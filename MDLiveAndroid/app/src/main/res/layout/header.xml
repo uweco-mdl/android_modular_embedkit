@@ -1,0 +1,5 @@
+<RelativeLayout
+    style="@style/HeaderStyle">
+    <ImageView
+        style="@style/HeaderLogoStyle"/>
+</RelativeLayout>

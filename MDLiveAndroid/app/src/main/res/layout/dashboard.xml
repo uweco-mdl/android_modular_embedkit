@@ -1,0 +1,162 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+    android:background="#ffffff"
+    >
+    <include layout="@layout/header"
+    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageView2"
+            android:background="@drawable/profilepic"
+            android:layout_gravity="center"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="50dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style="@style/HomeHeader"
+            android:text="Welcome"
+            android:layout_marginBottom="10dp"
+            android:textColor="#585858"/>
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/SubHomeHeader"
+                android:text="Mark Marino"
+                android:textSize="22sp"
+                android:textColor="#585858"/>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/imageView2"
+        android:background="#E0D8D8"
+        android:id="@+id/view1" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:weightSum="2"
+        android:paddingTop="15dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/SavLl">
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/imageView4"
+                android:background="@drawable/schedule"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleLeft"
+                android:text="Schedule a Visit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/MdliveAssistLl">
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/imageViewa"
+                android:background="@drawable/mdlive_assist"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleRight"
+                android:text="MDLIVE Assist" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:paddingTop="20dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/MyHealthLl">
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/myhealth"
+                android:background="@drawable/health"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleLeft"
+                android:text="My Health"
+                android:id="@+id/text_myhealth" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/MessageCenterLl">
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/imageViewb"
+                android:background="@drawable/message_center"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleRight"
+                android:text="Message Center"
+                android:id="@+id/textViewb" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:weightSum="2"
+        android:paddingTop="20dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/SymptomLl"
+            >
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/symptom"
+                android:background="@drawable/symptom"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleLeft"
+                android:text="Symptom Checker"
+
+                android:id="@+id/text_symptom" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/HomeImageviewContainerStyle"
+            android:id="@+id/MyAccountLl">
+
+            <ImageView
+                style="@style/HomeImageviewIconStyle"
+                android:id="@+id/account"
+                android:background="@drawable/myaccount"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HomeTextViewStyleRight"
+                android:text="My Account"
+                android:id="@+id/text_acct" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
+

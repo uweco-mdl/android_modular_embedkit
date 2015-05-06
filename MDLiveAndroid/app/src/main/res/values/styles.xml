@@ -1,0 +1,229 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+    <!-- Base View styles. -->
+    <style name="BaseEditTextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+    <style name="BaseBtnStyle">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="BaseTextViewStyle">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Base View styles END. -->
+
+    <!-- Login -->
+    <style name="BaseEditTextStyle.LoginEditTextStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+
+    <style name="BaseEditTextStyle.LoginPasswordEditTextStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="BaseBtnStyle.LoginBtnStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="BaseTextViewStyle.SubHeaderTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <!-- Getting Started-->
+    <style name="gettingstartedTextViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">40</item>/>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">start</item>/>
+        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <style name="gettingstartedContentStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">10dp</item>/>
+        <item name="android:textColor">@color/black</item>/>
+        <item name="android:gravity">start</item>/>
+        <item name="android:layout_gravity">center_vertical</item>/>
+    </style>
+
+    <style name="gettingstarted_edittext">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+
+    <style name="HeaderReasonTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColor">@color/grey_txt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="subHeaderReasonTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">5dp</item>/>
+        <item name="android:textColor">@color/black</item>/>
+        <item name="android:gravity">center</item>/>
+        <item name="android:layout_gravity">center_vertical</item>/>
+    </style>
+    <style name="ContentReasonTextViewStyle">
+        <item name="android:layout_width">370dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">35dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColor">@color/black</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="listReasonTextViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">40</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/grey_txt</item>
+
+        <item name="android:gravity">start</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="ReasonEditTextViewStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:background">#ffffff</item>
+
+        <item name="android:gravity">start</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <!-- Home-->
+    <style name="HomeImageviewIconStyle">
+    <item name="android:layout_width">70dp</item>
+    <item name="android:layout_height">70dp</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_gravity">center</item>
+</style>
+
+    <style name="HomeImageviewContainerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+
+
+    <style name="HomeTextViewStyleLeft">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="HomeTextViewStyleRight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="HomeHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">start</item>
+
+    </style>
+    <style name="SubHomeHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <item name="android:textColor">@color/grey_txt</item>
+        <item name="android:gravity">start</item>
+
+    </style>
+
+
+    <style name="ContainerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="HeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">#dcdcdc</item>
+    </style>
+
+    <style name="HeaderLogoStyle">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:src">@drawable/logo</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+</resources>
+

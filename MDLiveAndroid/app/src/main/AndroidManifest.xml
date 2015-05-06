@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mdlive.mobile" >
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Camera features - recommended for Card IO-->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        >
+        <activity
+            android:name=".uilayer.MDLiveLogin"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".uilayer.MDLiveSplashScreen"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".uilayer.MDLiveDashboard"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name=".uilayer.sav.MDLiveGetStarted"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWLogin"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWDashboard"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.sav.UMWGetStarted"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWSplashSceen"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+    </application>
+
+</manifest>

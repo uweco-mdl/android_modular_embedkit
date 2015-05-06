@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+
+    <include layout="@layout/header"
+    />
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style = "@style/BaseTextViewStyle.SubHeaderTextViewStyle"
+        android:text="@string/login"
+        android:tag="login"
+        />
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+        style = "@style/BaseEditTextStyle.LoginEditTextStyle"
+        android:id="@+id/UserNameEt"
+        android:hint="@string/username"
+        android:tag="email_username"
+        />
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+        style = "@style/BaseEditTextStyle.LoginPasswordEditTextStyle"
+        android:id="@+id/PasswordEt"
+        android:hint="@string/password"
+        android:tag="password"
+        />
+
+    <Button
+        style = "@style/BaseBtnStyle.LoginBtnStyle"
+        android:text="@string/login"
+        android:id="@+id/LoginBtn"/>
+
+</LinearLayout>
