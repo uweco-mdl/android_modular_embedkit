@@ -13,12 +13,27 @@
     <string name="empty_credentials">Username and password should not be empty</string>
     <string name="home">Home</string>
     <string name="sav">Schedule a Visit</string>
-    <string name="provider_txt">The Provider may call you to follow up:</string>
-    <string name="visit_txt"> If you had not had this visit today\n what would you do?</string>
-    <string name="primary_txt"> Do you have a primary care Physician?</string>
+
     <string name="doctoroncall_txt">Doctor On-Call is a 24 hour service where\n you can get an instant consultation by phone with the available doctor.</string>
     <string name="reason_txt">Hello Test, what seems to be the\n best problem today?</string>
     <string name="card_txt">Please fill your credit card information below :</string>
+
+    <!--Get Started-->
+    <string name="getStarted">GET STARTED</string>
+    <string name="patientTxt">Patient</string>
+    <string name="arTxt">AR</string>
+    <string name="providerTypeTxt">Provider Type</string>
+    <string name="pediatricianTxt">Pediatrician</string>
+    <string name="locationTxt">My Location</string>
+    <string name="markMarinoTxt">Mark Marino</string>
+
+    <string name="provider_txt">Please enter the phone number \nwe should call:</string>
+    <string name="visit_txt"> If you had not had this visit today\nwhat would you do?</string>
+    <string name="primary_txt"> Do you have a primary care\nPhysician?</string>
+
+
+
+
 
 
 </resources>

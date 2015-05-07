@@ -54,22 +54,39 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+    <style name="SubHeaderTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+
+        <!--<item name="android:textColor">#525252</item>-->
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
 
     <!-- Getting Started-->
     <style name="gettingstartedTextViewStyle">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">40</item>/>
+        <item name="android:layout_weight">30</item>/>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:gravity">start</item>/>
+        <item name="android:textColor">@color/black</item>
+
         <item name="android:layout_gravity">center_vertical</item>/>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">15dp</item>
     </style>
     <style name="gettingstartedContentStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_margin">10dp</item>/>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginLeft">15dp</item>/>
+        <item name="android:layout_marginRight">15dp</item>/>
+        <item name="android:layout_marginTop">10dp</item>/>
         <item name="android:textColor">@color/black</item>/>
         <item name="android:gravity">start</item>/>
         <item name="android:layout_gravity">center_vertical</item>/>
@@ -78,11 +95,14 @@
     <style name="gettingstarted_edittext">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
         <item name="android:padding">6dp</item>
+
         <item name="android:background">@drawable/edittext_bg</item>
+
     </style>
 
 
@@ -97,6 +117,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
     <style name="subHeaderReasonTextViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -214,16 +235,114 @@
     <style name="HeaderStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">#dcdcdc</item>
+        <item name="android:background">#F7F6F5</item>
     </style>
 
     <style name="HeaderLogoStyle">
         <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:src">@drawable/logo</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
+
+    <!-- Continue Button-->
+    <style name="ContinueButtonNoStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">Continue</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#5877AD</item>
+    </style>
+
+    <!-- View-->
+    <style name="ViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">#DCDCDC</item>
+
+    </style>
+
+    <!-- View-->
+    <style name="SecondViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">#E7E7E7</item>
+        <item name="android:layout_marginLeft">15dp</item>
+
+    </style>
+
+
+    <!-- Linear Layout-->
+    <style name="LinearLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+
+    <!-- Spinner Button-->
+    <style name="SpinnerButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:layout_margin">15dp</item>
+
+        <item name="android:background">@drawable/icon_arrow_down</item>
+    </style>
+
+
+    <!-- Spinner Button-->
+    <style name="SpinnerButtonLeftStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:layout_margin">15dp</item>
+
+        <item name="android:background">@drawable/icon_arrow_right</item>
+    </style>
+
+    <!-- Custom  Button-->
+
+    <style name="YesCustomButtonStyle">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:text">Yes</item>
+        <item name="android:textAllCaps">false</item>
+
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:layout_marginLeft">10dp</item>
+
+        <item name="android:background">@drawable/btn_shapes</item>
+    </style>
+    <style name="NoCustomButtonStyle">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:text">No</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:layout_marginLeft">15dp</item>
+
+        <item name="android:background">@drawable/shapes</item>
+    </style>
+
+    <!-- DownArrow ImageView-->
+
+    <style name="DownArrowStyle">
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_weight">10</item>
+        <item name="android:layout_marginTop">25dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:text">Yes</item>
+        <item name="android:textAllCaps">false</item>
+
+
+        <item name="android:background">@drawable/icon_arrow_down</item>
+    </style>
+
 
 </resources>
 

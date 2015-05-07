@@ -4,12 +4,14 @@
     >
     <include layout="@layout/header"
         />
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style = "@style/BaseTextViewStyle.SubHeaderTextViewStyle"
-        android:text="GET STARTED"
-     >
-        <requestFocus />
-     </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/progressBar" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,155 +21,149 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+              style="@style/SubHeaderTextViewStyle"
+                android:text="@string/getStarted"
+                android:layout_marginTop="10dp"
+                >
+
+            </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:paddingTop="2dp"
-                android:background="#E0D8D8"
-                 />
+                style="@style/ViewStyle"
+                />
             <LinearLayout
+                style="@style/LinearLayoutStyle"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+               >
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                    style="@style/gettingstartedTextViewStyle"
-                    android:text="Patient"
+                    android:text="@string/patientTxt"
                     android:id="@+id/patient" />
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                     style="@style/gettingstartedTextViewStyle"
                     android:id="@+id/mark"
-                    android:text="Mark Marino" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text=">"
-                    android:layout_weight="20"
-                    android:rotation="90"
-                    android:paddingTop="10dp"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:id="@+id/symbol2txt" />
+                    android:text="@string/markMarinoTxt" />
+                <Spinner
+                   style="@style/SpinnerButtonStyle"
+                     />
             </LinearLayout>
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0D8D8"
+                style="@style/SecondViewStyle"
                 />
             <LinearLayout
+                style="@style/LinearLayoutStyle"
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+               >
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                     style="@style/gettingstartedTextViewStyle"
-                    android:text="My Location"
+                    android:text="@string/locationTxt"
                     android:id="@+id/location" />
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                     style="@style/gettingstartedTextViewStyle"
                     android:id="@+id/ar"
-                    android:text="AR" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text=">"
-                    android:layout_weight="20"
-                    android:rotation="90"
-                    android:paddingTop="10dp"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:id="@+id/symbol1txt" />
+                    android:text="@string/arTxt" />
+                <Spinner
+                    style="@style/SpinnerButtonLeftStyle"
+                    android:id="@+id/spinner"
+
+                    />
             </LinearLayout>
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0D8D8"
+                style="@style/SecondViewStyle"
                 />
             <LinearLayout
+                style="@style/LinearLayoutStyle"
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                >
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                     style="@style/gettingstartedTextViewStyle"
-                    android:text="Provider Type"
+                    android:text="@string/providerTypeTxt"
                     android:id="@+id/providertxt" />
                 <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                     style="@style/gettingstartedTextViewStyle"
                     android:id="@+id/pediatrictxt"
-                    android:text="Pediatrician" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text=">"
-                    android:layout_weight="20"
-                    android:paddingTop="5dp"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:id="@+id/symbol3txt" />
+                    android:text="@string/pediatricianTxt" />
+                <Spinner
+                   style="@style/SpinnerButtonStyle"
+                   />
 
             </LinearLayout>
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0D8D8"
+
+                style="@style/SecondViewStyle"
                 />
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                 style="@style/gettingstartedContentStyle"
                 android:text="@string/provider_txt"
-                android:id="@+id/textView" />
+                android:id="@+id/textView"
+               />
 
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
                 style="@style/gettingstarted_edittext"
                 android:singleLine="true"
-                android:text="(906) 890 6123"
+                android:hint="(906) 890 6123"
+                android:inputType="number"
                 android:id="@+id/editText" />
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0D8D8"
+
+                style="@style/ViewStyle"
+                android:layout_marginTop="10dp"
                 />
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                 style="@style/gettingstartedContentStyle"
                 android:text="@string/visit_txt"
                 android:id="@+id/visit_txt"
-                android:layout_width="match_parent" />
+              />
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt-->
+                <!--style="@style/gettingstarted_edittext"-->
+                <!--android:hint="Seen my provider in Person"-->
+                <!--android:drawableEnd="@drawable/icon_arrow_down"-->
+                <!--android:singleLine="true"-->
+                <!--android:id="@+id/selectlist" />-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
                 style="@style/gettingstarted_edittext"
-                android:text="Seen my provider in Person"
+                android:hint="Seen my provider in Person"
                 android:singleLine="true"
-                android:id="@+id/primary_txt" />
+                    android:layout_weight="90"
+               />
+                <ImageView
+                   style="@style/DownArrowStyle"
+                    android:id="@+id/selectlist"/>
+            </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0D8D8"
+               style="@style/ViewStyle"
+                android:layout_marginTop="10dp"
                 />
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                 style="@style/gettingstartedContentStyle"
                 android:text="@string/primary_txt"
                 android:id="@+id/Primary_txt" />
-        <RadioGroup
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Yes"
-                android:id="@+id/radioButton_yes" />
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No"
-                android:id="@+id/radioButton_no" />
-        </RadioGroup>
+            <LinearLayout
+               style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+
+                android:orientation="horizontal">
+
+            <Button
+                style="@style/YesCustomButtonStyle"
+
+                android:id="@+id/Button_yes"/>
+            <Button
+
+style="@style/NoCustomButtonStyle"
+
+                android:id="@+id/Button_no" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Continue"
-        android:textColor="#ffffff"
-        android:background="#5877AD"
+       style="@style/ContinueButtonNoStyle"
+        android:textAllCaps="false"
         android:id="@+id/SavContinueBtn" />
 </LinearLayout>
