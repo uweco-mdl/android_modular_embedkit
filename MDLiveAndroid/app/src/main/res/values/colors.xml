@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
     <color name="grey_txt">#585858</color>
+    <color name="parentView_color">#DCDCDC</color>
+    <color name="childView_color">#E7E7E7</color>
+    <color name="continueBtn_color">#5877AD</color>
+    <color name="headerStyle_color">#F7F6F5</color>
 </resources>
