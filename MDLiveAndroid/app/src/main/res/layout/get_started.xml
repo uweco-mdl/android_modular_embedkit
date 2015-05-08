@@ -5,11 +5,15 @@
     <include layout="@layout/header"
         />
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressDrawable="@drawable/style_horizontal"
+        android:secondaryProgress="20"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="20dp"
         android:id="@+id/progressBar" />
 
     <ScrollView
@@ -156,8 +160,7 @@
                 android:id="@+id/Button_yes"/>
             <Button
 
-style="@style/NoCustomButtonStyle"
-
+           style="@style/NoCustomButtonStyle"
                 android:id="@+id/Button_no" />
             </LinearLayout>
         </LinearLayout>
