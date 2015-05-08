@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MDLive</string>
+    <string name="title_activity_doctor_list">DoctorList</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="login">LOGIN</string>
+    <string name="username">Email or Username</string>
+    <string name="password">Password</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="invalid_credentials">Invalid Username or password</string>
+    <string name="empty_credentials">Username and password should not be empty</string>
+    <string name="home">Home</string>
+    <string name="sav">Schedule a Visit</string>
+    <string name="provider_txt">Please enter the phone number \nwe should call:</string>
+    <string name="visit_txt"> If you had not had this visit today\nwhat would you do?</string>
+    <string name="primary_txt"> Do you have a primary care\nPhysician?</string>
+    <string name="doctoroncall_txt">Doctor On-Call is a 24 hour service where\n you can get an instant consultation by phone with the available doctor.</string>
+    <string name="reason_txt">Hello Test, what seems to be the\n best problem today?</string>
+    <string name="card_txt">Please fill your credit card information below :</string>
+
+
+</resources>
