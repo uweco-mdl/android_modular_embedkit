@@ -1,172 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle"
-    >
-    <include layout="@layout/header"
-        />
-    <ProgressBar
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:indeterminate="false"
-        android:max="100"
-        android:progressDrawable="@drawable/style_horizontal"
-        android:secondaryProgress="20"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:id="@+id/progressBar" />
+    style="@style/ContainerStyle">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+    <include layout="@layout/header" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal" />
+
+    <ScrollView style="@style/ScrollViewStyle"
+
         >
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical">
+
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-              style="@style/SubHeaderTextViewStyle"
-                android:text="@string/getStarted"
-                android:layout_marginTop="10dp"
-                >
+                style="@style/SubHeaderTextViewStyle"
+                android:text="@string/getStarted">
 
             </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
-            <View
-                style="@style/ViewStyle"
-                />
+
+            <View style="@style/ViewStyle" />
+
             <LinearLayout
                 style="@style/LinearLayoutStyle"
-                android:orientation="horizontal"
-               >
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                   style="@style/gettingstartedTextViewStyle"
-                    android:text="@string/patientTxt"
-                    android:id="@+id/patient" />
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/gettingstartedTextViewStyle"
-                    android:id="@+id/mark"
-                    android:text="@string/markMarinoTxt" />
-                <Spinner
-                   style="@style/SpinnerButtonStyle"
-                     />
-            </LinearLayout>
-            <View
-                style="@style/SecondViewStyle"
-                />
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="horizontal"
-               >
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/gettingstartedTextViewStyle"
-                    android:text="@string/locationTxt"
-                    android:id="@+id/location" />
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/gettingstartedTextViewStyle"
-                    android:id="@+id/ar"
-                    android:text="@string/arTxt" />
-                <Spinner
-                    style="@style/SpinnerButtonLeftStyle"
-                    android:id="@+id/spinner"
-
-                    />
-            </LinearLayout>
-            <View
-                style="@style/SecondViewStyle"
-                />
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="horizontal"
-                >
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/gettingstartedTextViewStyle"
-                    android:text="@string/providerTypeTxt"
-                    android:id="@+id/providertxt" />
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/gettingstartedTextViewStyle"
-                    android:id="@+id/pediatrictxt"
-                    android:text="@string/pediatricianTxt" />
-                <Spinner
-                   style="@style/SpinnerButtonStyle"
-                   />
-
-            </LinearLayout>
-            <View
-
-                style="@style/SecondViewStyle"
-                />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/gettingstartedContentStyle"
-                android:text="@string/provider_txt"
-                android:id="@+id/textView"
-               />
-
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-                style="@style/gettingstarted_edittext"
-                android:singleLine="true"
-                android:hint="(906) 890 6123"
-                android:inputType="number"
-                android:id="@+id/editText" />
-            <View
-
-                style="@style/ViewStyle"
-                android:layout_marginTop="10dp"
-                />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/gettingstartedContentStyle"
-                android:text="@string/visit_txt"
-                android:id="@+id/visit_txt"
-              />
-
-            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt-->
-                <!--style="@style/gettingstarted_edittext"-->
-                <!--android:hint="Seen my provider in Person"-->
-                <!--android:drawableEnd="@drawable/icon_arrow_down"-->
-                <!--android:singleLine="true"-->
-                <!--android:id="@+id/selectlist" />-->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-                style="@style/gettingstarted_edittext"
-                android:hint="Seen my provider in Person"
-                android:singleLine="true"
-                    android:layout_weight="90"
-               />
-                <ImageView
-                   style="@style/DownArrowStyle"
-                    android:id="@+id/selectlist"/>
-            </LinearLayout>
-
-            <View
-               style="@style/ViewStyle"
-                android:layout_marginTop="10dp"
-                />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/gettingstartedContentStyle"
-                android:text="@string/primary_txt"
-                android:id="@+id/Primary_txt" />
-            <LinearLayout
-               style="@style/LinearLayoutStyle"
-                android:layout_margin="10dp"
-
                 android:orientation="horizontal">
 
-            <Button
-                style="@style/YesCustomButtonStyle"
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/patient"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/patientTxt" />
 
-                android:id="@+id/Button_yes"/>
-            <Button
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/PatientNameTv"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/markMarinoTxt" />
 
-           style="@style/NoCustomButtonStyle"
-                android:id="@+id/Button_no" />
+                <ImageView
+                    android:id="@+id/PatientNameImg"
+                    style="@style/SpinnerButtonStyle" />
+            </LinearLayout>
+
+            <View style="@style/SecondViewStyle" />
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/location"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/locationTxt" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/ar"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/arTxt" />
+
+                <ImageView
+                    android:id="@+id/LocationImg"
+                    style="@style/SpinnerButtonLeftStyle" />
+            </LinearLayout>
+
+            <View style="@style/SecondViewStyle" />
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/providertxt"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/providerTypeTxt" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/ProvidertypeTv"
+                    style="@style/gettingstartedTextViewStyle"
+                    android:text="@string/pediatricianTxt" />
+
+                <ImageView
+                    android:id="@+id/ProviderTypeImg"
+                    style="@style/SpinnerButtonStyle" />
+
+            </LinearLayout>
+
+            <View style="@style/SecondViewStyle" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:id="@+id/textView"
+                style="@style/gettingstartedContentStyle"
+                android:text="@string/provider_txt" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+                android:id="@+id/PhoneNumberTv"
+
+                style="@style/phonenumberStyle_edittext" />
+
+            <View
+
+                style="@style/ViewStyle"
+                android:layout_marginTop="10dp" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:id="@+id/visit_txt"
+                style="@style/gettingstartedContentStyle"
+                android:text="@string/visit_txt" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+                    style="@style/phonenumberStyle_edittext"
+                    android:hint="Seen my provider in Person"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/ListImg"
+                    style="@style/DownArrowStyle" />
+            </LinearLayout>
+
+            <View
+                style="@style/ViewStyle"
+                android:layout_marginTop="10dp" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:id="@+id/Primary_txt"
+                style="@style/gettingstartedContentStyle"
+                android:text="@string/primary_txt" />
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/YesBtn"
+                    style="@style/YesCustomButtonStyle" />
+
+                <Button
+
+                    android:id="@+id/NoBtn"
+                    style="@style/NoCustomButtonStyle" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <Button
-       style="@style/ContinueButtonNoStyle"
-        android:textAllCaps="false"
-        android:id="@+id/SavContinueBtn" />
+        android:id="@+id/SavContinueBtn"
+        style="@style/ContinueButtonStyle"
+        android:textAllCaps="false" />
 </LinearLayout>

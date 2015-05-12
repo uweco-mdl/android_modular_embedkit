@@ -55,29 +55,18 @@
         </activity>
 
 
-        <activity
-            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWLogin"
-            android:label="@string/title_activity_home"
-            android:screenOrientation="portrait"
-            >
-        </activity>
-        <activity
-            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWDashboard"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_home" >
-        </activity>
+
 
         <activity
-            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.sav.UMWGetStarted"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
+        android:name=".uilayer.sav.VseeMainActivity"
+        android:windowSoftInputMode="stateHidden"
+        android:screenOrientation="portrait"
+        android:label="@string/title_activity_home" >
+    </activity>
 
-        <activity
-            android:name="com.mdlive.unifiedmiddleware.parentclasses.activity.UMWSplashSceen"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+
+
+
 
     </application>
 

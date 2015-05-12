@@ -31,8 +31,39 @@
     <string name="visit_txt"> If you had not had this visit today\nwhat would you do?</string>
     <string name="primary_txt"> Do you have a primary care\nPhysician?</string>
 
+    <!--REASON-->
+
+    <string name="header_reason_txt">REASON FOR THE VISIT</string>
+    <string name="subheader_reason_txt">Hello Test, what seems to be the\n best problem today?</string>
+    <string name="searchsymptom_txt">Search Symptom</string>
+    <string name="acne_txt">Acne</string>
+    <string name="alcohol_txt">Alcohol Dependencies</string>
+    <string name="allergy_txt">Allergic Conjuctivitis</string>
+    <string name="rihinits_txt">Allergic Rhinitis</string>
+
+    <string name="anal_txt">Anal Itching</string>
+    <string name="anxiety_txt">Anxiety</string>
+    <string name="arthritis_txt">Arthritis</string>
+    <string name="asthma_txt">Asthma</string>
+
+    <string name="atheletesfoot_txt">Atheletes Foot</string>
+    <string name="bloodsputum_txt">Blood In Sputum</string>
+    <string name="bloodstool_txt">Blood In Stool</string>
+    <string name="bloodurine_txt">Blood In Urine</string>
 
 
+
+    <!--Location-->
+    <string name="locationHeader_txt">UPDATE LOCATION</string>
+    <string name="locationSubHeader_txt">Update your location below.</string>
+    <string name="UseCurrentLocation_txt">Use current location</string>
+    <string name="zipCode_txt">Enter a Zip Code</string>
+    <string name="state_txt">State</string>
+
+    <!--Choose Provider-->
+    <string name="available_txt"> Available 24/7 by phone</string>
+    <string name="doctorOnCall_txt">Doctor on call</string>
+    Available 24/7 by phone
 
 
 

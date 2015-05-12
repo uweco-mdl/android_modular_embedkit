@@ -1,29 +1,84 @@
 package com.mdlive.mobile.uilayer;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-
+import android.os.Handler;
 import com.mdlive.mobile.global.MDLiveConfig;
-import com.mdlive.unifiedmiddleware.parentclasses.activity.UMWSplashSceen;
-import com.mdlive.mobile.R;
+import com.mdlive.mobile.uilayer.sav.MDLiveGetStarted;
+
 
 /**
  * Created by unnikrishnan_b on 4/7/2015.
  */
-public class MDLiveSplashScreen extends UMWSplashSceen {
+
+public class MDLiveSplashScreen extends Activity {
+    private Handler mHandler;
+    private Runnable mRunnable;
+    private static final int SPLASH_TIME_OUT = 5000;
 
     /**
      *
-     * Called when the activity is created.
-     *
-     * The config data is shared to common module by calling MDLiveConfig.setData() method.
-     *
+     *  * The config data is shared to common module by calling MDLiveConfig.setData() method.
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.splashscreen);
-        MDLiveConfig.setData();
-        setData(MDLiveLogin.class);
         super.onCreate(savedInstanceState);
+        MDLiveConfig.setData();
+        setLocalisationData();
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MDLiveSplashScreen.this, MDLiveLogin.class);
+                startActivity(intent);
+                finish();
+
+            }
+        };
+
     }
+
+    /**
+     *
+     * The language preferences is setup here.
+     *
+     * NOTE : Only a template, need to have the implementation.
+     *
+     */
+    private void setLocalisationData(){
+        // TODO : Implementation yet to be done.
+    }
+
+    @Override
+    public void onBackPressed() {
+// Remove callback on back press
+        if (mHandler != null && mRunnable != null) {
+            mHandler.removeCallbacks(mRunnable);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+// Remove callback on pause
+        if (mHandler != null && mRunnable != null) {
+            mHandler.removeCallbacks(mRunnable);
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+// Attach and start callback with delay on resume
+        if (mHandler != null && mRunnable != null) {
+            mHandler.postDelayed(mRunnable, SPLASH_TIME_OUT);
+        }
+        super.onResume();
+    }
+
+
 }
+
+
