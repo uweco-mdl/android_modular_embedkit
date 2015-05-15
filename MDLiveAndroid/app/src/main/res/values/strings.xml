@@ -65,6 +65,9 @@
     <string name="doctorOnCall_txt">Doctor on call</string>
     Available 24/7 by phone
 
+    <!--Pharmacy Acitivity-->
+    <string name="select_pharmcity">Select Pharmacy City</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

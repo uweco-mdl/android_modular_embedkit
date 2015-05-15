@@ -4,6 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
+
+    //<!-- Hack for Robolectric to run with appcompat.v7 -->
+    <style name="RoboAppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        //<!-- Customize your theme here. -->
+    </style>
+
     <!-- Base View styles. -->
     <style name="BaseEditTextStyle">
         <item name="android:textSize">18sp</item>
@@ -261,7 +267,7 @@
     <style name="HeaderLeftStyle">
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">15dp</item>
-        <item name="android:src">@drawable/slder</item>
+        <!--<item name="android:src">@drawable/slder</item>-->
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentLeft">true</item>
@@ -272,7 +278,7 @@
     <style name="HeaderRightStyle">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
-        <item name="android:src">@drawable/account</item>
+        <!--<item name="android:src">@drawable/account</item>-->
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
 
@@ -416,7 +422,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">15dp</item>
         <item name="android:background">@color/search_bgd</item>
-        <item name="android:drawableLeft">@drawable/locationsymbol</item>
+        <!--<item name="android:drawableLeft">@drawable/locationsymbol</item>-->
         <item name="android:paddingLeft">5dp</item>
     </style>
 
@@ -510,7 +516,6 @@
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
     </style>
-
 
 
 

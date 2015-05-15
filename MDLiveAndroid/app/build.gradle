@@ -23,4 +23,18 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile project(':unifiedmiddleware')
+
+
+    // Robolectric supporting files & JUnit supporting files
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.hamcrest:hamcrest-library:1.1'
+    testCompile 'org.hamcrest:hamcrest-integration:1.1'
+    testCompile 'com.squareup:fest-android:1.0.8'
+    /*This lib having feature of Assert That for Robolectric Testing*/
+
+    // This library requires to access all class of Robolectric.
+    testCompile('org.robolectric:robolectric:2.4');
+
+    compile 'com.google.android.gms:play-services:7.3.0'
 }
