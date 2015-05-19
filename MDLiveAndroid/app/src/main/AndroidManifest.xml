@@ -54,15 +54,13 @@
             android:label="@string/title_activity_home" >
         </activity>
 
-
-
-
         <activity
-        android:name=".uilayer.sav.VseeMainActivity"
-        android:windowSoftInputMode="stateHidden"
-        android:screenOrientation="portrait"
-        android:label="@string/title_activity_home" >
-    </activity>
+            android:name=".uilayer.sav.VseeMainActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme"
+            android:label="@string/title_video_home" >
+    	</activity>
 
 
 

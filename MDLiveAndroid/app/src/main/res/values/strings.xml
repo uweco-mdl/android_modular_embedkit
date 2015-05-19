@@ -9,6 +9,7 @@
     <string name="username">Email or Username</string>
     <string name="password">Password</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_video_home">Video Consultation</string>
     <string name="invalid_credentials">Invalid Username or password</string>
     <string name="empty_credentials">Username and password should not be empty</string>
     <string name="home">Home</string>

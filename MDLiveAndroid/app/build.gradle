@@ -1,5 +1,28 @@
 apply plugin: 'com.android.application'
 
+// VSee integration:
+//
+// First repository is for VSee released artifacts.  Others pick up transitive dependencies.
+// To access the VSee bintray repo, you must create a bintray account (it is free) and have
+// us add you to our team.
+//
+repositories {
+    maven {
+        credentials {
+            username bintrayUsername
+            password bintrayApiKey
+        }
+        url 'http://dl.bintray.com/vsee/android'
+    }
+    maven {
+        url "https://repo.commonsware.com.s3.amazonaws.com"
+    }
+    maven {
+        url "http://dl.bintray.com/populov/maven"
+    }
+    jcenter()
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "20.0.0"
@@ -19,11 +42,31 @@ android {
     }
 }
 
+// VSee integration:
+// If you don't include this section you will get errors due to duplicate files in
+// 3rd party dependencies.
+android.packagingOptions {
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/NOTICE'
+    exclude 'version.properties'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile project(':unifiedmiddleware')
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:support-v13:21.0.3'
+    compile 'com.google.android.gms:play-services:7.3.0'
+    compile files('libs/android-async-http-1.4.5.jar')
+    compile files('libs/card.io.jar')
+    compile files('libs/volley.jar')
+    compile 'com.google.code.gson:gson:2.3'
 
+    // VSee integration:
+    compile('com.vsee:vsee-kit:0.3.20524@aar') {
+        transitive = true
+    }
 
     // Robolectric supporting files & JUnit supporting files
     testCompile 'junit:junit:4.12'
@@ -35,6 +78,4 @@ dependencies {
 
     // This library requires to access all class of Robolectric.
     testCompile('org.robolectric:robolectric:2.4');
-
-    compile 'com.google.android.gms:play-services:7.3.0'
 }

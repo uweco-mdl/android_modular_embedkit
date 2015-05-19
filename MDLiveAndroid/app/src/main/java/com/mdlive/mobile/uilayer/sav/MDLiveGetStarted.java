@@ -280,7 +280,7 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
             editor.putString(PreferenceConstants.SAVED_MASTER_USER,response.toString());
             editor.commit();
 
-//Fetch Data From the Services
+            // Fetch Data From the Services
 
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
