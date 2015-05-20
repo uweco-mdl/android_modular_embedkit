@@ -5,21 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import com.mdlive.mobile.global.MDLiveConfig;
-import com.mdlive.mobile.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 
 
 /**
  * Created by unnikrishnan_b on 4/7/2015.
  */
 
-public class MDLiveSplashScreen extends Activity {
+public class MDLiveSplashScreen extends Activity
+{
     private Handler mHandler;
     private Runnable mRunnable;
     private static final int SPLASH_TIME_OUT = 5000;
 
     /**
      *
-     *  * The config data is shared to common module by calling MDLiveConfig.setData() method.
+     * The config data is shared to common module by calling MDLiveConfig.setData() method.
      * @param savedInstanceState
      */
     @Override
@@ -37,6 +38,13 @@ public class MDLiveSplashScreen extends Activity {
 
             }
         };
+
+        // set default lang
+        LocalizationSingleton.setLanguage(this, "en");
+
+        // if this is an *update* install, then clear the language shared prefs to prevent
+        // old language shared prefs(from previous installation) from being applied
+        LocalizationSingleton.purgeLangPrefsIfInstallUpdated(this);
 
     }
 
@@ -77,7 +85,6 @@ public class MDLiveSplashScreen extends Activity {
         }
         super.onResume();
     }
-
 
 }
 

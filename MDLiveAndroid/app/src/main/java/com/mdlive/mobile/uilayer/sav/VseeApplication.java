@@ -10,12 +10,6 @@ public class VseeApplication extends Application {
     private static String password = null;
     private static boolean firstTimeOnly = true;
 
-    // Try two different files just for convenience.  I can check login.properties in with
-    // no values and ignore private-login.properties.  If you aren't checking this in, use
-    // either.
-    public static final String LOGIN_PROPERTIES_FILENAME = "login.properties";
-    public static final String PRIVATE_LOGIN_PROPERTIES_FILENAME = "private-login.properties";
-
     public static String getUsername() {
         return username;
     }

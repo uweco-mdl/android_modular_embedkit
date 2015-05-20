@@ -3,7 +3,6 @@ package com.mdlive.mobile.uilayer.sav;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,7 +21,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mdlive.unifiedmiddleware.commonclasses.application.MDLiveLocalizationSystem;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -109,17 +108,17 @@ public class VseeMainActivity extends Activity
         spinner = (ProgressBar)findViewById(R.id.waitSpinner);
 
         TextView mesg0 = (TextView) findViewById(R.id.waitTitle);
-        mesg0.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wsc_header_title"));
+        mesg0.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wsc_header_title", this));
         Typeface tf= Typeface.createFromAsset(getAssets(), "HelveticaNeue_extended.ttf");
         mesg0.setTypeface(tf);
 
         TextView mesg1 = (TextView) findViewById(R.id.waitmesg1);
-        mesg1.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wsc_sit_relax"));
+        mesg1.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wsc_sit_relax", this));
         TextView mesg2 = (TextView) findViewById(R.id.waitmesg2);
-        mesg2.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wsc_starts_shortly"));
+        mesg2.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wsc_starts_shortly", this));
 
         TextView blinkingText1 = (TextView)findViewById(R.id.waitingforprovider1);
-        blinkingText1.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wsc_footer"));
+        blinkingText1.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wsc_footer", this));
         Animation anim1 = new AlphaAnimation(1.0f, 0.0f);
         anim1.setDuration(BLINKING_PERIOD);      // You can manage the blinking time with this parameter
         anim1.setStartOffset(0);
@@ -128,7 +127,7 @@ public class VseeMainActivity extends Activity
         blinkingText1.startAnimation(anim1);
 
         TextView blinkingText2 = (TextView)findViewById(R.id.waitingforprovider2);
-        blinkingText2.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wsc_please_dont_leave"));
+        blinkingText2.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wsc_please_dont_leave", this));
         Animation anim2 = new AlphaAnimation(0.0f, 1.0f);
         anim2.setDuration(BLINKING_PERIOD);      // You can manage the blinking time with this parameter
         anim2.setStartOffset(0);
@@ -150,7 +149,7 @@ public class VseeMainActivity extends Activity
 
         FrameLayout frame = (FrameLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.vseewaitingmessage, null);
         TextView waitConnectMesg = (TextView)frame.findViewById(R.id.txtWaitCallConnect);
-        waitConnectMesg.setText(MDLiveLocalizationSystem.localizedStringForKey("nat_wait_for_call_connect"));
+        waitConnectMesg.setText(LocalizationSingleton.getLocalizedString(R.string.temporary_placeholder, "nat_wait_for_call_connect", this));
         return(frame);
     }
 
@@ -185,7 +184,7 @@ public class VseeMainActivity extends Activity
     }
 
     /**
-     * checks to see whether the named service is already running or not
+     * Checks to see whether the named service is already running or not
      *
      * @param serviceClass
      * @return TRUE if service is already running, FALSE otherwise
