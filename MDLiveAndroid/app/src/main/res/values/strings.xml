@@ -13,7 +13,17 @@
     <string name="invalid_credentials">Invalid Username or password</string>
     <string name="empty_credentials">Username and password should not be empty</string>
     <string name="home">Home</string>
+    <string name="welcome">Welcome</string>
     <string name="sav">Schedule a Visit</string>
+    <string name="mdlive_assist">MDLive Assist</string>
+    <string name="my_health">My Health</string>
+    <string name="message_center">Message Center</string>
+    <string name="symptom_checker">Symptom Checker</string>
+    <string name="myaccount">My Account</string>
+    <string name="ok">OK</string>
+    <string name="true_txt">true</string>
+    <string name="bin_true">1</string>
+    <string name="bin_false">0</string>
 
     <string name="doctoroncall_txt">Doctor On-Call is a 24 hour service where\n you can get an instant consultation by phone with the available doctor.</string>
     <string name="reason_txt">Hello Test, what seems to be the\n best problem today?</string>
@@ -27,6 +37,12 @@
     <string name="pediatricianTxt">Pediatrician</string>
     <string name="locationTxt">My Location</string>
     <string name="markMarinoTxt">Mark Marino</string>
+    <string name="please_choose">Please Choose</string>
+    <string name="gone_to_emergency">Gone to the Emergency Room</string>
+    <string name="used_urgent_care">Used Urgent Care/Retail Clinic</string>
+    <string name="seen_my_provider">Seen my provider in Person</string>
+    <string name="done_nothing">Done nothing</string>
+    <string name="administrative_level1">administrative_level1</string>
 
     <string name="provider_txt">Please enter the phone number \nwe should call:</string>
     <string name="visit_txt"> If you had not had this visit today\nwhat would you do?</string>
@@ -35,8 +51,9 @@
     <!--REASON-->
 
     <string name="header_reason_txt">REASON FOR THE VISIT</string>
-    <string name="subheader_reason_txt">Hello Test, what seems to be the\n best problem today?</string>
-    <string name="searchsymptom_txt">Search Symptom</string>
+    <string name="subheader_reason_txt">what is the reason for your visit?</string>
+    <string name="searchsymptom_txt">Enter your Symptom</string>
+    <string name="searchProvidernmae_txt">Search provider name</string>
     <string name="acne_txt">Acne</string>
     <string name="alcohol_txt">Alcohol Dependencies</string>
     <string name="allergy_txt">Allergic Conjuctivitis</string>
@@ -60,11 +77,16 @@
     <string name="UseCurrentLocation_txt">Use current location</string>
     <string name="zipCode_txt">Enter a Zip Code</string>
     <string name="state_txt">State</string>
+    <string name="update_location">UPDATE LOCATION</string>
+    <string name="or">Or</string>
 
     <!--Choose Provider-->
+    <string name="choose_provider">CHOOSE PROVIDER</string>
     <string name="available_txt"> Available 24/7 by phone</string>
     <string name="doctorOnCall_txt">Doctor on call</string>
-    Available 24/7 by phone
+    <string name="please_wait">Please Wait...</string>
+    <string name="video_or_phonr">video or phone</string>
+    <string name="phone">phone</string>
 
     <!--Pharmacy Acitivity-->
     <string name="select_pharmcity">Select Pharmacy City</string>
