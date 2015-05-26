@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.mobile.R;
@@ -37,7 +40,7 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
     private Button SavContinueBtn;
     private ImageView imgView,patientNameimg,locationImg,providerImg;
     private ProgressDialog pDialog;
-    private TextView patientName,phoneNumber,providerType;
+    private TextView D0ctorNmaeTxt, phoneNumberTxt, providerTypeTxt,SeenMyProviderEtxt,locationTxt;
     private ArrayList<String> PatientList = new ArrayList<String>();
     private  ArrayList<String> LocationList = new ArrayList<String>();
     private ArrayList<String> ProviderList = new ArrayList<String>();
@@ -56,18 +59,22 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
         loadUserInformationDetails();
         loadProviderType();
         loadFamilyMember();
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
+        locationTxt.setText(SavedLocation);
     }
 
     private void initialiseData() {
         SavContinueBtn = (Button) findViewById(R.id.SavContinueBtn);
-
         imgView = (ImageView) findViewById(R.id.ListImg);
+        SeenMyProviderEtxt= (TextView) findViewById(R.id.Provider_editTxt);
+        locationTxt= (TextView) findViewById(R.id.LocationTxtView);
         patientNameimg = (ImageView) findViewById(R.id.PatientNameImg);
         locationImg = (ImageView) findViewById(R.id.LocationImg);
         providerImg = (ImageView) findViewById(R.id.ProviderTypeImg);
-        patientName = (TextView)findViewById(R.id.PatientNameTv);
-        providerType = (TextView)findViewById(R.id.ProvidertypeTv);
-        phoneNumber = (TextView)findViewById(R.id.PhoneNumberTv);
+        D0ctorNmaeTxt = (TextView)findViewById(R.id.PatientNameTv);
+        providerTypeTxt = (TextView)findViewById(R.id.ProvidertypeTv);
+        phoneNumberTxt = (TextView)findViewById(R.id.PhoneNumberTv);
         SavContinueBtn.setOnClickListener(this);
         Button yesBtn = (Button) findViewById(R.id.YesBtn);
         yesBtn.setOnClickListener(this);
@@ -214,13 +221,13 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
      *
      */
 
-    private void handleSuccessResponse(JSONObject response) {
+    private void  handleSuccessResponse(JSONObject response) {
         try {
             pDialog.dismiss();
-            Log.d("Response", response.toString());
+
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PreferenceConstants.SAVED_MASTER_USER,response.toString());
+            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
             editor.commit();
 
             //Fetch Data From the Services
@@ -247,9 +254,10 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
         try {
             pDialog.dismiss();
             Log.d("Response", response.toString());
+
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PreferenceConstants.SAVED_MASTER_USER,response.toString());
+            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
             editor.commit();
 
 //Fetch Data From the Services
@@ -260,7 +268,7 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
             String StrProviderTypeFamily =  responObj.get("provider_types").getAsJsonObject().get("3").getAsString();
             ProviderList.add(StrProviderTypePediatrician);
             ProviderList.add(StrProviderTypeFamily);
-            providerType.setText(StrProviderTypePediatrician);
+            providerTypeTxt.setText(StrProviderTypePediatrician);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -273,13 +281,9 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
     private void handleSuccessResponseFamilyMember(JSONObject response) {
         try {
             pDialog.dismiss();
-            Log.d("Response", response.toString());
-
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PreferenceConstants.SAVED_MASTER_USER,response.toString());
-            editor.commit();
-
+            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
             // Fetch Data From the Services
 
             JsonParser parser = new JsonParser();
@@ -288,9 +292,9 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
 
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
             for(int i=0;i<conditionsSearch.size();i++) {
-             String StrpatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
-             PatientList.add(StrpatientName);
-             patientName.setText( conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
+            String StrpatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
+            PatientList.add(StrpatientName);
+            D0ctorNmaeTxt.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
             }
 
 
@@ -311,8 +315,8 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
         switch (v.getId())
         {
             case R.id.SavContinueBtn:
-//           Intent intent = new Intent(MDLiveGetStarted.this, nextActivity);
-//           startActivity(intent);
+           Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+           startActivity(intent);
                 break;
             case R.id.YesBtn:
                 changeButtonColor((Button) v, (Button) findViewById(R.id.NoBtn));
@@ -322,21 +326,22 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
                 break;
             case R.id.ListImg:
                 VisitList.clear();
-                VisitList.add("Please Choose");
-                VisitList.add("Gone to the Emergency Room");
-                VisitList.add("Used Urgent Care/Retail Clinic");
-                VisitList.add("Seen my provider in Person");
-                VisitList.add("Done nothing");
-                showListViewDialog(VisitList);
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "please_choose", R.string.please_choose));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "gone_to_emergency",R.string.gone_to_emergency));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "used_urgent_care",R.string.used_urgent_care));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "seen_my_provider",R.string.seen_my_provider));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "done_nothing",R.string.done_nothing));
+                showListViewDialog(VisitList,(TextView)findViewById(R.id.Provider_editTxt));
                 break;
             case R.id.PatientNameImg:
-                showListViewDialog(PatientList);
+                showListViewDialog(PatientList,(TextView)findViewById(R.id.PatientNameTv));
                 break;
             case R.id.LocationImg:
-                showListViewDialog(LocationList);
+                Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
+                startActivity(LocationIntent);
                 break;
             case R.id.ProviderTypeImg:
-                showListViewDialog(ProviderList);
+                showListViewDialog(ProviderList,(TextView)findViewById(R.id.ProvidertypeTv));
                 break;
         }
     }
@@ -360,12 +365,10 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
      *     The layout android.R.layout.simple_list_item_single_choice creates radio button for each listview item
      *
     */
-    private void showListViewDialog (ArrayList<String> list) {
-        //TODO : Remove hardcoded text
-//        final String[] items = {"Choose Provider","Gone to the Emergency Room ", " Seen my provider in Person "," Done nothing "};
+    private void showListViewDialog (final ArrayList<String> list,final TextView selectedText) {
 
       /*We need to get the instance of the LayoutInflater*/
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.screen_popup, null);
         alertDialog.setView(convertView);
@@ -373,9 +376,17 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_single_choice,list);
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        alertDialog.show();
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
 
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String SelectedText = list.get(position);
+                selectedText.setText(SelectedText);
+                dialog.dismiss();
+            }
+        });
     }
 
 }
