@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clickable="false"
+    android:background="@drawable/startvisit_blank">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="WAITING ROOM"
+        android:id="@+id/waitTitle"
+        android:layout_marginTop="0dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="20sp"
+        android:textColor="#262E31"
+        android:textStyle="bold"
+        android:background="#C5D5d5"
+        android:textScaleX="1"
+        android:layout_alignParentTop="true"
+        android:textIsSelectable="false" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Just sit down and relax"
+        android:id="@+id/waitmesg1"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:textSize="24dp"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/waitTitle" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="your visit will start shortly"
+        android:id="@+id/waitmesg2"
+        android:layout_marginTop="7dp"
+        android:gravity="center_horizontal"
+        android:textSize="24dp"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/waitmesg1" />
+
+    <ProgressBar
+        android:id="@+id/waitSpinner"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/waitmesg2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:indeterminate="false" />
+
+    <!-- TextView
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+
+        android:text="                     Status: Launching Video"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/waitingforprovider"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" /-->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="22dp"
+        android:id="@+id/waitingforprovider1"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="22dp"
+        android:id="@+id/waitingforprovider2"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
+
