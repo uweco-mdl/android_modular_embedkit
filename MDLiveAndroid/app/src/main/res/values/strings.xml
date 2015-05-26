@@ -70,6 +70,13 @@
     <string name="select_pharmcity">Select Pharmacy City</string>
     <string name="title_activity_maps">Map</string>
 
+    <!-- VSee video consult -->
+    <string name="waiting_room_title">Waiting Room</string>
+    <string name="waiting_room_sit_relax">Please sit down and relax.</string>
+    <string name="waiting_room_doctor_shortly">The Doctor will be with you shortly!</string>
+    <string name="waiting_room_status_wait">Status: Waiting for doctor to arrive.</string>
+    <string name="waiting_room_estimated_time">Your estimated wait time is...</string>
+
 
     <string name="temporary_placeholder">"[please replace this]"</string>
 </resources>
