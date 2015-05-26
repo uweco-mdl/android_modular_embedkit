@@ -30,8 +30,19 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <!-- Base View styles END. -->
+    <!-- Header. -->
 
+    <style name="HeaderTextViewStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">40dp</item>
+    <item name="android:capitalize">characters</item>
+    <item name="android:textSize">16dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:layout_marginRight">-5dp</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:textColor">@color/grey_txt</item>
+    </style>
     <!-- Login -->
     <style name="BaseEditTextStyle.LoginEditTextStyle">
         <item name="android:layout_width">fill_parent</item>
@@ -62,10 +73,12 @@
     </style>
     <style name="SubHeaderTextViewStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:capitalize">characters</item>
-        <item name="android:textSize">14dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
@@ -76,6 +89,34 @@
     </style>
 
     <!-- Getting Started-->
+
+    <style name="GEtStartedContentTxtStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">40</item>/>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">start</item>/>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+    </style>
+
+    <style name="GetStartedSubHeaderTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+
     <style name="gettingstartedTextViewStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">30</item>/>
@@ -83,7 +124,6 @@
         <item name="android:textSize">17sp</item>
         <item name="android:gravity">start</item>/>
         <item name="android:textColor">@color/black</item>
-
         <item name="android:layout_gravity">center_vertical</item>/>
         <item name="android:layout_margin">15dp</item>
     </style>
@@ -127,7 +167,7 @@
 
     <style name="HeaderReasonTextViewStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:capitalize">characters</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_margin">5dp</item>
@@ -152,10 +192,11 @@
         <item name="android:capitalize">characters</item>
         <item name="android:textSize">16dp</item>
         <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">5dp</item>
         <item name="android:textColor">@color/black</item>
 
         <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_gravity">center</item>
     </style>
     <style name="listReasonTextViewStyle">
         <item name="android:layout_width">0dp</item>
@@ -180,6 +221,16 @@
 
         <item name="android:gravity">start</item>
         <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="NoResultsReasonTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:gravity">start</item>/>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
     <!-- Home-->
@@ -267,7 +318,7 @@
     <style name="HeaderLeftStyle">
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">15dp</item>
-        <!--<item name="android:src">@drawable/slder</item>-->
+        <item name="android:src">@drawable/slder</item>
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentLeft">true</item>
@@ -278,7 +329,7 @@
     <style name="HeaderRightStyle">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
-        <!--<item name="android:src">@drawable/account</item>-->
+        <item name="android:src">@drawable/account</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
 
@@ -292,7 +343,7 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/continueBtn_color</item>
+        <item name="android:background">@color/green</item>
     </style>
     <!-- Scroll View-->
     <style name="ScrollViewStyle">
@@ -307,7 +358,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/parentView_color</item>
-
     </style>
 
     <!-- View-->
@@ -324,7 +374,6 @@
     <style name="LinearLayoutStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-
     </style>
 
     <!-- Spinner Button-->
@@ -333,7 +382,6 @@
         <item name="android:layout_height">14dp</item>
         <item name="android:layout_weight">3</item>
         <item name="android:layout_margin">15dp</item>
-
         <item name="android:background">@drawable/icon_arrow_down</item>
     </style>
 
@@ -394,6 +442,46 @@
         <item name="android:background">@color/parentView_color</item>
 
     </style>
+    <!-- Provider Search Style-->
+
+    <style name="ProviderSearchAvailableTxtStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">40</item>/>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">start</item>/>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+    </style>
+
+    <style name="ProviderSearchAnyTxtStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">40</item>/>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">right</item>/>
+        <item name="android:textColor">@color/grey_txt</item>
+        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="ProviderSearchImgStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/icon_arrow_right</item>
+    </style>
+    <style name="ProviderSearchViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/parentView_color</item>
+    </style>
 
     <!-- Reason Text Style-->
     <style name="ReasonTextViewStyle">
@@ -402,15 +490,12 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:textSize">16sp</item>
     <item name="android:gravity">start</item>/>
-
     <item name="android:textColor">@color/black</item>
-
     <item name="android:layout_gravity">center_vertical</item>/>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginLeft">15dp</item>
-
     </style>
 
         <!--Location Styles-->
@@ -422,21 +507,21 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">15dp</item>
         <item name="android:background">@color/search_bgd</item>
-        <!--<item name="android:drawableLeft">@drawable/locationsymbol</item>-->
+        <item name="android:drawableLeft">@drawable/locationsymbol</item>
         <item name="android:paddingLeft">5dp</item>
     </style>
 
     <style name="LocationSubHeaderStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:capitalize">characters</item>
         <item name="android:text">@string/locationSubHeader_txt</item>
         <item name="android:textSize">16dp</item>
-        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_margin">1dp</item>
         <item name="android:textColor">@color/black</item>
 
-        <item name="android:gravity">start</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="LocationPlainTxtViewStyle">
@@ -454,24 +539,51 @@
 
     <style name="LocationBgdTxtViewStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_margin">10dp</item>
-        <item name="android:gravity">start</item>/>
+        <item name="android:gravity">left</item>/>
         <item name="android:textColor">@color/search_bgd</item>
         <item name="android:background">@drawable/edittext_bg</item>
-
-        <item name="android:layout_gravity">center_vertical</item>/>
+        <item name="android:layout_gravity">center</item>/>
 
     </style>
 
     <!-- Choose Provider Styles-->
     <style name="DoctorTxtStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">3dp</item>
         <item name="android:text">@string/doctorOnCall_txt</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="ProviderDetailsDoctorTxtStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:text">@string/doctorOnCall_txt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="BaseSpecialistDoctorTxtStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:text">@string/doctorOnCall_txt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/grey_txt</item>
+    </style>
+    <style name="BaseVideoImgStyle">
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/videoicon</item>
     </style>
 
     <style name="AvailableDoctorTxtStyle">
@@ -482,13 +594,35 @@
         <item name="android:textStyle">bold</item>
         <item name="android:padding">3dp</item>
         <item name="android:text">@string/available_txt</item>
-        <item name="android:background">@drawable/green_rounded_bg</item>
+        <item name="android:textColor">@color/search_bgd</item>
+    </style>
+    <style name="HeaderAvailableDoctorTxtStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:text">@string/available_txt</item>
+
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="BaseAvailableDoctorTxtStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:text">@string/available_txt</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="DoctorOnCallImgViewStyle">
-        <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
         <item name="android:background">@drawable/profilepic</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
@@ -501,8 +635,29 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">10dp</item>
-
     </style>
+   <!-- Choose Provider Header-->
+
+    <style name="providerBgdLinearLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/green_rounded_bg</item>
+    </style>
+
+    <style name="providerLinearLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="providerrightarrowStyle">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:background">@drawable/icon_arrow_right</item>
+    </style>
+
 
     <!-- Progress Bar Style-->
 
@@ -516,8 +671,163 @@
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
     </style>
+    <!-- Choose Provider Details-->
+    <style name="ProviderDetailsHeaderTxtStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:text">@string/doctorOnCall_txt</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Provider Detail Screen-->
+
+    <style name="ProviderDetailHeaderStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:text">@string/doctorOnCall_txt</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="ProviderDetailContentStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textColor">@color/black</item>
+            </style>
+    <!-- Credit Card-->
+    <style name="CardTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:gravity">start</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="cardEditTextViewStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+
+        <item name="android:gravity">start</item>
+        <item name="android:layout_gravity">center_vertical</item>
 
 
+    </style>
+    <style name="CardSubHeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/black</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="PaymentImageStyle">
+    <item name="android:layout_width">25dp</item>
+    <item name="android:layout_height">25dp</item>
+    <item name="android:layout_weight">10</item>
+    <item name="android:layout_marginTop">25dp</item>
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+      <!--  LifeStyle Haeder-->
+    //Height
+    <style name="LifeStyleHeightTxtViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">30</item>
+        <item name="android:text">Height</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    //ft EditText
+    <style name="LifeStyleFeetEditTxtStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">30</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+        <item name="android:layout_marginLeft">20dp</item>
+    </style>
+
+    //ft TextView
+    <style name="LifeStyleFeetTxtViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">5</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    //Weight
+    <style name="LifeStyleWeightTxtViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">14</item>
+        <item name="android:text">Height</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    //BMI TextView
+    <style name="LifeStylebmiTxtViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2.1</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    //Pediatric Header
+    <style name="PediatricheaderTxtViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:text">Please answer the following questions.</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    //Pediatric Listview
+    <style name="PediatricListviewViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+
+
+
+
+
+
+
+    <style name="LifeStyleYesCustomButtonStyle">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:text">Yes</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#A4A4A4</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:background">@drawable/btn_unselected</item>
+    </style>
 
 </resources>
 
