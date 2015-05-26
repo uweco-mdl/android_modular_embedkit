@@ -34,7 +34,7 @@ import static org.fest.assertions.api.ANDROID.assertThat;
 @RunWith(RobolectricGradleTestRunner.class)  /* It refers Roboletric Config file*/
 public class MDLiveLoginTest {
 
-    // MainActivity Instance
+    // MDLiveLogin Instance
     private MDLiveLogin mActivity;
 
     /*This setup is called initially when Test Process Initiated. Here activity instance will be initialzed. */
@@ -60,13 +60,6 @@ public class MDLiveLoginTest {
         assertThat(loginButton).isNotNull();
 
         assertThat(loginButton).containsText("LOGIN");
-    /*
-        TextView titleView = (TextView) mActivity.findViewById(R.id.titleText);
-
-        //check view is initialized or not
-        assertThat(titleView).isNotNull();
-
-        assertThat(titleView).containsText("LOGIN");*/
     }
 
     @Test /*This test scenario is used to test login page field values is initially empty or not .*/
@@ -92,23 +85,17 @@ public class MDLiveLoginTest {
     @Test /* This test scenario is used to check response from server if empty user credentials passed over webservice*/
     public void emptyUserCredentailsTestForLogin() throws  Exception{
 
-        // Required Response from server for Empty User Credentials
-        // {"uniqueid":null,"status":"","token":"Invalid Username/Email and password combination","msg":false}
-
         String httpResponse = makeHttpsCallForLoginCredentials("", ""); /*Username, password*/
+
         Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNull();
-        //org.junit.Assert.assertNotNull(getUniqueIdFromResponse(httpResponse));
-        //Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNotEqualTo(null);
+
     }
 
     @Test/* This test scenario is used to check response from server if valid user credentials passed over webservice*/
     public void validUserCredentailsTestForLogin() throws  Exception {
 
-        // Required Response from server for Valid User Credentials
-        // {"uniqueid":null,"status":"","token":"Invalid Username/Email and password combination","msg":false}
-
         String httpResponse = makeHttpsCallForLoginCredentials("stagefeb5", "mdlive789"); /*Username, password*/
-        //org.junit.Assert.assertNotNull(getUniqueIdFromResponse(httpResponse));
+
         Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNotEqualTo(null);
 
     }
@@ -116,38 +103,27 @@ public class MDLiveLoginTest {
     @Test/* This test scenario is used to check response from server if invalid user credentials passed over webservice*/
     public void invalidUserCredentailsTestForLogin() throws  Exception{
 
-        // Required Response from server for Empty User Credentials
-        // {"uniqueid":null,"status":"","token":"Invalid Username/Email and password combination","msg":false}
-
         String httpResponse = makeHttpsCallForLoginCredentials("mytestapp", "mdliveapp"); /*Username, password*/
+
         Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNull();
-        //Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNotEqualTo(null);
-        //org.junit.Assert.assertNotNull(getUniqueIdFromResponse(httpResponse));
 
     }
 
     @Test/* This test scenario is used to check response from server if valid user-password with empty username value passed over webservice*/
     public void userNameEmptyUserCredentailsTestForLogin() throws  Exception{
 
-        // Required Response from server for Empty User Credentials
-        // {"uniqueid":null,"status":"","token":"Invalid Username/Email and password combination","msg":false}
-
         String httpResponse = makeHttpsCallForLoginCredentials("", "mdlive789"); /*Username, password*/
+
         Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNull();
-        //org.junit.Assert.assertNotNull(getUniqueIdFromResponse(httpResponse));
-        //Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNotEqualTo(null);
+
     }
 
     @Test/* This test scenario is used to check response from server if valid user-name with empty password value passed over webservice*/
     public void passwordEmptyUserCredentailsTestForLogin() throws  Exception{
 
-        // Required Response from server for Empty User Credentials
-        // {"uniqueid":null,"status":"","token":"Invalid Username/Email and password combination","msg":false}
-
         String httpResponse = makeHttpsCallForLoginCredentials("stagefeb5", "");
+
         Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNull();
-        //org.junit.Assert.assertNotNull(getUniqueIdFromResponse(httpResponse));
-        //Assertions.assertThat(getUniqueIdFromResponse(httpResponse)).isNotEqualTo(null);
 
     }
 

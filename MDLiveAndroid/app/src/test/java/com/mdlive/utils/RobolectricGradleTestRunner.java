@@ -33,8 +33,15 @@ public class RobolectricGradleTestRunner extends RobolectricTestRunner {
         String resDir = appRoot + "res";
         String assetsDir = appRoot + "assets";
 
+
        return new AndroidManifest(Fs.fileFromPath(manifestPath), Fs.fileFromPath(resDir), Fs.fileFromPath(assetsDir)) {
-            @Override
+
+           @Override
+           public void setPackageName(String packageName) {
+               super.setPackageName("com.mdlive.mobile");
+           }
+
+           @Override
             public int getTargetSdkVersion() {
                 return MAX_SDK_SUPPORTED_BY_ROBOLECTRIC;
             }
