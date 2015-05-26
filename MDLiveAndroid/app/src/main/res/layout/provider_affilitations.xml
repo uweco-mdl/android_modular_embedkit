@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/LinearLayoutStyle"
+    >
+    <LinearLayout
+       style="@style/DoctorLinearLayoutStyle"
+        android:background="@drawable/edittext_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/doctor"
+            android:id="@+id/imageView" />
+    </LinearLayout>
+
+</LinearLayout>
