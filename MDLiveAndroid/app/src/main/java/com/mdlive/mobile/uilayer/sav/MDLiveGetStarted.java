@@ -50,7 +50,7 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.get_started);
-        pDialog = Utils.getProgressDialog("Loading...", this);
+        pDialog = Utils.getProgressDialog(LocalisationHelper.getLocalizedStringFromPrefs(this,getResources().getString(R.string.please_wait)), this);
 
         Utils.hideSoftKeyboard(this);
         initialiseData();
@@ -230,16 +230,6 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
             editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
             editor.commit();
 
-            //Fetch Data From the Services
-
-            JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject)parser.parse(response.toString());
-//            JsonArray responArray = responObj.get("personal_info").getAsJsonArray();
-//            for(int i=0;i<responArray.size();i++) {
-//                String StrPatientName =  responArray.get(i).getAsJsonObject().get("first_name").getAsString();
-//                String StrPhoneNumber =  responArray.get(i).getAsJsonObject().get("phone").getAsString();
-//                Log.d("patientName----->", StrPatientName);
-//            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -253,7 +243,6 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
     private void handleSuccessResponseProviderList(JSONObject response) {
         try {
             pDialog.dismiss();
-            Log.d("Response", response.toString());
 
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             SharedPreferences.Editor editor = settings.edit();
@@ -288,8 +277,6 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
 
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            Log.d("Family Members ----->", responObj.toString());
-
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
             for(int i=0;i<conditionsSearch.size();i++) {
             String StrpatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
@@ -326,11 +313,11 @@ public class MDLiveGetStarted extends Activity implements View.OnClickListener{
                 break;
             case R.id.ListImg:
                 VisitList.clear();
-                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "please_choose", R.string.please_choose));
-                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "gone_to_emergency",R.string.gone_to_emergency));
-                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "used_urgent_care",R.string.used_urgent_care));
-                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "seen_my_provider",R.string.seen_my_provider));
-                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, "done_nothing",R.string.done_nothing));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, getResources().getString(R.string.please_choose)));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, getResources().getString(R.string.gone_to_emergency)));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, getResources().getString(R.string.used_urgent_care)));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, getResources().getString(R.string.seen_my_provider)));
+                VisitList.add(LocalisationHelper.getLocalizedStringFromPrefs(this, getResources().getString(R.string.done_nothing)));
                 showListViewDialog(VisitList,(TextView)findViewById(R.id.Provider_editTxt));
                 break;
             case R.id.PatientNameImg:
