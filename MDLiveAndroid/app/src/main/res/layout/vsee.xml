@@ -4,92 +4,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
-    android:background="@android:color/white">
+    >
 
     <TextView
         android:id="@+id/waitTitle"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="@string/waiting_room_title"
+        android:text="@string/waitroom_title"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textColor="#262E31"
         android:textStyle="bold"
-        android:background="#C5D5d5"
+        android:background="#FFFFFF"
         android:textScaleX="1"
         android:layout_alignParentTop="true"
-        android:textIsSelectable="false" />
+        android:textIsSelectable="false"
+        />
 
-    <TextView
-        android:id="@+id/waitmesg1"
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_below="@id/waitTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/waiting_room_sit_relax"
-        android:layout_marginTop="32dp"
-        android:gravity="center_horizontal"
-        android:textSize="18dp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/waitTitle" />
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:background="#F1F5F8"
+        >
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#bababa"
+            />
+        <View
+            android:id="@+id/divider2"
+            android:layout_below="@id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#efefef"
+            />
 
-    <TextView
-        android:id="@+id/waitmesg2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/waiting_room_doctor_shortly"
-        android:layout_marginTop="7dp"
-        android:gravity="center_horizontal"
-        android:textSize="18dp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/waitmesg1" />
 
-    <VideoView
-        android:id="@+id/video_view"
-        android:layout_below="@+id/waitmesg2"
-        android:layout_width="fill_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        />
+        <Button
+            android:id="@+id/btnWait"
+            android:layout_below="@id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bluebutton"
+            android:textColor="#ffffff"
+            android:text="@string/waitroom_wait_provider"
+            android:onClick="sendMessage"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            />
 
-    <TextView
-        android:id="@+id/waitingforprovider1"
-        android:layout_below="@+id/video_view"
-        android:layout_marginTop="20dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18dp"
-        android:text="@string/waiting_room_status_wait"
-        android:gravity="center_horizontal"
-        />
+        <ImageView
+            android:id="@+id/image"
+            android:layout_below="@id/btnWait"
+            android:layout_width = "match_parent"
+            android:layout_height= "match_parent"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginTop="65dp"
+            android:layout_marginBottom="65dp"
+            android:src="@drawable/sofa_clock_middle"
+            />
 
-    <TextView
-        android:id="@+id/waitingforprovider2"
-        android:layout_below="@+id/waitingforprovider1"
-        android:layout_marginTop="15dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:text="@string/waiting_room_estimated_time"
-        />
-
-    <ProgressBar
-        android:id="@+id/waitSpinner"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/waitingforprovider2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:indeterminate="false"
-        android:layout_alignParentBottom="true"
-        />
+    </RelativeLayout>
 
 </RelativeLayout>
-
