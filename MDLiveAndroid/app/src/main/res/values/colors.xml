@@ -7,6 +7,9 @@
     <color name="childView_color">#E7E7E7</color>
     <color name="continueBtn_color">#5877AD</color>
     <color name="headerStyle_color">#F7F6F5</color>
+    <color name="green">#4BB544</color>
+    <color name="red">#FA5858</color>
+
 //Reason Activity
     <item name="view" type="color">#E0D8D8</item>
     <item name="search_bgd" type="color">#BDBDBD</item>

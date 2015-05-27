@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+    >
+
+    <ScrollView
+    style="@style/ScrollViewHolderStyle"
+    >
+    <LinearLayout
+        style="@style/ContainerStyle"
+        >
+
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        android:id="@+id/textView6"
+        android:text="@string/my_pharmacy"
+        android:tag="my_pharmacy"
+        style="@style/titleHeaderBackgroundStyle"/>
+
+    <RelativeLayout
+        android:id="@+id/defaultPharmlayout"
+        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+        android:padding="5dp"
+        android:background="@drawable/pharmacy_line_bg"
+        >
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_alignRight="@+id/textView5"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_horizontal|left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/addressline1"
+                style="@style/addressLineStyle"
+                />
+            <TextView
+                android:id="@+id/addressline2"
+                style="@style/addressLineStyle"
+                />
+            <TextView
+                android:id="@+id/addressline3"
+                style="@style/addressLineStyle"
+                />
+            <TextView
+                android:id="@+id/addressline4"
+                android:textColor="#4671BD"
+                style="@style/addressLineStyle"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+        android:padding="5dp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/pharmacy_line_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/grey_txt">
+
+            <fragment
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/mapView"
+                style="@style/common_style_W_Match_M_Match"
+                class="com.google.android.gms.maps.SupportMapFragment"/>
+
+            </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_pharmacy"
+            android:tag="change_pharmacy"
+            android:layout_margin="10dp"
+            style="@style/grayButtonStyle"
+            android:id="@+id/changePharmacyButton"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
+    <Button
+        android:id="@+id/reqappointmentBtn"
+        style="@style/ContinueButtonStyle"
+        android:text="Continue"
+        android:textAllCaps="false" />
+</LinearLayout>
