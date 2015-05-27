@@ -1,9 +1,9 @@
 <resources>
 
     <!-- Base application theme. -->
-    <!-- style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         [Customize your theme here.]
-    </style -->
+    </style>
 
     <!-- Hack for Robolectric to run with appcompat.v7 -->
     <style name="RoboAppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
@@ -832,6 +832,113 @@
         <item name="android:textColor">#A4A4A4</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:background">@drawable/btn_unselected</item>
+    </style>
+
+
+
+
+
+    <!-- Pharmacy Module Styles list -->
+    <style name="RemoveButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/gray_rounded_bg</item>
+    </style>
+
+    <style name="ProviderDownSearchImgStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/icon_arrow_down</item>
+    </style>
+
+    <style name="common_style_W_Wrap_H_Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="common_style_W_Match_M_Wrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="common_style_W_Match_M_Match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="common_style_W_Match_H_Match_O_Vertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="common_style_W_Match_H_Wrap_O_Horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="common_style_W_Match_H_Wrap_O_Vertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="common_style_W_Wrap_H_Wrap_O_Vertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="common_style_W_Wrap_H_Match_O_Vertical">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+
+    <style name="common_style_W_Zero_H_Match">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ContainerStyleOrientationHorizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity"></item>
+    </style>
+
+    <style name="titleHeaderBackgroundStyle" parent="@style/common_style_W_Match_H_Wrap_O_Vertical">
+        <item name="android:background">@drawable/pharmacy_line_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="addressLineStyle" parent="@style/common_style_W_Match_H_Wrap_O_Vertical">
+        <item name="android:gravity">left</item>
+        <item name="android:text"></item>
+    </style>
+
+    <style name="grayButtonStyle" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/pharmacy_gray_rounded_bg</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">#1C1C1C</item>
+    </style>
+
+    <style name="ScrollViewHolderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
 </resources>

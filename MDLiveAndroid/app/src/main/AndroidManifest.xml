@@ -6,6 +6,22 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.mdlive.mobile.permission.MAPS_RECEIVE"/>
+    <permission
+        android:name="com.mdlive.mobile.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
+
+
+    <!-- Maps API needs OpenGL ES 2.0. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
     <!-- Camera features - recommended for Card IO-->
     <uses-feature
         android:name="android.hardware.camera"
@@ -23,11 +39,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
+        <!-- Google Api Key -->
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDBythoQ48_HG2XwvICntf9nmBES_pPH20"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".uilayer.MDLiveLogin"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
+
+
 
         <activity
             android:name=".uilayer.MDLiveSplashScreen"
@@ -41,26 +67,65 @@
         </activity>
 
 
+
+
         <activity
             android:name=".uilayer.MDLiveDashboard"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_home" >
         </activity>
 
+
+
+        <!-- Pharmacy Activities-->
         <activity
-            android:name=".uilayer.sav.MDLiveGetStarted"
-            android:windowSoftInputMode="stateHidden"
+            android:name=".uilayer.pharmacy.activities.MDLivePharmacy"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name=".uilayer.pharmacy.activities.MDLivePharmacyChange"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_home" >
         </activity>
 
         <activity
+            android:name=".uilayer.pharmacy.activities.MDLivePharmacyDetails"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name=".uilayer.pharmacy.activities.MDLivePharmacyResult"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+        </activity>
+
+        <!-- Medications Activity -->
+
+        <activity
+            android:name=".uilayer.medications.activities.MDLiveMHMedications"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".uilayer.medications.activities.MDLiveMHAddMedications"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+        </activity>
+
+
+
+
+
+        <!--
+            <activity
             android:name=".uilayer.sav.VseeMainActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"
-            android:label="@string/title_video_home" >
-    	</activity>
+            android:label="@string/title_activity_home" >
+            </activity>-->
 
 
 

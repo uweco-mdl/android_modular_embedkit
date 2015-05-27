@@ -88,9 +88,7 @@
     <string name="video_or_phonr">video or phone</string>
     <string name="phone">phone</string>
 
-    <!--Pharmacy Acitivity-->
-    <string name="select_pharmcity">Select Pharmacy City</string>
-    <string name="title_activity_maps">Map</string>
+
 
     <!-- VSee video consult -->
     <string name="waiting_room_title">Waiting Room</string>
@@ -98,7 +96,37 @@
     <string name="waiting_room_doctor_shortly">The Doctor will be with you shortly!</string>
     <string name="waiting_room_status_wait">Status: Waiting for doctor to arrive.</string>
     <string name="waiting_room_estimated_time">Your estimated wait time is...</string>
-
-
     <string name="temporary_placeholder">"[please replace this]"</string>
+
+
+    <!--Pharmacy Package-->
+
+    <string name="my_pharmacy">MY PHARMACY</string>
+    <string name="change_pharmacy">Change pharmacy</string>
+
+    <string name="choose_pharmacy">CHOOSE A PHARMACY</string>
+    <string name="pharmacy_opn">Pharmacy Name (Optional)</string>
+    <string name="current_loc_txt">Use current location</string>
+    <string name="manual_txt">Manual Search</string>
+    <string name="enter_zip">Enter a Zip Code</string>
+    <string name="enter_city">Enter City</string>
+    <string name="select_stg">Select Stage</string>
+    <string name="find_pharmacy">Search Pharmacy</string>
+
+
+    <string name="pharm_details">PHARMACY DETAILS</string>
+    <string name="addr_text">Address</string>
+    <string name="phone_txt">Phone</string>
+    <string name="distance_txt">Distance</string>
+    <string name="getdir_text">Get directions</string>
+    <string name="use_pharm_txt">Use this pharmacy</string>
+
+    <string name="pharm_near_txt">PHARMACIES NEAR</string>
+
+    <string name="loading_txt">Loading...</string>
+
+
+    <string name="select_pharmcity">Select Pharmacy City</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>
