@@ -7,15 +7,7 @@
 //        classpath 'com.android.tools.build:gradle:1.0.0'
 //    }
 //}
-//
-//allprojects {
-//    repositories {
-//        maven {
-//            url "http://dl.bintray.com/populov/maven"
-//        }
-//        jcenter()
-//    }
-//}
+
 
 buildscript {
     repositories {
@@ -31,6 +23,9 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            url "http://dl.bintray.com/populov/maven"
+        }
         jcenter()
     }
 }

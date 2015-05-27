@@ -686,7 +686,7 @@
     <style name="noAnimTheme">
         <item name="android:windowAnimationStyle">@null</item>
     </style>
-    
+
     <!-- Provider Detail Screen-->
     <style name="ProviderDetailHeaderStyle">
         <item name="android:layout_width">wrap_content</item>
