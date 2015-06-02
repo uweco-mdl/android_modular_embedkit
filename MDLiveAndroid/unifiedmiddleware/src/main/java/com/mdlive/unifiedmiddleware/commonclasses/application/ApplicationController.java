@@ -1,14 +1,23 @@
 package com.mdlive.unifiedmiddleware.commonclasses.application;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.BitmapLruCache;
+import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
+
+import org.apache.http.HttpResponse;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class ApplicationController extends Application {
     private static ImageLoader mImageLoader;
@@ -50,17 +59,26 @@ public class ApplicationController extends Application {
         // created when it is accessed for the first time
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-            mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(MAX_IMAGE_CACHE_ENTIRES));
-
-
+            mImageLoader = getImageLoader(getApplicationContext());
         }
 
         return mRequestQueue;
     }
-    public ImageLoader getImageLoader()
+
+
+
+    public ImageLoader getImageLoader(final Context context)
     {
+        HurlStack stack = new HurlStack() {
+            @Override
+            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError {
+                headers.putAll(BaseServicesPlugin.getAuthHeader(context));
+                return super.performRequest(request, headers);
+            }
+        };
         if(mImageLoader == null)
-            mImageLoader = new ImageLoader(Volley.newRequestQueue(getApplicationContext()), new BitmapLruCache(MAX_IMAGE_CACHE_ENTIRES));
+            mImageLoader = new ImageLoader(Volley.newRequestQueue(getApplicationContext(), stack), new BitmapLruCache(MAX_IMAGE_CACHE_ENTIRES));
         return mImageLoader;
     }
 
