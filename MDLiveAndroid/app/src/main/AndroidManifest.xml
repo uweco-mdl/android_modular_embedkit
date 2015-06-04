@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mdlive.mobile" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mdlive.embedkit"
+    android:hardwareAccelerated="true"
+    >
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <uses-permission android:name="com.mdlive.mobile.permission.MAPS_RECEIVE"/>
+
     <permission
-        android:name="com.mdlive.mobile.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
+        android:name="com.mdlive.embedkit.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
 
 
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -35,20 +37,24 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+
         android:label="@string/app_name"
+        android:name="com.mdlive.embedkit.unifiedmiddleware.commonclasses.application.ApplicationController"
         android:theme="@style/AppTheme"
+        android:largeHeap="true"
         >
         <!-- Google Api Key -->
-        <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDBythoQ48_HG2XwvICntf9nmBES_pPH20"/>
+        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyA0TdTAHCYkUdfFBGr_ASKIYuUa3ap5WZ8"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="7327000"/>-->
+           <!-- android:value="@integer/google_play_services_version" -->
+
 
         <activity
-            android:name=".uilayer.MDLiveLogin"
+            android:name="com.mdlive.embedkit.uilayer.MDLiveLogin"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
@@ -56,8 +62,9 @@
 
 
         <activity
-            android:name=".uilayer.MDLiveSplashScreen"
+            android:name="com.mdlive.embedkit.uilayer.MDLiveSplashScreen"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,7 +77,64 @@
 
 
         <activity
-            android:name=".uilayer.MDLiveDashboard"
+            android:name="com.mdlive.embedkit.uilayer.MDLiveDashboard"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+<!--Provider Details-->
+        <activity
+            android:name=".uilayer.sav.MDLiveGetStartedOld"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name=".uilayer.sav.MDLiveGetStarted"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveLocation"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.sav.MDLivePediatricProfile"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_home" >
         </activity>
@@ -79,56 +143,96 @@
 
         <!-- Pharmacy Activities-->
         <activity
-            android:name=".uilayer.pharmacy.activities.MDLivePharmacy"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacy"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_home" >
         </activity>
         <activity
-            android:name=".uilayer.pharmacy.activities.MDLivePharmacyChange"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLBTPharmacy_ResultTab"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyDetails"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_home" >
         </activity>
 
         <activity
-            android:name=".uilayer.pharmacy.activities.MDLivePharmacyDetails"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_home" >
-        </activity>
-
-        <activity
-            android:name=".uilayer.pharmacy.activities.MDLivePharmacyResult"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
-        </activity>
-
-        <!-- Medications Activity -->
-
-        <activity
-            android:name=".uilayer.medications.activities.MDLiveMHMedications"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity
-            android:name=".uilayer.medications.activities.MDLiveMHAddMedications"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
 
 
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.myhealth.activity.MedicalHistory"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveBehaviouralHealthHistory"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- Payment Activity -->
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.payment.MDLivePayment"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+<!--Medical History Allergies-->
+        <activity android:name="com.mdlive.embedkit.uilayer.myhealth.activity.AddConditions" android:label="@string/title_activity_add_conditions" android:screenOrientation="portrait"> </activity>
+
+        <activity android:name="com.mdlive.embedkit.uilayer.myhealth.activity.AddAllergies" android:screenOrientation="portrait"> </activity>
+
+        <activity android:name="com.mdlive.embedkit.uilayer.myhealth.activity.AddMedications" android:screenOrientation="portrait"> </activity>
 
 
 
         <!--
+            <activity
             android:name=".uilayer.sav.VseeMainActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"
-            android:label="@string/title_video_home" >
+            android:label="@string/title_activity_home" >
             </activity>-->
 
+        <activity
+            android:name="com.mdlive.embedkit.VseeMainActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+        </activity>
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+
+        <activity
+            android:name="io.card.payment.DataEntryActivity"
+            android:screenOrientation="portrait"/>
 
 
+     <!--   &lt;!&ndash; From Unified Middle ware&ndash;&gt;
+        <application android:allowBackup="true" android:name="com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController">
+
+
+        </application>-->
 
 
     </application>

@@ -1,0 +1,34 @@
+<LinearLayout
+    style="@style/ContainerStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+    <include layout="@layout/header" />-->
+    <ScrollView style="@style/ScrollViewStyle">
+
+
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical"
+            android:id="@+id/AddConditionsLl"
+            >
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/SubHeaderTextViewStyle"
+                android:id="@+id/CommonConditionsAllergiesHeaderTv"
+                android:text="Add Condition">
+
+                </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
+
+            <View style="@style/ViewStyle" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        style="@style/ContinueButtonStyle"
+        android:text="Save"
+        android:id="@+id/SaveBtn" />
+
+</LinearLayout>

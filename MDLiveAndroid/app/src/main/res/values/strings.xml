@@ -24,6 +24,7 @@
     <string name="true_txt">true</string>
     <string name="bin_true">1</string>
     <string name="bin_false">0</string>
+    <string name="delete">Delete</string>
 
     <string name="doctoroncall_txt">Doctor On-Call is a 24 hour service where\n you can get an instant consultation by phone with the available doctor.</string>
     <string name="reason_txt">Hello Test, what seems to be the\n best problem today?</string>
@@ -42,7 +43,7 @@
     <string name="used_urgent_care">Used Urgent Care/Retail Clinic</string>
     <string name="seen_my_provider">Seen my provider in Person</string>
     <string name="done_nothing">Done nothing</string>
-    <string name="administrative_level1">administrative_level1</string>
+    <string name="administrative_level1">administrative_area_level_1</string>
 
     <string name="provider_txt">Please enter the phone number \nwe should call:</string>
     <string name="visit_txt"> If you had not had this visit today\nwhat would you do?</string>
@@ -51,7 +52,7 @@
     <!--REASON-->
 
     <string name="header_reason_txt">REASON FOR THE VISIT</string>
-    <string name="subheader_reason_txt">what is the reason for your visit?</string>
+    <string name="subheader_reason_txt">What is the reason for your visit?</string>
     <string name="searchsymptom_txt">Enter your Symptom</string>
     <string name="searchProvidernmae_txt">Search provider name</string>
     <string name="acne_txt">Acne</string>
@@ -68,7 +69,6 @@
     <string name="bloodsputum_txt">Blood In Sputum</string>
     <string name="bloodstool_txt">Blood In Stool</string>
     <string name="bloodurine_txt">Blood In Urine</string>
-
 
 
     <!--Location-->
@@ -89,13 +89,12 @@
     <string name="phone">phone</string>
 
 
-
     <!-- VSee video consult -->
-    <string name="waitroom_title">WAITING ROOM</string>
-    <string name="waitroom_wait_provider">Waiting for provider...</string>
-    <string name="waitroom_provider_arrived">Provider has arrived...</string>
-    <string name="waitroom_consult_start">Consultation Starting...</string>
-
+    <string name="waiting_room_title">Waiting Room</string>
+    <string name="waiting_room_sit_relax">Please sit down and relax.</string>
+    <string name="waiting_room_doctor_shortly">The Doctor will be with you shortly!</string>
+    <string name="waiting_room_status_wait">Status: Waiting for doctor to arrive.</string>
+    <string name="waiting_room_estimated_time">Your estimated wait time is...</string>
     <string name="temporary_placeholder">"[please replace this]"</string>
 
 
@@ -110,7 +109,7 @@
     <string name="manual_txt">Manual Search</string>
     <string name="enter_zip">Enter a Zip Code</string>
     <string name="enter_city">Enter City</string>
-    <string name="select_stg">Select Stage</string>
+    <string name="select_stg">Select State</string>
     <string name="find_pharmacy">Search Pharmacy</string>
 
 
@@ -120,13 +119,96 @@
     <string name="distance_txt">Distance</string>
     <string name="getdir_text">Get directions</string>
     <string name="use_pharm_txt">Use this pharmacy</string>
-
     <string name="pharm_near_txt">PHARMACIES NEAR</string>
-
-    <string name="loading_txt">Loading...</string>
-
-
     <string name="select_pharmcity">Select Pharmacy City</string>
     <string name="title_activity_maps">Map</string>
+
+
+    <!-- My Health -->
+    <string name="my_health_txt">Medical History</string>
+    <string name="my_health_preexisting">Do you have any pre-existing medical conditions? (ex Diabetes)</string>
+    <string name="my_health_medications">Are you taking any medications?</string>
+    <string name="my_health_allergies">Do you have any allergies?</string>
+    <string name="my_health_add_photo">Add a photo\n(Helpful for rashes, cuts,etc)</string>
+    <string name="add_medical_condition">Add Condition</string>
+    <string name="add_condition_with_eg_hint">Add Conditions (E.g. Diabetes)</string>
+    <string name="add_condition_hint">Add Conditions</string>
+    <string name="title_activity_add_conditions">Add Conditions</string>
+    <string name="add_allergy">Add Allergy</string>
+    <string name="add_allergies_with_eg_hint">Add Allergies (E.g. Diabetes)</string>
+    <string name="add_allergies_hint">Add Allergies</string>
+    <string name="add_meidations_with_eg_hint">Add Medications</string>
+    <string name="add_medications_hint">Add Medications</string>
+    <string name="add_medication">Add Medications</string>
+
+    <string name="age_check1">Are you currently or could you possibly be pregnant?</string>
+    <string name="age_check2">Are you currently breastfeeding?</string>
+
+
+
+
+    <!-- My Health -->
+
+
+    <!-- Waiting Room -->
+
+    <integer name="google_play_version_number">7327000</integer>
+
+    <string name="waiting_header">Waiting Room</string>
+    <string name="waiting_text">Please sit down and relax, your visit will \n begin shortly</string>
+    <string name="waiting_warn_text">Please do not leave this screen</string>
+    <string name="waiting_provider_text">Waiting for provider</string>
+
+    <!-- Waiting Room -->
+
+    <!-- State Name List-->
+    <string-array name="stateName">
+        <item>Alabama</item>
+        <item>Alaska</item>
+        <item>AmericanSamoa</item>
+        <item>Arizona</item>
+        <item>Arkansas</item>
+        <item>ArmedForcesEurope</item>
+        <item>California</item>
+        <item>Colorado</item>
+        <item>CoonectiCut</item>
+        <item>Delaware</item>
+        <item>DistrictOfColumbia</item>
+        <item>FederatedStatesOfMicronesia</item>
+        <item>Florida</item>
+        <item>Georgia</item>
+        <item>GUAM</item>
+        <item>Hawali</item>
+        <item>Idaho</item>
+        <item>Illinois</item>
+        <item>Indiana</item>
+        <item>Iowa</item>
+        <item>Kansas</item>
+    </string-array>
+
+    <!-- State Code List -->
+    <string-array name="stateCode">
+        <item>AL</item>
+        <item>AK</item>
+        <item>AM</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>AE</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FM</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>GU</item>
+        <item>HI</item>
+        <item>IH</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KA</item>
+    </string-array>s
 
 </resources>
