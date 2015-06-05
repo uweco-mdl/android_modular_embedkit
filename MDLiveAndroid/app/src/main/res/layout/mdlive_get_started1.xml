@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ContainerLl"
+    style="@style/ContainerStyle"
+    android:visibility="visible">
+
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:orientation="horizontal">
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style="@style/HeaderTextViewStyle"
+            android:text="@string/getStarted" />
+
+    </LinearLayout>
+
+
+    <ScrollView style="@style/ScrollViewStyle">
+
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical">
+
+            <View style="@style/ViewStyle" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/GetStartedSubHeaderTextViewStyle"
+                android:text="Who is this visit for?" />
+
+
+            <LinearLayout
+                android:id="@+id/patientLl"
+                style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+                android:background="@drawable/edittext_bg"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/patientTxtView"
+                    style="@style/GEtStartedContentTxtStyle"
+                    android:text="Patient Name" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/DobLl"
+                style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+                android:background="@drawable/edittext_bg"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/DobTxtView"
+                    style="@style/GEtStartedContentTxtStyle"
+                    android:text="Date of Birth" />
+
+                <ImageView
+                    android:id="@+id/DateOfBirth_img"
+
+                    style="@style/ProviderSearchImgStyle" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/GenderLl"
+                style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+                android:background="@drawable/edittext_bg"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/GenderTxt"
+                    style="@style/GEtStartedContentTxtStyle"
+                    android:text="Gender" />
+
+                <ImageView
+                    android:id="@+id/GenderImg"
+                    style="@style/ProviderSearchImgStyle" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/LocationLl"
+                style="@style/LinearLayoutStyle"
+                android:layout_margin="10dp"
+                android:background="@drawable/edittext_bg"
+                android:orientation="horizontal">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/LocationTxt"
+                    style="@style/GEtStartedContentTxtStyle"
+                    android:text="Location" />
+
+                <ImageView
+                    android:id="@+id/LocationImg"
+                    style="@style/ProviderSearchImgStyle" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/SavContinueBtn"
+        style="@style/ContinueButtonStyle"
+        android:textAllCaps="false" />
+</LinearLayout>

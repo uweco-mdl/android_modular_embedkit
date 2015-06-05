@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        style="@style/providerBgdLinearLayoutStyle"
+        android:id="@+id/DocOnCalLinLay"
+        android:orientation="horizontal"
+        android:layout_width="340dp"
+      >
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/ProfileImg"
+            android:visibility="visible"
+            style="@style/DoctorOnCallImgViewStyle"/>
+
+        <LinearLayout
+            style="@style/providerLinearLayoutStyle"
+            android:orientation="vertical"
+           >
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HeaderAvailableDoctorTxtStyle"
+                android:id="@+id/PatientName"
+                android:text="Doctor On Call"
+                />
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:orientation="horizontal">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HeaderAvailableDoctorTxtStyle"
+                android:text="See the next available doctor"
+                android:id="@+id/vailability"/>
+                <ImageView
+                    android:id="@+id/nextImg"
+                    style="@style/providerrightarrowStyle"
+                    />
+            </LinearLayout>
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/HeaderAvailableDoctorTxtStyle"
+                android:text="6 Minutes (Average Wait Time)"
+                android:id="@+id/Time"/>
+          </LinearLayout>
+
+        </LinearLayout>
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style="@style/BaseAvailableDoctorTxtStyle"
+        android:text="Or Select a Provider below"
+        android:id="@+id/selectProvider"/>
+</LinearLayout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+    />
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style="@style/HeaderTextViewStyle"
+        android:text="PROVIDER PROFILE"        >
+    </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
+
+    <ScrollView style="@style/ScrollViewStyle"
+        >
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical">
+            <View style="@style/ViewStyle" />
+
+       <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:background="@color/search_bgd"
+        >
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/ProfileImg1"
+            android:layout_marginTop="40dp"
+            android:visibility="visible"
+            style="@style/DoctorOnCallImgViewStyle"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/ProviderDetailsDoctorTxtStyle"
+                android:id="@+id/DoctorName"
+                android:textColor="@color/white"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+           <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/ProviderDetailsDoctorTxtStyle"
+                android:id="@+id/specalist"
+                android:text="General Practise"
+               android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
+    <LinearLayout
+        style="@style/DoctorLinearLayoutStyle"
+        android:background="@drawable/green_rounded_bg"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        >
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/white"
+        android:text="See the Doctor"
+        android:id="@+id/tapBtn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:drawablePadding="90dp"
+         />
+    </LinearLayout>
+
+
+    <LinearLayout
+      style="@style/LinearLayoutStyle">
+      <include layout="@layout/mdlive_provider_aboutme"/>
+      </LinearLayout>
+
+      <LinearLayout
+        style="@style/LinearLayoutStyle">
+         <include layout="@layout/mdlive_provider_specialities"/>
+       </LinearLayout>
+
+       <LinearLayout
+        style="@style/LinearLayoutStyle">
+        <include layout="@layout/mdlive_provider_license"/>
+       </LinearLayout>
+
+       <LinearLayout
+         style="@style/LinearLayoutStyle">
+         <include layout="@layout/mdlive_provider_affilitations"/>
+       </LinearLayout>
+
+       <LinearLayout
+         style="@style/LinearLayoutStyle">
+         <include layout="@layout/mdlive_provider_location"/>
+       </LinearLayout>
+
+       <LinearLayout
+          style="@style/LinearLayoutStyle">
+          <include layout="@layout/mdlive_provider_languages"/>
+       </LinearLayout>
+     </LinearLayout>
+    </ScrollView>
+    <Button
+        android:id="@+id/reqappointmentBtn"
+        style="@style/ContinueButtonStyle"
+        android:text="Request Appointment"
+        android:visibility="gone"
+        android:textAllCaps="false" />
+    </LinearLayout>

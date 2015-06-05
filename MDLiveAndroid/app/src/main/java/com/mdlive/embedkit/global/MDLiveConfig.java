@@ -1,7 +1,7 @@
 package com.mdlive.embedkit.global;
 
 
-import com.mdlive.embedkit.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 
 /**
  * All the configuration details are stored here. These information will be passed to the middleware \

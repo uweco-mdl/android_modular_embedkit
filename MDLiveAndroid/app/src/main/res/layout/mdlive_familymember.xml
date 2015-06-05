@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:orientation="vertical">
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style = "@style/HeaderTextViewStyle"
+            android:text="Add Child"
+            />
+        <View style="@style/ViewStyle"
+            android:layout_marginBottom="10dp"/>
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style = "@style/BaseSubHeaderTextViewStyle"
+            android:text="Child must be younger than 18 years old"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:orientation="vertical">
+
+        <View style="@style/ViewStyle" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_bg"
+            android:layout_margin="10dp"
+            android:id="@+id/patientLl"
+            style="@style/LinearLayoutStyle">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:text="Patient Name"
+                 />
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+                style = "@style/GEtStartedContentTxtStyle"
+                android:hint="Patient Name"
+                android:id="@+id/patientEt" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_bg"
+            android:layout_margin="10dp"
+            android:id="@+id/DobLl"
+            style="@style/LinearLayoutStyle">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:text="Date of Birth"/>
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:id="@+id/DobTxtView"
+                android:text="mm/dd/yyyy"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_bg"
+            android:layout_margin="10dp"
+            android:id="@+id/GenderLl"
+            style="@style/LinearLayoutStyle">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:text="Gender"
+                 />
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:text="    Male"
+                android:id="@+id/genderTxt" />
+
+            <ImageView
+                style="@style/ProviderSearchImgStyle"
+                android:id="@+id/GenderImg" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_bg"
+            android:layout_margin="10dp"
+            android:id="@+id/LocationLl"
+            style="@style/LinearLayoutStyle">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style = "@style/GEtStartedContentTxtStyle"
+                android:text="I certify that i'm the legal parent or guardian\nof the minor above."
+                android:id="@+id/LocationTxt" />
+            <Switch
+                android:id="@+id/mySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="Play with the Switch" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/addChildBtn"
+        style="@style/ContinueButtonStyle"
+        android:layout_margin="20dp"
+        android:text="Add Child"
+        android:textAllCaps="false" />
+
+    </LinearLayout>

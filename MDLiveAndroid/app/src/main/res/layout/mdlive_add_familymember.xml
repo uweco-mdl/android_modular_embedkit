@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:orientation="horizontal">
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style = "@style/HeaderTextViewStyle"
+            android:text="Family Member"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@drawable/edittext_bg"
+        android:layout_margin="10dp"
+        android:id="@+id/AddFamilyLl"
+        style="@style/LinearLayoutStyle">
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style = "@style/GEtStartedContentTxtStyle"
+            android:id="@+id/addFanilyTxtView"
+            android:text="Add a family member"/>
+
+        <ImageView
+            style="@style/ProviderSearchImgStyle"
+            android:id="@+id/addFamily_img" />
+    </LinearLayout>
+
+</LinearLayout>

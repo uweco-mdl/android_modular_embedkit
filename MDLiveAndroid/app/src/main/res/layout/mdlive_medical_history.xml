@@ -1,0 +1,417 @@
+<?xml version="1.0"?>
+
+<LinearLayout
+    style="@style/ContainerStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    <include layout="@layout/header" />-->
+
+<!--    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:id="@+id/progressBar" />-->
+
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style="@style/SubHeaderTextViewStyle"
+        android:text="@string/my_health_txt"></com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
+
+    <ScrollView style="@style/ScrollViewStyle"
+        android:id="@+id/ContainerScrollView"
+        >
+
+
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical">
+
+            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
+
+
+            <!--style="@style/SubHeaderTextViewStyle"-->
+
+
+            <!--android:text="@string/getStarted">-->
+
+
+            <!--</com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>-->
+
+
+
+
+            <View style="@style/MyhealthViewStyle"
+                android:id="@+id/age_chk_line1"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/PediatricAgeCheck1"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/PediatricChecks"
+                    android:text="@string/age_check1" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/PediatricAgeCheck1_YesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/PediatricAgeCheck1_NoBtn" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View style="@style/MyhealthViewStyle"
+                android:id="@+id/age_chk_line2"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/PediatricAgeCheck2"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/PediatricCheck"
+                    android:text="@string/age_check2" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/PediatricAgeCheck2_YesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/PediatricAgeCheck2_NoBtn" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!--<View style="@style/MyhealthViewStyle" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/PediatricProfileLl"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/Pediatric_txt"
+                    android:text="@string/my_health_allergies" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/PediatricYesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/PediatricNoBtn" />
+                </LinearLayout>
+            </LinearLayout>-->
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/PediatricLl"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+
+                <ImageView
+                    style="@style/MyHealthListImageViewStyle"
+                    android:src="@drawable/pediatric_profile" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                        android:text="Pediatric profile" />
+
+                    <TextView
+                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                        android:id="@+id/PediatricNameTv"
+                        android:maxLines="2"
+                        android:text="Panic, blink, Blink" />
+                </LinearLayout>
+                <ImageView style="@style/RightArrowStyle" />
+            </LinearLayout>
+
+            <View style="@style/ViewStyle" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthConditionChoiceLl"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:text="@string/my_health_preexisting" />
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/PreExisitingYesBtn" />
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/PreExisitingNoBtn" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthConditionsLl"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/MyHealthListImageViewStyle"
+                    android:src="@drawable/my_health_conditions" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                        android:text="My Health Conditions" />
+
+                    <TextView
+                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                        android:id="@+id/MyHealthConditionsNameTv"
+                        android:maxLines="2"
+                        android:text="Panic, blink, Blink" />
+
+                </LinearLayout>
+
+                <ImageView style="@style/RightArrowStyle" />
+
+            </LinearLayout>
+
+            <View style="@style/MyhealthViewStyle" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthMedicationsLl"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:text="@string/my_health_medications" />
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/MedicationsYesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/MedicationsNoBtn" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MedicationsLl"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/MyHealthListImageViewStyle"
+                    android:src="@drawable/my_medications" />
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                        android:text="Medications" />
+
+                    <TextView
+                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                        android:id="@+id/MedicationsNameTv"
+                        android:maxLines="2"
+                        android:text="Panic, blink, Blink" />
+                </LinearLayout>
+
+                <ImageView style="@style/RightArrowStyle" />
+
+            </LinearLayout>
+
+            <View style="@style/MyhealthViewStyle" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthAllergiesLl"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/Primary_txt"
+                    android:text="@string/my_health_allergies" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/AllergiesYesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/AllergiesNoBtn" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/AllergiesLl"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/MyHealthListImageViewStyle"
+                    android:src="@drawable/my_allergies" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                        android:text="Allergies" />
+
+                    <TextView
+                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                        android:id="@+id/AlergiesNameTv"
+                        android:maxLines="2"
+                        android:text="Panic, blink, Blink" />
+                </LinearLayout>
+                <ImageView style="@style/RightArrowStyle" />
+            </LinearLayout>
+            <View style="@style/MyhealthViewStyle"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthProceduresLl"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/Procedure_primary_txt"
+                    android:text="@string/my_health_allergies" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/YesDefaultCustomButtonStyle"
+                        android:id="@+id/ProceduresYesBtn" />
+
+                    <Button
+                        style="@style/NoCustomButtonStyle"
+                        android:id="@+id/ProceduressNoBtn" />
+                </LinearLayout>
+            </LinearLayout>
+
+<!--            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/ProceduresLl"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/MyHealthListImageViewStyle"
+                    android:src="@drawable/my_procedure" />
+
+
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                        android:text="Procedures" />
+
+                    <TextView
+                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                        android:id="@+id/ProcedureNameTv"
+                        android:maxLines="2"
+                        android:text="Panic, blink, Blink" />
+                </LinearLayout>
+                <ImageView style="@style/RightArrowStyle" />
+            </LinearLayout>-->
+
+
+            <View style="@style/MyhealthViewStyle" />
+
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthAddPhotoLl"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:text="@string/my_health_add_photo" />
+                <LinearLayout
+                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/MyhealthCameraBtnStyle"
+                        android:id="@+id/MyHealthCameraBtn"
+                        android:src="@android:drawable/ic_menu_camera" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        style="@style/ContinueButtonStyle"
+        android:id="@+id/SavContinueBtn"
+        android:textAllCaps="false" />
+
+</LinearLayout>

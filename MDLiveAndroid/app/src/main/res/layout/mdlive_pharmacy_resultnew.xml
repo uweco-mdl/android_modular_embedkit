@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        android:id="@+id/textView6"
+        android:tag="pharm_near_txt"
+        android:text="@string/pharm_near_txt"
+        android:textStyle="bold"
+        style="@style/titleHeaderBackgroundStyle"
+        />
+
+    <com.mdlive.embedkit.uilayer.pharmacy.customui.CustomFlt
+        android:id="@+id/mapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:layout_above="@+id/rl_footer">
+
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_footer"
+        class="com.google.android.gms.maps.SupportMapFragment"/>
+
+    </com.mdlive.embedkit.uilayer.pharmacy.customui.CustomFlt>
+
+    <RelativeLayout
+        android:id="@+id/rl_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:background="@android:color/white" >
+
+        <ListView
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="7dip"
+            android:id="@+id/pharmList"
+            android:layout_above="@+id/loadingIndicator"
+            android:clickable="true" />
+
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/footerButton"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:text="List Results ">
+
+    </Button>
+
+
+
+
+</LinearLayout>

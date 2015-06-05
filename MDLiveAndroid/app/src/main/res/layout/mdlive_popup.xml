@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10sp"
+    android:background="#444">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400px">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Please Enter Offer Code"
+        android:id="@+id/textView"
+        android:textColor="#fff"
+        android:layout_gravity="center_vertical" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerCode"
+        android:layout_gravity="center_vertical"
+        android:textColor="#fff" />
+ </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="120px"
+    android:layout_gravity="center_horizontal">
+    <Button
+        android:id="@+id/btn_ok_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apply" />
+    <Button
+        android:id="@+id/btn_close_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:text="Cancel" />
+
+</LinearLayout>
+</LinearLayout>

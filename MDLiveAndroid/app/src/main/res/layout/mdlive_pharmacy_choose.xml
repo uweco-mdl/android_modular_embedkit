@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+    >
+
+ <ScrollView
+        style="@style/ScrollViewHolderStyle"
+        >
+     <LinearLayout
+        style="@style/ContainerStyle">
+
+       <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        android:id="@+id/textView6"
+        android:tag="choose_pharmacy"
+        android:text="@string/choose_pharmacy"
+        style="@style/titleHeaderBackgroundStyle" />
+
+    <LinearLayout
+        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+        android:padding="5dp"
+        >
+
+        <AutoCompleteTextView
+            style="@style/gettingstarted_edittext"
+            android:singleLine="true"
+            android:hint="@string/pharmacy_opn"
+            android:tag="pharmacy_opn"
+            android:id="@+id/pharmacy_search_name"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/current_loc_txt"
+            android:tag="current_loc_txt"
+            android:layout_marginTop="15dp"
+            style="@style/grayButtonStyle"
+            android:id="@+id/getlocationButton"
+            android:layout_gravity="center_horizontal" />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="15dp"
+            android:hint="@string/manual_txt"
+            android:tag="manual_txt"
+            android:id="@+id/textView7" />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+            style="@style/gettingstarted_edittext"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:hint="@string/enter_zip"
+            android:tag="enter_zip"
+            android:layout_marginTop="10dp"
+            android:inputType="number"
+            android:id="@+id/zipcodeText"
+            />
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style="@style/common_style_W_Match_M_Match"
+            android:tag="or"
+            android:text="@string/or"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/textView8" />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+            style="@style/gettingstarted_edittext"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:tag="enter_city"
+            android:hint="@string/enter_city"
+            android:id="@+id/cityText"
+            />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            style="@style/gettingstarted_edittext"
+            android:singleLine="true"
+            android:tag="select_stg"
+            android:text="@string/select_stg"
+            android:id="@+id/chooseState"
+            android:layout_marginTop="10dp"
+            />
+
+
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
+    <Button
+        android:id="@+id/find_pharmacy"
+        style="@style/ContinueButtonStyle"
+        android:tag="find_pharmacy"
+        android:text="@string/find_pharmacy"
+        android:textAllCaps="false" />
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/ScrollViewHolderStyle">
+
+        <LinearLayout style="@style/ContainerStyle">
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:id="@+id/textView6"
+                style="@style/titleHeaderBackgroundStyle"
+                android:tag="pharm_details"
+                android:text="@string/pharm_details"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                style="@style/common_style_W_Match_H_Match_O_Vertical"
+                android:background="@drawable/pharmacy_line_bg"
+                android:padding="5dp">
+
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/mapView"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/address"
+                    style="@style/addressLineStyle"
+                    android:text="@string/addr_text"
+                    android:tag="addr_text" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/addressLine1"
+                    style="@style/addressLineStyle" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/addressLine2"
+                    style="@style/addressLineStyle" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/addressLine3"
+                    style="@style/addressLineStyle" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/phone"
+                    style="@style/addressLineStyle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/phone_txt"
+                    android:tag="phone_txt" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/phoneText"
+                    style="@style/addressLineStyle" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/distance"
+                    style="@style/addressLineStyle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/distance_txt"
+                    android:tag="distance_txt" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:id="@+id/milesText"
+                    style="@style/addressLineStyle" />
+
+                <Button
+                    android:id="@+id/getDirections"
+                    style="@style/grayButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:text="@string/getdir_text"
+                    android:tag="getdir_text" />
+
+                <Button
+                    android:id="@+id/usePharmacy"
+                    style="@style/grayButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:text="@string/use_pharm_txt"
+                    android:tag="use_pharm_txt" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
