@@ -9,6 +9,9 @@
     <color name="headerStyle_color">#F7F6F5</color>
     <color name="green">#4BB544</color>
     <color name="red">#FA5858</color>
+    <color name="viewstyle_behavioural_color">#E0D8D8</color>
+    <color name="CustomButtonStyle">#A4A4A4</color>
+    <color name="grayButtonStyle">#1C1C1C</color>
 
 //Reason Activity
     <item name="view" type="color">#E0D8D8</item>
