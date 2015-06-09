@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -60,6 +61,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.e("Response ", "**"+response.toString()+"**");
                         if (newConditions.size() == ++addConditionsCount) {
                             pDialog.dismiss();
                             updateConditionsOrAllergies();
@@ -87,6 +89,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
      * This function is used to update allergy details modified by user.
      *
      */
+
     @Override
     protected void updateConditionsOrAllergies() {
         pDialog.show();
@@ -100,6 +103,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.e("Response ", "**updateConditions"+response.toString()+"**");
                         if (existingConditions.size() == ++existingConditionsCount) {
                             pDialog.dismiss();
                             callMedicalHistoryIntent();

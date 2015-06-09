@@ -86,6 +86,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
      * This function is used to update conditions details modified by user.
      *
      */
+
     @Override
     protected void updateConditionsOrAllergies() {
         pDialog.show();

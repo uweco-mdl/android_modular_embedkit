@@ -177,15 +177,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     private void initialiseSingleConditionView(final View singleConditionView, final LinearLayout addConditionsLl, int position, HashMap<String, String> conditionDetails) {
         final EditText conditonEt = (EditText) singleConditionView.findViewById(R.id.ConditionEt);
         final ImageView deleteView = (ImageView) singleConditionView.findViewById(R.id.DeleteConditionBtn);
+
         createSingleConditionAllergiesViews(position, conditonEt, deleteView, conditionDetails);
-        if(type== TYPE_CONSTANT.ALLERGY)
-              conditonEt.setHint("Add allergy");
-       else if(type== TYPE_CONSTANT.CONDITION)
-            conditonEt.setHint("Add condition");
-
-       else if(type== TYPE_CONSTANT.MEDICATION)
-            conditonEt.setHint("Add medication");
-
 
         conditonEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -290,11 +283,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     protected void createSingleConditionAllergiesViews(int position, EditText conditonEt, ImageView deleteView, HashMap<String, String> conditionDetails) {
         conditonEt.setId(Utils.generateViewId());
         deleteView.setId(Utils.generateViewId());
-        String hint = (type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_with_eg_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_with_eg_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_meidations_with_eg_hint) : getResources().getString(R.string.add_medications_hint));
-
         conditonEt.setTextColor(Color.BLACK);
         conditonEt.setSingleLine(true);
-        conditonEt.setTag((type == TYPE_CONSTANT.CONDITION)?"add_condition" : (type == TYPE_CONSTANT.ALLERGY) ?"add_allergy":"add_medication");
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)deleteView.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_TOP,conditonEt.getId());
         params.addRule(RelativeLayout.ALIGN_BOTTOM, conditonEt.getId());
@@ -302,18 +292,22 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         deleteView.setLayoutParams(params);
         deleteView.setVisibility(View.GONE);
         conditonEt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        conditonEt.setHintTextColor(getResources().getColor(R.color.search_bgd));
+        conditonEt.setHint((type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_with_eg_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_with_eg_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_meidations_with_eg_hint) : getResources().getString(R.string.add_medications_hint)));
+        conditonEt.setTag((type == TYPE_CONSTANT.CONDITION)?"add_condition" : (type == TYPE_CONSTANT.ALLERGY) ?"add_allergy":"add_medication");
+
         if(type == TYPE_CONSTANT.CONDITION) {
-            if (conditionDetails != null && !conditionDetails.get("condition").equals("")) {
+            if (conditionDetails != null && !conditionDetails.get("condition").trim().equals("")) {
                 conditonEt.setText(conditionDetails.get("condition"));
                 ((ViewGroup) (conditonEt.getParent())).setTag(conditionDetails.get("id"));
             }
         } else if(type == TYPE_CONSTANT.ALLERGY){
-            if(conditionDetails!=null && !conditionDetails.get("allergy").equals("")) {
+            if(conditionDetails!=null && !conditionDetails.get("allergy").trim().equals("")) {
                 conditonEt.setText(conditionDetails.get("allergy"));
                 ((ViewGroup)(conditonEt.getParent())).setTag(conditionDetails.get("id"));
             }
         } else {
-            if(conditionDetails!=null && !conditionDetails.get("medication").equals("")) {
+            if(conditionDetails!=null && !conditionDetails.get("medication").trim().equals("")) {
                 conditonEt.setText(conditionDetails.get("medication"));
                 ((ViewGroup)(conditonEt.getParent())).setTag(conditionDetails.get("id"));
             }
