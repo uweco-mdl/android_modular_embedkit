@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style="@style/Waiting_headerStyle"
+        android:text="@string/waiting_header" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="30dp"
+        android:background="@color/headerStyle_color"
+        android:orientation="vertical">
+
+        <ImageView
+
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/medical_kit_icon"
+
+            />
+
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            android:id="@+id/txt_waitingtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="Provider has Arrived"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:paddingBottom="50dp"
+            android:text="@string/waiting_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:text="@string/waiting_warn_text"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
