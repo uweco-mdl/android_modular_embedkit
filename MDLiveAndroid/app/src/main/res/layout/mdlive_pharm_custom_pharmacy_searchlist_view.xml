@@ -4,9 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:padding="5dp"
+    android:padding="10dp"
     android:background="@android:color/white"
     >
 
@@ -22,16 +20,9 @@
         android:layout_alignBottom="@+id/textView3">
 
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:id="@+id/milesText"
-            android:textColor="@color/black"
-            />
 
-        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -46,10 +37,23 @@
         android:layout_toStartOf="@+id/textView5">
 
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            android:layout_width="295dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:textStyle="bold"
+            android:textSize="18sp"
+            android:id="@+id/preferStoretxt"
+            android:textColor="@color/link_blue"
+            android:visibility="gone"
+            android:text="Preferred Store"
+            />
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:id="@+id/pharmacyName"
             android:textColor="@color/black"
             />
@@ -60,13 +64,32 @@
             android:id="@+id/pharmacyAddresline1"
             android:textColor="@color/black"
             />
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:id="@+id/pharmacyAddressline2"
-            android:textColor="@color/black"
-            />
+            android:orientation="horizontal">
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="70"
+                android:gravity="left"
+                android:id="@+id/pharmacyAddressline2"
+                android:textColor="@color/black"
+                />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_weight="30"
+                android:id="@+id/twentyfourHrstxt"
+                android:text="24 hours"
+                android:visibility="gone"
+                android:textColor="@color/green"
+                />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

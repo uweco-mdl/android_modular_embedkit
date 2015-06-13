@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle">
-        />
-    <RelativeLayout
-        style="@style/LinearLayoutStyle"
+    style="@style/ContainerStyle"
+    >
+    <LinearLayout
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:text="Choose Doctor"
+            />
+    </LinearLayout>
 
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-        style = "@style/HeaderTextViewStyle"
-        android:text="@string/choose_provider"
-        android:tag="choose_provider"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-        </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt>
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:id="@+id/refinesearch"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/slder"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+
     <!--<View
         style="@style/ViewStyle"
         />-->

@@ -2,48 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         style="@style/providerBgdLinearLayoutStyle"
         android:id="@+id/DocOnCalLinLay"
-        android:orientation="horizontal"
-        android:layout_width="340dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
       >
         <com.android.volley.toolbox.NetworkImageView
+            style="@style/DoctorOnCallImgViewStyle"
             android:id="@+id/ProfileImg"
             android:visibility="visible"
-            style="@style/DoctorOnCallImgViewStyle"/>
+            android:layout_height="160dp"
+            android:layout_width="160dp"
+            android:background="@drawable/doctor_icon"
+           />
 
-        <LinearLayout
-            style="@style/providerLinearLayoutStyle"
-            android:orientation="vertical"
-           >
-
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style="@style/HeaderAvailableDoctorTxtStyle"
                 android:id="@+id/PatientName"
+                android:textColor="#35393d"
+                android:textSize="18dp"
                 android:text="Doctor On Call"
                 />
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="horizontal">
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/HeaderAvailableDoctorTxtStyle"
-                android:text="See the next available doctor"
-                android:id="@+id/vailability"/>
-                <ImageView
-                    android:id="@+id/nextImg"
-                    style="@style/providerrightarrowStyle"
-                    />
-            </LinearLayout>
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/HeaderAvailableDoctorTxtStyle"
-                android:text="6 Minutes (Average Wait Time)"
+
+            <TextView
+                style="@style/DoctorTxtStyle"
+                android:text="Average Wait: 6 min"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:textColor="#878f95"
                 android:id="@+id/Time"/>
+        <Button
+            android:id="@+id/seenextAvailableBtn"
+            style="@style/ContinueButtonStyle"
+            android:text="See Next Available"
+            android:layout_marginTop="18dp"
+            android:textAllCaps="false" />
           </LinearLayout>
 
-        </LinearLayout>
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style="@style/BaseAvailableDoctorTxtStyle"
-        android:text="Or Select a Provider below"
-        android:id="@+id/selectProvider"/>
+    <RelativeLayout
+        android:id="@+id/filterRl"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ECF5FA">
+
+        <TextView
+            android:text="CHOOSE OTHER DOCTOR"
+            style="@style/BaseAvailableDoctorTxtStyle"
+            android:gravity="left|center"
+            android:textSize="16sp"
+            android:textColor="#35393d"
+            android:layout_centerVertical="true"
+            android:id="@+id/textView14" />
+
+        <TextView
+            style="@style/BaseAvailableDoctorTxtStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FILTER"
+            android:textSize="16sp"
+            android:textColor="@color/mdlivePrimaryBlueColor"
+            android:id="@+id/textView15"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
 </LinearLayout>

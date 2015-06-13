@@ -5,6 +5,7 @@
     android:id="@+id/popup_element"
     android:background="@drawable/edittext_bg"
     android:theme="@android:style/Theme.NoTitleBar">
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

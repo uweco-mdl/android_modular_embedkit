@@ -1,27 +1,48 @@
-<?xml version="1.0"?>
-
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-<!--    <include layout="@layout/header" />-->
-
-<!--    <ProgressBar
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:id="@+id/progressBar" />-->
-
-
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style="@style/SubHeaderTextViewStyle"
-        android:text="@string/my_health_txt"></com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
+    >
+    <LinearLayout
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical">
+            <TextView
+                style = "@style/ReasonHeaderTxtStyle"
+                android:text="Medical History"
+                />
+            <TextView
+                android:id="@+id/reason_patientTxt"
+                style = "@style/ReasonsubHeaderTxtStyle"
+                android:text="Michelle Marino"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
     <ScrollView style="@style/ScrollViewStyle"
         android:id="@+id/ContainerScrollView"
         >
 
-
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            style="@style/WagParentLinearLayoutStyle"
             android:orientation="vertical">
 
             <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
@@ -36,15 +57,8 @@
             <!--</com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>-->
 
 
-
-
-            <View style="@style/MyhealthViewStyle"
-                android:id="@+id/age_chk_line1"
-                android:visibility="gone"
-                />
-
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/PediatricAgeCheck1"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -54,28 +68,37 @@
                     android:id="@+id/PediatricChecks"
                     android:text="@string/age_check1" />
 
-
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/PediatricAgeCheck1_YesBtn" />
+                    <RadioGroup
+                        android:id="@+id/pediatricAgeGroup1"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/perdiatric1YesButton"
+                            android:text="Yes"/>
 
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/PediatricAgeCheck1_NoBtn" />
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/perdiatric1NoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
+
+                    </RadioGroup>
                 </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/MyhealthViewStyle"
+            <!--<View style="@style/MyhealthViewStyle"
                 android:id="@+id/age_chk_line2"
-                android:visibility="gone"/>
+                android:visibility="gone"/>-->
 
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/PediatricAgeCheck2"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -87,103 +110,91 @@
 
 
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/PediatricAgeCheck2_YesBtn" />
+                    <RadioGroup
+                        android:id="@+id/pediatricAgeGroup2"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/perdiatric2YesButton"
+                            android:text="Yes"/>
 
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/PediatricAgeCheck2_NoBtn" />
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/perdiatric2NoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
+
+                    </RadioGroup>
                 </LinearLayout>
             </LinearLayout>
 
-
-            <!--<View style="@style/MyhealthViewStyle" />
-
-
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:id="@+id/PediatricProfileLl"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
-                    android:id="@+id/Pediatric_txt"
-                    android:text="@string/my_health_allergies" />
-
-
-                <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
-                    android:orientation="horizontal">
-
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/PediatricYesBtn" />
-
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/PediatricNoBtn" />
-                </LinearLayout>
-            </LinearLayout>-->
-
-
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
+           <!-- <LinearLayout
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/PediatricLl"
                 android:orientation="horizontal"
-                android:visibility="gone">
-
-
+                android:visibility="gone"
+                >
                 <ImageView
                     style="@style/MyHealthListImageViewStyle"
                     android:src="@drawable/pediatric_profile" />
-
-
                 <LinearLayout
                     style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
                     android:orientation="vertical">
-
                     <TextView
                         style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
                         android:text="Pediatric profile" />
-
                     <TextView
                         style="@style/MyhealthListLayoutSubSubTextStyle"
                         android:id="@+id/PediatricNameTv"
                         android:maxLines="2"
-                        android:text="Panic, blink, Blink" />
+                        android:ellipsize="end"
+                        android:text="" />
                 </LinearLayout>
                 <ImageView style="@style/RightArrowStyle" />
-            </LinearLayout>
-
+            </LinearLayout>-->
+            <!--<View style="@style/MyhealthViewStyle" />
             <View style="@style/ViewStyle" />
-
-
+        -->
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MyHealthConditionChoiceLl"
                 android:orientation="horizontal">
                 <TextView
                     style="@style/BaseTextViewStyle.MyhealthContentStyle"
                     android:text="@string/my_health_preexisting" />
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/PreExisitingYesBtn" />
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/PreExisitingNoBtn" />
+
+                    <RadioGroup
+                        android:id="@+id/conditionsGroup"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/conditionYesButton"
+                            android:text="Yes"/>
+
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/conditionNoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
+
+                    </RadioGroup>
                 </LinearLayout>
+
             </LinearLayout>
 
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MyHealthConditionsLl"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -205,7 +216,8 @@
                         style="@style/MyhealthListLayoutSubSubTextStyle"
                         android:id="@+id/MyHealthConditionsNameTv"
                         android:maxLines="2"
-                        android:text="Panic, blink, Blink" />
+                        android:ellipsize="end"
+                        android:text="No conditions reported" />
 
                 </LinearLayout>
 
@@ -213,11 +225,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MyhealthViewStyle" />
+            <!--<View style="@style/MyhealthViewStyle" />-->
 
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MyHealthMedicationsLl"
                 android:orientation="horizontal">
 
@@ -226,24 +238,33 @@
                     android:text="@string/my_health_medications" />
 
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/MedicationsYesBtn" />
+                    <RadioGroup
+                        android:id="@+id/medicationsGroup"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/medicationsYesButton"
+                            android:text="Yes"
+                            android:checked="false" />
 
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/MedicationsNoBtn" />
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/medicationsNoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
 
+                    </RadioGroup>
                 </LinearLayout>
 
             </LinearLayout>
 
-
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MedicationsLl"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -264,18 +285,18 @@
                         style="@style/MyhealthListLayoutSubSubTextStyle"
                         android:id="@+id/MedicationsNameTv"
                         android:maxLines="2"
-                        android:text="Panic, blink, Blink" />
+                        android:ellipsize="end"
+                        android:text="No conditions reported" />
                 </LinearLayout>
 
                 <ImageView style="@style/RightArrowStyle" />
 
             </LinearLayout>
 
-            <View style="@style/MyhealthViewStyle" />
-
+            <!--<View style="@style/MyhealthViewStyle" />-->
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MyHealthAllergiesLl"
                 android:orientation="horizontal">
 
@@ -284,23 +305,32 @@
                     android:id="@+id/Primary_txt"
                     android:text="@string/my_health_allergies" />
 
-
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/AllergiesYesBtn" />
+                    <RadioGroup
+                        android:id="@+id/allergiesGroup"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/allergiesYesButton"
+                            android:text="Yes"/>
 
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/AllergiesNoBtn" />
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/allergiesNoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
+
+                    </RadioGroup>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/AllergiesLl"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -308,7 +338,6 @@
                 <ImageView
                     style="@style/MyHealthListImageViewStyle"
                     android:src="@drawable/my_allergies" />
-
 
                 <LinearLayout
                     style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
@@ -322,16 +351,17 @@
                         style="@style/MyhealthListLayoutSubSubTextStyle"
                         android:id="@+id/AlergiesNameTv"
                         android:maxLines="2"
+                        android:ellipsize="end"
                         android:text="Panic, blink, Blink" />
                 </LinearLayout>
                 <ImageView style="@style/RightArrowStyle" />
             </LinearLayout>
-            <View style="@style/MyhealthViewStyle"
-                android:visibility="gone"/>
+            <!--<View style="@style/MyhealthViewStyle"
+                android:visibility="gone"/>-->
 
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/titleHeaderBackgroundStyle"
                 android:id="@+id/MyHealthProceduresLl"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -343,54 +373,67 @@
 
 
                 <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
-                        style="@style/YesDefaultCustomButtonStyle"
-                        android:id="@+id/ProceduresYesBtn" />
+                    <RadioGroup
+                        android:id="@+id/proceduresGroup"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/proceduresYesButton"
+                            android:text="Yes"/>
 
-                    <Button
-                        style="@style/NoCustomButtonStyle"
-                        android:id="@+id/ProceduressNoBtn" />
+                        <RadioButton
+                            style="@style/YesNoRadioButtonStyle"
+                            android:id="@+id/proceduresNoButton"
+                            android:layout_marginLeft="10dp"
+                            android:text="No"/>
+
+                    </RadioGroup>
                 </LinearLayout>
+
+
             </LinearLayout>
 
-<!--            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:id="@+id/ProceduresLl"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            <!--            <LinearLayout
+                            style="@style/titleHeaderBackgroundStyle"
+                            android:id="@+id/ProceduresLl"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
-                <ImageView
-                    style="@style/MyHealthListImageViewStyle"
-                    android:src="@drawable/my_procedure" />
-
-
-                <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
-                        android:text="Procedures" />
-
-                    <TextView
-                        style="@style/MyhealthListLayoutSubSubTextStyle"
-                        android:id="@+id/ProcedureNameTv"
-                        android:maxLines="2"
-                        android:text="Panic, blink, Blink" />
-                </LinearLayout>
-                <ImageView style="@style/RightArrowStyle" />
-            </LinearLayout>-->
+                            <ImageView
+                                style="@style/MyHealthListImageViewStyle"
+                                android:src="@drawable/my_procedure" />
 
 
-            <View style="@style/MyhealthViewStyle" />
+                            <LinearLayout
+                                style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                                    android:text="Procedures" />
+
+                                <TextView
+                                    style="@style/MyhealthListLayoutSubSubTextStyle"
+                                    android:id="@+id/ProcedureNameTv"
+                                    android:maxLines="2"
+                                    android:text="Panic, blink, Blink" />
+                            </LinearLayout>
+                            <ImageView style="@style/RightArrowStyle" />
+                        </LinearLayout>-->
+
+
+            <!--<View style="@style/MyhealthViewStyle" />-->
 
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
                 android:id="@+id/MyHealthAddPhotoLl"
+                android:background="@drawable/line_full_bg"
                 android:orientation="horizontal">
                 <TextView
                     style="@style/BaseTextViewStyle.MyhealthContentStyle"
@@ -404,14 +447,32 @@
                         android:id="@+id/MyHealthCameraBtn"
                         android:src="@android:drawable/ic_menu_camera" />
                 </LinearLayout>
+
+
             </LinearLayout>
+
+            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gridview"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:numColumns="4"
+                android:stretchMode="columnWidth"
+                android:gravity="center"
+                />
+
         </LinearLayout>
 
     </ScrollView>
 
     <Button
-        style="@style/ContinueButtonStyle"
         android:id="@+id/SavContinueBtn"
-        android:textAllCaps="false" />
+        style="@style/ContinueButtonStyle"
+        android:text="@string/next_btn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="18dp"
+        />
 
 </LinearLayout>

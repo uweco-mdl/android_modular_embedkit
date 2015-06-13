@@ -2,21 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle">
     <LinearLayout
-        style="@style/LinearLayoutStyle"
-        android:orientation="vertical">
+        style="@style/wagHeaderLinearLayoutStyle"
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
             android:text="Add Child"
             />
-        <View style="@style/ViewStyle"
-            android:layout_marginBottom="10dp"/>
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            style = "@style/BaseSubHeaderTextViewStyle"
-            android:text="Child must be younger than 18 years old"
-            android:layout_width="match_parent" />
-
     </LinearLayout>
+    <TextView
+        style = "@style/BaseSubHeaderTextViewStyle"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Child must be younger than 18 years old"
+        android:layout_width="match_parent" />
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
     <LinearLayout
         style="@style/LinearLayoutStyle"
         android:orientation="vertical">
@@ -24,88 +48,80 @@
         <View style="@style/ViewStyle" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:background="@drawable/edittext_bg"
-            android:layout_margin="10dp"
+            android:orientation="vertical"
+
             android:id="@+id/patientLl"
-            style="@style/LinearLayoutStyle">
+            style="@style/WagLinearLayoutStyle">
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
+                style = "@style/GetStartedHeaderContentStyle"
                 android:text="Patient Name"
                  />
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-                style = "@style/GEtStartedContentTxtStyle"
+                style = "@style/GetStartedContentTxtStyle"
                 android:hint="Patient Name"
+                android:background="@null"
                 android:id="@+id/patientEt" />
 
 
         </LinearLayout>
+        <View style="@style/ViewStyle" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:background="@drawable/edittext_bg"
-            android:layout_margin="10dp"
-            android:id="@+id/DobLl"
-            style="@style/LinearLayoutStyle">
+            android:orientation="vertical"
+            android:id="@+id/dobLl"
+            style="@style/WagLinearLayoutStyle">
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
+                style = "@style/GetStartedHeaderContentStyle"
                 android:text="Date of Birth"/>
 
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
-                android:id="@+id/DobTxtView"
-                android:text="mm/dd/yyyy"/>
+                style = "@style/GetStartedHeaderContentStyle"
+                android:id="@+id/dobTxt"
+                android:hint="mm/dd/yyyy"/>
         </LinearLayout>
 
-
+        <View style="@style/ViewStyle" />
         <LinearLayout
-            android:orientation="horizontal"
-            android:background="@drawable/edittext_bg"
-            android:layout_margin="10dp"
-            android:id="@+id/GenderLl"
-            style="@style/LinearLayoutStyle">
+            android:orientation="vertical"
+            android:id="@+id/genderLl"
+            style="@style/WagLinearLayoutStyle">
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
+                style = "@style/GetStartedHeaderContentStyle"
                 android:text="Gender"
                  />
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
-                android:text="    Male"
+                style = "@style/GetStartedContentTxtStyle"
+                android:hint="Male"
                 android:id="@+id/genderTxt" />
 
-            <ImageView
-                style="@style/ProviderSearchImgStyle"
-                android:id="@+id/GenderImg" />
+
         </LinearLayout>
 
-
+        <View style="@style/ViewStyle" />
         <LinearLayout
             android:orientation="horizontal"
-            android:background="@drawable/edittext_bg"
-            android:layout_margin="10dp"
-            android:id="@+id/LocationLl"
+            android:layout_marginTop="30dp"
+            android:id="@+id/locationLl"
             style="@style/LinearLayoutStyle">
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style = "@style/GEtStartedContentTxtStyle"
-                android:text="I certify that i'm the legal parent or guardian\nof the minor above."
-                android:id="@+id/LocationTxt" />
+
             <Switch
                 android:id="@+id/mySwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:text="Play with the Switch" />
-
-
+                android:text="I,Michelle Marino confirm that i&apos;m the legal parent / guardian\nof the minor above."
+                android:checked="false" />
         </LinearLayout>
+        </LinearLayout>
+        <Button
+            android:id="@+id/addChildBtn"
+            style="@style/ContinueButtonStyle"
+            android:layout_marginTop="30dp"
+            android:text="Add Child"
+             />
 
     </LinearLayout>
-    <Button
-        android:id="@+id/addChildBtn"
-        style="@style/ContinueButtonStyle"
-        android:layout_margin="20dp"
-        android:text="Add Child"
-        android:textAllCaps="false" />
+
 
     </LinearLayout>

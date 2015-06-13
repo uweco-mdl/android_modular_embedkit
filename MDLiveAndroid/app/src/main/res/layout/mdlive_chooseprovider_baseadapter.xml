@@ -8,7 +8,6 @@
         style="@style/DoctorLinearLayoutStyle"
         android:orientation="horizontal"
         >
-
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ProfileImg"
             android:visibility="visible"
@@ -20,88 +19,37 @@
             android:layout_width="230dp"
             >
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"
+                android:textColor="#35393d"
+                android:textSize="16sp"
                 android:singleLine="true"
                 />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/specalist"
-                android:textSize="12sp"
-                android:textColor="@color/grey_txt"
+                android:textColor="#878f95"
+                android:textSize="16sp"
                 />
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/AvailableDoctorTxtStyle"
-                android:visibility="gone"
+            <TextView
+                style="@style/DoctorTxtStyle"
+                android:visibility="visible"
+                android:textColor="#878f95"
+                android:text="Mercy Hospital"
                 android:id="@+id/Time"/>
 
 
         </LinearLayout>
         <ImageView
             android:id="@+id/callImg"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_height="30dp"
             android:layout_width="30dp"
             android:layout_gravity="top"
             android:gravity="center"
+
             />
     </LinearLayout>
 </LinearLayout>
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<LinearLayout-->
-        <!--style="@style/DoctorLinearLayoutStyle"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:background="@color/white"-->
-       <!-->-->
-
-        <!--<com.android.volley.toolbox.NetworkImageView-->
-            <!--android:id="@+id/ProfileImg"-->
-            <!--android:visibility="visible"-->
-            <!--style="@style/DoctorOnCallImgViewStyle"/>-->
-
-        <!--<LinearLayout-->
-            <!--style="@style/LinearLayoutStyle"-->
-            <!--android:orientation="vertical"-->
-            <!-->-->
-
-            <!--<RelativeLayout-->
-                <!--style="@style/LinearLayoutStyle"-->
-               <!-->-->
-
-                <!--<ImageView-->
-                    <!--style="@style/BaseVideoImgStyle"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:id="@+id/callImg"-->
-                    <!--android:visibility="visible"-->
-                    <!--/>-->
-            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
-             <!--style="@style/DoctorTxtStyle"-->
-                <!--android:singleLine="true"-->
-             <!--android:id="@+id/PatientName"-->
-
-
-                <!--android:layout_toLeftOf="@+id/callImg"-->
-                <!--android:layout_toStartOf="@+id/callImg" />-->
-
-                <!--</RelativeLayout>-->
-            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
-                <!--style="@style/BaseSpecialistDoctorTxtStyle"-->
-                <!--android:id="@+id/specalist"-->
-                <!--/>-->
-
-            <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
-                <!--style="@style/AvailableDoctorTxtStyle"-->
-                <!--android:visibility="gone"-->
-                <!--android:id="@+id/Time"/>-->
-
-        <!--</LinearLayout>-->
-
-    <!--</LinearLayout>-->
-<!--</LinearLayout>-->

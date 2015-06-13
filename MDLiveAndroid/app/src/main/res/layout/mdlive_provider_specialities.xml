@@ -9,7 +9,7 @@
         android:orientation="vertical">
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailHeaderStyle"
-            android:text="MY SPECIALITIES"
+            android:text="Specialities"
             />
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailContentStyle"

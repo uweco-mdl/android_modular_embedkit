@@ -10,13 +10,20 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <permission
+    <!-- Camera features - recommended -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+    <!--<permission
         android:name="com.mdlive.embedkit.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature" />-->
 
 
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -44,7 +51,7 @@
 
         <!-- Google Api Key -->
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyA0TdTAHCYkUdfFBGr_ASKIYuUa3ap5WZ8"/>
+            android:value="AIzaSyD10ySfhNEM1FYuoRuoxK9yWjcGWOPA6Js"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -173,6 +180,10 @@
         <activity
             android:name=".uilayer.myhealth.activity.MDLiveAddMedications"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".uilayer.myhealth.activity.MDLiveImageGalleryView"
+            android:screenOrientation="portrait"></activity>
+
         <!--
             <activity
             android:name=".uilayer.sav.VseeMainActivity"
@@ -182,7 +193,7 @@
             </activity>-->
 
         <activity
-            android:name="com.mdlive.embedkit.VseeMainActivity"
+            android:name=".VseeMainActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>

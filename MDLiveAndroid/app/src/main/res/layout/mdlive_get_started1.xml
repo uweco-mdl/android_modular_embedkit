@@ -1,106 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ContainerLl"
     style="@style/ContainerStyle"
-    android:visibility="visible">
-
+   >
     <LinearLayout
-        style="@style/LinearLayoutStyle"
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
         android:orientation="horizontal">
-
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            style="@style/HeaderTextViewStyle"
-            android:text="@string/getStarted" />
-
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+           android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+             />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:text="@string/get_started"
+            />
     </LinearLayout>
-
-
-    <ScrollView style="@style/ScrollViewStyle">
-
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            style="@style/WagParentLinearLayoutStyle"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/patientLl"
+                style="@style/WagLinearLayoutStyle">
+
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="Patient Name"
+                    />
+                <Spinner
+                    android:id="@+id/patientSpinner"
+                   style="@style/SpinnerButtonStyle"/>
+            </LinearLayout>
 
             <View style="@style/ViewStyle" />
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/GetStartedSubHeaderTextViewStyle"
-                android:text="Who is this visit for?" />
-
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/dobLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="Date of Birth"/>
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:id="@+id/dobTxt"
+                    android:textColor="#b4b9bd"
+                    android:text="mm/dd/yyyy"/>
+            </LinearLayout>
+            <View style="@style/ViewStyle" />
 
             <LinearLayout
-                android:id="@+id/patientLl"
-                style="@style/LinearLayoutStyle"
-                android:layout_margin="10dp"
-                android:background="@drawable/edittext_bg"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:id="@+id/genderLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="@string/gender"
+                   />
+                <Spinner
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    android:id="@+id/patientTxtView"
-                    style="@style/GEtStartedContentTxtStyle"
-                    android:text="Patient Name" />
+                   style="@style/SpinnerButtonStyle"
+                    android:id="@+id/genderSpinner" />
 
+            </LinearLayout>
+            <View style="@style/ViewStyle" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/locationLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="@string/location"
+                    />
+                <TextView
+                    style = "@style/GetStartedContentTxtStyle"
+                    android:text="@string/location"
+                    android:textColor="#35393d"
+                    android:id="@+id/locationTxt" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/DobLl"
-                style="@style/LinearLayoutStyle"
-                android:layout_margin="10dp"
-                android:background="@drawable/edittext_bg"
-                android:orientation="horizontal">
+            <View style="@style/ViewStyle" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    android:id="@+id/DobTxtView"
-                    style="@style/GEtStartedContentTxtStyle"
-                    android:text="Date of Birth" />
-
-                <ImageView
-                    android:id="@+id/DateOfBirth_img"
-
-                    style="@style/ProviderSearchImgStyle" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/GenderLl"
-                style="@style/LinearLayoutStyle"
-                android:layout_margin="10dp"
-                android:background="@drawable/edittext_bg"
-                android:orientation="horizontal">
-
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    android:id="@+id/GenderTxt"
-                    style="@style/GEtStartedContentTxtStyle"
-                    android:text="Gender" />
-
-                <ImageView
-                    android:id="@+id/GenderImg"
-                    style="@style/ProviderSearchImgStyle" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/LocationLl"
-                style="@style/LinearLayoutStyle"
-                android:layout_margin="10dp"
-                android:background="@drawable/edittext_bg"
-                android:orientation="horizontal">
-
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    android:id="@+id/LocationTxt"
-                    style="@style/GEtStartedContentTxtStyle"
-                    android:text="Location" />
-
-                <ImageView
-                    android:id="@+id/LocationImg"
-                    style="@style/ProviderSearchImgStyle" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/SavContinueBtn"
+                style="@style/ContinueButtonStyle"
+                android:text="@string/next_btn"
+                />
         </LinearLayout>
-    </ScrollView>
 
-    <Button
-        android:id="@+id/SavContinueBtn"
-        style="@style/ContinueButtonStyle"
-        android:textAllCaps="false" />
 </LinearLayout>

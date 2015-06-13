@@ -19,7 +19,7 @@
         style="@style/LinearLayoutStyle">
 
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            style = "@style/GEtStartedContentTxtStyle"
+            style = "@style/GetStartedContentTxtStyle"
             android:id="@+id/addFanilyTxtView"
             android:text="Add a family member"/>
 

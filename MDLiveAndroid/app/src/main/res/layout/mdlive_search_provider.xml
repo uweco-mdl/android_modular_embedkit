@@ -1,175 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle">
-    />
+    style="@style/ContainerStyle"
+    >
     <LinearLayout
-        style="@style/LinearLayoutStyle"
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
         android:orientation="horizontal">
-
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/exit_icon"
+            android:id="@+id/backImg"
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
-            android:text="@string/choose_provider"
+            android:text="Doctor Filters"
+            />
+        <TextView
+            android:id="@+id/doneTxt"
+            style = "@style/GetStartedHeaderContentStyle"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="end|right|center"
+            android:text="DONE"
             />
     </LinearLayout>
     <ScrollView style="@style/ScrollViewStyle"
         >
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            style="@style/WagParentLinearLayoutStyle"
             android:orientation="vertical">
 
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="vertical">
 
-                <View style="@style/ViewStyle" />
-
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                    style="@style/SubHeaderTextViewStyle"
-                    android:text="Advanced Search options"
+               <LinearLayout
+                android:orientation="vertical"
+                style="@style/WagProviderProfileLinearLayoutStyle"
+                android:id="@+id/providerNameLl">
+                <TextView
+                    style = "@style/ProviderSearchAvailableTxtStyle"
+                    android:text="Provider Name"
+                    android:textColor="@color/grey_txt"/>
                     />
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-                    android:id="@+id/edt_searchProvider"
-                    style="@style/gettingstarted_edittext"
-                    android:hint="@string/searchProvidernmae_txt"
-                    />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
-                    android:id="@+id/availableLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Available by:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
-                        android:text="Any"
-                        android:id="@+id/AvailableTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/available_img" />
+                   <EditText
+                       style = "@style/ProviderSearchAvailableTxtStyle"
+                       android:text="Any"
+                       android:textColor="@color/black"
+                       android:background="@null"
+                       android:drawableEnd="@drawable/dropdown_icon"
+                       android:id="@+id/edt_searchProvider" />
+                   <View style="@style/ProviderSearchViewStyle"
+                       android:layout_marginTop="5dp"/>
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
-
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
-                    android:id="@+id/appointmentLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Appointment date:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
-                        android:text="May 13, 2015"
-                        android:id="@+id/DateTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/appointment_img" />
-                </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/providertypeLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Provider type:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
-                        android:text=""
+                        android:textColor="@color/grey_txt"
+                        android:text="Provider type"                 />
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:text="Family Physician"
+                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:textColor="@color/black"
                         android:id="@+id/ProviderTypeTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/providertype_img" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/sortbyLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Sort by:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
+                        android:textColor="@color/grey_txt"
+                        android:text="Sort by"                 />
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="Any"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/SortbyTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/sortby_img" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
+
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/specialityLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:textColor="@color/grey_txt"
                         android:text="Speciality:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="Any"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/SpecialityTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/speciality_img" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
+
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/locLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Located in:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
+                        android:textColor="@color/grey_txt"
+                        android:text="Located in"                 />
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="Florida"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/LocatioTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/loc_img" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/speaksLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Speaks:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
+                        android:text="Speaks"
+                        android:textColor="@color/grey_txt"/>
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="Any"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/SpeaksTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/speaks_img" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
+                    android:id="@+id/genderLl">
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:text="Gender"
+                        android:textColor="@color/grey_txt"/>
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:text="Any"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:id="@+id/GenderTxtView" />
+                    <View style="@style/ProviderSearchViewStyle"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
+                    android:id="@+id/availableLl"
+                    android:visibility="gone">
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:textColor="@color/grey_txt"
+                        android:text="Available by"                 />
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:text="Any"
+                        android:textColor="@color/black"
+                        android:id="@+id/AvailableTxtView" />
                 </LinearLayout>
                 <View style="@style/ProviderSearchViewStyle" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    style="@style/LinearLayoutStyle"
-                    android:id="@+id/genderLl">
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    android:orientation="vertical"
+                    style="@style/WagProviderProfileLinearLayoutStyle"
+                    android:visibility="gone"
+                    android:id="@+id/appointmentLl">
+                    <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Gender:"                 />
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style = "@style/ProviderSearchAnyTxtStyle"
-                        android:text="Any"
-                        android:id="@+id/GenderTxtView" />
-                    <ImageView
-                        style="@style/ProviderSearchImgStyle"
-                        android:id="@+id/gender_img" />
+                        android:textColor="@color/grey_txt"
+                        android:text="Appointment date"                 />
+                    <TextView
+                        style = "@style/ProviderSearchAvailableTxtStyle"
+                        android:text="May 13, 2015"
+                        android:textColor="@color/black"
+                        android:id="@+id/DateTxtView" />
                 </LinearLayout>
                 <View style="@style/ProviderSearchViewStyle" />
+
+
+
+
+
+
+
+
+
+
+
+
+
             </LinearLayout>
-        </LinearLayout>
+
     </ScrollView>
     <Button
         android:id="@+id/SearchBtn"
