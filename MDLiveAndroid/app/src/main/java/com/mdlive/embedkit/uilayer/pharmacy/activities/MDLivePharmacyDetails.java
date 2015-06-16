@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,70 +59,107 @@ public class MDLivePharmacyDetails extends FragmentActivity {
 
     /* This function is used to initialized views defined in layout.
      */
+
     public void initializeViews() {
-        ViewGroup view = (ViewGroup) getWindow().getDecorView();
+
+        ViewGroup view = (ViewGroup)getWindow().getDecorView();
         LocalisationHelper.localiseLayout(this, view);
+
         addressLine1 = ((TextView) findViewById(R.id.addressLine1));
         addressLine2 = ((TextView) findViewById(R.id.addressLine2));
         addressLine3 = ((TextView) findViewById(R.id.addressLine3));
         phoneText = ((TextView) findViewById(R.id.phoneText));
         milesText = ((TextView) findViewById(R.id.milesText));
-        findViewById(R.id.usePharmacy).setOnClickListener(new View.OnClickListener() {
+
+
+        ((Button) findViewById(R.id.usePharmacy)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setPharmacyAsADefault();
             }
         });
-        findViewById(R.id.getDirections).setOnClickListener(new View.OnClickListener() {
+
+//        ((ImageView) findViewById(R.id.backButton)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+
+        ((Button) findViewById(R.id.getDirections)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocationService locationService = new LocationService();
-                if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-                    locationService.getLocation(MDLivePharmacyDetails.this, new LocationService.LocationResult() {
-                        @Override
-                        public void gotLocation(final Location location) {
-                            runOnUiThread(new Runnable() {
+
+                        LocationService locationService = new LocationService();
+
+                        if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
+                            locationService.getLocation(MDLivePharmacyDetails.this, new LocationService.LocationResult(){
                                 @Override
-                                public void run() {
-                                    if (location != null) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?saddr=" +
-                                                        location.getLatitude() +"," +location.getLongitude() +
-                                                        "&daddr=" + "20.5666" +"," +"45.345"));
-                                        startActivity(intent);
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
-                                    }
+                                public void gotLocation(final Location location) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(location != null){
+                                                Intent intent = new Intent(Intent.ACTION_VIEW,
+                                                        Uri.parse("http://maps.google.com/maps?saddr=" +
+                                                                location.getLatitude() +
+                                                                "," +
+                                                                location.getLongitude() +
+                                                                "&daddr=" +
+                                                                "20.5666" +
+                                                                "," +
+                                                                "45.345"));
+                                                /*Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                                        Uri.parse("google.navigation:q=" +
+                                                                location.getLatitude() +
+                                                                "," +
+                                                                location.getLongitude()));*/
+                                                startActivity(intent);
+                                                /*Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                                        Uri.parse("http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345"));*/
+                                            }else{
+                                                Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                             });
+                        }else
+                        {
+                            Toast.makeText(getApplicationContext(), "Please enable location service", Toast.LENGTH_SHORT).show();
                         }
-                    });
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please enable location service", Toast.LENGTH_SHORT).show();
-                }
-            }
+                    }
         });
+
+
         pDialog = Utils.getProgressDialog("Loading...", this);
     }
 
-    /* This function is used to initialize map view for MDLBTPharmacyDetails activity */
-    public void initializeMapView() {
+    /* This function is used to initialize map view for MDLBTPharmacy_Details activity */
+
+    public void initializeMapView(){
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
         map = mapView.getMap();
     }
 
     /**
-     * This function has a webservice call of SetPharmacyService
-     * While user clicks on the usePharmacy button which will set pharmacy as a user's default.
+     *  This function has a webservice call of SetPharmacyService
+     *  While user clicks on the usePharmacy button which will set pharmacy as a user's default.
      */
-    public void setPharmacyAsADefault() {
+
+    public void setPharmacyAsADefault(){
+
         pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyDetails.this);
+
         pDialog.show();
+
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 handleSuccessResponse(response);
             }
         };
+
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -137,37 +175,46 @@ public class MDLivePharmacyDetails extends FragmentActivity {
                         Utils.connectionTimeoutError(pDialog, MDLivePharmacyDetails.this);
                     }
                 }
-            }
-        };
+            }};
+
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
         gsonMap.put("pharmacy_id", receivedBundle.getInt("pharmacy_id"));
         SetPharmacyService services = new SetPharmacyService(MDLivePharmacyDetails.this, null);
-        services.doPharmacyResultsRequest(new Gson().toJson(gsonMap), String.valueOf(receivedBundle.getInt("pharmacy_id")),
-                responseListener, errorListener);
+        services.doPharmacyResultsRequest(new Gson().toJson(gsonMap),String.valueOf(receivedBundle.getInt("pharmacy_id")),
+                        responseListener, errorListener);
     }
 
     /**
-     * This function is handling response of SetPharmacyService which was thrown from
-     * <p/>
-     * function setPharmacyAsADefault()
+     *  This function is handling response of SetPharmacyService which was thrown from
+     *
+     *  function setPharmacyAsADefault()
+     *
      */
+
+
     private void handleSuccessResponse(JSONObject response) {
+
         try {
             pDialog.dismiss();
+
             Log.d("Response", response.toString());
-            if (response.getString("message").equals("Pharmacy details updated")) {
+
+            if(response.getString("message").equals("Pharmacy details updated")){
                 Toast.makeText(getApplicationContext(), "Default Pharmacy Saved!", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
-        } catch (Exception e) {
+
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
     }
 
     /* This function is used to update ui while MDLBTPharmacy_Details page getting load. */
+
     public void updateUiFromGetIntent() {
         Intent getIntent = getIntent();
         receivedBundle = new Bundle();
@@ -191,23 +238,21 @@ public class MDLivePharmacyDetails extends FragmentActivity {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 15));
                 map.getUiSettings().setZoomControlsEnabled(true);
             }
+            //pharmacy_id
         }
     }
 
-    /**
-     *
-     * This will initialise the map before loading.
-     *
-     * @param map - The google map object
-     */
-    private void configureMap(GoogleMap map) {
+    private void configureMap(GoogleMap map)
+    {
         if (map == null)
             return; // Google Maps not available
         try {
             MapsInitializer.initialize(MDLivePharmacyDetails.this);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e("Map Status", "Have GoogleMap but then error", e);
             return;
         }
+
     }
 }

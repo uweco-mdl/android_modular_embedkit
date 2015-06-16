@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+
     >
     <!--<include layout="@layout/header" />-->
 
@@ -18,7 +19,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/line_full_bg"
+        android:background="@color/mdlivePrimaryBlueColor"
+
         >
 
 
@@ -29,6 +31,8 @@
             android:text="Conditions"
             android:id="@+id/textView6"
             android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
             android:layout_centerInParent="true"
             android:textStyle="bold"
          />
@@ -75,6 +79,6 @@
         android:text="Save"
         android:textSize="20dp"
         android:textColor="#ffffff"
-        android:background="#5877AD"
+       style="@style/ContinueButtonStyle"
         android:id="@+id/SavContinueBtn" />
 </LinearLayout>

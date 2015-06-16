@@ -20,15 +20,28 @@
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="32dp"
             android:layout_toEndOf="@+id/backImg"
             />
-        <TextView
-            android:id="@+id/CommonConditionsAllergiesHeaderTv"
-            style = "@style/HeaderTextViewStyle"
-            android:text="Add Condition"
-            />
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="30dp">
+            <TextView
+                style = "@style/ReasonHeaderTxtStyle"
+                android:id="@+id/CommonConditionsAllergiesHeaderTv"
+                android:text="Add Conditions"
+                />
+            <TextView
+                android:id="@+id/reason_patientTxt"
+                style = "@style/ReasonsubHeaderTxtStyle"
+                android:text="Michelle Marino"
+                />
+        </LinearLayout>
     </LinearLayout>
+
     <ScrollView style="@style/ScrollViewStyle">
 
 

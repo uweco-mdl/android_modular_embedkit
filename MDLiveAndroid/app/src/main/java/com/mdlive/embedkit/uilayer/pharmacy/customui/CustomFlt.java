@@ -7,9 +7,7 @@ import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 /**
- * This class is a customized Frame layout
- * This layout has GestureDetector to detect gesture of layout
- * It is used in MDLivePharmacyResult page to detect double tap on google map
+ * Created by srinivasan_ka on 5/21/2015.
  */
 public class CustomFlt extends FrameLayout
 {

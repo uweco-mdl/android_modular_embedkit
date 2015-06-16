@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -11,13 +12,14 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.SuggestMedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.UpdateMedicationService;
+import com.mdlive.unifiedmiddleware.services.myhealth.UpdateMedicalService;
 
 import org.json.JSONObject;
 
@@ -40,6 +42,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         type = TYPE_CONSTANT.MEDICATION;
         super.onCreate(savedInstanceState);
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medication));
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
     }
 
     /**
@@ -117,7 +121,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 HashMap<String, String> medication = existingConditions.get(i);
                 HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
                 postBody.put("medication", medication);
-                UpdateMedicationService services = new UpdateMedicationService(MDLiveAddMedications.this, null);
+                UpdateMedicalService services = new UpdateMedicalService(MDLiveAddMedications.this, null);
                 services.doLoginRequest(medication.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
             }
         }
@@ -229,10 +233,11 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      */
 
     public void callMedicalHistoryIntent() {
-        Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
+        finish();
+        /*Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
         medicalHistory.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         medicalHistory.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(medicalHistory);
+        startActivity(medicalHistory);*/
     }
 
 

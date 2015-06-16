@@ -89,9 +89,10 @@
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
-            android:hint="@string/manual_txt"
+            android:hint="Manual Search"
             android:tag="manual_txt"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:id="@+id/textView7" />
             <TextView
                 style="@style/common_style_W_Match_M_Match"
@@ -120,10 +121,11 @@
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:tag="or"
-            android:text="@string/or"
+            android:text="Or"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:id="@+id/textView8" />
             <TextView
                 style="@style/common_style_W_Match_M_Match"
@@ -170,10 +172,4 @@
     </LinearLayout>
 </LinearLayout>
 </ScrollView>
-    <Button
-        android:id="@+id/find_pharmacy"
-        style="@style/ContinueButtonStyle"
-        android:tag="find_pharmacy"
-        android:text="@string/find_pharmacy"
-        android:textAllCaps="false" />
 </LinearLayout>

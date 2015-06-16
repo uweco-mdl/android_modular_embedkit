@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -50,7 +51,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MDLivePharmacy extends FragmentActivity {
 
-    private TextView addressline1, addressline2, addressline3, addressline4;
+    private TextView addressline1, addressline2, addressline3;
     private ProgressDialog pDialog;
     private Button continueButton;
     private SupportMapFragment mapView;
@@ -66,7 +67,11 @@ public class MDLivePharmacy extends FragmentActivity {
         //This function is for initialize google map that was used in layout
         initializeMapView();
         //This function is for get user pharmacy details
-        getUserPharmacyDetails();
+        //getUserPharmacyDetails();
+        if(getIntent() != null && getIntent().hasExtra("Response"))
+            loadDatas(getIntent().getStringExtra("Response"));
+        else
+            getUserPharmacyDetails();
     }
 
     /*
@@ -79,7 +84,6 @@ public class MDLivePharmacy extends FragmentActivity {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
         addressline3 = ((TextView) findViewById(R.id.addressline3));
-        addressline4 = ((TextView) findViewById(R.id.addressline4));
         ((Button) findViewById(R.id.SavContinueBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,15 +99,34 @@ public class MDLivePharmacy extends FragmentActivity {
                 startActivity(i);
             }
         });
-        ((RelativeLayout) findViewById(R.id.defaultPharmlayout)).setOnClickListener(new View.OnClickListener() {
+        /**
+         * The back image will pull you back to the Previous activity
+         * The home button will pull you back to the Dashboard activity
+         */
+
+        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movetohome();
+            }
+        });
+
+
+      /*  ((RelativeLayout) findViewById(R.id.defaultPharmlayout)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyDetails.class);
                 i.putExtra("datas", bundletoSend);
                 startActivity(i);
             }
-        });
-        pDialog = Utils.getProgressDialog("Loading...", this);
+        });*/
+        pDialog = Utils.getProgressDialog("Please wait...", this);
     }
 
     private void doConfirmAppointment() {
@@ -147,6 +170,7 @@ public class MDLivePharmacy extends FragmentActivity {
                 }
             }
         };
+
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
@@ -234,14 +258,14 @@ public class MDLivePharmacy extends FragmentActivity {
                     return null;
                 }
             });
-            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            /*map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Intent i = new Intent(getApplicationContext(), MDLivePharmacyDetails.class);
                     i.putExtra("datas", bundletoSend);
                     startActivity(i);
                 }
-            });
+            });*/
         }
     }
 
@@ -252,15 +276,15 @@ public class MDLivePharmacy extends FragmentActivity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            pDialog.dismiss();;
             Log.d("Response", response.toString());
             JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-            addressline1.setText(pharmacyDatas.getString("store_name"));
+
+            addressline1.setText(pharmacyDatas.getString("store_name")+" "+pharmacyDatas.getString("distance"));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
                     + pharmacyDatas.getString("zipcode"));
-            addressline4.setText(pharmacyDatas.getString("phone"));
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
@@ -286,6 +310,51 @@ public class MDLivePharmacy extends FragmentActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadDatas(String response){
+        try {
+        JSONObject jobj=new JSONObject(response);
+        JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
+        addressline1.setText(pharmacyDatas.getString("store_name"));
+        addressline2.setText(pharmacyDatas.getString("address1"));
+        addressline3.setText(pharmacyDatas.getString("city") + ", "
+                + pharmacyDatas.getString("state") + " "
+                + pharmacyDatas.getString("zipcode"));
+    //        addressline4.setText(pharmacyDatas.getString("phone"));
+        bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
+        JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
+        bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
+        bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
+        bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
+        bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
+        bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
+        bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
+        bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
+        bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
+        bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
+        bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
+        bundletoSend.putString("city", pharmacyDatas.getString("city"));
+        bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
+        bundletoSend.putString("state", pharmacyDatas.getString("state"));
+        if (map != null) {
+            LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
+                    Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
+            Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
+                    .title("Marker"));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * The back image will pull you back to the Previous activity
+     * The home button will pull you back to the Dashboard activity
+     */
+    public void movetohome()
+    {
+        Utils.movetohome(MDLivePharmacy.this, MDLiveLogin.class);
     }
 
 }

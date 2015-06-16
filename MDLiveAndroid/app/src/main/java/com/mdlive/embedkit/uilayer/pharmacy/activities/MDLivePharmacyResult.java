@@ -6,17 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -31,13 +30,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
+import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
-import com.mdlive.embedkit.uilayer.pharmacy.customui.CustomFlt;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
+import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
 
 import org.json.JSONObject;
 
@@ -67,11 +68,10 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private GoogleMap googleMap;
     private ListView pharmList;
     private PharmacyListAdaper adaper;
-    private GestureDetector mDetector;
-    private CustomFlt mapContainer;
     private ProgressBar loadingIndicator;
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
+    boolean isMarkerPointAdded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,8 +80,17 @@ public class MDLivePharmacyResult extends FragmentActivity {
         initializeViews();
         initializeListView();
         initializeMapView();
-        keyParams = new HashMap<String, Object>();
         getPharmacySearchResults(getPostBody(getIntent()));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 4000){
+            if(data != null){
+                getPharmacySearchResults(getPostBody(data));
+            }
+        }
     }
 
     /**
@@ -91,39 +100,33 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         LocalisationHelper.localiseLayout(this, view);
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
-        ((Button) findViewById(R.id.footerButton)).setOnClickListener(new View.OnClickListener() {
+        keyParams = new HashMap<String, Object>();
+        loadingIndicator = (ProgressBar) findViewById(R.id.loadingIndicator);
+
+        ((TextView) findViewById(R.id.filter_txt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Button) findViewById(R.id.footerButton)).setVisibility(View.GONE);
-                rl_footer.setVisibility(View.VISIBLE);
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                startActivityForResult(i, 4000);
             }
         });
-        mapContainer = ((CustomFlt) findViewById(R.id.mapContainer));
-        mDetector = mapContainer.getGestureListener();
-        mDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                return false;
-            }
+        /**
+         * The back image will pull you back to the Previous activity
+         * The home button will pull you back to the Dashboard activity
+         */
 
+        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                if (rl_footer.getVisibility() == View.VISIBLE) {
-                    rl_footer.setVisibility(View.GONE);
-                    ((Button) findViewById(R.id.footerButton)).setVisibility(View.VISIBLE);
-                } else {
-                    rl_footer.setVisibility(View.VISIBLE);
-                    ((Button) findViewById(R.id.footerButton)).setVisibility(View.GONE);
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onDoubleTapEvent(MotionEvent e) {
-                return false;
+            public void onClick(View v) {
+                finish();
             }
         });
-        loadingIndicator = (ProgressBar) findViewById(R.id.loadingIndicator);
+        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movetohome();
+            }
+        });
     }
 
 
@@ -132,55 +135,25 @@ public class MDLivePharmacyResult extends FragmentActivity {
     */
 
     public void initializeListView() {
+
         pharmList = (ListView) findViewById(R.id.pharmList);
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(MDLivePharmacyResult.this.getApplicationContext(), MDLivePharmacyDetails.class);
-                bundleToSend.putInt("pharmacy_id", (int) list.get(position).get("pharmacy_id"));
-                bundleToSend.putDouble("longitude", (Double) list.get(position).get("longitude"));
-                bundleToSend.putDouble("latitude", (Double) list.get(position).get("latitude"));
-                bundleToSend.putBoolean("twenty_four_hours", (Boolean) list.get(position).get("twenty_four_hours"));
-                bundleToSend.putBoolean("active", (Boolean) list.get(position).get("active"));
-                bundleToSend.putString("store_name", (String) list.get(position).get("store_name"));
-                bundleToSend.putString("phone", (String) list.get(position).get("phone"));
-                bundleToSend.putString("address1", (String) list.get(position).get("address1"));
-                bundleToSend.putString("address2", (String) list.get(position).get("address2"));
-                bundleToSend.putString("zipcode", (String) list.get(position).get("zipcode"));
-                bundleToSend.putString("fax", (String) list.get(position).get("fax"));
-                bundleToSend.putString("city", (String) list.get(position).get("city"));
-                bundleToSend.putString("distance", (String) list.get(position).get("distance"));
-                bundleToSend.putString("state", (String) list.get(position).get("state"));
-                i.putExtra("datas", bundleToSend);
-                startActivity(i);
+                setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
             }
         });
-        pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+
+       /* ((TextView)findViewById(R.id.textView6)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                startActivityForResult(i, 4000);
             }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if ((firstVisibleItem + visibleItemCount) == totalItemCount &&
-                        rl_footer.getVisibility() == View.VISIBLE &&
-                        !isPageLimitReached
-                        ) {
-                    if (!isLoading) {
-                        pharmList.setEnabled(false);
-                        isLoading = true;
-                        loadingIndicator.setVisibility(View.VISIBLE);
-                        keyParams.put("page", ((int) keyParams.get("page")) + 1);
-                        keyParams.put("per_page", 10);
-                        Gson gson = new Gson();
-                        String postBody = gson.toJson(keyParams);
-                        Log.e("Post Body", postBody);
-                        getPharmacySearchResults(postBody);
-                    }
-                }
-            }
-        });
+        });*/
     }
 
     /**
@@ -193,28 +166,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
         if (googleMap != null) {
             if (googleMap != null) {
                 googleMap.setInfoWindowAdapter(markerInfoAdapter);
-                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        Intent intent = new Intent(MDLivePharmacyResult.this, MDLivePharmacyDetails.class);
-                        bundleToSend.putInt("pharmacy_id", (int) list.get(markerIdCollection.get(marker)).get("pharmacy_id"));
-                        bundleToSend.putDouble("longitude", (Double) list.get(markerIdCollection.get(marker)).get("longitude"));
-                        bundleToSend.putDouble("latitude", (Double) list.get(markerIdCollection.get(marker)).get("latitude"));
-                        bundleToSend.putBoolean("twenty_four_hours", (Boolean) list.get(markerIdCollection.get(marker)).get("twenty_four_hours"));
-                        bundleToSend.putBoolean("active", (Boolean) list.get(markerIdCollection.get(marker)).get("active"));
-                        bundleToSend.putString("store_name", (String) list.get(markerIdCollection.get(marker)).get("store_name"));
-                        bundleToSend.putString("phone", (String) list.get(markerIdCollection.get(marker)).get("phone"));
-                        bundleToSend.putString("address1", (String) list.get(markerIdCollection.get(marker)).get("address1"));
-                        bundleToSend.putString("address2", (String) list.get(markerIdCollection.get(marker)).get("address2"));
-                        bundleToSend.putString("zipcode", (String) list.get(markerIdCollection.get(marker)).get("zipcode"));
-                        bundleToSend.putString("fax", (String) list.get(markerIdCollection.get(marker)).get("fax"));
-                        bundleToSend.putString("city", (String) list.get(markerIdCollection.get(marker)).get("city"));
-                        bundleToSend.putString("distance", (String) list.get(markerIdCollection.get(marker)).get("distance"));
-                        bundleToSend.putString("state", (String) list.get(markerIdCollection.get(marker)).get("state"));
-                        intent.putExtra("datas", bundleToSend);
-                        startActivity(intent);
-                    }
-                });
             }
         }
     }
@@ -334,10 +285,12 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
 
     private void handleListSuccessResponse(JSONObject response) {
+        JsonObject responObj = null;
         try {
             pDialog.dismiss();
+            Log.e("response", response.toString());
             JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject) parser.parse(response.toString());
+            responObj = (JsonObject) parser.parse(response.toString());
             int total_pages = responObj.get("total_pages").getAsInt();
             if (total_pages == ((int) keyParams.get("page")))
                 isPageLimitReached = true;
@@ -394,13 +347,16 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 map.put("twenty_four_hours", twenty_four_hours);
                 map.put("distance", distance);
                 map.put("active", active);
-                if (googleMap != null) {
-                    markerPoint = new LatLng(latitude, longitude);
-                    Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                                    markerPoint)
-                                    .title(store_name)
-                    );
-                    markerIdCollection.put(marker, i);
+                if (googleMap != null && !isMarkerPointAdded) {
+                    if(store_name.contains("Walgreen")){
+                        markerPoint = new LatLng(latitude, longitude);
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                                        markerPoint)
+                                        .title(store_name)
+                        );
+                        markerIdCollection.put(marker, i);
+                        isMarkerPointAdded = true;
+                    }
                 }
                 list.add(map);
             }
@@ -408,9 +364,106 @@ public class MDLivePharmacyResult extends FragmentActivity {
             //For Google map initialize view
             if (markerPoint != null)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
+            pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                }
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if ((firstVisibleItem + visibleItemCount) == totalItemCount &&
+                            rl_footer.getVisibility() == View.VISIBLE &&
+                            !isPageLimitReached
+                            ) {
+                        if (!isLoading) {
+                            pharmList.setEnabled(false);
+                            isLoading = true;
+                            loadingIndicator.setVisibility(View.VISIBLE);
+                            keyParams.put("page", ((int) keyParams.get("page")) + 1);
+                            keyParams.put("per_page", 10);
+                            Gson gson = new Gson();
+                            String postBody = gson.toJson(keyParams);
+                            Log.e("Post Body", postBody);
+                            getPharmacySearchResults(postBody);
+                        }
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    /**
+     * This function has a webservice call of SetPharmacyService
+     * While user clicks on the usePharmacy button which will set pharmacy as a user's default.
+     */
+    public void setPharmacyAsADefault(int pharmacyId) {
+        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
+        pDialog.show();
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleSuccessResponse(response);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                /*pDialog.dismiss();*/
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyResult.this);
+                    }
+                }
+            }
+        };
+        HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
+        gsonMap.put("pharmacy_id", pharmacyId);
+        SetPharmacyService services = new SetPharmacyService(MDLivePharmacyResult.this, null);
+        services.doPharmacyResultsRequest(new Gson().toJson(gsonMap), String.valueOf(pharmacyId), responseListener, errorListener);
+               // responseListener, errorListener);
+    }
+
+    /**
+     * This function is handling response of SetPharmacyService which was thrown from
+     * <p/>
+     * function setPharmacyAsADefault()
+     */
+    private void handleSuccessResponse(JSONObject response) {
+        try {
+            pDialog.dismiss();
+            Log.d("Response", response.toString());
+            if (response.getString("message").equals("Pharmacy details updated")) {
+                Toast.makeText(getApplicationContext(), "Default Pharmacy Saved!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * The back image will pull you back to the Previous activity
+     * The home button will pull you back to the Dashboard activity
+     */
+    public void movetohome()
+    {
+        Utils.movetohome(MDLivePharmacyResult.this, MDLiveLogin.class);
     }
 
 }

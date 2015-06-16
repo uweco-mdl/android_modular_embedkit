@@ -18,20 +18,25 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SuggestPharmayService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,7 +56,7 @@ public class MDLivePharmacyChange extends Activity {
     private TextView chooseState;
     private ListView stageListView;
     private AlertDialog stateDialog;
-    private Button find_pharmacy, getlocationButton;
+    private Button getlocationButton;
     private ProgressDialog pDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> suggestionList = new ArrayList<String>();
@@ -74,46 +79,56 @@ public class MDLivePharmacyChange extends Activity {
      * pharmacy_search_name is a edit text. When users enters the text, it will call to webservice
      * and feed results in drop down box.
      */
-    private void initializeViews(){
-        ViewGroup view = (ViewGroup)getWindow().getDecorView();
+    private void initializeViews() {
+        ViewGroup view = (ViewGroup) getWindow().getDecorView();
         LocalisationHelper.localiseLayout(this, view);
         chooseState = ((TextView) findViewById(R.id.chooseState));
         pharmacy_search_name = ((AutoCompleteTextView) findViewById(R.id.pharmacy_search_name));
         zipcodeText = ((EditText) findViewById(R.id.zipcodeText));
         cityText = ((EditText) findViewById(R.id.cityText));
-        find_pharmacy = ((Button) findViewById(R.id.find_pharmacy));
         getlocationButton = ((Button) findViewById(R.id.getlocationButton));
         pDialog = Utils.getProgressDialog("Loading...", this);
+        //Initialize Intent for Pharmacy Results
+        sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
+        sendingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
-        adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item, suggestionList);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, suggestionList);
         pharmacy_search_name.setThreshold(3);
         pharmacy_search_name.setAdapter(adapter);
         zipcodeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     cityText.setText("");
                     stageListView.setItemChecked(0, true);
                     chooseState.setText("Select State");
                 }
             }
         });
-       cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     zipcodeText.setText("");
                 }
             }
         });
-        find_pharmacy.setOnClickListener(new View.OnClickListener() {
+        ((TextView) findViewById(R.id.doneTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
                 addExtrasInIntent();
                 startActivity(sendingIntent);
+                finish();
             }
         });
+        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movetohome();
+            }
+        });
+
         locationService = new LocationCooridnates();
         getlocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,10 +145,11 @@ public class MDLivePharmacyChange extends Activity {
         });
     }
 
+
+
     /**
      * The textwatcher for Pharmacy Search Name. This will initiate the autosuggestion for
      * pharmacy search name.
-     *
      *
      * @return TextWatcher - The text watcher instance
      */
@@ -142,12 +158,14 @@ public class MDLivePharmacyChange extends Activity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (start > 2) {
                     addSearchTextHistory(s.toString());
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -157,47 +175,42 @@ public class MDLivePharmacyChange extends Activity {
     /**
      * OnClickAction for Location Button Action. This will get the current location. If the current
      * location is received, starts teh MDLivePharmacyResult activity.
-     *
-     *
      */
     private void getLocationBtnOnClickAction() {
-        if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
+        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
             pDialog.show();
-            locationService.getLocation(this, new LocationCooridnates.LocationResult(){
+            locationService.getLocation(this, new LocationCooridnates.LocationResult() {
                 @Override
                 public void gotLocation(final Location location) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                           pDialog.dismiss();
-                           if(location != null){
-                               sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
-                               addExtrasForLocationInIntent(location);
-                               startActivity(sendingIntent);
-                            }else{
+                            pDialog.dismiss();
+                            if (location != null) {
+                                addExtrasForLocationInIntent(location);
+                                startActivity(sendingIntent);
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
             });
-        }else{
+        } else {
             Utils.showGPSSettingsAlert(MDLivePharmacyChange.this);
         }
     }
 
     /**
      * This function is used to get suggestion results from webservice
-     *
+     * <p/>
      * responseListener - handleSuggestionSuccessResponse handles the reponse results
-     *
+     * <p/>
      * SuggestPharmayService class handling webservice integration for suggestions
      *
-     * @param searchText  - This text is enter by users
-     *
-     *
+     * @param searchText - This text is enter by users
      */
-    public void addSearchTextHistory(String searchText){
+    public void addSearchTextHistory(String searchText) {
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -218,14 +231,15 @@ public class MDLivePharmacyChange extends Activity {
                         Utils.connectionTimeoutError(pDialog, MDLivePharmacyChange.this);
                     }
                 }
-            }};
+            }
+        };
         SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), null);
         services.doSuggestionRequest(searchText, responseListener, errorListener);
     }
 
     /**
      * This function is used to handle the response of suggestion results.
-     *
+     * <p/>
      * Once response text is parsed, then it will be added in pharmacy_search_name suggestion box.
      *
      * @param response - Response recevied from addSearchTextHistory - onResponseReceiver.
@@ -234,25 +248,25 @@ public class MDLivePharmacyChange extends Activity {
         try {
             suggestionList.clear();
             JSONArray jarray = response.getJSONArray("pharmacies");
-            for(int i = 0; i<jarray.length(); i++) {
+            for (int i = 0; i < jarray.length(); i++) {
                 suggestionList.add(jarray.getString(i));
             }
-            adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item, suggestionList);
+            adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, suggestionList);
             pharmacy_search_name.setThreshold(3);
             pharmacy_search_name.setAdapter(adapter);
             pharmacy_search_name.showDropDown();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * This function is used to get post body text depends upon user currrent location
-     *  which is required to get results from webservice.
+     * which is required to get results from webservice.
      *
      * @param location - location of user currently located which is fetch by location service.
      */
-    private void addExtrasForLocationInIntent(Location location){
+    private void addExtrasForLocationInIntent(Location location) {
         sendingIntent.putExtra("longitude", location.getLongitude());
         sendingIntent.putExtra("latitude", location.getLatitude());
     }
@@ -260,28 +274,29 @@ public class MDLivePharmacyChange extends Activity {
     /**
      * This function is used to get post body depends upon option that users selected.
      */
-    private void addExtrasInIntent(){
+    private void addExtrasInIntent() {
         HashMap<String, Object> keyParams = new HashMap<String, Object>();
-        if(!TextUtils.isEmpty(pharmacy_search_name.getText().toString()))
+        if (!TextUtils.isEmpty(pharmacy_search_name.getText().toString()))
             sendingIntent.putExtra("name", pharmacy_search_name.getText().toString());
         try {
-            if(!TextUtils.isEmpty(zipcodeText.getText().toString())){
+            if (!TextUtils.isEmpty(zipcodeText.getText().toString())) {
                 sendingIntent.putExtra("zipcode", zipcodeText.getText().toString());
-        }else{
-            if(!TextUtils.isEmpty(cityText.getText().toString())){
-                sendingIntent.putExtra("city", cityText.getText().toString());
+            } else {
+                if (!TextUtils.isEmpty(cityText.getText().toString())) {
+                    sendingIntent.putExtra("city", cityText.getText().toString());
+                }
+                if (stageListView.getCheckedItemPosition() > 0)
+                    sendingIntent.putExtra("state", stateIds.get(stageListView.getCheckedItemPosition()));
             }
-            if(stageListView.getCheckedItemPosition() > 0)
-                sendingIntent.putExtra("state", stateIds.get(stageListView.getCheckedItemPosition()));
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
-     *  This function is for initialize Dialogs used in MDLivePharmacyChange Page.
-     *
-     *  Statelist will be displayed using this function.
+     * This function is for initialize Dialogs used in MDLivePharmacyChange Page.
+     * <p/>
+     * Statelist will be displayed using this function.
      */
     private void initializeStateDialog() {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePharmacyChange.this);
@@ -291,7 +306,7 @@ public class MDLivePharmacyChange extends Activity {
         stageListView = (ListView) convertView.findViewById(R.id.popupListview);
         stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
         stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_single_choice, stateList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, stateList);
         stageListView.setAdapter(adapter);
         stageListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         stateDialog = alertDialog.create();
@@ -303,5 +318,13 @@ public class MDLivePharmacyChange extends Activity {
                 stateDialog.dismiss();
             }
         });
+    }
+    /**
+     * The back image will pull you back to the Previous activity
+     * The home button will pull you back to the Dashboard activity
+     */
+    public void movetohome()
+    {
+        Utils.movetohome(MDLivePharmacyChange.this, MDLiveLogin.class);
     }
 }

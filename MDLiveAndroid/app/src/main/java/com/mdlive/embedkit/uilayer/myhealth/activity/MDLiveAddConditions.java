@@ -1,7 +1,9 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicalConditionServices;
@@ -42,6 +45,8 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         type = TYPE_CONSTANT.CONDITION;
         super.onCreate(savedInstanceState);
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medical_condition));
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
     }
 
     /**
@@ -53,6 +58,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     @Override
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
+        Log.e("newConditions", newConditions.size()+"");
         if (newConditions.size() == 0) {
             pDialog.dismiss();
             updateConditionsOrAllergies();
@@ -226,10 +232,11 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
      */
 
     public void callMedicalHistoryIntent() {
-        Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
+        finish();
+        /*Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
         medicalHistory.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         medicalHistory.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(medicalHistory);
+        startActivity(medicalHistory);*/
     }
 
 }

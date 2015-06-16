@@ -21,7 +21,7 @@
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="25dp"
             android:layout_alignTop="@+id/backImg"
             android:layout_toEndOf="@+id/backImg" />
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="40dp"
             android:textSize="20sp"
             android:gravity="center_vertical"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="30dp"
             android:textColor="@color/white"
             android:text="Choose Pharmacy"
             android:layout_centerVertical="true"
@@ -45,7 +45,6 @@
             android:layout_marginRight="10dp"
             android:textColor="@color/white"
             android:id="@+id/filter_txt"
-            android:visibility="gone"
             />
     </RelativeLayout>
 
