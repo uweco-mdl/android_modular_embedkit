@@ -10,6 +10,7 @@
         <TextView
             style = "@style/ReasonTextViewStyle"
             android:text="@string/acne_txt"
+            android:layout_height="35dp"
             android:id="@+id/reasonTxt" />
 
     </LinearLayout>

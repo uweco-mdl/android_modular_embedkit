@@ -1,154 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff"
-    android:orientation="vertical">
+    style="@style/ContainerStyle"
+    >
+    <LinearLayout
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:text="Billing information"
+            />
+    </LinearLayout>
     <ScrollView
+        style="@style/WagParentLinearLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-       <WebView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/HostedPCI"
-            android:layout_marginTop="20px"
-            android:layout_marginBottom="20px"
-            android:layout_marginRight="15px"
-            android:layout_marginLeft="15px"/>
+            <TextView
+                style="@style/Pediatric_TextStyle"
+                android:id="@+id/ageTxt"
+                android:text="Credit Card"
+                android:visibility="gone"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
-        android:layout_marginRight="15px"
-        android:layout_marginLeft="15px">
+            <TextView
+                style="@style/Pediatric_TextStyle"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation." />
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/HostedPCI"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
+                android:layout_marginRight="15px"
+                android:layout_marginLeft="15px"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Exp. Date"
-            android:id="@+id/textView4"
-            android:textColor="#000"
-            android:layout_marginLeft="25px" />
+            <LinearLayout
+                style="@style/WagLinearLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="25px"
+                android:orientation="vertical"
+                >
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/datepicker"
-            android:editable="false"
-            android:maxLines="1" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
-        android:layout_marginRight="15px"
-        android:layout_marginLeft="15px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Expiry Date"
+                    android:textSize="16sp"
+                    android:id="@+id/txtexpDate"
+                    android:textColor="@color/grey_txt"
+                     />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Zip Code"
-            android:id="@+id/textView2"
-            android:textColor="#000"
-            android:layout_marginLeft="25px"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtExpiryDate"
+                    android:textSize="17sp"
+                    android:background="@null"
+                    android:hint=""
+                    android:textColor="@color/black"
+                    android:editable="false"
+                    android:maxLines="1" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/WagLinearLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="25px"
+                android:orientation="vertical"
+               >
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:layout_weight="1"
-            android:maxLines="1" />
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Zip Code"
+                    android:id="@+id/textView2"
+                    android:textColor="@color/grey_txt"
+                    android:textSize="16sp"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edtZipCode"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:background="@null"
+                    android:hint=""
+                    android:layout_weight="1"
+                    android:maxLines="1" />
+            </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
-        android:layout_marginRight="15px"
-        android:layout_marginLeft="15px">
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton"
-            android:clickable="true"
-            android:layout_marginLeft="25px"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
+                android:layout_marginRight="30px"
+                android:layout_marginLeft="30px">
+                <Switch
+                    android:id="@+id/terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center"
+                    android:layout_gravity="center"
+                    android:text="Is this an FSA/HSA card?"
+                    android:checked="false" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Is this an FSA/HSA card?"
-            android:layout_marginLeft="30px"
-            android:id="@+id/textView3"
-            android:textColor="#000" />
 
-    </LinearLayout>
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="90px"
-        android:id="@+id/LinearLayout5"
-        android:background="#ECF5FA"
-        android:layout_marginRight="15px"
-        android:layout_marginLeft="15px">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Apply Offer Code"
-            android:id="@+id/textView5"
-            android:textColor="#6EAEDB"
-            android:layout_marginTop="20px"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="25px"
+                android:layout_marginLeft="25px"
+                android:background="#ECF5FA"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:layout_margin="25px"
+                    android:id="@+id/LinearLayout5"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Total :"
-            android:id="@+id/textView9"
-            android:layout_marginLeft="30px"
-            android:layout_marginTop="20px"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="49$"
-            android:id="@+id/cost"
-            android:layout_marginTop="20px"/>
+                   >
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#ECF5FA"
-        android:layout_marginBottom="20px"
-        android:layout_marginRight="15px"
-        android:layout_marginLeft="15px">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pay Now"
-            android:id="@+id/paynow"
-            android:background="#2A7DB6"
-            android:textColor="#fff"
-            android:layout_marginTop="40px"/>
-    </LinearLayout>
-     </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Apply Offer Code"
+                        android:id="@+id/textView5"
+                        android:textSize="18sp"
+                        android:layout_alignParentLeft="true"
+                        android:textColor="#6EAEDB"
+                        />
+
+                  <!--  <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_alignRight="@+id/textView5"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Total : "
+                        android:textColor="@color/black"
+                        android:id="@+id/textView9"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="320px"
+                        android:textStyle="bold"
+                       />-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Total :$49.00"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:id="@+id/cost"
+                        />
+
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="#ECF5FA"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginRight="15px"
+                    android:layout_marginLeft="15px">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pay Now"
+                        android:id="@+id/paynow"
+                        android:background="#2A7DB6"
+                        android:textColor="#fff"
+                        android:layout_marginTop="40px"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

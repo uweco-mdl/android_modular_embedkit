@@ -11,7 +11,7 @@
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
             android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
+            android:layout_marginStart="17dp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,37 +28,41 @@
             android:text="Add Child"
             />
     </LinearLayout>
+    <ScrollView style="@style/ScrollViewStyle"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            style="@style/LinearLayoutStyle"
+            android:id="@+id/providerNameLl">
     <TextView
         style = "@style/BaseSubHeaderTextViewStyle"
         android:textColor="@color/black"
         android:textSize="18sp"
+        android:layout_marginStart="19dp"
         android:text="Child must be younger than 18 years old"
         android:layout_width="match_parent" />
     <LinearLayout
-        style="@style/LinearLayoutStyle"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        style="@style/WagParentLinearLayoutStyle"
         android:orientation="vertical">
     <LinearLayout
         style="@style/LinearLayoutStyle"
         android:orientation="vertical">
 
-        <View style="@style/ViewStyle" />
-
         <LinearLayout
             android:orientation="vertical"
+            android:layout_marginStart="19dp"
 
             android:id="@+id/patientLl"
             style="@style/WagLinearLayoutStyle">
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style = "@style/GetStartedHeaderContentStyle"
                 android:text="Patient Name"
                  />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
+            <EditText
                 style = "@style/GetStartedContentTxtStyle"
                 android:hint="Patient Name"
+                android:textSize="18sp"
+                android:textColor="@color/black"
                 android:background="@null"
                 android:id="@+id/patientEt" />
 
@@ -69,14 +73,16 @@
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/dobLl"
+            android:layout_marginStart="19dp"
             style="@style/WagLinearLayoutStyle">
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style = "@style/GetStartedHeaderContentStyle"
                 android:text="Date of Birth"/>
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style = "@style/GetStartedHeaderContentStyle"
                 android:id="@+id/dobTxt"
+                android:textSize="18sp"
                 android:hint="mm/dd/yyyy"/>
         </LinearLayout>
 
@@ -84,14 +90,17 @@
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/genderLl"
+            android:layout_marginStart="19dp"
             style="@style/WagLinearLayoutStyle">
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style = "@style/GetStartedHeaderContentStyle"
                 android:text="Gender"
                  />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style = "@style/GetStartedContentTxtStyle"
                 android:hint="Male"
+                android:textSize="18sp"
+                android:textColor="@color/black"
                 android:id="@+id/genderTxt" />
 
 
@@ -102,26 +111,29 @@
             android:orientation="horizontal"
             android:layout_marginTop="30dp"
             android:id="@+id/locationLl"
+            android:layout_marginStart="5dp"
             style="@style/LinearLayoutStyle">
 
-            <Switch
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/mySwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_gravity="center"
-                android:text="I,Michelle Marino confirm that i&apos;m the legal parent / guardian\nof the minor above."
+                android:textSize="18sp"
+                android:text="I,Michelle Marino confirm that i'm the legal parent / guardian of the minor above."
                 android:checked="false" />
         </LinearLayout>
         </LinearLayout>
         <Button
             android:id="@+id/addChildBtn"
             style="@style/ContinueButtonStyle"
-            android:layout_marginTop="30dp"
+            android:layout_margin="20dp"
             android:text="Add Child"
              />
 
     </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
     </LinearLayout>

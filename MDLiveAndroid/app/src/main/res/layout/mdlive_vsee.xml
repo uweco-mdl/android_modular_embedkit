@@ -1,71 +1,114 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle">
 
+    <RelativeLayout
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
+        android:orientation="horizontal">
 
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style="@style/Waiting_headerStyle"
-        android:text="@string/waiting_header" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:layout_centerInParent="true"
+            android:text="Waiting Room"
+            />
+    </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="30dp"
-        android:background="@color/headerStyle_color"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
         <ImageView
 
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:src="@drawable/medical_kit_icon"
+            android:src="@drawable/doctor_icon_xxhdpi"
 
             />
 
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             android:id="@+id/txt_waitingtext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
-            android:text="Provider has Arrived"
+            android:text="@string/waiting_provider_text"
             android:textSize="18sp" />
 
 
     </LinearLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/numberOne"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:paddingBottom="50dp"
-            android:text="@string/waiting_text"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:gravity="center_horizontal"
+            android:text="1"
+            android:padding="10dp"
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            android:layout_width="match_parent"
+            android:textSize="125sp" />
+
+        <TextView
+            android:id="@+id/numberTwo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:paddingBottom="20dp"
-            android:text="@string/waiting_warn_text"
-            android:textSize="18sp" />
+            android:gravity="center_horizontal"
+            android:text="2"
+            android:textColor="@color/grey_txt"
+            android:padding="10dp"
+            android:textSize="125sp" />
+
+        <TextView
+            android:id="@+id/numberThree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:text="3"
+            android:textColor="@color/green"
+            android:padding="10dp"
+            android:textSize="125sp" />
+
+    </LinearLayout>
 
 
-    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:paddingBottom="50dp"
+        android:text="@string/waiting_warn_complete"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
 
 
 </LinearLayout>

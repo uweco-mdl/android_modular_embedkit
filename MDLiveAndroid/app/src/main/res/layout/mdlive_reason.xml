@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle">
-    />
+    style="@style/ContainerStyle"
+    >
+
     <LinearLayout
         style="@style/LinearLayoutStyle"
         android:orientation="vertical"
+         android:background="@color/mdlivePrimaryBlueColor"
         android:elevation="20dp"
-        android:background="@color/green">
+       >
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
+            android:layout_height="70dp"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"
@@ -23,29 +26,42 @@
                 android:background="@drawable/home_icon"
                 android:id="@+id/homeImg"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="30dp"
                 android:layout_toEndOf="@+id/backImg"
                 />
             <LinearLayout
                style="@style/LinearLayoutStyle"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_height="70dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp">
             <TextView
-
                 style = "@style/ReasonHeaderTxtStyle"
-                android:text="Reason for visit"
+                android:text="Reason for Visit"
                 />
                 <TextView
                     android:id="@+id/reason_patientTxt"
                     style = "@style/ReasonsubHeaderTxtStyle"
+                    android:textSize="18sp"
+                    android:layout_marginTop="5dp"
                     android:text="Michelle Marino"
                     />
             </LinearLayout>
-        </LinearLayout>
+
+              </LinearLayout>
         <EditText
             style="@style/gettingstarted_edittext"
-            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:hint="@string/searchsymptom_txt"
-            android:id="@+id/search_edit" />
+            android:id="@+id/search_edit"
+            android:drawableLeft="@drawable/search_icon"
+            android:drawablePadding="5dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="60dp"
+           />
         </LinearLayout>
 
 
@@ -80,8 +96,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:layout_marginTop="5dp"
             android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.3dip"
+            android:dividerHeight="0.1dip"
             android:id="@+id/reasonList" />
     </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+    android:background="@color/white"
     >
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
@@ -12,24 +13,24 @@
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
             android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
+            android:layout_marginStart="16dp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:visibility="visible"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="32dp"
             android:layout_toEndOf="@+id/backImg"
             />
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
+            android:gravity="start|center"
+            android:layout_marginLeft="38dp"
             android:text="Choose Doctor"
             />
     </LinearLayout>
-
 
     <!--<View
         style="@style/ViewStyle"
@@ -39,6 +40,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/chooseProviderList" />
-
-
 </LinearLayout>

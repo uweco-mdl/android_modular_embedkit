@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <include layout="@layout/header"
+    <include layout="@layout/mdlive_header"
     />
     <LinearLayout
         android:layout_width="match_parent"
@@ -170,7 +170,7 @@
 
         <include
             android:id="@+id/toolbar_actionbar"
-            layout="@layout/toolbar_default"
+            layout="@layout/mdlive_toolbar_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -189,6 +189,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
-        app:layout="@layout/fragment_navigation_drawer" />
+        app:layout="@layout/mdlive_fragment_navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>
 

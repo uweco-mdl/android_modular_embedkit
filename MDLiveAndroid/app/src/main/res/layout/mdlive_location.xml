@@ -1,34 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle">
-
-
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style = "@style/SubHeaderTextViewStyle"
-        android:text="@string/update_location"
-        android:tag="Update_location"
-
-        > </com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>
-    <View
-        style="@style/ViewStyle"
-        />
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-        style = "@style/LocationSubHeaderStyle"
-        android:id="@+id/mark1"
-        />
-
+    style="@style/ContainerStyle"
+    >
     <LinearLayout
-        android:orientation="horizontal"
-        style="@style/LinearLayoutStyle"
-
-        >
-
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-            style="@style/CurrentLocationTvStyle"
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/exit_icon"
+            android:id="@+id/backImg"
             android:layout_gravity="center"
-            android:id="@+id/currentLocation" />
-
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:text="Update Location"
+            />
+        <TextView
+            android:id="@+id/txtApply"
+            style = "@style/GetStartedHeaderContentStyle"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:gravity="end|right|center"
+            android:text="APPLY"
+            />
     </LinearLayout>
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/current_loc_txt"
+            android:tag="current_loc_txt"
+           android:drawableLeft="@drawable/location_symbol"
+            android:layout_margin="10dp"
+            style="@style/ContinueButtonStyle"
+            android:id="@+id/currentLocation"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="70dip"
+            android:paddingRight="60dip"
+        />
+
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,40 +64,80 @@
         >
         <LinearLayout
             android:orientation="vertical"
-            style="@style/LinearLayoutStyle">
+            style="@style/WagParentLinearLayoutStyle">
 
+        <LinearLayout
+            style="@style/WagLinearLayoutStyle"
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                style="@style/LocationPlainTxtViewStyle"
-                android:text="or"
+            android:layout_marginStart="19dp"
+            android:orientation="vertical">
+            <TextView
+                style="@style/common_style_W_Match_M_Match"
+                android:text="Manual Search"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt
-                style="@style/LocationBgdTxtViewStyle"
+            <TextView
+                style="@style/common_style_W_Match_M_Match"
+                android:text="Zip Code"
+                android:textColor="@color/grey_txt"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="18sp"
+                />
+            <EditText
+                style="@style/location_edittext"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:hint=""
+                android:maxLength="10"
+                android:tag="enter_zip"
+                android:layout_marginTop="5dp"
                 android:id="@+id/ZipEditTxt"
-                android:inputType="number"
-                android:padding="3dp"
-                android:hint="@string/zipCode_txt"
-                android:maxLength="5"
-                android:tag="enter_zipcodet"
                 />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <View style="@style/ViewStyle" />
+            </LinearLayout>
+        <LinearLayout
+            style="@style/WagLinearLayoutStyle"
+            android:layout_marginStart="19dp"
+            android:orientation="vertical">
+            <TextView
                 style="@style/LocationPlainTxtViewStyle"
-                android:text="@string/or"
+                android:text="Or"
                 android:tag="or"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 />
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 style="@style/LocationBgdTxtViewStyle"
                 android:hint="@string/state_txt"
                 android:tag="state"
-                android:id="@+id/StateTxt"
-                android:drawableEnd="@drawable/icon_arrow_down"
+                android:textColor="@color/grey_txt"
+                android:textSize="18sp"
                 />
+            <TextView
+                style="@style/LocationBgdTxtViewStyle"
+                android:hint=""
+                android:tag="state"
+                android:textSize="18sp"
+                android:id="@+id/StateTxt"
+                android:text="Select State"
+                android:drawableEnd="@drawable/dropdown_icon"
+                />
+            <View style="@style/ViewStyle" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <!--<Button
         style="@style/ContinueButtonStyle"
         android:tag="save_btn"
         android:textAllCaps="false"
-        android:id="@+id/SavContinueBtn" />
+        android:id="@+id/SavContinueBtn" />-->
 </LinearLayout>

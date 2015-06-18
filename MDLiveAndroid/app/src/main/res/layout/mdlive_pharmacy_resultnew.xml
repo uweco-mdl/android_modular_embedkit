@@ -35,16 +35,16 @@
             android:text="Choose Pharmacy"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/homeImg" />
-        <TextView
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Filter"
-            android:textSize="20sp"
+            android:background="@drawable/filter_icon"
+            android:id="@+id/filterImg"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:textColor="@color/white"
-            android:id="@+id/filter_txt"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
             />
     </RelativeLayout>
 
@@ -74,12 +74,24 @@
         android:visibility="visible"
         android:background="@android:color/white" >
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textSize="15sp"
+            android:id="@+id/noResultsText"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:text="No Results Found."/>
         <ListView
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dip"
+            android:layout_below="@+id/noResultsText"
             android:id="@+id/pharmList"
             android:layout_above="@+id/loadingIndicator"
             android:clickable="true" />

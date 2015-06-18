@@ -57,7 +57,7 @@
 
     <string name="header_reason_txt">Reason for visit</string>
     <string name="subheader_reason_txt">What is the reason for your visit?</string>
-    <string name="searchsymptom_txt">Search symptom</string>
+    <string name="searchsymptom_txt">Search symptoms</string>
     <string name="searchProvidernmae_txt">Search provider name</string>
     <string name="acne_txt">Acne</string>
     <string name="alcohol_txt">Alcohol Dependencies</string>

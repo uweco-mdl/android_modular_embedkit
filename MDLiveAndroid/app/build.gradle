@@ -26,15 +26,14 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.0"
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "com.mdlive.embedkit"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
     }
 
     buildTypes {
@@ -50,7 +49,6 @@ android {
 }
 
 
-
 // VSee integration:
 // If you don't include this section you will get errors due to duplicate files in
 // 3rd party dependencies.
@@ -62,19 +60,17 @@ android.packagingOptions {
     exclude 'version.properties'
 }
 
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // MultiDex support for building VSee embedded (to resolve asyncHttpClient-related issues)
     compile 'com.android.support:multidex:1.0.0'
-    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:support-v13:21.0.3'
-    compile files('libs/android-async-http-1.4.5.jar')
-    //compile files('libs/volley.jar')
-    compile files('libs/card.io.jar')
+    compile 'com.loopj.android:android-async-http:1.4.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+//    compile 'io.card:android-sdk:5.0.1'
     compile 'com.android.support:recyclerview-v7:22.1.1'
     compile project (':unifiedmiddleware')
-
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
     // VSee integration:
     compile('com.vsee:vsee-kit:0.3.20524@aar') {
         transitive = true
@@ -93,8 +89,5 @@ dependencies {
     testCompile 'org.robolectric:robolectric:2.4'*/
 
     /*compile 'com.google.android.gms:play-services:7.3.0'*/
-    compile 'com.google.android.gms:play-services-maps:7.3.0'
-    /*From Unified Middleware*/
-    compile 'com.google.code.gson:gson:2.3.1'
 
 }

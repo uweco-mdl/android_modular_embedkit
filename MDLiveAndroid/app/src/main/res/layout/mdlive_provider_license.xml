@@ -5,15 +5,15 @@
     >
     <LinearLayout
        style="@style/DoctorLinearLayoutStyle"
-        android:background="@drawable/edittext_bg"
         android:orientation="vertical">
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailHeaderStyle"
-            android:text="LICENSED IN"
+            android:text="Licensed In"
             />
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailContentStyle"
             android:id="@+id/license_txt"
+            android:textColor="#878f95"
             android:textAllCaps="true"
             />
 

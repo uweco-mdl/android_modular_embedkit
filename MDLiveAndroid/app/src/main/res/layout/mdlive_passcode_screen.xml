@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/parent_ll"
+    android:background="#FFFFFF"
+    >
+    <FrameLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#F7F6F5" >
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:hardwareAccelerated="false"
+            android:layout_margin="5dp"
+            android:id="@+id/passcode_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Sign Up"
+            android:textColor="#000000"
+            android:id="@+id/SignUpText"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:text="CREATE A PIN"
+        android:textColor="#6E6E6E"
+        android:textSize="14sp"
+        android:typeface="sans" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E6E6E6"/>
+
+    <TextView
+        android:id="@+id/desc_text"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Please create a 6 digit pin. To ensure your privacy you will be required to enter this pin to log into the application each time."
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_1"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_1"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_2"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_2"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_3"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_3"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_4"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_4"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_5"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_5"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/passcode_field_6"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_6"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox" />
+            </FrameLayout>
+        </LinearLayout>
+        
+        <TextView
+	        android:id="@+id/second_desc_text"
+	        android:layout_width="294dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="20dp"
+	        android:text=""
+	        android:textColor="#000000"
+	        android:textSize="15sp"
+	        android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/forgot_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Forgot your pin?"
+            android:textColor="#6E6E6E"
+            android:textSize="14sp"
+            android:typeface="sans" />
+        <TextView
+            android:id="@+id/password_unlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#6E6E6E"
+            android:textSize="14sp"
+            android:typeface="sans" />
+        <TextView
+            android:id="@+id/password_unlock_Def"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginTop="5dp"
+            android:textColor="#6E6E6E"
+            android:textSize="14sp"
+            android:typeface="sans" />
+        <TextView
+            android:id="@+id/loginWithUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="Sign in with Username and Password"
+            android:textColor="#6E6E6E"
+            android:textSize="14sp"
+            android:typeface="sans" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/dumy_field_passcode"
+        android:layout_width="0.1dp"
+        android:layout_height="0dp"
+        android:inputType="numberPassword"
+        android:maxLength="6" />
+</LinearLayout>
+</LinearLayout>

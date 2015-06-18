@@ -13,8 +13,9 @@
             style="@style/DoctorOnCallImgViewStyle"
             android:id="@+id/ProfileImg"
             android:visibility="visible"
-            android:layout_height="160dp"
-            android:layout_width="160dp"
+            android:layout_height="150dp"
+            android:layout_width="150dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/doctor_icon"
            />
 
@@ -38,13 +39,16 @@
             style="@style/ContinueButtonStyle"
             android:text="See Next Available"
             android:layout_marginTop="18dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:textAllCaps="false" />
           </LinearLayout>
 
     <RelativeLayout
+
         android:id="@+id/filterRl"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="10dp"
@@ -57,6 +61,7 @@
             android:gravity="left|center"
             android:textSize="16sp"
             android:textColor="#35393d"
+            android:layout_marginStart="19dp"
             android:layout_centerVertical="true"
             android:id="@+id/textView14" />
 
@@ -65,6 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FILTER"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
             android:textSize="16sp"
             android:textColor="@color/mdlivePrimaryBlueColor"
             android:id="@+id/textView15"

@@ -5,14 +5,14 @@
     >
     <LinearLayout
        style="@style/DoctorLinearLayoutStyle"
-        android:background="@drawable/edittext_bg"
         android:orientation="vertical">
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailHeaderStyle"
-            android:text="LOCATION"
+            android:text="Location"
             />
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailContentStyle"
+            android:textColor="#878f95"
             android:id="@+id/provider_location_txt"
             />
 

@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted1;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -90,14 +90,14 @@ public class MDLiveVsee extends Activity
             };
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String uid = extras.getString("userid");
-            String pass = extras.getString("passwd");
+//        if (extras != null) {
+            String uid = "mdlivedev+ps4ilgpwmmshpmf2igccqfkm3";
+            String pass = "qqrn9u74tc";
 
             MDLiveVseeApplication.setCredentials(uid, pass);
 
             VSeeServerConnection.instance().loginUser(uid, pass);
-        }
+//        }
 
 
         if (!MDLiveVseeApplication.loginCredentialsValid())
@@ -121,7 +121,7 @@ public class MDLiveVsee extends Activity
     @SuppressLint("InflateParams")
     private View getWaitingMessageView() {
 
-        FrameLayout frame = (FrameLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.vseewaitingmessage, null);
+        FrameLayout frame = (FrameLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.mdlive_vseewaitingmessage, null);
         TextView waitConnectMesg = (TextView)frame.findViewById(R.id.txtWaitCallConnect);
         waitConnectMesg.setText("Waiting for call to connect");
         return(frame);
@@ -154,7 +154,7 @@ public class MDLiveVsee extends Activity
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
 		simpleServerConnectionReceiver = null;
 		simpleVidManagerReceiver = null;
-        Intent i = new Intent(MDLiveVsee.this, MDLiveGetStarted1.class);
+        Intent i = new Intent(MDLiveVsee.this, MDLiveGetStarted.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         super.onDestroy();
@@ -265,5 +265,7 @@ public class MDLiveVsee extends Activity
     }
     */
 
-
+    @Override
+    public void onBackPressed() {
+    }
 }

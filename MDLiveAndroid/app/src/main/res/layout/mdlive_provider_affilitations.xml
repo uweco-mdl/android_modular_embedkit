@@ -6,7 +6,6 @@
     <LinearLayout
         android:id="@+id/providerImageHolder"
        style="@style/DoctorLinearLayoutStyle"
-        android:background="@drawable/edittext_bg"
         android:gravity="center"
         android:orientation="vertical">
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBackgroundColor"
     >
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
@@ -46,7 +47,7 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ProfileImg1"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_height="160dp"
             android:layout_width="160dp"
             android:visibility="visible"
@@ -57,55 +58,97 @@
                 style="@style/ProviderDetailsDoctorTxtStyle"
                 android:id="@+id/DoctorName"
                 android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
                 android:gravity="left|center"
                 android:textColor="#35393d"
                 android:textSize="18sp"
                 />
+           <LinearLayout
+              style="@style/LinearLayoutStyle"
+               android:orientation="horizontal">
            <TextView
                 style="@style/ProviderDetailsDoctorTxtStyle"
                 android:id="@+id/specalist"
                 android:text="General Practise"
                 android:layout_marginTop="5dp"
+               android:layout_marginStart="5dp"
                android:textColor="#878f95"
                android:gravity="left|center"
+               android:layout_width="wrap_content"
                 android:textSize="18sp"
                 />
+           <TextView
+               style="@style/ProviderDetailsDoctorTxtStyle"
+               android:text="Available now"
+               android:layout_marginTop="5dp"
+               android:layout_marginRight="5dp"
+               android:textColor="#31B404"
+               android:gravity="end|right|center"
+               android:textSize="18sp"
+               />
+           </LinearLayout>
+           <TextView
+               style="@style/ProviderDetailsDoctorTxtStyle"
+               android:text="Mercy Hospital"
+               android:layout_marginTop="5dp"
+               android:textColor="#878f95"
+               android:gravity="left|center"
+               android:layout_marginStart="5dp"
+               android:textSize="18sp"
+               />
         </LinearLayout>
 
         <Button
             android:id="@+id/tapBtn"
             style="@style/ContinueButtonStyle"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:text="Choose Dr.Clarke"
-            android:layout_marginTop="18dp"
             android:textAllCaps="false" />
-
+            <TextView
+                style="@style/ProviderDetailsDoctorTxtStyle"
+                android:layout_marginTop="10dp"
+                android:gravity="left|center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginStart="15dp"
+                android:textColor="#35393d"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Qualifications"
+                />
 
             <LinearLayout
-                style="@style/LinearLayoutStyle">
+                style="@style/LinearLayoutStyle"
+                android:layout_marginStart="5dp">
+
                 <include layout="@layout/mdlive_provider_specialities"/>
             </LinearLayout>
     <LinearLayout
-      style="@style/LinearLayoutStyle">
+      style="@style/LinearLayoutStyle"
+        android:layout_marginStart="5dp">
       <include layout="@layout/mdlive_provider_aboutme"/>
       </LinearLayout>
        <LinearLayout
-        style="@style/LinearLayoutStyle">
+        style="@style/LinearLayoutStyle"
+           android:layout_marginStart="5dp">
         <include layout="@layout/mdlive_provider_license"/>
        </LinearLayout>
 
        <LinearLayout
-         style="@style/LinearLayoutStyle">
+         style="@style/LinearLayoutStyle"
+           android:layout_marginStart="5dp">
          <include layout="@layout/mdlive_provider_affilitations"/>
        </LinearLayout>
 
        <LinearLayout
-         style="@style/LinearLayoutStyle">
-         <include layout="@layout/provider_location"/>
+         style="@style/LinearLayoutStyle"
+           android:layout_marginStart="5dp">
+         <include layout="@layout/mdlive_provider_location"/>
        </LinearLayout>
 
        <LinearLayout
-          style="@style/LinearLayoutStyle">
+          style="@style/LinearLayoutStyle"
+           android:layout_marginStart="5dp">
           <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
      </LinearLayout>
