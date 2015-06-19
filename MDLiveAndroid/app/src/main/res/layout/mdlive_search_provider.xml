@@ -56,6 +56,7 @@
                    <EditText
                        style = "@style/ProviderSearchAvailableTxtStyle"
                        android:textColor="@color/black"
+                       android:maxLength="50"
                        android:background="@null"
                        android:id="@+id/edt_searchProvider" />
                    <View style="@style/ProviderSearchViewStyle"
@@ -83,6 +84,7 @@
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
+                    android:visibility="gone"
                     android:id="@+id/sortbyLl">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
@@ -157,7 +159,9 @@
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:id="@+id/genderLl">
+                    android:paddingBottom="15dp"
+                    android:id="@+id/genderLl"
+                    >
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="Gender"
@@ -169,7 +173,8 @@
                         android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/GenderTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp"
+                       />
                 </LinearLayout>
 
 
@@ -187,8 +192,9 @@
                         android:text="Any"
                         android:textColor="@color/black"
                         android:id="@+id/AvailableTxtView" />
+                    <View style="@style/ProviderSearchViewStyle" />
                 </LinearLayout>
-                <View style="@style/ProviderSearchViewStyle" />
+
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -206,18 +212,6 @@
                         android:id="@+id/DateTxtView" />
                 </LinearLayout>
                 <View style="@style/ProviderSearchViewStyle" />
-
-
-
-
-
-
-
-
-
-
-
-
 
             </LinearLayout>
 

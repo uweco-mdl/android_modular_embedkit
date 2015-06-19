@@ -13,28 +13,27 @@
             android:id="@+id/backImg"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
+            android:layout_marginStart="16dp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_gravity="center"
-            android:layout_marginLeft="25dp"
-            android:layout_alignTop="@+id/backImg"
-            android:layout_toEndOf="@+id/backImg" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+
         <TextView
             android:id="@+id/headerTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/white"
-            android:text="Choose Pharmacy"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/homeImg" />
+            style = "@style/HeaderTextViewStyle"
+            android:gravity="start|center"
+            android:layout_centerInParent="true"
+            android:text="Choose Pharmacy">
+
+        </TextView>
+
 
         <ImageView
             android:layout_width="wrap_content"

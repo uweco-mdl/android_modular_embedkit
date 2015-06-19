@@ -63,6 +63,26 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
             pDialog.dismiss();
             updateConditionsOrAllergies();
         } else {
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (newConditions.size() == ++addConditionsCount) {
+                        pDialog.dismiss();
+                        updateConditionsOrAllergies();
+                    }
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    medicalCommonErrorResponseHandler(error);
+                }
+            };
+
+            AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
+            services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions);
+            /*
             for (int i = 0; i < newConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -82,7 +102,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                 };
                 AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
                 services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions.get(i));
-            }
+            }*/
         }
     }
 

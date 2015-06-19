@@ -56,6 +56,27 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             pDialog.dismiss();
             updateConditionsOrAllergies();
         } else {
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (newConditions.size() == ++addConditionsCount) {
+                        pDialog.dismiss();
+                        updateConditionsOrAllergies();
+                    }
+                }
+            };
+
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    medicalCommonErrorResponseHandler(error);
+                }
+            };
+
+            AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
+            services.addAllergyRequest(successCallBackListener, errorListener, newConditions);
+            /*
             for (int i = 0; i < newConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -78,7 +99,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
                 services.addAllergyRequest(successCallBackListener, errorListener, newConditions.get(i));
 
-            }
+            }*/
         }
     }
 

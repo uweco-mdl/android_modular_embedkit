@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +42,8 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.choose_provider_details);
-        pDialog = Utils.getProgressDialog("Loading...", this);
+        setContentView(R.layout.mdlive_choose_provider_details);
+        pDialog = Utils.getProgressDialog("Please wait...", this);
         getPreferenceDetails();
         Initialization();
         //Service call Method
@@ -78,9 +79,27 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         specialist_txt = (TextView)findViewById(R.id.specalist);
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         SearchBtn.setOnClickListener(this);
-        tapSeetheDoctorTxt.setOnClickListener(this);
+        //tapSeetheDoctorTxt.setOnClickListener(this);
         ProfileImg = (NetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
+
+        ((Button) findViewById(R.id.tapBtn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
+                startActivity(Reasonintent);
+            }
+        });
+        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLiveProviderDetails.this);
+                finish();
+            }
+        });
+
+
+
     }
     /**
      * Load user information Details.
@@ -234,11 +253,11 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.tapBtn:
+         /*   case R.id.tapBtn:
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 break;
-
+        */
         }
 
     }

@@ -3,46 +3,56 @@
     style="@style/ContainerStyle"
     android:background="@color/mdliveBackgroundColor"
     >
-    <LinearLayout
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
-        android:layout_height="70dp"
         android:orientation="horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/back_arrow_hdpi"
-                android:id="@+id/backImg"
-                android:layout_gravity="center"
-                android:layout_marginStart="19dp" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/home_icon"
-                android:id="@+id/homeImg"
-                android:layout_gravity="center"
-                android:layout_marginLeft="32dp"
-                android:layout_toEndOf="@+id/backImg"
-                />
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="vertical"
-                android:layout_height="70dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="15dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true">
+
             <TextView
-                style = "@style/ReasonHeaderTxtStyle"
-                android:text="Medical History"
-                />
+                android:id="@+id/headerTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="Medical History">
+            </TextView>
+
             <TextView
                 android:id="@+id/reason_patientTxt"
-                style = "@style/ReasonsubHeaderTxtStyle"
-                android:layout_marginTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/white"
                 android:text="Michelle Marino"
+                android:layout_below="@+id/headerTxt"
+
                 />
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <ScrollView style="@style/ScrollViewStyle"
         android:id="@+id/ContainerScrollView"

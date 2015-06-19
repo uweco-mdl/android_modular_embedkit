@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 
 import org.json.JSONArray;
@@ -70,6 +71,24 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             @Override
             public void onClick(View view) {
                 saveBtnAction();
+            }
+        });
+        /**
+         * The back image will pull you back to the Previous activity
+         * The home button will pull you back to the Dashboard activity
+         */
+
+        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
+                finish();
+            }
+        });
+        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movetohome();
             }
         });
     }
@@ -466,5 +485,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 return view;
             }
         };
+    }
+    /**
+     * The back image will pull you back to the Previous activity
+     * The home button will pull you back to the Dashboard activity
+     */
+    public void movetohome()
+    {
+        Utils.movetohome(MDLiveCommonConditionsMedicationsActivity.this, MDLiveLogin.class);
     }
 }

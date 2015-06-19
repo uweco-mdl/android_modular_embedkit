@@ -156,7 +156,7 @@
     <string name="pediatric_header_text">PEDIATRIC PROFILE</string>
     <string name="pediatric_please_text">Please answer the following questions.</string>
     <string name="pediatric_Birth_Weight_text">Birth Weight</string>
-    <string name="pediatric_current_Weight_text">Current Weight (lbs)</string>
+    <string name="pediatric_current_Weight_text">Current Weight in lbs</string>
     <string name="pediatric_lbs_text">lbs</string>
     <string name="pediatric_delivery_text">Delivery type</string>
     <string name="pediatric_diet_text">Current diet</string>
@@ -196,7 +196,7 @@
     <string-array name="stateName">
         <item>Alabama</item>
         <item>Alaska</item>
-        <item>AmericanSamoa</item>
+        <item>American Samoa</item>
         <item>Arizona</item>
         <item>Arkansas</item>
         <item>ArmedForcesEurope</item>

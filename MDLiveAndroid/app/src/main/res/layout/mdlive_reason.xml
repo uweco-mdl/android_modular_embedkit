@@ -9,46 +9,56 @@
          android:background="@color/mdlivePrimaryBlueColor"
         android:elevation="20dp"
        >
-        <LinearLayout
+        <RelativeLayout
             style="@style/wagHeaderLinearLayoutStyle"
-            android:layout_height="70dp"
+            android:elevation="20dp"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/back_arrow_hdpi"
                 android:id="@+id/backImg"
-                android:layout_gravity="center"
-                android:layout_marginStart="19dp" />
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/home_icon"
                 android:id="@+id/homeImg"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/backImg"
                 />
             <LinearLayout
-               style="@style/LinearLayoutStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_height="70dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="15dp">
-            <TextView
-                style = "@style/ReasonHeaderTxtStyle"
-                android:text="Reason for Visit"
-                />
+                android:layout_centerInParent="true">
+
+                <TextView
+                    android:id="@+id/headerTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:text="Reason for Visit">
+                </TextView>
+
                 <TextView
                     android:id="@+id/reason_patientTxt"
-                    style = "@style/ReasonsubHeaderTxtStyle"
-                    android:textSize="18sp"
-                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
                     android:text="Michelle Marino"
+                    android:layout_below="@+id/headerTxt"
+
                     />
             </LinearLayout>
 
-              </LinearLayout>
+        </RelativeLayout>
         <EditText
             style="@style/gettingstarted_edittext"
             android:layout_marginTop="20dp"

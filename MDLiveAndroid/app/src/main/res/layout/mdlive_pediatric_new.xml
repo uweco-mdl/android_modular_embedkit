@@ -5,50 +5,60 @@
     android:background="@color/mdliveBackgroundColor"
     >
 
-    <LinearLayout
-        android:id="@+id/header"
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
-        android:layout_height="70dp"
         android:orientation="horizontal">
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
-            android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
             />
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_height="70dp"
-            android:layout_marginLeft="15dp">
+            android:layout_centerInParent="true">
+
             <TextView
-                style = "@style/ReasonHeaderTxtStyle"
-                android:text="Pediatric Profile"
-                />
+                android:id="@+id/headerTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="Pediatric Profile">
+            </TextView>
+
             <TextView
                 android:id="@+id/reason_patientTxt"
-                style = "@style/ReasonsubHeaderTxtStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/white"
                 android:text="Michelle Marino"
+                android:layout_below="@+id/headerTxt"
+
                 />
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
 
     <ScrollView
-        android:layout_below="@+id/header"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_continue_pediatric"

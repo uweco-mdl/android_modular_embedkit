@@ -99,7 +99,6 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:textStyle="bold"
                 android:textSize="18sp"
                 />
             <TextView
@@ -134,7 +133,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:textSize="18sp"
-            android:textStyle="bold"
             android:id="@+id/textView8" />
             <TextView
                 style="@style/common_style_W_Match_M_Match"

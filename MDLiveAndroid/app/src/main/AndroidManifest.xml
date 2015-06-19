@@ -125,12 +125,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
 
-        <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLivePediatricProfile"
-            android:label="@string/title_activity_home"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
-
 
         <!-- Pharmacy Activities-->
         <activity
@@ -142,10 +136,7 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".uilayer.pharmacy.activities.MDLivePharmacyResultTab"
-            android:label="@string/title_activity_home"
-            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyDetails"
             android:label="@string/title_activity_home"

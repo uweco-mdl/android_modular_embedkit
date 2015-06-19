@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 <!--
     <include layout="@layout/header" />-->
-    <LinearLayout
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
         android:orientation="horizontal">
@@ -12,35 +12,48 @@
             android:layout_height="wrap_content"
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
-            android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_gravity="center"
-            android:layout_marginLeft="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
             />
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="30dp">
+            android:layout_centerInParent="true">
+
             <TextView
-                style = "@style/ReasonHeaderTxtStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:id="@+id/CommonConditionsAllergiesHeaderTv"
                 android:text="Add Conditions"
-                />
+                android:textColor="@color/white"
+                >
+            </TextView>
+
             <TextView
                 android:id="@+id/reason_patientTxt"
-                style = "@style/ReasonsubHeaderTxtStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/white"
                 android:text="Michelle Marino"
+                android:layout_below="@+id/headerTxt"
+
                 />
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <ScrollView style="@style/ScrollViewStyle">
 

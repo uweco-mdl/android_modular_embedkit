@@ -1,17 +1,21 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
+import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 
 import java.util.ArrayList;
@@ -27,11 +31,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
     LinearLayout DocOnCalLinLay;
 
     public ChooseProviderAdapter(Context applicationContext,
-                                       ArrayList<HashMap<String, String>> arraylist) {
+                                 ArrayList<HashMap<String, String>> arraylist) {
 
         this.context = applicationContext;
         this.array = arraylist;
-
 
     }
 
@@ -70,21 +73,37 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
             inflate = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.chooseproviderheader, parent,
+            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,
                     false);
+            ((RelativeLayout)row.findViewById(R.id.filterRl)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent  = new Intent(context, MDLiveSearchProvider.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.getApplicationContext().startActivity(intent);
+                }
+            });
+            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.getApplicationContext().startActivity(intent);
+                }
+            });
         }
         else {
             if(row==null)
             inflate = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.chooseprovider_baseadapter, parent,
+            row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,
                     false);
             PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
             PatientNmaeTxt.setText(array.get(pos).get("name"));
             SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
             SPecialistTxt.setText(array.get(pos).get("speciality"));
             ProfileImg = (NetworkImageView) row.findViewById(R.id.ProfileImg);
-            Log.d("array.get(pos).get(\"provider_image_url\")",array.get(pos).get("provider_image_url"));
+
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
 
              //    This is to Check the availability of the Doctor. If the next availability of doctor
@@ -107,13 +126,12 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
             callImg = (ImageView) row.findViewById(R.id.callImg);
             if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.video_or_phonr))) {
-                callImg.setVisibility(View.VISIBLE);
+                callImg.setVisibility(View.GONE);
                 callImg.setBackgroundResource(R.drawable.videoicon);
             }
             if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.phone))) {
-                callImg.setVisibility(View.VISIBLE);
+                callImg.setVisibility(View.GONE);
                 callImg.setBackgroundResource(R.drawable.callicon);
-
             }
         }
 

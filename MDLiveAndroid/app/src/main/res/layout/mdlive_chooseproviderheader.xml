@@ -34,15 +34,14 @@
                 android:gravity="center"
                 android:textColor="#878f95"
                 android:id="@+id/Time"/>
-        <Button
-            android:id="@+id/seenextAvailableBtn"
-            style="@style/ContinueButtonStyle"
-            android:text="See Next Available"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:textAllCaps="false" />
+
           </LinearLayout>
+    <Button
+        android:id="@+id/seenextAvailableBtn"
+        style="@style/ContinueButtonStyle"
+        android:text="See Next Available"
+        android:layout_marginTop="18dp"
+        android:textAllCaps="false" />
 
     <RelativeLayout
 

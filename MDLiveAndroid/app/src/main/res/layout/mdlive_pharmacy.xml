@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     >
-    <LinearLayout
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
         android:orientation="horizontal">
@@ -11,25 +11,29 @@
             android:layout_height="wrap_content"
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
-            android:layout_gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="16dp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_gravity="center"
-            android:layout_marginLeft="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
             />
+
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
             android:gravity="start|center"
-            android:layout_marginLeft="38dp"
-            android:text="Choose Pharmacy"
-            />
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:text="Choose Pharmacy">
+
+        </TextView>
+    </RelativeLayout>
 
 
     <ScrollView

@@ -131,6 +131,7 @@ public class MDLiveLogin extends Activity {
                 Intent i = new Intent(getApplicationContext(), MDLiveGetStarted.class);
                 i.putExtra("token",response.getString("token")); // The token received from service on successful login
                 startActivity(i);
+                finish();
 
             } else {
 //                displayMessage(response.has("token")?response.getString("token"):localisationHelper.getLocalizedStringFromPrefs(this, "invalid_credentials"));

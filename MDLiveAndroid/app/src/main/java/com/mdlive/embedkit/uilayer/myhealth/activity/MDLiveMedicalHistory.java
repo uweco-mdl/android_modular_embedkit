@@ -246,6 +246,7 @@ public class MDLiveMedicalHistory extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLiveMedicalHistory.this);
                 finish();
             }
         });

@@ -31,7 +31,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
-import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
@@ -103,7 +102,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         keyParams = new HashMap<String, Object>();
         loadingIndicator = (ProgressBar) findViewById(R.id.loadingIndicator);
 
-        ((TextView) findViewById(R.id.filter_txt)).setOnClickListener(new View.OnClickListener() {
+        ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
@@ -118,6 +117,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLivePharmacyResult.this);
                 finish();
             }
         });

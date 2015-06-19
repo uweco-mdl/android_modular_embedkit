@@ -124,15 +124,17 @@
                 android:checked="false" />
         </LinearLayout>
         </LinearLayout>
-        <Button
-            android:id="@+id/addChildBtn"
-            style="@style/ContinueButtonStyle"
-            android:layout_margin="20dp"
-            android:text="Add Child"
-             />
+
 
     </LinearLayout>
+            <Button
+                android:id="@+id/addChildBtn"
+                style="@style/ContinueButtonStyle"
+                android:layout_marginTop="20dp"
+                android:text="Add Child"
+                />
         </LinearLayout>
+
     </ScrollView>
 
 

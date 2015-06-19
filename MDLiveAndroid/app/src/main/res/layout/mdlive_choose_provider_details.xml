@@ -101,8 +101,8 @@
         <Button
             android:id="@+id/tapBtn"
             style="@style/ContinueButtonStyle"
-            android:layout_margin="30dp"
-            android:text="Choose Dr.Clarke"
+            android:layout_marginTop="30dp"
+            android:text=""
             android:textAllCaps="false" />
             <TextView
                 style="@style/ProviderDetailsDoctorTxtStyle"
