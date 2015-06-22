@@ -43,7 +43,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         super.onCreate(savedInstanceState);
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medication));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
+        ((TextView) findViewById(R.id.reason_patientTxt
+        )).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
     }
 
     /**
@@ -64,10 +65,10 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (newConditions.size() == ++addConditionsCount) {
-                            pDialog.dismiss();
-                            updateConditionsOrAllergies();
-                        }
+                        pDialog.dismiss();
+                        updateConditionsOrAllergies();
+                        /*if (newConditions.size() == ++addConditionsCount) {
+                        }*/
                     }
                 };
                 NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -97,19 +98,14 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         pDialog.show();
         if (existingConditions.size() == 0) {
             pDialog.dismiss();
-            callMedicalHistoryIntent();
-            finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (existingConditions.size() == ++existingConditionsCount) {
-                            pDialog.dismiss();
-                            callMedicalHistoryIntent();
-                            finish();
-                        }
+                        pDialog.dismiss();
+                        finish();
                     }
                 };
                 NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -167,7 +163,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                while (addConditionsLl.getChildCount() < 5) {
+                while (addConditionsLl.getChildCount() < 3) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();

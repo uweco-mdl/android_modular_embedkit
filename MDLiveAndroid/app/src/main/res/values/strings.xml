@@ -73,7 +73,10 @@
     <string name="bloodsputum_txt">Blood In Sputum</string>
     <string name="bloodstool_txt">Blood In Stool</string>
     <string name="bloodurine_txt">Blood In Urine</string>
-
+    <string name="invalid_name">Invalid Name</string>
+    <string name="invalid_symptom">Invalid Symptom</string>
+    <string name="no_results_found_txt">No results.</string>
+    <string name="no_results_found_as_symptom_txt">submit {0} as your symptom</string>
 
     <!--Location-->
     <string name="locationHeader_txt">UPDATE LOCATION</string>

@@ -67,10 +67,11 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (newConditions.size() == ++addConditionsCount) {
-                        pDialog.dismiss();
-                        updateConditionsOrAllergies();
-                    }
+                    pDialog.dismiss();
+                    updateConditionsOrAllergies();
+              /*      if (newConditions.size() == ++addConditionsCount) {
+
+                    }*/
                 }
             };
             NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -118,7 +119,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         pDialog.show();
         if (existingConditions.size() == 0) {
             pDialog.dismiss();
-            callMedicalHistoryIntent();
             finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
@@ -126,11 +126,11 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (existingConditions.size() == ++existingConditionsCount) {
-                            pDialog.dismiss();
-                            callMedicalHistoryIntent();
-                            finish();
-                        }
+                        pDialog.dismiss();
+                        finish();
+                        /*if (existingConditions.size() == ++existingConditionsCount) {
+
+                        }*/
                     }
                 };
                 NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -190,7 +190,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                while (addConditionsLl.getChildCount() < 5) {
+                while (addConditionsLl.getChildCount() < 3) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();

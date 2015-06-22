@@ -3,8 +3,7 @@
     style="@style/ContainerStyle">
     <RelativeLayout
         android:id="@+id/defaultPharmlayout"
-        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-        android:background="@drawable/pharmacy_line_bg"
+        style="@style/wagHeaderLinearLayoutStyle"
         android:padding="10dp">
 
         <TextView
@@ -14,6 +13,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:text="DONE" />
         <TextView
             android:id="@+id/imageNameText"
@@ -21,6 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:maxLength="15"
+            android:ellipsize="end"
             android:text="IMAGE NAME" />
 
         <TextView
@@ -30,6 +35,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:textColor="@color/white"
             android:text="UPLOAD" />
 
     </RelativeLayout>
@@ -38,19 +44,28 @@
         style="@style/ViewStyle"
         />
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/galleryImageView"
-        android:scaleType="centerCrop"
-        />
+        android:layout_weight="1">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/galleryImageView"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@drawable/doctor_icon"
+            />
+
+    </RelativeLayout>
+
+
 
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
-        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-        android:background="@drawable/pharmacy_line_bg"
+        style="@style/wagHeaderLinearLayoutStyle"
         android:padding="10dp">
 
 
@@ -61,6 +76,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:text="DELETE" />
 
     </RelativeLayout>

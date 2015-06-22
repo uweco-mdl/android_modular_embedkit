@@ -60,10 +60,10 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (newConditions.size() == ++addConditionsCount) {
-                        pDialog.dismiss();
-                        updateConditionsOrAllergies();
-                    }
+                    pDialog.dismiss();
+                    updateConditionsOrAllergies();
+                  /*  if (newConditions.size() == ++addConditionsCount) {
+                    }*/
                 }
             };
 
@@ -76,6 +76,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
             AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
             services.addAllergyRequest(successCallBackListener, errorListener, newConditions);
+
             /*
             for (int i = 0; i < newConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -109,7 +110,6 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         pDialog.show();
         if(existingConditions.size() == 0){
             pDialog.dismiss();
-            callMedicalHistoryIntent();
             finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
@@ -117,11 +117,8 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (existingConditions.size() == ++existingConditionsCount) {
-                            pDialog.dismiss();
-                            callMedicalHistoryIntent();
-                            finish();
-                        }
+                        pDialog.dismiss();
+                        finish();
                     }
                 };
 
@@ -156,7 +153,6 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     protected void getConditionsOrAllergiesData() {
         pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
                 medicalConditionOrAllergyListHandleSuccessResponse(response);
@@ -173,14 +169,13 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         services.getAllergyListRequest(successCallBackListener, errorListener);
     }
 
-
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
         pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                while(addConditionsLl.getChildCount()<5){
+                while(addConditionsLl.getChildCount()<3){
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();
