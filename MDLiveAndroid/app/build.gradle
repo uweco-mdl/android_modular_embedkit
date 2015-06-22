@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId "com.mdlive.embedkit"
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -38,7 +38,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
