@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -112,7 +113,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     protected void onResume() {
         super.onResume();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String SavedLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FL");
+        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
         locationTxt.setText(SavedLocation);
     }
     /**
@@ -167,12 +168,38 @@ public class MDLiveGetStarted extends FragmentActivity{
                     try{
                         if(patientSpinner!=null) {
                             if ((dependentList.size() >= IntegerConstants.ADD_CHILD_SIZE) && patientSpinner.getSelectedItem().toString().equals("Add Child")) {
-                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
+                                DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1800888444"));// TODO : Change it one number is confirmed
+                                        startActivity(intent);
+                                    }
+                                };
+
+                                DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                };
+
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call \n" +
+                                                "1-888-818-0978 to \nadd another child.", "Call", "Dismiss",
+                                        positiveOnClickListener,negativeOnClickListener);
+//                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
                             } else {
                                 if (patientSpinner.getSelectedItem().toString().equals("Add Child")) {
                                     Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                                     startActivity(intent);
                                 } else {
+
+                                    SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString(PreferenceConstants.PATIENT_NAME, patientSpinner.getSelectedItem().toString());
+                                     if(!dependentList.contains(patientSpinner.getSelectedItem().toString())){
+                                         editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
+                                     }
+                                    editor.commit();
                                     Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                     startActivity(intent);
                                 }
@@ -245,12 +272,37 @@ public class MDLiveGetStarted extends FragmentActivity{
                     {
                         if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
                         {
-                            Utils.alert(pDialog,MDLiveGetStarted.this,"Please call 1-800-XXX-XXXX to \nadd another child.");
+                            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1800888444"));// TODO : Change it one number is confirmed
+                                    startActivity(intent);
+                                }
+                            };
+
+                            DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            };
+//                            Utils.alert(pDialog,MDLiveGetStarted.this,"Please call 1-800-XXX-XXXX to \nadd another child.");
+                            Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-800-XXX-XXXX to \nadd another child.", "Call", "Dismiss",
+                                    positiveOnClickListener,negativeOnClickListener);
                         }
                     }else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                             startActivity(intent);
+                        }else {
+                            Log.d("Dep Name", dependentName);
+                            for(HashMap<String,String> tmpMap : PatientList){
+                                Log.d("Dep Name  - TmpMap", tmpMap.get("name"));
+                                if(tmpMap.get("name").equalsIgnoreCase(dependentName)){
+                                    loadDependentUserInformationDetails(tmpMap.get("id"));
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -311,7 +363,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 }
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
-        services.getUserBasicInfoRequest(successCallBackListener, errorListener);
+        services.getUserBasicInfoRequest("",successCallBackListener, errorListener);
     }
     /**
      * Load Family Member Type Details.
@@ -348,6 +400,42 @@ public class MDLiveGetStarted extends FragmentActivity{
         FamilyMembersList family_services = new FamilyMembersList(MDLiveGetStarted.this, null);
         family_services.getFamilyMember(responseListener, errorListener);
     }
+
+
+    private void loadDependentUserInformationDetails(String depenedentId) {
+        if(!pDialog.isShowing()) {
+            pDialog.show();
+        }
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("Dep Response", response.toString());
+                handleDependentSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Response", error.toString());
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        pDialog.dismiss();
+                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                    }
+                }
+            }};
+        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
+        services.getUserBasicInfoRequest(depenedentId,successCallBackListener, errorListener);
+    }
+
     /**
      *
      * Successful Response Handler for Family Member.This response will return the patient name
@@ -398,18 +486,45 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-
             JSONObject personalInfo = response.getJSONObject("personal_info");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("state"));
             genderText.setText(personalInfo.getString("gender"));
-            dependentList.add(0,personalInfo.getString("username")) ;
+            dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("username"));
+            editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
+            editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
+            editor.commit();
+            pDialog.dismiss();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     *  Successful Response Handler for Load Basic Info.The user basic info will provider the gender
+     *  of the user and the date of birth of the corresponding user.
+     *
+     */
+
+    private void handleDependentSuccessResponse(JSONObject response) {
+        try {
+            JSONObject personalInfo = response.getJSONObject("personal_info");
+            isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
+            DateTxt.setText(personalInfo.getString("birthdate"));
+            locationTxt.setText(personalInfo.getString("state"));
+            genderText.setText(personalInfo.getString("gender"));
+            JsonParser parser = new JsonParser();
+            JsonObject responObj = (JsonObject)parser.parse(response.toString());
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
             pDialog.dismiss();

@@ -121,25 +121,24 @@ public class MDLiveFamilymember extends Activity {
                     @Override
                     public void onClick(View v) {
                         getEditValue = patientNameEt.getText().toString();
-
-
-
-//            finalstr.put("pediatric", Result);
-
-                        HashMap<String,HashMap<String,String>> map=new HashMap<>();
-                        HashMap  params = new HashMap();
-                        params.put("computer","Mac");
-                        HashMap  params1 = new HashMap();
-                        params1.put("username",getEditValue);
-                        params1.put("first_name","stage");
-                        params1.put("last_name","divi");
-                        params1.put("gender",strGender);
-                        params1.put("date",strDate);
-                        params1.put("email","raja.rathinavel@photoninfotech.net");
-                        params1.put("phone","12345678902");
-                        array.put("camera",params);
-                        array.put("member",params1);
-                        PostLifeStyleServices();
+                        if (Utils.isValidName(getEditValue)) {
+                            HashMap<String, HashMap<String, String>> map = new HashMap<>();
+                            HashMap params = new HashMap();
+                            params.put("computer", "Mac");
+                            HashMap params1 = new HashMap();
+                            params1.put("username", getEditValue);
+                            params1.put("first_name", "stage");
+                            params1.put("last_name", "divi");
+                            params1.put("gender", strGender);
+                            params1.put("date", strDate);
+                            params1.put("email", "raja.rathinavel@photoninfotech.net");
+                            params1.put("phone", "12345678902");
+                            array.put("camera", params);
+                            array.put("member", params1);
+                            PostLifeStyleServices();
+                        } else {
+                            Utils.showDialog(MDLiveFamilymember.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
+                        }
                     }
                 });
 
@@ -177,7 +176,7 @@ public class MDLiveFamilymember extends Activity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
 //        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
-        mySwitch.setText("I certify that i'm the legal parent / guardian\nof the minor above.");
+        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+" certify that i'm the legal parent / guardian\nof the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -216,9 +215,9 @@ public class MDLiveFamilymember extends Activity {
         if(TextUtils.isEmpty(dateTxt.getText())){
             isAllFieldsfilled = false;
         }
-        if(TextUtils.isEmpty(genderTxt.getText().toString())){
-            isAllFieldsfilled = false;
-        }
+//        if(TextUtils.isEmpty(genderTxt.getText().toString())){
+//            isAllFieldsfilled = false;
+//        }
         if(!mySwitch.isChecked())
         {
             isAllFieldsfilled = false;

@@ -80,8 +80,15 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
                 if(array.size()==0)
                 {
                     LinearResults.setVisibility(View.VISIBLE);
-                    noresults.setText("No results found for " + constraint.toString());
-                    submitResults.setText("submit results "+constraint.toString()+" "+"as your symptom");
+                    if(!constraint.toString().trim().isEmpty()) {
+                        noresults.setVisibility(View.VISIBLE);
+                        submitResults.setVisibility(View.VISIBLE);
+                        noresults.setText(context.getResources().getString(R.string.no_results_found_txt));
+                        submitResults.setText(java.text.MessageFormat.format(context.getResources().getString(R.string.no_results_found_as_symptom_txt) ,new String[]{constraint.toString()}));
+                    } else {
+                        noresults.setVisibility(View.GONE);
+                        submitResults.setVisibility(View.GONE);
+                    }
 
                 }else
                 {

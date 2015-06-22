@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -73,14 +73,12 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
             inflate = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,
-                    false);
-            ((RelativeLayout)row.findViewById(R.id.filterRl)).setOnClickListener(new View.OnClickListener() {
+            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
+            ((TextView)row.findViewById(R.id.txtFilter)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent  = new Intent(context, MDLiveSearchProvider.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.getApplicationContext().startActivity(intent);
+                    ((Activity)context).startActivityForResult(intent,1);
                 }
             });
             ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
@@ -139,6 +137,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
         return row;
     }
+
+
+
+
 
 
 }

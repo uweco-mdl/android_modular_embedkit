@@ -29,7 +29,7 @@
             android:text="Update Location"
             />
         <TextView
-            android:id="@+id/SavContinueBtn"
+            android:id="@+id/txtApply"
             style = "@style/GetStartedHeaderContentStyle"
             android:textColor="@color/white"
             android:textSize="18sp"
@@ -121,11 +121,10 @@
                 />
             <TextView
                 style="@style/LocationBgdTxtViewStyle"
-                android:hint=""
                 android:tag="state"
                 android:textSize="18sp"
                 android:id="@+id/StateTxt"
-                android:text="Select State"
+                android:hint="Select State"
                 android:drawableEnd="@drawable/dropdown_icon"
                 />
             <View style="@style/ViewStyle" />

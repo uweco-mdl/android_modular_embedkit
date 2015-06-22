@@ -44,7 +44,6 @@
         android:textAllCaps="false" />
 
     <RelativeLayout
-
         android:id="@+id/filterRl"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -62,7 +61,7 @@
             android:textColor="#35393d"
             android:layout_marginStart="19dp"
             android:layout_centerVertical="true"
-            android:id="@+id/textView14" />
+            android:id="@+id/txtFilter" />
 
         <TextView
             style="@style/BaseAvailableDoctorTxtStyle"

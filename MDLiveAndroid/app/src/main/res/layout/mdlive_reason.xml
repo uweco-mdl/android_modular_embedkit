@@ -66,6 +66,7 @@
             android:layout_marginRight="10dp"
             android:hint="@string/searchsymptom_txt"
             android:id="@+id/search_edit"
+            android:inputType="textPersonName"
             android:drawableLeft="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:layout_margin="10dp"

@@ -102,15 +102,29 @@ public class MDLiveChooseProvider extends Activity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                try {
+                    if (error.networkResponse == null) {
+                        if (error.getClass().equals(TimeoutError.class)) {
+                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            };
+                            Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                        }
                     }
+                    DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            MDLiveChooseProvider.this.finish();
+                        }
+                    };
+                    JSONObject obj = new JSONObject(error.toString());
+                    Utils.showDialog(MDLiveChooseProvider.this,MDLiveChooseProvider.this.getResources().getString(R.string.app_name),obj.getString("error"),MDLiveChooseProvider.this.getResources().getString(R.string.ok),null,positiveOnclickListener,null);
+                }catch(Exception e){
+                    Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                    e.printStackTrace();
                 }
             }};
         ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, null);
@@ -153,7 +167,7 @@ public class MDLiveChooseProvider extends Activity {
      */
     private void setListView() {
         listView = (ListView) findViewById(R.id.chooseProviderList);
-        baseadapter = new ChooseProviderAdapter(getApplicationContext(), ProviderListMap);
+        baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
         ListItemClickListener();
@@ -291,18 +305,19 @@ public class MDLiveChooseProvider extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
+
             String response=data.getStringExtra("Response");
-            ProviderListMap.clear();
             try{
                 JSONObject jobj=new JSONObject(response);
                 JSONArray jArray=jobj.getJSONArray("physicians");
                 if(jArray.get(0).toString().equals(StringConstants.NO_PROVIDERS)){
-                    baseadapter = new ChooseProviderAdapter(getApplicationContext(), ProviderListMap);
+                    baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
                     listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
                     Utils.alert(pDialog,MDLiveChooseProvider.this,jArray.get(0).toString());
 
                 }else{
+                    ProviderListMap.clear();
                     handleSuccessResponse(response);
                 }
 

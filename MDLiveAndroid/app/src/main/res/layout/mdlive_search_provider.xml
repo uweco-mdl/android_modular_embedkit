@@ -73,7 +73,7 @@
                         android:text="Provider type"                 />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Family Physician"
+                        android:text="Any"
                         android:drawableEnd="@drawable/dropdown_icon"
                         android:textColor="@color/black"
                         android:id="@+id/ProviderTypeTxtView" />

@@ -105,12 +105,28 @@
                     style = "@style/GetStartedHeaderContentStyle"
                     android:text="@string/location"
                     />
-                <TextView
-                    style = "@style/GetStartedContentTxtStyle"
-                    android:text="FL"
-                    android:textSize="18sp"
-                    android:textColor="#35393d"
-                    android:id="@+id/locationTxt" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        style = "@style/GetStartedContentTxtStyle"
+                        android:text="FL"
+                        android:textSize="18sp"
+                        android:textColor="#35393d"
+                        android:id="@+id/locationTxt"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
+                        />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_action_next_item"
+                        android:layout_centerVertical="true"
+                        />
+
+                    </RelativeLayout>
+
                 <View style="@style/ViewStyle"
                     android:layout_marginTop="7dp"/>
             </LinearLayout>

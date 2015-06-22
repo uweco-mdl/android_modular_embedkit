@@ -34,7 +34,7 @@ import org.json.JSONObject;
  */
 public class MDLiveProviderDetails extends Activity implements View.OnClickListener{
     private ProgressDialog pDialog;
-    private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt,DoctorName_txt,specialist_txt,tapSeetheDoctorTxt;
+    private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,tapSeetheDoctorTxt;
     private NetworkImageView ProfileImg,AffilitationProviderImg;
     public String DoctorId;
     private String SharedLocation,AppointmentDate,AppointmentType;
@@ -75,7 +75,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (TextView)findViewById(R.id.tapBtn);
-        DoctorName_txt = (TextView)findViewById(R.id.DoctorName);
+        doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         SearchBtn.setOnClickListener(this);
@@ -113,6 +113,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
 
             @Override
             public void onResponse(JSONObject response) {
+                tapSeetheDoctorTxt.setClickable(true);
                 handleSuccessResponse(response);
             }
         };
@@ -129,6 +130,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
                                 dialog.dismiss();
                             }
                         };
+                        tapSeetheDoctorTxt.setClickable(false);
                         // Show timeout error message
                         Utils.connectionTimeoutError(pDialog, MDLiveProviderDetails.this);
                     }
@@ -159,7 +161,10 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
             String str_AboutMe = providerdetObj.get("about_me").getAsString();
             String str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
             ProfileImg.setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
-            DoctorName_txt.setText(str_DoctorName);
+            ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
+            ProfileImg.setErrorImageResId(R.drawable.doctor_icon);
+            doctorNameTv.setText(str_DoctorName);
+            tapSeetheDoctorTxt.setText(str_DoctorName);
             aboutme_txt.setText(str_AboutMe);
             location_txt.setText(str_Location);
             String license_state = "";

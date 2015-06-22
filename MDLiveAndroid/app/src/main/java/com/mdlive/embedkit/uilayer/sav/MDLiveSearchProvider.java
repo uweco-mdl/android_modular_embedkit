@@ -156,6 +156,10 @@ public class MDLiveSearchProvider extends Activity {
         SearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!Utils.isValidName(edtSearch.getText().toString())){
+                    Utils.showDialog(MDLiveSearchProvider.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
+                    return;
+                }
                 postParams.put("located_in",SavedLocation);
                 postParams.put("appointment_date",AppointmentTxtView.getText().toString());
                 postParams.put("gender",genderTxtView.getText().toString());
@@ -180,14 +184,6 @@ public class MDLiveSearchProvider extends Activity {
 
             }
         });
-        ((TextView)findViewById(R.id.doneTxt)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveSearchProvider.this);
-                finish();
-
-            }
-        });
         TextView AvailableTxtView = (TextView) findViewById(R.id.AvailableTxtView);
         AppointmentTxtView = (TextView) findViewById(R.id.DateTxtView);
         Calendar now = Calendar.getInstance();
@@ -195,7 +191,6 @@ public class MDLiveSearchProvider extends Activity {
         String currentDate=now.get(Calendar.YEAR)+"/"+month+"/"+now.get(Calendar.DAY_OF_MONTH);
         AppointmentTxtView.setText(currentDate);
         ProviderTypeTxtView = (TextView) findViewById(R.id.ProviderTypeTxtView);
-        ProviderTypeTxtView.setText("Therapist");
         TextView SortByTxtView = (TextView) findViewById(R.id.SortbyTxtView);
         TextView SpecialityTxtView = (TextView) findViewById(R.id.SpecialityTxtView);
          LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
@@ -445,6 +440,7 @@ public class MDLiveSearchProvider extends Activity {
 
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("Sucess Response", response.toString());
                 handleFilterSuccessResponse(response);
             }
         };

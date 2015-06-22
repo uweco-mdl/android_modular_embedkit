@@ -62,8 +62,13 @@ public class MDLiveReasonForVisit extends Activity {
         SubmitResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!Utils.isValidName(((EditText)findViewById(R.id.search_edit)).getText().toString())){
+                    Utils.showDialog(MDLiveReasonForVisit.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_symptom));
+                    return;
+                }
+
                 Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
-                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=12){
+                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
                     finish();
@@ -194,7 +199,7 @@ public class MDLiveReasonForVisit extends Activity {
                 Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
 
                 //MDLivePharmacy
-                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=12){
+                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
 

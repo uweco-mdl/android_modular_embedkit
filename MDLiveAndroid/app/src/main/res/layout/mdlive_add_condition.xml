@@ -10,6 +10,8 @@
         android:id="@+id/ConditionEt"
         android:hint="@string/add_condition_hint"
         android:tag="add_condition"
+        android:paddingRight="35dp"
+        android:maxLength="100"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/DeleteConditionBtn" />
