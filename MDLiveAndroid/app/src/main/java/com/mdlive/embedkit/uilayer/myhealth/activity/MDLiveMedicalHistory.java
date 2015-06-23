@@ -113,7 +113,9 @@ public class MDLiveMedicalHistory extends Activity {
         ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
         myPhotosList = new ArrayList<HashMap<String, Object>>();
 
-        Utils.photoList.clear();
+//        Utils.photoList.clear();
+        Utils.mphotoList.clear();
+
 
         findViewById(R.id.editConditionsTxt).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -606,7 +608,8 @@ public class MDLiveMedicalHistory extends Activity {
                 if(recordsArray != null){
                     for(int i =0; i<recordsArray.length(); i++){
                         JSONObject jsonObject = recordsArray.getJSONObject(i);
-                        if(Utils.photoList.get(jsonObject.getInt("id")) == null)
+//                        if(Utils.photoList.get(jsonObject.getInt("id")) == null)
+                        if(Utils.mphotoList.get(jsonObject.getInt("id")) == null)
                             downloadImageService(jsonObject.getInt("id"));
                     }
                 }
@@ -651,7 +654,8 @@ public class MDLiveMedicalHistory extends Activity {
                 if(response.has("message") && response.getString("message").equals("Document found")){
                     byte[] decodedString = Base64.decode(response.getString("file_stream"), Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    Utils.photoList.put(photoId, decodedByte);
+//                    Utils.photoList.put(photoId, decodedByte);
+                    Utils.mphotoList.put(photoId, response.getString("file_stream"));
 
                 }
             }

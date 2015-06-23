@@ -3,7 +3,10 @@ package com.mdlive.embedkit.uilayer.myhealth.activity.imageadapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,7 +62,14 @@ public class MDLiveImageGalleryView extends Activity {
         ((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
 
         Log.e("Received Id", getIntent().getIntExtra("id", 0)+"");
-        ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(Utils.photoList.get(getIntent().getIntExtra("id", 0)));
+
+
+        byte[] decodedString = Base64.decode((String) Utils.mphotoList.get(getIntent().getIntExtra("id", 0)), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        //imageView.setImageBitmap(decodedByte);
+        ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(decodedByte);
+
+//        decodedByte.recycle();
     }
 
     /**
