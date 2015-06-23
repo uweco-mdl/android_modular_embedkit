@@ -98,6 +98,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         pDialog.show();
         if (existingConditions.size() == 0) {
             pDialog.dismiss();
+            setResult(RESULT_OK);
+            finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -105,6 +107,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                     @Override
                     public void onResponse(JSONObject response) {
                         pDialog.dismiss();
+                        setResult(RESULT_OK);
                         finish();
                     }
                 };

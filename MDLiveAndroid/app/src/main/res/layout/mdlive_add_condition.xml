@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/line_bottomline_medicalhistory_bg">
 
-    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomActv
+    <AutoCompleteTextView
         style = "@style/BaseEditTextStyle.LoginEditTextStyle.AddEditText"
         android:id="@+id/ConditionEt"
         android:hint="@string/add_condition_hint"
@@ -13,8 +13,8 @@
         android:paddingRight="35dp"
         android:maxLength="100"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/DeleteConditionBtn" />
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/DeleteConditionBtn" />
 
     <ImageView
         android:layout_width="25dp"

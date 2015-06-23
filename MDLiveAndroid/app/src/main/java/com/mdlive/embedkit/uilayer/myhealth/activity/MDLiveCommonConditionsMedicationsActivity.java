@@ -228,6 +228,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_OK);
                 if(((ViewGroup)(deleteView.getParent())).getTag()!=null) {
                     deleteMedicalConditionsOrAllergyAction(deleteView, addConditionsLl);
                 } else {

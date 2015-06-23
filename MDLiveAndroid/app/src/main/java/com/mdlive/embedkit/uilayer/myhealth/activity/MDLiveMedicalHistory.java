@@ -39,7 +39,7 @@ import com.mdlive.embedkit.uilayer.myhealth.activity.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -78,7 +78,7 @@ import java.util.Locale;
 
 public class MDLiveMedicalHistory extends Activity {
 
-    private ProgressDialog pDialog;
+    public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
     private boolean isFemaleQuestionsDone = false, isConditionsDone = false,
@@ -89,7 +89,10 @@ public class MDLiveMedicalHistory extends Activity {
     private ArrayList<HashMap<String, Object>> myPhotosList;
     private ImageAdapter imageAdapter;
     private GridView gridview;
-
+    public static Uri fileUri;
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    public static final int IMAGE_PREVIEW_CODE = 200;
+    private static final int RELOAD_REQUEST_CODE = 111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,7 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
-                startActivity(i);
+                startActivityForResult(i, RELOAD_REQUEST_CODE);
             }
         });
 
@@ -124,7 +127,7 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
-                startActivity(i);
+                startActivityForResult(i, RELOAD_REQUEST_CODE);
             }
         });
 
@@ -132,7 +135,7 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
-                startActivity(i);
+                startActivityForResult(i, RELOAD_REQUEST_CODE);
             }
         });
 
@@ -152,8 +155,9 @@ public class MDLiveMedicalHistory extends Activity {
 
 //        saveDateOfBirth();
         initializeViews();
-
+        checkMedicalAggregation();
     }
+
     private void updateMedicalHistory(){
 
         pDialog.show();
@@ -332,9 +336,7 @@ public class MDLiveMedicalHistory extends Activity {
     }
 
     // Activity request codes
-    public static Uri fileUri;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    public static final int IMAGE_PREVIEW_CODE = 200;
+
 
     /* Checking device has camera hardware or not
     * */
@@ -390,11 +392,20 @@ public class MDLiveMedicalHistory extends Activity {
                 // successfully captured the image
                 if(fileUri != null)
                     uploadMedicalRecordService(fileUri.getPath());
-            } else if(!(resultCode == RESULT_CANCELED)) {
+            } else {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(),
                         "Sorry! Failed to Upload Image!", Toast.LENGTH_SHORT)
                         .show();
+            }
+        }if(requestCode == RELOAD_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                checkMedicalAggregation();
+            }
+        }
+        if(requestCode == IMAGE_PREVIEW_CODE) {
+            if (resultCode == RESULT_OK) {
+                downloadMedicalRecordService();
             }
         }
     }
@@ -402,7 +413,6 @@ public class MDLiveMedicalHistory extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkMedicalAggregation();
     }
 
     private void applyValidationOnViews(){
@@ -458,11 +468,12 @@ public class MDLiveMedicalHistory extends Activity {
      */
 
     private void uploadMedicalRecordService(String filePath) {
-        // pDialog.show();
+        pDialog.show();
+        Log.e("filePath---->", filePath);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //pDialog.dismiss();
+                pDialog.dismiss();
                 Log.e("response--> upload", response.toString());
                 try {
                     if(response!= null){
@@ -668,12 +679,11 @@ public class MDLiveMedicalHistory extends Activity {
                 pDialog.dismiss();
                 try {
                     if(response != null){
-                        Log.e("Medical Completion....", response.toString());
                         if(response.has("health_last_update")){
-                            int time = response.getInt("health_last_update");
+                            long time = response.getLong("health_last_update");
                             if(time != 0){
                                 Calendar calendar = Calendar.getInstance();
-                                calendar.setTimeInMillis(time);
+                                calendar.setTimeInMillis(time * 1000);
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                                 ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.updateInfoText)).setText(
@@ -861,19 +871,19 @@ public class MDLiveMedicalHistory extends Activity {
             {
                 JSONObject subObj = historyPercentageArray.getJSONObject(i);
                 if(subObj.has("health")){
-                    int myHealthPercentage = historyPercentageArray.getJSONObject(0).getInt("health");
+                    int myHealthPercentage = subObj.getInt("health");
                     if(myHealthPercentage == 0){
                         havingHealth = true;
                     }
                 }
                 if(subObj.has("life_style")){
-                    int life_styleValue = historyPercentageArray.getJSONObject(1).getInt("life_style");
+                    int life_styleValue = subObj.getInt("life_style");
                     if(life_styleValue == 0){
                         liftStyle = true;
                     }
                 }
                 if(subObj.has("pediatric")){
-                    int pediatricValue = historyPercentageArray.getJSONObject(2).getInt("pediatric");
+                    int pediatricValue = subObj.getInt("pediatric");
                     if(pediatricValue == 0){
                         pediatric = true;
                     }

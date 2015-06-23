@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.myhealth.activity.imageadapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -81,8 +80,7 @@ public class MDLiveImageGalleryView extends Activity {
                         Log.e("Response", response.toString());
                         if(response.has("message")){
                             if(response.getString("message").equals("Customer document deleted successfully")){
-                                Intent intent = new Intent();
-                                setResult(RESULT_OK, intent);
+                                setResult(RESULT_OK);
                                 finish();
                             }
                         }

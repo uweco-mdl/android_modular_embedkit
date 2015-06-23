@@ -24,11 +24,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.pharmacy.LocationService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
 
 import org.json.JSONObject;
@@ -90,10 +90,10 @@ public class MDLivePharmacyDetails extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                        LocationService locationService = new LocationService();
+                        LocationCooridnates locationService = new LocationCooridnates();
 
                         if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
-                            locationService.getLocation(MDLivePharmacyDetails.this, new LocationService.LocationResult(){
+                            locationService.getLocation(MDLivePharmacyDetails.this, new LocationCooridnates.LocationResult(){
                                 @Override
                                 public void gotLocation(final Location location) {
                                     runOnUiThread(new Runnable() {

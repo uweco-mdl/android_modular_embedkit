@@ -110,6 +110,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         pDialog.show();
         if(existingConditions.size() == 0){
             pDialog.dismiss();
+            setResult(RESULT_OK);
             finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
@@ -118,6 +119,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                     @Override
                     public void onResponse(JSONObject response) {
                         pDialog.dismiss();
+                        setResult(RESULT_OK);
                         finish();
                     }
                 };

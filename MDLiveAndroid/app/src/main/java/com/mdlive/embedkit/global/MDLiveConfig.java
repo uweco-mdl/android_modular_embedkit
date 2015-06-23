@@ -75,6 +75,7 @@ private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
     private static final String URL_PENDING_APPOINTMENT= "/appointments";
     private static final String URL_BILLING_UPDATE= "/billing_informations/1";
 
+    private static final String URL_GET_LASTDATE_MEDICAL_HISTORY = "/medical_histories/medical_history_completion";
 
 
 
@@ -144,6 +145,7 @@ private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
         AppSpecificConfig.DELETE_MEDICALREPORT = DELETE_MEDICALREPORT;
         AppSpecificConfig.USER_INFORMATION = USER_INFORMATION;
         AppSpecificConfig.URL_GET_PROMOCODE = URL_GET_PROMOCODE;
+        AppSpecificConfig.URL_GET_LASTDATE_MEDICAL_HISTORY = URL_GET_LASTDATE_MEDICAL_HISTORY;
         AppSpecificConfig.URL_USER_INFO = URL_USER_INFO;
         AppSpecificConfig.URL_PENDING_APPOINTMENT = URL_PENDING_APPOINTMENT;
         AppSpecificConfig.URL_BILLING_UPDATE = URL_BILLING_UPDATE;
