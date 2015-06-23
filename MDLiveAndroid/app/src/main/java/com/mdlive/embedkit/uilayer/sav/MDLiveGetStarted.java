@@ -59,6 +59,8 @@ public class MDLiveGetStarted extends FragmentActivity{
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
     private int serviceCount;
+    private boolean isUserInfo=false;
+    private HashMap<String,Object> userInfoObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,8 @@ public class MDLiveGetStarted extends FragmentActivity{
         super.onResume();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        locationTxt.setText(SavedLocation);
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        locationTxt.setText(longNameLocation);
     }
     /**
      * Intialization of the views should be done here and the on click listener of the particular
@@ -145,6 +148,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 movetohome();
             }
         });
+        userInfoObject=new HashMap<>();
 
 
 
@@ -184,7 +188,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 };
 
                                 Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call \n" +
-                                                "1-888-818-0978 to \nadd another child.", "Call", "Dismiss",
+                                                "1-888-818-0978 to \nadd another child.", "Call Now", "Dismiss",
                                         positiveOnClickListener,negativeOnClickListener);
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
                             } else {
@@ -259,14 +263,22 @@ public class MDLiveGetStarted extends FragmentActivity{
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_spinner_item,list);
 
-        dataAdapter.setDropDownViewResource
-                (android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
                 int item = spinner.getSelectedItemPosition();
                 String dependentName = spinner.getSelectedItem().toString();
+                if(dependentName.equals(dependentList.get(0))){
+                    userInfoChange((JSONObject)userInfoObject.get(dependentName));
+                    Log.e("Inside Condition","Coming");;
+                       /* Log.e("Inside Condition","Coming");
+                        PatientList.clear();
+                        dependentList.clear();
+                        loadUserInformationDetails();*/;
+
+                }
                 if(list!=null){
                     if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
                     {
@@ -275,7 +287,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1800888444"));// TODO : Change it one number is confirmed
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1-888-818-0978"));// TODO : Change it one number is confirmed
                                     startActivity(intent);
                                 }
                             };
@@ -287,8 +299,12 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 }
                             };
 //                            Utils.alert(pDialog,MDLiveGetStarted.this,"Please call 1-800-XXX-XXXX to \nadd another child.");
-                            Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-800-XXX-XXXX to \nadd another child.", "Call", "Dismiss",
+                            Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "Call Now", "Dismiss",
                                     positiveOnClickListener,negativeOnClickListener);
+                        }else
+                        {
+                            Log.d("Dep Name", dependentName);
+                            loadDependentInformationDetails(dependentName);
                         }
                     }else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
@@ -296,13 +312,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                             startActivity(intent);
                         }else {
                             Log.d("Dep Name", dependentName);
-                            for(HashMap<String,String> tmpMap : PatientList){
-                                Log.d("Dep Name  - TmpMap", tmpMap.get("name"));
-                                if(tmpMap.get("name").equalsIgnoreCase(dependentName)){
-                                    loadDependentUserInformationDetails(tmpMap.get("id"));
-                                    break;
-                                }
-                            }
+                            loadDependentInformationDetails(dependentName);
                         }
                     }
                 }
@@ -311,6 +321,36 @@ public class MDLiveGetStarted extends FragmentActivity{
             }
             public void onNothingSelected(AdapterView<?> arg0) { }
         });
+    }
+
+    private void loadDependentInformationDetails(String dependentName) {
+        for(HashMap<String,String> tmpMap : PatientList){
+            Log.d("Dep Name  - TmpMap", tmpMap.get("name"));
+            if(tmpMap.get("name").equalsIgnoreCase(dependentName)){
+                loadDependentUserInformationDetails(tmpMap.get("id"));
+                break;
+            }
+        }
+    }
+
+
+    public void userInfoChange(JSONObject resObj){
+        try{
+            JSONObject personalInfo = resObj.getJSONObject("personal_info");
+            isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
+            DateTxt.setText(personalInfo.getString("birthdate"));
+            locationTxt.setText(personalInfo.getString("state"));
+            genderText.setText(personalInfo.getString("gender"));
+            JsonParser parser = new JsonParser();
+            JsonObject responObj = (JsonObject)parser.parse(resObj.toString());
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
+            editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
+            editor.commit();
+        }catch (Exception e){
+
+        }
     }
 
     /**
@@ -340,6 +380,7 @@ public class MDLiveGetStarted extends FragmentActivity{
 
             @Override
             public void onResponse(JSONObject response) {
+                Utils.hideProgressDialog(pDialog);
                 handleSuccessResponse(response);
                 loadFamilyMember();
             }
@@ -372,9 +413,13 @@ public class MDLiveGetStarted extends FragmentActivity{
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
     private void loadFamilyMember() {
+        if(!pDialog.isShowing()) {
+            pDialog.show();
+        }
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Utils.hideProgressDialog(pDialog);
                 handleSuccessResponseFamilyMember(response);
             }
         };
@@ -411,6 +456,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("Dep Response", response.toString());
+                Utils.hideProgressDialog(pDialog);
                 handleDependentSuccessResponse(response);
             }
         };
@@ -444,6 +490,7 @@ public class MDLiveGetStarted extends FragmentActivity{
      */
     private void handleSuccessResponseFamilyMember(JSONObject response) {
         try {
+            isUserInfo=false;
             if(serviceCount == 2){
                 pDialog.dismiss();
                 serviceCount = 0;
@@ -464,6 +511,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 Log.e("dependent list",strPatientName);
                 dependentList.add(strPatientName);
                 PatientList.add(test);
+
 
 //                patientName.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
             }
@@ -486,11 +534,17 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
+            isUserInfo=true;
             JSONObject personalInfo = response.getJSONObject("personal_info");
+            userInfoObject.put(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name"),response);
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("state"));
             genderText.setText(personalInfo.getString("gender"));
+
+            ((TextView)findViewById(R.id.telephoneTxt)).setText(personalInfo.getString("phone"));
+
+
             dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
@@ -515,6 +569,7 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
+            isUserInfo=true;
             JSONObject personalInfo = response.getJSONObject("personal_info");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
@@ -522,11 +577,11 @@ public class MDLiveGetStarted extends FragmentActivity{
             genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+           /* SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
-            editor.commit();
+            editor.commit();*/
             pDialog.dismiss();
 
         }catch(Exception e){
@@ -564,7 +619,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         // Show current date
         selectedText.setText(new StringBuilder()
                 // Month is 0 based, just add 1
-                .append(month + 1).append("-").append(day).append("-")
+                .append(month + 1).append("/").append(day).append("/")
                 .append(year).append(" "));
     }
 
@@ -588,7 +643,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             currendDate.setTime(new Date());
 
             DateTxt.setText(new StringBuilder().append(month + 1)
-                    .append("-").append(day).append("-").append(year)
+                    .append("/").append(day).append("/").append(year)
                     .append(" "));
 
         }

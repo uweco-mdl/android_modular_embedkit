@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class MDLivePharmacyChange extends Activity {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
+    private int keyDel=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,40 @@ public class MDLivePharmacyChange extends Activity {
                 }
             }
         });
+        //validation for Zip code
+        zipcodeText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                zipcodeText.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_DEL)
+                            keyDel = 1;
+                        return false;
+                    }
+                });
+
+                if (keyDel == 0) {
+                    int len = zipcodeText.getText().length();
+                    if(len == 5) {
+                        zipcodeText.setText(zipcodeText.getText() + "-");
+                        zipcodeText.setSelection(zipcodeText.getText().length());
+                    }
+                } else {
+                    keyDel = 0;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -117,15 +153,26 @@ public class MDLivePharmacyChange extends Activity {
         ((TextView) findViewById(R.id.doneTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addExtrasInIntent();
-                startActivity(sendingIntent);
-                finish();
+                if(validate_data()){
+                    addExtrasInIntent();
+                    startActivity(sendingIntent);
+                    finish();
+                }else{
+                    Utils.showDialog(MDLivePharmacyChange.this, "Alert", "Please choose any state/zipcode to proceed search!");
+                }
+
             }
         });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+        /**
+         * The back image will pull you back to the Previous activity
+         * The home button will pull you back to the Dashboard activity
+         */
+
+        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                movetohome();
+                Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                finish();
             }
         });
 
@@ -145,6 +192,19 @@ public class MDLivePharmacyChange extends Activity {
         });
     }
 
+    public boolean validate_data(){
+        if(zipcodeText.getText()!=null && !zipcodeText.getText().toString().equals("")){
+            if(Utils.validateZipCode(zipcodeText.getText().toString())){
+                return true;
+            }else{
+                return false;
+            }
+
+        }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("")){
+            return true;
+        }
+        return false;
+    }
 
 
     /**

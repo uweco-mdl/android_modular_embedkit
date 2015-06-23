@@ -4,7 +4,6 @@ package com.mdlive.embedkit.uilayer.payment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +11,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -46,14 +48,16 @@ import java.util.HashMap;
 
 public class MDLivePayment extends Activity {
 
-    private EditText dateView, offercode,edtZipCode;
+    private EditText dateView, edtZipCode;
     private int year, month, day;
-    static final int DATE_PICKER_ID = 1111;
     private Button cls_btn, ok_btn, payNow;
     private String applyOfferCode;
     private WebView HostedPCI;
     private DatePicker datePicker;
     protected ProgressDialog pDialog;
+    private DatePickerDialog datePickerDialog;
+    private boolean isPaymentLoading;
+    private int keyDel=0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,29 +65,73 @@ public class MDLivePayment extends Activity {
         setContentView(R.layout.mdlive_payment_activity);
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
+        getDateOfBirth();
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    showDialog(DATE_PICKER_ID);
+                datePickerDialog.show();
             }
         });
         payNow = (Button) findViewById(R.id.paynow);
         edtZipCode= (EditText) findViewById(R.id.edtZipCode);
+        edtZipCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                edtZipCode.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_DEL)
+                            keyDel = 1;
+                        return false;
+                    }
+                });
+
+                if (keyDel == 0) {
+                    int len = edtZipCode.getText().length();
+                    if(len == 5) {
+                        edtZipCode.setText(edtZipCode.getText() + "-");
+                        edtZipCode.setSelection(edtZipCode.getText().length());
+                    }
+                } else {
+                    keyDel = 0;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         TextView textview = (TextView) findViewById((R.id.textView5));
         HostedPCI.getSettings().setJavaScriptEnabled(true);
-        HostedPCI.setWebChromeClient(new WebChromeClient());
+        HostedPCI.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!isPaymentLoading)
+                                pDialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-
-
-        SimpleDateFormat dateFormat=new SimpleDateFormat("MM/yy");
-        dateView.setText(dateFormat.format(new Date()));
-
-        // HostedPCI.loadUrl("file:///android_asset/htdocs/templateIndex.html");
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
+        pDialog.show();
         textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -95,14 +143,13 @@ public class MDLivePayment extends Activity {
         ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLivePayment.this);
                 finish();
             }
         });
         ((ImageView) findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // movetohome();
+                // movetohome();
             }
         });
     }
@@ -141,9 +188,13 @@ public class MDLivePayment extends Activity {
 
     private View.OnClickListener paynow_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
-
             if(edtZipCode.getText().toString().length()!=0&&dateView.getText().toString().length()!=0){
-                HostedPCI.loadUrl("javascript:tokenizeForm()");
+                if(Utils.validateZipCode(edtZipCode.getText().toString())){
+                    HostedPCI.loadUrl("javascript:tokenizeForm()");
+                }else{
+                    Utils.alert(pDialog,MDLivePayment.this,"Please enter a valid Zipcode.");
+                }
+
             }else{
                 Utils.alert(pDialog,MDLivePayment.this,"Please fill all the details");
 
@@ -155,63 +206,54 @@ public class MDLivePayment extends Activity {
     };
 
 
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_PICKER_ID:
 
-                // return new DatePickerDialog(this, pickerListener, year, month,day);
-                Calendar c = Calendar.getInstance();
-                int currentYear = c.get(Calendar.YEAR);
-                int currentMonth = c.get(Calendar.MONTH);
-                int Currentday = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dpd = new DatePickerDialog(this, pickerListener, currentYear, currentMonth, Currentday);
-                try {
-                    java.lang.reflect.Field[] datePickerDialogFields = dpd.getClass().getDeclaredFields();
-                    for (java.lang.reflect.Field datePickerDialogField : datePickerDialogFields) {
-                        if (datePickerDialogField.getName().equals("mDatePicker")) {
-                            datePickerDialogField.setAccessible(true);
-                            datePicker.setCalendarViewShown(false);
-                            datePicker.setSpinnersShown(true);
-                            datePicker = (DatePicker) datePickerDialogField.get(dpd);
-                            java.lang.reflect.Field[] datePickerFields = datePickerDialogField.getType().getDeclaredFields();
-                            for (java.lang.reflect.Field datePickerField : datePickerFields) {
-                                if ("mDaySpinner".equals(datePickerField.getName())) {
-                                    datePickerField.setAccessible(true);
-                                    Object dayPicker = new Object();
-                                    dayPicker = datePickerField.get(datePicker);
-                                    ((View) dayPicker).setVisibility(View.GONE);
-                                }
-                            }
-                        }
 
-                    }
-                } catch (Exception ex) {
-                }
-                return dpd;
+
+    /**
+     * Fetching the values from the native date picker and the picker listener was implemented
+     * for the particular native date picker.
+     */
+    private void getDateOfBirth() {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setCalendarViewShown(false);
+            datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+        }catch (Exception e){
+
         }
-        return null;
+
     }
+
+
+
 
     private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
 
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
-            year = selectedYear;
-            month = selectedMonth;
-            day = selectedDay;
-            Calendar c = Calendar.getInstance();
-            c.set(selectedYear, selectedMonth, selectedDay);
-            SimpleDateFormat dateFormat=new SimpleDateFormat("MM/yy");
-            dateView.setText(dateFormat.format(c.getTime()));
+
+            try{
+                year = selectedYear;
+                month = selectedMonth;
+                day = selectedDay;
+                Calendar c = Calendar.getInstance();
+                c.set(selectedYear, selectedMonth, selectedDay);
+                SimpleDateFormat dateFormat=new SimpleDateFormat("MM/yy");
+                new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
+                dateView.setText(dateFormat.format(c.getTime()));
+            }catch (Exception e){
+
+            }
+
         }
     };
 
 
-    private void populateTable(final ProgressDialog dialog) {
+    private void dismissDialog(final ProgressDialog dialog) {
         runOnUiThread(new Runnable(){
             public void run() {
-
                 try {
                     dialog.dismiss();
                 } catch (final Exception ex) {
@@ -223,13 +265,16 @@ public class MDLivePayment extends Activity {
 
 
     private void doConfirmAppointment() {
+        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
         pDialog.show();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-               populateTable(pDialog);
+
+//                pDialog.dismiss();
                 Log.e("Response Payment",response.toString());
                 try {
+                    isPaymentLoading = false;
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -238,8 +283,10 @@ public class MDLivePayment extends Activity {
                         editor.commit();
                         Intent i = new Intent(MDLivePayment.this, MDLiveWaitingRoom.class);
                         startActivity(i);
+                        dismissDialog(pDialog);
                     } else {
                         Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                        dismissDialog(pDialog);
                     }
 
                 } catch (Exception e) {
@@ -251,28 +298,35 @@ public class MDLivePayment extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                populateTable(pDialog);
+                //
+
                 Log.e("Response error",error.toString());
                 try{
+                    isPaymentLoading = false;
                     JSONObject jsonObject=new JSONObject(error.getMessage());
                     if(jsonObject.has("message")){
                         Utils.alert(pDialog,MDLivePayment.this,jsonObject.getString("message"));
+                    } else if(jsonObject.has("error")){
+                        Utils.alert(pDialog,MDLivePayment.this,jsonObject.getString("error"));
+                    }
+                    dismissDialog(pDialog);
+
+                    if (error.networkResponse == null) {
+                        if (error.getClass().equals(TimeoutError.class)) {
+                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            };
+                            // Show timeout error message
+
+                            Utils.connectionTimeoutError(null, MDLivePayment.this);
+
+                        }
+                        dismissDialog(pDialog);
                     }
                 }catch (Exception e){
-
-                }
-
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-
-                        Utils.connectionTimeoutError(null, MDLivePayment.this);
-                    }
+                    e.printStackTrace();
                 }
             }
         };
@@ -290,7 +344,7 @@ public class MDLivePayment extends Activity {
         params.put("alternate_visit_option", "alternate_visit_option");
         params.put("do_you_have_primary_care_physician", "No");
         Gson gson = new GsonBuilder().serializeNulls().create();
-
+        isPaymentLoading = true;
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePayment.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
 
@@ -396,23 +450,7 @@ public class MDLivePayment extends Activity {
 
 
 
- /*   public  void showDialog(final Context context, String title, String message, EditText promoCode, DialogInterface.OnClickListener positiveOnclickListener) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
-        alertDialogBuilder
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton("Ok", positiveOnclickListener);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.setView(promoCode);
-        alertDialog.show();
-    }*/
-
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
+ 
 
    /* public void movetohome() {
         Utils.movetoback(MDLivePayment.this, MDLiveLogin.class);

@@ -54,10 +54,10 @@
         android:background="#ECF5FA">
 
         <TextView
-            android:text="CHOOSE OTHER DOCTOR"
+            android:text="Choose other doctor"
             style="@style/BaseAvailableDoctorTxtStyle"
             android:gravity="left|center"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="#35393d"
             android:layout_marginStart="19dp"
             android:layout_centerVertical="true"
@@ -65,14 +65,14 @@
 
         <TextView
             style="@style/BaseAvailableDoctorTxtStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="FILTER"
             android:textStyle="bold"
             android:layout_marginRight="20dp"
             android:textSize="16sp"
             android:textColor="@color/mdlivePrimaryBlueColor"
-            android:id="@+id/textView15"
+            android:id="@+id/filterTxt"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />

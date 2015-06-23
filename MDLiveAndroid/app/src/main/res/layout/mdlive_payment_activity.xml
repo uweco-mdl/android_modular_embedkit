@@ -29,7 +29,7 @@
             />
     </LinearLayout>
     <ScrollView
-        style="@style/WagParentLinearLayoutStyle"
+        style="@style/WagLinearLayoutStylePediatric"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -83,7 +83,7 @@
                     android:id="@+id/edtExpiryDate"
                     android:textSize="17sp"
                     android:background="@null"
-                    android:hint=""
+                    android:hint="mm/yy"
                     android:textColor="@color/black"
                     android:editable="false"
                     android:maxLines="1" />
@@ -101,6 +101,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Zip Code"
+
                     android:id="@+id/textView2"
                     android:textColor="@color/grey_txt"
                     android:textSize="16sp"
@@ -113,8 +114,10 @@
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:background="@null"
-                    android:hint=""
+                    android:hint="12345-7890"
                     android:layout_weight="1"
+                    android:inputType="number"
+                    android:maxLength="10"
                     android:maxLines="1" />
             </LinearLayout>
 
@@ -126,7 +129,7 @@
                 android:layout_marginBottom="20px"
                 android:layout_marginRight="30px"
                 android:layout_marginLeft="30px">
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/terms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +53,8 @@ public class MDLiveLocation extends Activity {
     private ArrayList<String> StateName = new ArrayList<String>();
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
-    private String ZipCodeCity,selectedCity,longNameText;
+    private String ZipCodeCity,selectedCity,longNameText,shortNameText;
+    private int keyDel=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,44 @@ public class MDLiveLocation extends Activity {
             }
         });
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
+        ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ZipcodeEditTxt.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_DEL)
+                            keyDel = 1;
+                        return false;
+                    }
+                });
+
+                if (keyDel == 0) {
+                    int len = ZipcodeEditTxt.getText().length();
+                    if(len == 5) {
+                        ZipcodeEditTxt.setText(ZipcodeEditTxt.getText() + "-");
+                        ZipcodeEditTxt.setSelection(ZipcodeEditTxt.getText().length());
+                    }
+                } else {
+                    keyDel = 0;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
         SavContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLiveLocation.this);
                 if(ZipcodeEditTxt.getText().toString().length()!=0||StateTxt.getText().toString().length()!=0){
                     if(ZipcodeEditTxt.getText().length()!=0){
                         String getEditTextValue = ZipcodeEditTxt.getText().toString();
@@ -80,11 +118,13 @@ public class MDLiveLocation extends Activity {
                             Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
                         }
                     }else{
+                        SaveZipCodeCity(selectedCity);
                         finish();
                     }
                 }else{
                     Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
                 }
+
                /* if(StateTxt.getText().length()==0){
                     String getEditTextValue = ZipcodeEditTxt.getText().toString();
                     String zipcodePattern="^\\d{5}([\\-]?\\d{4})?$";
@@ -252,9 +292,13 @@ public class MDLiveLocation extends Activity {
                         if (zip.equalsIgnoreCase("administrative_area_level_1")) {
                             SelectedZipCodeCity = localZip.get("short_name").getAsString();
                             Log.e("Results", SelectedZipCodeCity);
-                            ZipCodeCity = SelectedZipCodeCity;
+                            //This is for long name like Florida.
+                            longNameText = SelectedZipCodeCity;
+                            //This is for Short name like FL
+                            shortNameText = SelectedZipCodeCity;
                             selectedCity = ZipCodeCity;
-                            SaveZipCodeCity(SelectedZipCodeCity);
+                            SaveZipCodeCity(longNameText);
+                            finish();
 //                            SaveZipCodeCity(SelectedZipCodeCity);
 //                            Intent resultIntent = new Intent();
 //                            resultIntent.putExtra("ZipCodeCity", ZipCodeCity);
@@ -330,8 +374,8 @@ public class MDLiveLocation extends Activity {
     public void SaveZipCodeCity(String ZipCodeCity) {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
-//        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, selectedCity);
-        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, longNameText);
+        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
         editor.commit();
     }
 
@@ -355,10 +399,10 @@ public class MDLiveLocation extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedText = ShortNameList.get(position);
+                shortNameText = ShortNameList.get(position);
                 longNameText = LongNameList.get(position);
-                SelectedText.setText(selectedText);
-                selectedCity = selectedText;
+                SelectedText.setText(shortNameText);
+                selectedCity = shortNameText;
 //                SaveZipCodeCity(selectedText);
 //                ZipCodeCity = selectedText;
                 dialog.dismiss();

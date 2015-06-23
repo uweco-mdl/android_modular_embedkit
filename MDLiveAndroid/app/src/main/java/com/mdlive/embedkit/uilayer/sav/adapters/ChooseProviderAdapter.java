@@ -74,7 +74,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
             inflate = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
-            ((TextView)row.findViewById(R.id.txtFilter)).setOnClickListener(new View.OnClickListener() {
+            ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent  = new Intent(context, MDLiveSearchProvider.class);
@@ -92,10 +92,8 @@ public class ChooseProviderAdapter extends BaseAdapter {
         }
         else {
             if(row==null)
-            inflate = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,
-                    false);
+            inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,false);
             PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
             PatientNmaeTxt.setText(array.get(pos).get("name"));
             SPecialistTxt = (TextView) row.findViewById(R.id.specalist);

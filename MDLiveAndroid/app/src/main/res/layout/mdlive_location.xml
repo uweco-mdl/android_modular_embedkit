@@ -35,7 +35,7 @@
             android:textSize="18sp"
             android:visibility="visible"
             android:gravity="end|right|center"
-            android:text="APPLY"
+            android:text="Apply"
             />
     </LinearLayout>
 
@@ -77,7 +77,6 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
-
                 android:textSize="18sp"
                 />
             <TextView
@@ -96,6 +95,7 @@
                 android:maxLength="10"
                 android:tag="enter_zip"
                 android:layout_marginTop="5dp"
+                android:inputType="number"
                 android:id="@+id/ZipEditTxt"
                 />
             <View style="@style/ViewStyle" />
