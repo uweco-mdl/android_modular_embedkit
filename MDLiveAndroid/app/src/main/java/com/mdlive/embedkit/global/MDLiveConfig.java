@@ -10,8 +10,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
  */
 public class MDLiveConfig {
 
-//    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
-    private static final String BASE_URL ="https://dev-members.mdlive.com/services";
+    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
+//    private static final String BASE_URL ="https://dev-members.mdlive.com/services";
     public static final String LOGIN_SERVICES = "/customer_logins";
     public static final String URL_USER_INFORMATION = "/customer/:id";
     public static final String URL_PROVIDER_TYPE = "/providers/provider_type_list";
@@ -32,13 +32,13 @@ public class MDLiveConfig {
 
 
 
-//    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-// private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
+    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
+private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
 
 
     //dev Secret Keys..
-    private static final String MDLIVE_SECRET_KEY = "843f117b0bf7368ed5d";
-    private static final String MDLIVE_API_KEY = "a775f7e2ed1ce6cb313b";
+//    private static final String MDLIVE_SECRET_KEY = "843f117b0bf7368ed5d";
+//    private static final String MDLIVE_API_KEY = "a775f7e2ed1ce6cb313b";
 
     public static final String DEFAULT_USER_ID = "MobileUser";
 
@@ -71,6 +71,9 @@ public class MDLiveConfig {
     private static final String USER_INFORMATION = "/customer/user_information";
 
     private static final String URL_GET_PROMOCODE= "/consultation_charges/get_promocode_details?promocode=";
+    private static final String URL_USER_INFO= "/customer/user_information";
+    private static final String URL_PENDING_APPOINTMENT= "/appointments";
+    private static final String URL_BILLING_UPDATE= "/billing_informations/1";
 
 
 
@@ -141,6 +144,9 @@ public class MDLiveConfig {
         AppSpecificConfig.DELETE_MEDICALREPORT = DELETE_MEDICALREPORT;
         AppSpecificConfig.USER_INFORMATION = USER_INFORMATION;
         AppSpecificConfig.URL_GET_PROMOCODE = URL_GET_PROMOCODE;
+        AppSpecificConfig.URL_USER_INFO = URL_USER_INFO;
+        AppSpecificConfig.URL_PENDING_APPOINTMENT = URL_PENDING_APPOINTMENT;
+        AppSpecificConfig.URL_BILLING_UPDATE = URL_BILLING_UPDATE;
 
     }
     /*
