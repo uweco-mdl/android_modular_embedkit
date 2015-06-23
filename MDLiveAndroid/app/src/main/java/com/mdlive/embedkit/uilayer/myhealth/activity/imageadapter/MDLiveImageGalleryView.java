@@ -5,14 +5,14 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NetworkImageView;
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -59,8 +59,8 @@ public class MDLiveImageGalleryView extends Activity {
 
         ((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
 
-        ((NetworkImageView) findViewById(R.id.galleryImageView)).setImageUrl(getIntent().getStringExtra("download_link"),
-                ApplicationController.getInstance().getImageLoader(getApplicationContext()));
+        Log.e("Received Id", getIntent().getIntExtra("id", 0)+"");
+        ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(Utils.photoList.get(getIntent().getIntExtra("id", 0)));
     }
 
     /**
@@ -75,8 +75,10 @@ public class MDLiveImageGalleryView extends Activity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                pDialog.dismiss();
                 try {
                     if(response != null){
+                        Log.e("Response", response.toString());
                         if(response.has("message")){
                             if(response.getString("message").equals("Customer document deleted successfully")){
                                 Intent intent = new Intent();
@@ -97,9 +99,8 @@ public class MDLiveImageGalleryView extends Activity {
             }
         };
         DeleteMedicalServices services = new DeleteMedicalServices(MDLiveImageGalleryView.this, null);
-        services.deleteAllergyRequest(successCallBackListener, errorListener, getIntent().getStringExtra("id"));
+        services.deleteAllergyRequest(successCallBackListener, errorListener, getIntent().getIntExtra("id", 0));
     }
-
 
 
     /**

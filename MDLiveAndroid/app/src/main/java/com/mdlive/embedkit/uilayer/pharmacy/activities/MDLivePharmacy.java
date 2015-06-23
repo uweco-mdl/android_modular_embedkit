@@ -315,36 +315,36 @@ public class MDLivePharmacy extends FragmentActivity {
 
     public void loadDatas(String response){
         try {
-        JSONObject jobj=new JSONObject(response);
-        JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
-        addressline1.setText(pharmacyDatas.getString("store_name"));
-        addressline2.setText(pharmacyDatas.getString("address1"));
-        addressline3.setText(pharmacyDatas.getString("city") + ", "
-                + pharmacyDatas.getString("state") + " "
-                + pharmacyDatas.getString("zipcode"));
-    //        addressline4.setText(pharmacyDatas.getString("phone"));
-        bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
-        JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
-        bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
-        bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
-        bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
-        bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
-        bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
-        bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
-        bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
-        bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
-        bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
-        bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
-        bundletoSend.putString("city", pharmacyDatas.getString("city"));
-        bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
-        bundletoSend.putString("state", pharmacyDatas.getString("state"));
-        if (map != null) {
-            LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
-                    Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
-            Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
-                    .title("Marker"));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
-        }
+            JSONObject jobj=new JSONObject(response);
+            JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
+            addressline1.setText(pharmacyDatas.getString("store_name"));
+            addressline2.setText(pharmacyDatas.getString("address1"));
+            addressline3.setText(pharmacyDatas.getString("city") + ", "
+                    + pharmacyDatas.getString("state") + " "
+                    + pharmacyDatas.getString("zipcode"));
+            //        addressline4.setText(pharmacyDatas.getString("phone"));
+            bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
+            JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
+            bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
+            bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
+            bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
+            bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
+            bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
+            bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
+            bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
+            bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
+            bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
+            bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
+            bundletoSend.putString("city", pharmacyDatas.getString("city"));
+            bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
+            bundletoSend.putString("state", pharmacyDatas.getString("state"));
+            if (map != null) {
+                LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
+                        Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
+                Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
+                        .title("Marker"));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

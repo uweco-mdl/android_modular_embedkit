@@ -7,13 +7,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -33,15 +39,17 @@ import com.mdlive.embedkit.uilayer.myhealth.activity.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalImageService;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalService;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UpdateFemaleAttributeServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
@@ -53,6 +61,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -73,14 +82,14 @@ public class MDLiveMedicalHistory extends Activity {
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
     private boolean isFemaleQuestionsDone = false, isConditionsDone = false,
-            isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false;
+            isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser;
     private Button btnSaveContinue;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup, ProceduresGroup;
-    private ImageView MyHealthCameraBtn;
     private ArrayList<HashMap<String, Object>> myPhotosList;
     private ImageAdapter imageAdapter;
     private GridView gridview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +108,9 @@ public class MDLiveMedicalHistory extends Activity {
         MedicationsGroup = ((RadioGroup) findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
         ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
-        MyHealthCameraBtn = ((ImageView) findViewById(R.id.MyHealthCameraBtn));
         myPhotosList = new ArrayList<HashMap<String, Object>>();
+
+        Utils.photoList.clear();
 
         findViewById(R.id.editConditionsTxt).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +140,8 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onClick(View v) {
                 if (hasFemaleAttribute) {
-                    updateFemaleAttributes();
+                    //First Time User
+                    updateMedicalHistory();
                 } else {
                     getUserPharmacyDetails();
 //                    Intent i = new Intent(MDLiveMedicalHistory.this, MDLivePharmacy.class);
@@ -141,15 +152,49 @@ public class MDLiveMedicalHistory extends Activity {
 
 //        saveDateOfBirth();
         initializeViews();
+
+    }
+    private void updateMedicalHistory(){
+
+        pDialog.show();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Response ---->", response.toString());
+                if (hasFemaleAttribute) {
+                    updateFemaleAttributes();
+                } else {
+                    getUserPharmacyDetails();
+                }
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                medicalCommonErrorResponseHandler(error);
+            }
+        };
+        try {
+            boolean hasAllergies, hasConditions, hasMedications, hasProcedures = false;
+            JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
+            hasAllergies = healthHistory.getJSONArray("allergies").length() == 0;
+            hasConditions = healthHistory.getJSONArray("conditions").length() == 0;
+            hasMedications = healthHistory.getJSONArray("medications").length() == 0;
+            HashMap<String,String> updateMap = new HashMap<String,String>();
+            updateMap.put("Do you have any health conditions?", hasConditions + "");
+            updateMap.put("Are you currently taking any medication?", hasMedications + "");
+            updateMap.put("Do you have any Allergies or Drug Sensitivities?", hasAllergies + "");
+            updateMap.put("Have you ever had any surgeries or medical procedures?", hasProcedures + "");
+            HashMap<String, HashMap<String,String>> medhistoryMap = new HashMap<String, HashMap<String,String>>();
+            medhistoryMap.put("medical_history",updateMap);
+            MedicalHistoryUpdateServices services = new MedicalHistoryUpdateServices(MDLiveMedicalHistory.this, null);
+            services.updateMedicalHistoryRequest(medhistoryMap, successCallBackListener, errorListener);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
-    private void saveDateOfBirth() {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(PreferenceConstants.DATE_OF_BIRTH, "09-14-2008");
-        MDLiveGetStarted.isFemale = true;
-        editor.commit();
-    }
 
     public void initializeViews() {
 
@@ -224,7 +269,7 @@ public class MDLiveMedicalHistory extends Activity {
             }
         });
 
-        MyHealthCameraBtn.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) findViewById(R.id.MyHealthAddPhotoL2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isDeviceSupportCamera())
@@ -246,7 +291,6 @@ public class MDLiveMedicalHistory extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveMedicalHistory.this);
                 finish();
             }
         });
@@ -267,12 +311,12 @@ public class MDLiveMedicalHistory extends Activity {
                 Toast.makeText(MDLiveMedicalHistory.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
-
-        downloadMedicalRecordService();
     }
+
+
     /*
- * Capturing Camera Image will lauch camera app requrest image capture
- */
+     * Capturing Camera Image will lauch camera app requrest image capture
+     */
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri();
@@ -288,7 +332,7 @@ public class MDLiveMedicalHistory extends Activity {
     }
 
     // Activity request codes
-    private Uri fileUri;
+    public static Uri fileUri;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int IMAGE_PREVIEW_CODE = 200;
 
@@ -344,21 +388,14 @@ public class MDLiveMedicalHistory extends Activity {
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
-                Log.e("uriPath", fileUri.getPath());
-                uploadMedicalRecordService(fileUri.getPath());
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled Image capture
-                Toast.makeText(getApplicationContext(),
-                        "User cancelled image capture", Toast.LENGTH_SHORT)
-                        .show();
-            } else {
+                if(fileUri != null)
+                    uploadMedicalRecordService(fileUri.getPath());
+            } else if(!(resultCode == RESULT_CANCELED)) {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(),
-                        "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
+                        "Sorry! Failed to Upload Image!", Toast.LENGTH_SHORT)
                         .show();
             }
-        }else if(resultCode == RESULT_OK && requestCode == MDLiveMedicalHistory.IMAGE_PREVIEW_CODE){
-            downloadMedicalRecordService();
         }
     }
 
@@ -421,11 +458,11 @@ public class MDLiveMedicalHistory extends Activity {
      */
 
     private void uploadMedicalRecordService(String filePath) {
-        pDialog.show();
+        // pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                //pDialog.dismiss();
                 Log.e("response--> upload", response.toString());
                 try {
                     if(response!= null){
@@ -498,15 +535,176 @@ public class MDLiveMedicalHistory extends Activity {
                     data.put("id", jsonObject.getInt("id"));
                     data.put("uploaded_at", jsonObject.getString("uploaded_at"));
                     listDatas.add(data);
+                    /*if(Utils.photoList.get(jsonObject.getInt("id")) == null)
+                        downloadImageService(jsonObject.getInt("id"));*/
                 }
+
+                if(recordsArray.length() > 0){
+                    gridview.setVisibility(View.VISIBLE);
+                }
+                if(recordsArray != null){
+                    if(recordsArray.length() > 4){
+                        DisplayMetrics dm = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(dm);
+                        int width = dm.widthPixels;
+                        gridview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                (width/2)+50));
+                    }else if(recordsArray.length() > 0){
+                        DisplayMetrics dm = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(dm);
+                        int width = dm.widthPixels;
+                        gridview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                (width/4)+25));
+                    }
+                }
+                loadDownloadedImages loadImageService = new loadDownloadedImages(recordsArray);
+                loadImageService.execute();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Log.e("String size", listDatas.size()+"");
+        myPhotosList = listDatas;
         imageAdapter.notifyWithDataSet(listDatas);
     }
+
+    class loadDownloadedImages extends AsyncTask<Void, Void, Void>{
+
+        JSONArray recordsArray;
+
+        public loadDownloadedImages(JSONArray recordsArray){
+            this.recordsArray = recordsArray;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.show();
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                if(recordsArray != null){
+                    for(int i =0; i<recordsArray.length(); i++){
+                        JSONObject jsonObject = recordsArray.getJSONObject(i);
+                        if(Utils.photoList.get(jsonObject.getInt("id")) == null)
+                            downloadImageService(jsonObject.getInt("id"));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+    }
+    /**
+     * Checks user medical history aggregation details.
+     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered.
+     */
+
+    private void downloadImageService(final int photoId) {
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleDownloadImageService(response, photoId);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                //medicalCommonErrorResponseHandler(error);
+            }
+        };
+        DownloadMedicalImageService services = new DownloadMedicalImageService(this, null);
+        services.doDownloadImagesRequest(photoId, successCallBackListener, errorListener);
+    }
+
+
+    public void handleDownloadImageService(JSONObject response, int photoId){
+        try {
+            if(response != null){
+                Log.e("Image response", response.toString());
+                if(response.has("message") && response.getString("message").equals("Document found")){
+                    byte[] decodedString = Base64.decode(response.getString("file_stream"), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    Utils.photoList.put(photoId, decodedByte);
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(imageAdapter != null)
+            imageAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Checks user medical history aggregation details.
+     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered.
+     */
+
+    private void checkMedicalDateHistory() {
+        pDialog.show();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                pDialog.dismiss();
+                try {
+                    if(response != null){
+                        Log.e("Medical Completion....", response.toString());
+                        if(response.has("health_last_update")){
+                            int time = response.getInt("health_last_update");
+                            if(time != 0){
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTimeInMillis(time);
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
+                                ((TextView)findViewById(R.id.updateInfoText)).setText(
+                                        "Last Updated : "+
+                                                dateFormat.format(calendar.getTime())
+                                );
+                            } else {
+                                isNewUser = true;
+                            }
+                        } else {
+                            isNewUser = true;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    isNewUser = true;
+                }
+                downloadMedicalRecordService();
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                medicalCommonErrorResponseHandler(error);
+            }
+        };
+        MedicalHistoryLastUpdateServices services = new MedicalHistoryLastUpdateServices(MDLiveMedicalHistory.this, null);
+        services.getMedicalHistoryLastUpdateRequest(successCallBackListener, errorListener);
+    }
+
+
 
 
     /**
@@ -541,7 +739,6 @@ public class MDLiveMedicalHistory extends Activity {
 
     private void medicalAggregationHandleSuccessResponse(JSONObject response) {
         try {
-            Log.d("Response", response.toString());
             medicalAggregationJsonObject = response;
             checkMedicalCompletion();
         } catch (Exception e) {
@@ -597,7 +794,6 @@ public class MDLiveMedicalHistory extends Activity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Rresponse", response.toString());
                 medicalCompletionHandleSuccessResponse(response);
             }
         };
@@ -645,8 +841,53 @@ public class MDLiveMedicalHistory extends Activity {
             checkAllergies(historyPercentageArray);
             checkAgeAndFemale();
             applyValidationOnViews();
+
+            if(isUserFirstToApp(historyPercentageArray)){
+                downloadMedicalRecordService();
+            }else{
+                checkMedicalDateHistory();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public boolean isUserFirstToApp(JSONArray historyPercentageArray){
+        boolean havingHealth = false, liftStyle = false, pediatric = false;
+        try {
+            Log.e("hist-->", historyPercentageArray.toString());
+            for(int i = 0; i < historyPercentageArray.length(); i++)
+            {
+                JSONObject subObj = historyPercentageArray.getJSONObject(i);
+                if(subObj.has("health")){
+                    int myHealthPercentage = historyPercentageArray.getJSONObject(0).getInt("health");
+                    if(myHealthPercentage == 0){
+                        havingHealth = true;
+                    }
+                }
+                if(subObj.has("life_style")){
+                    int life_styleValue = historyPercentageArray.getJSONObject(1).getInt("life_style");
+                    if(life_styleValue == 0){
+                        liftStyle = true;
+                    }
+                }
+                if(subObj.has("pediatric")){
+                    int pediatricValue = historyPercentageArray.getJSONObject(2).getInt("pediatric");
+                    if(pediatricValue == 0){
+                        pediatric = true;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if(havingHealth && liftStyle && pediatric){
+            return  true;
+        }else{
+            return false;
         }
     }
 
@@ -660,8 +901,13 @@ public class MDLiveMedicalHistory extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String dateOfBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, "");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            int age = Utils.calculateAge(sdf.parse(dateOfBirth));
-            String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
+
+            /*int age = Utils.calculateAge(sdf.parse(dateOfBirth));
+            String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");*/
+
+            int age = 10;
+            String gender = "male";
+
             if ((age >= 10 && age <= 12) && gender.equalsIgnoreCase("female")) {
                 ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                 ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
@@ -973,40 +1219,6 @@ public class MDLiveMedicalHistory extends Activity {
                 startActivity(i);
             }
 
-            /*jsonResponse = response.toString();
-            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-            if(pharmacyDatas == null){
-                getLocationBtnOnClickAction();
-            }else{
-                bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
-                JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
-                bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
-                bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
-                bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
-                bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
-                bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
-                bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
-                bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
-                bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
-                bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
-                bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
-                bundletoSend.putString("city", pharmacyDatas.getString("city"));
-                bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
-                bundletoSend.putString("state", pharmacyDatas.getString("state"));
-                String res = response.toString();
-
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
-                i.putExtra("Response",res);
-                startActivity(i);
-                if (map != null) {
-                    LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
-                            Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
-                    Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
-                            .title("Marker"));
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
-                }*/
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1044,63 +1256,13 @@ public class MDLiveMedicalHistory extends Activity {
                 }
             });
         }else{
-            Utils.showGPSSettingsAlert(MDLiveMedicalHistory.this);
+            Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+            i.putExtra("Response",jsonResponse);
+            startActivity(i);
+            //Utils.showGPSSettingsAlert(MDLiveMedicalHistory.this);
         }
     }
 
-
-    /*public void test(){
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put("hai");
-        jsonArray.put("hello");
-        jsonArray.put("hmm.");
-
-        String s = jsonArray.toString();
-        Log.e("Sss ", s);
-        try {
-            jsonArray = new JSONArray(s);
-            for(int i = 0; i< jsonArray.length(); i++){
-                Log.e("String"+i, jsonArray.getString(i));
-            }
-            jsonArray = removeItemFromArray(jsonArray, 1);
-            for(int i = 0; i< jsonArray.length(); i++){
-                Log.e("String"+i, jsonArray.getString(i));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }*/
-
-    public ArrayList<String> getPhotosArray(){
-        ArrayList<String> photosArray = new ArrayList<String>();
-        try {
-            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            JSONArray jsonArray = new JSONArray(sharedpreferences.getString(PreferenceConstants.PHOTOS_COLLECTION, null));
-            for(int i = 0; i<jsonArray.length(); i++){
-                photosArray.add(jsonArray.getString(i));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return photosArray;
-    }
-
-    public void removeItemFromArray(int index){
-        JSONArray newArray = new JSONArray();
-        try{
-            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            JSONArray jsonArray = new JSONArray(sharedpreferences.getString(PreferenceConstants.PHOTOS_COLLECTION, null));
-            for(int i = 0; i<jsonArray.length(); i++){
-                if(index != i)
-                    newArray.put(jsonArray.getString(i));
-            }
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(PreferenceConstants.PHOTOS_COLLECTION, newArray.toString());
-            editor.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     /**
      * The back image will pull you back to the Previous activity

@@ -3,63 +3,55 @@
     style="@style/ContainerStyle"
     android:background="@color/mdliveBackgroundColor"
     >
-    <RelativeLayout
+    <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
+        android:layout_height="70dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp" />
-
+            android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="32dp"
             android:layout_toEndOf="@+id/backImg"
             />
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/LinearLayoutStyle"
             android:orientation="vertical"
-            android:layout_centerInParent="true">
-
+            android:layout_height="70dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp">
             <TextView
-                android:id="@+id/headerTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/white"
-                android:text="Medical History">
-            </TextView>
-
+                style = "@style/ReasonHeaderTxtStyle"
+                android:text="Medical History"
+                />
             <TextView
                 android:id="@+id/reason_patientTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/white"
+                style = "@style/ReasonsubHeaderTxtStyle"
+                android:layout_marginTop="2dp"
                 android:text="Michelle Marino"
-                android:layout_below="@+id/headerTxt"
-
                 />
         </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView style="@style/ScrollViewStyle"
         android:id="@+id/ContainerScrollView"
         >
-
         <LinearLayout
-            style="@style/WagParentLinearLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
             <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
@@ -72,7 +64,18 @@
 
 
             <!--</com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>-->
+            <LinearLayout
+                style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+                android:id="@+id/UpdateInfoWindow"
+                android:visibility="gone"
+                android:orientation="horizontal">
 
+                <TextView
+                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                    android:id="@+id/updateInfoText"
+                    android:text="Last Updated " />
+
+            </LinearLayout>
 
             <LinearLayout
                 style="@style/titleHeaderBackgroundStyle"
@@ -150,35 +153,35 @@
                 </LinearLayout>
             </LinearLayout>
 
-           <!-- <LinearLayout
-                style="@style/titleHeaderBackgroundStyle"
-                android:id="@+id/PediatricLl"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-                <ImageView
-                    style="@style/MyHealthListImageViewStyle"
-                    android:src="@drawable/pediatric_profile" />
-                <LinearLayout
-                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
-                    android:orientation="vertical">
-                    <TextView
-                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
-                        android:text="Pediatric profile" />
-                    <TextView
-                        style="@style/MyhealthListLayoutSubSubTextStyle"
-                        android:id="@+id/PediatricNameTv"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:text="" />
-                </LinearLayout>
-                <ImageView style="@style/RightArrowStyle" />
-            </LinearLayout>-->
+            <!-- <LinearLayout
+                 style="@style/titleHeaderBackgroundStyle"
+                 android:id="@+id/PediatricLl"
+                 android:orientation="horizontal"
+                 android:visibility="gone"
+                 >
+                 <ImageView
+                     style="@style/MyHealthListImageViewStyle"
+                     android:src="@drawable/pediatric_profile" />
+                 <LinearLayout
+                     style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                     android:orientation="vertical">
+                     <TextView
+                         style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                         android:text="Pediatric profile" />
+                     <TextView
+                         style="@style/MyhealthListLayoutSubSubTextStyle"
+                         android:id="@+id/PediatricNameTv"
+                         android:maxLines="2"
+                         android:ellipsize="end"
+                         android:text="" />
+                 </LinearLayout>
+                 <ImageView style="@style/RightArrowStyle" />
+             </LinearLayout>-->
             <!--<View style="@style/MyhealthViewStyle" />
             <View style="@style/ViewStyle" />
         -->
             <LinearLayout
-                style="@style/titleHeaderBackgroundStyle"
+                style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
                 android:id="@+id/MyHealthConditionChoiceLl"
                 android:orientation="horizontal">
                 <TextView
@@ -187,7 +190,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    >
 
                     <RadioGroup
                         android:id="@+id/conditionsGroup"
@@ -211,7 +215,9 @@
 
 
             <RelativeLayout
-                style="@style/titleHeaderBackgroundStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_topline_bg"
                 android:id="@+id/MyHealthConditionsLl"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -227,8 +233,9 @@
                     <TextView
                         style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
                         android:layout_width="match_parent"
-                        android:text="My Health Conditions"
-                       />
+                        android:textSize="20sp"
+                        android:text="Pre-Existing Conditions"
+                        />
 
                     <TextView
                         style="@style/MyhealthListLayoutSubSubTextStyle"
@@ -241,8 +248,8 @@
                 </LinearLayout>
 
                 <TextView
-                style="@style/common_style_W_Wrap_H_Wrap"
-                android:text="EDIT"
+                    style="@style/common_style_W_Wrap_H_Wrap"
+                    android:text="EDIT"
                     android:padding="10dp"
                     android:textColor="@color/green"
                     android:layout_alignParentTop="true"
@@ -255,7 +262,7 @@
 
 
             <LinearLayout
-                style="@style/titleHeaderBackgroundStyle"
+                style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
                 android:id="@+id/MyHealthMedicationsLl"
                 android:orientation="horizontal"
                 >
@@ -291,7 +298,9 @@
             </LinearLayout>
 
             <RelativeLayout
-                style="@style/titleHeaderBackgroundStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_topline_bg"
                 android:id="@+id/MedicationsLl"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -306,6 +315,7 @@
                         style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
                         android:layout_width="match_parent"
                         android:text="Medications"
+                        android:textSize="20sp"
                         />
 
                     <TextView
@@ -316,7 +326,7 @@
                         android:ellipsize="end"
                         android:text="No conditions reported" />
 
-                    </LinearLayout>
+                </LinearLayout>
 
                 <TextView
                     style="@style/common_style_W_Wrap_H_Wrap"
@@ -332,7 +342,7 @@
             <!--<View style="@style/MyhealthViewStyle" />-->
 
             <LinearLayout
-                style="@style/titleHeaderBackgroundStyle"
+                style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
                 android:id="@+id/MyHealthAllergiesLl"
                 android:orientation="horizontal">
 
@@ -366,7 +376,9 @@
             </LinearLayout>
 
             <RelativeLayout
-                style="@style/titleHeaderBackgroundStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_full_bg"
                 android:id="@+id/AllergiesLl"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -385,6 +397,7 @@
                         style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
                         android:layout_width="match_parent"
                         android:text="Allergies"
+                        android:textSize="20sp"
                         />
 
                     <TextView
@@ -396,7 +409,7 @@
                         android:text="No conditions reported" />
 
 
-                    </LinearLayout>
+                </LinearLayout>
                 <TextView
                     style="@style/common_style_W_Wrap_H_Wrap"
                     android:text="EDIT"
@@ -481,45 +494,89 @@
 
 
             <LinearLayout
-                style="@style/LinearLayoutStyle"
+                style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
                 android:id="@+id/MyHealthAddPhotoLl"
-                android:background="@drawable/line_full_bg"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
                 <TextView
-                    style="@style/BaseTextViewStyle.MyhealthContentStyle"
-                    android:text="@string/my_health_add_photo" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:text="PHOTOS" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="17sp"
+                    android:layout_marginTop="10dp"
+                    android:text="Helpful for rashes, cuts, etc."
+                    />
                 <LinearLayout
                     style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        style="@style/MyhealthCameraBtnStyle"
-                        android:id="@+id/MyHealthCameraBtn"
-                        android:src="@android:drawable/ic_menu_camera" />
                 </LinearLayout>
 
 
             </LinearLayout>
 
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:id="@+id/MyHealthAddPhotoL2"
+                android:background="@drawable/line_full_bg"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/MyHealthCameraBtn"
+                    android:layout_marginLeft="10dp"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20sp"
+                    android:text="Take a photo" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/SavContinueBtn"
+                style="@style/ContinueButtonStyle"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/next_btn"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                />
+
             <GridView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/gridview"
-                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
+                android:padding="10dp"
+                android:layout_gravity="center"
                 android:numColumns="4"
                 android:stretchMode="columnWidth"
                 android:gravity="center"
                 />
 
+
+
         </LinearLayout>
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/SavContinueBtn"
-        style="@style/ContinueButtonStyle"
-        android:text="@string/next_btn"
-        android:layout_marginTop="18dp"
-        />
+
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,11 +72,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 saveBtnAction();
             }
         });
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
-
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +82,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                movetohome();
+                Utils.movetohome(MDLiveCommonConditionsMedicationsActivity.this, MDLiveLogin.class);
             }
         });
     }
@@ -100,22 +94,28 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
      *
      */
     private void saveBtnAction() {
+        ArrayList<String> tmpExistingCond = new ArrayList<String>();
         LinearLayout addConditionsLl = (LinearLayout) findViewById(R.id.AddConditionsLl);
         existingConditions.clear();
         newConditions.clear();
         for(int i = 0;i<addConditionsLl.getChildCount();i++){
 
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
-            Log.d("Add addConditionsLl", "conditionRl.getTag() - " + conditionRl.getTag() + "--" + ((EditText)conditionRl.getChildAt(0)).getText().toString());
             if(conditionRl.getTag()==null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
                     !(((EditText)conditionRl.getChildAt(0)).getText().toString().equalsIgnoreCase(""))){
-                Log.d("Add addConditionsLl", "conditionRl.getTag() - " + conditionRl.getTag() + "--" + ((EditText)conditionRl.getChildAt(0)).getText().toString());
                 newConditions.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
             } else if(conditionRl.getTag()!=null) {
                 HashMap<String, String> items = new HashMap<String, String>();
                 items.put("id", conditionRl.getTag().toString());
                 items.put("name",((EditText)conditionRl.getChildAt(0)).getText().toString());
+                tmpExistingCond.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
                 existingConditions.add(items);
+            }
+        }
+        for(String name : newConditions){
+            if(tmpExistingCond.contains(name)){
+                Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The "+type.name().toLowerCase()+" already exists in your medical history.");
+                return;
             }
         }
         saveNewConditionsOrAllergies();
@@ -176,6 +176,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             }else{
                 addBlankConditionOrAllergy();
             }
+//            addBlankConditionOrAllergy();
+
             pDialog.dismiss();
         }catch (Exception e){
             e.printStackTrace();
@@ -228,6 +230,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             public void onClick(View view) {
                 if(((ViewGroup)(deleteView.getParent())).getTag()!=null) {
                     deleteMedicalConditionsOrAllergyAction(deleteView, addConditionsLl);
+                } else {
+                    addBlankConditionOrAllergy();
                 }
                 addConditionsLl.removeView(singleConditionView);
             }
@@ -323,11 +327,16 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         conditonEt.setHintTextColor(getResources().getColor(R.color.grey_txt));
         conditonEt.setTextColor(Color.BLACK);
         conditonEt.setSingleLine(true);
+
+        /*conditonEt.setBackgroundResource(R.drawable.line_bottomline_medicalhistory_bg);*/
+        /*
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)deleteView.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_TOP,conditonEt.getId());
         params.addRule(RelativeLayout.ALIGN_BOTTOM, conditonEt.getId());
         params.addRule(RelativeLayout.ALIGN_RIGHT, conditonEt.getId());
         deleteView.setLayoutParams(params);
+        */
+
         deleteView.setVisibility(View.GONE);
         conditonEt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         if(type == TYPE_CONSTANT.CONDITION) {
@@ -485,13 +494,5 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 return view;
             }
         };
-    }
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        Utils.movetohome(MDLiveCommonConditionsMedicationsActivity.this, MDLiveLogin.class);
     }
 }
