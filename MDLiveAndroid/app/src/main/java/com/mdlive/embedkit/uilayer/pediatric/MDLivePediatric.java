@@ -101,7 +101,7 @@ public class MDLivePediatric extends Activity {
 
 
     public void initializeUI(){
-        setContentView(R.layout.pediatric_new);
+        setContentView(R.layout.mdlive_pediatric_new);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         questionList=new ArrayList<>();
