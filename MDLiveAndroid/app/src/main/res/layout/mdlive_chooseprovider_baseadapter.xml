@@ -12,8 +12,8 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         >
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/ProfileImg"
+        <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+            android:id="@+id/ProfileImglist"
             android:visibility="visible"
             style="@style/DoctorOnCallImgViewStyle"/>
 
@@ -33,6 +33,7 @@
             <TextView
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/specalist"
+                android:text="General Practise"
                 android:textColor="#878f95"
                 android:textSize="16sp"
                 />
@@ -41,7 +42,7 @@
                 style="@style/DoctorTxtStyle"
                 android:visibility="visible"
                 android:textColor="#878f95"
-                android:text="Mercy Hospital"
+                android:text="Capital Regional\nMedical Center"
                 android:id="@+id/Time"/>
 
 

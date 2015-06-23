@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
 import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
 import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
@@ -65,7 +65,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
     public View getView(int pos, View convertview, ViewGroup parent) {
         TextView PatientNmaeTxt,SPecialistTxt,DateTxt;
         ImageView callImg;
-        final NetworkImageView ProfileImg;
+        final CircularNetworkImageView ProfileImg;
         View row = null;
         if(array.get(pos).get("isheader").equals("1"))
         {
@@ -98,7 +98,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
             PatientNmaeTxt.setText(array.get(pos).get("name"));
             SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
             SPecialistTxt.setText(array.get(pos).get("speciality"));
-            ProfileImg = (NetworkImageView) row.findViewById(R.id.ProfileImg);
+            ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
 
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
 
@@ -106,12 +106,12 @@ public class ChooseProviderAdapter extends BaseAdapter {
              //   is available then the time stamp should be  visible else it should be hidden.
             DateTxt = (TextView) row.findViewById(R.id.Time);
             try {
-                if (array.get(pos).get("next_availability") == null || array.get(pos).get("next_availability").equals("0") || array.get(pos).get("next_availability").equalsIgnoreCase("null")) {
-                    DateTxt.setVisibility(View.GONE);
-                } else {
-                    DateTxt.setVisibility(View.VISIBLE);
-                    DateTxt.setText(array.get(pos).get("next_availability"));
-                }
+//                if (array.get(pos).get("next_availability") == null || array.get(pos).get("next_availability").equals("0") || array.get(pos).get("next_availability").equalsIgnoreCase("null")) {
+//                    DateTxt.setVisibility(View.GONE);
+//                } else {
+//                    DateTxt.setVisibility(View.VISIBLE);
+//                    DateTxt.setText(array.get(pos).get("next_availability"));
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -149,8 +150,6 @@ public class MDLiveGetStarted extends FragmentActivity{
             }
         });
         userInfoObject=new HashMap<>();
-
-
 
     }
     /**
@@ -465,11 +464,13 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
+                Utils.hideProgressDialog(pDialog);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                Utils.hideProgressDialog(pDialog);
                             }
                         };
                         // Show timeout error message
@@ -541,8 +542,9 @@ public class MDLiveGetStarted extends FragmentActivity{
             DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("state"));
             genderText.setText(personalInfo.getString("gender"));
-
-            ((TextView)findViewById(R.id.telephoneTxt)).setText(personalInfo.getString("phone"));
+            String formattedNumber = PhoneNumberUtils.formatNumber (personalInfo.getString("phone"));
+            Log.e("formattedNumber---->",formattedNumber);
+            ((TextView)findViewById(R.id.telephoneTxt)).setText(formattedNumber);
 
 
             dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;

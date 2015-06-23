@@ -45,7 +45,7 @@
 
         >
 
-        <com.android.volley.toolbox.NetworkImageView
+        <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
             android:id="@+id/ProfileImg1"
             android:layout_marginTop="30dp"
             android:layout_height="160dp"
