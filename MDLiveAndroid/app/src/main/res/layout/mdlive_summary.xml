@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+    >
+
+ <ScrollView
+        style="@style/ScrollViewHolderStyle"
+        >
+     <LinearLayout
+        style="@style/ContainerStyle"
+         >
+
+         <RelativeLayout
+             style="@style/wagHeaderLinearLayoutStyle"
+             android:elevation="20dp"
+             android:orientation="horizontal">
+
+
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:id="@+id/homeImg"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginLeft="20dp"
+                 android:layout_toEndOf="@+id/backImg"
+                 android:text="Your Consultation"
+                 android:textColor="@color/white"
+                 android:textSize="20sp"
+                 />
+         </RelativeLayout>
+
+         <LinearLayout
+        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+        android:layout_marginLeft="5dp"
+        android:padding="5dp"
+        android:background="@color/myWindowBackground"
+        >
+
+
+
+        <TextView
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"
+            android:hint="Thank you for Using MDLIVE!"
+            android:id="@+id/textView9"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="25dp"
+            android:hint="Summary"
+            android:id="@+id/textView10" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:hint="$49.00"
+                android:id="@+id/textView13" />
+
+        </LinearLayout>
+
+             <TextView
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="20dp"
+            android:hint="Rate Consultation"
+            android:id="@+id/textView15" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            style="@style/RatingBarTheme"
+            android:id="@+id/ratingBar" />
+
+             <TextView
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="15dp"
+            android:hint="Next Steps"
+            android:id="@+id/textView16" />
+
+           <TextView
+            style="@style/common_style_W_Match_M_Match"
+            android:layout_marginTop="15dp"
+            android:hint="You will receive an email with your receipt, Doctor's contact info, and prescription details if necessary"
+            android:id="@+id/textView19" />
+
+             <Button
+                 android:id="@+id/DoneRatingBtn"
+                 style="@style/ContinueButtonStyle"
+                 android:layout_margin="10dp"
+                 android:text="Done"
+                 android:layout_marginTop="18dp"
+                 android:textAllCaps="false" />
+
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
+
+
+
+
+</LinearLayout>
