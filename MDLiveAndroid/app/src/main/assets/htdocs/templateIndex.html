@@ -1,0 +1,48 @@
+<style>
+.billing-page{
+	width: 100%;
+	float: left;
+}
+.billing-page-name{
+	width: 94%;
+	padding: 10px;
+	float: left;
+	background-color: #ECF5FA;
+	font-weight: bold;
+}
+#mdliveparentFrame{
+	width:100%;
+	height:100%;
+}
+.ccv-camera-img-content {
+	position: absolute;
+	top: 30px;
+	width: 45px;
+	height: 30px;
+	right: 11px;
+}
+.scan-card-button {
+	width: 46px;
+	height: 27px;
+	margin: 0 0 0 10px;
+}
+</style>
+
+
+
+
+<div class="billing-page">
+	<div class="billing-page-name">Credit Card</div>
+		<iframe id="mdliveparentFrame" name="mdliveframe" src="file:///android_asset/htdocs/index.html" frameborder="0" scrolling="yes"> If you can see
+		this, your browser doesn't understand IFRAME. </iframe>
+	</div>
+</div>
+
+<div class="ccv-camera-img-content" onclick="scanCard(); return false;"><img class="scan-card-button" src="images/photo.svg"/></div>
+
+<script>
+function scanCard(){
+	alert("testing");
+	tokenizeForm();
+}
+</script>

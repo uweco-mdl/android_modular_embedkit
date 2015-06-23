@@ -1,64 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:id="@+id/pediatricContainer"
     style="@style/ContainerStyle"
     android:background="@color/mdliveBackgroundColor"
     >
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/header"
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
+        android:layout_height="70dp"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/back_arrow_hdpi"
             android:id="@+id/backImg"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp" />
-
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
             />
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/LinearLayoutStyle"
             android:orientation="vertical"
-            android:layout_centerInParent="true">
-
+            android:layout_marginTop="5dp"
+            android:layout_height="70dp"
+            >
             <TextView
-                android:id="@+id/headerTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/white"
-                android:text="Pediatric Profile">
-            </TextView>
-
+                style = "@style/ReasonHeaderTxtStyle"
+                android:text="Pediatric Profile"
+                />
             <TextView
                 android:id="@+id/reason_patientTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/white"
+                style = "@style/ReasonsubHeaderTxtStyle"
                 android:text="Michelle Marino"
-                android:layout_below="@+id/headerTxt"
-
                 />
         </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <ScrollView
-
+        android:id="@+id/pediatricScroll"
+        android:layout_below="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_continue_pediatric"
@@ -126,6 +117,7 @@
                         android:id="@+id/edt_currentweight"
                         android:hint=""
                         android:gravity="start|left"
+                        android:maxLength="3"
                         android:inputType="number"
                         android:background="#ffffff"
                         android:layout_width="match_parent"
