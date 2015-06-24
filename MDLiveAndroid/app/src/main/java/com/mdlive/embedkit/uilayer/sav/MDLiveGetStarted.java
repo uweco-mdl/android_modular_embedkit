@@ -65,6 +65,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     private EditText  phonrNmberEditTxt;
     private boolean isUserInfo=false;
     private HashMap<String,Object> userInfoObject;
+    private String parentName;//Variable to save the parent name.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         setonClickListener();
          /*  Load Services*/
         loadUserInformationDetails();
-//        setGenderSpinnerValues();
+//
     }
 
     /**
@@ -92,7 +93,6 @@ public class MDLiveGetStarted extends FragmentActivity{
             GenderList.add(StringConstants.GENDER_MALE);
             GenderList.add(StringConstants.GENDER_FEMALE);
         }
-       // setSpinnerValues(GenderList, (Spinner)findViewById(R.id.genderSpinner));
     }
     /**
      * The Remote userid is hardcoded here for the Vsee and for configuring the .aar file
@@ -215,7 +215,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                             ((Button)findViewById(R.id.SavContinueBtn)).setBackgroundColor(getResources().getColor(R.color.grey_txt));
                         }
                     }catch (Exception e){
-
+                        e.printStackTrace();
                     }
 
 
@@ -269,13 +269,13 @@ public class MDLiveGetStarted extends FragmentActivity{
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
             public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
                 int item = spinner.getSelectedItemPosition();
                 String dependentName = spinner.getSelectedItem().toString();
-                if(dependentName.equals(dependentList.get(0))){
+                if(dependentName.equals(parentName)){
                     userInfoChange((JSONObject)userInfoObject.get(dependentName));
-
-                }
+                }else{
                 if(list!=null){
                     if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
                     {
@@ -295,23 +295,22 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     dialogInterface.dismiss();
                                 }
                             };
-//                            Utils.alert(pDialog,MDLiveGetStarted.this,"Please call 1-800-XXX-XXXX to \nadd another child.");
-                            Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "Call Now", "Dismiss",
                                     positiveOnClickListener,negativeOnClickListener);
                         }else
                         {
                             Log.d("Dep Name", dependentName);
-                            loadDependentInformationDetails(dependentName);
+                                loadDependentInformationDetails(dependentName,position);
                         }
                     }else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                             startActivity(intent);
                         }else {
-                            Log.d("Dep Name", dependentName);
-                            loadDependentInformationDetails(dependentName);
+                                loadDependentInformationDetails(dependentName,position);
                         }
                     }
+                }
                 }
 
             }
@@ -320,20 +319,49 @@ public class MDLiveGetStarted extends FragmentActivity{
     }
     /**
      *
-     * The dependent name will be fetched through the temporary.
-     * hashmap . The corresponding dependent id is also fetched and it has been populated
-     * to the load dependent user information details method..
-     *
+     * @param dependentName-User selected dependent name from spinner
+     * @param position-User selected dependent item position,used to map user dependent id
      */
-    private void loadDependentInformationDetails(String dependentName) {
-        for(HashMap<String,String> tmpMap : PatientList){
-            Log.d("Dep Name  - TmpMap", tmpMap.get("name"));
-            if(tmpMap.get("name").equalsIgnoreCase(dependentName)){
-                loadDependentUserInformationDetails(tmpMap.get("id"));
-                break;
-            }
-        }
+
+    private void loadDependentInformationDetails(String dependentName,int position) {
+                try{
+                    if(position!=0){
+                        HashMap<String,String> tmpMap=PatientList.get(position-1);
+                        if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
+                            if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
+                                loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
+
+                                // Logic to clear the dependent list on selecting the child,It will show only the parent in the drop down.
+                                String name=dependentList.get(0);
+                                dependentList.clear();
+                                dependentList.add(tmpMap.get("name"));
+                                dependentList.add(name);
+                            }
+                        }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
+                            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    setSpinnerValues(dependentList,patientSpinner);
+                                }
+                            };
+//
+                            Utils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok","", positiveOnClickListener,null);
+
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+
+         //   }
+
+
     }
+
 
     /**
      *
@@ -356,9 +384,44 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
+            dependentList.clear();//Clearing all previous data to avoid duplicates
+            PatientList.clear();
+            dependentList.add(0,personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));//Adding Parent name as first in the dependent List.
+            handleChangeResponse(resObj);//Method call for handling Family members Response
         }catch (Exception e){
-
+            e.printStackTrace();
         }
+    }
+
+
+    /**
+     * This method will parse the family member information and stored in the dependent list.
+     * @param response-Response object contains User family members information.
+     */
+
+    private void handleChangeResponse(JSONObject response) {
+        try {
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
+            JsonParser parser = new JsonParser();
+            JsonObject responObj = (JsonObject)parser.parse(response.toString());
+            JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
+            for(int i=0;i<conditionsSearch.size();i++) {
+                strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
+                HashMap<String, String> test = new HashMap<String, String>();
+                test.put("name",strPatientName);
+                test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
+                test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
+                dependentList.add(strPatientName);
+                PatientList.add(test);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        dependentList.add(StringConstants.ADD_CHILD);
+
     }
 
     /**
@@ -390,7 +453,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             public void onResponse(JSONObject response) {
                 Utils.hideProgressDialog(pDialog);
                 handleSuccessResponse(response);
-                loadFamilyMember();
+                //loadFamilyMember();
             }
         };
 
@@ -398,6 +461,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
+                pDialog.dismiss();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -419,46 +483,6 @@ public class MDLiveGetStarted extends FragmentActivity{
      * Class : FamilyMembersList - Service class used to fetch the Family Member List information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
-     */
-    private void loadFamilyMember() {
-        if(!pDialog.isShowing()) {
-            pDialog.show();
-        }
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Utils.hideProgressDialog(pDialog);
-                handleSuccessResponseFamilyMember(response);
-            }
-        };
-
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
-                pDialog.dismiss();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
-                    }
-                }
-            }};
-
-        FamilyMembersList family_services = new FamilyMembersList(MDLiveGetStarted.this, null);
-        family_services.getFamilyMember(responseListener, errorListener);
-    }
-    /**
-     *
-     * Successful Response Handler for Dependent user. The gender and the date of birth of
-     * the corresponding dependent will be fetched and populated in the view
-     * and the corresponding id's of the user.These two were populated to the Arraylist .
-     *
      */
 
     private void loadDependentUserInformationDetails(String depenedentId) {
@@ -485,7 +509,6 @@ public class MDLiveGetStarted extends FragmentActivity{
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                Utils.hideProgressDialog(pDialog);
                             }
                         };
                         // Show timeout error message
@@ -517,31 +540,26 @@ public class MDLiveGetStarted extends FragmentActivity{
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
-
             for(int i=0;i<conditionsSearch.size();i++) {
-                 strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
+                strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
                 HashMap<String, String> test = new HashMap<String, String>();
                 test.put("name",strPatientName);
-
                 test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
-                Log.e("dependent list",strPatientName);
+                test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
+                Log.e("dependent list", strPatientName);
                 dependentList.add(strPatientName);
                 PatientList.add(test);
-
-
 //                patientName.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
             }
 
         }catch(Exception e){
             e.printStackTrace();
         }
-        HashMap<String, String> test = new HashMap<String, String>();
-
         dependentList.add(StringConstants.ADD_CHILD);
-
         setSpinnerValues(dependentList, patientSpinner);
+
     }
-       /**
+    /**
      *
      *  Successful Response Handler for Load Basic Info.The user basic info will provider the gender
      *  of the user and the date of birth of the corresponding user.
@@ -582,6 +600,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             }
 
             dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
+            parentName=personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -590,6 +609,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
             pDialog.dismiss();
+            handleSuccessResponseFamilyMember(response);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -613,11 +633,11 @@ public class MDLiveGetStarted extends FragmentActivity{
             genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
-           /* SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
-            editor.commit();*/
+            editor.commit();
             pDialog.dismiss();
 
         }catch(Exception e){
