@@ -40,14 +40,14 @@
         android:id="@+id/seenextAvailableBtn"
         style="@style/ContinueButtonStyle"
         android:text="See Next Available"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="5dp"
         android:textAllCaps="false" />
 
     <RelativeLayout
         android:id="@+id/filterRl"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="18dp"
+        android:layout_height="50dp"
+
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -58,7 +58,7 @@
             style="@style/BaseAvailableDoctorTxtStyle"
             android:gravity="left|center"
             android:textSize="18sp"
-            android:textColor="#35393d"
+            android:textColor="@color/search_bgd"
             android:layout_marginStart="19dp"
             android:layout_centerVertical="true"
             android:id="@+id/txtFilter" />

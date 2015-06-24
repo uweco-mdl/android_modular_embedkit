@@ -12,19 +12,11 @@
             android:id="@+id/backImg"
             android:layout_gravity="center"
             android:layout_marginStart="17dp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/home_icon"
-            android:id="@+id/homeImg"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
-            />
+
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
+            android:layout_marginLeft="20dp"
             android:text="Add Child"
             />
     </LinearLayout>
@@ -39,7 +31,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:layout_marginStart="19dp"
-        android:text="Child must be younger than 18 years old"
+        android:text="Child must be younger than 18 years old."
         android:layout_width="match_parent" />
     <LinearLayout
         style="@style/WagParentLinearLayoutStyle"
@@ -83,6 +75,7 @@
                 style = "@style/GetStartedHeaderContentStyle"
                 android:id="@+id/dobTxt"
                 android:textSize="18sp"
+                android:textColor="@color/black"
                 android:hint="mm/dd/yyyy"/>
         </LinearLayout>
 
@@ -96,14 +89,23 @@
                 style = "@style/GetStartedHeaderContentStyle"
                 android:text="Gender"
                  />
-            <TextView
-                style = "@style/GetStartedContentTxtStyle"
-                android:hint="Male"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:id="@+id/genderTxt" />
-
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    style = "@style/GetStartedContentTxtStyle"
+                    android:hint=""
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:id="@+id/genderTxt" />
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/dropdown_icon"
+                    android:layout_centerVertical="true"
+                    />
+            </RelativeLayout>
         </LinearLayout>
 
         <View style="@style/ViewStyle" />
@@ -118,8 +120,8 @@
                 android:id="@+id/mySwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
+                android:gravity="left|center"
+                android:textSize="16sp"
                 android:text="I,Michelle Marino confirm that i'm the legal parent / guardian of the minor above."
                 android:checked="false" />
         </LinearLayout>

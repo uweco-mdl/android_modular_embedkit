@@ -14,19 +14,11 @@
             android:id="@+id/backImg"
             android:layout_gravity="center"
             android:layout_marginStart="19dp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/home_icon"
-            android:id="@+id/homeImg"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
-            />
+
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
+            android:layout_marginLeft="20dp"
             android:text="Doctor Details"
             />
     </LinearLayout>
@@ -48,8 +40,8 @@
         <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
             android:id="@+id/ProfileImg1"
             android:layout_marginTop="30dp"
-            android:layout_height="160dp"
-            android:layout_width="160dp"
+            android:layout_height="150dp"
+            android:layout_width="150dp"
             android:visibility="visible"
             android:src="@drawable/doctor_icon"
             style="@style/DoctorOnCallImgViewStyle"/>
@@ -70,7 +62,7 @@
                 style="@style/ProviderDetailsDoctorTxtStyle"
                 android:id="@+id/specalist"
                 android:text="General Practise"
-                android:layout_marginTop="5dp"
+
                android:layout_marginStart="5dp"
                android:textColor="#878f95"
                android:gravity="left|center"
@@ -80,8 +72,6 @@
            <TextView
                style="@style/ProviderDetailsDoctorTxtStyle"
                android:text="Available now"
-               android:layout_marginTop="5dp"
-               android:layout_marginRight="5dp"
                android:textColor="#31B404"
                android:gravity="end|right|center"
                android:textSize="18sp"
@@ -90,7 +80,6 @@
            <TextView
                style="@style/ProviderDetailsDoctorTxtStyle"
                android:text="Mercy Hospital"
-               android:layout_marginTop="5dp"
                android:textColor="#878f95"
                android:gravity="left|center"
                android:layout_marginStart="5dp"
@@ -103,6 +92,7 @@
             style="@style/ContinueButtonStyle"
             android:layout_marginTop="30dp"
             android:text=""
+            android:textStyle="bold"
             android:textAllCaps="false" />
             <TextView
                 style="@style/ProviderDetailsDoctorTxtStyle"
@@ -119,8 +109,8 @@
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
+                android:layout_marginTop="20dp"
                 android:layout_marginStart="5dp">
-
                 <include layout="@layout/mdlive_provider_specialities"/>
             </LinearLayout>
     <LinearLayout
@@ -130,25 +120,29 @@
       </LinearLayout>
        <LinearLayout
         style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp">
+           android:layout_marginStart="5dp"
+           android:layout_marginTop="10dp">
         <include layout="@layout/mdlive_provider_license"/>
        </LinearLayout>
 
        <LinearLayout
          style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp">
+           android:layout_marginStart="5dp"
+           android:layout_marginTop="10dp">
          <include layout="@layout/mdlive_provider_affilitations"/>
        </LinearLayout>
 
        <LinearLayout
          style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp">
+           android:layout_marginStart="5dp"
+           android:layout_marginTop="10dp">
          <include layout="@layout/mdlive_provider_location"/>
        </LinearLayout>
 
        <LinearLayout
           style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp">
+           android:layout_marginStart="5dp"
+           android:layout_marginTop="10dp">
           <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
      </LinearLayout>

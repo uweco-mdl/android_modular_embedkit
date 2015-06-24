@@ -163,7 +163,6 @@
         <item name="android:textColor">@color/mdliveLoginUsernameColor</item>
         <item name="android:layout_gravity">center_vertical</item>/>
         <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
@@ -730,8 +729,8 @@
     </style>
 
     <style name="DoctorOnCallImgViewStyle">
-        <item name="android:layout_width">70dp</item>
-        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
         <item name="android:src">@drawable/doctor_icon</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
@@ -751,7 +750,7 @@
     <style name="providerBgdLinearLayoutStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">5dp</item>
 
     </style>
 
@@ -797,7 +796,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:text">@string/doctorOnCall_txt</item>
         <item name="android:textColor">@color/black</item>
     </style>

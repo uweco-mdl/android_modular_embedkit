@@ -70,7 +70,7 @@
                 <TextView
                     style = "@style/GetStartedHeaderContentStyle"
                     android:id="@+id/dobTxt"
-                    android:textColor="#b4b9bd"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:text="mm/dd/yyyy"/>
                 <View style="@style/ViewStyle"
@@ -123,7 +123,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_action_next_item"
+                        android:src="@drawable/dropdown_icon"
                         android:layout_centerVertical="true"
                         />
 
@@ -142,11 +142,12 @@
                     style = "@style/GetStartedHeaderContentStyle"
                     android:text="Telephone Number"
                     />
-                <TextView
+                <EditText
                     style = "@style/GetStartedHeaderContentStyle"
                     android:id="@+id/telephoneTxt"
                     android:textColor="@color/black"
                     android:textSize="18sp"
+                    android:background="@color/transparent"
                     android:inputType="phone"
                     android:text=""/>
                 <View style="@style/ViewStyle"
@@ -158,9 +159,27 @@
     <Button
         android:id="@+id/SavContinueBtn"
         style="@style/ContinueButtonStyle"
-
-
-        android:text="@string/next_btn"
+        android:text="NEXT"
         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/search_bgd"
+            android:layout_marginLeft="50dp"
+            android:text="Service Provided by"
+            android:id="@+id/footerTxt" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/footerTxt"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/logo"
+            android:id="@+id/imageView3" />
+    </RelativeLayout>
 </LinearLayout>

@@ -89,12 +89,12 @@ public class MDLiveFamilymember extends Activity {
                 finish();
             }
         });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                movetohome();
-            }
-        });
+//        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                movetohome();
+//            }
+//        });
 
         patientNameEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -176,7 +176,7 @@ public class MDLiveFamilymember extends Activity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
 //        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
-        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+" certify that i'm the legal parent / guardian\nof the minor above.");
+        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", certify that i'm the legal parent / guardian of the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -212,12 +212,12 @@ public class MDLiveFamilymember extends Activity {
         if(TextUtils.isEmpty(patientNameEt.getText().toString())){
             isAllFieldsfilled = false;
         }
-        if(TextUtils.isEmpty(dateTxt.getText())){
-            isAllFieldsfilled = false;
-        }
-//        if(TextUtils.isEmpty(genderTxt.getText().toString())){
+//        if(TextUtils.isEmpty(dateTxt.getText())){
 //            isAllFieldsfilled = false;
 //        }
+        if(TextUtils.isEmpty(genderTxt.getText().toString())){
+            isAllFieldsfilled = false;
+        }
         if(!mySwitch.isChecked())
         {
             isAllFieldsfilled = false;
@@ -321,7 +321,7 @@ public class MDLiveFamilymember extends Activity {
         // Show current date
         selectedText.setText(new StringBuilder()
                 // Month is 0 based, just add 1
-                .append(month + 1).append("-").append(day).append("-")
+                .append(month + 1).append("/").append(day).append("/")
                 .append(year).append(" "));
     }
 

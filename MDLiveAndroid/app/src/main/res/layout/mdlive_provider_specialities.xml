@@ -6,11 +6,11 @@
     <LinearLayout
        style="@style/DoctorLinearLayoutStyle"
         android:orientation="vertical">
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             style="@style/ProviderDetailHeaderStyle"
             android:text="Specialities"
             />
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             style="@style/ProviderDetailContentStyle"
             android:textColor="#878f95"
             android:id="@+id/specialities_txt"

@@ -100,6 +100,15 @@ public class MDLiveLocation extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (keyDel == 0) {
+                    int len = ZipcodeEditTxt.getText().length();
+                    if(len == 5) {
+                        ZipcodeEditTxt.setText(ZipcodeEditTxt.getText() + "-");
+                        ZipcodeEditTxt.setSelection(ZipcodeEditTxt.getText().length());
+                    }
+                } else {
+                    keyDel = 0;
+                }
 
             }
         });

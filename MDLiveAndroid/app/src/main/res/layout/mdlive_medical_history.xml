@@ -534,7 +534,7 @@
                     android:layout_width="25dp"
                     android:id="@+id/MyHealthCameraBtn"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/camera_icon" />
+                    android:src="@drawable/icon_camera" />
 
                 <TextView
                     android:layout_height="match_parent"

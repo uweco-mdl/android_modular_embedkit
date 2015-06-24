@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="@string/current_loc_txt"
             android:tag="current_loc_txt"
-           android:drawableLeft="@drawable/location_symbol"
+            android:drawableLeft="@drawable/location_icon"
             android:layout_margin="10dp"
             style="@style/ContinueButtonStyle"
             android:id="@+id/currentLocation"

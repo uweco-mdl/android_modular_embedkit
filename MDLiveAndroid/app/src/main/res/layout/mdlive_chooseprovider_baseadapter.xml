@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="19dp"
 
     android:orientation="vertical">
 
     <LinearLayout
         style="@style/DoctorLinearLayoutStyle"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="25dp"
         android:orientation="horizontal"
         >
         <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
@@ -21,6 +21,8 @@
             style="@style/LinearLayoutStyle"
             android:orientation="vertical"
             android:layout_width="230dp"
+            android:layout_marginLeft="10dp"
+
             >
 
             <TextView
@@ -34,6 +36,7 @@
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/specalist"
                 android:text="General Practise"
+                android:layout_marginTop="5dp"
                 android:textColor="#878f95"
                 android:textSize="16sp"
                 />
@@ -42,6 +45,7 @@
                 style="@style/DoctorTxtStyle"
                 android:visibility="visible"
                 android:textColor="#878f95"
+                android:layout_marginTop="2dp"
                 android:text="Capital Regional\nMedical Center"
                 android:id="@+id/Time"/>
 
@@ -57,4 +61,8 @@
 
             />
     </LinearLayout>
+    <View style="@style/ViewStyle"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        />
 </LinearLayout>

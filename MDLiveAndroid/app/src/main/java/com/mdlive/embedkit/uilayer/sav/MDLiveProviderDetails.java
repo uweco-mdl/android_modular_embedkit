@@ -35,7 +35,8 @@ import org.json.JSONObject;
 public class MDLiveProviderDetails extends Activity implements View.OnClickListener{
     private ProgressDialog pDialog;
     private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,tapSeetheDoctorTxt;
-    private NetworkImageView ProfileImg,AffilitationProviderImg;
+    private CircularNetworkImageView ProfileImg;
+    private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder;
@@ -80,7 +81,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         SearchBtn.setOnClickListener(this);
         //tapSeetheDoctorTxt.setOnClickListener(this);
-        ProfileImg = (NetworkImageView)findViewById(R.id.ProfileImg1);
+        ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
 
         ((Button) findViewById(R.id.tapBtn)).setOnClickListener(new View.OnClickListener() {
@@ -164,7 +165,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
             ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
             ProfileImg.setErrorImageResId(R.drawable.doctor_icon);
             doctorNameTv.setText(str_DoctorName);
-            tapSeetheDoctorTxt.setText(str_DoctorName);
+            tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
             aboutme_txt.setText(str_AboutMe);
             location_txt.setText(str_Location);
             String license_state = "";
@@ -216,7 +217,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         JsonArray specialityArray = providerdetObj.get("speciality_qualifications").getAsJsonArray();
         for(int i=0;i<specialityArray.size();i++)
         {
-            specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
+            specialities+= specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
             specialities_txt.setText(specialities);
             Log.e("Lang Details--->", specialityArray.get(i).toString());
 
@@ -232,7 +233,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         JsonArray langArray = providerdetObj.get("Language").getAsJsonArray();
         for(int i=0;i<langArray.size();i++)
         {
-            lang+="\u2022"+" "+langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
+            lang+=langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
             lang_txt.setText(lang);
             Log.e("Lang Details--->", langArray.get(i).toString());
 
@@ -248,7 +249,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         for(int i=0;i<responArray.size();i++)
         {
             JsonObject licenseObject = responArray.get(i).getAsJsonObject();
-            license_state += "\u2022"+" "+licenseObject.get("state").getAsString()+"\n";
+            license_state +=licenseObject.get("state").getAsString()+"\n";
             license_txt.setText(license_state);
             String license_number = licenseObject.get("license_number").getAsString();
         }

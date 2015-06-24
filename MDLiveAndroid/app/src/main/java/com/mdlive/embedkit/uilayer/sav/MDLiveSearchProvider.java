@@ -180,7 +180,7 @@ public class MDLiveSearchProvider extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                movetohome();
+                finish();
 
             }
         });

@@ -84,7 +84,6 @@
                 android:textSize="14sp"
                 android:layout_centerVertical="true"
             android:id="@+id/search_edit"
-            android:gravity="center"
             android:inputType="textPersonName"
             android:layout_gravity="center_horizontal"
 
@@ -103,6 +102,7 @@
         <TextView
             style="@style/NoResultsReasonTextViewStyle"
             android:text="Search Results"
+            android:visibility="gone"
          />
         <TextView
             android:id="@+id/noresults"

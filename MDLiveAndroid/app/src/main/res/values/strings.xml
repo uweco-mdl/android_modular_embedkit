@@ -35,7 +35,7 @@
     <string name="patientTxt">Patient</string>
     <string name="dateOfBirth">Date of Birth</string>
     <string name="gender">Gender</string>
-    <string name="location">Location</string>
+    <string name="location">Current Location</string>
     <string name="next_btn">Next</string>
     <string name="arTxt">AR</string>
     <string name="providerTypeTxt">Provider Type</string>
@@ -75,7 +75,7 @@
     <string name="bloodurine_txt">Blood In Urine</string>
     <string name="invalid_name">Invalid Name</string>
     <string name="invalid_symptom">Invalid Symptom</string>
-    <string name="no_results_found_txt">No results.</string>
+    <string name="no_results_found_txt">No results found for</string>
     <string name="no_results_found_as_symptom_txt">submit {0} as your symptom</string>
 
     <!--Location-->
@@ -152,8 +152,6 @@
     <string name="age_check2">Are you currently breastfeeding?</string>
 
 
-
-
     <!-- My Health -->
     <!-- Pediatric -->
     <string name="pediatric_header_text">PEDIATRIC PROFILE</string>
@@ -197,52 +195,110 @@
 
     <!-- State Name List-->
     <string-array name="stateName">
-        <item>Alabama</item>
-        <item>Alaska</item>
-        <item>American Samoa</item>
-        <item>Arizona</item>
-        <item>Arkansas</item>
-        <item>ArmedForcesEurope</item>
-        <item>California</item>
-        <item>Colorado</item>
-        <item>CoonectiCut</item>
-        <item>Delaware</item>
-        <item>DistrictOfColumbia</item>
-        <item>FederatedStatesOfMicronesia</item>
-        <item>Florida</item>
-        <item>Georgia</item>
-        <item>GUAM</item>
-        <item>Hawali</item>
-        <item>Idaho</item>
-        <item>Illinois</item>
-        <item>Indiana</item>
-        <item>Iowa</item>
-        <item>Kansas</item>
+        <item>ALABAMA</item>
+        <item>ALASKA</item>
+        <item>ARIZONA</item>
+        <item>ARKANSAS</item><item>
+CALIFORNIA</item><item>
+COLORADO</item><item>
+CONNECTICUT</item><item>
+DELAWARE</item><item>
+FLORIDA</item><item>
+GEORGIA</item><item>
+HAWAII</item><item>
+IDAHO</item><item>
+ILLINOIS</item><item>
+INDIANA</item><item>
+IOWA</item><item>
+KANSAS</item><item>
+KENTUCKY</item><item>
+LOUISIANA</item><item>
+MAINE</item><item>
+MARYLAND</item><item>
+MASSACHUSETTS</item><item>
+MICHIGAN</item><item>
+MINNESOTA</item><item>
+MISSISSIPPI</item><item>
+MISSOURI</item><item>
+MONTANA</item><item>
+NEBRASKA</item><item>
+NEVADA</item><item>
+NEW HAMPSHIRE</item><item>
+NEW JERSEY</item><item>
+NEW MEXICO</item><item>
+NEW YORK</item><item>
+NORTH CAROLINA</item><item>
+NORTH DAKOTA</item><item>
+OHIO</item><item>
+OKLAHOMA</item><item>
+OREGON</item><item>
+PENNSYLVANIA</item><item>
+RHODE ISLAND</item><item>
+SOUTH CAROLINA</item><item>
+SOUTH DAKOTA</item><item>
+TENNESSEE</item><item>
+TEXAS</item><item>
+UTAH</item><item>
+VERMONT</item><item>
+VIRGINIA</item><item>
+WASHINGTON</item><item>
+WEST VIRGINIA</item>
+        <item>WISCONSIN</item>
+        <item>WYOMING</item>
     </string-array>
 
     <!-- State Code List -->
     <string-array name="stateCode">
         <item>AL</item>
         <item>AK</item>
-        <item>AM</item>
         <item>AZ</item>
         <item>AR</item>
-        <item>AE</item>
         <item>CA</item>
         <item>CO</item>
         <item>CT</item>
         <item>DE</item>
-        <item>DC</item>
-        <item>FM</item>
         <item>FL</item>
         <item>GA</item>
-        <item>GU</item>
         <item>HI</item>
-        <item>IH</item>
+        <item>ID</item>
         <item>IL</item>
         <item>IN</item>
         <item>IA</item>
-        <item>KA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
     </string-array>
 
     <string-array name="dietlist">
