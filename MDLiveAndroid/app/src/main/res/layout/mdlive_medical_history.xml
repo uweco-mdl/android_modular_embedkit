@@ -534,17 +534,36 @@
                     android:layout_width="25dp"
                     android:id="@+id/MyHealthCameraBtn"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_camera" />
+                    android:src="@drawable/camera_icon" />
 
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="wrap_content"
+                    android:id="@+id/takephotoTxt"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:textSize="20sp"
-                    android:text="Take a photo" />
+                    android:text="Take a photo"
+                    android:textColor="@android:color/black"
+                    />
 
             </LinearLayout>
+
+
+            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gridview"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:numColumns="4"
+                android:stretchMode="columnWidth"
+                android:gravity="center"
+                />
 
             <Button
                 android:id="@+id/SavContinueBtn"
@@ -556,20 +575,6 @@
                 android:layout_marginBottom="10dp"
                 />
 
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/gridview"
-                android:visibility="gone"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:horizontalSpacing="10dp"
-                android:verticalSpacing="10dp"
-                android:padding="10dp"
-                android:layout_gravity="center"
-                android:numColumns="4"
-                android:stretchMode="columnWidth"
-                android:gravity="center"
-                />
 
 
 

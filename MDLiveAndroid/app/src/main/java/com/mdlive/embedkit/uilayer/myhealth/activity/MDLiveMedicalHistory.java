@@ -7,8 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +39,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -58,13 +58,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * This class is for MDLiveMedicalHistory page.
@@ -93,6 +100,8 @@ public class MDLiveMedicalHistory extends Activity {
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int IMAGE_PREVIEW_CODE = 200;
     private static final int RELOAD_REQUEST_CODE = 111;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,14 +287,14 @@ public class MDLiveMedicalHistory extends Activity {
         ((LinearLayout) findViewById(R.id.MyHealthAddPhotoL2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isDeviceSupportCamera())
-                    Toast.makeText(getApplicationContext(), "Your Device doesn't support have Camera Feature!",
-                            Toast.LENGTH_SHORT).show();
-                else
-                if(myPhotosList.size() >= 8){
-                    Toast.makeText(getApplicationContext(), "Maximum allowed photos is 8!", Toast.LENGTH_SHORT).show();
+                if (!isDeviceSupportCamera()){
+                    Utils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
                 }else{
-                    captureImage();
+                    if(myPhotosList.size() >= 8){
+                        Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
+                    }else{
+                        captureImage();
+                    }
                 }
             }
         });
@@ -327,6 +336,7 @@ public class MDLiveMedicalHistory extends Activity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // set the video image quality to high
         // start the image capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
@@ -535,7 +545,9 @@ public class MDLiveMedicalHistory extends Activity {
         ArrayList<HashMap<String, Object>> listDatas = new ArrayList<>();
         Log.e("response--> download", response.toString());
         try {
-            if(response.has("records")){
+            if(response != null && response.toString().contains("No Previous Documents Found")){
+                gridview.setVisibility(View.GONE);
+            }else if(response.has("records")){
                 listDatas.clear();
                 JSONArray recordsArray = response.getJSONArray("records");
                 for(int i = 0; i<recordsArray.length(); i++){
@@ -551,10 +563,20 @@ public class MDLiveMedicalHistory extends Activity {
                     /*if(Utils.photoList.get(jsonObject.getInt("id")) == null)
                         downloadImageService(jsonObject.getInt("id"));*/
                 }
-
                 if(recordsArray.length() > 0){
                     gridview.setVisibility(View.VISIBLE);
+                }else{
+                    gridview.setVisibility(View.GONE);
                 }
+
+                if(recordsArray.length() >= 8){
+                    ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.DKGRAY);
+                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setBackgroundResource(R.drawable.icon_camera);
+                }else{
+                    ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.BLACK);
+                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setBackgroundResource(R.drawable.camera_icon);
+                }
+
                 if(recordsArray != null){
                     if(recordsArray.length() > 4){
                         DisplayMetrics dm = new DisplayMetrics();
@@ -592,14 +614,15 @@ public class MDLiveMedicalHistory extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.show();
-
+//            pDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            if(imageAdapter != null)
+                imageAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -608,9 +631,19 @@ public class MDLiveMedicalHistory extends Activity {
                 if(recordsArray != null){
                     for(int i =0; i<recordsArray.length(); i++){
                         JSONObject jsonObject = recordsArray.getJSONObject(i);
-//                        if(Utils.photoList.get(jsonObject.getInt("id")) == null)
-                        if(Utils.mphotoList.get(jsonObject.getInt("id")) == null)
-                            downloadImageService(jsonObject.getInt("id"));
+                            /*if(Utils.mphotoList.get(jsonObject.getInt("id")) == null){
+                                downloadImageService(jsonObject.getInt("id"));
+                            }*/
+                        try {
+                            if(Utils.mphotoList.get(jsonObject.getInt("id")) == null){
+                                String response = makeImageRequestCall(AppSpecificConfig.BASE_URL + AppSpecificConfig.DOWNLOAD_MEDICAL_IMAGE + "/"+jsonObject.getInt("id"));
+                                if(response != null && response.length() != 0)
+                                    handleDownloadImageService(new JSONObject(response), jsonObject.getInt("id"));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
             } catch (JSONException e) {
@@ -621,6 +654,46 @@ public class MDLiveMedicalHistory extends Activity {
 
 
     }
+
+    /* For Testing Purpose Get Method Call*/
+    public String makeImageRequestCall(String urlString) throws Exception {
+        //Url link for choose provider details
+        URL url = new URL(urlString);
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setDoInput(true);
+        urlConnection.setDoOutput(true);
+        urlConnection.setConnectTimeout(30000);
+        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
+        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+        urlConnection.setRequestProperty("Authorization", auth);
+        urlConnection.setRequestProperty("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+        String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        if(dependentId != null) {
+            urlConnection.setRequestProperty("DependantId", dependentId);
+        }
+        if (urlConnection.getResponseCode() == 200) {
+            InputStream in = urlConnection.getInputStream();
+            return convertInputStreamToString(in);
+        } else {
+            return null;
+        }
+    }
+
+    /** This function is used to convert Inputstream Datas to String type*/
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+    }
+
     /**
      * Checks user medical history aggregation details.
      * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
@@ -653,7 +726,6 @@ public class MDLiveMedicalHistory extends Activity {
                 Log.e("Image response", response.toString());
                 if(response.has("message") && response.getString("message").equals("Document found")){
                     byte[] decodedString = Base64.decode(response.getString("file_stream"), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 //                    Utils.photoList.put(photoId, decodedByte);
                     Utils.mphotoList.put(photoId, response.getString("file_stream"));
 
@@ -662,9 +734,6 @@ public class MDLiveMedicalHistory extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(imageAdapter != null)
-            imageAdapter.notifyDataSetChanged();
     }
 
     /**

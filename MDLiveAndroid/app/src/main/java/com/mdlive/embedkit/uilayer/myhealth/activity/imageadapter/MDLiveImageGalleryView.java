@@ -65,9 +65,17 @@ public class MDLiveImageGalleryView extends Activity {
 
 
         byte[] decodedString = Base64.decode((String) Utils.mphotoList.get(getIntent().getIntExtra("id", 0)), Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        //imageView.setImageBitmap(decodedByte);
-        ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(decodedByte);
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = 8;
+
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+
+        if(decodedByte != null)
+            //imageView.setImageBitmap(decodedByte);
+            ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(decodedByte);
 
 //        decodedByte.recycle();
     }

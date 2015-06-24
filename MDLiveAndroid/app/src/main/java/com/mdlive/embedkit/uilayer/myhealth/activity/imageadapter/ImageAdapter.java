@@ -75,9 +75,7 @@ public class ImageAdapter extends BaseAdapter {
 
             if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
                 byte[] decodedString = Base64.decode(Utils.mphotoList.get(myPhotosList.get(position).get("id")), Base64.DEFAULT);
-                //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 imageView.setImageBitmap(decodeSampledBitmapFromResource(decodedString));
-//                decodedByte.recycle();
             }else{
                 imageView.setImageResource(R.drawable.account);
             }
@@ -105,6 +103,8 @@ public class ImageAdapter extends BaseAdapter {
 
         options.inJustDecodeBounds = true;
 
+        options.inSampleSize = 8;
+
         Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
 
         if(b != null)
@@ -118,6 +118,7 @@ public class ImageAdapter extends BaseAdapter {
 
     //Given the bitmap size and View size calculate a subsampling size (powers of 2)
     static int calculateInSampleSize( BitmapFactory.Options options, int reqWidth, int reqHeight) {
+
         int inSampleSize = 1;	//Default subsampling size
         // See if image raw height and width is bigger than that of required view
         if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
