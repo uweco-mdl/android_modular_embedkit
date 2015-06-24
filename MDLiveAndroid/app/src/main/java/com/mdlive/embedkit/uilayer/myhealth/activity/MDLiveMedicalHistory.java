@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -85,7 +86,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MDLiveMedicalHistory extends Activity {
 
-    
+
     public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
@@ -99,9 +100,10 @@ public class MDLiveMedicalHistory extends Activity {
     private GridView gridview;
     public static Uri fileUri;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int PICK_IMAGE_REQUEST_CODE = 101;
     public static final int IMAGE_PREVIEW_CODE = 200;
     private static final int RELOAD_REQUEST_CODE = 111;
-
+    private AlertDialog imagePickerDialog;
 
 
     @Override
@@ -235,6 +237,7 @@ public class MDLiveMedicalHistory extends Activity {
                 ValidateModuleFields();
             }
         });
+
         PreExisitingGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -288,15 +291,7 @@ public class MDLiveMedicalHistory extends Activity {
         ((LinearLayout) findViewById(R.id.MyHealthAddPhotoL2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isDeviceSupportCamera()){
-                    Utils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
-                }else{
-                    if(myPhotosList.size() >= 8){
-                        Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
-                    }else{
-                        captureImage();
-                    }
-                }
+                imagePickerDialog.show();
             }
         });
         /**
@@ -327,8 +322,49 @@ public class MDLiveMedicalHistory extends Activity {
                 Toast.makeText(MDLiveMedicalHistory.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+        initializeCameraDialog();
     }
 
+
+    public void initializeCameraDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveMedicalHistory.this);
+
+        alertDialogBuilder
+                .setMessage("Pick Image From")
+                .setPositiveButton("Camera", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        imagePickerDialog.dismiss();
+                        if (!isDeviceSupportCamera()){
+                            Utils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
+                        }else{
+                            if(myPhotosList.size() >= 8){
+                                Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
+                            }else{
+                                captureImage();
+                            }
+                        }
+
+                    }
+                })
+                .setNegativeButton("Gallery", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        imagePickerDialog.dismiss();
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        startActivityForResult(photoPickerIntent, PICK_IMAGE_REQUEST_CODE);
+                    }
+                })
+                .setNeutralButton("Close", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        imagePickerDialog.dismiss();
+                    }
+                });
+
+        imagePickerDialog = alertDialogBuilder.create();
+    }
 
     /*
      * Capturing Camera Image will lauch camera app requrest image capture
@@ -411,7 +447,21 @@ public class MDLiveMedicalHistory extends Activity {
                         "Sorry! Failed to Upload Image!", Toast.LENGTH_SHORT)
                         .show();
             }
-        }if(requestCode == RELOAD_REQUEST_CODE) {
+        }
+
+        if (requestCode == PICK_IMAGE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    fileUri = data.getData();
+                    if(fileUri != null)
+                        uploadMedicalRecordService(fileUri.getPath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if(requestCode == RELOAD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 checkMedicalAggregation();
             }
@@ -426,6 +476,7 @@ public class MDLiveMedicalHistory extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        applyValidationOnViews();
     }
 
     private void applyValidationOnViews(){
@@ -572,10 +623,10 @@ public class MDLiveMedicalHistory extends Activity {
 
                 if(recordsArray.length() >= 8){
                     ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.DKGRAY);
-                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setBackgroundResource(R.drawable.icon_camera);
+                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setImageResource(R.drawable.icon_camera);
                 }else{
                     ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.BLACK);
-                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setBackgroundResource(R.drawable.camera_icon);
+                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setImageResource(R.drawable.camera_icon);
                 }
 
                 if(recordsArray != null){
@@ -923,8 +974,8 @@ public class MDLiveMedicalHistory extends Activity {
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
-            checkAgeAndFemale();
             applyValidationOnViews();
+            checkAgeAndFemale();
 
             if(isUserFirstToApp(historyPercentageArray)){
                 downloadMedicalRecordService();
@@ -956,6 +1007,7 @@ public class MDLiveMedicalHistory extends Activity {
                         liftStyle = true;
                     }
                 }
+
                 if(subObj.has("pediatric")){
                     int pediatricValue = subObj.getInt("pediatric");
                     if(pediatricValue == 0){
@@ -969,8 +1021,14 @@ public class MDLiveMedicalHistory extends Activity {
         }
 
         if(havingHealth && liftStyle && pediatric){
+            saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "false");
+            saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "false");
+            saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "false");
             return  true;
         }else{
+            saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "true");
+            saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "true");
+            saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "true");
             return false;
         }
     }

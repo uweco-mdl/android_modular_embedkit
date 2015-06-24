@@ -86,7 +86,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             }
         });
     }
-
     /**
      *
      * This function handles the saving of data when the user presses the save button. Only the newly
@@ -169,13 +168,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 initialiseSingleConditionView(singleConditionView, addConditionsLl, i, tmpCondition);
                 addConditionsLl.addView(singleConditionView);
             }
-            if(addConditionsLl.getChildCount() < 3){
+            /*if(addConditionsLl.getChildCount() < 3){
                 while(addConditionsLl.getChildCount()<3){
                     addBlankConditionOrAllergy();
                 }
-            }else{
+            }else{*/
                 addBlankConditionOrAllergy();
-            }
+//            }
 //            addBlankConditionOrAllergy();
 
             pDialog.dismiss();
@@ -371,12 +370,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
      */
     private boolean conditonEditTextEditorActon(int actionId, LinearLayout addConditionsLl, EditText conditonEt) {
         if (actionId == EditorInfo.IME_ACTION_NEXT) {
-
-            int childCount = addConditionsLl.getChildCount();
-            if (childCount >= 3 && (((ViewGroup)(addConditionsLl.getChildAt(childCount-1))).getChildAt(0)).getId() == conditonEt.getId()) {
+            if (conditonEt.getText() != null && conditonEt.getText().toString().length() != 0 &&
+                    (((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId()) {
                 addBlankConditionOrAllergy();
-                childCount = addConditionsLl.getChildCount();
-                EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(childCount-1))).getChildAt(0);
+                EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
                 conditonEt.setNextFocusDownId(newEt.getId());
                 newEt.requestFocus();
                 InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -21,7 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by srinivasan_ka on 6/11/2015.
+ * This adapter class is used to display list of images uploaded by user
+ *
+ * By tapping on image, it will redirect to MDLiveImageGalleryView page.
+ *
  */
 public class ImageAdapter extends BaseAdapter {
     private Activity activity;
@@ -103,7 +106,7 @@ public class ImageAdapter extends BaseAdapter {
 
         options.inJustDecodeBounds = true;
 
-        options.inSampleSize = 8;
+        options.inSampleSize = 2;
 
         Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
 
@@ -134,8 +137,5 @@ public class ImageAdapter extends BaseAdapter {
         }
         return inSampleSize;
     }
-
-
-
 
 }
