@@ -85,6 +85,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MDLiveMedicalHistory extends Activity {
 
+    
     public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
