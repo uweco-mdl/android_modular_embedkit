@@ -67,6 +67,7 @@ public class MDLiveReasonForVisit extends Activity {
                     return;
                 }
 
+
                 Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
                 if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
