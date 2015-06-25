@@ -51,7 +51,7 @@ import static java.util.Calendar.MONTH;
  */
 public class MDLiveSearchProvider extends Activity {
     private ProgressDialog pDialog;
-    private  TextView AppointmentTxtView,LocationTxtView, ProviderTypeTxtView,genderTxtView;
+    private  TextView AppointmentTxtView,LocationTxtView, ProviderTypeTxtView,genderTxtView,edtSearch;
     private int month,day,year;
     private static final int DATE_PICKER_ID = 1111;
     private ArrayList<HashMap<String, String>> SearchArrayListProvider = new ArrayList<HashMap<String,String>>();
@@ -66,11 +66,7 @@ public class MDLiveSearchProvider extends Activity {
     private ArrayList<String> SpecialityArrayList = new ArrayList<String>();
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
-    private TextView edtSearch;
-
-
-
-    HashMap<String,String> postParams=new HashMap<>();
+    private HashMap<String,String> postParams=new HashMap<>();
     public String SavedLocation;
 
     @Override
@@ -100,6 +96,11 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(AvailableByArrayList,(TextView)findViewById(R.id.AvailableTxtView),"available_by",SearchArrayListAvailableBy);
             }
         });
+        /**
+         *This method is to fetch the apoointment date and the native date picker is called for selecting
+         * the required date.
+         *
+         */
         LinearLayout appointmentLl = (LinearLayout) findViewById(R.id.appointmentLl);
         appointmentLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +110,11 @@ public class MDLiveSearchProvider extends Activity {
                 showDialog(DATE_PICKER_ID);
             }
         });
+        /**
+         *This method is to fetch the Provider Type details.Here the Provider type can be either
+         * Family Physician or Pediatrician.These things will be populated in the arraylist.
+         *
+         */
         LinearLayout providertypeLl = (LinearLayout) findViewById(R.id.providertypeLl);
         providertypeLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +122,11 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(ProviderTypeArrayList,(TextView)findViewById(R.id.ProviderTypeTxtView),"provider_type",SearchArrayListProvider);
             }
         });
+        /**
+         *This method is to fetch the Sort order details.
+         * The sorted list will be populated in the arraylist.
+         *
+         */
         LinearLayout SortByLl = (LinearLayout) findViewById(R.id.sortbyLl);
         SortByLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +134,12 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(SortByArrayList,(TextView)findViewById(R.id.SortbyTxtView),"sort_by",SearchArrayList);
             }
         });
+        /**
+         *This method is to fetch the Speciality type and this specialisation will be
+         * completely based on the Provider type.If the provider type is pediatrician then the corresponding
+         * specialisation for the particular Provider type will be populated.
+         *
+         */
         LinearLayout SpecialityLl = (LinearLayout) findViewById(R.id.specialityLl);
         SpecialityLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +147,12 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(SpecialityArrayList,(TextView)findViewById(R.id.SpecialityTxtView),"speciality",SearchArrayListSpeciality);
             }
         });
+        /**
+         *This method is to fetch the Location.Here the location can be fetched by
+         * using either the current location or by using the manual search like either through
+         * the Zip code or by selecting the state or the city.
+         *
+         */
         LinearLayout LocationLl = (LinearLayout) findViewById(R.id.locLl);
         LocationLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +161,11 @@ public class MDLiveSearchProvider extends Activity {
                 startActivity(intent);
             }
         });
+        /**
+         *This method is to fetch the what the provider speaks.
+         * THe provider speaking languages will be fetched and populated in the arraylist
+         *
+         */
         LinearLayout speaksLl = (LinearLayout) findViewById(R.id.speaksLl);
         speaksLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +173,11 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(SpeaksArrayList,(TextView)findViewById(R.id.SpeaksTxtView),"speaks",SearchArrayListSpeaks);
             }
         });
+        /**
+         *This method is to fetch what the provider gender is.
+         * THe provider can be either Male or Female.
+         *
+         */
         LinearLayout GenderLl = (LinearLayout) findViewById(R.id.genderLl);
         GenderLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +185,11 @@ public class MDLiveSearchProvider extends Activity {
                 showListViewDialog(GenderArrayList,(TextView)findViewById(R.id.GenderTxtView),"gender",SearchArrayList);
             }
         });
+        /**
+         *The Search button taps the user to the Provider screen and it filters
+         * tHe provider's category based on the corresponding selection of the filters.
+         *
+         */
         TextView SearchBtn = (TextView) findViewById(R.id.doneTxt);
         SearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,20 +218,18 @@ public class MDLiveSearchProvider extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(MDLiveSearchProvider.this);
                 finish();
 
             }
         });
-        TextView AvailableTxtView = (TextView) findViewById(R.id.AvailableTxtView);
         AppointmentTxtView = (TextView) findViewById(R.id.DateTxtView);
         Calendar now = Calendar.getInstance();
         int month=now.get(Calendar.MONTH)+1;
         String currentDate=now.get(Calendar.YEAR)+"/"+month+"/"+now.get(Calendar.DAY_OF_MONTH);
         AppointmentTxtView.setText(currentDate);
         ProviderTypeTxtView = (TextView) findViewById(R.id.ProviderTypeTxtView);
-        TextView SortByTxtView = (TextView) findViewById(R.id.SortbyTxtView);
-        TextView SpecialityTxtView = (TextView) findViewById(R.id.SpecialityTxtView);
-         LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
+        LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
         TextView SpeaksTxtView = (TextView) findViewById(R.id.SpeaksTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch= (TextView) findViewById(R.id.edt_searchProvider);
@@ -260,7 +296,6 @@ public class MDLiveSearchProvider extends Activity {
 
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            Log.e("search Response-->",responObj.toString());
             //Available by response
             getAvailableData(response);
             //Gender response
@@ -335,9 +370,8 @@ public class MDLiveSearchProvider extends Activity {
                 map.put(key,(String)itemObj.get(key));
                 System.out.println(key);
             }
-//                HashMap<String,String> map = new HashMap<String,String>();
-//                map.put("sort_by",Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
             SearchArrayList.add(map);
+            SortByArrayList.add("Any");
             SortByArrayList.add(Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
             Log.e("SortByArrayList----->", Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
         }
@@ -362,11 +396,8 @@ public class MDLiveSearchProvider extends Activity {
                 map.put(key,(String)itemObj.get(key));
                 System.out.println(key);
             }
-//                HashMap<String,String> map = new HashMap<String,String>();
-//                map.put("sort_by",Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
             SearchArrayListSpeaks.add(map);
             SpeaksArrayList.add(Speaks_array.getJSONObject(i).getString(Speaks_array.getJSONObject(i).keys().next()));
-            Log.e("SpeaksArrayList----->", Speaks_array.getJSONObject(i).getString(Speaks_array.getJSONObject(i).keys().next()));
         }
     }
     /**
@@ -387,7 +418,6 @@ public class MDLiveSearchProvider extends Activity {
                 map.put(key,(String)itemObj.get(key));
                 System.out.println(key);
             }
-//                map.put("gender",Gender_array.getJSONObject(i).getString(Gender_array.getJSONObject(i).keys().next()));
             SearchArrayList.add(map);
             GenderArrayList.add(Gender_array.getJSONObject(i).getString(Gender_array.getJSONObject(i).keys().next()));
         }
@@ -413,7 +443,6 @@ public class MDLiveSearchProvider extends Activity {
                            }
             SearchArrayListAvailableBy.add(map);
             AvailableByArrayList.add(Available_array.getJSONObject(i).getString(Available_array.getJSONObject(i).keys().next()));
-//                Log.e("Serach provider----->",Available_array.getJSONObject(i).getString(Available_array.getJSONObject(i).keys().next()));
         }
     }
     /**
@@ -429,9 +458,11 @@ public class MDLiveSearchProvider extends Activity {
      *
      * Class : UserBasicInfoServices - Service class used to fetch the user basic information
      *
-     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the
+     * service class to handle the service response calls.
      *
-     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     * Based on the server response the corresponding action will be triggered(Either error
+     * message to user or Get started screen will shown to user).
      *
      */
     private void LoadFilterSearchServices() {
@@ -482,6 +513,7 @@ public class MDLiveSearchProvider extends Activity {
             Intent intent=new Intent();
             intent.putExtra("Response",response.toString());
             setResult(1,intent);
+            Utils.hideSoftKeyboard(MDLiveSearchProvider.this);
             finish();
             Log.e("Filter Response----->",responObj.toString());
         } catch (Exception e) {
