@@ -37,7 +37,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.userinfo.FamilyMembersList;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
 import org.json.JSONObject;
@@ -177,7 +176,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
+                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));// TODO : Change it one number is confirmed
                                         startActivity(intent);
                                     }
                                 };
@@ -189,7 +188,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     }
                                 };
 
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call \n" +
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
                                                 "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
                                         positiveOnClickListener,negativeOnClickListener);
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
@@ -233,13 +232,10 @@ public class MDLiveGetStarted extends FragmentActivity{
                     Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
                     startActivityForResult(LocationIntent, 2222);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    SavedLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
-                    if(SavedLocation != null && SavedLocation.length() != 0)
-                        locationTxt.setText(SavedLocation);
-
-
-
-
+                 String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+                    SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+                    if(longLocation != null && longLocation.length() != 0)
+                        locationTxt.setText(longLocation);
                 }
             });
             getDateOfBirth();
