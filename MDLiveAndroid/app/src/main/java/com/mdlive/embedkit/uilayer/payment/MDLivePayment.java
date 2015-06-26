@@ -27,18 +27,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -46,18 +53,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import javassist.bytecode.analysis.Util;
+
 public class MDLivePayment extends Activity {
 
     private EditText dateView, edtZipCode;
     private int year, month, day;
     private Button cls_btn, ok_btn, payNow;
-    private String applyOfferCode;
+    private String promoCode=null;
     private WebView HostedPCI;
     private DatePicker datePicker;
-    protected ProgressDialog pDialog;
+    protected static ProgressDialog pDialog;
     private DatePickerDialog datePickerDialog;
     private boolean isPaymentLoading;
     private int keyDel=0;
+    private HashMap<String,HashMap<String,String>> billingParams;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,44 +84,32 @@ public class MDLivePayment extends Activity {
             }
         });
         payNow = (Button) findViewById(R.id.paynow);
+        billingParams=new HashMap<>();
         edtZipCode= (EditText) findViewById(R.id.edtZipCode);
         edtZipCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                edtZipCode.setOnKeyListener(new View.OnKeyListener() {
-                    @Override
-                    public boolean onKey(View v, int keyCode, KeyEvent event) {
-                        if (keyCode == KeyEvent.KEYCODE_DEL)
-                            keyDel = 1;
-                        return false;
-                    }
-                });
-
-                if (keyDel == 0) {
-                    int len = edtZipCode.getText().length();
-                    if(len == 5) {
-                        edtZipCode.setText(edtZipCode.getText() + "-");
-                        edtZipCode.setSelection(edtZipCode.getText().length());
-                    }
-                } else {
-                    keyDel = 0;
-                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(edtZipCode.getText().toString().length()>=9){
+                    if(!edtZipCode.getText().toString().contains("-")){
+                        String formattedString=Utils.zipCodeFormat(Long.parseLong(edtZipCode.getText().toString()));
+                        edtZipCode.setText(formattedString);
+                    }
 
+                }
             }
         });
 
         TextView textview = (TextView) findViewById((R.id.textView5));
         HostedPCI.getSettings().setJavaScriptEnabled(true);
-        HostedPCI.setWebChromeClient(new WebChromeClient(){
+     /*   HostedPCI.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int progress) {
                 if (progress == 100) {
@@ -123,7 +122,7 @@ public class MDLivePayment extends Activity {
                     });
                 }
             }
-        });
+        });*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
@@ -131,7 +130,7 @@ public class MDLivePayment extends Activity {
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
-        pDialog.show();
+        //pDialog.show();
         textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -149,7 +148,7 @@ public class MDLivePayment extends Activity {
         ((ImageView) findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // movetohome();
+                 Utils.movetohome(MDLivePayment.this, MDLiveLogin.class);
             }
         });
     }
@@ -161,18 +160,17 @@ public class MDLivePayment extends Activity {
 
         // This annotation is required in Jelly Bean and later:
         @JavascriptInterface
-        public void sendToAndroid(String text) {
+        public void sendToAndroid(String billingResponse) {
             // this is called from JS with passed value
             try{
-                JSONObject jobj=new JSONObject(text);
+                JSONObject jobj=new JSONObject(billingResponse);
                 if(jobj.getString("status").equals("success")){
-                    doConfirmAppointment();
+                    String params=getBillingPutParams(billingResponse);
+                    Log.e("Params",params+billingResponse);
+                    updateCardDetails(params);
                 }else{
-                    Utils.alert(pDialog,MDLivePayment.this,jobj.getString("status"));
-
+                    Utils.alert(pDialog, MDLivePayment.this, jobj.getString("status"));
                 }
-
-
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -184,6 +182,119 @@ public class MDLivePayment extends Activity {
         @JavascriptInterface
         public void scanCreditCard(){
         }
+    }
+
+
+    /**
+     * This method will update the credit card information to server
+     * ConfirmAppointmentServices class handles sending request to the server.
+     * doUpdateBillingInformation() methos post request to server with params
+     * successListener-Listner will invoke on Success response
+     * errorListener-Listner will invoke on Error response
+     */
+
+    public void updateCardDetails(String params){
+        showDialog(pDialog);
+        final NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                try{
+                    dismissDialog(pDialog);
+                    Log.e("Succes Update",response.toString());
+                    JSONObject resObj=new JSONObject(response.toString());
+                    if(resObj.has("message")){
+                        Log.e("Confirm","Calling");
+                        doConfirmAppointment();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        NetworkErrorListener errorListener=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try{
+                    //Log.e("Error",error.networkResponse.statusCode+"");
+                    dismissDialog(pDialog);
+                    Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+                   /* NetworkResponse errorResponse=error.networkResponse;
+                    if (errorResponse!=null&&errorResponse.statusCode==HttpStatus.SC_UNPROCESSABLE_ENTITY||errorResponse.statusCode==HttpStatus.SC_NOT_FOUND||errorResponse.statusCode==HttpStatus.SC_UNAUTHORIZED)
+                    {
+                        String responseBody = new String(error.networkResponse.data, "utf-8" );
+                        JSONObject errorObj = new JSONObject( responseBody );
+                        if(errorObj.has("message")){
+                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
+                        }else if(errorObj.has("error")){
+                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
+                        }
+                     }else if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+
+                        Utils.connectionTimeoutError(pDialog, MDLivePayment.this);
+                    }*//*else if (error instanceof AuthFailureError) {
+                        //TODO
+                    } else if (error instanceof ServerError) {
+                        //TODO
+                    } else if (error instanceof NetworkError) {
+                        //TODO
+                    } else if (error instanceof ParseError) {
+                        //TODO
+                    }*/
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        };
+
+        ConfirmAppointmentServices billingUpdateService=new ConfirmAppointmentServices(MDLivePayment.this,pDialog);
+        billingUpdateService.doUpdateBillingInformation(params,successListener,errorListener);
+
+    }
+
+    /**
+     * This method will convert user card details and information in to Json Parameters
+     * @param billingDetails-Contains Billing details information as Json     *
+     * @return-Billing parameter in a Json format
+     */
+
+
+    public String getBillingPutParams(String billingDetails){
+        try{
+            JSONObject resObj=new JSONObject(billingDetails);
+            JSONObject billingObj=resObj.getJSONObject("billing_information");
+            HashMap<String,String> cardInfo=new HashMap<>();
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            cardInfo.put("billing_name",settings.getString(PreferenceConstants.PATIENT_NAME,""));
+            cardInfo.put("billing_address1","test1");
+            cardInfo.put("billing_address2","test");
+            Log.e("USer Location", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
+            cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
+            cardInfo.put("billing_city","Test");
+            cardInfo.put("billing_country_id","1");
+            cardInfo.put("cc_num",billingObj.getString("cc_num"));
+            cardInfo.put("cc_cvv2",billingObj.getString("cc_cvv2"));
+            cardInfo.put("cc_expyear",String.valueOf(year));
+            cardInfo.put("cc_expmonth",String.valueOf(month));
+            cardInfo.put("cc_hsa",billingObj.getString("cc_hsa"));
+            cardInfo.put("billing_zip5",edtZipCode.getText().toString());
+            cardInfo.put("cc_type_id",billingObj.getString("cc_type_id"));
+            billingParams.put("billing_information",cardInfo);
+            Log.e("Forming Params",new Gson().toJson(billingParams).toString());
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new Gson().toJson(billingParams);
     }
 
     private View.OnClickListener paynow_button_click_listener = new View.OnClickListener() {
@@ -262,16 +373,25 @@ public class MDLivePayment extends Activity {
             }
         });
     }
+    private void showDialog(final ProgressDialog dialog) {
+        runOnUiThread(new Runnable(){
+            public void run() {
+                try {
+                    dialog.show();
+                } catch (final Exception ex) {
+                    Log.i("---","Exception in thread");
+                }
+            }
+        });
+    }
 
 
     private void doConfirmAppointment() {
-        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
-        pDialog.show();
+       showDialog(pDialog);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-//                pDialog.dismiss();
+                dismissDialog(pDialog);
                 Log.e("Response Payment",response.toString());
                 try {
                     isPaymentLoading = false;
@@ -283,13 +403,12 @@ public class MDLivePayment extends Activity {
                         editor.commit();
                         Intent i = new Intent(MDLivePayment.this, MDLiveWaitingRoom.class);
                         startActivity(i);
-                        dismissDialog(pDialog);
                     } else {
                         Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                        dismissDialog(pDialog);
                     }
 
                 } catch (Exception e) {
+                    dismissDialog(pDialog);
                     e.printStackTrace();
                 }
             }
@@ -298,20 +417,13 @@ public class MDLivePayment extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //
-
-                Log.e("Response error",error.toString());
                 try{
-                    isPaymentLoading = false;
-                    JSONObject jsonObject=new JSONObject(error.getMessage());
-                    if(jsonObject.has("message")){
-                        Utils.alert(pDialog,MDLivePayment.this,jsonObject.getString("message"));
-                    } else if(jsonObject.has("error")){
-                        Utils.alert(pDialog,MDLivePayment.this,jsonObject.getString("error"));
-                    }
-                    dismissDialog(pDialog);
 
-                    if (error.networkResponse == null) {
+                    dismissDialog(pDialog);
+                    Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+                    /* if (error.networkResponse != null) {
+                         NetworkResponse errorResponse=error.networkResponse;
+                         Log.e("Status Code",""+error.networkResponse.statusCode);
                         if (error.getClass().equals(TimeoutError.class)) {
                             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -320,12 +432,26 @@ public class MDLivePayment extends Activity {
                             };
                             // Show timeout error message
 
-                            Utils.connectionTimeoutError(null, MDLivePayment.this);
+                            Utils.connectionTimeoutError(pDialog, MDLivePayment.this);
+
 
                         }
-                        dismissDialog(pDialog);
+
+                         else if (errorResponse.statusCode==HttpStatus.SC_UNPROCESSABLE_ENTITY||errorResponse.statusCode==HttpStatus.SC_NOT_FOUND||errorResponse.statusCode==HttpStatus.SC_UNAUTHORIZED)
+                         {
+                             Log.e("Status Code",""+error.networkResponse.statusCode);
+                             String responseBody = new String(error.networkResponse.data, "utf-8" );
+                             JSONObject errorObj = new JSONObject( responseBody );
+                             if(errorObj.has("message")){
+                                 Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
+                             }else if(errorObj.has("error")){
+                                 Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
+                             }
+                         }
+
                     }
-                }catch (Exception e){
+*/                }catch (Exception e){
+                    dismissDialog(pDialog);
                     e.printStackTrace();
                 }
             }
@@ -334,22 +460,24 @@ public class MDLivePayment extends Activity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
-        params.put("phys_availability_id", null);
+       // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", "Not Sure");
-        params.put("state_id", "FL");
         params.put("customer_call_in_number", "9068906789");
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
+        if(promoCode != null && !promoCode.isEmpty()){
+            params.put("promocode", promoCode);
+        }
+
+      /*  params.put("customer_call_in_number", "9068906789");
         params.put("chief_complaint_reasons", null);
         params.put("alternate_visit_option", "alternate_visit_option");
-        params.put("do_you_have_primary_care_physician", "No");
+        params.put("do_you_have_primary_care_physician", "No");*/
         Gson gson = new GsonBuilder().serializeNulls().create();
         isPaymentLoading = true;
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePayment.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
-
-
-
     }
 
 
@@ -367,6 +495,7 @@ public class MDLivePayment extends Activity {
             public void onClick(DialogInterface dialog, int id) {
                 if (editText.getText().toString().length() != 0) {
                     applyPromoCode(editText.getText().toString());
+                    promoCode=editText.getText().toString();
                 }/*else{
                     Toast.makeText(getApplicationContext(), "Please enter the promocode", Toast.LENGTH_SHORT).show();
                 }*/
@@ -387,11 +516,11 @@ public class MDLivePayment extends Activity {
     }
 
     public void applyPromoCode(String promoCode){
-        pDialog.show();
+       showDialog(pDialog);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                pDialog.dismiss();
+                dismissDialog(pDialog);
                 handlePromocodeResponse(response.toString());
                 Log.e("Response Succeed",response.toString());
             }
@@ -400,20 +529,33 @@ public class MDLivePayment extends Activity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                hanldeErrorResponse(error.getMessage());
-                Log.e("Response Failure",error.toString());
-                pDialog.dismiss();
+                dismissDialog(pDialog);
+                Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+               /* try{
+                    String responseBody = new String(error.networkResponse.data, "utf-8" );
+                    JSONObject errorObj = new JSONObject( responseBody );
+                    Log.e("Response Failure",responseBody);
+                    if(errorObj.has("message")){
+                        Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
+                    }else if(errorObj.has("error")){
+                        Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
+                    }
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
 
-                if (error.getClass().equals(TimeoutError.class)) {
-                    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    };
-                    // Show timeout error message
+                        Utils.connectionTimeoutError(null, MDLivePayment.this);
+                    }
+                }catch (Exception e){
+                    dismissDialog(pDialog);
+                    e.printStackTrace();
 
-                    Utils.connectionTimeoutError(null, MDLivePayment.this);
-                }
+                }*/
+
             }
         };
 
@@ -428,7 +570,7 @@ public class MDLivePayment extends Activity {
             if(resObject.has("discount_amount")){
                 String discountAmount=resObject.getString("discount_amount").replace("$","");
                 double payableAmount=Double.parseDouble(discountAmount.trim())-49.00;
-                Log.e("Payable AMOU","Discount ASmount"+payableAmount);
+                Log.e("Payable AMOU","Discount Amount"+payableAmount);
                 ((TextView) findViewById(R.id.cost)).setText("Total :$"+payableAmount);
             }
         }catch (Exception e){
@@ -450,7 +592,7 @@ public class MDLivePayment extends Activity {
 
 
 
- 
+
 
    /* public void movetohome() {
         Utils.movetoback(MDLivePayment.this, MDLiveLogin.class);
