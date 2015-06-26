@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -51,6 +54,8 @@ public class MDLiveChooseProvider extends Activity {
     private ArrayList<HashMap<String, String>> ProviderListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
+    private LinearLayout dcotorOnCallHeader;
+    private Button seenextAvailableBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,9 @@ public class MDLiveChooseProvider extends Activity {
         setContentView(R.layout.mdlive_choose_provider);
         ProviderListMap = new ArrayList<HashMap<String, String>>();
         pDialog = Utils.getProgressDialog("Please wait...", this);
+        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
+        seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
+
         ChooseProviderResponseList();
         //Todo : This is reference for the Filter Button in Choose provider Adapter
         /**
@@ -79,6 +87,26 @@ public class MDLiveChooseProvider extends Activity {
             }
         });
     }
+
+    private void doctorOnCallButtonClick() {
+        seenextAvailableBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MDLiveChooseProvider.this,MDLiveReasonForVisit.class);
+                startActivity(intent);
+
+            }
+        });
+        ((TextView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
+                    startActivity(intent);
+
+                }
+            });
+    }
+
     /**
      *
      * Choose Provider List Details.
@@ -102,6 +130,8 @@ public class MDLiveChooseProvider extends Activity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
                 pDialog.dismiss();
+                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                doctorOnCallButtonClick();
                 try {
                     if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
@@ -142,12 +172,14 @@ public class MDLiveChooseProvider extends Activity {
     private void handleSuccessResponse(String response) {
         try {
             pDialog.dismiss();
+            dcotorOnCallHeader.setVisibility(View.VISIBLE);
+            doctorOnCallButtonClick();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
             String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
             //Setting the Doctor On Call Header
-            setHeaderContent(StrDoctorOnCall);
+//            setHeaderContent(StrDoctorOnCall);
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             //Setting the Doctor List Body
             setBodyContent(responArray);
@@ -306,7 +338,8 @@ public class MDLiveChooseProvider extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
-
+            dcotorOnCallHeader.setVisibility(View.VISIBLE);
+            doctorOnCallButtonClick();
             String response=data.getStringExtra("Response");
             try{
                 JSONObject jobj=new JSONObject(response);
