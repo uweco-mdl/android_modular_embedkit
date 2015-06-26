@@ -2,9 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
+    <LinearLayout
+       style="@style/LinearLayoutStyle"
+        android:id="@+id/headerLl"
+        android:visibility="gone"
+        android:orientation="vertical">
+    <LinearLayout
+        style="@style/providerBgdLinearLayoutStyle"
+        android:id="@+id/DocOnCalLinLay"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        >
+        <com.android.volley.toolbox.NetworkImageView
+            style="@style/DoctorOnCallImgViewStyle"
+            android:id="@+id/ProfileImg"
+            android:visibility="visible"
+            android:layout_height="150dp"
+            android:layout_width="150dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/doctor_icon"
+            />
 
+        <TextView
+            style="@style/HeaderAvailableDoctorTxtStyle"
+            android:id="@+id/PatientName1"
+            android:textColor="#35393d"
+            android:textSize="18dp"
+            android:text="Doctor On Call"
+            />
+
+        <TextView
+            style="@style/DoctorTxtStyle"
+            android:text="Average Wait: 6 min"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:textColor="#878f95"
+            android:id="@+id/Time1"/>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/seenextAvailableBtn"
+        style="@style/ContinueButtonStyle"
+        android:text="See Doctor on Call"
+        android:layout_marginTop="5dp"
+        android:textAllCaps="false" />
+
+    <RelativeLayout
+        android:id="@+id/filterRl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ECF5FA">
+
+        <TextView
+            android:text="Choose other doctor"
+            style="@style/BaseAvailableDoctorTxtStyle"
+            android:gravity="left|center"
+            android:textSize="18sp"
+            android:textColor="@color/search_bgd"
+            android:layout_marginStart="19dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/txtFilter" />
+
+        <TextView
+            style="@style/BaseAvailableDoctorTxtStyle"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="FILTER"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/mdlivePrimaryBlueColor"
+            android:id="@+id/filterTxt"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+    </LinearLayout>
     <LinearLayout
         style="@style/DoctorLinearLayoutStyle"
         android:layout_marginBottom="10dp"
@@ -22,9 +100,7 @@
             android:orientation="vertical"
             android:layout_width="230dp"
             android:layout_marginLeft="10dp"
-
             >
-
             <TextView
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"

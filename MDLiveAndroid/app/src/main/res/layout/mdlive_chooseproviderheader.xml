@@ -39,7 +39,7 @@
     <Button
         android:id="@+id/seenextAvailableBtn"
         style="@style/ContinueButtonStyle"
-        android:text="See Next Available"
+        android:text="See Doctor on Call"
         android:layout_marginTop="5dp"
         android:textAllCaps="false" />
 
