@@ -78,7 +78,7 @@ public class MDLiveLocation extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ZipcodeEditTxt.setOnKeyListener(new View.OnKeyListener() {
+               /* ZipcodeEditTxt.setOnKeyListener(new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if (keyCode == KeyEvent.KEYCODE_DEL)
@@ -95,19 +95,17 @@ public class MDLiveLocation extends Activity {
                     }
                 } else {
                     keyDel = 0;
-                }
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (keyDel == 0) {
-                    int len = ZipcodeEditTxt.getText().length();
-                    if(len == 5) {
-                        ZipcodeEditTxt.setText(ZipcodeEditTxt.getText() + "-");
-                        ZipcodeEditTxt.setSelection(ZipcodeEditTxt.getText().length());
+                if(ZipcodeEditTxt.getText().toString().length()>=9){
+                    if(!ZipcodeEditTxt.getText().toString().contains("-")){
+                        String formattedString=Utils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
+                        ZipcodeEditTxt.setText(formattedString);
                     }
-                } else {
-                    keyDel = 0;
+
                 }
 
             }
@@ -242,6 +240,8 @@ public class MDLiveLocation extends Activity {
      * <p/>
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
+
+
     private void loadZipCode(String EditTextValue) {
         pDialog.show();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {

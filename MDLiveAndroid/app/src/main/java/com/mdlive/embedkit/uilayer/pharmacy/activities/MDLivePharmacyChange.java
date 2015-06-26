@@ -117,7 +117,7 @@ public class MDLivePharmacyChange extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                zipcodeText.setOnKeyListener(new View.OnKeyListener() {
+               /* zipcodeText.setOnKeyListener(new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if (keyCode == KeyEvent.KEYCODE_DEL)
@@ -134,12 +134,18 @@ public class MDLivePharmacyChange extends Activity {
                     }
                 } else {
                     keyDel = 0;
-                }
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(zipcodeText.getText().toString().length()>=9){
+                    if(!zipcodeText.getText().toString().contains("-")){
+                        String formattedString=Utils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
+                        zipcodeText.setText(formattedString);
+                    }
 
+                }
             }
         });
         cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
