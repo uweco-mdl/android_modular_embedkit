@@ -1,21 +1,16 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
-import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
-import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 
 import java.util.ArrayList;
@@ -67,30 +62,30 @@ public class ChooseProviderAdapter extends BaseAdapter {
         ImageView callImg;
         final CircularNetworkImageView ProfileImg;
         View row = null;
-        if(array.get(pos).get("isheader").equals("1"))
-        {
-            if(row==null)
-
-            inflate = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
-            ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent  = new Intent(context, MDLiveSearchProvider.class);
-                    ((Activity)context).startActivityForResult(intent,1);
-                }
-            });
-            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.getApplicationContext().startActivity(intent);
-                }
-            });
-        }
-        else {
+//        if(array.get(pos).get("isheader").equals("1"))
+//        {
+//            if(row==null)
+//
+//            inflate = (LayoutInflater) context
+//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
+//            ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent  = new Intent(context, MDLiveSearchProvider.class);
+//                    ((Activity)context).startActivityForResult(intent,1);
+//                }
+//            });
+//            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.getApplicationContext().startActivity(intent);
+//                }
+//            });
+//        }
+//        else {
             if(row==null)
             inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,false);
@@ -129,7 +124,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 callImg.setVisibility(View.GONE);
                 callImg.setBackgroundResource(R.drawable.callicon);
             }
-        }
+//        }
 
 
 
