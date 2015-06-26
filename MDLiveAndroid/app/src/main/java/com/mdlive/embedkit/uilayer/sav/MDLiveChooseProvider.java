@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.TimeoutError;
@@ -41,9 +40,7 @@ import java.util.TimeZone;
 
 
 /**
- *This Class defines the list of available providers.There will be also the Doctor on call
- * and the Providers availbale only by the video will be displayed.Along with the Provider name
- * Provider's speciality and affilitations will also be displayed.
+ * Created by sudha_s on 5/12/2015.
  */
 public class MDLiveChooseProvider extends Activity {
 
@@ -54,7 +51,6 @@ public class MDLiveChooseProvider extends Activity {
     private ArrayList<HashMap<String, String>> ProviderListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
-    private LinearLayout doctoroncallHeaderLl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +58,8 @@ public class MDLiveChooseProvider extends Activity {
         setContentView(R.layout.mdlive_choose_provider);
         ProviderListMap = new ArrayList<HashMap<String, String>>();
         pDialog = Utils.getProgressDialog("Please wait...", this);
-        doctoroncallHeaderLl = (LinearLayout)findViewById(R.id.headerLl);
         ChooseProviderResponseList();
+        //Todo : This is reference for the Filter Button in Choose provider Adapter
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -86,7 +82,7 @@ public class MDLiveChooseProvider extends Activity {
     /**
      *
      * Choose Provider List Details.
-     * Class : ChooseProviderServices - Service class used to fetch the Provider list information
+     * Class : UserBasicInfoServices - Service class used to fetch the user basic information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      *
@@ -104,6 +100,7 @@ public class MDLiveChooseProvider extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("Error Response", error.toString());
                 pDialog.dismiss();
                 try {
                     if (error.networkResponse == null) {
@@ -111,27 +108,23 @@ public class MDLiveChooseProvider extends Activity {
                             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    doctoroncallHeaderLl.setVisibility(View.VISIBLE);
                                 }
                             };
                             Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
-
-                            doctoroncallHeaderLl.setVisibility(View.VISIBLE);
                         }
                     }
                     DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            doctoroncallHeaderLl.setVisibility(View.VISIBLE);
                             MDLiveChooseProvider.this.finish();
                         }
                     };
                     JSONObject obj = new JSONObject(error.toString());
-                    doctoroncallHeaderLl.setVisibility(View.VISIBLE);
                     Utils.showDialog(MDLiveChooseProvider.this,MDLiveChooseProvider.this.getResources().getString(R.string.app_name),obj.getString("error"),MDLiveChooseProvider.this.getResources().getString(R.string.ok),null,positiveOnclickListener,null);
                 }catch(Exception e){
                     Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+
                     e.printStackTrace();
                 }
             }};
@@ -141,7 +134,7 @@ public class MDLiveChooseProvider extends Activity {
     }
     /**
      *
-     *  Successful Response Handler for Provider list Info.
+     *  Successful Response Handler for Load Basic Info.
      *   Here if the doctor on call String returns true then the Doctor On Call should
      *   be available else the doctor on call should be hidden.
      *
@@ -152,12 +145,9 @@ public class MDLiveChooseProvider extends Activity {
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
-            //This Comes from service
-//            String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
-            //ToDo remove the hardcoded doctor on call true string
-            String StrDoctorOnCall = "true";
+            String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
             //Setting the Doctor On Call Header
-//            setHeaderContent(StrDoctorOnCall);
+            setHeaderContent(StrDoctorOnCall);
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             //Setting the Doctor List Body
             setBodyContent(responArray);
@@ -166,7 +156,7 @@ public class MDLiveChooseProvider extends Activity {
             e.printStackTrace();
         }
 
-        setListView();
+          setListView();
     }
     /**
      *
@@ -212,8 +202,7 @@ public class MDLiveChooseProvider extends Activity {
             appointmentDate = getDateCurrentTimeZone(StrDate);
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", patientName);
-//            map.put("isheader",StringConstants.ISHEADER_FALSE);
-            map.put("isheader",StringConstants.ISHEADER_TRUE);
+            map.put("isheader",StringConstants.ISHEADER_FALSE);
             map.put("speciality", speciality);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
@@ -236,7 +225,7 @@ public class MDLiveChooseProvider extends Activity {
         {
             isDoctorOnCallReady = true;
             HashMap<String, String> map = new HashMap<String, String>();
-//            map.put("name", patientName);
+            map.put("name", patientName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
             map.put("speciality", speciality);
             map.put("provider_image_url", imageUrl);
@@ -258,14 +247,14 @@ public class MDLiveChooseProvider extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!(position == 0)){
+//                if(!(position == 0)){
                     Log.e("Provider Id",ProviderListMap.get(position).get("id"));
                     saveDoctorId(ProviderListMap.get(position).get("id"), ProviderListMap.get(position).get("next_availability"));
                     Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                     startActivity(Reasonintent);
-                }
+//                }
 
-            }
+}
         });
     }
 
@@ -295,7 +284,6 @@ public class MDLiveChooseProvider extends Activity {
 
     /**
      *      @param DocorId : Pass the selected Doctor's Id String
-     *      @param AppointmentDate : Pass the selected Appointment dtae String
      *      The Corresponding id of the Doctor should be saved in the Preferences and will be
      *      triggerred in the Requird places.
      *
@@ -328,7 +316,6 @@ public class MDLiveChooseProvider extends Activity {
                     listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
                     Utils.alert(pDialog,MDLiveChooseProvider.this,jArray.get(0).toString());
-
 
                 }else{
                     ProviderListMap.clear();

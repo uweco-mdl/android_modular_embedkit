@@ -79,7 +79,7 @@
            </LinearLayout>
            <TextView
                style="@style/ProviderDetailsDoctorTxtStyle"
-               android:text="Mercy Hospital"
+               android:text="Capital Regional\nMedical Center"
                android:textColor="#878f95"
                android:gravity="left|center"
                android:layout_marginStart="5dp"
@@ -94,6 +94,10 @@
             android:text=""
             android:textStyle="bold"
             android:textAllCaps="false" />
+            <LinearLayout
+               style="@style/LinearLayoutStyle"
+                android:id="@+id/detailsLl"
+                android:orientation="vertical">
             <TextView
                 style="@style/ProviderDetailsDoctorTxtStyle"
                 android:layout_marginTop="10dp"
@@ -145,6 +149,7 @@
            android:layout_marginTop="10dp">
           <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
+            </LinearLayout>
      </LinearLayout>
     </ScrollView>
     <Button

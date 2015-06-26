@@ -22,20 +22,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This is the Adapter class which extends the BaseAdapter.This class mainly used to set the Views
- * based on the Provider name , specialisation and the affilitations.
+ * Created by sudha_s on 5/15/2015.
  */
 public class ChooseProviderAdapter extends BaseAdapter {
     ArrayList<HashMap<String, String>> array = new ArrayList<HashMap<String, String>>();
     Context context;
     LayoutInflater inflate;
     LinearLayout DocOnCalLinLay;
-    /**
-     * This is the constructor in which data in the activity will be added in the
-     * Arraylist and the corresponding context and the arraylist will be
-     * populated to the constructor.so that it can be fetched in the ChooseProvider Adapter
-     * class.
-     */
+
     public ChooseProviderAdapter(Context applicationContext,
                                  ArrayList<HashMap<String, String>> arraylist) {
 
@@ -43,27 +37,17 @@ public class ChooseProviderAdapter extends BaseAdapter {
         this.array = arraylist;
 
     }
-    /**
-     * This method returns the total count or total size of the Arraylist.
-     * It returns the total number of data in the List.
-     */
 
     @Override
     public int getCount() {
         return array.size();
     }
-    /**
-     * This method returns the particular item of the Arraylist.
-     * It returns the total data in the List.
-     */
+
     @Override
     public Object getItem(int arg0) {
         return array.get(arg0);
     }
-    /**
-     * This method returns the particular item Id of the Arraylist.
-     * It returns the Id of the Corresponding data in the Arraylist.
-     */
+
     @Override
     public long getItemId(int arg0) {
         return 0;
@@ -74,6 +58,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
      *     The datas are fetched from the Arraylist based on the position the dates will be placed
      *     in the listview.
      *
+     *
      */
 
     @Override
@@ -82,125 +67,78 @@ public class ChooseProviderAdapter extends BaseAdapter {
         ImageView callImg;
         final CircularNetworkImageView ProfileImg;
         View row = null;
-//        if(array.get(pos).get("isheader").equals("1"))
-//        {
-//            row = doctorOnCallHeader(parent, row);
-//        }
-//        else {
-        row = doctorOnCallList(pos, parent, row);
-//        }
-
-        return row;
-    }
-    /**
-     *   This method returns only the Provider's list.This method will be called below the Doctor on call
-     *   header and this will be included in the listview with the Provider image , Provider name ,
-     *   provider's specialisation and the Provider's affilitations.
-     *
-     */
-
-    private View doctorOnCallList(int pos, ViewGroup parent, View row) {
-        TextView PatientNmaeTxt;
-        TextView SPecialistTxt;
-        CircularNetworkImageView ProfileImg;
-        TextView DateTxt;
-        ImageView callImg;
-        LinearLayout doctoroncallHeaderLl;
-        if(row==null)
-
-            inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,false);
-        if(pos==0)
+        if(array.get(pos).get("isheader").equals("1"))
         {
-            doctoroncallHeaderLl = (LinearLayout) row.findViewById(R.id.headerLl);
-            doctoroncallHeaderLl.setVisibility(View.VISIBLE);
+            if(row==null)
 
+            inflate = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
+            ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent  = new Intent(context, MDLiveSearchProvider.class);
+                    ((Activity)context).startActivityForResult(intent,1);
+                }
+            });
+            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.getApplicationContext().startActivity(intent);
+                }
+            });
         }
-        PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
-        PatientNmaeTxt.setText(array.get(pos).get("name"));
-        SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
-        SPecialistTxt.setText(array.get(pos).get("speciality"));
-        ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
+        else {
+            if(row==null)
+            inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,false);
+            PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
+            PatientNmaeTxt.setText(array.get(pos).get("name"));
+            SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
+            SPecialistTxt.setText(array.get(pos).get("speciality"));
+            ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
 
-        ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
+            ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
 
-        //    This is to Check the availability of the Doctor. If the next availability of doctor
-        //   is available then the time stamp should be  visible else it should be hidden.
-        DateTxt = (TextView) row.findViewById(R.id.Time);
-        try {
+             //    This is to Check the availability of the Doctor. If the next availability of doctor
+             //   is available then the time stamp should be  visible else it should be hidden.
+            DateTxt = (TextView) row.findViewById(R.id.Time);
+            try {
 //                if (array.get(pos).get("next_availability") == null || array.get(pos).get("next_availability").equals("0") || array.get(pos).get("next_availability").equalsIgnoreCase("null")) {
 //                    DateTxt.setVisibility(View.GONE);
 //                } else {
 //                    DateTxt.setVisibility(View.VISIBLE);
 //                    DateTxt.setText(array.get(pos).get("next_availability"));
 //                }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //   This is to Check the availability of the Doctor is through either by phone or video
-        //   if it is through phone calling icon should be visible or if it is either through
-        //   video then the video icon should be visible .
-
-        callImg = (ImageView) row.findViewById(R.id.callImg);
-        if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.video_or_phonr))) {
-            callImg.setVisibility(View.GONE);
-            callImg.setBackgroundResource(R.drawable.videoicon);
-        }
-        if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.phone))) {
-            callImg.setVisibility(View.GONE);
-            callImg.setBackgroundResource(R.drawable.callicon);
-        }
-
-        //Doctor on call Header
-        ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent  = new Intent(context, MDLiveSearchProvider.class);
-                ((Activity)context).startActivityForResult(intent,1);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
-        ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.getApplicationContext().startActivity(intent);
+
+             //   This is to Check the availability of the Doctor is through either by phone or video
+             //   if it is through phone calling icon should be visible or if it is either through
+             //   video then the video icon should be visible .
+
+            callImg = (ImageView) row.findViewById(R.id.callImg);
+            if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.video_or_phonr))) {
+                callImg.setVisibility(View.GONE);
+                callImg.setBackgroundResource(R.drawable.videoicon);
             }
-        });
+            if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.phone))) {
+                callImg.setVisibility(View.GONE);
+                callImg.setBackgroundResource(R.drawable.callicon);
+            }
+        }
+
+
+
         return row;
     }
 
-    /**
-     *     This method returns only the doctor on call.
-     *    This will be included in the listview if only the doctoroncall response is true else
-     *   this header method will not be called and it will not be displayed.
-     *
-     */
 
-    private View doctorOnCallHeader(ViewGroup parent, View row) {
-        if(row==null)
 
-            inflate = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent,false);
-        ((TextView)row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent  = new Intent(context, MDLiveSearchProvider.class);
-                ((Activity)context).startActivityForResult(intent,1);
-            }
-        });
-        ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.getApplicationContext().startActivity(intent);
-            }
-        });
-        return row;
-    }
+
 
 
 }
