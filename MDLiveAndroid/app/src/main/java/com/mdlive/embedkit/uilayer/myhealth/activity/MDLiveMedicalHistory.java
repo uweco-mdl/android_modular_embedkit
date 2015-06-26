@@ -30,6 +30,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -55,6 +56,7 @@ import com.mdlive.unifiedmiddleware.services.myhealth.UpdateFemaleAttributeServi
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,7 +115,7 @@ public class MDLiveMedicalHistory extends Activity {
         btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
         btnSaveContinue.setClickable(false);
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
-        findViewById(R.id.SavContinueBtn).setVisibility(View.GONE);
+//        findViewById(R.id.SavContinueBtn).setVisibility(View.GONE);
         pDialog = Utils.getProgressDialog("Please wait...", this);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -153,7 +155,7 @@ public class MDLiveMedicalHistory extends Activity {
             }
         });
 
-        findViewById(R.id.SavContinueBtn).setOnClickListener(new View.OnClickListener() {
+        btnSaveContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hasFemaleAttribute) {
@@ -242,41 +244,39 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.conditionYesButton) {
-                    saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "true");
+                    PreExisitingGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
-                    startActivity(i);
-                } else {
-                    saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "false");
+                    startActivityForResult(i, RELOAD_REQUEST_CODE);
+                }else{
+                    ValidateModuleFields();
                 }
-                ValidateModuleFields();
             }
         });
         MedicationsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.medicationsYesButton) {
-                    saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "true");
+                    MedicationsGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
-                    startActivity(i);
-                } else {
-                    saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "false");
+                    startActivityForResult(i, RELOAD_REQUEST_CODE);
+                }else{
+                    ValidateModuleFields();
                 }
-                ValidateModuleFields();
             }
         });
         AllergiesGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.allergiesYesButton) {
-                    saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "true");
+                    AllergiesGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
-                    startActivity(i);
-                } else {
-                    saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "false");
+                    startActivityForResult(i, RELOAD_REQUEST_CODE);
+                }else{
+                    ValidateModuleFields();
                 }
-                ValidateModuleFields();
             }
         });
+
         ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -291,7 +291,11 @@ public class MDLiveMedicalHistory extends Activity {
         ((LinearLayout) findViewById(R.id.MyHealthAddPhotoL2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagePickerDialog.show();
+                if(myPhotosList.size() >= 8){
+                    Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
+                }else{
+                    imagePickerDialog.show();
+                }
             }
         });
         /**
@@ -327,6 +331,7 @@ public class MDLiveMedicalHistory extends Activity {
 
 
     public void initializeCameraDialog() {
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveMedicalHistory.this);
 
         alertDialogBuilder
@@ -338,11 +343,7 @@ public class MDLiveMedicalHistory extends Activity {
                         if (!isDeviceSupportCamera()){
                             Utils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
                         }else{
-                            if(myPhotosList.size() >= 8){
-                                Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
-                            }else{
                                 captureImage();
-                            }
                         }
 
                     }
@@ -462,10 +463,23 @@ public class MDLiveMedicalHistory extends Activity {
         }
 
         if(requestCode == RELOAD_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                checkMedicalAggregation();
+            if (resultCode == RESULT_OK && data != null) {
+                if(data.hasExtra("medicationData")){
+                    findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
+                    findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.MedicationsNameTv)).setText(data.getStringExtra("medicationData"));
+                }else if(data.hasExtra("conditionsData")){
+                    findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
+                    findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.MyHealthConditionsNameTv)).setText(data.getStringExtra("conditionsData"));
+                }else if(data.hasExtra("allegiesData")){
+                    findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
+                    findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.AlergiesNameTv)).setText(data.getStringExtra("allegiesData"));
+                }
             }
         }
+
         if(requestCode == IMAGE_PREVIEW_CODE) {
             if (resultCode == RESULT_OK) {
                 downloadMedicalRecordService();
@@ -475,43 +489,11 @@ public class MDLiveMedicalHistory extends Activity {
 
     @Override
     protected void onResume() {
+        ValidateModuleFields();
         super.onResume();
-        applyValidationOnViews();
     }
 
-    private void applyValidationOnViews(){
-        if (getEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED) != null) {
-            if (getEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED).equals("true")) {
-                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
-                findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
-                findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
-                ((RadioButton) findViewById(R.id.allergiesNoButton)).setChecked(true);
-            }
-        }
-        if (getEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED) != null) {
-            if (getEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED).equals("true")) {
-                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
-                findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
-                findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
-                ((RadioButton) findViewById(R.id.medicationsNoButton)).setChecked(true);
-            }
-        }
-        if (getEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED) != null) {
-            if (getEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED).equals("true")) {
-                findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
-                findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
-                findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
-                ((RadioButton) findViewById(R.id.conditionNoButton)).setChecked(true);
-            }
-        }
-        ValidateModuleFields();
-    }
+
     private void saveEntryForOptions(String prefId, String value) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -644,8 +626,26 @@ public class MDLiveMedicalHistory extends Activity {
                                 (width/4)+25));
                     }
                 }
-                loadDownloadedImages loadImageService = new loadDownloadedImages(recordsArray);
-                loadImageService.execute();
+
+                boolean hasPendingDownloads = false;
+
+                try {
+                    for(int i =0; i<recordsArray.length(); i++){
+                        JSONObject jsonObject = recordsArray.getJSONObject(i);
+                        if(Utils.mphotoList.get(jsonObject.getInt("id")) == null) {
+                            hasPendingDownloads = true;
+                            i = recordsArray.length();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    hasPendingDownloads = true;
+                }
+
+                if(hasPendingDownloads){
+                    loadDownloadedImages loadImageService = new loadDownloadedImages(recordsArray);
+                    loadImageService.execute();
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -666,13 +666,13 @@ public class MDLiveMedicalHistory extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            pDialog.show();
+            pDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-//            pDialog.dismiss();
+            pDialog.dismiss();
             if(imageAdapter != null)
                 imageAdapter.notifyDataSetChanged();
         }
@@ -695,7 +695,6 @@ public class MDLiveMedicalHistory extends Activity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             } catch (JSONException e) {
@@ -716,7 +715,8 @@ public class MDLiveMedicalHistory extends Activity {
         urlConnection.setRequestMethod("GET");
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
-        urlConnection.setConnectTimeout(30000);
+        urlConnection.setUseCaches(false);
+        urlConnection.setConnectTimeout(20000);
         String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
@@ -738,12 +738,12 @@ public class MDLiveMedicalHistory extends Activity {
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
-        String result = "";
-        while ((line = bufferedReader.readLine()) != null)
-            result += line;
-
+        StringBuilder sb = new StringBuilder();
+        while ((line = bufferedReader.readLine()) != null){
+            sb.append(line);
+        }
         inputStream.close();
-        return result;
+        return sb.toString();
     }
 
     /**
@@ -764,7 +764,7 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                //medicalCommonErrorResponseHandler(error);
+                medicalCommonErrorResponseHandler(error);
             }
         };
         DownloadMedicalImageService services = new DownloadMedicalImageService(this, null);
@@ -775,12 +775,8 @@ public class MDLiveMedicalHistory extends Activity {
     public void handleDownloadImageService(JSONObject response, int photoId){
         try {
             if(response != null){
-                Log.e("Image response", response.toString());
                 if(response.has("message") && response.getString("message").equals("Document found")){
-                    byte[] decodedString = Base64.decode(response.getString("file_stream"), Base64.DEFAULT);
-//                    Utils.photoList.put(photoId, decodedByte);
                     Utils.mphotoList.put(photoId, response.getString("file_stream"));
-
                 }
             }
         } catch (Exception e) {
@@ -910,7 +906,7 @@ public class MDLiveMedicalHistory extends Activity {
             Log.e("Failed In", "MyHealthAllergiesLl");
         }
         if (isAllFieldsfilled) {
-            btnSaveContinue.setBackgroundColor(getResources().getColor(R.color.green));
+            btnSaveContinue.setBackgroundColor(Color.parseColor("#2b7db5"));
             btnSaveContinue.setClickable(true);
         } else {
             btnSaveContinue.setBackgroundColor(getResources().getColor(R.color.grey_txt));
@@ -947,20 +943,30 @@ public class MDLiveMedicalHistory extends Activity {
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
         pDialog.dismiss();
-        if (error.networkResponse == null) {
-            if (error.getClass().equals(TimeoutError.class)) {
-                DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                };
-                // Show timeout error message
-                Utils.connectionTimeoutError(pDialog, MDLiveMedicalHistory.this);
+        NetworkResponse networkResponse = error.networkResponse;
+/*
+        try {
+            String responseBody = new String(error.networkResponse.data, "utf-8" );
+            Log.e("Error Message", responseBody)
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+*/
+        if (networkResponse != null) {
+            String message = "No Internet Connection";
+            if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                message = "Internal Server Error";
+            } else if (networkResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                message = "Unprocessable Entity Error";
+            } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
+                message = "Page Not Found";
             }
+            Utils.showDialog(MDLiveMedicalHistory.this, "Error",
+                    "Status Code : " + error.networkResponse.statusCode +"\n"+
+                            "Server Response : " + message);
+
         }
     }
-
-
     /**
      * Successful Response Handler for Medical History Completion.
      */
@@ -968,28 +974,33 @@ public class MDLiveMedicalHistory extends Activity {
     private void medicalCompletionHandleSuccessResponse(JSONObject response) {
         try {
             JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
+
+            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) == null ||
+                    getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("false")){
+                isNewUser = isUserFirstToApp(historyPercentageArray);
+            }
+
             //checkIsFirstTimeUser(historyPercentageArray);
             checkMyHealthHistory(historyPercentageArray);
             //checkPediatricProfile(historyPercentageArray);
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
-            applyValidationOnViews();
+//            applyValidationOnViews();
+            ValidateModuleFields();
             checkAgeAndFemale();
-
-            if(isUserFirstToApp(historyPercentageArray)){
+            if(isNewUser){
                 downloadMedicalRecordService();
             }else{
                 checkMedicalDateHistory();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public boolean isUserFirstToApp(JSONArray historyPercentageArray){
-        boolean havingHealth = false, liftStyle = false, pediatric = false;
+        int havingHealth = -1, liftStyle = -1, pediatric = -1;
         try {
             Log.e("hist-->", historyPercentageArray.toString());
             for(int i = 0; i < historyPercentageArray.length(); i++)
@@ -998,37 +1009,35 @@ public class MDLiveMedicalHistory extends Activity {
                 if(subObj.has("health")){
                     int myHealthPercentage = subObj.getInt("health");
                     if(myHealthPercentage == 0){
-                        havingHealth = true;
+                        havingHealth = 1;
                     }
                 }
                 if(subObj.has("life_style")){
                     int life_styleValue = subObj.getInt("life_style");
                     if(life_styleValue == 0){
-                        liftStyle = true;
+                        liftStyle = 1;
                     }
                 }
-
                 if(subObj.has("pediatric")){
                     int pediatricValue = subObj.getInt("pediatric");
                     if(pediatricValue == 0){
-                        pediatric = true;
+                        pediatric = 1;
                     }
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
         }
 
-        if(havingHealth && liftStyle && pediatric){
-            saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "false");
-            saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "false");
-            saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "false");
+        if(havingHealth == 1){
+            saveEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER, "true");
+        }else{
+            saveEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER, "false");
+        }
+
+        if(havingHealth == 1){
             return  true;
         }else{
-            saveEntryForOptions(PreferenceConstants.IS_CONDITION_CHECKED, "true");
-            saveEntryForOptions(PreferenceConstants.IS_MEDICATION_CHECKED, "true");
-            saveEntryForOptions(PreferenceConstants.IS_ALLERGY_CHECKED, "true");
             return false;
         }
     }
@@ -1041,22 +1050,40 @@ public class MDLiveMedicalHistory extends Activity {
     public void checkAgeAndFemale() {
         try {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String dateOfBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, "");
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            /*int age = Utils.calculateAge(sdf.parse(dateOfBirth));
-            String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");*/
+            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10&&Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)<=13){
+                if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)==13){
+                    if(Utils.calculteMonthFromPrefs(MDLiveMedicalHistory.this)<=0&&Utils.daysFromPrefs(MDLiveMedicalHistory.this)<=0){
+                        if(gender.equalsIgnoreCase("Female")){
+                            ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
+                            ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
+                            hasFemaleAttribute = true;
+                        }else{
+                        }
+                    }else{
+                        hasFemaleAttribute = false;
+                    }
+                }else{
+                    //Implement
+                    if(gender.equalsIgnoreCase("Female")){
+                        ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
+                        ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
+                        hasFemaleAttribute = true;
+                    }
+                }
+            }else{
+                hasFemaleAttribute = false;
+            }
 
-            int age = 10;
-            String gender = "male";
-
-            if ((age >= 10 && age <= 12) && gender.equalsIgnoreCase("female")) {
+            ValidateModuleFields();
+           /* if ((age >= 10 && age <= 12) && gender.equalsIgnoreCase("female")) {
                 ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                 ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                 hasFemaleAttribute = true;
             } else {
                 hasFemaleAttribute = false;
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1095,10 +1122,24 @@ public class MDLiveMedicalHistory extends Activity {
                 ((TextView) findViewById(R.id.AlergiesNameTv)).setText("No allergies reported");
             }
             findViewById(R.id.ContainerScrollView).setVisibility(View.VISIBLE);
-            findViewById(R.id.SavContinueBtn).setVisibility(View.VISIBLE);
+//            findViewById(R.id.SavContinueBtn).setVisibility(View.VISIBLE);
             pDialog.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
+            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
+                findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
+            }
+        }
+        if(AllergiesGroup.getCheckedRadioButtonId() > 0 &&
+                AllergiesGroup.getCheckedRadioButtonId() == R.id.allergiesYesButton){
+            ((RadioButton) findViewById(R.id.allergiesYesButton)).setChecked(false);
         }
     }
 
@@ -1137,6 +1178,22 @@ public class MDLiveMedicalHistory extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
+            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
+                findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if(MedicationsGroup.getCheckedRadioButtonId() > 0 &&
+                MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton){
+            ((RadioButton) findViewById(R.id.medicationsYesButton)).setChecked(false);
+        }
+
     }
 
     /**
@@ -1172,9 +1229,28 @@ public class MDLiveMedicalHistory extends Activity {
             } else {
                 ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText("No conditions reported");
             }
+
+            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
+                if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+                    findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
+                    findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
+                }else{
+                    findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
+                    findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+            ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
+        }
+
+
+
     }
 
 

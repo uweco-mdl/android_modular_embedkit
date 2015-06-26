@@ -77,8 +77,7 @@ public class ImageAdapter extends BaseAdapter {
         if(myPhotosList != null && !TextUtils.isEmpty((String)myPhotosList.get(position).get("download_link"))){
 
             if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
-                byte[] decodedString = Base64.decode(Utils.mphotoList.get(myPhotosList.get(position).get("id")), Base64.DEFAULT);
-                imageView.setImageBitmap(decodeSampledBitmapFromResource(decodedString));
+                imageView.setImageBitmap(decodeSampledBitmapFromResource(Base64.decode(Utils.mphotoList.get(myPhotosList.get(position).get("id")), Base64.DEFAULT)));
             }else{
                 imageView.setImageResource(R.drawable.account);
             }
@@ -104,18 +103,18 @@ public class ImageAdapter extends BaseAdapter {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = false;
 
-        options.inSampleSize = 2;
+        options.inSampleSize = 12;
 
         Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
 
-        if(b != null)
-        // Calculate inSampleSize
+        if(b != null){
+            // Calculate inSampleSize
             options.inSampleSize = calculateInSampleSize(options, b.getWidth(), b.getHeight());
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-
+            // Decode bitmap with inSampleSize set
+            b.recycle();
+        }
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
     }
 

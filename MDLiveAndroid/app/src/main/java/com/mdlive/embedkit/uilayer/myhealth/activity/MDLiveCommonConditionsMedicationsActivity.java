@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,12 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,7 +45,7 @@ import java.util.HashMap;
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity {
 
-    protected ProgressDialog pDialog;
+    public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
@@ -55,6 +55,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     protected int existingConditionsCount = 0;
     public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION};
     protected TYPE_CONSTANT type;
+    public String conditionsText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -393,15 +394,30 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
         previousSearch = "";
         pDialog.dismiss();
-        if (error.networkResponse == null) {
-            if (error.getClass().equals(TimeoutError.class)) {
-                DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                };
-            }
+        NetworkResponse networkResponse = error.networkResponse;
+/*
+        try {
+            String responseBody = new String(error.networkResponse.data, "utf-8" );
+            Log.e("Error Message", responseBody)
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+*/
+        if (networkResponse != null) {
+            String message = "No Internet Connection";
+            if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                message = "Internal Server Error";
+            } else if (networkResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                message = "Unprocessable Entity Error";
+            } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
+                message = "Page Not Found";
+            }
+            Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "Error",
+                    "Status Code : " + error.networkResponse.statusCode +"\n"+
+                            "Server Response : " + message);
+
+        }
+
     }
 
 

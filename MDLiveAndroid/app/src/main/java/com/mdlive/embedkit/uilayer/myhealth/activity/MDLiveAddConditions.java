@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,6 +60,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
         Log.e("newConditions", newConditions.size()+"");
+        setResult(RESULT_OK);
         if (newConditions.size() == 0) {
             pDialog.dismiss();
             updateConditionsOrAllergies();
@@ -107,6 +109,22 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         }
     }
 
+    public void setDatas(){
+        for(int i = 0; i < newConditions.size(); i++){
+            conditionsText += newConditions.get(i)+", ";
+        }
+        for(int i = 0; i < existingConditions.size(); i++){
+            HashMap<String, String> data = existingConditions.get(i);
+            conditionsText += data.get("name")+", ";
+        }
+        Intent resultData = new Intent();
+        if(conditionsText == null || conditionsText.trim().length() == 0)
+            conditionsText = "No conditions reported";
+        resultData.putExtra("conditionsData", conditionsText);
+        setResult(RESULT_OK, resultData);
+    }
+
+
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
      *
@@ -119,7 +137,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         pDialog.show();
         if (existingConditions.size() == 0) {
             pDialog.dismiss();
-            setResult(RESULT_OK);
+            setDatas();
             finish();
         } else {
             for (int i = 0; i < existingConditions.size(); i++) {
@@ -128,7 +146,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                     @Override
                     public void onResponse(JSONObject response) {
                         pDialog.dismiss();
-                        setResult(RESULT_OK);
+                        setDatas();
                         finish();
                         /*if (existingConditions.size() == ++existingConditionsCount) {
 
@@ -244,7 +262,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        callMedicalHistoryIntent();
+        setDatas();
     }
 
     /**
