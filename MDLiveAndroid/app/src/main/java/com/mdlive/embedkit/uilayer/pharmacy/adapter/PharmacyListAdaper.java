@@ -24,7 +24,6 @@ public class PharmacyListAdaper extends BaseAdapter{
         this.list = list;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
@@ -47,13 +46,16 @@ public class PharmacyListAdaper extends BaseAdapter{
             ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
         }
 
-        ((TextView) convertView.findViewById(R.id.pharmacyName)).setText((String)getItem(position).get("store_name"));
-
+        ((TextView) convertView.findViewById(R.id.pharmacyName)).setText(
+                (String)getItem(position).get("store_name")+" "+
+                        (((getItem(position).get("distance")!= null) &&
+                        ((String)getItem(position).get("distance")).length() != 0) ? (String)getItem(position).get("distance")+"mi":""));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddressline2)).setText(
-                (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
+                ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
+                    (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
 
         return convertView;
     }

@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.pharmacy.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -163,18 +161,7 @@ public class MDLivePharmacyDetails extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                /*pDialog.dismiss();*/
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyDetails.this);
-                    }
-                }
+                Utils.handelVolleyErrorResponse(MDLivePharmacyDetails.this, error, pDialog);
             }};
 
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();

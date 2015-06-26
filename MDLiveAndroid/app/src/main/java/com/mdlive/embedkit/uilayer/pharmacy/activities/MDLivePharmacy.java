@@ -118,15 +118,6 @@ public class MDLivePharmacy extends FragmentActivity {
             }
         });
 
-
-      /*  ((RelativeLayout) findViewById(R.id.defaultPharmlayout)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacyDetails.class);
-                i.putExtra("datas", bundletoSend);
-                startActivity(i);
-            }
-        });*/
         pDialog = Utils.getProgressDialog("Please wait...", this);
     }
 
@@ -210,17 +201,7 @@ public class MDLivePharmacy extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePharmacy.this);
-                    }
-                }
+                Utils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
             }
         };
         PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
@@ -259,14 +240,6 @@ public class MDLivePharmacy extends FragmentActivity {
                     return null;
                 }
             });
-            /*map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent i = new Intent(getApplicationContext(), MDLivePharmacyDetails.class);
-                    i.putExtra("datas", bundletoSend);
-                    startActivity(i);
-                }
-            });*/
         }
     }
 
@@ -277,10 +250,9 @@ public class MDLivePharmacy extends FragmentActivity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();;
-            Log.d("Response", response.toString());
-            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+            pDialog.dismiss();
 
+            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name")+" "+pharmacyDatas.getString("distance"));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "

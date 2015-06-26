@@ -34,13 +34,11 @@
 
         </TextView>
     </RelativeLayout>
-
-
     <ScrollView
     style="@style/ScrollViewHolderStyle"
     >
 <LinearLayout
-    style="@style/WagParentLinearLayoutStyle"
+    style="@style/common_style_W_Match_H_Wrap_O_Vertical"
     >
 
 
@@ -65,19 +63,20 @@
                 android:id="@+id/textView17" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black"
-                android:text="Please select a pharmacy in the event your\ndoctor prescribes a medication"
+                android:text="Please select a pharmacy in the event your doctor prescribes a medication"
                 android:textSize="16sp"
                 android:id="@+id/textView18" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_margin="10dp"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:background="@color/grey_txt">
@@ -93,8 +92,6 @@
         <RelativeLayout
             android:id="@+id/defaultPharmlayout"
             style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-            android:padding="5dp"
-            android:background="@drawable/pharmacy_line_bg"
             >
 
             <LinearLayout
@@ -103,6 +100,7 @@
                 android:id="@+id/textView3"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal|left"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -113,18 +111,21 @@
                     style="@style/addressLineStyle"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:textSize="17sp"
                     />
                 <TextView
                     android:id="@+id/addressline2"
                     style="@style/addressLineStyle"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:textSize="13sp"
                     />
                 <TextView
                     android:id="@+id/addressline3"
                     style="@style/addressLineStyle"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:textSize="13sp"
                     />
                 <TextView
                     android:id="@+id/addressline4"
@@ -132,17 +133,12 @@
                     style="@style/addressLineStyle"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:textSize="13sp"
                     />
 
             </LinearLayout>
-
-
         </RelativeLayout>
-
-
-
     </LinearLayout>
-
 </LinearLayout>
 
 </ScrollView>

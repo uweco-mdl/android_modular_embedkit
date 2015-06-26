@@ -133,7 +133,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
    /*
     * This function is mainly focused on initializing view in layout.
     */
-
     public void initializeListView() {
 
         pharmList = (ListView) findViewById(R.id.pharmList);
@@ -276,6 +275,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         return postBody;
     }
 
+
     /**
      * This function is used to handle response which was thrown from getPharmacySearchResults function
      * <p/>
@@ -295,26 +295,39 @@ public class MDLivePharmacyResult extends FragmentActivity {
             if (total_pages == ((int) keyParams.get("page")))
                 isPageLimitReached = true;
             JsonArray responArray = responObj.get("pharmacies").getAsJsonArray();
-            int pharmacy_id;
-            double longitude, latitude;
-            boolean twenty_four_hours, active;
-            String store_name, phone, address1, address2, zipcode, fax, city, distance, state;
+            int pharmacy_id=0;
+            double longitude=0, latitude=0;
+            boolean twenty_four_hours=false, active=false;
+            String store_name="", phone="", address1="", address2="", zipcode="", fax="", city="",
+                    distance="", state="";
             // For google map
             googleMap = mapView.getMap();
             LatLng markerPoint = null;
             for (int i = 0; i < responArray.size(); i++) {
-                state = responArray.get(i).getAsJsonObject().get("state").getAsString();
-                pharmacy_id = responArray.get(i).getAsJsonObject().get("pharmacy_id").getAsInt();
-                store_name = responArray.get(i).getAsJsonObject().get("store_name").getAsString();
-                phone = responArray.get(i).getAsJsonObject().get("phone").getAsString();
-                address1 = responArray.get(i).getAsJsonObject().get("address1").getAsString();
-                active = responArray.get(i).getAsJsonObject().get("active").getAsBoolean();
-                address2 = responArray.get(i).getAsJsonObject().get("address2").getAsString();
-                zipcode = responArray.get(i).getAsJsonObject().get("zipcode").getAsString();
-                fax = responArray.get(i).getAsJsonObject().get("fax").getAsString();
-                city = responArray.get(i).getAsJsonObject().get("city").getAsString();
-                twenty_four_hours = responArray.get(i).getAsJsonObject().get("twenty_four_hours").getAsBoolean();
-                distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "state"))
+                    state = responArray.get(i).getAsJsonObject().get("state").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "pharmacy_id"))
+                    pharmacy_id = responArray.get(i).getAsJsonObject().get("pharmacy_id").getAsInt();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "store_name"))
+                    store_name = responArray.get(i).getAsJsonObject().get("store_name").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "phone"))
+                    phone = responArray.get(i).getAsJsonObject().get("phone").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address1"))
+                    address1 = responArray.get(i).getAsJsonObject().get("address1").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "active"))
+                    active = responArray.get(i).getAsJsonObject().get("active").getAsBoolean();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address2"))
+                    address2 = responArray.get(i).getAsJsonObject().get("address2").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "zipcode"))
+                    zipcode = responArray.get(i).getAsJsonObject().get("zipcode").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "fax"))
+                    fax = responArray.get(i).getAsJsonObject().get("fax").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "city"))
+                    city = responArray.get(i).getAsJsonObject().get("city").getAsString();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "twenty_four_hours"))
+                    twenty_four_hours = responArray.get(i).getAsJsonObject().get("twenty_four_hours").getAsBoolean();
+                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "distance"))
+                    distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
                 try {
                     if (responArray.get(i).getAsJsonObject().get("coordinates").isJsonNull()) {
                         longitude = 0;
@@ -395,8 +408,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 }
             });
         }
-
-
     }
 
     /**
