@@ -586,6 +586,14 @@ public class MDLiveGetStarted extends FragmentActivity{
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         String changeEditText = phonrNmberEditTxt.getText().toString();
+                        if(changeEditText.length()>=11){
+                            if(!changeEditText.contains("-")){
+                                String formattedString=Utils.phoneNumberFormat(Long.parseLong(changeEditText));
+                                phonrNmberEditTxt.setText(formattedString);
+                            }
+
+                        }
+
                     }
 
                     @Override

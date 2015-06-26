@@ -148,6 +148,7 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:background="@color/transparent"
+                    android:maxLength="15"
                     android:inputType="phone"
                     android:text=""/>
                 <View style="@style/ViewStyle"
