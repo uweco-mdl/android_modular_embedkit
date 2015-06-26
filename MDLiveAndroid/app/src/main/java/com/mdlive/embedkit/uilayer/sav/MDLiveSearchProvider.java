@@ -319,7 +319,9 @@ public class MDLiveSearchProvider extends Activity {
      *
      */
     private void getSpecialityData(JSONObject response) throws JSONException {
-        JSONArray provider_type_array = response.getJSONArray("provider_type");
+        JSONArray provider_type_array=null;
+        provider_type_array.put("Any");
+        provider_type_array = response.getJSONArray("provider_type");
 
 
         for(int i = 0;i< provider_type_array.length();i++) {
@@ -332,8 +334,9 @@ public class MDLiveSearchProvider extends Activity {
             ProviderTypeArrayList.add(str_provider_type);
             HashMap<String, String> specialitymap = null;
             //Speciality response
-
-            JSONArray speciality_array = licenseObject.getJSONArray("speciality");
+            JSONArray speciality_array=null;
+            speciality_array.put("Any");
+            speciality_array = licenseObject.getJSONArray("speciality");
             SpecialityArrayList.clear();
             specialitymap = new HashMap<String, String>();
             for (int j = 0; j < speciality_array.length(); j++) {
@@ -358,7 +361,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getSortData(JSONObject response) throws JSONException {
-        JSONArray Sort_array = response.getJSONArray("sort_by");
+        JSONArray Sort_array=null;
+        Sort_array.put("Any");
+         Sort_array = response.getJSONArray("sort_by");
         ArrayList<String> keysList = new ArrayList<String>();
         for(int i = 0;i< Sort_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
@@ -371,7 +376,7 @@ public class MDLiveSearchProvider extends Activity {
                 System.out.println(key);
             }
             SearchArrayList.add(map);
-            SortByArrayList.add("Any");
+
             SortByArrayList.add(Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
             Log.e("SortByArrayList----->", Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
         }
@@ -384,7 +389,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getSpeaksData(JSONObject response) throws JSONException {
-        JSONArray Speaks_array = response.getJSONArray("speaks");
+        JSONArray Speaks_array=null;
+        Speaks_array.put("Any");
+        Speaks_array = response.getJSONArray("speaks");
         ArrayList<String> keysList = new ArrayList<String>();
         for(int i = 0;i< Speaks_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
@@ -396,6 +403,7 @@ public class MDLiveSearchProvider extends Activity {
                 map.put(key,(String)itemObj.get(key));
                 System.out.println(key);
             }
+
             SearchArrayListSpeaks.add(map);
             SpeaksArrayList.add(Speaks_array.getJSONObject(i).getString(Speaks_array.getJSONObject(i).keys().next()));
         }
@@ -407,7 +415,10 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getGenderData(JSONObject response) throws JSONException {
-        JSONArray Gender_array = response.getJSONArray("gender");
+        JSONArray Gender_array=null;
+        Gender_array.put("Any");
+         Gender_array = response.getJSONArray("gender");
+
         for(int i = 0;i< Gender_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
             JSONObject itemObj=Gender_array.getJSONObject(i);
@@ -429,7 +440,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getAvailableData(JSONObject response) throws JSONException {
-        JSONArray Available_array = response.getJSONArray("available_by");
+        JSONArray Available_array=null;
+        Available_array.put("Any");
+         Available_array = response.getJSONArray("available_by");
         for(int i = 0;i< Available_array.length();i++){
 
             HashMap<String,String> map = new HashMap<String,String>();

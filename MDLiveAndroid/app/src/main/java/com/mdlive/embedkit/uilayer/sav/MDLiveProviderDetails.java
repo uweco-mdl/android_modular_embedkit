@@ -32,14 +32,14 @@ import org.json.JSONObject;
 /**
  * This class returns the Provider profile for the corresponding providers.
  */
-public class MDLiveProviderDetails extends Activity implements View.OnClickListener{
+public class MDLiveProviderDetails extends Activity{
     private ProgressDialog pDialog;
     private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,tapSeetheDoctorTxt;
     private CircularNetworkImageView ProfileImg;
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private String SharedLocation,AppointmentDate,AppointmentType;
-    private LinearLayout providerImageHolder;
+    private LinearLayout providerImageHolder,detailsLl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +51,11 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         loadProviderDetails();
     }
     /**
-     * Retrieve the shared data from preferences for Provider Id and Location
+     * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
+     * the Location can be fetched from the GetStarted screen and the provider's Id and the
+     * Provider's Appointment date will be fetched from the Choose Provider Screen.
      *
      */
-
 
     private void getPreferenceDetails() {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -67,7 +68,11 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         }
 
     }
-     /*Initialization of the views were done*/
+     /**
+      * Initialization of the views are done here.
+      * The click event of the particular view also are done here.
+      **/
+
     public void Initialization()
     {
         aboutme_txt = (TextView)findViewById(R.id.aboutMe_txt);
@@ -79,11 +84,12 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
-        SearchBtn.setOnClickListener(this);
-        //tapSeetheDoctorTxt.setOnClickListener(this);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
-
+    /**
+     * The back image will pull you back to the Previous activity
+     * The tap button will pull you  to the Reason for visit Screen.
+     */
         ((Button) findViewById(R.id.tapBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,15 +104,14 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
                 finish();
             }
         });
-
-
-
     }
     /**
-     * Load user information Details.
-     * Class : loadProviderDetails - Service class used to fetch the Provider's information
-     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
-     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     * LProviderDetailServices
+     * Class : ProviderDetailServices - Service class used to fetch the Provider's information
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to
+     * the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error
+     * message to user or Get started screen will shown to user).
      */
     private void loadProviderDetails() {
         pDialog.show();
@@ -142,7 +147,10 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     }
 
     /**
-     *  Successful Response Handler for Load Provider Info
+     *  Successful Response Handler for Load Provider Info.Here the Profile image of
+     *  the Particular provider will be displayed.Along with that the Provider's
+     *  speciality,about the Provider , license and the languages will also be
+     *  displayed.Along with this Provider's affilitations will also be displayed
      *
      */
 
@@ -188,6 +196,7 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     }
     /**
      *  Successful Response Handler for getting the Affillitations and the provider image.
+     *  This method will give the successful response of the Provider's affilitations.
      *
      */
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
@@ -209,6 +218,8 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     }
     /**
      *  Response Handler for getting the Speciality and this is completely depend upon the provider type.
+     *  Here the Provider type can either be family physician or Pediatrician.so based on this type
+     *  the Speciality data will be populated .
      *
      */
 
@@ -225,6 +236,8 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     }
     /**
      *  Response Handler for getting the languages , what the provider speaks.
+     *  This method returns what the Provider speaks .The speaks will be populated in the arraylist
+     *  and it will be loaded in the TextView.
      *
      */
 
@@ -241,6 +254,8 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
     }
     /**
      *  Response Handler for getting the license.
+     *  This method returns the successful response of the Provider for the corresponding
+     *  Providers.
      *
      */
 
@@ -255,16 +270,5 @@ public class MDLiveProviderDetails extends Activity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-         /*   case R.id.tapBtn:
-                Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
-                startActivity(Reasonintent);
-                break;
-        */
-        }
 
-    }
 }

@@ -156,7 +156,7 @@ public class MDLivePediatric extends Activity {
         edtLastShot= (EditText) findViewById(R.id.edt_lastshot);
         lasShotLabel= (TextView) findViewById(R.id.txt_lastShot_label);
         birthComplicationLayout= (RelativeLayout) findViewById(R.id.layout_birthComplications);
-       if(Utils.calculteAgeFromPrefs(MDLivePediatric.this)>2&&Utils.calculteMonthFromPrefs(MDLivePediatric.this)>0&&Utils.daysFromPrefs(MDLivePediatric.this)>0){
+       if(checkPerdiatricAge()){
             txtAge.setText("Patient under 13 years of age");
              birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
              edtBirthComplications.setVisibility(View.GONE);
@@ -173,6 +173,21 @@ public class MDLivePediatric extends Activity {
         buttonClick();
         radioClick();
         getPediatricProfileBelowTwo();
+    }
+
+    public boolean checkPerdiatricAge(){
+        if(Utils.calculteAgeFromPrefs(MDLivePediatric.this)>2 && Utils.calculteAgeFromPrefs(MDLivePediatric.this)<13){
+            return true;
+        }else if(Utils.calculteAgeFromPrefs(MDLivePediatric.this) == 2){
+            if(Utils.calculteMonthFromPrefs(MDLivePediatric.this) > 0 && Utils.daysFromPrefs(MDLivePediatric.this) > 0){
+                return true;
+            }
+        }else if(Utils.calculteAgeFromPrefs(MDLivePediatric.this) == 13){
+            if(Utils.calculteMonthFromPrefs(MDLivePediatric.this) == 0 && Utils.daysFromPrefs(MDLivePediatric.this) == 0){
+                return true;
+            }
+        }
+        return false;
     }
 
 

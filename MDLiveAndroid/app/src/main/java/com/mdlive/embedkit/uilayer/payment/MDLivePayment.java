@@ -556,6 +556,13 @@ public class MDLivePayment extends Activity {
             if(resObject.has("discount_amount")){
                 String discountAmount=resObject.getString("discount_amount").replace("$","");
                 double payableAmount=Double.parseDouble(discountAmount.trim())-49.00;
+                if(payableAmount==1.0)
+                {
+                    payableAmount=0.00;
+                }else if(payableAmount==0.0)
+                {
+                    payableAmount=0.00;
+                }
                 Log.e("Payable AMOU","Discount Amount"+payableAmount);
                 ((TextView) findViewById(R.id.cost)).setText("Total :$"+payableAmount);
             }

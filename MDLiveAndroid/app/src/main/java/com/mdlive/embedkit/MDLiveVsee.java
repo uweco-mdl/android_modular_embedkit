@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -26,7 +26,6 @@ public class MDLiveVsee extends Activity
     private boolean stopUpdatingStatus = false;
     private static boolean CONSULTED = false,
             FINISH = false;
-    private static final int BLINKING_PERIOD = 1300; // milliseconds
 
     private static VSeeServerConnection.SimpleVSeeServerConnectionReceiver simpleServerConnectionReceiver = null;
     private static VSeeVideoManager.SimpleVSeeVideoManagerReceiver simpleVidManagerReceiver = null;
@@ -90,14 +89,15 @@ public class MDLiveVsee extends Activity
             };
 
         Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-            String uid = "mdlivedev+ps4ilgpwmmshpmf2igccqfkm3";
-            String pass = "qqrn9u74tc";
+        if (extras != null) {
+            String uid = extras.getString("username");
+            String pass = extras.getString("password");
+
 
             MDLiveVseeApplication.setCredentials(uid, pass);
 
             VSeeServerConnection.instance().loginUser(uid, pass);
-//        }
+        }
 
 
         if (!MDLiveVseeApplication.loginCredentialsValid())
@@ -139,6 +139,10 @@ public class MDLiveVsee extends Activity
 			VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
 			simpleServerConnectionReceiver = null;
 			simpleVidManagerReceiver = null;
+            Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
+//        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra("isReturning", true);
+            startActivity(i);
             finish();
         }
     }
@@ -154,8 +158,9 @@ public class MDLiveVsee extends Activity
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
 		simpleServerConnectionReceiver = null;
 		simpleVidManagerReceiver = null;
-        Intent i = new Intent(MDLiveVsee.this, MDLiveGetStarted.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
+//        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.putExtra("isReturning", true);
         startActivity(i);
         super.onDestroy();
     }

@@ -28,7 +28,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private Filter filter;
     private LayoutInflater inflate;
     private LinearLayout reasonLinLay;
-    
+
 
     public ReasonForVisitAdapter(Context applicationContext,
                                  final ArrayList<String> arraylist, final LinearLayout LinearResults, final TextView noresults, final TextView submitResults) {

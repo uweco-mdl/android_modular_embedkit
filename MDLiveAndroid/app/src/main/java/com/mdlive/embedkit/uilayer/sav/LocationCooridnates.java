@@ -105,7 +105,11 @@ public class LocationCooridnates {
         }
     }
 
-    //Result receiver class which will have body of gotLocation function at the place of implementation of Activity.
+    /**
+     * Result receiver class which will have body of gotLocation function at the place
+     * of implementation of Activity.
+     */
+
     public static abstract class LocationResult {
         public abstract void gotLocation(Location location);
     }
