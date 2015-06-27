@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.pharmacy.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,7 +69,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
     boolean isMarkerPointAdded = false;
-
+    private String errorMesssage ="No Pharmacies Found!";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,15 +142,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
             }
         });
-
-
-       /* ((TextView)findViewById(R.id.textView6)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-                startActivityForResult(i, 4000);
-            }
-        });*/
     }
 
     /**
@@ -194,18 +183,8 @@ public class MDLivePharmacyResult extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyResult.this);
-                    }
-                }
                 resetLoadingViews();
+                Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
         pDialog.show();
@@ -260,6 +239,8 @@ public class MDLivePharmacyResult extends FragmentActivity {
             keyParams.put("longitude", receivedIntent.getDoubleExtra("longitude", 0));
         if (receivedIntent.hasExtra("name"))
             keyParams.put("name", receivedIntent.getStringExtra("name"));
+        if(receivedIntent.hasExtra("errorMesssage"))
+            errorMesssage = receivedIntent.getStringExtra("errorMesssage");
         if (receivedIntent.hasExtra("zipcode")) {
             keyParams.put("zipcode", receivedIntent.getStringExtra("zipcode"));
         } else {
@@ -381,7 +362,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(responObj.get("total_pages").isJsonNull()){
+            Utils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
+        }
         if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
             pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
@@ -427,17 +410,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 /*pDialog.dismiss();*/
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyResult.this);
-                    }
-                }
+                Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();

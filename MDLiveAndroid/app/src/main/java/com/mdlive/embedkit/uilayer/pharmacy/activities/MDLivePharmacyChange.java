@@ -63,6 +63,7 @@ public class MDLivePharmacyChange extends Activity {
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
     private int keyDel=0;
+    private String errorMesssage = "No Pharmacies listed in your location!";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,24 +115,7 @@ public class MDLivePharmacyChange extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-               /* zipcodeText.setOnKeyListener(new View.OnKeyListener() {
-                    @Override
-                    public boolean onKey(View v, int keyCode, KeyEvent event) {
-                        if (keyCode == KeyEvent.KEYCODE_DEL)
-                            keyDel = 1;
-                        return false;
-                    }
-                });
 
-                if (keyDel == 0) {
-                    int len = zipcodeText.getText().length();
-                    if(len == 5) {
-                        zipcodeText.setText(zipcodeText.getText() + "-");
-                        zipcodeText.setSelection(zipcodeText.getText().length());
-                    }
-                } else {
-                    keyDel = 0;
-                }*/
             }
 
             @Override
@@ -153,19 +137,21 @@ public class MDLivePharmacyChange extends Activity {
                 }
             }
         });
+
         ((TextView) findViewById(R.id.doneTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validate_data()){
+                String hasErrorMessage = hasValidationMessage();
+                if(hasErrorMessage == null){
                     addExtrasInIntent();
                     startActivity(sendingIntent);
                     finish();
                 }else{
-                    Utils.showDialog(MDLivePharmacyChange.this, "Alert", "Please choose any state/zipcode to proceed search!");
+                    Utils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
                 }
-
             }
         });
+
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -195,18 +181,44 @@ public class MDLivePharmacyChange extends Activity {
         });
     }
 
-    public boolean validate_data(){
-        if(zipcodeText.getText()!=null && !zipcodeText.getText().toString().equals("")){
+    public String hasValidationMessage(){
+        if(zipcodeText.getText()!=null && !zipcodeText.getText().toString().trim().equals("")){
             if(Utils.validateZipCode(zipcodeText.getText().toString())){
-                return true;
+                if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
+                    errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
+                         +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state";
+                }else{
+                    errorMesssage = "No Pharmacies listed in your location";
+                }
             }else{
-                return false;
+                return "Please enter a valid Zipcode!";
             }
-
-        }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("")){
-            return true;
+        }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("Select State") && !chooseState.getText().toString().trim().equals("")){
+            if(cityText.getText() == null || cityText.getText().toString().trim().equals("")){
+                return "Please input City!";
+            }
+            if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
+                errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
+                        +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
+            }else{
+                errorMesssage = "No Pharmacies listed in your location";
+            }
+        }else if(cityText.getText()!=null && !cityText.getText().toString().trim().equals("")){
+            if(chooseState.getText() == null || chooseState.getText().toString().equals("Select State") || chooseState.getText().toString().trim().equals("")){
+                return "Please select a State!";
+            }
+            if(pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0){
+                errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
+                        +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
+            }else{
+                errorMesssage = "No Pharmacies listed in your location";
+            }
+        }else if( (TextUtils.isEmpty(zipcodeText.getText().toString()))
+                && ((TextUtils.isEmpty(chooseState.getText().toString())
+                || chooseState.getText().toString().equals("Select State")))){
+            return "Please choose any state/zipcode to proceed search!";
         }
-        return false;
+        return null;
     }
 
 
@@ -283,7 +295,7 @@ public class MDLivePharmacyChange extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
+        //                Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
         SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), null);
@@ -322,6 +334,7 @@ public class MDLivePharmacyChange extends Activity {
     private void addExtrasForLocationInIntent(Location location) {
         sendingIntent.putExtra("longitude", location.getLongitude());
         sendingIntent.putExtra("latitude", location.getLatitude());
+        errorMesssage = "No Pharmacies listed in your location";
     }
 
     /**
@@ -344,6 +357,7 @@ public class MDLivePharmacyChange extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        sendingIntent.putExtra("errorMesssage", errorMesssage);
     }
 
     /**
