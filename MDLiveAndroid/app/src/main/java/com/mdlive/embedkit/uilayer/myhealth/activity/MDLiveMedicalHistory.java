@@ -29,7 +29,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -55,12 +54,10 @@ import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryUpdateServic
 import com.mdlive.unifiedmiddleware.services.myhealth.UpdateFemaleAttributeServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -440,8 +437,14 @@ public class MDLiveMedicalHistory extends Activity {
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
-                if(fileUri != null)
-                    uploadMedicalRecordService(fileUri.getPath());
+                if(fileUri != null){
+                    File file = new File(fileUri.getPath());
+                    if(file.exists()){
+                        int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                        Log.e("Size of File..", file_size+"");
+                        //uploadMedicalRecordService(fileUri.getPath());
+                    }
+                }
             } else {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(),
@@ -974,12 +977,10 @@ public class MDLiveMedicalHistory extends Activity {
     private void medicalCompletionHandleSuccessResponse(JSONObject response) {
         try {
             JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
-
             if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) == null ||
                     getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("false")){
                 isNewUser = isUserFirstToApp(historyPercentageArray);
             }
-
             //checkIsFirstTimeUser(historyPercentageArray);
             checkMyHealthHistory(historyPercentageArray);
             //checkPediatricProfile(historyPercentageArray);
@@ -1052,38 +1053,17 @@ public class MDLiveMedicalHistory extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10&&Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)<=13){
-                if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)==13){
-                    if(Utils.calculteMonthFromPrefs(MDLiveMedicalHistory.this)<=0&&Utils.daysFromPrefs(MDLiveMedicalHistory.this)<=0){
+            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=11){
                         if(gender.equalsIgnoreCase("Female")){
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                             hasFemaleAttribute = true;
-                        }else{
                         }
                     }else{
                         hasFemaleAttribute = false;
                     }
-                }else{
-                    //Implement
-                    if(gender.equalsIgnoreCase("Female")){
-                        ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
-                        ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
-                        hasFemaleAttribute = true;
-                    }
-                }
-            }else{
-                hasFemaleAttribute = false;
-            }
 
             ValidateModuleFields();
-           /* if ((age >= 10 && age <= 12) && gender.equalsIgnoreCase("female")) {
-                ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
-                ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
-                hasFemaleAttribute = true;
-            } else {
-                hasFemaleAttribute = false;
-            }*/
 
         } catch (Exception e) {
             e.printStackTrace();

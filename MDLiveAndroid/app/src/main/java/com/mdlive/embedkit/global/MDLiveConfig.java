@@ -10,8 +10,11 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
  */
 public class MDLiveConfig {
 
-    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
+//    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
 //    private static final String BASE_URL ="https://dev-members.mdlive.com/services";
+    private static final String BASE_URL ="https://pluto-members.mdtestsite.net/services";
+
+
     public static final String LOGIN_SERVICES = "/customer_logins";
     public static final String URL_USER_INFORMATION = "/customer/:id";
     public static final String URL_PROVIDER_TYPE = "/providers/provider_type_list";
@@ -26,19 +29,21 @@ public class MDLiveConfig {
     public static final String URL_PEDIATRIC_PROFILE = "/medical_histories/pediatric_profile";
 
     private static final String UPLOAD_MEDICALREPORT = "/customer/upload_document";
-    private static final String DOWNLOAD_MEDICALREPORT = "/customer/records";
+    private static final String DOWNLOAD_MEDICALREPORT = "/customer/records?images_only=true";
     private static final String DELETE_MEDICALREPORT = "/customer/delete_document";
     private static final String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
 
-
-
-    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
-
+    //Stage Secret Keys...
+//    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
+//    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
 
     //dev Secret Keys..
 //    private static final String MDLIVE_SECRET_KEY = "843f117b0bf7368ed5d";
 //    private static final String MDLIVE_API_KEY = "a775f7e2ed1ce6cb313b";
+
+    //Pluto QA
+    private static final String MDLIVE_API_KEY = "b74d0fb9a114904c009b";
+    private static final String MDLIVE_SECRET_KEY ="89c8d3ea88501e8e62a";
 
     public static final String DEFAULT_USER_ID = "MobileUser";
 
@@ -76,9 +81,7 @@ private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
     private static final String URL_BILLING_UPDATE= "/billing_informations/1";
 
     private static final String URL_GET_LASTDATE_MEDICAL_HISTORY = "/medical_histories/medical_history_completion";
-
-
-
+    private static final String URL_UPDATE_MEDICAL_HISTORY= "/medical_histories/update_medical_history";
 
 
 
@@ -149,6 +152,7 @@ private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
         AppSpecificConfig.URL_USER_INFO = URL_USER_INFO;
         AppSpecificConfig.URL_PENDING_APPOINTMENT = URL_PENDING_APPOINTMENT;
         AppSpecificConfig.URL_BILLING_UPDATE = URL_BILLING_UPDATE;
+        AppSpecificConfig.URL_UPDATE_MEDICAL_HISTORY = URL_UPDATE_MEDICAL_HISTORY;
 
     }
     /*
