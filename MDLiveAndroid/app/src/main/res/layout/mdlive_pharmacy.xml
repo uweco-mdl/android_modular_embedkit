@@ -41,8 +41,6 @@
     style="@style/common_style_W_Match_H_Wrap_O_Vertical"
     >
 
-
-
     <LinearLayout
         style="@style/common_style_W_Match_H_Wrap_O_Vertical"
         android:padding="5dp"
