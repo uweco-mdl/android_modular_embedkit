@@ -110,33 +110,37 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      */
     @Override
     protected void updateConditionsOrAllergies() {
-        pDialog.show();
-        if (existingConditions.size() == 0) {
-            pDialog.dismiss();
-            setDatas();
-            finish();
-        } else {
-            for (int i = 0; i < existingConditions.size(); i++) {
-                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        pDialog.dismiss();
-                        setDatas();
-                        finish();
-                    }
-                };
-                NetworkErrorListener errorListener = new NetworkErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        medicalCommonErrorResponseHandler(error);
-                    }
-                };
-                HashMap<String, String> medication = existingConditions.get(i);
-                HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                postBody.put("medication", medication);
-                UpdateMedicalService services = new UpdateMedicalService(MDLiveAddMedications.this, null);
-                services.doLoginRequest(medication.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
+        try {
+            pDialog.show();
+            if (existingConditions.size() == 0) {
+                pDialog.dismiss();
+                setDatas();
+                finish();
+            } else {
+                for (int i = 0; i < existingConditions.size(); i++) {
+                    NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            pDialog.dismiss();
+                            setDatas();
+                            finish();
+                        }
+                    };
+                    NetworkErrorListener errorListener = new NetworkErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            medicalCommonErrorResponseHandler(error);
+                        }
+                    };
+                    HashMap<String, String> medication = existingConditions.get(i);
+                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
+                    postBody.put("medication", medication);
+                    UpdateMedicalService services = new UpdateMedicalService(MDLiveAddMedications.this, null);
+                    services.doLoginRequest(medication.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
+                }
             }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

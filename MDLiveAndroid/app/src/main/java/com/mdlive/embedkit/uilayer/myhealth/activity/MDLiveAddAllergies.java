@@ -123,39 +123,42 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     @Override
     protected void updateConditionsOrAllergies() {
+        try {
+            pDialog.show();
+            if (existingConditions.size() == 0) {
+                pDialog.dismiss();
+                setDatas();
+                finish();
+            } else {
+                for (int i = 0; i < existingConditions.size(); i++) {
+                    NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
-        pDialog.show();
-        if(existingConditions.size() == 0){
-            pDialog.dismiss();
-            setDatas();
-            finish();
-        } else {
-            for (int i = 0; i < existingConditions.size(); i++) {
-                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            pDialog.dismiss();
+                            setDatas();
+                            finish();
+                        }
+                    };
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        pDialog.dismiss();
-                        setDatas();
-                        finish();
-                    }
-                };
+                    NetworkErrorListener errorListener = new NetworkErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            medicalCommonErrorResponseHandler(error);
+                        }
+                    };
 
-                NetworkErrorListener errorListener = new NetworkErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        medicalCommonErrorResponseHandler(error);
-                    }
-                };
+                    HashMap<String, String> allergy = existingConditions.get(i);
+                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
+                    postBody.put("allergy", allergy);
 
-                HashMap<String, String> allergy = existingConditions.get(i);
-                HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                postBody.put("allergy", allergy);
+                    AllergiesUpdateServices services = new AllergiesUpdateServices(MDLiveAddAllergies.this, null);
+                    services.updateAllergyRequest(allergy.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
 
-                AllergiesUpdateServices services = new AllergiesUpdateServices(MDLiveAddAllergies.this, null);
-                services.updateAllergyRequest(allergy.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
-
+                }
             }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

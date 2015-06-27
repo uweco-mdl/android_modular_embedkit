@@ -99,12 +99,12 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         existingConditions.clear();
         newConditions.clear();
         for(int i = 0;i<addConditionsLl.getChildCount();i++){
-
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
             if(conditionRl.getTag()==null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
-                    !(((EditText)conditionRl.getChildAt(0)).getText().toString().equalsIgnoreCase(""))){
+                    !(((EditText)conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())){
                 newConditions.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
-            } else if(conditionRl.getTag()!=null) {
+            } else if(conditionRl.getTag()!=null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
+                    !(((EditText)conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())) {
                 HashMap<String, String> items = new HashMap<String, String>();
                 items.put("id", conditionRl.getTag().toString());
                 items.put("name",((EditText)conditionRl.getChildAt(0)).getText().toString());
