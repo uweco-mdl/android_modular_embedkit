@@ -79,7 +79,7 @@ public class MDLiveSearchProvider extends Activity {
       //Load Services
         loadSearchproviderDetails();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
+        SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -158,6 +158,7 @@ public class MDLiveSearchProvider extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MDLiveSearchProvider.this, MDLiveLocation.class);
+                intent.putExtra("activitycaller", "searchprovider");
                 startActivity(intent);
             }
         });
@@ -194,20 +195,24 @@ public class MDLiveSearchProvider extends Activity {
         SearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Utils.isValidName(edtSearch.getText().toString())){
-                    Utils.showDialog(MDLiveSearchProvider.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
-                    return;
-                }
-                postParams.put("located_in",SavedLocation);
-                postParams.put("appointment_date",AppointmentTxtView.getText().toString());
-                postParams.put("gender",genderTxtView.getText().toString());
-                if(edtSearch.getText().toString().length()!=0){
-                    postParams.put("provider_name",edtSearch.getText().toString());
-                }
-                if(postParams.get("provider_type")==null){
-                    postParams.put("provider_type","1");
-                }
-                LoadFilterSearchServices();
+//                if (!edtSearch.getText().toString().isEmpty()) {
+                    if(!Utils.isValidName(edtSearch.getText().toString())){
+                        Utils.showDialog(MDLiveSearchProvider.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
+                        return;
+                    }
+                    postParams.put("located_in",SavedLocation);
+                    postParams.put("appointment_date",AppointmentTxtView.getText().toString());
+                    postParams.put("gender",genderTxtView.getText().toString());
+                    if(edtSearch.getText().toString().length()!=0){
+                        postParams.put("provider_name",edtSearch.getText().toString());
+                    }
+                    if(postParams.get("provider_type")==null){
+                        postParams.put("provider_type","1");
+                    }
+                    LoadFilterSearchServices();
+//                } else {
+//                    Utils.alert(pDialog,MDLiveSearchProvider.this,"Please select the Provider Name");
+//                }
             }
         });
         /**
@@ -239,7 +244,7 @@ public class MDLiveSearchProvider extends Activity {
     protected void onResume() {
         super.onResume();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
         LocationTxtView.setText(SavedLocation);
     }
 
