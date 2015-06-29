@@ -39,6 +39,7 @@ import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,6 +58,8 @@ public class MDLivePayment extends Activity {
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
+    private  double payableAmount=0.00;
+    private  String finalAmout="";
 
 
 
@@ -285,17 +288,22 @@ public class MDLivePayment extends Activity {
 
     private View.OnClickListener paynow_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
-            if(edtZipCode.getText().toString().length()!=0&&dateView.getText().toString().length()!=0){
-                if(Utils.validateZipCode(edtZipCode.getText().toString())){
-                    HostedPCI.loadUrl("javascript:tokenizeForm()");
-                }else{
-                    Utils.alert(pDialog,MDLivePayment.this,"Please enter a valid Zipcode.");
-                }
-
+            if(finalAmout.equals("0.00")){
+                doConfirmAppointment();
             }else{
-                Utils.alert(pDialog,MDLivePayment.this,"Please fill all the details");
+                if(edtZipCode.getText().toString().length()!=0&&dateView.getText().toString().length()!=0){
+                    if(Utils.validateZipCode(edtZipCode.getText().toString())){
+                        HostedPCI.loadUrl("javascript:tokenizeForm()");
+                    }else{
+                        Utils.alert(pDialog,MDLivePayment.this,"Please enter a valid Zipcode.");
+                    }
 
+                }else{
+                    Utils.alert(pDialog,MDLivePayment.this,"Please fill in all the required fields");
+
+                }
             }
+
 
 
 
@@ -317,7 +325,7 @@ public class MDLivePayment extends Activity {
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
     }
@@ -555,16 +563,20 @@ public class MDLivePayment extends Activity {
             JSONObject resObject=new JSONObject(response);
             if(resObject.has("discount_amount")){
                 String discountAmount=resObject.getString("discount_amount").replace("$","");
-                double payableAmount=Double.parseDouble(discountAmount.trim())-49.00;
-                if(payableAmount==1.0)
+                payableAmount=Double.parseDouble(discountAmount.trim())-49.00;
+
+                Log.e("Amount",payableAmount+"");
+                if(payableAmount==1.00)
                 {
                     payableAmount=0.00;
-                }else if(payableAmount==0.0)
-                {
-                    payableAmount=0.00;
+                    finalAmout=String.format( "%.2f",payableAmount);
+
+                  Log.e("Condition",finalAmout+"");
+                }else if(payableAmount==0.0){
+                    finalAmout=String.format( "%.2f",payableAmount);
                 }
                 Log.e("Payable AMOU","Discount Amount"+payableAmount);
-                ((TextView) findViewById(R.id.cost)).setText("Total :$"+payableAmount);
+                ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
             }
         }catch (Exception e){
             e.printStackTrace();
