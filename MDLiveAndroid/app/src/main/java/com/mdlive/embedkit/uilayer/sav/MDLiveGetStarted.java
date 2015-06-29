@@ -404,7 +404,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
-            if (!conditionsSearch.getAsJsonObject().isJsonNull()) {
+            if (conditionsSearch.size()!=0) {
                 for(int i=0;i<conditionsSearch.size();i++) {
                     strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
                     HashMap<String, String> test = new HashMap<String, String>();
@@ -541,7 +541,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            Log.d("FamilyMember response--->",responObj.toString());
+            Log.d("FmyMember response--->",responObj.toString());
             if (!responObj.isJsonNull()) {
                 JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
                 for(int i=0;i<conditionsSearch.size();i++) {
