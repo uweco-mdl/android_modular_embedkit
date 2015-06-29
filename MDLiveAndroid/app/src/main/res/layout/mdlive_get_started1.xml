@@ -149,7 +149,7 @@
                     android:textSize="18sp"
                     android:background="@color/transparent"
                     android:maxLength="15"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:text=""/>
                 <View style="@style/ViewStyle"
                     android:layout_marginTop="7dp"/>
