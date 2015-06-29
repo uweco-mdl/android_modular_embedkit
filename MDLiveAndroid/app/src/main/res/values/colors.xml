@@ -16,6 +16,7 @@
     <color name="headerStyle_color">#F7F6F5</color>
     <color name="green">#2A7DB6</color>
     <color name="red">#FA5858</color>
+    <color name="location_color">#35393d</color>
 
 //Reason Activity
     <item name="view" type="color">#E0D8D8</item>
@@ -36,6 +37,9 @@
     <color name="myTextPrimaryColor">#212121</color>
 
     <color name="myNavigationColor">#000</color>
+
+    <color name="transparent_native">#0FFF</color>
+    <color name="link_blue_native">#0645AD</color>
 
     <drawable name="pressed_gray">#0c000000</drawable>
 
