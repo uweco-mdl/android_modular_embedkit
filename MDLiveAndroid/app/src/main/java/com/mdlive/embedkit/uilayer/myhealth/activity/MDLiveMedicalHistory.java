@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -180,11 +179,9 @@ public class MDLiveMedicalHistory extends Activity {
     private void updateMedicalHistory(){
 
         pDialog.show();
-        Log.d("Response ---->", "Update Medical History");
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Response ---->", response.toString());
                 if (hasFemaleAttribute) {
                     updateFemaleAttributes();
                 } else {
@@ -201,7 +198,6 @@ public class MDLiveMedicalHistory extends Activity {
         try {
             boolean hasAllergies = false, hasConditions = false, hasMedications = false, hasProcedures = false;
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            Log.d("Health History", healthHistory.toString());
             hasAllergies = !(healthHistory.getJSONArray("allergies").length() == 0);
             hasConditions = !(healthHistory.getJSONArray("conditions").length() == 0);
             hasMedications = !(healthHistory.getJSONArray("medications").length() == 0);
@@ -216,7 +212,6 @@ public class MDLiveMedicalHistory extends Activity {
             MedicalHistoryUpdateServices services = new MedicalHistoryUpdateServices(MDLiveMedicalHistory.this, null);
             services.updateMedicalHistoryRequest(medhistoryMap, successCallBackListener, errorListener);
         }catch(Exception e){
-            Log.e("ResponseError ---->", e.getMessage());
             e.printStackTrace();
         }
 
@@ -424,8 +419,6 @@ public class MDLiveMedicalHistory extends Activity {
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
-                        + IMAGE_DIRECTORY_NAME + " directory");
                 return null;
             }
         }
@@ -552,12 +545,10 @@ public class MDLiveMedicalHistory extends Activity {
 
     private void uploadMedicalRecordService(String filePath) {
         pDialog.show();
-        Log.e("filePath---->", filePath);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 pDialog.dismiss();
-                Log.e("response--> upload", response.toString());
                 try {
                     if(response!= null){
                         if(response.has("message")){
@@ -614,7 +605,6 @@ public class MDLiveMedicalHistory extends Activity {
     public void handleDownloadRecordService(JSONObject response){
         pDialog.dismiss();
         ArrayList<HashMap<String, Object>> listDatas = new ArrayList<>();
-        Log.e("response--> download", response.toString());
         try {
             if(response != null && response.toString().contains("No Previous Documents Found")){
                 gridview.setVisibility(View.GONE);
@@ -818,10 +808,7 @@ public class MDLiveMedicalHistory extends Activity {
                     byte[] bytes = Base64.decode(response.getString("file_stream").getBytes("UTF-8"), Base64.DEFAULT);
                     //response.getString("file_stream").getBytes("UTF-8");
                     if(bytes == null){
-                        Log.e("Vt-->", "null");
                     }else{
-                        Log.e("Vt-->", "Not null");
-                        Log.e("photoId-->", photoId+"");
                         entry.etag = photoId+"";
                         entry.data = bytes;
                         cache.put(photoId+"", entry);
@@ -937,23 +924,19 @@ public class MDLiveMedicalHistory extends Activity {
             if (PediatricAgeCheckGroup_1.getCheckedRadioButtonId() < 0
                     || PediatricAgeCheckGroup_2.getCheckedRadioButtonId() < 0) {
                 isAllFieldsfilled = false;
-                Log.e("Failed In", "hasFemaleAttribute");
             }
         }
         if (((LinearLayout) findViewById(R.id.MyHealthConditionChoiceLl)).getVisibility() == View.VISIBLE &&
                 PreExisitingGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
-            Log.e("Failed In", "PreExisitingGroup");
         }
         if (((LinearLayout) findViewById(R.id.MyHealthMedicationsLl)).getVisibility() == View.VISIBLE &&
                 MedicationsGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
-            Log.e("Failed In", "MedicationsGroup");
         }
         if (((LinearLayout) findViewById(R.id.MyHealthAllergiesLl)).getVisibility() == View.VISIBLE &&
                 AllergiesGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
-            Log.e("Failed In", "MyHealthAllergiesLl");
         }
         if (isAllFieldsfilled) {
             btnSaveContinue.setBackgroundColor(Color.parseColor("#2b7db5"));
@@ -993,7 +976,6 @@ public class MDLiveMedicalHistory extends Activity {
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
         pDialog.dismiss();
-        Log.d("Error -->", error.getMessage());
         NetworkResponse networkResponse = error.networkResponse;
 /*
         try {
@@ -1050,7 +1032,6 @@ public class MDLiveMedicalHistory extends Activity {
     public boolean isUserFirstToApp(JSONArray historyPercentageArray){
         int havingHealth = -1, liftStyle = -1, pediatric = -1;
         try {
-            Log.e("hist-->", historyPercentageArray.toString());
             for(int i = 0; i < historyPercentageArray.length(); i++)
             {
                 JSONObject subObj = historyPercentageArray.getJSONObject(i);
@@ -1234,7 +1215,6 @@ public class MDLiveMedicalHistory extends Activity {
         try {
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
             int myHealthPercentage = historyPercentageArray.getJSONObject(0).getInt("health");
-            Log.e("conditions", myHealthPercentage + "");
             if (myHealthPercentage != 0 && !(healthHistory.getJSONArray("conditions").length() == 0)) {
                 findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
                 findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
@@ -1304,7 +1284,6 @@ public class MDLiveMedicalHistory extends Activity {
                     JSONObject pediatricObject = healthHistory.getJSONObject("pediatric");
                     JSONArray perdiatricQuestionArray = pediatricObject.getJSONArray("questions");
                     for (int i = 0; i < perdiatricQuestionArray.length(); i++) {
-                        Log.e("name", perdiatricQuestionArray.getJSONObject(i).getString("name"));
                         if (perdiatricQuestionArray.getJSONObject(i).getString("name").trim() != null &&
                                 !perdiatricQuestionArray.getJSONObject(i).getString("name").trim().equals("")) {
                             pediotricNames += perdiatricQuestionArray.getJSONObject(i).getString("name");
@@ -1316,7 +1295,6 @@ public class MDLiveMedicalHistory extends Activity {
 //                    ((TextView) findViewById(R.id.PediatricNameTv)).setText(pediotricNames);
                 }
             } else {
-                Log.e("myHealthPercentage", myHealthPercentage + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1433,7 +1411,6 @@ public class MDLiveMedicalHistory extends Activity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             pDialog.dismiss();
-            Log.d("Response", response.toString());
             jsonResponse = response.toString();
 
             if(response.has("message")){
