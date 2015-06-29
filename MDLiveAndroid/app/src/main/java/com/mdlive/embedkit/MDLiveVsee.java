@@ -68,9 +68,11 @@ public class MDLiveVsee extends Activity
                 }
             };
 
-        // For this example, just accept all calls.  VSeeVideoManager calls can only be made after initialization is complete.
-        // Also, set Call Join Waiting text message;
-        //
+        /** For this example, just accept all calls.  VSeeVideoManager calls can only be made
+        *   after initialization is complete.
+        *
+        * Also, set Call Join Waiting text message;
+        */
         if(simpleVidManagerReceiver == null)
             simpleVidManagerReceiver = new VSeeVideoManager.SimpleVSeeVideoManagerReceiver() {
                 @Override
@@ -79,7 +81,6 @@ public class MDLiveVsee extends Activity
                     Log.e("VSeeMainActivity", "onRemoveRemoteVideoView() got called.");
 
                     if (isLast) {
-                        Log.e("VSeeMainActivity", "onRemoveRemoteVideoView() ----- LAST Logout.");
                         // video call is over... end the call activity if it is open
                         VSeeServerConnection.instance().logout();
                         VSeeVideoManager.instance().finishVideoActivity();
@@ -105,10 +106,6 @@ public class MDLiveVsee extends Activity
             Toast.makeText(this, "ERROR!\n\n INVALID VSEE CREDENTIALS", Toast.LENGTH_LONG).show();
             return;
         }
-
-        // Get feedback about our login state.  Set the initial state and then get updates from
-        // VSeeServerConnection.
-        //
         updateLoginState(VSeeServerConnection.instance().getLoginState());
 
 
@@ -140,7 +137,6 @@ public class MDLiveVsee extends Activity
 			simpleServerConnectionReceiver = null;
 			simpleVidManagerReceiver = null;
             Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
-//        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("isReturning", true);
             startActivity(i);
             finish();
@@ -149,11 +145,6 @@ public class MDLiveVsee extends Activity
 
     @Override
     protected void onDestroy() {
-        /*
-        if(isServiceRunning(VSeeKitBackgroundService.class))
-            stopService(new Intent(this, VSeeKitBackgroundService.class));
-        */
-
         VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
 		simpleServerConnectionReceiver = null;
@@ -161,7 +152,7 @@ public class MDLiveVsee extends Activity
         Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
 //        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("isReturning", true);
-        startActivity(i);
+//        startActivity(i);
         super.onDestroy();
     }
 
@@ -206,25 +197,16 @@ public class MDLiveVsee extends Activity
             return;
         }
 
-        // On any change to login state, update the loginState text.
-        //
-        Log.d("VSeeExample", String.format("VSEE -- Got state change: %s", loginState.toString()));
-
         switch (loginState) {
             case TRY_LOGIN:
 
                 break;
 
             case LOGGED_IN:
-                Log.d("VSeeExample", "######### VSEE -- Got logged in!!! #########");
 
                 // make sure auto-accept is enabled even for cases of reconnection
                 VSeeServerConnection.instance().setAutoAccept(true);
-/*
-                CONSULTED = true;
-                startActivity(VSeeVideoManager.instance().getVideoLaunchIntent());
-*/
-                // start video session after brief delay (2.3s)
+
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -241,34 +223,6 @@ public class MDLiveVsee extends Activity
         }
     }
 
-    /*
-    protected void setMarqueeSpeed(TextView tv, float speed, boolean speedIsMultiplier) {
-
-        try {
-            Field f = tv.getClass().getDeclaredField("mMarquee");
-            f.setAccessible(true);
-
-            Object marquee = f.get(tv);
-            if (marquee != null) {
-
-                String scrollSpeedFieldName = "mScrollUnit";
-                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
-                    scrollSpeedFieldName = "mPixelsPerSecond";
-
-                Field mf = marquee.getClass().getDeclaredField(scrollSpeedFieldName);
-                mf.setAccessible(true);
-
-                float newSpeed = speed;
-                if (speedIsMultiplier)
-                    newSpeed = mf.getFloat(marquee) * speed;
-
-                mf.setFloat(marquee, newSpeed);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
 
     @Override
     public void onBackPressed() {

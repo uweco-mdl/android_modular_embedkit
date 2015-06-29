@@ -35,7 +35,7 @@ public class MDLivePendingVisits extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pending_visits);
-        initializeUI();
+        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
         getUserInformation();
 
     }
@@ -45,12 +45,11 @@ public class MDLivePendingVisits extends Activity {
      * This function will deals with all necessary UI Initialization.
      */
     public void initializeUI(){
-
-        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
         resumeBtn= (Button) findViewById(R.id.resumeConsultationBtn);
         txtPatientName = (TextView) findViewById(R.id.txtPendingPatientName);
         txtDoctorName= (TextView) findViewById(R.id.txtPendingDoctorName);
         txtReason= (TextView) findViewById(R.id.txtPendingReason);
+        txtAddress = (TextView) findViewById(R.id.txtPharmacyAddress);
         resumeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,10 +63,8 @@ public class MDLivePendingVisits extends Activity {
         });
 
         Bundle extras=getIntent().getExtras();
-        if(!extras.isEmpty()){
-            txtDoctorName.setText(extras.getString(extras.getString("DocName")));
-            txtReason.setText(extras.getString(extras.getString("Reason")));
-        }
+        txtDoctorName.setText(extras.getString(extras.getString("DocName","")));
+        txtReason.setText(extras.getString(extras.getString("Reason","")));
 
     }
 
@@ -83,8 +80,9 @@ public class MDLivePendingVisits extends Activity {
             @Override
             public void onResponse(Object response) {
                 Utils.hideProgressDialog(pDialog);
-                handleUserInfoResponse(response.toString());
+
                 Log.e("UserInfo Response", response.toString());
+                handleUserInfoResponse(response.toString());
             }
         };
         NetworkErrorListener errorListner=new NetworkErrorListener() {
@@ -117,10 +115,11 @@ public class MDLivePendingVisits extends Activity {
 
     public void handleUserInfoResponse(String response){
         try{
+            initializeUI();
             JSONObject resObject=new JSONObject(response);
             JSONObject personalObj=resObject.getJSONObject("personal_info");
             JSONObject notificationsObj=resObject.getJSONObject("notifications");
-            JSONObject pharmacyDetails=notificationsObj.getJSONObject("notifications");
+            JSONObject pharmacyDetails=notificationsObj.getJSONObject("pharmacy_details");
             txtPatientName.setText(personalObj.getString("first_name")+" "+personalObj.getString("last_name"));
             txtAddress.setText(pharmacyDetails.getString("store_name")+"\n"+pharmacyDetails.getString("address1")+","+pharmacyDetails.getString("address2")+"\n"+
                     pharmacyDetails.getString("city")+","+pharmacyDetails.getString("state")+" "+pharmacyDetails.getString("zipcode"));
