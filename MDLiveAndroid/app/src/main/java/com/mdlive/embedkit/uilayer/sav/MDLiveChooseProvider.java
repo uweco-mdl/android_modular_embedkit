@@ -358,8 +358,8 @@ public class MDLiveChooseProvider extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
-            dcotorOnCallHeader.setVisibility(View.VISIBLE);
-            doctorOnCallButtonClick();
+//            dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//            doctorOnCallButtonClick();
             String response=data.getStringExtra("Response");
             try{
                 JSONObject jobj=new JSONObject(response);
