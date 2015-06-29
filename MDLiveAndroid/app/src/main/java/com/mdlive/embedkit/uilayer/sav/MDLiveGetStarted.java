@@ -69,7 +69,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_get_started1);
+        setContentView(R.layout.mdlive_get_started);
         MDLiveConfig.setData();
         setRemoteUserId();
         pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
@@ -619,7 +619,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 } catch (Exception e) {
                 }
             } else {
-                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
+//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
             }
 
             dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;

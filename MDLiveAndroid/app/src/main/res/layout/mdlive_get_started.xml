@@ -114,7 +114,7 @@
                         style = "@style/GetStartedContentTxtStyle"
                         android:text=""
                         android:textSize="18sp"
-                        android:textColor="#35393d"
+                        android:textColor="@color/location_color"
                         android:id="@+id/locationTxt"
                         android:layout_alignParentLeft="true"
                         android:gravity="center_vertical"
@@ -147,7 +147,7 @@
                     android:id="@+id/telephoneTxt"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:background="@color/transparent"
+                    android:background="@color/transparent_native"
                     android:maxLength="15"
                     android:inputType="number"
                     android:text=""/>

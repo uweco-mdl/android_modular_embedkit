@@ -42,7 +42,7 @@
             android:gravity="left"
             android:textSize="18sp"
             android:id="@+id/preferStoretxt"
-            android:textColor="@color/link_blue"
+            android:textColor="@color/link_blue_native"
             android:visibility="gone"
             android:text="Preferred Store"
             />
