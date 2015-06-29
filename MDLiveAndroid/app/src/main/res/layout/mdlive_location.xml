@@ -30,8 +30,9 @@
             />
         <TextView
             android:id="@+id/txtApply"
-            style = "@style/GetStartedHeaderContentStyle"
+            style = "@style/endHeaderTextViewStyle"
             android:textColor="@color/white"
+            android:layout_marginLeft="50dp"
             android:textSize="18sp"
             android:visibility="visible"
             android:gravity="end|right|center"
