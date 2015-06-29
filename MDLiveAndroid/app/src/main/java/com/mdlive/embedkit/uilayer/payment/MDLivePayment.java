@@ -563,16 +563,16 @@ public class MDLivePayment extends Activity {
             JSONObject resObject=new JSONObject(response);
             if(resObject.has("discount_amount")){
                 String discountAmount=resObject.getString("discount_amount").replace("$","");
-                payableAmount=Double.parseDouble(discountAmount.trim())-49.00;
+                payableAmount=49.00-Double.parseDouble(discountAmount.trim());
 
                 Log.e("Amount",payableAmount+"");
-                if(payableAmount==1.00)
+                if(payableAmount<=0.00)
                 {
                     payableAmount=0.00;
                     finalAmout=String.format( "%.2f",payableAmount);
 
                   Log.e("Condition",finalAmout+"");
-                }else if(payableAmount==0.0){
+                }else{
                     finalAmout=String.format( "%.2f",payableAmount);
                 }
                 Log.e("Payable AMOU","Discount Amount"+payableAmount);

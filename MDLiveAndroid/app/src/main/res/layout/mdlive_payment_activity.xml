@@ -150,7 +150,7 @@
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
+                    android:layout_height="wrap_content"
                     android:layout_margin="25px"
                     android:id="@+id/LinearLayout5"
 
@@ -167,19 +167,6 @@
                         android:textColor="#6EAEDB"
                         />
 
-                  <!--  <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_alignRight="@+id/textView5"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Total : "
-                        android:textColor="@color/black"
-                        android:id="@+id/textView9"
-                        android:textSize="18sp"
-                        android:layout_marginLeft="320px"
-                        android:textStyle="bold"
-                       />-->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -207,7 +194,7 @@
                         android:id="@+id/paynow"
                         android:background="#2A7DB6"
                         android:textColor="#fff"
-                        android:layout_marginTop="40px"/>
+                        android:layout_marginTop="20dp"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
