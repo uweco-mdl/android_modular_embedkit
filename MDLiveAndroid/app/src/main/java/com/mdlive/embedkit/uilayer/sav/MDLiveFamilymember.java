@@ -319,10 +319,10 @@ public class MDLiveFamilymember extends Activity {
         day   = c.get(Calendar.DAY_OF_MONTH);
 
         // Show current date
-        selectedText.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(month + 1).append("/").append(day).append("/")
-                .append(year).append(" "));
+//        selectedText.setText(new StringBuilder()
+//                // Month is 0 based, just add 1
+//                .append(month + 1).append("/").append(day).append("/")
+//                .append(year).append(" "));
     }
 
 

@@ -187,9 +187,9 @@ public class MDLiveLogin extends Activity {
             JSONArray appointArray=resObj.getJSONArray("appointments");
             JSONArray onCallAppointmentArray=resObj.getJSONArray("oncall_appointments");
             if(appointArray.length()!=0){
-                String docName=appointArray.getJSONObject(1).getString("physician_name");
-                String appointmnetID=appointArray.getJSONObject(1).getString("id");
-                String chiefComplaint=appointArray.getJSONObject(1).getString("chief_complaint");
+                String docName=appointArray.getJSONObject(0).getString("physician_name");
+                String appointmnetID=appointArray.getJSONObject(0).getString("id");
+                String chiefComplaint=appointArray.getJSONObject(0).getString("chief_complaint");
                 Intent pendingVisitIntent = new Intent(getApplicationContext(), MDLivePendingVisits.class);
                 pendingVisitIntent.putExtra("DocName",docName); // The doctor name  from service on successful response
                 pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
@@ -204,7 +204,7 @@ public class MDLiveLogin extends Activity {
             }
 
         }catch (Exception e){
-
+                e.printStackTrace();
         }
 
     }

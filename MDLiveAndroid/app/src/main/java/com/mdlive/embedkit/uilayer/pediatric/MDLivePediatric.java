@@ -395,6 +395,8 @@ public class MDLivePediatric extends Activity {
             @Override
             public void onClick(View v) {
                 showListViewDialog(dietList,txtDietType,"Current Diet");
+                Utils.hideSoftKeyboard(MDLivePediatric.this);
+                touchHandlers();
 
             }
         });

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
+import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -29,7 +30,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by srinivasan_ka on 6/13/2015.
+ * THis is the waiting Room screen. The provider status is checked here. If the Provider status is
+ * true, then the VSeeActivity is called. In the returning user case, where the user is taken back
+ * to this swcreen by Vsee, if the provider status is false, MDLiveSummary activity  is called.
+ *
  */
 public class MDLiveWaitingRoom extends Activity{
 
@@ -43,7 +47,20 @@ public class MDLiveWaitingRoom extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
         isReturning = getIntent().getBooleanExtra("isReturning",false);
-        getProviderStatus();
+        if(isReturning){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    //getProviderStatus();
+                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                }
+            }, 10000);
+        } else {
+            getProviderStatus();
+        }
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,10 +154,11 @@ public class MDLiveWaitingRoom extends Activity{
     public void handleSuccessResponse(String response) {
         try{
             JSONObject resObj=new JSONObject(response);
+            Log.d("isReturning",isReturning + "" + " - Provider status" + resObj.getString("provider_status"));
             if(resObj.getString("provider_status").equals("true")){
                 getVSEECredentials();
             }else if(isReturning) {
-                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveLogin.class); //TODO : Implement THank YOu Screen and Replace it here
+                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
@@ -184,6 +202,7 @@ public class MDLiveWaitingRoom extends Activity{
                         i.putExtra("username",userName);
                         i.putExtra("password",password);
                         startActivity(i);
+                        finish();
                     }
                 }, 5000);
             }

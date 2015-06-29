@@ -161,7 +161,7 @@ public class MDLiveMedicalHistory extends Activity {
         btnSaveContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasFemaleAttribute) {
+                if (isNewUser) {
                     //First Time User
                     updateMedicalHistory();
                 } else {
@@ -180,6 +180,7 @@ public class MDLiveMedicalHistory extends Activity {
     private void updateMedicalHistory(){
 
         pDialog.show();
+        Log.d("Response ---->", "Update Medical History");
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -198,21 +199,24 @@ public class MDLiveMedicalHistory extends Activity {
             }
         };
         try {
-            boolean hasAllergies, hasConditions, hasMedications, hasProcedures = false;
+            boolean hasAllergies = false, hasConditions = false, hasMedications = false, hasProcedures = false;
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            hasAllergies = healthHistory.getJSONArray("allergies").length() == 0;
-            hasConditions = healthHistory.getJSONArray("conditions").length() == 0;
-            hasMedications = healthHistory.getJSONArray("medications").length() == 0;
+            Log.d("Health History", healthHistory.toString());
+            hasAllergies = !(healthHistory.getJSONArray("allergies").length() == 0);
+            hasConditions = !(healthHistory.getJSONArray("conditions").length() == 0);
+            hasMedications = !(healthHistory.getJSONArray("medications").length() == 0);
             HashMap<String,String> updateMap = new HashMap<String,String>();
-            updateMap.put("Do you have any health conditions?", hasConditions + "");
-            updateMap.put("Are you currently taking any medication?", hasMedications + "");
-            updateMap.put("Do you have any Allergies or Drug Sensitivities?", hasAllergies + "");
-            updateMap.put("Have you ever had any surgeries or medical procedures?", hasProcedures + "");
+            updateMap.put("Do you have any health conditions?", hasConditions?"Yes":"No");
+            updateMap.put("Are you currently taking any medication?", hasMedications?"Yes":"No");
+            updateMap.put("Do you have any Allergies or Drug Sensitivities?", hasAllergies?"Yes":"No");
+            updateMap.put("Have you ever had any surgeries or medical procedures?", hasProcedures?"Yes":"No");
             HashMap<String, HashMap<String,String>> medhistoryMap = new HashMap<String, HashMap<String,String>>();
             medhistoryMap.put("medical_history",updateMap);
+
             MedicalHistoryUpdateServices services = new MedicalHistoryUpdateServices(MDLiveMedicalHistory.this, null);
             services.updateMedicalHistoryRequest(medhistoryMap, successCallBackListener, errorListener);
         }catch(Exception e){
+            Log.e("ResponseError ---->", e.getMessage());
             e.printStackTrace();
         }
 
@@ -989,6 +993,7 @@ public class MDLiveMedicalHistory extends Activity {
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
         pDialog.dismiss();
+        Log.d("Error -->", error.getMessage());
         NetworkResponse networkResponse = error.networkResponse;
 /*
         try {
@@ -1008,7 +1013,6 @@ public class MDLiveMedicalHistory extends Activity {
                 message = "Page Not Found";
             }
             Utils.showDialog(MDLiveMedicalHistory.this, "Error",
-                    "Status Code : " + error.networkResponse.statusCode +"\n"+
                             "Server Response : " + message);
 
         }

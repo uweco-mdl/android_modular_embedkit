@@ -148,13 +148,16 @@ public class MDLiveChooseProvider extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             MDLiveChooseProvider.this.finish();
+
                         }
                     };
+
                     JSONObject obj = new JSONObject(error.toString());
                     Utils.showDialog(MDLiveChooseProvider.this,MDLiveChooseProvider.this.getResources().getString(R.string.app_name),obj.getString("error"),MDLiveChooseProvider.this.getResources().getString(R.string.ok),null,positiveOnclickListener,null);
                 }catch(Exception e){
                     Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
-
+                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                    doctorOnCallButtonClick();
                     e.printStackTrace();
                 }
             }};
@@ -172,17 +175,35 @@ public class MDLiveChooseProvider extends Activity {
     private void handleSuccessResponse(String response) {
         try {
             pDialog.dismiss();
-            dcotorOnCallHeader.setVisibility(View.VISIBLE);
-            doctorOnCallButtonClick();
+//            dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//            doctorOnCallButtonClick();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
             String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
             //Setting the Doctor On Call Header
-//            setHeaderContent(StrDoctorOnCall);
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
+            if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
+                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                doctorOnCallButtonClick();
+            }else{
+                setHeaderContent(StrDoctorOnCall);
+                setBodyContent(responArray);
+            }
+
+          /*  if(responArray.getAsString().equals(StringConstants.NO_PROVIDERS)) {
+//                Log.e("Choose Provider Response Array",responArray.getAsString());
+                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                doctorOnCallButtonClick();
+            }
+//            else
+            {
+                setHeaderContent(StrDoctorOnCall);
+                setBodyContent(responArray);
+            }*/
+            //{"doctor_on_call":false,"physicians":["No Providers listed with given criteria"]}
             //Setting the Doctor List Body
-            setBodyContent(responArray);
+
 
         }catch(Exception e){
             e.printStackTrace();
@@ -213,7 +234,6 @@ public class MDLiveChooseProvider extends Activity {
      *  the Particular doctor will be displayed.
      *
      */
-
     private void setBodyContent(JsonArray responArray) {
         for(int i=0;i<responArray.size();i++) {
             patientName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
@@ -239,7 +259,7 @@ public class MDLiveChooseProvider extends Activity {
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
-            map.put("next_availability",getDateCurrentTimeZone(StrDate));
+            //map.put("next_availability",getDateCurrentTimeZone(StrDate));
             ProviderListMap.add(map);
         }
     }
@@ -263,7 +283,7 @@ public class MDLiveChooseProvider extends Activity {
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
-            map.put("next_availability",getDateCurrentTimeZone(StrDate));
+            //map.put("next_availability",getDateCurrentTimeZone(StrDate));
             ProviderListMap.add(map);
         }
     }
@@ -338,17 +358,20 @@ public class MDLiveChooseProvider extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==1){
-            dcotorOnCallHeader.setVisibility(View.VISIBLE);
-            doctorOnCallButtonClick();
+//            dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//            doctorOnCallButtonClick();
             String response=data.getStringExtra("Response");
             try{
                 JSONObject jobj=new JSONObject(response);
                 JSONArray jArray=jobj.getJSONArray("physicians");
+                Log.e("Choose Provider Response Array",jArray.get(0).toString());
                 if(jArray.get(0).toString().equals(StringConstants.NO_PROVIDERS)){
                     baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
                     listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
                     Utils.alert(pDialog,MDLiveChooseProvider.this,jArray.get(0).toString());
+                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                    doctorOnCallButtonClick();
 
                 }else{
                     ProviderListMap.clear();

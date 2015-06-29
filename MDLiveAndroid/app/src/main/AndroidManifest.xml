@@ -171,6 +171,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.login.MDLiveSummary"
+            android:screenOrientation="portrait"></activity>
+
         <!--Medical History Allergies-->
 
 

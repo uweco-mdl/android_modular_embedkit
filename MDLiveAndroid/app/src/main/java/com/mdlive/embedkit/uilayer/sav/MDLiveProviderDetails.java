@@ -40,6 +40,7 @@ public class MDLiveProviderDetails extends Activity{
     public String DoctorId;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class MDLiveProviderDetails extends Activity{
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
+        detailsLl = (LinearLayout) findViewById(R.id.detailsLl);
     /**
      * The back image will pull you back to the Previous activity
      * The tap button will pull you  to the Reason for visit Screen.
@@ -129,6 +131,8 @@ public class MDLiveProviderDetails extends Activity{
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 pDialog.dismiss();
+                tapSeetheDoctorTxt.setClickable(false);
+                detailsLl.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -158,7 +162,6 @@ public class MDLiveProviderDetails extends Activity{
         try {
             pDialog.dismiss();
             //Fetch Data From the Services
-
             Log.e("details-->",response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());

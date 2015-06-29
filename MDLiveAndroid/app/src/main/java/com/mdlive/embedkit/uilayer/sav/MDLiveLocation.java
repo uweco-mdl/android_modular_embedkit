@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +68,7 @@ public class MDLiveLocation extends Activity {
                 showListViewDialog(LongNameList, (TextView) v);
             }
         });
+        Utils.checkGpsLocation(MDLiveLocation.this);
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,7 +121,7 @@ public class MDLiveLocation extends Activity {
                         if(Utils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
                         }else{
-                            Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
+                            Utils.alert(pDialog,MDLiveLocation.this,"Please enter a valid Zip Code");
                         }
                     }else{
                         SaveZipCodeCity(selectedCity);
@@ -169,6 +169,8 @@ public class MDLiveLocation extends Activity {
         LongNameList = Arrays.asList(getResources().getStringArray(R.array.stateName));
         ShortNameList = Arrays.asList(getResources().getStringArray(R.array.stateCode));
     }
+
+
 
     /*public void validateZipCode(String zipCode){
         String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
@@ -382,9 +384,18 @@ public class MDLiveLocation extends Activity {
     public void SaveZipCodeCity(String ZipCodeCity) {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
+        String activityCaller     = getIntent().getStringExtra("activitycaller");
+        if(activityCaller.equals("getstarted")){
         editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
         editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
-        editor.commit();
+        }
+        else
+        {
+            editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+            editor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, longNameText);
+
+        }
+    editor.commit();
     }
 
     /**
