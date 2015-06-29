@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
@@ -63,7 +64,7 @@ public class MDLivePharmacyChange extends Activity {
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
     private int keyDel=0;
-    private String errorMesssage = "No Pharmacies listed in your location!";
+    private String errorMesssage = "No Pharmacies listed in your location.";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class MDLivePharmacyChange extends Activity {
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
-        adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, suggestionList);
+        adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
         pharmacy_search_name.setThreshold(3);
         pharmacy_search_name.setAdapter(adapter);
         zipcodeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -186,22 +187,22 @@ public class MDLivePharmacyChange extends Activity {
             if(Utils.validateZipCode(zipcodeText.getText().toString())){
                 if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
                     errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
-                         +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state";
+                         +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state.";
                 }else{
-                    errorMesssage = "No Pharmacies listed in your location";
+                    errorMesssage = "No Pharmacies listed in your location.";
                 }
             }else{
-                return "Please enter a valid Zipcode!";
+                return "Please enter a valid Zipcode.";
             }
         }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("Select State") && !chooseState.getText().toString().trim().equals("")){
             if(cityText.getText() == null || cityText.getText().toString().trim().equals("")){
-                return "Please input City!";
+                return "Please input City.";
             }
             if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
                 errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                         +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
             }else{
-                errorMesssage = "No Pharmacies listed in your location";
+                errorMesssage = "No Pharmacies listed in your location.";
             }
         }else if(cityText.getText()!=null && !cityText.getText().toString().trim().equals("")){
             if(chooseState.getText() == null || chooseState.getText().toString().equals("Select State") || chooseState.getText().toString().trim().equals("")){
@@ -211,12 +212,12 @@ public class MDLivePharmacyChange extends Activity {
                 errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                         +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
             }else{
-                errorMesssage = "No Pharmacies listed in your location";
+                errorMesssage = "No Pharmacies listed in your location.";
             }
         }else if( (TextUtils.isEmpty(zipcodeText.getText().toString()))
                 && ((TextUtils.isEmpty(chooseState.getText().toString())
                 || chooseState.getText().toString().equals("Select State")))){
-            return "Please choose any state/zipcode to proceed search!";
+            return "Please choose any state/zipcode to proceed search.";
         }
         return null;
     }
@@ -236,7 +237,7 @@ public class MDLivePharmacyChange extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (start > 2) {
+                if (s != null && s.length() > 3) {
                     addSearchTextHistory(s.toString());
                 }
             }
@@ -316,13 +317,44 @@ public class MDLivePharmacyChange extends Activity {
             for (int i = 0; i < jarray.length(); i++) {
                 suggestionList.add(jarray.getString(i));
             }
-            adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, suggestionList);
+            adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
             pharmacy_search_name.setThreshold(3);
             pharmacy_search_name.setAdapter(adapter);
             pharmacy_search_name.showDropDown();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     *This function creates an array adapter for the AutoCompletionTextView. Once the list item is
+     * clicked, the text is set to the edit text and the autocompletion list is dismissed.
+     *
+     *
+     * @param atv :: The AutoCompletionTextView
+     * @param conditionList :: The conditions array list
+     * @return The array adapter
+     */
+    private ArrayAdapter<String> getAutoCompletionArrayAdapter(final AutoCompleteTextView atv, final ArrayList<String> conditionList) {
+        return new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, conditionList) {
+            @Override
+            public View getView(int position,View convertView, ViewGroup parent) {
+                View view = super.getView(position,convertView, parent);
+                parent.setBackgroundColor(Color.WHITE);
+                final TextView text = (TextView) view.findViewById(android.R.id.text1);
+                text.setTextColor(Color.BLACK);
+                text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        atv.setText(text.getText().toString());
+                        atv.dismissDropDown();
+                        atv.setAdapter(null);
+                    }
+                });
+                return view;
+            }
+        };
     }
 
     /**

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -29,6 +30,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -41,6 +44,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -54,10 +58,12 @@ import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryUpdateServic
 import com.mdlive.unifiedmiddleware.services.myhealth.UpdateFemaleAttributeServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
+
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -371,7 +377,7 @@ public class MDLiveMedicalHistory extends Activity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // set the video image quality to high
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0); // set the video image quality to high
         // start the image capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
@@ -440,9 +446,9 @@ public class MDLiveMedicalHistory extends Activity {
                 if(fileUri != null){
                     File file = new File(fileUri.getPath());
                     if(file.exists()){
-                        int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
-                        Log.e("Size of File..", file_size+"");
-                        //uploadMedicalRecordService(fileUri.getPath());
+                        //int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                        //Log.e("Size of File..", file_size+"");
+                        uploadMedicalRecordService(fileUri.getPath());
                     }
                 }
             } else {
@@ -458,7 +464,7 @@ public class MDLiveMedicalHistory extends Activity {
                 try {
                     fileUri = data.getData();
                     if(fileUri != null)
-                        uploadMedicalRecordService(fileUri.getPath());
+                        uploadMedicalRecordService(getPath(fileUri));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -489,6 +495,30 @@ public class MDLiveMedicalHistory extends Activity {
             }
         }
     }
+
+    /**
+     * helper to retrieve the path of an image URI
+     */
+    public String getPath(Uri uri) {
+        // just some safety built in
+        if( uri == null ) {
+            return null;
+        }
+        // try to retrieve the image from the media store first
+        // this will only work for images selected from gallery
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if( cursor != null ){
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        // this is our fallback here
+        return uri.getPath();
+    }
+
+
 
     @Override
     protected void onResume() {
@@ -584,7 +614,7 @@ public class MDLiveMedicalHistory extends Activity {
         try {
             if(response != null && response.toString().contains("No Previous Documents Found")){
                 gridview.setVisibility(View.GONE);
-            }else if(response.has("records")){
+            }else if(response != null && response.has("records")){
                 listDatas.clear();
                 JSONArray recordsArray = response.getJSONArray("records");
                 for(int i = 0; i<recordsArray.length(); i++){
@@ -779,6 +809,19 @@ public class MDLiveMedicalHistory extends Activity {
         try {
             if(response != null){
                 if(response.has("message") && response.getString("message").equals("Document found")){
+                    Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveMedicalHistory.this).getCache();
+                    Cache.Entry entry = new Cache.Entry();
+                    byte[] bytes = Base64.decode(response.getString("file_stream").getBytes("UTF-8"), Base64.DEFAULT);
+                    //response.getString("file_stream").getBytes("UTF-8");
+                    if(bytes == null){
+                        Log.e("Vt-->", "null");
+                    }else{
+                        Log.e("Vt-->", "Not null");
+                        Log.e("photoId-->", photoId+"");
+                        entry.etag = photoId+"";
+                        entry.data = bytes;
+                        cache.put(photoId+"", entry);
+                    }
                     Utils.mphotoList.put(photoId, response.getString("file_stream"));
                 }
             }

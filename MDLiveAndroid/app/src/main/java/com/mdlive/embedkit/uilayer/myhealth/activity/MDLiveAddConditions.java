@@ -211,7 +211,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                while (addConditionsLl.getChildCount() < 3) {
+                if (addConditionsLl.getChildCount() < 3) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();

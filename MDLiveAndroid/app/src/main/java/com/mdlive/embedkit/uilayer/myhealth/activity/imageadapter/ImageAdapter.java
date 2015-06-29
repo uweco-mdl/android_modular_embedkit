@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMedicalHistory;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,12 +75,26 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
         if(myPhotosList != null && !TextUtils.isEmpty((String)myPhotosList.get(position).get("download_link"))){
-
-            if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
-                imageView.setImageBitmap(decodeSampledBitmapFromResource(Base64.decode(Utils.mphotoList.get(myPhotosList.get(position).get("id")), Base64.DEFAULT)));
-            }else{
+            //if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
+            if(ApplicationController.getInstance().getBitmapLruCache() != null &&
+                    ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id")+"") == null){
+                if(ApplicationController.getInstance().getRequestQueue(activity).getCache().get(myPhotosList.get(position).get("id")+"") != null){
+                    ApplicationController.getInstance().getBitmapLruCache().put(myPhotosList.get(position).get("id")+"",
+                            decodeSampledBitmapFromResource(ApplicationController.getInstance().getRequestQueue(activity).getCache().get(myPhotosList.get(position).get("id")+"").data));
+                    if(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + "") == null){
+                        Log.e("Image Bitmap is null", "true");
+                    }else{
+                        Log.e("Image Bitmap is null", "false");
+                    }
+                    imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
+                }
+            }else if(ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id")+"") != null){
+                imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id")+""));
+            }
+            else{
                 imageView.setImageResource(R.drawable.account);
             }
+
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,22 +114,31 @@ public class ImageAdapter extends BaseAdapter {
 
     //Load a bitmap from a resource with a target size
     static Bitmap decodeSampledBitmapFromResource(byte[] decodedString) {
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+        try {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = 8;
+            options.inScaled = false;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+            if(b != null){
+                // Calculate inSampleSize
+                options.inSampleSize = calculateInSampleSize(options, b.getWidth(), b.getHeight());
+                // Decode bitmap with inSampleSize set
+                b.recycle();
+            }
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+            /*if(decodedString.length/1024 < 10){
+                return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+            }else{
+                return null;
+            }*/
 
-        options.inJustDecodeBounds = false;
-
-        options.inSampleSize = 12;
-
-        Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
-
-        if(b != null){
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, b.getWidth(), b.getHeight());
-            // Decode bitmap with inSampleSize set
-            b.recycle();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+        return null;
     }
 
     //Given the bitmap size and View size calculate a subsampling size (powers of 2)

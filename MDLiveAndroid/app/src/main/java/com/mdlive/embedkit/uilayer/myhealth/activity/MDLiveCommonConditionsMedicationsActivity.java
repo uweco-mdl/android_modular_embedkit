@@ -56,7 +56,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION};
     protected TYPE_CONSTANT type;
     public String conditionsText = "";
-
+    public static boolean isNewAdded = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,6 +214,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     private void initialiseSingleConditionView(final View singleConditionView, final LinearLayout addConditionsLl, int position, HashMap<String, String> conditionDetails) {
         final EditText conditonEt = (EditText) singleConditionView.findViewById(R.id.ConditionEt);
         final ImageView deleteView = (ImageView) singleConditionView.findViewById(R.id.DeleteConditionBtn);
+
         createSingleConditionAllergiesViews(position, conditonEt, deleteView, conditionDetails);
 
         conditonEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -222,7 +223,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 return conditonEditTextEditorActon(actionId, addConditionsLl, conditonEt);
             }
         });
-        conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt, deleteView));
+        conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt,addConditionsLl, deleteView));
 
         conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, deleteView));
         deleteView.setOnClickListener(new View.OnClickListener() {
@@ -282,7 +283,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
      * @param deleteView :: The Delete Button View
      * @return The TextWatcher object
      */
-    private TextWatcher getEditTextWatcher(final EditText conditonEt, final ImageView deleteView) {
+    private TextWatcher getEditTextWatcher(final EditText conditonEt, final LinearLayout addConditionsLl,  final ImageView deleteView) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -300,8 +301,15 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 } else {
                     deleteView.setVisibility(View.VISIBLE);
                 }
-
                 if(text.length()>2){
+                    if((((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId()){
+                        addBlankConditionOrAllergy();
+                        EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
+                        conditonEt.setNextFocusDownId(newEt.getId());
+                        newEt.requestFocus();
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(newEt,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    }
                     getAutoCompleteData((AutoCompleteTextView)conditonEt,text);
                 }
             }
@@ -415,7 +423,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "Error",
                     "Status Code : " + error.networkResponse.statusCode +"\n"+
                             "Server Response : " + message);
-
         }
 
     }
