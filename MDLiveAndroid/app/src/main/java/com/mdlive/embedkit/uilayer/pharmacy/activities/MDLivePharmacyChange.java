@@ -299,7 +299,7 @@ public class MDLivePharmacyChange extends Activity {
         //                Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
-        SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), null);
+        SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
         services.doSuggestionRequest(searchText, responseListener, errorListener);
     }
 

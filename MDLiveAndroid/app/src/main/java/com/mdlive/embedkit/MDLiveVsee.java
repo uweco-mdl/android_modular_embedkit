@@ -93,8 +93,6 @@ public class MDLiveVsee extends Activity
         if (extras != null) {
             String uid = extras.getString("username");
             String pass = extras.getString("password");
-
-
             MDLiveVseeApplication.setCredentials(uid, pass);
 
             VSeeServerConnection.instance().loginUser(uid, pass);

@@ -132,7 +132,7 @@ public class MDLiveReasonForVisit extends Activity {
                     }
                 }
             }};
-        ReasonForVisitServices services = new ReasonForVisitServices(MDLiveReasonForVisit.this, null);
+        ReasonForVisitServices services = new ReasonForVisitServices(MDLiveReasonForVisit.this, pDialog);
         services.getReasonList(successCallBackListener, errorListener);
     }
 

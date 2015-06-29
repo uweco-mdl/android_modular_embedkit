@@ -49,7 +49,7 @@ import static java.util.Calendar.MONTH;
 
 
 /**
- * Created by sudha_s on 6/1/2015.
+ * This class handles the Add FamilyMember related functionalities implementation.
  */
 public class MDLiveFamilymember extends Activity {
     private ProgressDialog pDialog;
@@ -273,7 +273,7 @@ public class MDLiveFamilymember extends Activity {
             }
         };
 
-        AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, null);
+        AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, pDialog);
         addChildServices.getChildDependentsr(array, responseListener, errorListener);
     }
 
@@ -317,12 +317,6 @@ public class MDLiveFamilymember extends Activity {
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day   = c.get(Calendar.DAY_OF_MONTH);
-
-        // Show current date
-//        selectedText.setText(new StringBuilder()
-//                // Month is 0 based, just add 1
-//                .append(month + 1).append("/").append(day).append("/")
-//                .append(year).append(" "));
     }
 
 

@@ -284,7 +284,7 @@ public class MDLiveSearchProvider extends Activity {
                     }
                 }
             }};
-        SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
+        SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, pDialog);
         services.getsearchdetails(successCallBackListener, errorListener);
     }
 

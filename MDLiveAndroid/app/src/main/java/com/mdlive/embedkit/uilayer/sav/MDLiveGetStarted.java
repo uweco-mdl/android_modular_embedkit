@@ -477,7 +477,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     }
                 }
             }};
-        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
+        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, pDialog);
         services.getUserBasicInfoRequest("",successCallBackListener, errorListener);
     }
     /**
@@ -519,7 +519,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     }
                 }
             }};
-        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
+        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, pDialog);
         services.getUserBasicInfoRequest(depenedentId,successCallBackListener, errorListener);
     }
 

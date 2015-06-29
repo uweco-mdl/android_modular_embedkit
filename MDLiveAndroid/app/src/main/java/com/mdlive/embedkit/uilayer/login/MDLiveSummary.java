@@ -69,7 +69,7 @@ public class MDLiveSummary extends Activity {
                 }
             }
         };
-        SummaryService summaryService = new SummaryService(this,null );
+        SummaryService summaryService = new SummaryService(this,pDialog );
         summaryService.sendRating(rating,successListener,errorListner );
     }
 

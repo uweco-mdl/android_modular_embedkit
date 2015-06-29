@@ -166,7 +166,7 @@ public class MDLivePharmacyDetails extends FragmentActivity {
 
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
         gsonMap.put("pharmacy_id", receivedBundle.getInt("pharmacy_id"));
-        SetPharmacyService services = new SetPharmacyService(MDLivePharmacyDetails.this, null);
+        SetPharmacyService services = new SetPharmacyService(MDLivePharmacyDetails.this, pDialog);
         services.doPharmacyResultsRequest(new Gson().toJson(gsonMap),String.valueOf(receivedBundle.getInt("pharmacy_id")),
                         responseListener, errorListener);
     }

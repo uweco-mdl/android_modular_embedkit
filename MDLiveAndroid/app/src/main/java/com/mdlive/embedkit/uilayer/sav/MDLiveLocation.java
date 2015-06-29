@@ -230,7 +230,7 @@ public class MDLiveLocation extends Activity {
             }
         };
 
-        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveLocation.this, null);
+        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveLocation.this, pDialog);
         currentlocationservices.getCurrentLocation(latitude, longitude, responseListener, errorListener);
     }
 
@@ -274,7 +274,7 @@ public class MDLiveLocation extends Activity {
             }
         };
 
-        ZipCodeServices zipcodeservices = new ZipCodeServices(MDLiveLocation.this, null);
+        ZipCodeServices zipcodeservices = new ZipCodeServices(MDLiveLocation.this, pDialog);
         zipcodeservices.getZipCodeServices(EditTextValue, responseListener, errorListener);
     }
 

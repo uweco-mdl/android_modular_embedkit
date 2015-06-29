@@ -175,7 +175,7 @@ public class MDLivePharmacy extends FragmentActivity {
         params.put("alternate_visit_option", "alternate_visit_option");
         params.put("do_you_have_primary_care_physician", "No");
         Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, null);
+        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, pDialog);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
@@ -203,7 +203,7 @@ public class MDLivePharmacy extends FragmentActivity {
                 Utils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
             }
         };
-        PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+        PharmacyService services = new PharmacyService(MDLivePharmacy.this, pDialog);
         services.doMyPharmacyRequest(responseListener, errorListener);
     }
 

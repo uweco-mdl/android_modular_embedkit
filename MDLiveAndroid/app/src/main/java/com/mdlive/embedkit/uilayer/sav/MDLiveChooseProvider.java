@@ -161,7 +161,7 @@ public class MDLiveChooseProvider extends Activity {
                     e.printStackTrace();
                 }
             }};
-        ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, null);
+        ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"), "3", successCallBackListener, errorListener);
     }

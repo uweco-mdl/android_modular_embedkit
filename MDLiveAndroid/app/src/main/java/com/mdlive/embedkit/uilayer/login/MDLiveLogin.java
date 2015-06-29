@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
@@ -48,6 +49,7 @@ public class MDLiveLogin extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_login);
+        MDLiveConfig.setData();
         usernameEt = (EditText)findViewById(R.id.UserNameEt);
         passwordEt = (EditText)findViewById(R.id.PasswordEt);
         loginBtn = (Button)findViewById(R.id.LoginBtn);
@@ -109,7 +111,7 @@ public class MDLiveLogin extends Activity {
                             }
                         }};
 
-                    LoginServices services = new LoginServices(MDLiveLogin.this, null);
+                    LoginServices services = new LoginServices(MDLiveLogin.this, pDialog);
                     services.doLoginRequest(username,password, responseListener,errorListener);
                 }
             }
@@ -126,12 +128,6 @@ public class MDLiveLogin extends Activity {
                 passwordEt.setText("");
                 token=response.getString("token");
                 getPendingAppointments();
-//                Intent i = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
-               /* Intent i = new Intent(getApplicationContext(), MDLiveGetStarted.class);
-                i.putExtra("token",response.getString("token")); // The token received from service on successful login
-                startActivity(i);
-                finish();*/
-
             } else {
 //                displayMessage(response.has("token")?response.getString("token"):localisationHelper.getLocalizedStringFromPrefs(this, "invalid_credentials"));
                 Utils.alert(pDialog,MDLiveLogin.this,"invalid_credentials");
@@ -181,6 +177,14 @@ public class MDLiveLogin extends Activity {
         getApponitmentsService.getUserPendingHistory(successListener,errorListner);
     }
 
+    /**
+     *
+     * THis function handles the pending visits if any. If there is any pending visits,
+     * the user will be taken to PEndingVisits screen, else the user will ber taken to
+     * getstarted screen.
+     *
+     * @param response
+     */
     public void handlePendingResponse(String response){
         try{
             JSONObject resObj=new JSONObject(response);
