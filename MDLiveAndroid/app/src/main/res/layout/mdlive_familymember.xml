@@ -43,7 +43,6 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_marginStart="19dp"
-
             android:id="@+id/patientLl"
             style="@style/WagLinearLayoutStyle">
             <TextView
