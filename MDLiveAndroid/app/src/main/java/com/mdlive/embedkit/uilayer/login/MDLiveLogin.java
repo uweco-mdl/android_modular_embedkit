@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -201,7 +202,7 @@ public class MDLiveLogin extends Activity {
                 startActivity(pendingVisitIntent);
                 finish();
             }else {
-                Intent i = new Intent(getApplicationContext(), MDLiveGetStarted.class);
+                Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
                 i.putExtra("token",token); // The token received from service on successful login
                 startActivity(i);
                 finish();

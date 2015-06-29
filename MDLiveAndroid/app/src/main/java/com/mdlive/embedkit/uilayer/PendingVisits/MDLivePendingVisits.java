@@ -63,8 +63,8 @@ public class MDLivePendingVisits extends Activity {
         });
 
         Bundle extras=getIntent().getExtras();
-        txtDoctorName.setText(extras.getString(extras.getString("DocName","")));
-        txtReason.setText(extras.getString(extras.getString("Reason","")));
+        txtDoctorName.setText(extras.getString("DocName",""));
+        txtReason.setText(extras.getString("Reason",""));
 
     }
 

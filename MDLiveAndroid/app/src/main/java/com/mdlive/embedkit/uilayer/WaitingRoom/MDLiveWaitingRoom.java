@@ -155,14 +155,14 @@ public class MDLiveWaitingRoom extends Activity{
         try{
             JSONObject resObj=new JSONObject(response);
             Log.d("isReturning",isReturning + "" + " - Provider status" + resObj.getString("provider_status"));
-            if(resObj.getString("provider_status").equals("true")){
-                getVSEECredentials();
-            }else if(isReturning) {
+            if(isReturning) {
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
-            }else{
+            }else if(resObj.getString("provider_status").equals("true")){
+                getVSEECredentials();
+            }else {
                 ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
