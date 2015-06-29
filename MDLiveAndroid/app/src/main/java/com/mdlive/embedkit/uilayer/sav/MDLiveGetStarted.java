@@ -118,8 +118,8 @@ public class MDLiveGetStarted extends FragmentActivity{
     protected void onResume() {
         super.onResume();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FLORIDA");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "");
+        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FL");
         locationTxt.setText(longNameLocation);
     }
     /**
@@ -415,7 +415,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     PatientList.add(test);
                 }
             } else {
-                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
+//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
 
             }
 
@@ -464,7 +464,8 @@ public class MDLiveGetStarted extends FragmentActivity{
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
+                Utils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+               /* if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -475,9 +476,9 @@ public class MDLiveGetStarted extends FragmentActivity{
                         pDialog.dismiss();
                         Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
                     }
-                }
+                }*/
             }};
-        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, pDialog);
+        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest("",successCallBackListener, errorListener);
     }
     /**
@@ -519,7 +520,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     }
                 }
             }};
-        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, pDialog);
+        UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest(depenedentId,successCallBackListener, errorListener);
     }
 
@@ -542,7 +543,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             Log.d("FmyMember response--->",responObj.toString());
-            if (!responObj.isJsonNull()) {
+//            if (!responObj.isJsonNull()) {
                 JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
                 for(int i=0;i<conditionsSearch.size();i++) {
                     strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
@@ -553,11 +554,12 @@ public class MDLiveGetStarted extends FragmentActivity{
                     Log.e("dependent list", strPatientName);
                     dependentList.add(strPatientName);
                     PatientList.add(test);
-    //                patientName.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
+                    //                patientName.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
                 }
-            } else {
-                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
-            }
+//            }
+//            else {
+//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
+//            }
 
         }catch(Exception e){
             e.printStackTrace();

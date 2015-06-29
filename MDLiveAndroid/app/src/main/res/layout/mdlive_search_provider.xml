@@ -30,11 +30,12 @@
             />
         <TextView
             android:id="@+id/doneTxt"
-            style = "@style/GetStartedHeaderContentStyle"
+            style = "@style/endHeaderTextViewStyle"
+
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_gravity="center"
-            android:gravity="end|right|center"
+            android:gravity="end|right"
             android:text="DONE"
             />
     </LinearLayout>

@@ -67,7 +67,7 @@ public class MDLiveSearchProvider extends Activity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String,String> postParams=new HashMap<>();
-    public String SavedLocation;
+    public String filter_SavedLocation,SavedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,7 @@ public class MDLiveSearchProvider extends Activity {
         loadSearchproviderDetails();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
+        filter_SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -196,18 +197,20 @@ public class MDLiveSearchProvider extends Activity {
             @Override
             public void onClick(View v) {
 //                if (!edtSearch.getText().toString().isEmpty()) {
-                    if(!Utils.isValidName(edtSearch.getText().toString())){
-                        Utils.showDialog(MDLiveSearchProvider.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
-                        return;
-                    }
-                    postParams.put("located_in",SavedLocation);
+//                    if(!Utils.isValidName(edtSearch.getText().toString())){
+//                        Utils.showDialog(MDLiveSearchProvider.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
+//                        return;
+//                    }
+                    postParams.put("located_in",filter_SavedLocation);
+//                    postParams.put("located_in","FL");
+                    postParams.put("available_by","3");
                     postParams.put("appointment_date",AppointmentTxtView.getText().toString());
                     postParams.put("gender",genderTxtView.getText().toString());
                     if(edtSearch.getText().toString().length()!=0){
                         postParams.put("provider_name",edtSearch.getText().toString());
                     }
                     if(postParams.get("provider_type")==null){
-                        postParams.put("provider_type","1");
+                        postParams.put("provider_type","3");
                     }
                     LoadFilterSearchServices();
 //                } else {
@@ -245,6 +248,7 @@ public class MDLiveSearchProvider extends Activity {
         super.onResume();
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        filter_SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -324,9 +328,9 @@ public class MDLiveSearchProvider extends Activity {
      *
      */
     private void getSpecialityData(JSONObject response) throws JSONException {
-        JSONArray provider_type_array=null;
-        provider_type_array.put("Any");
-        provider_type_array = response.getJSONArray("provider_type");
+//        JSONArray provider_type_array=null;
+//        provider_type_array.put("Any");
+        JSONArray provider_type_array = response.getJSONArray("provider_type");
 
 
         for(int i = 0;i< provider_type_array.length();i++) {
@@ -339,9 +343,9 @@ public class MDLiveSearchProvider extends Activity {
             ProviderTypeArrayList.add(str_provider_type);
             HashMap<String, String> specialitymap = null;
             //Speciality response
-            JSONArray speciality_array=null;
-            speciality_array.put("Any");
-            speciality_array = licenseObject.getJSONArray("speciality");
+//            JSONArray speciality_array=null;
+//            speciality_array.put("Any");
+            JSONArray speciality_array = licenseObject.getJSONArray("speciality");
             SpecialityArrayList.clear();
             specialitymap = new HashMap<String, String>();
             for (int j = 0; j < speciality_array.length(); j++) {
@@ -366,9 +370,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getSortData(JSONObject response) throws JSONException {
-        JSONArray Sort_array=null;
-        Sort_array.put("Any");
-         Sort_array = response.getJSONArray("sort_by");
+//        JSONArray Sort_array=null;
+//        Sort_array.put("Any");
+        JSONArray Sort_array = response.getJSONArray("sort_by");
         ArrayList<String> keysList = new ArrayList<String>();
         for(int i = 0;i< Sort_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
@@ -394,9 +398,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getSpeaksData(JSONObject response) throws JSONException {
-        JSONArray Speaks_array=null;
-        Speaks_array.put("Any");
-        Speaks_array = response.getJSONArray("speaks");
+//        JSONArray Speaks_array=null;
+//        Speaks_array.put("Any");
+        JSONArray Speaks_array = response.getJSONArray("speaks");
         ArrayList<String> keysList = new ArrayList<String>();
         for(int i = 0;i< Speaks_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
@@ -420,9 +424,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getGenderData(JSONObject response) throws JSONException {
-        JSONArray Gender_array=null;
-        Gender_array.put("Any");
-         Gender_array = response.getJSONArray("gender");
+//        JSONArray Gender_array=null;
+//        Gender_array.put("Any");
+        JSONArray Gender_array = response.getJSONArray("gender");
 
         for(int i = 0;i< Gender_array.length();i++){
             HashMap<String,String> map = new HashMap<String,String>();
@@ -445,9 +449,9 @@ public class MDLiveSearchProvider extends Activity {
      */
 
     private void getAvailableData(JSONObject response) throws JSONException {
-        JSONArray Available_array=null;
-        Available_array.put("Any");
-         Available_array = response.getJSONArray("available_by");
+//        JSONArray Available_array=null;
+//        Available_array.put("Any");
+        JSONArray Available_array = response.getJSONArray("available_by");
         for(int i = 0;i< Available_array.length();i++){
 
             HashMap<String,String> map = new HashMap<String,String>();

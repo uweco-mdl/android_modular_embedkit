@@ -156,8 +156,6 @@ public class MDLiveChooseProvider extends Activity {
                     Utils.showDialog(MDLiveChooseProvider.this,MDLiveChooseProvider.this.getResources().getString(R.string.app_name),obj.getString("error"),MDLiveChooseProvider.this.getResources().getString(R.string.ok),null,positiveOnclickListener,null);
                 }catch(Exception e){
                     Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
-                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                    doctorOnCallButtonClick();
                     e.printStackTrace();
                 }
             }};
@@ -370,8 +368,8 @@ public class MDLiveChooseProvider extends Activity {
                     listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
                     Utils.alert(pDialog,MDLiveChooseProvider.this,jArray.get(0).toString());
-                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                    doctorOnCallButtonClick();
+//                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//                    doctorOnCallButtonClick();
 
                 }else{
                     ProviderListMap.clear();

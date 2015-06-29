@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
@@ -412,6 +413,7 @@ public class MDLiveLocation extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        lv.setCacheColorHint(Color.TRANSPARENT);
         final AlertDialog dialog = alertDialog.create();
         dialog.show();
 
