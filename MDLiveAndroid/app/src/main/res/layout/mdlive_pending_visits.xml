@@ -16,6 +16,7 @@
             android:layout_gravity="center"
             android:textSize="18sp"
             android:layout_marginLeft="20dp"
+            android:onClick="cancelVisit"
             android:textStyle="bold"
             android:text="Cancel"/>
 
