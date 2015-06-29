@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     >
-    <LinearLayout
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
         android:orientation="horizontal">
@@ -11,6 +11,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/exit_icon"
             android:id="@+id/backImg"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
             android:layout_marginStart="19dp" />
         <ImageView
@@ -26,19 +28,22 @@
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/backImg"
             android:text="Doctor Filters"
             />
         <TextView
             android:id="@+id/doneTxt"
             style = "@style/endHeaderTextViewStyle"
-
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_gravity="center"
             android:gravity="end|right"
             android:text="DONE"
             />
-    </LinearLayout>
+    </RelativeLayout>
     <ScrollView style="@style/ScrollViewStyle"
         >
         <LinearLayout

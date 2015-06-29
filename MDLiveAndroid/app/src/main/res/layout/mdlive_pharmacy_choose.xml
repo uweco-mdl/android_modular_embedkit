@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     >
-    <LinearLayout
+    <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
         android:orientation="horizontal">
@@ -11,6 +11,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/exit_icon"
             android:id="@+id/backImg"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
             android:layout_marginStart="19dp" />
         <ImageView
@@ -19,6 +21,8 @@
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
             android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
@@ -26,6 +30,8 @@
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/backImg"
             android:text="Pharmacy Filters"
             />
         <TextView
@@ -33,11 +39,12 @@
             style = "@style/endHeaderTextViewStyle"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:layout_marginLeft="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:gravity="end|right|center"
             android:text="APPLY"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
  <ScrollView
         style="@style/ScrollViewHolderStyle"
