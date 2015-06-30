@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -54,7 +55,8 @@ public class MDLiveChooseProvider extends Activity {
     private ArrayList<HashMap<String, String>> ProviderListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
-    private LinearLayout dcotorOnCallHeader;
+    private LinearLayout dcotorOnCallHeader,DocOnCalLinLay;
+    private RelativeLayout filterRl;
     private Button seenextAvailableBtn;
 
     @Override
@@ -64,6 +66,8 @@ public class MDLiveChooseProvider extends Activity {
         ProviderListMap = new ArrayList<HashMap<String, String>>();
         pDialog = Utils.getProgressDialog("Please wait...", this);
         dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
+        DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
+        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
 
         ChooseProviderResponseList();
@@ -179,6 +183,13 @@ public class MDLiveChooseProvider extends Activity {
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
             String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
+            if(StrDoctorOnCall.equals("false"))
+            {
+                Log.e("StrDoctorOnCall-->",StrDoctorOnCall);
+                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                DocOnCalLinLay.setVisibility(View.GONE);
+                filterRl.setVisibility(View.VISIBLE);
+            }
             //Setting the Doctor On Call Header
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
