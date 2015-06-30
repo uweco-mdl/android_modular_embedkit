@@ -65,15 +65,18 @@ public class ImageAdapter extends BaseAdapter {
     // create a new ImageView for each item referenced by the Adaptergridview
     public View getView(final int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) {
+        if (convertView == null || convertView.getTag() == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(activity);
             imageView.setLayoutParams(new GridView.LayoutParams(size, size));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY); //.CENTER_CROP
             imageView.setPadding(5, 0, 5, 0);
+            convertView = imageView;
+            convertView.setTag(imageView);
         } else {
-            imageView = (ImageView) convertView;
+            imageView = (ImageView) convertView.getTag();
         }
+
         if(myPhotosList != null && !TextUtils.isEmpty((String)myPhotosList.get(position).get("download_link"))){
             //if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
             if(ApplicationController.getInstance().getBitmapLruCache() != null &&
@@ -109,7 +112,7 @@ public class ImageAdapter extends BaseAdapter {
                 }
             });
         }
-        return imageView;
+        return convertView;
     }
 
     //Load a bitmap from a resource with a target size
