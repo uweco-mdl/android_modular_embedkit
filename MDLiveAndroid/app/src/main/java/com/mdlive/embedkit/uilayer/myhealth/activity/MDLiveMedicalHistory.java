@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -63,11 +64,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,6 +117,7 @@ public class MDLiveMedicalHistory extends Activity {
         setContentView(R.layout.mdlive_medical_history);
         btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
         btnSaveContinue.setClickable(false);
+        clearCacheInVolley();
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
 //        findViewById(R.id.SavContinueBtn).setVisibility(View.GONE);
         pDialog = Utils.getProgressDialog("Please wait...", this);
@@ -130,7 +132,6 @@ public class MDLiveMedicalHistory extends Activity {
         myPhotosList = new ArrayList<HashMap<String, Object>>();
 
 //        Utils.photoList.clear();
-        Utils.mphotoList.clear();
 
 
         findViewById(R.id.editConditionsTxt).setOnClickListener(new View.OnClickListener() {
@@ -515,11 +516,11 @@ public class MDLiveMedicalHistory extends Activity {
         return uri.getPath();
     }
 
-
-
     @Override
     protected void onResume() {
         ValidateModuleFields();
+        /*if(imageAdapter != null)
+            imageAdapter.notifyWithDataSet(myPhotosList);*/
         super.onResume();
     }
 
@@ -611,6 +612,7 @@ public class MDLiveMedicalHistory extends Activity {
             }else if(response != null && response.has("records")){
                 listDatas.clear();
                 JSONArray recordsArray = response.getJSONArray("records");
+                Log.e("myPhotosList", response.toString());
                 for(int i = 0; i<recordsArray.length(); i++){
                     JSONObject jsonObject = recordsArray.getJSONObject(i);
                     HashMap<String, Object> data = new HashMap<>();
@@ -631,8 +633,8 @@ public class MDLiveMedicalHistory extends Activity {
                 }
 
                 if(recordsArray.length() >= 8){
-                    ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.DKGRAY);
-                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setImageResource(R.drawable.icon_camera);
+                    ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(getResources().getColor(R.color.grey_txt));
+                    ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setImageResource(R.drawable.camera_gray_icon);
                 }else{
                     ((TextView) findViewById(R.id.takephotoTxt)).setTextColor(Color.BLACK);
                     ((ImageView) findViewById(R.id.MyHealthCameraBtn)).setImageResource(R.drawable.camera_icon);
@@ -659,7 +661,7 @@ public class MDLiveMedicalHistory extends Activity {
                 try {
                     for(int i =0; i<recordsArray.length(); i++){
                         JSONObject jsonObject = recordsArray.getJSONObject(i);
-                        if(Utils.mphotoList.get(jsonObject.getInt("id")) == null) {
+                        if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null) {
                             hasPendingDownloads = true;
                             i = recordsArray.length();
                         }
@@ -710,11 +712,8 @@ public class MDLiveMedicalHistory extends Activity {
                 if(recordsArray != null){
                     for(int i =0; i<recordsArray.length(); i++){
                         JSONObject jsonObject = recordsArray.getJSONObject(i);
-                            /*if(Utils.mphotoList.get(jsonObject.getInt("id")) == null){
-                                downloadImageService(jsonObject.getInt("id"));
-                            }*/
                         try {
-                            if(Utils.mphotoList.get(jsonObject.getInt("id")) == null){
+                            if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null){
                                 String response = makeImageRequestCall(AppSpecificConfig.BASE_URL + AppSpecificConfig.DOWNLOAD_MEDICAL_IMAGE + "/"+jsonObject.getInt("id"));
                                 if(response != null && response.length() != 0)
                                     handleDownloadImageService(new JSONObject(response), jsonObject.getInt("id"));
@@ -743,7 +742,7 @@ public class MDLiveMedicalHistory extends Activity {
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setConnectTimeout(20000);
+        urlConnection.setConnectTimeout(30000);
         String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
@@ -763,14 +762,20 @@ public class MDLiveMedicalHistory extends Activity {
 
     /** This function is used to convert Inputstream Datas to String type*/
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        int n = 0;
+        char[] buffer = new char[1024 * 4];
+        InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+        StringWriter writer = new StringWriter();
+        while (-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
+      /*  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         StringBuilder sb = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null){
             sb.append(line);
         }
-        inputStream.close();
-        return sb.toString();
+        inputStream.close();*/
+        Log.e("Data... ", writer.toString());
+        return writer.toString();
     }
 
     /**
@@ -803,22 +808,41 @@ public class MDLiveMedicalHistory extends Activity {
         try {
             if(response != null){
                 if(response.has("message") && response.getString("message").equals("Document found")){
-                    Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveMedicalHistory.this).getCache();
-                    Cache.Entry entry = new Cache.Entry();
+
+                    /*byte[] bytes = com.mdlive.unifiedmiddleware.commonclasses.utils.Base64.decode(response.getString("file_stream"),
+                            com.mdlive.unifiedmiddleware.commonclasses.utils.Base64.DECODE);*/
                     byte[] bytes = Base64.decode(response.getString("file_stream").getBytes("UTF-8"), Base64.DEFAULT);
                     //response.getString("file_stream").getBytes("UTF-8");
                     if(bytes == null){
                     }else{
-                        entry.etag = photoId+"";
-                        entry.data = bytes;
-                        cache.put(photoId+"", entry);
+                        feedDatasInVolleyCache(photoId+"", bytes);
                     }
-                    Utils.mphotoList.put(photoId, response.getString("file_stream"));
+                    //Utils.mphotoList.put(photoId, response.getString("file_stream"));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearCacheInVolley(){
+        ApplicationController.getInstance().getRequestQueue(MDLiveMedicalHistory.this).getCache().clear();
+        ApplicationController.getInstance().getBitmapLruCache().evictAll();
+    }
+
+    public void feedDatasInVolleyCache(String photoId, byte[] bytes){
+        Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveMedicalHistory.this).getCache();
+        Cache.Entry entry = new Cache.Entry();
+        entry.etag = photoId+"";
+        entry.data = bytes;
+        cache.put(photoId+"", entry);
+    }
+
+    public Cache.Entry getDatasInVolleyCache(String photoId){
+        Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveMedicalHistory.this).getCache();
+        Cache.Entry entry = new Cache.Entry();
+        entry = cache.get(photoId+"");
+        return entry;
     }
 
     /**
@@ -908,6 +932,7 @@ public class MDLiveMedicalHistory extends Activity {
     private void medicalAggregationHandleSuccessResponse(JSONObject response) {
         try {
             medicalAggregationJsonObject = response;
+            Log.e("Health History -->", medicalAggregationJsonObject.toString());
             checkMedicalCompletion();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1081,7 +1106,7 @@ public class MDLiveMedicalHistory extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=11){
+            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10){
                         if(gender.equalsIgnoreCase("Female")){
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
