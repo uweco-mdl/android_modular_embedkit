@@ -62,7 +62,6 @@
                 style="@style/ProviderDetailsDoctorTxtStyle"
                 android:id="@+id/specalist"
                 android:text="General Practise"
-
                android:layout_marginStart="5dp"
                android:textColor="#878f95"
                android:gravity="left|center"
@@ -71,7 +70,8 @@
                 />
            <TextView
                style="@style/ProviderDetailsDoctorTxtStyle"
-               android:text="Available now"
+               android:text=""
+               android:id="@+id/withpatientTxt"
                android:textColor="#31B404"
                android:gravity="end|right|center"
                android:textSize="18sp"

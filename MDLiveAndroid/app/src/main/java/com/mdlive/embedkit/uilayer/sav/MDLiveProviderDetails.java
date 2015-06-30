@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,10 +35,11 @@ import org.json.JSONObject;
  */
 public class MDLiveProviderDetails extends Activity{
     private ProgressDialog pDialog;
-    private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,tapSeetheDoctorTxt;
+    private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,withpatientTxt;
     private CircularNetworkImageView ProfileImg;
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
+    private Button tapSeetheDoctorTxt;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
 
@@ -81,9 +83,10 @@ public class MDLiveProviderDetails extends Activity{
         license_txt = (TextView)findViewById(R.id.license_txt);
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
-        tapSeetheDoctorTxt = (TextView)findViewById(R.id.tapBtn);
+        tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
+        withpatientTxt = (TextView)findViewById(R.id.withpatientTxt);
         Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
@@ -172,10 +175,35 @@ public class MDLiveProviderDetails extends Activity{
             String str_Location = providerdetObj.get("location").getAsString();
             String str_AboutMe = providerdetObj.get("about_me").getAsString();
             String str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
+            String str_Availability_Type= providerdetObj.get("availability_type").getAsString();
+            if(str_Availability_Type.equals("Available now"))
+            {
+                withpatientTxt.setText(str_Availability_Type);
+                withpatientTxt.setBackgroundColor(Color.parseColor("#31B404"));
+
+            }
+            else if(str_Availability_Type.equals("With Patient"))
+            {
+                withpatientTxt.setText(str_Availability_Type);
+                withpatientTxt.setBackgroundColor(Color.parseColor("#FF4000"));
+            }
+            else if(str_Availability_Type.equals("not available"))
+            {
+                withpatientTxt.setVisibility(View.GONE);
+            }
+
+            Log.e("str_Availability_Type--->",str_Availability_Type);
+
             ProfileImg.setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
             ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
             ProfileImg.setErrorImageResId(R.drawable.doctor_icon);
             doctorNameTv.setText(str_DoctorName);
+            if(str_DoctorName.isEmpty())
+            {
+                tapSeetheDoctorTxt.setClickable(false);
+                tapSeetheDoctorTxt.setVisibility(View.GONE);
+
+            }
             tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
             aboutme_txt.setText(str_AboutMe);
             location_txt.setText(str_Location);

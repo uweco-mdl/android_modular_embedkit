@@ -135,6 +135,7 @@ public class MDLiveChooseProvider extends Activity {
                 Log.d("Error Response", error.toString());
                 pDialog.dismiss();
                 dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                filterRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
                     if (error.networkResponse == null) {

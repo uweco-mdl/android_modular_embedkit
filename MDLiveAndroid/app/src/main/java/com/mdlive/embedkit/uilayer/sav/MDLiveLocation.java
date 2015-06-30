@@ -66,6 +66,7 @@ public class MDLiveLocation extends Activity {
         StateTxt.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ZipcodeEditTxt.setText("");
                 showListViewDialog(LongNameList, (TextView) v);
             }
         });
