@@ -67,6 +67,8 @@ public class MDLiveGetStarted extends FragmentActivity{
     private HashMap<String,Object> userInfoObject;
     private String parentName,dependentName=null;//Variable to save the parent name.
 
+    private String userInfoJSONString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,6 +206,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                             } else {
                                 if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
                                     Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                                    Log.e("TEST", "JSON :" + userInfoJSONString);
+                                    intent.putExtra("user_info", userInfoJSONString);
                                     startActivity(intent);
                                 } else {
 
@@ -311,6 +315,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                         }else {
                             if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                                 Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                                Log.e("TEST", "JSON :" + userInfoJSONString);
+                                intent.putExtra("user_info", userInfoJSONString);
                                 startActivity(intent);
                             }else {
                                 loadDependentInformationDetails(dependentName,position);
@@ -594,6 +600,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             isUserInfo=true;
             JSONObject personalInfo = response.getJSONObject("personal_info");
             Log.d("Personal Info----->",personalInfo.toString());
+            userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
                 userInfoObject.put(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name"),response);
                 isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");

@@ -2,11 +2,13 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -232,6 +234,11 @@ public class MDLiveChooseProvider extends Activity {
      */
     private void setListView() {
         listView = (ListView) findViewById(R.id.chooseProviderList);
+
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.mdlive_footer, null, false);
+        listView.addFooterView(footerView);
+
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
@@ -375,7 +382,6 @@ public class MDLiveChooseProvider extends Activity {
             try{
                 JSONObject jobj=new JSONObject(response);
                 JSONArray jArray=jobj.getJSONArray("physicians");
-                Log.e("Choose Provider Response Array",jArray.get(0).toString());
                 if(jArray.get(0).toString().equals(StringConstants.NO_PROVIDERS)){
                     baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
                     listView.setAdapter(baseadapter);

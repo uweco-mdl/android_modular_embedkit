@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -156,7 +157,13 @@ public class MDLiveReasonForVisit extends Activity {
         }
 
             listView = (ListView) findViewById(R.id.reasonList);
-            baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,(LinearLayout)findViewById(R.id.linearlayoutresults),(TextView)findViewById(R.id.noresults),(TextView)findViewById(R.id.submitresult));
+
+
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.mdlive_footer, null, false);
+        listView.addFooterView(footerView);
+
+        baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,(LinearLayout)findViewById(R.id.linearlayoutresults),(TextView)findViewById(R.id.noresults),(TextView)findViewById(R.id.submitresult));
             listView.setAdapter(baseadapter);
             RefineSearch();
             ListItemClickListener();

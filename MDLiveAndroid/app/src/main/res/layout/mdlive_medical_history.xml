@@ -389,7 +389,7 @@
                     android:padding="10dp"
                     android:textColor="@color/green"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:id="@+id/editAllergiesTxt" />
 
             </RelativeLayout>
@@ -555,6 +555,7 @@
 
     </ScrollView>
 
-
-
+    <include
+        layout="@layout/mdlive_footer"
+        style="@style/Footer_Style" />
 </LinearLayout>

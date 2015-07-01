@@ -14,7 +14,7 @@
             android:id="@+id/backImg"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp" />
+            android:layout_marginLeft="16dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
             android:id="@+id/homeImg"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/backImg"
+            android:layout_toRightOf="@+id/backImg"
             />
 
         <TextView
@@ -44,7 +44,7 @@
         <LinearLayout
             style="@style/WagParentLinearLayoutStyle"
             android:orientation="vertical"
-            android:layout_marginStart="19dp">
+            android:layout_marginLeft="19dp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -87,7 +87,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="19dp"
+                android:layout_marginLeft="19dp"
                 android:id="@+id/genderLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
@@ -107,7 +107,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="19dp"
+                android:layout_marginLeft="19dp"
                 android:id="@+id/locationLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
@@ -142,7 +142,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="19dp"
+                android:layout_marginLeft="19dp"
                 android:id="@+id/telephoneLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
@@ -193,4 +193,8 @@
 
     </LinearLayout>
     </ScrollView>
+
+    <include
+        layout="@layout/mdlive_footer"
+        style="@style/Footer_Style" />
 </LinearLayout>

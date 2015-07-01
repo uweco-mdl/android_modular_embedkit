@@ -64,10 +64,19 @@ public class MDLiveFamilymember extends Activity {
     private  boolean isAllFieldsfilled = true;
     private ArrayList<String> GenderList = new ArrayList<String>();
     private  HashMap<String,HashMap<String,String>>  array = new HashMap<>();
+
+    private String userInfoJSONString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_familymember);
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
+            userInfoJSONString = getIntent().getExtras().getString("user_info");
+        }
+
+
         pDialog = Utils.getProgressDialog("Please wait...",this);
         patientNameEt= (EditText) findViewById(R.id.patientEt);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
@@ -122,19 +131,53 @@ public class MDLiveFamilymember extends Activity {
                     public void onClick(View v) {
                         getEditValue = patientNameEt.getText().toString();
                         if (Utils.isValidName(getEditValue)) {
+                        //if (getEditValue.matches("[A-Z][a-zA-Z]*")) {
                             HashMap<String, HashMap<String, String>> map = new HashMap<>();
                             HashMap params = new HashMap();
                             params.put("computer", "Mac");
-                            HashMap params1 = new HashMap();
-                            params1.put("username", getEditValue);
-                            params1.put("first_name", "stage");
-                            params1.put("last_name", "divi");
-                            params1.put("gender", strGender);
-                            params1.put("date", strDate);
-                            params1.put("email", "raja.rathinavel@photoninfotech.net");
-                            params1.put("phone", "12345678902");
                             array.put("camera", params);
+
+                            JSONObject userObject = null;
+
+                            try {
+
+                                Log.d("TEST", "User : " +  userInfoJSONString);
+
+                                userObject = new JSONObject(userInfoJSONString);
+
+                                Log.d("TEST", userObject.optString("email"));
+                                Log.d("TEST", userObject.optString("phone"));
+                                Log.d("TEST", userObject.optString("address1"));
+                                Log.d("TEST", userObject.optString("address2"));
+                                Log.d("TEST", userObject.optString("city"));
+                                Log.d("TEST", userObject.optString("state"));
+                                Log.d("TEST", userObject.optString("zipcode"));
+                            } catch (Exception e) {
+                                Log.d("TEST", "Exception : " + e.getMessage());
+                                return;
+                            }
+
+
+                            HashMap params1 = new HashMap();
+                            //params1.put("username", getEditValue);
+                            params1.put("first_name", getEditValue);
+                            params1.put("middle_name", "");
+                            params1.put("last_name", "");
+                            params1.put("gender", strGender);
+                            params1.put("email", userObject.optString("email"));
+                            params1.put("phone", userObject.optString("phone"));
+                            params1.put("address1", userObject.optString("address1"));
+                            params1.put("address2", userObject.optString("address2"));
+                            params1.put("work_phone", "");
+                            params1.put("fax", "");
+                            params1.put("city", userObject.optString("city"));
+                            params1.put("state_id", userObject.optString("state"));
+                            params1.put("zip", userObject.optString("zipcode"));
+                            params1.put("birthdate", strDate);
+                            params1.put("answer", "");
+
                             array.put("member", params1);
+
                             PostLifeStyleServices();
                         } else {
                             Utils.showDialog(MDLiveFamilymember.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
