@@ -25,6 +25,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -203,14 +204,27 @@ public class MDLivePediatric extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+              /*  String text=s.toString();
+                if(text.length()!=0 && !text.startsWith(" ")){
+                    updateExplanationParams("Birth complications explanation",s.toString());
+                }else{
+                    enableSaveButton();
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                /*if(edtBirthComplications.getText().toString().startsWith(" ")){
+                    Toast.makeText(getApplicationContext(),"Positive",Toast.LENGTH_SHORT).show();
+                }*/
+
+
                 enableSaveButton();
-                if(s.length()!=0){
+                String text=s.toString();
+                if(text.length()!=0 && !text.startsWith(" ")){
                     updateExplanationParams("Birth complications explanation",s.toString());
+                }else{
+                    enableSaveButton();
                 }
 
             }
@@ -223,12 +237,22 @@ public class MDLivePediatric extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+               /* String text=s.toString();
+                if(text.length()!=0 && !text.startsWith(" ")){
+                    updateExplanationParams("Last shot",s.toString());
+                }else{
+                    enableSaveButton();
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length()!=0){
+              /*  if(edtLastShot.getText().toString().startsWith(" ")){
+                    Toast.makeText(getApplicationContext(),"Positive",Toast.LENGTH_SHORT).show();
+                }*/
+                enableSaveButton();
+                String text=s.toString();
+                if(text.length()!=0 && !text.startsWith(" ")){
                     updateExplanationParams("Last shot",s.toString());
                 }else{
                     enableSaveButton();
@@ -607,7 +631,7 @@ public class MDLivePediatric extends Activity {
 
 
     public boolean isFieldsNotEmpty(){
-        if(edtCurrentWeight.getText().toString().length()==0){
+        if(edtCurrentWeight.getText().toString().length()==0||edtCurrentWeight.getText().toString().startsWith(" ")){
             return false;
         }
         if(txtDietType.getVisibility()==View.VISIBLE){
@@ -636,13 +660,13 @@ public class MDLivePediatric extends Activity {
         }
         if(edtBirthComplications.getVisibility()==View.VISIBLE){
             Log.e("birthComplication","Coming");
-            if(edtBirthComplications.getText().toString().length()==0){
+            if(edtBirthComplications.getText().toString().length()==0||edtBirthComplications.getText().toString().startsWith(" ")){
                 return false;
             }
         }
         if(lasShotLabel.getVisibility()==View.VISIBLE){
             Log.e("lasShotLabel","Coming");
-            if(edtLastShot.getText().toString().length()==0){
+            if(edtLastShot.getText().toString().length()==0||edtLastShot.getText().toString().startsWith(" ")){
                 return false;
             }
 
