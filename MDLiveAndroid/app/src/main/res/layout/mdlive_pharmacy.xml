@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBackgroundColor"
     >
     <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
@@ -35,129 +36,148 @@
         </TextView>
     </RelativeLayout>
     <ScrollView
-    style="@style/ScrollViewHolderStyle"
-    >
-<LinearLayout
-    style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-    >
-
-    <LinearLayout
-        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-        android:padding="5dp"
-        android:gravity="center_horizontal"
-        android:background="@drawable/pharmacy_line_bg">
-
+        style="@style/ScrollViewHolderStyle"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="false"
+        >
 
         <LinearLayout
-            style="@style/WagLinearLayoutStyle"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Previous Pharmacy"
-             android:textSize="18sp"
-                android:textColor="@color/black"
-                android:id="@+id/textView17" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black"
-                android:text="Please select a pharmacy in the event your doctor prescribes a medication"
-                android:textSize="16sp"
-                android:id="@+id/textView18" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/grey_txt">
-
-            <fragment
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/mapView"
-                style="@style/common_style_W_Match_M_Match"
-                class="com.google.android.gms.maps.SupportMapFragment"/>
-
-            </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/defaultPharmlayout"
             style="@style/common_style_W_Match_H_Wrap_O_Vertical"
             >
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_horizontal|left"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:background="@color/mdliveBackgroundColor"
+                android:gravity="center_horizontal"
+                >
 
-                <TextView
-                    android:id="@+id/addressline1"
-                    style="@style/addressLineStyle"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="17sp"
-                    />
-                <TextView
-                    android:id="@+id/addressline2"
-                    style="@style/addressLineStyle"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="13sp"
-                    />
-                <TextView
-                    android:id="@+id/addressline3"
-                    style="@style/addressLineStyle"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="13sp"
-                    />
-                <TextView
-                    android:id="@+id/addressline4"
-                    android:textColor="#4671BD"
-                    style="@style/addressLineStyle"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="13sp"
-                    />
 
+                <LinearLayout
+                    style="@style/WagLinearLayoutStyle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Previous Pharmacy"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:id="@+id/textView17" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:text="Please select a pharmacy in the event your doctor prescribes a medication3"
+                        android:textSize="15sp"
+                        android:id="@+id/textView18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:background="@color/grey_txt">
+
+                    <fragment
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/mapView"
+                        style="@style/common_style_W_Match_M_Match"
+                        class="com.google.android.gms.maps.SupportMapFragment"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/defaultPharmlayout"
+                    style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_horizontal|left"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/addressline1"
+                            style="@style/addressLineStyle"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            />
+                        <TextView
+                            android:id="@+id/addressline2"
+                            style="@style/addressLineStyle"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            />
+                        <TextView
+                            android:id="@+id/addressline3"
+                            style="@style/addressLineStyle"
+                            android:textColor="@color/black"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textSize="15sp"
+                            />
+
+                    </LinearLayout>
+                </RelativeLayout>
+                <Button
+                    android:text="Use This Pharmacy"
+                    android:tag="change_pharmacy"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    style="@style/PharmacyContinueButtonStyle"
+                    android:background="#009933"
+                    android:id="@+id/SavContinueBtn"
+                    android:layout_gravity="center_horizontal" />
+                <Button
+                    android:text="Choose Different Pharmacy"
+                    android:tag="change_pharmacy"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    style="@style/PharmacyContinueButtonStyle"
+                    android:id="@+id/changePharmacyButton"
+                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-</LinearLayout>
 
-</ScrollView>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Use this Pharmacy"
-        android:tag="change_pharmacy"
-        android:layout_margin="10dp"
-        style="@style/ContinueButtonStyle"
-        android:background="#009933"
-        android:id="@+id/SavContinueBtn"
-        android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
-    <Button
+
+    </ScrollView>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose different pharmacy"
-        android:tag="change_pharmacy"
-        android:layout_margin="10dp"
-        style="@style/ContinueButtonStyle"
-        android:id="@+id/changePharmacyButton"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="50dp"
+        android:padding="10dp"
+        >
+        <include
+            layout="@layout/mdlive_footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
 </LinearLayout>

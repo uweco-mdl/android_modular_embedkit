@@ -323,5 +323,5 @@ WEST VIRGINIA</item>
     <string name="providers">Providers</string>
 
     <string name="support">Support</string>
-
+    <string name="service_provided_by">Service Provided by</string>
 </resources>
