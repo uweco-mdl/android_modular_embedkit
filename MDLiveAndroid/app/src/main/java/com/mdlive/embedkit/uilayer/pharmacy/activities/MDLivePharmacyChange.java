@@ -71,6 +71,7 @@ public class MDLivePharmacyChange extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
         //initialize views of activity
+        Utils.checkGpsLocation(MDLivePharmacyChange.this);
         initializeViews();
     }
 
