@@ -36,6 +36,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:text="UPLOAD" />
 
     </RelativeLayout>
