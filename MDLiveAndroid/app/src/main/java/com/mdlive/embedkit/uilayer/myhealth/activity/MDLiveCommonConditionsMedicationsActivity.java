@@ -3,10 +3,14 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +29,28 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 /**
@@ -57,6 +75,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     protected TYPE_CONSTANT type;
     public String conditionsText = "";
     public static boolean isNewAdded = false;
+    public Intent resultData = new Intent();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +96,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
-                finish();
+                checkMedicalAggregation();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
@@ -98,6 +117,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         LinearLayout addConditionsLl = (LinearLayout) findViewById(R.id.AddConditionsLl);
         existingConditions.clear();
         newConditions.clear();
+        int emptyFieldCount = 0;
         for(int i = 0;i<addConditionsLl.getChildCount();i++){
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
             if(conditionRl.getTag()==null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
@@ -110,15 +130,70 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 items.put("name",((EditText)conditionRl.getChildAt(0)).getText().toString());
                 tmpExistingCond.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
                 existingConditions.add(items);
+            }else{
+                emptyFieldCount++;
             }
         }
+
+        Log.e("emptyFieldCount-->", emptyFieldCount+"");
+
         for(String name : newConditions){
             if(tmpExistingCond.contains(name)){
                 Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The "+type.name().toLowerCase()+" already exists in your medical history.");
                 return;
             }
         }
-        saveNewConditionsOrAllergies();
+        if(emptyFieldCount > 1)
+            Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
+        else
+            saveNewConditionsOrAllergies();
+    }
+
+    /* For Testing Purpose Get Method Call*/
+    public String updateConditionDetails(String postUrl,String postBody) throws Exception {
+        //Url link for choose provider details
+        URL url = new URL(postUrl);
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setRequestMethod("PUT");
+        urlConnection.setDoInput(true);
+        urlConnection.setDoOutput(true);
+        urlConnection.setUseCaches(false);
+        urlConnection.setConnectTimeout(30000);
+        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
+        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+        urlConnection.setRequestProperty("Authorization", auth);
+        urlConnection.setRequestProperty("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+        String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        if(dependentId != null) {
+            urlConnection.setRequestProperty("DependantId", dependentId);
+        }
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(postBody);
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (urlConnection.getResponseCode() == 200) {
+            InputStream in = urlConnection.getInputStream();
+            return convertInputStreamToString(in);
+        } else {
+            return null;
+        }
+    }
+
+    /** This function is used to convert Inputstream Datas to String type*/
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        int n = 0;
+        char[] buffer = new char[1024 * 4];
+        InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+        StringWriter writer = new StringWriter();
+        while (-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
+        return writer.toString();
     }
 
     /**
@@ -306,7 +381,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                         addBlankConditionOrAllergy();
                         EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
                         conditonEt.setNextFocusDownId(newEt.getId());
-                        newEt.requestFocus();
+                        conditonEt.requestFocus();
                         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.showSoftInput(newEt,InputMethodManager.HIDE_IMPLICIT_ONLY);
                     }
@@ -515,5 +590,89 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 return view;
             }
         };
+    }
+
+
+    /**
+     * Checks user medical history aggregation details.
+     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered.
+     */
+
+    public void checkMedicalAggregation() {
+        pDialog.show();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                medicalAggregationHandleSuccessResponse(response);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                medicalCommonErrorResponseHandler(error);
+            }
+        };
+        MedicalHistoryAggregationServices services = new MedicalHistoryAggregationServices(MDLiveCommonConditionsMedicationsActivity.this, null);
+        services.getMedicalHistoryAggregationRequest(successCallBackListener, errorListener);
+    }
+
+    public void medicalAggregationHandleSuccessResponse(JSONObject response){
+        try {
+            JSONObject healthHistory = response.getJSONObject("health_history");
+                String conditonsNames = "";
+                if(type == TYPE_CONSTANT.CONDITION){
+                    JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
+                    for (int i = 0; i < conditonsArray.length(); i++) {
+                        if (conditonsArray.getJSONObject(i).getString("condition").trim() != null &&
+                                !conditonsArray.getJSONObject(i).getString("condition").trim().equals("")) {
+                            conditonsNames += conditonsArray.getJSONObject(i).getString("condition");
+                            if (i != conditonsArray.length() - 1) {
+                                conditonsNames += ", ";
+                            }
+                        }
+                    }
+                    if (conditonsNames.trim().length() == 0)
+                        conditonsNames = "No conditions reported";
+                    resultData.putExtra("conditionsData", conditonsNames);
+                }else if(type == TYPE_CONSTANT.MEDICATION){
+                    JSONArray conditonsArray = healthHistory.getJSONArray("medications");
+                    for (int i = 0; i < conditonsArray.length(); i++) {
+                        if (conditonsArray.getJSONObject(i).getString("name").trim() != null &&
+                                !conditonsArray.getJSONObject(i).getString("name").trim().equals("")) {
+                            conditonsNames += conditonsArray.getJSONObject(i).getString("name");
+                            if (i != conditonsArray.length() - 1) {
+                                conditonsNames += ", ";
+                            }
+                        }
+                    }
+                    if (conditonsNames.trim().length() == 0)
+                        conditonsNames = "No medications reported";
+                    resultData.putExtra("medicationData", conditonsNames);
+                }else if(type == TYPE_CONSTANT.ALLERGY){
+                    JSONArray conditonsArray = healthHistory.getJSONArray("allergies");
+                    for (int i = 0; i < conditonsArray.length(); i++) {
+                        if (conditonsArray.getJSONObject(i).getString("name").trim() != null &&
+                                !conditonsArray.getJSONObject(i).getString("name").trim().equals("")) {
+                            conditonsNames += conditonsArray.getJSONObject(i).getString("name");
+                            if (i != conditonsArray.length() - 1) {
+                                conditonsNames += ", ";
+                            }
+                        }
+                    }
+                    if (conditonsNames.trim().length() == 0)
+                        conditonsNames = "No allergies reported";
+                    resultData.putExtra("allegiesData", conditonsNames);
+                }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        pDialog.dismiss();
+        setResult(RESULT_OK, resultData);
+        Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
+        finish();
     }
 }
