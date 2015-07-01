@@ -1,10 +1,9 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -21,7 +21,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicalConditionService
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicalConditionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionAutoSuggestionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionListServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionUpdateServices;
 
 import org.json.JSONObject;
 
@@ -59,7 +58,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     @Override
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
-        Log.e("newConditions", newConditions.size()+"");
         setResult(RESULT_OK);
         if (newConditions.size() == 0) {
             pDialog.dismiss();
@@ -109,20 +107,21 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         }
     }
 
-    public void setDatas(){
+  /*  public void setDatas(){
         for(int i = 0; i < newConditions.size(); i++){
             conditionsText += newConditions.get(i)+", ";
         }
         for(int i = 0; i < existingConditions.size(); i++){
             HashMap<String, String> data = existingConditions.get(i);
-            conditionsText += data.get("name")+", ";
+            if(data.get("name")!=null)
+                conditionsText += data.get("name")+", ";
         }
         Intent resultData = new Intent();
         if(conditionsText == null || conditionsText.trim().length() == 0)
             conditionsText = "No conditions reported";
         resultData.putExtra("conditionsData", conditionsText);
         setResult(RESULT_OK, resultData);
-    }
+    }*/
 
 
     /**
@@ -135,41 +134,49 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     @Override
     protected void updateConditionsOrAllergies() {
         try {
+             new UpdateExistingConditionsService().execute();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected void onPreExecute() {
             pDialog.show();
+            super.onPreExecute();
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+            checkMedicalAggregation();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
             if (existingConditions.size() == 0) {
-                pDialog.dismiss();
-                setDatas();
-                finish();
             } else {
                 for (int i = 0; i < existingConditions.size(); i++) {
-                    NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            pDialog.dismiss();
-                            setDatas();
-                            finish();
-                        }
-                    };
-                    NetworkErrorListener errorListener = new NetworkErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            medicalCommonErrorResponseHandler(error);
-                        }
-                    };
                     HashMap<String, String> condition = existingConditions.get(i);
                     HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
                     condition.put("condition", condition.get("name"));
                     condition.remove("name");
                     postBody.put("medical_condition", condition);
-                    MedicalConditionUpdateServices services = new MedicalConditionUpdateServices(MDLiveAddConditions.this, null);
-                    services.updateConditionRequest(condition.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
+
+                    try{
+                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICAL_CONDITIONS_LIST + "/" +condition.get("id"),
+                                new Gson().toJson(postBody));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
-        }catch(Exception e){
-            e.printStackTrace();
+            return null;
         }
     }
+
 
     /**
      * This function will retrieve the known allergies from the server.
@@ -211,7 +218,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (addConditionsLl.getChildCount() < 3) {
+                if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();
@@ -262,8 +269,8 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        setDatas();
+//        super.onBackPressed();
+        checkMedicalAggregation();
     }
 
     /**

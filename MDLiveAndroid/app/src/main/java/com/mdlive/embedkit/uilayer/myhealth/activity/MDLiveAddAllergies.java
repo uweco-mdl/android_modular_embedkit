@@ -1,8 +1,8 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -13,11 +13,11 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddAllergyServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.AllergiesUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.AllergyAutoSuggestionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.AllergyListServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteAllergyServices;
@@ -105,7 +105,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         }
     }
 
-    public void setDatas(){
+  /*  public void setDatas(){
         for(int i = 0; i < newConditions.size(); i++){
             conditionsText += newConditions.get(i)+", ";
         }
@@ -118,47 +118,48 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             conditionsText = "No allergies reported";
         resultData.putExtra("allegiesData", conditionsText);
         setResult(RESULT_OK, resultData);
-    }
+    }*/
 
 
     @Override
     protected void updateConditionsOrAllergies() {
         try {
+            new UpdateExistingConditionsService().execute();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected void onPreExecute() {
             pDialog.show();
+            super.onPreExecute();
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+            checkMedicalAggregation();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
             if (existingConditions.size() == 0) {
-                pDialog.dismiss();
-                setDatas();
-                finish();
             } else {
                 for (int i = 0; i < existingConditions.size(); i++) {
-                    NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            pDialog.dismiss();
-                            setDatas();
-                            finish();
-                        }
-                    };
-
-                    NetworkErrorListener errorListener = new NetworkErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            medicalCommonErrorResponseHandler(error);
-                        }
-                    };
-
                     HashMap<String, String> allergy = existingConditions.get(i);
                     HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
                     postBody.put("allergy", allergy);
-
-                    AllergiesUpdateServices services = new AllergiesUpdateServices(MDLiveAddAllergies.this, null);
-                    services.updateAllergyRequest(allergy.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
-
+                    try{
+                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ALLERGY_LIST + "/" + allergy.get("id"),
+                                new Gson().toJson(postBody));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
-        }catch(Exception e){
-            e.printStackTrace();
+            return null;
         }
     }
 
@@ -197,7 +198,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(addConditionsLl.getChildCount() == 0){
+                if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();
@@ -255,8 +256,8 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     @Override
     public void onBackPressed() {
-        setDatas();
-        super.onBackPressed();
+        checkMedicalAggregation();
+        //super.onBackPressed();
     }
 
     /**

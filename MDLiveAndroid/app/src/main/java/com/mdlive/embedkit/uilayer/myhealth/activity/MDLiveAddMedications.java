@@ -1,17 +1,19 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -19,7 +21,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.SuggestMedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.UpdateMedicalService;
 
 import org.json.JSONObject;
 
@@ -56,17 +57,15 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
+
         if (newConditions.size() == 0) {
             updateConditionsOrAllergies();
         } else {
             for (int i = 0; i < newConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         updateConditionsOrAllergies();
-                        /*if (newConditions.size() == ++addConditionsCount) {
-                        }*/
                     }
                 };
                 NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -85,7 +84,40 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         }
     }
 
-    public void setDatas(){
+    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected void onPreExecute() {
+            pDialog.show();
+            super.onPreExecute();
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+            checkMedicalAggregation();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (existingConditions.size() == 0) {
+                pDialog.dismiss();
+            } else {
+                for (int i = 0; i < existingConditions.size(); i++) {
+                    HashMap<String, String> medication = existingConditions.get(i);
+                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
+                    postBody.put("medication", medication);
+                    try{
+                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICATION_UPDATE + "/"+medication.get("id"),
+                                new Gson().toJson(postBody));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
+ /*   public void setDatas(){
         for(int i = 0; i < newConditions.size(); i++){
             conditionsText += newConditions.get(i)+", ";
         }
@@ -100,7 +132,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
             conditionsText += "...";
         resultData.putExtra("medicationData", conditionsText);
         setResult(RESULT_OK, resultData);
-    }
+    }*/
 
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
@@ -111,34 +143,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void updateConditionsOrAllergies() {
         try {
-            pDialog.show();
-            if (existingConditions.size() == 0) {
-                pDialog.dismiss();
-                setDatas();
-                finish();
-            } else {
-                for (int i = 0; i < existingConditions.size(); i++) {
-                    NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            pDialog.dismiss();
-                            setDatas();
-                            finish();
-                        }
-                    };
-                    NetworkErrorListener errorListener = new NetworkErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            medicalCommonErrorResponseHandler(error);
-                        }
-                    };
-                    HashMap<String, String> medication = existingConditions.get(i);
-                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                    postBody.put("medication", medication);
-                    UpdateMedicalService services = new UpdateMedicalService(MDLiveAddMedications.this, null);
-                    services.doLoginRequest(medication.get("id"), new Gson().toJson(postBody), successCallBackListener, errorListener);
-                }
-            }
+           new UpdateExistingConditionsService().execute();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -184,7 +189,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (addConditionsLl.getChildCount() < 3) {
+                if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
                 pDialog.dismiss();
@@ -239,8 +244,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
 
     @Override
     public void onBackPressed() {
-        setDatas();
-        super.onBackPressed();
+        checkMedicalAggregation();
+       // super.onBackPressed();
     }
 
     /**
