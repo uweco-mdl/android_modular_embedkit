@@ -70,6 +70,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private boolean isPageLimitReached = false, isLoading = false;
     boolean isMarkerPointAdded = false;
     private String errorMesssage ="No Pharmacies Found!";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

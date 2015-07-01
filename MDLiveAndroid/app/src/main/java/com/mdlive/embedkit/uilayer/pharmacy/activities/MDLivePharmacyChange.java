@@ -177,6 +177,9 @@ public class MDLivePharmacyChange extends Activity {
         chooseState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                zipcodeText.setText("");
+                zipcodeText.clearFocus();
+                cityText.requestFocus();
                 stateDialog.show();
             }
         });
@@ -234,16 +237,14 @@ public class MDLivePharmacyChange extends Activity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 3) {
                     addSearchTextHistory(s.toString());
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
             }
         };
     }
@@ -296,7 +297,7 @@ public class MDLivePharmacyChange extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-        //                Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
+                 Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
         SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
