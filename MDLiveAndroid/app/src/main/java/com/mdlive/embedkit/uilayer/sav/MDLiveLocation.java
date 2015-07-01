@@ -425,8 +425,6 @@ public class MDLiveLocation extends Activity {
                 longNameText = LongNameList.get(position);
                 SelectedText.setText(shortNameText);
                 selectedCity = shortNameText;
-//                SaveZipCodeCity(selectedText);
-//                ZipCodeCity = selectedText;
                 dialog.dismiss();
             }
         });
