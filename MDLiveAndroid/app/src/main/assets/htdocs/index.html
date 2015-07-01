@@ -177,7 +177,7 @@
 
         if (cccvvValue.trim().length==0 || ccNumValue.trim().length==0 ) {
         	this.billingData = {
-					"status" : "Please fill all the fields"
+					"status" : "Please fill in all the required fields"
 				}
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
