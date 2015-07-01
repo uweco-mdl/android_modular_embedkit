@@ -572,6 +572,8 @@ public class MDLiveMedicalHistory extends Activity {
                 medicalCommonErrorResponseHandler(error);
             }
         };
+        File file = new File(filePath);
+
         UploadImageService services = new UploadImageService(MDLiveMedicalHistory.this, null);
         services.doUploadDocumentService(new File(filePath), successCallBackListener, errorListener);
     }
@@ -1082,13 +1084,11 @@ public class MDLiveMedicalHistory extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         if(havingHealth == 1){
             saveEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER, "true");
         }else{
             saveEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER, "false");
         }
-
         if(havingHealth == 1){
             return  true;
         }else{
@@ -1106,7 +1106,7 @@ public class MDLiveMedicalHistory extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10){
+            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10) {
                         if(gender.equalsIgnoreCase("Female")){
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
