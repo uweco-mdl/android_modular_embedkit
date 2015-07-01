@@ -4,11 +4,13 @@ package com.mdlive.embedkit.uilayer.payment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,12 +18,14 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +58,6 @@ public class MDLivePayment extends Activity {
     private WebView HostedPCI;
     private DatePicker datePicker;
     protected static ProgressDialog pDialog;
-    private DatePickerDialog datePickerDialog;
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
@@ -80,7 +83,7 @@ public class MDLivePayment extends Activity {
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePickerDialog.show();
+                showDatePicker();
             }
         });
         payNow = (Button) findViewById(R.id.paynow);
@@ -184,6 +187,51 @@ public class MDLivePayment extends Activity {
         }
     }
 
+    private void showDatePicker(){
+        final Dialog d = new Dialog(this);
+        d.setTitle("Expiration month/year");
+        d.setContentView(R.layout.monthly_picker_dialog);
+        Button buttonDone = (Button) d.findViewById(R.id.set_button);
+        final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
+        final NumberPicker yearPicker = (NumberPicker) d.findViewById(R.id.year_picker);
+        monthPicker.setMaxValue(12);
+        monthPicker.setMinValue(01);
+        monthPicker.setWrapSelectorWheel(true);
+        try {
+            Calendar c = Calendar.getInstance();
+            Date mDate = new Date();
+            c.setTime(mDate);
+            monthPicker.setValue(c.get(Calendar.MONTH)+1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Calendar c = Calendar.getInstance();
+        int minimumYear = c.get(Calendar.YEAR);
+
+        yearPicker.setMaxValue(9999);
+        yearPicker.setMinValue(minimumYear);
+        yearPicker.setWrapSelectorWheel(false);
+        yearPicker.setValue(minimumYear);
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    year = yearPicker.getValue();
+                    month = monthPicker.getValue() - 1;
+                    Calendar c = Calendar.getInstance();
+                    c.set(year, month, 1);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
+                    dateView.setText(dateFormat.format(c.getTime()));
+                    d.dismiss();
+                }catch(Exception e){
+
+                }
+            }
+        });
+
+        d.show();
+    }
 
     /**
      * This method will update the credit card information to server
@@ -328,10 +376,13 @@ public class MDLivePayment extends Activity {
      */
     private void getDateOfBirth() {
         try{
-            Calendar calendar = Calendar.getInstance();
-            datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+//            Calendar calendar = Calendar.getInstance();
+//            datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+//            datePickerDialog.getDatePicker().setCalendarViewShown(false);
+//            datePickerDialog.getDatePicker().setSpinnersShown(true);
+//            ((ViewGroup) datePickerDialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
+//            datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -350,9 +401,8 @@ public class MDLivePayment extends Activity {
             try{
                 year = selectedYear;
                 month = selectedMonth;
-                day = selectedDay;
                 Calendar c = Calendar.getInstance();
-                c.set(selectedYear, selectedMonth, selectedDay);
+                c.set(selectedYear, selectedMonth, 1);
                 SimpleDateFormat dateFormat=new SimpleDateFormat("MM/yy");
                 new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
                 dateView.setText(dateFormat.format(c.getTime()));
@@ -467,6 +517,7 @@ public class MDLivePayment extends Activity {
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", "Not Sure");
         params.put("customer_call_in_number", "9068906789");
+        params.put("do_you_have_primary_care_physician","No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
         if(promoCode != null && !promoCode.isEmpty()){
             params.put("promocode", promoCode);
