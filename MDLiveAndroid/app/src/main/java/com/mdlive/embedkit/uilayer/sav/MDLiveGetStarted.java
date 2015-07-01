@@ -200,8 +200,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
                                                 "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
                                         positiveOnClickListener,negativeOnClickListener);
-                                new AlertDialog.Builder(
-                                        new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));
+                                /*new AlertDialog.Builder(
+                                        new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
                             } else {
                                 if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
