@@ -149,7 +149,7 @@ public class MDLiveProviderDetails extends Activity{
                     }
                 }
             }};
-        ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, null);
+        ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, pDialog);
         services.getProviderDetails(SharedLocation,AppointmentDate,AppointmentType,DoctorId,successCallBackListener, errorListener);
     }
 
