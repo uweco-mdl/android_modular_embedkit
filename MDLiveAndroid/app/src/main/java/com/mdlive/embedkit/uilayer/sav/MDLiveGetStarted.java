@@ -42,6 +42,7 @@ import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     private EditText  phonrNmberEditTxt;
     private boolean isUserInfo=false;
     private HashMap<String,Object> userInfoObject;
-    private String parentName;//Variable to save the parent name.
+    private String parentName,dependentName=null;//Variable to save the parent name.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +118,15 @@ public class MDLiveGetStarted extends FragmentActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
+            patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dependentList);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            patientSpinner.setAdapter(dataAdapter);
+        }
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FL");
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
         locationTxt.setText(longNameLocation);
     }
     /**
@@ -269,7 +276,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
                 int item = spinner.getSelectedItemPosition();
-                String dependentName = spinner.getSelectedItem().toString();
+                dependentName = spinner.getSelectedItem().toString();
                 if(dependentName.equals(parentName)){
                     userInfoChange((JSONObject)userInfoObject.get(dependentName));
                 }else{
@@ -292,7 +299,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         dialogInterface.dismiss();
                                     }
                                 };
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "Call Now", "Dismiss",
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "CALL NOW", "ClOSE",
                                         positiveOnClickListener,negativeOnClickListener);
                             }else
                             {
@@ -372,7 +379,12 @@ public class MDLiveGetStarted extends FragmentActivity{
             JSONObject personalInfo = resObj.getJSONObject("personal_info");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
-            locationTxt.setText(personalInfo.getString("state"));
+            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
+                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                }
+            }
             genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(resObj.toString());
@@ -584,7 +596,15 @@ public class MDLiveGetStarted extends FragmentActivity{
                 userInfoObject.put(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name"),response);
                 isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
                 DateTxt.setText(personalInfo.getString("birthdate"));
-                locationTxt.setText(personalInfo.getString("state"));
+                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
+                    if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                        locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                        Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    }
+                }
+
+
+                //locationTxt.setText(personalInfo.getString("state"));
                 genderText.setText(personalInfo.getString("gender"));
                 String numStr = personalInfo.getString("phone");
                 try {
@@ -726,6 +746,9 @@ public class MDLiveGetStarted extends FragmentActivity{
 
         }
     };
+
+
+
     /**
      * The back image will pull you back to the Previous activity
      * The home button will pull you back to the Dashboard activity
