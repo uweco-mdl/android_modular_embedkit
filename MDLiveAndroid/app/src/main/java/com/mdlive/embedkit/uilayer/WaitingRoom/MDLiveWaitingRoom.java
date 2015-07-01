@@ -51,13 +51,13 @@ public class MDLiveWaitingRoom extends Activity{
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    //getProviderStatus();
-                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    finish();
+                    getProviderStatus();
+//                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+//                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(i);
+//                    finish();
                 }
-            }, 10000);
+            }, 30000);
         } else {
             getProviderStatus();
         }
@@ -155,20 +155,19 @@ public class MDLiveWaitingRoom extends Activity{
         try{
             JSONObject resObj=new JSONObject(response);
             Log.d("isReturning",isReturning + "" + " - Provider status" + resObj.getString("provider_status"));
-            if(isReturning) {
+            if(isReturning && !resObj.getString("provider_status").equals("true")) {
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
             }else if(resObj.getString("provider_status").equals("true")){
-                getVSEECredentials();
-            }else {
                 ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
+                getVSEECredentials();
+            }else {
                 getProviderStatus();
-                // Toast.makeText(MDLiveWaitingRoomNew.this,resObj.getString("message"),Toast.LENGTH_SHORT).show();
             }
 
         }catch (JSONException e){
