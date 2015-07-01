@@ -6,15 +6,16 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -62,12 +63,11 @@ public class MDLiveImageGalleryView extends Activity {
 
         ((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
 
-        Log.e("Received Id", getIntent().getIntExtra("id", 0)+"");
-
-            if(Utils.mphotoList.get(getIntent().getIntExtra("id", 0)) != null){
-                byte[] decodedString = Base64.decode((String) Utils.mphotoList.get(getIntent().getIntExtra("id", 0)), Base64.DEFAULT);
+            if(getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"") != null){
+                byte[] decodedString = getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"").data;
                 // First decode with inJustDecodeBounds=true to check dimensions
                 final BitmapFactory.Options options = new BitmapFactory.Options();
+
                 options.inJustDecodeBounds = false;
                 //        options.inSampleSize = 8;
                 options.inSampleSize = 2;
@@ -81,6 +81,14 @@ public class MDLiveImageGalleryView extends Activity {
 
 //        decodedByte.recycle();
     }
+
+    public Cache.Entry getDatasInVolleyCache(String photoId){
+        Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveImageGalleryView.this).getCache();
+        Cache.Entry entry = new Cache.Entry();
+        entry = cache.get(photoId+"");
+        return entry;
+    }
+
 
     /**
      * Checks user medical history aggregation details.
