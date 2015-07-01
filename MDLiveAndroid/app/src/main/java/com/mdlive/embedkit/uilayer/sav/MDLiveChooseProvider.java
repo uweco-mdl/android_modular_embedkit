@@ -190,6 +190,7 @@ public class MDLiveChooseProvider extends Activity {
                 dcotorOnCallHeader.setVisibility(View.VISIBLE);
                 DocOnCalLinLay.setVisibility(View.GONE);
                 filterRl.setVisibility(View.VISIBLE);
+                doctorOnCallButtonClick();
             }
             //Setting the Doctor On Call Header
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
