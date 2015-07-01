@@ -423,7 +423,7 @@ public class MDLiveLocation extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 shortNameText = ShortNameList.get(position);
                 longNameText = LongNameList.get(position);
-                SelectedText.setText(shortNameText);
+                SelectedText.setText(longNameText);
                 selectedCity = shortNameText;
                 dialog.dismiss();
             }

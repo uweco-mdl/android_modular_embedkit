@@ -136,6 +136,7 @@ public class MDLiveProviderDetails extends Activity{
                 pDialog.dismiss();
                 tapSeetheDoctorTxt.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
+                tapSeetheDoctorTxt.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -144,6 +145,7 @@ public class MDLiveProviderDetails extends Activity{
                             }
                         };
                         tapSeetheDoctorTxt.setClickable(false);
+                        tapSeetheDoctorTxt.setVisibility(View.GONE);
                         // Show timeout error message
                         Utils.connectionTimeoutError(pDialog, MDLiveProviderDetails.this);
                     }
@@ -202,6 +204,7 @@ public class MDLiveProviderDetails extends Activity{
             {
                 tapSeetheDoctorTxt.setClickable(false);
                 tapSeetheDoctorTxt.setVisibility(View.GONE);
+                detailsLl.setVisibility(View.GONE);
 
             }
             tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
