@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
    >
+
     <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
@@ -34,6 +35,12 @@
 
         </TextView>
     </RelativeLayout>
+    <ScrollView
+        style="@style/ScrollViewStyle">
+        <LinearLayout
+            style="@style/LinearLayoutStyle"
+            android:orientation="vertical"
+            >
         <LinearLayout
             style="@style/WagParentLinearLayoutStyle"
             android:orientation="vertical"
@@ -183,4 +190,7 @@
             android:background="@drawable/logo"
             android:id="@+id/imageView3" />
     </RelativeLayout>
+
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

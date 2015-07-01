@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -198,6 +200,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
                                                 "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
                                         positiveOnClickListener,negativeOnClickListener);
+                                new AlertDialog.Builder(
+                                        new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
                             } else {
                                 if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
