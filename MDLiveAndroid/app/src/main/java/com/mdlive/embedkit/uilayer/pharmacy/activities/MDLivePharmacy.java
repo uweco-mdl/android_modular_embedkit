@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -87,8 +88,9 @@ public class MDLivePharmacy extends FragmentActivity {
             @Override
             public void onClick(View v) {
 //                doConfirmAppointment();
-                Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
-                startActivity(i);
+                checkInsuranceEligibility();
+              /*  Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
+                startActivity(i);*/
             }
         });
         ((Button) findViewById(R.id.changePharmacyButton)).setOnClickListener(new View.OnClickListener() {
@@ -120,6 +122,72 @@ public class MDLivePharmacy extends FragmentActivity {
         pDialog = Utils.getProgressDialog("Please wait...", this);
     }
 
+
+    /**
+     * This method handles checks user insurance eligibility and return the final amount for the user.
+     * successListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * PharmacyService-Class will send the request to the server and get the responses
+     *doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
+     */
+
+    public void checkInsuranceEligibility(){
+        pDialog.show();
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                pDialog.dismiss();
+               Log.e("Zero Dollar Insurance", response.toString());
+                try{
+                    JSONObject jobj=new JSONObject(response.toString());
+                    if(jobj.has("final_amount")){
+                        if(Integer.parseInt(jobj.getString("final_amount"))>0){
+                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
+                            i.putExtra("final_amount",jobj.getString("final_amount"));
+                            startActivity(i);
+                        }else{
+                            doConfirmAppointment();
+                        }
+
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        NetworkErrorListener errorListener=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
+            }
+        };
+        PharmacyService insuranceService=new PharmacyService(MDLivePharmacy.this,pDialog);
+        insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(),successListener,errorListener);
+    }
+
+
+    public String formPostInsuranceParams(){
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        HashMap<String,String> insuranceMap=new HashMap<>();
+        insuranceMap.put("appointment_method","1");
+        insuranceMap.put("provider_id",settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        insuranceMap.put("timeslot","Now");
+        insuranceMap.put("provider_type_id","3");
+        insuranceMap.put("state_id",settings.getString(PreferenceConstants.LOCATION,"FL"));
+        return new Gson().toJson(insuranceMap);
+    }
+
+
+    /**
+     * This method handles appointment confirmation for zero dollar user
+     * responseListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * ConfirmAppointmentServices-Class will send the request to the server and get the responses
+     *
+     */
     private void doConfirmAppointment() {
         pDialog.show();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -148,7 +216,8 @@ public class MDLivePharmacy extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
+                Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
+                /*if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -158,13 +227,23 @@ public class MDLivePharmacy extends FragmentActivity {
                         // Show timeout error message
                         Utils.connectionTimeoutError(pDialog, MDLivePharmacy.this);
                     }
-                }
+                }*/
             }
         };
 
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String, Object> params = new HashMap<String, Object>();
+
         params.put("appointment_method", "1");
+        // params.put("phys_availability_id", null);
+        params.put("timeslot", "Now");
+        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        params.put("chief_complaint", "Not Sure");
+        params.put("customer_call_in_number", "9068906789");
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
+
+
+      /*  params.put("appointment_method", "1");
         params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
@@ -173,7 +252,7 @@ public class MDLivePharmacy extends FragmentActivity {
         params.put("customer_call_in_number", "9068906789");
         params.put("chief_complaint_reasons", null);
         params.put("alternate_visit_option", "alternate_visit_option");
-        params.put("do_you_have_primary_care_physician", "No");
+        params.put("do_you_have_primary_care_physician", "No");*/
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, pDialog);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);

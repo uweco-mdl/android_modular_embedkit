@@ -59,13 +59,21 @@ public class MDLivePayment extends Activity {
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
     private  double payableAmount=0.00;
-    private  String finalAmout="";
+    private  String finalAmout="0.00";
 
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
+
+        Bundle extras=getIntent().getExtras();
+        if(!extras.isEmpty()){
+            finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
+            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
+        }
+
+
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
         getDateOfBirth();
@@ -563,13 +571,14 @@ public class MDLivePayment extends Activity {
             JSONObject resObject=new JSONObject(response);
             if(resObject.has("discount_amount")){
                 String discountAmount=resObject.getString("discount_amount").replace("$","");
-                payableAmount=49.00-Double.parseDouble(discountAmount.trim());
+                payableAmount=Double.parseDouble(finalAmout)-Double.parseDouble(discountAmount.trim());
 
                 Log.e("Amount",payableAmount+"");
                 if(payableAmount<=0.00)
                 {
                     payableAmount=0.00;
                     finalAmout=String.format( "%.2f",payableAmount);
+                    doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
 
                   Log.e("Condition",finalAmout+"");
                 }else{
