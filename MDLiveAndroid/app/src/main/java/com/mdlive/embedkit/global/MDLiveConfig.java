@@ -10,11 +10,10 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
  */
 public class MDLiveConfig {
 
-    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
+//    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
 //    private static final String BASE_URL ="https://dev-members.mdlive.com/services";
-//    private static final String BASE_URL ="https://pluto-members.mdtestsite.net/services";
-
-
+    private static final String BASE_URL ="https://pluto-members.mdtestsite.net/services";
+    public static final String WALGREENS_LOGIN_SERVICE = "/customer_logins/embed_kit";
     public static final String LOGIN_SERVICES = "/customer_logins";
     public static final String URL_USER_INFORMATION = "/customer/:id";
     public static final String URL_PROVIDER_TYPE = "/providers/provider_type_list";
@@ -34,16 +33,16 @@ public class MDLiveConfig {
     private static final String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
 
     //Stage Secret Keys...
-    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
+//    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
+//    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
 
     //dev Secret Keys..
 //    private static final String MDLIVE_SECRET_KEY = "843f117b0bf7368ed5d";
 //    private static final String MDLIVE_API_KEY = "a775f7e2ed1ce6cb313b";
 
     //Pluto QA
-//    private static final String MDLIVE_API_KEY = "b74d0fb9a114904c009b";
-//    private static final String MDLIVE_SECRET_KEY ="89c8d3ea88501e8e62a";
+    private static final String MDLIVE_API_KEY = "b74d0fb9a114904c009b";
+    private static final String MDLIVE_SECRET_KEY ="89c8d3ea88501e8e62a";
 
     public static final String DEFAULT_USER_ID = "MobileUser";
 
@@ -157,7 +156,7 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_UPDATE_MEDICAL_HISTORY = URL_UPDATE_MEDICAL_HISTORY;
         AppSpecificConfig.URL_RATINGS = URL_RATINGS;
         AppSpecificConfig.URL_ZERO_INSURANCE = URL_ZERO_INSURANCE;
-
+        AppSpecificConfig.WALGREENS_LOGIN_SERVICE = WALGREENS_LOGIN_SERVICE;
     }
     /*
     private static final String BASE_URL = "https://stage-members.mdlive.com/services";
