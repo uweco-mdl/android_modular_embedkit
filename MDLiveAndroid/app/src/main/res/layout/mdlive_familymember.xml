@@ -1,142 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle">
+
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
 
         android:orientation="horizontal">
+
         <ImageView
+            android:id="@+id/backImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_arrow_hdpi"
-            android:id="@+id/backImg"
             android:layout_gravity="center"
-            android:layout_marginStart="17dp" />
+            android:layout_marginStart="17dp"
+            android:background="@drawable/back_arrow_hdpi" />
 
         <TextView
             android:id="@+id/headerTxt"
-            style = "@style/HeaderTextViewStyle"
+            style="@style/HeaderTextViewStyle"
             android:layout_marginLeft="20dp"
-            android:text="Add Child"
-            />
+            android:text="@string/add_child" />
     </LinearLayout>
-    <ScrollView style="@style/ScrollViewStyle"
-        >
+
+    <ScrollView style="@style/ScrollViewStyle">
+
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/providerNameLl"
             style="@style/LinearLayoutStyle"
-            android:id="@+id/providerNameLl">
-    <TextView
-        style = "@style/BaseSubHeaderTextViewStyle"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginStart="19dp"
-        android:text="Child must be younger than 18 years old."
-        android:layout_width="match_parent" />
-    <LinearLayout
-        style="@style/WagParentLinearLayoutStyle"
-        android:orientation="vertical">
-    <LinearLayout
-        style="@style/LinearLayoutStyle"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginStart="19dp"
-            android:id="@+id/patientLl"
-            style="@style/WagLinearLayoutStyle">
-            <TextView
-                style = "@style/GetStartedHeaderContentStyle"
-                android:text="Patient Name"
-                 />
-            <EditText
-                style = "@style/GetStartedContentTxtStyle"
-                android:hint="Patient Name"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:background="@null"
-                android:id="@+id/patientEt" />
-
-
-        </LinearLayout>
-        <View style="@style/ViewStyle" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/dobLl"
-            android:layout_marginStart="19dp"
-            style="@style/WagLinearLayoutStyle">
-            <TextView
-                style = "@style/GetStartedHeaderContentStyle"
-                android:text="Date of Birth"/>
+            android:orientation="vertical">
 
             <TextView
-                style = "@style/GetStartedHeaderContentStyle"
-                android:id="@+id/dobTxt"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:hint="mm/dd/yyyy"/>
-        </LinearLayout>
-
-        <View style="@style/ViewStyle" />
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/genderLl"
-            android:layout_marginStart="19dp"
-            style="@style/WagLinearLayoutStyle">
-            <TextView
-                style = "@style/GetStartedHeaderContentStyle"
-                android:text="Gender"
-                 />
-            <RelativeLayout
+                style="@style/BaseSubHeaderTextViewStyle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    style = "@style/GetStartedContentTxtStyle"
-                    android:hint=""
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:id="@+id/genderTxt" />
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/dropdown_icon"
-                    android:layout_centerVertical="true"
-                    />
-            </RelativeLayout>
-        </LinearLayout>
+                android:layout_marginStart="19dp"
+                android:text="@string/child_must_be_younger_than"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
-        <View style="@style/ViewStyle" />
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp"
-            android:id="@+id/locationLl"
-            android:layout_marginStart="5dp"
-            style="@style/LinearLayoutStyle">
+            <LinearLayout
+                style="@style/WagParentLinearLayoutStyle"
+                android:orientation="vertical">
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/mySwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:textSize="16sp"
-                android:text="I,Michelle Marino confirm that i'm the legal parent / guardian of the minor above."
-                android:checked="false" />
-        </LinearLayout>
-        </LinearLayout>
+                <LinearLayout
+                    style="@style/LinearLayoutStyle"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/patientLl"
+                        style="@style/WagLinearLayoutStyle"
+                        android:layout_marginStart="19dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:text="@string/first_name" />
+
+                        <EditText
+                            android:id="@+id/patientEt"
+                            style="@style/GetStartedContentTxtStyle"
+                            android:background="@null"
+                            android:hint="@string/first_name"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
 
 
-    </LinearLayout>
+                    </LinearLayout>
+
+                    <View style="@style/ViewStyle" />
+
+                    <LinearLayout
+                        android:id="@+id/patientL2"
+                        style="@style/WagLinearLayoutStyle"
+                        android:layout_marginStart="19dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:text="@string/last_name" />
+
+                        <EditText
+                            android:id="@+id/patient2Et"
+                            style="@style/GetStartedContentTxtStyle"
+                            android:background="@null"
+                            android:hint="@string/last_name"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+
+                    </LinearLayout>
+
+                    <View style="@style/ViewStyle" />
+
+                    <LinearLayout
+                        android:id="@+id/dobLl"
+                        style="@style/WagLinearLayoutStyle"
+                        android:layout_marginStart="19dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:text="@string/date_of_birth" />
+
+                        <TextView
+                            android:id="@+id/dobTxt"
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:hint="@string/date_of_birth_hint"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <View style="@style/ViewStyle" />
+
+                    <LinearLayout
+                        android:id="@+id/genderLl"
+                        style="@style/WagLinearLayoutStyle"
+                        android:layout_marginStart="19dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:text="@string/gender" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/genderTxt"
+                                style="@style/GetStartedContentTxtStyle"
+                                android:hint=""
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/dropdown_icon" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View style="@style/ViewStyle" />
+
+                    <LinearLayout
+                        android:id="@+id/locationLl"
+                        style="@style/LinearLayoutStyle"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="30dp"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/mySwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:gravity="left|center"
+                            android:text="@string/i_michelle_text"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/addChildBtn"
                 style="@style/ContinueButtonStyle"
                 android:layout_marginTop="20dp"
-                android:text="Add Child"
-                />
+                android:text="Add Child" />
         </LinearLayout>
 
     </ScrollView>
 
 
-    </LinearLayout>
+</LinearLayout>

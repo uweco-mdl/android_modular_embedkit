@@ -28,8 +28,6 @@ import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -55,10 +53,10 @@ public class MDLiveFamilymember extends Activity {
     private ProgressDialog pDialog;
     private SwitchCompat mySwitch;
     private Button addChildBtn;
-    private EditText patientNameEt;
+    private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
-    private String getEditValue,strGender,strDate;
+    private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
     private LinearLayout genderll,dobLl;
     private DatePickerDialog datePickerDialog;
     private  boolean isAllFieldsfilled = true;
@@ -78,7 +76,8 @@ public class MDLiveFamilymember extends Activity {
 
 
         pDialog = Utils.getProgressDialog("Please wait...",this);
-        patientNameEt= (EditText) findViewById(R.id.patientEt);
+        firstNameEditText = (EditText) findViewById(R.id.patientEt);
+        lastNameEditText = (EditText) findViewById(R.id.patient2Et);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
         dateTxt = (TextView) findViewById(R.id.dobTxt);
         genderll = (LinearLayout) findViewById(R.id.genderLl);
@@ -105,7 +104,7 @@ public class MDLiveFamilymember extends Activity {
 //            }
 //        });
 
-        patientNameEt.addTextChangedListener(new TextWatcher() {
+        firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -129,9 +128,9 @@ public class MDLiveFamilymember extends Activity {
                 addChildBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getEditValue = patientNameEt.getText().toString();
-                        if (Utils.isValidName(getEditValue)) {
-                        //if (getEditValue.matches("[A-Z][a-zA-Z]*")) {
+                        firstNameEditTextValue = firstNameEditText.getText().toString().trim();
+                        lastNameEditTextValue = lastNameEditText.getText().toString().trim();
+                        if (Utils.isValidName(firstNameEditTextValue) && Utils.isValidName(lastNameEditTextValue)) {
                             HashMap<String, HashMap<String, String>> map = new HashMap<>();
                             HashMap params = new HashMap();
                             params.put("computer", "Mac");
@@ -159,10 +158,10 @@ public class MDLiveFamilymember extends Activity {
 
 
                             HashMap params1 = new HashMap();
-                            //params1.put("username", getEditValue);
-                            params1.put("first_name", getEditValue);
+                            //params1.put("username", firstNameEditTextValue);
+                            params1.put("first_name", firstNameEditTextValue);
                             params1.put("middle_name", "");
-                            params1.put("last_name", "");
+                            params1.put("last_name", lastNameEditTextValue);
                             params1.put("gender", strGender);
                             params1.put("email", userObject.optString("email"));
                             params1.put("phone", userObject.optString("phone"));
@@ -252,7 +251,7 @@ public class MDLiveFamilymember extends Activity {
     public void ValidateModuleFields() {
         isAllFieldsfilled = true;
 
-        if(TextUtils.isEmpty(patientNameEt.getText().toString())){
+        if(TextUtils.isEmpty(firstNameEditText.getText().toString())){
             isAllFieldsfilled = false;
         }
 //        if(TextUtils.isEmpty(dateTxt.getText())){
@@ -329,9 +328,8 @@ public class MDLiveFamilymember extends Activity {
         try {
             pDialog.dismiss();
             //Fetch Data From the Services
-            JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject) parser.parse(response.toString());
-            Log.e("MDlivePediatric->",responObj.toString());
+            Log.e("MDlivePediatric->",response.toString());
+            Utils.showDialog(this, "Child Added", response.optString("message"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -429,5 +427,5 @@ public class MDLiveFamilymember extends Activity {
     {
         Utils.movetohome(MDLiveFamilymember.this, MDLiveLogin.class);
     }
-    }
+}
 
