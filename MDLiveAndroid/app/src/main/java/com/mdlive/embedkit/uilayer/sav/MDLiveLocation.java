@@ -218,7 +218,8 @@ public class MDLiveLocation extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                if (error.networkResponse == null) {
+                Utils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
+               /* if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -228,7 +229,7 @@ public class MDLiveLocation extends Activity {
                         // Show timeout error message
                         Utils.connectionTimeoutError(pDialog, MDLiveLocation.this);
                     }
-                }
+                }*/
             }
         };
 

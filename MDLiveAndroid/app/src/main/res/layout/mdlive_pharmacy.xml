@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textColor="@color/black"
-                        android:text="Please select a pharmacy in the event your doctor prescribes a medication3"
+                        android:text="Please select a pharmacy in the event your doctor prescribes a medication"
                         android:textSize="15sp"
                         android:id="@+id/textView18" />
                 </LinearLayout>
@@ -168,7 +168,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:padding="10dp"
         >
         <include

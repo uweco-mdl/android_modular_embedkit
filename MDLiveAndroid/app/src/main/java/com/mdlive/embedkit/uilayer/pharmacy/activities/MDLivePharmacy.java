@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.pharmacy.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -235,6 +233,7 @@ public class MDLivePharmacy extends FragmentActivity {
         HashMap<String, Object> params = new HashMap<String, Object>();
 
         params.put("appointment_method", "1");
+        params.put("do_you_have_primary_care_physician","No");
         // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));

@@ -121,10 +121,11 @@ public class MDLiveGetStarted extends FragmentActivity{
     protected void onResume() {
         super.onResume();
         if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
-            patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
+            loadUserInformationDetails();
+           /* patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dependentList);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            patientSpinner.setAdapter(dataAdapter);
+            patientSpinner.setAdapter(dataAdapter);*/
         }
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
@@ -198,7 +199,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 };
 
                                 Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
-                                                "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
+                                                "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
                                         positiveOnClickListener,negativeOnClickListener);
                                 /*new AlertDialog.Builder(
                                         new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
@@ -218,8 +219,16 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
                                     }
                                     editor.commit();
-                                    Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
-                                    startActivity(intent);
+                                    if(phonrNmberEditTxt.getText().toString().length()<10)
+                                    {
+                                        Utils.alert(pDialog,MDLiveGetStarted.this,"Please enter the Valid Phone number");
+
+                                    }else
+                                    {
+                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+                                        startActivity(intent);
+                                    }
+
                                 }
 
                             }
@@ -271,7 +280,6 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
 
-
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_spinner_item,list);
 
@@ -305,7 +313,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         dialogInterface.dismiss();
                                     }
                                 };
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "CALL NOW", "ClOSE",
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "ClOSE", "CALL NOW",
                                         positiveOnClickListener,negativeOnClickListener);
                             }else
                             {

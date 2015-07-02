@@ -93,6 +93,8 @@
             android:layout_marginTop="30dp"
             android:text=""
             android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textAllCaps="false" />
             <LinearLayout
                style="@style/LinearLayoutStyle"

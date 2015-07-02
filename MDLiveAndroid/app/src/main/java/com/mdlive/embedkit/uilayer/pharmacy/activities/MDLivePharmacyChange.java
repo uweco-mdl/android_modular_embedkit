@@ -146,6 +146,7 @@ public class MDLivePharmacyChange extends Activity {
                 String hasErrorMessage = hasValidationMessage();
                 if(hasErrorMessage == null){
                     addExtrasInIntent();
+                    Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
                     startActivity(sendingIntent);
                     finish();
                 }else{
@@ -266,6 +267,7 @@ public class MDLivePharmacyChange extends Activity {
                             pDialog.dismiss();
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
+                                Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
                                 startActivity(sendingIntent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();

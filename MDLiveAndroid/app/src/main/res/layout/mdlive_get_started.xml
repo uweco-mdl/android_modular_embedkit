@@ -87,7 +87,6 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginLeft="19dp"
                 android:id="@+id/genderLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
@@ -107,7 +106,6 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginLeft="19dp"
                 android:id="@+id/locationLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
@@ -142,7 +140,6 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginLeft="19dp"
                 android:id="@+id/telephoneLl"
                 style="@style/WagLinearLayoutStyle">
                 <TextView
