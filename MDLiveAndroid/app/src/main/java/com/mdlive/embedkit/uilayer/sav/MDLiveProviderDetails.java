@@ -35,7 +35,7 @@ import org.json.JSONObject;
  */
 public class MDLiveProviderDetails extends Activity{
     private ProgressDialog pDialog;
-    private TextView aboutme_txt,specialities_txt,license_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,withpatientTxt;
+    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,withpatientTxt;
     private CircularNetworkImageView ProfileImg;
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
@@ -79,8 +79,9 @@ public class MDLiveProviderDetails extends Activity{
     public void Initialization()
     {
         aboutme_txt = (TextView)findViewById(R.id.aboutMe_txt);
+        education_txt = (TextView)findViewById(R.id.education_txt);
         specialities_txt = (TextView)findViewById(R.id.specialities_txt);
-        license_txt = (TextView)findViewById(R.id.license_txt);
+        hospitalAffilations_txt = (TextView)findViewById(R.id.license_txt);
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
@@ -173,21 +174,44 @@ public class MDLiveProviderDetails extends Activity{
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
             JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
             //Doctor Name
-            String str_DoctorName = providerdetObj.get("name").getAsString();
-            String str_Location = providerdetObj.get("location").getAsString();
-            String str_AboutMe = providerdetObj.get("about_me").getAsString();
-            String str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
-            String str_Availability_Type= providerdetObj.get("availability_type").getAsString();
+            String str_DoctorName ="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"name")) {
+                 str_DoctorName = providerdetObj.get("name").getAsString();
+            }
+            String str_BoardCertifications="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"board_certifications")) {
+                 str_BoardCertifications = providerdetObj.get("board_certifications").getAsString();
+            }
+            String str_AboutMe="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"about_me"))
+            {
+                 str_AboutMe = providerdetObj.get("about_me").getAsString();
+            }
+            String str_ProfileImg="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"provider_image_url")) {
+                 str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
+            }
+            String str_Availability_Type="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"availability_type")) {
+                 str_Availability_Type = providerdetObj.get("availability_type").getAsString();
+            }
+            String str_education="";
+            if(Utils.checkJSONResponseHasString(providerdetObj,"education")) {
+                str_education = providerdetObj.get("education").getAsString();
+            }
             if(str_Availability_Type.equals("Available now"))
             {
                 withpatientTxt.setText(str_Availability_Type);
-                withpatientTxt.setBackgroundColor(Color.parseColor("#31B404"));
+                withpatientTxt.setTextColor(Color.parseColor("#31B404"));
 
             }
             else if(str_Availability_Type.equals("With Patient"))
             {
                 withpatientTxt.setText(str_Availability_Type);
-                withpatientTxt.setBackgroundColor(Color.parseColor("#FF4000"));
+                withpatientTxt.setTextColor(Color.parseColor("#FF4000"));
+                tapSeetheDoctorTxt.setClickable(false);
+                tapSeetheDoctorTxt.setBackgroundColor(getResources().getColor(R.color.search_bgd));
+                tapSeetheDoctorTxt.setText("Currently with patient");
             }
             else if(str_Availability_Type.equals("not available"))
             {
@@ -200,16 +224,44 @@ public class MDLiveProviderDetails extends Activity{
             ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
             ProfileImg.setErrorImageResId(R.drawable.doctor_icon);
             doctorNameTv.setText(str_DoctorName);
-            if(str_DoctorName.isEmpty())
+            if(str_DoctorName.equals(""))
             {
                 tapSeetheDoctorTxt.setClickable(false);
                 tapSeetheDoctorTxt.setVisibility(View.GONE);
                 detailsLl.setVisibility(View.GONE);
 
+            }else
+            {
+                tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
             }
-            tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
-            aboutme_txt.setText(str_AboutMe);
-            location_txt.setText(str_Location);
+            Log.e("About me",str_AboutMe.length()+"");
+           if(str_AboutMe.length()!=0)
+           {
+               aboutme_txt.setText(str_AboutMe);
+           }else
+           {
+              Log.e("str_AboutMe-------------->",str_AboutMe);
+
+               ((LinearLayout)findViewById(R.id.aboutmeLl)).setVisibility(View.GONE);
+           }
+            if(!str_education.equals("")||str_education != null && !str_education.isEmpty()||str_education.length()!=0)
+            {
+                education_txt.setText(str_education);
+            }else
+            {
+                education_txt.setVisibility(View.GONE);
+                ((LinearLayout)findViewById(R.id.educationLl)).setVisibility(View.GONE);
+            }
+
+            if(!str_BoardCertifications.equals("")||str_BoardCertifications != null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
+            {
+                location_txt.setText(str_BoardCertifications);
+            }else
+            {
+                location_txt.setVisibility(View.GONE);
+                ((LinearLayout)findViewById(R.id.boardCertificationsLl)).setVisibility(View.GONE);
+            }
+
             String license_state = "";
             //License Array
             getLicenseArrayResponse(providerdetObj, license_state);
@@ -263,8 +315,14 @@ public class MDLiveProviderDetails extends Activity{
         for(int i=0;i<specialityArray.size();i++)
         {
             specialities+= specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
-            specialities_txt.setText(specialities);
-            Log.e("Lang Details--->", specialityArray.get(i).toString());
+            if(!specialities.equals("")||specialities.length()!=0)
+            {
+                specialities_txt.setText(specialities);
+            }else
+            {
+                specialities_txt.setVisibility(View.GONE);
+                ((LinearLayout)findViewById(R.id.specialitiesLl)).setVisibility(View.GONE);
+            }
 
         }
     }
@@ -281,8 +339,14 @@ public class MDLiveProviderDetails extends Activity{
         for(int i=0;i<langArray.size();i++)
         {
             lang+=langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
-            lang_txt.setText(lang);
-            Log.e("Lang Details--->", langArray.get(i).toString());
+            if(!lang.equals("")||lang != null && !lang.isEmpty()||lang.length()!=0)
+            {
+                lang_txt.setText(lang);
+            }else
+            {
+                lang_txt.setVisibility(View.GONE);
+                ((LinearLayout)findViewById(R.id.languagesLl)).setVisibility(View.GONE);
+            }
 
         }
     }
@@ -294,13 +358,23 @@ public class MDLiveProviderDetails extends Activity{
      */
 
     private void getLicenseArrayResponse(JsonObject providerdetObj, String license_state) {
-        JsonArray responArray = providerdetObj.get("provider_licenses").getAsJsonArray();
+        JsonArray responArray = providerdetObj.get("provider_affiliations").getAsJsonArray();
         for(int i=0;i<responArray.size();i++)
         {
-            JsonObject licenseObject = responArray.get(i).getAsJsonObject();
-            license_state +=licenseObject.get("state").getAsString()+"\n";
-            license_txt.setText(license_state);
-            String license_number = licenseObject.get("license_number").getAsString();
+//            JsonObject licenseObject = responArray.get(i).getAsJsonObject();
+//            license_state +=licenseObject.get("state").getAsString()+"\n";
+            String hospitalAffilations = "";
+            hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1)+"\n";
+            if(!hospitalAffilations.equals("")||hospitalAffilations != null || !hospitalAffilations.isEmpty()||hospitalAffilations.length()!=0)
+            {
+                hospitalAffilations_txt.setText(hospitalAffilations);
+            }else
+            {
+                hospitalAffilations_txt.setVisibility(View.GONE);
+                ((LinearLayout)findViewById(R.id.hosaffiliationsLl)).setVisibility(View.GONE);
+            }
+
+//            String license_number = licenseObject.get("license_number").getAsString();
         }
     }
 

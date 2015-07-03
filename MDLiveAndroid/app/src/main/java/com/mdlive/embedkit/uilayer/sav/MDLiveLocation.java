@@ -52,7 +52,7 @@ public class MDLiveLocation extends Activity {
     private ArrayList<String> StateName = new ArrayList<String>();
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
-    private String ZipCodeCity,selectedCity,longNameText,shortNameText;
+    private String ZipCodeCity,selectedCity,longNameText,shortNameText,zipcode_longNameText;
     private int keyDel=0;
 
     @Override
@@ -122,6 +122,7 @@ public class MDLiveLocation extends Activity {
                         String getEditTextValue = ZipcodeEditTxt.getText().toString();
                         if(Utils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
+
                         }else{
                             Utils.alert(pDialog,MDLiveLocation.this,"Please enter a valid Zip Code");
                         }
@@ -129,9 +130,13 @@ public class MDLiveLocation extends Activity {
                         SaveZipCodeCity(selectedCity);
                         finish();
                     }
+
                 }else{
                     Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
                 }
+
+
+
 
                /* if(StateTxt.getText().length()==0){
                     String getEditTextValue = ZipcodeEditTxt.getText().toString();
@@ -306,12 +311,20 @@ public class MDLiveLocation extends Activity {
                             SelectedZipCodeCity = localZip.get("short_name").getAsString();
                             Log.e("Results", SelectedZipCodeCity);
                             //This is for long name like Florida.
-                            longNameText = SelectedZipCodeCity;
+                            zipcode_longNameText = SelectedZipCodeCity;
                             //This is for Short name like FL
-                            shortNameText = SelectedZipCodeCity;
-                            selectedCity = ZipCodeCity;
-                            SaveZipCodeCity(longNameText);
-                            finish();
+
+                            for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
+                                if (zipcode_longNameText.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
+                                    zipcode_longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
+                                    SaveZipCodeCity(zipcode_longNameText);
+                                    Log.e("Location Service -->", Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l));
+                                } else {
+                                    Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+                                }
+                            }
+
+
 //                            SaveZipCodeCity(SelectedZipCodeCity);
 //                            Intent resultIntent = new Intent();
 //                            resultIntent.putExtra("ZipCodeCity", ZipCodeCity);

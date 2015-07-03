@@ -115,39 +115,51 @@
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
+                android:id="@+id/specialitiesLl"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="5dp">
                 <include layout="@layout/mdlive_provider_specialities"/>
             </LinearLayout>
     <LinearLayout
       style="@style/LinearLayoutStyle"
-        android:layout_marginStart="5dp">
-      <include layout="@layout/mdlive_provider_aboutme"/>
+        android:layout_marginStart="5dp"
+                    android:id="@+id/hosaffiliationsLl"
+                    android:layout_marginTop="10dp">
+                    <include layout="@layout/mdlive_provider_license"/>
       </LinearLayout>
        <LinearLayout
         style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp"
+                    android:id="@+id/educationLl"
            android:layout_marginTop="10dp">
-        <include layout="@layout/mdlive_provider_license"/>
+                    <include layout="@layout/mdlive_provider_education"/>
+       </LinearLayout>
+
+       <LinearLayout
+         style="@style/LinearLayoutStyle"
+                    android:id="@+id/languagesLl"
+                    android:layout_marginLeft="5dp"
+           android:layout_marginTop="10dp">
+                    <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
 
        <LinearLayout
          style="@style/LinearLayoutStyle"
            android:layout_marginStart="5dp"
-           android:layout_marginTop="10dp">
-         <include layout="@layout/mdlive_provider_affilitations"/>
-       </LinearLayout>
-
-       <LinearLayout
-         style="@style/LinearLayoutStyle"
-           android:layout_marginStart="5dp"
+                    android:id="@+id/boardCertificationsLl"
            android:layout_marginTop="10dp">
          <include layout="@layout/mdlive_provider_location"/>
        </LinearLayout>
+             <LinearLayout
+            style="@style/LinearLayoutStyle"
+                 android:id="@+id/aboutmeLl"
+           android:layout_marginLeft="5dp">
+          <include layout="@layout/mdlive_provider_aboutme"/>
+           </LinearLayout>
 
        <LinearLayout
           style="@style/LinearLayoutStyle"
            android:layout_marginStart="5dp"
+           android:visibility="gone"
            android:layout_marginTop="10dp">
           <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
