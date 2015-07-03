@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -196,12 +197,19 @@ public class MDLiveReasonForVisit extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                baseadapter.getFilter().filter(s.toString());
+
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                String text=s.toString();
+                if(!text.startsWith(" ")){
+                    baseadapter.getFilter().filter(s.toString());
+                }else{
+                    Utils.alert(pDialog,MDLiveReasonForVisit.this,"Please enter the character");//TO DO Need to confirm the alert message
 
+                }
             }
         });
     }
