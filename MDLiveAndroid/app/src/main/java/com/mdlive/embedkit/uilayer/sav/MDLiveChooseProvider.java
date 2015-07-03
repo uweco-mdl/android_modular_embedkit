@@ -244,9 +244,11 @@ public class MDLiveChooseProvider extends Activity {
     private void setListView() {
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
-        listView.addFooterView(footerView);
+        if (listView.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            listView.addFooterView(footerView);
+        }
 
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
         listView.setAdapter(baseadapter);

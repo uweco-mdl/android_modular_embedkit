@@ -84,6 +84,10 @@ public class MDLiveVsee extends Activity
                         // video call is over... end the call activity if it is open
                         VSeeServerConnection.instance().logout();
                         VSeeVideoManager.instance().finishVideoActivity();
+                        Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
+                        i.putExtra("isReturning", true);
+                        startActivity(i);
+                        finish();
                     }
                 }
 
@@ -94,10 +98,8 @@ public class MDLiveVsee extends Activity
             String uid = extras.getString("username");
             String pass = extras.getString("password");
             MDLiveVseeApplication.setCredentials(uid, pass);
-
             VSeeServerConnection.instance().loginUser(uid, pass);
         }
-
 
         if (!MDLiveVseeApplication.loginCredentialsValid())
         {
@@ -130,8 +132,9 @@ public class MDLiveVsee extends Activity
         if(CONSULTED)   // if user returned to this page after a consultation
         {
             FINISH = true;
+            VSeeVideoManager.instance().finishVideoActivity();
 			VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
-			VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
+            VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
 			simpleServerConnectionReceiver = null;
 			simpleVidManagerReceiver = null;
             Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);

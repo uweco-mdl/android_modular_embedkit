@@ -47,20 +47,7 @@ public class MDLiveWaitingRoom extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
         isReturning = getIntent().getBooleanExtra("isReturning",false);
-        if(isReturning){
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    getProviderStatus();
-//                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-//                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(i);
-//                    finish();
-                }
-            }, 30000);
-        } else {
-            getProviderStatus();
-        }
+        getProviderStatus();
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,15 +70,15 @@ public class MDLiveWaitingRoom extends Activity{
 
             @Override
             public void onResponse(Object response) {
-                Log.e("Response Vsee", response.toString());
+                Log.e("Response Provider Status", response.toString());
                 handleSuccessResponse(response.toString());//Method to handle the response from Server
             }
         };
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response Vsee", error.toString());
-                if (error.networkResponse == null)
+                Log.e("Response Provider Status Error", error.toString());
+                if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
 
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -101,6 +88,13 @@ public class MDLiveWaitingRoom extends Activity{
                         // Show timeout error message
                         Utils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
                     }
+                }
+                if(isReturning){
+                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                }
             }
         };
 
@@ -138,6 +132,12 @@ public class MDLiveWaitingRoom extends Activity{
                         Utils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
                     }
                 }
+                if(isReturning){
+                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                }
             }
         };
         waitingService = new WaitingRoomService(MDLiveWaitingRoom.this, null);
@@ -155,17 +155,17 @@ public class MDLiveWaitingRoom extends Activity{
         try{
             JSONObject resObj=new JSONObject(response);
             Log.d("isReturning",isReturning + "" + " - Provider status" + resObj.getString("provider_status"));
-            if(isReturning && !resObj.getString("provider_status").equals("true")) {
-                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
-            }else if(resObj.getString("provider_status").equals("true")){
+            if(resObj.getString("provider_status").equals("true")){
                 ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
                 getVSEECredentials();
+            }else if(isReturning && !resObj.getString("provider_status").equals("true")) {
+                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
             }else {
                 getProviderStatus();
             }
