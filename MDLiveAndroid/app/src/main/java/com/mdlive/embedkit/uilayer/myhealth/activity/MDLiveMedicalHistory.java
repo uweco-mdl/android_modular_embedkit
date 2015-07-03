@@ -96,7 +96,7 @@ public class MDLiveMedicalHistory extends Activity {
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
     private boolean isFemaleQuestionsDone = false, isConditionsDone = false,
-            isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser;
+            isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser = false;
     private Button btnSaveContinue;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup, ProceduresGroup;
@@ -174,11 +174,11 @@ public class MDLiveMedicalHistory extends Activity {
 
 //        saveDateOfBirth();
         initializeViews();
-        checkMedicalAggregation();
+
+        checkMedicalDateHistory();
     }
 
     private void updateMedicalHistory(){
-
         pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -209,13 +209,11 @@ public class MDLiveMedicalHistory extends Activity {
             updateMap.put("Have you ever had any surgeries or medical procedures?", hasProcedures?"Yes":"No");
             HashMap<String, HashMap<String,String>> medhistoryMap = new HashMap<String, HashMap<String,String>>();
             medhistoryMap.put("medical_history",updateMap);
-
             MedicalHistoryUpdateServices services = new MedicalHistoryUpdateServices(MDLiveMedicalHistory.this, null);
             services.updateMedicalHistoryRequest(medhistoryMap, successCallBackListener, errorListener);
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
 
@@ -525,7 +523,7 @@ public class MDLiveMedicalHistory extends Activity {
     }
 
 
-    private void saveEntryForOptions(String prefId, String value) {
+    /*private void saveEntryForOptions(String prefId, String value) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(prefId, value);
@@ -535,7 +533,7 @@ public class MDLiveMedicalHistory extends Activity {
     private String getEntryForOptions(String prefId) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         return sharedpreferences.getString(prefId, null);
-    }
+    }*/
 
     /**
      * Checks user medical history aggregation details.
@@ -697,13 +695,13 @@ public class MDLiveMedicalHistory extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.show();
+//            pDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            pDialog.dismiss();
+//            pDialog.dismiss();
             if(imageAdapter != null)
                 imageAdapter.notifyDataSetChanged();
         }
@@ -857,35 +855,46 @@ public class MDLiveMedicalHistory extends Activity {
     private void checkMedicalDateHistory() {
         pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
                 pDialog.dismiss();
                 try {
-                    if(response != null){
-                        if(response.has("health_last_update")){
-                            long time = response.getLong("health_last_update");
-                            if(time != 0){
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTimeInMillis(time * 1000);
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                                ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
-                                ((TextView)findViewById(R.id.updateInfoText)).setText(
-                                        "Last Updated : "+
-                                                dateFormat.format(calendar.getTime())
-                                );
-                            } else {
-                                isNewUser = true;
-                            }
-                        } else {
-                            isNewUser = true;
+                    if(response.get("health_last_update") instanceof Number){
+                        Log.e("health_last_update ", "number");
+                        long num=response.getLong("health_last_update");
+                        int length = (int) Math.log10(num) + 1;
+                        System.out.println(length);
+                    }else if(response.get("health_last_update") instanceof CharSequence){
+                        Log.e("health_last_update ", "String");
+                        if(response.getString("health_last_update").equals("")){
+                            Log.e("health_last_update ", "String is empty");
                         }
                     }
+
+                        if(response.getString("health_last_update").length() == 0){
+                                isNewUser = true;
+                        }else{
+                            if(response.has("health_last_update")){
+                                long time = response.getLong("health_last_update");
+                                if(time != 0){
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTimeInMillis(time * 1000);
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                    ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
+                                    ((TextView)findViewById(R.id.updateInfoText)).setText(
+                                            "Last Updated : "+
+                                                    dateFormat.format(calendar.getTime())
+                                    );
+                                    isNewUser = false;
+                                }
+                            }
+                        }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     isNewUser = true;
                 }
-                downloadMedicalRecordService();
+                checkMedicalAggregation();
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -920,6 +929,7 @@ public class MDLiveMedicalHistory extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("error", error.getMessage());
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -1033,10 +1043,10 @@ public class MDLiveMedicalHistory extends Activity {
     private void medicalCompletionHandleSuccessResponse(JSONObject response) {
         try {
             JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
-            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) == null ||
+           /* if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) == null &&
                     getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("false")){
                 isNewUser = isUserFirstToApp(historyPercentageArray);
-            }
+            }*/
             //checkIsFirstTimeUser(historyPercentageArray);
             checkMyHealthHistory(historyPercentageArray);
             //checkPediatricProfile(historyPercentageArray);
@@ -1046,17 +1056,14 @@ public class MDLiveMedicalHistory extends Activity {
 //            applyValidationOnViews();
             ValidateModuleFields();
             checkAgeAndFemale();
-            if(isNewUser){
-                downloadMedicalRecordService();
-            }else{
-                checkMedicalDateHistory();
-            }
+            downloadMedicalRecordService();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean isUserFirstToApp(JSONArray historyPercentageArray){
+    /*public boolean isUserFirstToApp(JSONArray historyPercentageArray){
         int havingHealth = -1, liftStyle = -1, pediatric = -1;
         try {
             for(int i = 0; i < historyPercentageArray.length(); i++)
@@ -1094,7 +1101,7 @@ public class MDLiveMedicalHistory extends Activity {
         }else{
             return false;
         }
-    }
+    }*/
 
     /**
      * Check the age of user and sex whether male or female to enable
@@ -1161,19 +1168,14 @@ public class MDLiveMedicalHistory extends Activity {
             e.printStackTrace();
         }
 
-        if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
-            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+            if(isNewUser){
                 findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
                 findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
             }else{
                 findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
                 findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
             }
-        }
-        if(AllergiesGroup.getCheckedRadioButtonId() > 0 &&
-                AllergiesGroup.getCheckedRadioButtonId() == R.id.allergiesYesButton){
-            ((RadioButton) findViewById(R.id.allergiesYesButton)).setChecked(false);
-        }
+
     }
 
     /**
@@ -1212,15 +1214,14 @@ public class MDLiveMedicalHistory extends Activity {
             e.printStackTrace();
         }
 
-        if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
-            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+            if(isNewUser){
                 findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
                 findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
             }else{
                 findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
                 findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
             }
-        }
+
 
         if(MedicationsGroup.getCheckedRadioButtonId() > 0 &&
                 MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton){
@@ -1262,15 +1263,14 @@ public class MDLiveMedicalHistory extends Activity {
                 ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText("No conditions reported");
             }
 
-            if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER) != null){
-                if(getEntryForOptions(PreferenceConstants.IS_FIRST_TIME_USER).equals("true")){
+                if(isNewUser){
                     findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
                     findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
                 }else{
                     findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
                     findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
                 }
-            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1280,9 +1280,6 @@ public class MDLiveMedicalHistory extends Activity {
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
             ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
         }
-
-
-
     }
 
 
@@ -1384,6 +1381,9 @@ public class MDLiveMedicalHistory extends Activity {
                 medicalCommonErrorResponseHandler(error);
             }
         };
+
+    /*  Log.e("new Gson().toJson(postBody)", new Gson().toJson(postBody));*/
+
         UpdateFemaleAttributeServices services = new UpdateFemaleAttributeServices(MDLiveMedicalHistory.this, null);
         services.updateFemaleAttributeRequest(new Gson().toJson(postBody), successCallBackListener, errorListener);
     }

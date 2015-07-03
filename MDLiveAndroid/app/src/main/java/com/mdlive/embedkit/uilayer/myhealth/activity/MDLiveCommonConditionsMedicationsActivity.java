@@ -76,6 +76,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     public String conditionsText = "";
     public static boolean isNewAdded = false;
     public Intent resultData = new Intent();
+    public static boolean IsThisPageEdited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -44,6 +44,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         //Setting up type in parent class for Conditions
         type = TYPE_CONSTANT.CONDITION;
         super.onCreate(savedInstanceState);
+        IsThisPageEdited = false;
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medical_condition));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -59,6 +60,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
         setResult(RESULT_OK);
+        IsThisPageEdited = true;
         if (newConditions.size() == 0) {
             pDialog.dismiss();
             updateConditionsOrAllergies();
@@ -134,6 +136,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     @Override
     protected void updateConditionsOrAllergies() {
         try {
+            IsThisPageEdited = true;
              new UpdateExistingConditionsService().execute();
         }catch(Exception e){
             e.printStackTrace();
@@ -218,6 +221,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                IsThisPageEdited = true;
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
@@ -269,8 +273,10 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        checkMedicalAggregation();
+        if(IsThisPageEdited)
+            checkMedicalAggregation();
+        else
+            super.onBackPressed();
     }
 
     /**

@@ -6,12 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMedicalHistory;
@@ -31,6 +32,7 @@ public class ImageAdapter extends BaseAdapter {
     private ArrayList<HashMap<String, Object>> myPhotosList;
     private BitmapFactory.Options options;
     private int size = 0;
+    private LayoutInflater inflater;
     public ImageAdapter(Activity activity, ArrayList<HashMap<String, Object>> myPhotosList) {
         this.myPhotosList = myPhotosList;
         this.activity = activity;
@@ -40,6 +42,7 @@ public class ImageAdapter extends BaseAdapter {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         size = width/4;
+        inflater = activity.getLayoutInflater();
     }
 
     public void notifyWithDataSet(ArrayList<HashMap<String, Object>> myPhotosList){
@@ -64,17 +67,21 @@ public class ImageAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adaptergridview
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
+        ImageView imageView = null;
+        ProgressBar progressBar = null;
         if (convertView == null || convertView.getTag() == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(activity);
-            imageView.setLayoutParams(new GridView.LayoutParams(size, size));
+            convertView = inflater.inflate(R.layout.mdlive_custom_imageadapter_view, null);
+            imageView = (ImageView)convertView.findViewById(R.id.thumpImage);
+            progressBar = (ProgressBar)convertView.findViewById(R.id.thumpProgressBar);
+            imageView.setLayoutParams(new RelativeLayout.LayoutParams(size, size));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY); //.CENTER_CROP
             imageView.setPadding(5, 0, 5, 0);
-            convertView = imageView;
-            convertView.setTag(imageView);
+            convertView.setTag(convertView);
         } else {
-            imageView = (ImageView) convertView.getTag();
+            convertView = (View) convertView.getTag();
+            imageView = (ImageView)convertView.findViewById(R.id.thumpImage);
+            progressBar = (ProgressBar)convertView.findViewById(R.id.thumpProgressBar);
         }
 
         if(myPhotosList != null && !TextUtils.isEmpty((String)myPhotosList.get(position).get("download_link"))){
@@ -85,17 +92,20 @@ public class ImageAdapter extends BaseAdapter {
                     ApplicationController.getInstance().getBitmapLruCache().put(myPhotosList.get(position).get("id")+"",
                             decodeSampledBitmapFromResource(ApplicationController.getInstance().getRequestQueue(activity).getCache().get(myPhotosList.get(position).get("id")+"").data));
                     if(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + "") == null){
-                        Log.e("Image Bitmap is null", "true");
+                        progressBar.setVisibility(View.VISIBLE);
+                        imageView.setImageResource(R.drawable.account);
                     }else{
-                        Log.e("Image Bitmap is null", "false");
+                        progressBar.setVisibility(View.GONE);
+                        imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
                     }
-                    imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
+
                 }
             }else if(ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id")+"") != null){
                 imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id")+""));
+                   progressBar.setVisibility(View.GONE);
             }
             else{
-                imageView.setImageResource(R.drawable.account);
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             imageView.setOnClickListener(new View.OnClickListener() {

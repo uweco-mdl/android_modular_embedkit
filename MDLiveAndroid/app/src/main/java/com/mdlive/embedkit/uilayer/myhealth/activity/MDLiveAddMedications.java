@@ -42,6 +42,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         //Setting up type in parent class for Medications
         type = TYPE_CONSTANT.MEDICATION;
         super.onCreate(savedInstanceState);
+        IsThisPageEdited = false;
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medication));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt
@@ -57,7 +58,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
-
+        IsThisPageEdited = true;
         if (newConditions.size() == 0) {
             updateConditionsOrAllergies();
         } else {
@@ -143,6 +144,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void updateConditionsOrAllergies() {
         try {
+           IsThisPageEdited = true;
            new UpdateExistingConditionsService().execute();
         }catch(Exception e){
             e.printStackTrace();
@@ -189,6 +191,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                IsThisPageEdited = true;
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
@@ -244,8 +247,10 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
 
     @Override
     public void onBackPressed() {
-        checkMedicalAggregation();
-       // super.onBackPressed();
+        if(IsThisPageEdited)
+            checkMedicalAggregation();
+        else
+            super.onBackPressed();
     }
 
     /**

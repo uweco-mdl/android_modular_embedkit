@@ -43,6 +43,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         //Setting up type in parent class for Allergy
         type = TYPE_CONSTANT.ALLERGY;
         super.onCreate(savedInstanceState);
+        IsThisPageEdited = false;
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_allergy));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -53,6 +54,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     protected void saveNewConditionsOrAllergies() {
         pDialog.show();
         setResult(RESULT_OK);
+        IsThisPageEdited = true;
         if(newConditions.size() == 0){
             pDialog.dismiss();
             updateConditionsOrAllergies();
@@ -78,52 +80,13 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
             services.addAllergyRequest(successCallBackListener, errorListener, newConditions);
 
-            /*
-            for (int i = 0; i < newConditions.size(); i++) {
-                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (newConditions.size() == ++addConditionsCount) {
-                            pDialog.dismiss();
-                            updateConditionsOrAllergies();
-                        }
-                    }
-                };
-
-                NetworkErrorListener errorListener = new NetworkErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        medicalCommonErrorResponseHandler(error);
-                    }
-                };
-
-                AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
-                services.addAllergyRequest(successCallBackListener, errorListener, newConditions.get(i));
-
-            }*/
         }
     }
-
-  /*  public void setDatas(){
-        for(int i = 0; i < newConditions.size(); i++){
-            conditionsText += newConditions.get(i)+", ";
-        }
-        for(int i = 0; i < existingConditions.size(); i++){
-            HashMap<String, String> data = existingConditions.get(i);
-            conditionsText += data.get("name")+", ";
-        }
-        Intent resultData = new Intent();
-        if(conditionsText == null || conditionsText.trim().length() == 0)
-            conditionsText = "No allergies reported";
-        resultData.putExtra("allegiesData", conditionsText);
-        setResult(RESULT_OK, resultData);
-    }*/
-
 
     @Override
     protected void updateConditionsOrAllergies() {
         try {
+            IsThisPageEdited = true;
             new UpdateExistingConditionsService().execute();
         }catch(Exception e){
             e.printStackTrace();
@@ -198,6 +161,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                IsThisPageEdited = true;
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
@@ -256,8 +220,10 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     @Override
     public void onBackPressed() {
-        checkMedicalAggregation();
-        //super.onBackPressed();
+        if(IsThisPageEdited)
+            checkMedicalAggregation();
+        else
+            super.onBackPressed();
     }
 
     /**
