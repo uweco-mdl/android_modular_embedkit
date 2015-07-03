@@ -61,8 +61,9 @@ public class MDLivePayment extends Activity {
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
-    private  double payableAmount=0.00;
-    private  String finalAmout="0.00";
+    private  double payableAmount;
+    private  String finalAmout="";
+    Calendar expiryDate=  Calendar.getInstance();;
 
 
 
@@ -70,8 +71,8 @@ public class MDLivePayment extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
 
-        Bundle extras=getIntent().getExtras();
-        if(!extras.isEmpty()){
+        if(getIntent()!=null){
+            Bundle extras=getIntent().getExtras();
             finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
             storePayableAmount(finalAmout);
             ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
@@ -219,11 +220,10 @@ public class MDLivePayment extends Activity {
                 try {
                     year = yearPicker.getValue();
                     month = monthPicker.getValue() - 1;
-                    Calendar c = Calendar.getInstance();
-                    c.set(year, month, 1);
+                    expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
-                    new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
-                    dateView.setText(dateFormat.format(c.getTime()));
+                    /*new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());*/
+                    dateView.setText(dateFormat.format(expiryDate.getTime()));
                     d.dismiss();
                 }catch(Exception e){
 
@@ -264,37 +264,9 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
-                    //Log.e("Error",error.networkResponse.statusCode+"");
                     dismissDialog(pDialog);
                     Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
-                   /* NetworkResponse errorResponse=error.networkResponse;
-                    if (errorResponse!=null&&errorResponse.statusCode==HttpStatus.SC_UNPROCESSABLE_ENTITY||errorResponse.statusCode==HttpStatus.SC_NOT_FOUND||errorResponse.statusCode==HttpStatus.SC_UNAUTHORIZED)
-                    {
-                        String responseBody = new String(error.networkResponse.data, "utf-8" );
-                        JSONObject errorObj = new JSONObject( responseBody );
-                        if(errorObj.has("message")){
-                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
-                        }else if(errorObj.has("error")){
-                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
-                        }
-                     }else if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
 
-                        Utils.connectionTimeoutError(pDialog, MDLivePayment.this);
-                    }*//*else if (error instanceof AuthFailureError) {
-                        //TODO
-                    } else if (error instanceof ServerError) {
-                        //TODO
-                    } else if (error instanceof NetworkError) {
-                        //TODO
-                    } else if (error instanceof ParseError) {
-                        //TODO
-                    }*/
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -328,7 +300,8 @@ public class MDLivePayment extends Activity {
             cardInfo.put("billing_country_id","1");
             cardInfo.put("cc_num",billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2",billingObj.getString("cc_cvv2"));
-            cardInfo.put("cc_expyear",String.valueOf(year));
+            Log.e("test Year",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
+            cardInfo.put("cc_expyear",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth",String.valueOf(month));
             cardInfo.put("cc_hsa",billingObj.getString("cc_hsa"));
             cardInfo.put("billing_zip5",edtZipCode.getText().toString());

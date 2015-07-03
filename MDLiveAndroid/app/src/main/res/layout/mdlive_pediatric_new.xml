@@ -72,7 +72,7 @@
                 android:text="@string/pediatric_please_text"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
             <LinearLayout
