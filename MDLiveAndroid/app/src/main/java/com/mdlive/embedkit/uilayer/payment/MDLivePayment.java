@@ -73,6 +73,7 @@ public class MDLivePayment extends Activity {
         Bundle extras=getIntent().getExtras();
         if(!extras.isEmpty()){
             finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmout);
             ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
         }
 
@@ -334,8 +335,6 @@ public class MDLivePayment extends Activity {
             cardInfo.put("cc_type_id",billingObj.getString("cc_type_id"));
             billingParams.put("billing_information",cardInfo);
             Log.e("Forming Params",new Gson().toJson(billingParams).toString());
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -365,6 +364,14 @@ public class MDLivePayment extends Activity {
 
         }
     };
+
+
+    public void storePayableAmount(String amount){
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
 
 
 
@@ -510,12 +517,13 @@ public class MDLivePayment extends Activity {
         };
 
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
        // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", "Not Sure");
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON_PREFERENCES,"Not Sure"));
         params.put("customer_call_in_number", "9068906789");
         params.put("do_you_have_primary_care_physician","No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
@@ -629,11 +637,13 @@ public class MDLivePayment extends Activity {
                 {
                     payableAmount=0.00;
                     finalAmout=String.format( "%.2f",payableAmount);
+                    storePayableAmount(finalAmout);
                     doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
 
                   Log.e("Condition",finalAmout+"");
                 }else{
                     finalAmout=String.format( "%.2f",payableAmount);
+                    storePayableAmount(finalAmout);
                 }
                 Log.e("Payable AMOU","Discount Amount"+payableAmount);
                 ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
