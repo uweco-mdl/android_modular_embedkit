@@ -189,15 +189,24 @@ public class MDLiveChooseProvider extends Activity {
             if(StrDoctorOnCall.equals("false"))
             {
                 Log.e("StrDoctorOnCall-->",StrDoctorOnCall);
-                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                DocOnCalLinLay.setVisibility(View.GONE);
-                filterRl.setVisibility(View.VISIBLE);
-                doctorOnCallButtonClick();
+                JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
+                if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
+                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                    filterRl.setVisibility(View.GONE);
+                    doctorOnCallButtonClick();
+                }else {
+                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                    DocOnCalLinLay.setVisibility(View.GONE);
+                    filterRl.setVisibility(View.VISIBLE);
+                    doctorOnCallButtonClick();
+                }
             }
+
             //Setting the Doctor On Call Header
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
                 dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                filterRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
             }else{
                 setHeaderContent(StrDoctorOnCall);
@@ -235,9 +244,11 @@ public class MDLiveChooseProvider extends Activity {
     private void setListView() {
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
-        listView.addFooterView(footerView);
+        if (listView.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            listView.addFooterView(footerView);
+        }
 
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
         listView.setAdapter(baseadapter);
@@ -259,6 +270,7 @@ public class MDLiveChooseProvider extends Activity {
             doctorId =  responArray.get(i).getAsJsonObject().get("id").getAsString();
             imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
             try {
+
                 if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
                     StrDate = IntegerConstants.DATE_FLAG;
                 else

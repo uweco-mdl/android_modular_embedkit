@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--BasePrimaryColor-->
-    <color name="mdliveBackgroundColor">#E8F2F9</color>
+    <color name="mdliveBackgroundColor">#ecf5fa</color>
     <color name="mdlivePrimaryBlueColor">#3A89C9</color>
+    <color name="mdliveHeaderPrimaryBlueColor">#489cd4</color>
     <!--BasePrimaryColor-->
     <color name="mdliveLoginUsernameColor">#878f95</color>
 

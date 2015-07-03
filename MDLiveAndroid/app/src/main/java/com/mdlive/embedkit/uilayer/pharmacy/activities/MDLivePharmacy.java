@@ -230,6 +230,9 @@ public class MDLivePharmacy extends FragmentActivity {
         };
 
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+
         HashMap<String, Object> params = new HashMap<String, Object>();
 
         params.put("appointment_method", "1");
@@ -237,7 +240,7 @@ public class MDLivePharmacy extends FragmentActivity {
         // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", "Not Sure");
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON_PREFERENCES,"Not Sure"));
         params.put("customer_call_in_number", "9068906789");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
 

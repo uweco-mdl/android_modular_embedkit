@@ -155,7 +155,7 @@
     <!-- My Health -->
     <!-- Pediatric -->
     <string name="pediatric_header_text">PEDIATRIC PROFILE</string>
-    <string name="pediatric_please_text">Please answer the following questions.</string>
+    <string name="pediatric_please_text">Please complete pediatric profile below</string>
     <string name="pediatric_Birth_Weight_text">Birth Weight</string>
     <string name="pediatric_current_Weight_text">Current Weight in lbs</string>
     <string name="pediatric_lbs_text">lbs</string>
@@ -179,7 +179,7 @@
     <string name="pediatric_feeding_text">Feeding problems</string>
     <string name="pediatric_immunization_text">Immunization up to date?</string>
     <string name="radio_yes_text">Yes</string>
-    <string name="radio_No_text">NO</string>
+    <string name="radio_No_text">N0</string>
 
     <!-- Waiting Room -->
 

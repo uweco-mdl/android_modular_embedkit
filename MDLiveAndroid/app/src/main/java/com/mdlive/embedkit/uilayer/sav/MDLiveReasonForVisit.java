@@ -69,6 +69,10 @@ public class MDLiveReasonForVisit extends Activity {
                 }
 
 
+
+
+
+
                 Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
                 if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
@@ -101,6 +105,10 @@ public class MDLiveReasonForVisit extends Activity {
         });
 
     }
+
+
+
+
     /**
      * Reason for Visit List Details.
      * Class : ReasonForVisitServices - Service class used to fetch the List information
@@ -159,9 +167,11 @@ public class MDLiveReasonForVisit extends Activity {
             listView = (ListView) findViewById(R.id.reasonList);
 
 
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
-        listView.addFooterView(footerView);
+        if (listView.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            listView.addFooterView(footerView);
+        }
 
         baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,(LinearLayout)findViewById(R.id.linearlayoutresults),(TextView)findViewById(R.id.noresults),(TextView)findViewById(R.id.submitresult));
             listView.setAdapter(baseadapter);
@@ -205,6 +215,12 @@ public class MDLiveReasonForVisit extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
+            try{
+                SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                Log.e("Reason",""+listView.getAdapter().getItem(position).toString());
+                editor.putString(PreferenceConstants.REASON,listView.getAdapter().getItem(position).toString());
+                editor.commit();
 
                 //MDLivePharmacy
                 if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
@@ -215,6 +231,10 @@ public class MDLiveReasonForVisit extends Activity {
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this,MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
                 }
+            }catch (Exception e){
+            e.printStackTrace();
+            }
+
 
 
             }

@@ -61,8 +61,9 @@ public class MDLivePayment extends Activity {
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
-    private  double payableAmount=0.00;
-    private  String finalAmout="0.00";
+    private  double payableAmount;
+    private  String finalAmout="";
+    Calendar expiryDate=  Calendar.getInstance();;
 
 
 
@@ -70,9 +71,10 @@ public class MDLivePayment extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
 
-        Bundle extras=getIntent().getExtras();
-        if(!extras.isEmpty()){
+        if(getIntent()!=null){
+            Bundle extras=getIntent().getExtras();
             finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmout);
             ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
         }
 
@@ -218,11 +220,10 @@ public class MDLivePayment extends Activity {
                 try {
                     year = yearPicker.getValue();
                     month = monthPicker.getValue() - 1;
-                    Calendar c = Calendar.getInstance();
-                    c.set(year, month, 1);
+                    expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
-                    new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
-                    dateView.setText(dateFormat.format(c.getTime()));
+                    /*new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());*/
+                    dateView.setText(dateFormat.format(expiryDate.getTime()));
                     d.dismiss();
                 }catch(Exception e){
 
@@ -263,37 +264,9 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
-                    //Log.e("Error",error.networkResponse.statusCode+"");
                     dismissDialog(pDialog);
                     Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
-                   /* NetworkResponse errorResponse=error.networkResponse;
-                    if (errorResponse!=null&&errorResponse.statusCode==HttpStatus.SC_UNPROCESSABLE_ENTITY||errorResponse.statusCode==HttpStatus.SC_NOT_FOUND||errorResponse.statusCode==HttpStatus.SC_UNAUTHORIZED)
-                    {
-                        String responseBody = new String(error.networkResponse.data, "utf-8" );
-                        JSONObject errorObj = new JSONObject( responseBody );
-                        if(errorObj.has("message")){
-                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
-                        }else if(errorObj.has("error")){
-                            Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
-                        }
-                     }else if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
 
-                        Utils.connectionTimeoutError(pDialog, MDLivePayment.this);
-                    }*//*else if (error instanceof AuthFailureError) {
-                        //TODO
-                    } else if (error instanceof ServerError) {
-                        //TODO
-                    } else if (error instanceof NetworkError) {
-                        //TODO
-                    } else if (error instanceof ParseError) {
-                        //TODO
-                    }*/
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -327,15 +300,14 @@ public class MDLivePayment extends Activity {
             cardInfo.put("billing_country_id","1");
             cardInfo.put("cc_num",billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2",billingObj.getString("cc_cvv2"));
-            cardInfo.put("cc_expyear",String.valueOf(year));
+            Log.e("test Year",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
+            cardInfo.put("cc_expyear",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth",String.valueOf(month));
             cardInfo.put("cc_hsa",billingObj.getString("cc_hsa"));
             cardInfo.put("billing_zip5",edtZipCode.getText().toString());
             cardInfo.put("cc_type_id",billingObj.getString("cc_type_id"));
             billingParams.put("billing_information",cardInfo);
             Log.e("Forming Params",new Gson().toJson(billingParams).toString());
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -365,6 +337,14 @@ public class MDLivePayment extends Activity {
 
         }
     };
+
+
+    public void storePayableAmount(String amount){
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
 
 
 
@@ -510,12 +490,13 @@ public class MDLivePayment extends Activity {
         };
 
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
        // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", "Not Sure");
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON_PREFERENCES,"Not Sure"));
         params.put("customer_call_in_number", "9068906789");
         params.put("do_you_have_primary_care_physician","No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
@@ -629,11 +610,13 @@ public class MDLivePayment extends Activity {
                 {
                     payableAmount=0.00;
                     finalAmout=String.format( "%.2f",payableAmount);
+                    storePayableAmount(finalAmout);
                     doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
 
                   Log.e("Condition",finalAmout+"");
                 }else{
                     finalAmout=String.format( "%.2f",payableAmount);
+                    storePayableAmount(finalAmout);
                 }
                 Log.e("Payable AMOU","Discount Amount"+payableAmount);
                 ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
