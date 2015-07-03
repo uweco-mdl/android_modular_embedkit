@@ -334,4 +334,7 @@ WEST VIRGINIA</item>
     <string name="date_of_birth_hint">mm/dd/yyyy</string>
     <string name="i_michelle_text">I,Michelle Marino confirm that i\'m the legal parent / guardian of the minor above.</string>
 
+    <!-- Used in SSO Screen -->
+    <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
+
 </resources>
