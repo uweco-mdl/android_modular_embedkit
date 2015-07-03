@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +48,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -119,6 +119,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         existingConditions.clear();
         newConditions.clear();
         int emptyFieldCount = 0;
+
         for(int i = 0;i<addConditionsLl.getChildCount();i++){
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
             if(conditionRl.getTag()==null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
@@ -136,18 +137,30 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             }
         }
 
-        Log.e("emptyFieldCount-->", emptyFieldCount+"");
 
-        for(String name : newConditions){
+
+     /*     for(String name : newConditions){
             if(tmpExistingCond.contains(name)){
                 Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The "+type.name().toLowerCase()+" already exists in your medical history.");
                 return;
             }
-        }
-        if(emptyFieldCount > 1)
+        }*/
+
+        //Converting ArrayList to HashSet to remove duplicates
+        LinkedHashSet<String> listToSet = new LinkedHashSet<String>();
+        listToSet.addAll(newConditions);
+        listToSet.addAll(tmpExistingCond);
+
+        if(emptyFieldCount > 1){
             Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
-        else
-            saveNewConditionsOrAllergies();
+        }
+        else{
+            if(((newConditions.size()+existingConditions.size()) == listToSet.size())){
+                saveNewConditionsOrAllergies();
+            }else{
+                Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
+            }
+        }
     }
 
     /* For Testing Purpose Get Method Call*/
@@ -302,6 +315,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt,addConditionsLl, deleteView));
 
         conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, deleteView));
+
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,6 +326,26 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                     addBlankConditionOrAllergy();
                 }
                 addConditionsLl.removeView(singleConditionView);
+            }
+        });
+
+        conditonEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if(v.getText() != null && v.getText().toString().length() > 3){
+                        if((((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId()){
+                            addBlankConditionOrAllergy();
+                            EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
+                            conditonEt.setNextFocusDownId(newEt.getId());
+                            conditonEt.requestFocus();
+                            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.showSoftInput(newEt,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -377,17 +411,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 } else {
                     deleteView.setVisibility(View.VISIBLE);
                 }
-                if(text.length()>2){
-                    if((((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId()){
-                        addBlankConditionOrAllergy();
-                        EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
-                        conditonEt.setNextFocusDownId(newEt.getId());
-                        conditonEt.requestFocus();
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.showSoftInput(newEt,InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    }
-                    getAutoCompleteData((AutoCompleteTextView)conditonEt,text);
-                }
+                getAutoCompleteData((AutoCompleteTextView)conditonEt,text);
             }
         };
     }

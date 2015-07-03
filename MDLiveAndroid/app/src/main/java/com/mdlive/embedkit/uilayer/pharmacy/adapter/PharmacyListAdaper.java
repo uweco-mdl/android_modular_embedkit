@@ -16,7 +16,6 @@ import java.util.HashMap;
 public class PharmacyListAdaper extends BaseAdapter{
 
     private ArrayList<HashMap<String, Object>>  list = new ArrayList<HashMap<String, Object>>();
-    private int walgreensPosition = -1;
     private Activity context;
 
     public PharmacyListAdaper(Activity context, ArrayList<HashMap<String, Object>> list){
@@ -32,11 +31,7 @@ public class PharmacyListAdaper extends BaseAdapter{
         }else{
             convertView = (View) convertView.getTag();
         }
-        if(walgreensPosition < 0 && ((String)getItem(position).get("store_name")).contains("Walgreen")){
-            walgreensPosition = position;
-        }
-
-        if(walgreensPosition >= 0 && position == walgreensPosition){
+        if((Boolean)getItem(position).get("is_preferred")){
             ((TextView) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.VISIBLE);
         }else{
             ((TextView) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.GONE);

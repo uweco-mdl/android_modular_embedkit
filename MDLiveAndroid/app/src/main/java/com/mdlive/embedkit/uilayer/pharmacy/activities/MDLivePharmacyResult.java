@@ -279,7 +279,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
             JsonArray responArray = responObj.get("pharmacies").getAsJsonArray();
             int pharmacy_id=0;
             double longitude=0, latitude=0;
-            boolean twenty_four_hours=false, active=false;
+            boolean twenty_four_hours=false, active=false, is_preferred =false;
             String store_name="", phone="", address1="", address2="", zipcode="", fax="", city="",
                     distance="", state="";
             // For google map
@@ -310,6 +310,20 @@ public class MDLivePharmacyResult extends FragmentActivity {
                     twenty_four_hours = responArray.get(i).getAsJsonObject().get("twenty_four_hours").getAsBoolean();
                 if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "distance"))
                     distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
+
+                try {
+                    if(responArray.get(i).getAsJsonObject().has("is_preferred")){
+                        if(responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean())
+                            is_preferred = true;
+                        else
+                            is_preferred = false;
+                    }else{
+                        is_preferred = false;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 try {
                     if (responArray.get(i).getAsJsonObject().get("coordinates").isJsonNull()) {
                         longitude = 0;
@@ -328,6 +342,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 }
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("state", state);
+                map.put("is_preferred", is_preferred);
                 map.put("pharmacy_id", pharmacy_id);
                 map.put("store_name", store_name);
                 map.put("phone", phone);

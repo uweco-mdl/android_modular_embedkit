@@ -97,6 +97,7 @@ public class ImageAdapter extends BaseAdapter {
                     }else{
                         progressBar.setVisibility(View.GONE);
                         imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
+                       // ApplicationController.getInstance().getRequestQueue(activity).getCache().remove(myPhotosList.get(position).get("id")+"");
                     }
 
                 }
@@ -133,7 +134,7 @@ public class ImageAdapter extends BaseAdapter {
             options.inJustDecodeBounds = false;
             options.inSampleSize = 8;
             options.inScaled = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            options.inPreferredConfig = Bitmap.Config.ARGB_4444;
             Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
             if(b != null){
                 // Calculate inSampleSize
