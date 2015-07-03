@@ -69,6 +69,7 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private String userInfoJSONString;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +200,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 };
 
                                 Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
-                                                "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
+                                                "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
                                         positiveOnClickListener,negativeOnClickListener);
                                 /*new AlertDialog.Builder(
                                         new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
@@ -313,7 +314,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         dialogInterface.dismiss();
                                     }
                                 };
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", "ClOSE", "CALL NOW",
+                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
                                         positiveOnClickListener,negativeOnClickListener);
                             }else
                             {
