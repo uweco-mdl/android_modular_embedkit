@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
+import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -37,8 +38,10 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -68,6 +71,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     private String parentName,dependentName=null;//Variable to save the parent name.
 
     private String userInfoJSONString;
+
 
 
     @Override
@@ -212,7 +216,6 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     intent.putExtra("user_info", userInfoJSONString);
                                     startActivity(intent);
                                 } else {
-
                                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.putString(PreferenceConstants.PATIENT_NAME, patientSpinner.getSelectedItem().toString());
@@ -281,9 +284,7 @@ public class MDLiveGetStarted extends FragmentActivity{
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item,list);
-
+        ArrayAdapter<String> dataAdapter; dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -357,6 +358,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                         dependentList.clear();
                         dependentList.add(tmpMap.get("name"));
                         dependentList.add(name);
+                        patientSpinner.setSelection(0);
                     }
                 }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
                     DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -382,6 +384,80 @@ public class MDLiveGetStarted extends FragmentActivity{
 
 
     }
+
+
+
+
+    /***
+     *This method is used to get user Pending Appointments History from server.
+     * MDLivePendigVisitService-class is responsible for sending request to the server
+     */
+
+    public void getPendingAppointments(){
+        Utils.showProgressDialog(pDialog);
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                Utils.hideProgressDialog(pDialog);
+                handlePendingResponse(response.toString());
+                Log.e("Pending Response",response.toString());
+            }
+        };
+        NetworkErrorListener errorListner=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Utils.hideProgressDialog(pDialog);
+                Log.e("Pending Error Response",error.toString());
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                    }
+                }
+
+            }
+        };
+
+        MDLivePendigVisitService getApponitmentsService=new MDLivePendigVisitService(MDLiveGetStarted.this,pDialog);
+        getApponitmentsService.getUserPendingHistory(successListener,errorListner);
+    }
+
+
+
+    /**
+     *
+     * THis function handles the pending visits if any. If there is any pending visits,
+     * the user will be taken to PEndingVisits screen, else the user will ber taken to
+     * getstarted screen.
+     *
+     * @param response
+     */
+    public void handlePendingResponse(String response){
+        try{
+            JSONObject resObj=new JSONObject(response);
+            JSONArray appointArray=resObj.getJSONArray("appointments");
+            JSONArray onCallAppointmentArray=resObj.getJSONArray("oncall_appointments");
+            if(appointArray.length()!=0){
+                String docName=appointArray.getJSONObject(0).getString("physician_name");
+                String appointmnetID=appointArray.getJSONObject(0).getString("id");
+                String chiefComplaint=appointArray.getJSONObject(0).getString("chief_complaint");
+                Intent pendingVisitIntent = new Intent(getApplicationContext(), MDLivePendingVisits.class);
+                pendingVisitIntent.putExtra("DocName",docName); // The doctor name  from service on successful response
+                pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
+                pendingVisitIntent.putExtra("Reason",chiefComplaint); // The Reason for visit from service on successful response
+                startActivity(pendingVisitIntent);
+                finish();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     /**
@@ -413,6 +489,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             dependentList.clear();//Clearing all previous data to avoid duplicates
             PatientList.clear();
             dependentList.add(0,personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));//Adding Parent name as first in the dependent List.
+            patientSpinner.setSelection(0);
             handleChangeResponse(resObj);//Method call for handling Family members Response
         }catch (Exception e){
             e.printStackTrace();
@@ -688,6 +765,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         try {
             isUserInfo=true;
             JSONObject personalInfo = response.getJSONObject("personal_info");
+            JSONObject notiObj=response.getJSONObject("notifications");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("state"));
@@ -700,6 +778,10 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
             pDialog.dismiss();
+            Log.e("Pending Appt",notiObj.getString("upcoming_appointments"));
+            if(notiObj.getInt("upcoming_appointments")>=1){
+                getPendingAppointments();
+            }
 
         }catch(Exception e){
             e.printStackTrace();

@@ -170,7 +170,7 @@ public class MDLiveReasonForVisit extends Activity {
         if (listView.getFooterViewsCount() == 0) {
             final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView);
+            listView.addFooterView(footerView, null, false);
         }
 
         baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,(LinearLayout)findViewById(R.id.linearlayoutresults),(TextView)findViewById(R.id.noresults),(TextView)findViewById(R.id.submitresult));

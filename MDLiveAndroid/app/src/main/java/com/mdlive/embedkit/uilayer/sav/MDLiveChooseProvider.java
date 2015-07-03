@@ -247,7 +247,7 @@ public class MDLiveChooseProvider extends Activity {
         if (listView.getFooterViewsCount() == 0) {
             final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView);
+            listView.addFooterView(footerView, null, false);
         }
 
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
