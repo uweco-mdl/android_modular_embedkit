@@ -211,7 +211,7 @@ public class MDLivePharmacyChange extends Activity {
             }
         }else if(cityText.getText()!=null && !cityText.getText().toString().trim().equals("")){
             if(chooseState.getText() == null || chooseState.getText().toString().equals("Select State") || chooseState.getText().toString().trim().equals("")){
-                return "Please select a State!";
+                return "Please select a state.";
             }
             if(pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0){
                 errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
