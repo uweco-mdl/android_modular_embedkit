@@ -13,6 +13,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <!-- <permission
          android:name="com.mdlive.embedkit.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>-->
