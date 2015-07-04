@@ -338,7 +338,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                             addBlankConditionOrAllergy();
                             EditText newEt = (EditText) ((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0);
                             conditonEt.setNextFocusDownId(newEt.getId());
-                            conditonEt.requestFocus();
+                            newEt.requestFocus();
                             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             inputMethodManager.showSoftInput(newEt,InputMethodManager.HIDE_IMPLICIT_ONLY);
                         }
