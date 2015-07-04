@@ -80,5 +80,8 @@ public class MDLiveSummary extends Activity {
         summaryService.sendRating(rating,successListener,errorListner );
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }

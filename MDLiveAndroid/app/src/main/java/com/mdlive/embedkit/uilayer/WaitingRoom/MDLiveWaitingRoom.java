@@ -162,7 +162,7 @@ public class MDLiveWaitingRoom extends Activity{
                 getVSEECredentials();
             }else if(isReturning && !resObj.getString("provider_status").equals("true")) {
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
                 finish();
             }else {
