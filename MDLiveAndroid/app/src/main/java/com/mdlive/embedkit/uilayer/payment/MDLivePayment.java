@@ -81,7 +81,6 @@ public class MDLivePayment extends Activity {
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
-        getDateOfBirth();
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,20 +113,6 @@ public class MDLivePayment extends Activity {
 
         TextView textview = (TextView) findViewById((R.id.textView5));
         HostedPCI.getSettings().setJavaScriptEnabled(true);
-     /*   HostedPCI.setWebChromeClient(new WebChromeClient(){
-            @Override
-            public void onProgressChanged(WebView view, int progress) {
-                if (progress == 100) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!isPaymentLoading)
-                                pDialog.dismiss();
-                        }
-                    });
-                }
-            }
-        });*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
@@ -135,7 +120,6 @@ public class MDLivePayment extends Activity {
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
-        //pDialog.show();
         textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -144,13 +128,13 @@ public class MDLivePayment extends Activity {
                 showDialog();            }
         });
         payNow.setOnClickListener(paynow_button_click_listener);
-        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        ((ImageView) findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  Utils.movetohome(MDLivePayment.this, MDLiveLogin.class);
@@ -180,8 +164,6 @@ public class MDLivePayment extends Activity {
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-//            Intent intent = new Intent(MDLivePayment.this,Wait)
         }
         // This annotation is required in Jelly Bean and later:
         @JavascriptInterface
@@ -222,7 +204,6 @@ public class MDLivePayment extends Activity {
                     month = monthPicker.getValue() - 1;
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
-                    /*new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());*/
                     dateView.setText(dateFormat.format(expiryDate.getTime()));
                     d.dismiss();
                 }catch(Exception e){
@@ -249,10 +230,8 @@ public class MDLivePayment extends Activity {
             public void onResponse(Object response) {
                 try{
                     dismissDialog(pDialog);
-                    Log.e("Succes Update",response.toString());
                     JSONObject resObj=new JSONObject(response.toString());
                     if(resObj.has("message")){
-                        Log.e("Confirm","Calling");
                         doConfirmAppointment();
                     }
                 }catch (Exception e){
@@ -294,20 +273,17 @@ public class MDLivePayment extends Activity {
             cardInfo.put("billing_name",settings.getString(PreferenceConstants.PATIENT_NAME,""));
             cardInfo.put("billing_address1","test1");
             cardInfo.put("billing_address2","test");
-            Log.e("USer Location", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
             cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
             cardInfo.put("billing_city","Test");
             cardInfo.put("billing_country_id","1");
             cardInfo.put("cc_num",billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2",billingObj.getString("cc_cvv2"));
-            Log.e("test Year",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expyear",new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth",String.valueOf(month));
             cardInfo.put("cc_hsa",billingObj.getString("cc_hsa"));
             cardInfo.put("billing_zip5",edtZipCode.getText().toString());
             cardInfo.put("cc_type_id",billingObj.getString("cc_type_id"));
             billingParams.put("billing_information",cardInfo);
-            Log.e("Forming Params",new Gson().toJson(billingParams).toString());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -331,13 +307,8 @@ public class MDLivePayment extends Activity {
 
                 }
             }
-
-
-
-
         }
     };
-
 
     public void storePayableAmount(String amount){
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
@@ -345,32 +316,6 @@ public class MDLivePayment extends Activity {
         editor.putString(PreferenceConstants.AMOUNT, amount);
         editor.commit();
     }
-
-
-
-
-
-    /**
-     * Fetching the values from the native date picker and the picker listener was implemented
-     * for the particular native date picker.
-     */
-    private void getDateOfBirth() {
-        try{
-//            Calendar calendar = Calendar.getInstance();
-//            datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-//            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-//            datePickerDialog.getDatePicker().setSpinnersShown(true);
-//            ((ViewGroup) datePickerDialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-//            datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-
-
 
     private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
@@ -450,39 +395,9 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
-
                     dismissDialog(pDialog);
                     Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
-                    /* if (error.networkResponse != null) {
-                         NetworkResponse errorResponse=error.networkResponse;
-                         Log.e("Status Code",""+error.networkResponse.statusCode);
-                        if (error.getClass().equals(TimeoutError.class)) {
-                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            };
-                            // Show timeout error message
-
-                            Utils.connectionTimeoutError(pDialog, MDLivePayment.this);
-
-
-                        }
-
-                         else if (errorResponse.statusCode==HttpStatus.SC_UNPROCESSABLE_ENTITY||errorResponse.statusCode==HttpStatus.SC_NOT_FOUND||errorResponse.statusCode==HttpStatus.SC_UNAUTHORIZED)
-                         {
-                             Log.e("Status Code",""+error.networkResponse.statusCode);
-                             String responseBody = new String(error.networkResponse.data, "utf-8" );
-                             JSONObject errorObj = new JSONObject( responseBody );
-                             if(errorObj.has("message")){
-                                 Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("message"));
-                             }else if(errorObj.has("error")){
-                                 Utils.alert(pDialog, MDLivePayment.this, errorObj.getString("error"));
-                             }
-                         }
-
-                    }
-*/                }catch (Exception e){
+                }catch (Exception e){
                     dismissDialog(pDialog);
                     e.printStackTrace();
                 }
@@ -493,7 +408,6 @@ public class MDLivePayment extends Activity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
-       // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));

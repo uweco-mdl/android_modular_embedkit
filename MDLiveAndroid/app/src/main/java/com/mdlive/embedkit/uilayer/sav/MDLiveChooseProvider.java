@@ -52,7 +52,7 @@ public class MDLiveChooseProvider extends Activity {
 
     private ListView listView;
     private ProgressDialog pDialog;
-    private String patientName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
+    private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
     private long StrDate;
     private ArrayList<HashMap<String, String>> ProviderListMap;
     private ChooseProviderAdapter baseadapter;
@@ -180,8 +180,6 @@ public class MDLiveChooseProvider extends Activity {
     private void handleSuccessResponse(String response) {
         try {
             pDialog.dismiss();
-//            dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//            doctorOnCallButtonClick();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
@@ -212,21 +210,6 @@ public class MDLiveChooseProvider extends Activity {
                 setHeaderContent(StrDoctorOnCall);
                 setBodyContent(responArray);
             }
-
-          /*  if(responArray.getAsString().equals(StringConstants.NO_PROVIDERS)) {
-//                Log.e("Choose Provider Response Array",responArray.getAsString());
-                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                doctorOnCallButtonClick();
-            }
-//            else
-            {
-                setHeaderContent(StrDoctorOnCall);
-                setBodyContent(responArray);
-            }*/
-            //{"doctor_on_call":false,"physicians":["No Providers listed with given criteria"]}
-            //Setting the Doctor List Body
-
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -265,7 +248,7 @@ public class MDLiveChooseProvider extends Activity {
      */
     private void setBodyContent(JsonArray responArray) {
         for(int i=0;i<responArray.size();i++) {
-            patientName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
+            providerName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
             speciality =  responArray.get(i).getAsJsonObject().get("speciality").getAsString();
             doctorId =  responArray.get(i).getAsJsonObject().get("id").getAsString();
             imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
@@ -283,7 +266,7 @@ public class MDLiveChooseProvider extends Activity {
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
             appointmentDate = getDateCurrentTimeZone(StrDate);
             HashMap<String, String> map = new HashMap<String, String>();
-            map.put("name", patientName);
+            map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
             map.put("speciality", speciality);
             map.put("id", doctorId);
@@ -307,7 +290,7 @@ public class MDLiveChooseProvider extends Activity {
         {
             isDoctorOnCallReady = true;
             HashMap<String, String> map = new HashMap<String, String>();
-            map.put("name", patientName);
+            map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
             map.put("speciality", speciality);
             map.put("provider_image_url", imageUrl);
@@ -331,7 +314,8 @@ public class MDLiveChooseProvider extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                if(!(position == 0)){
                     Log.e("Provider Id",ProviderListMap.get(position).get("id"));
-                    saveDoctorId(ProviderListMap.get(position).get("id"), ProviderListMap.get(position).get("next_availability"));
+                    saveDoctorId(ProviderListMap.get(position).get("id"), ProviderListMap.get(position).get("next_availability"),
+                            ProviderListMap.get(position).get("name"));
                     Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                     startActivity(Reasonintent);
 //                }
@@ -370,11 +354,12 @@ public class MDLiveChooseProvider extends Activity {
      *      triggerred in the Requird places.
      *
      */
-    public void saveDoctorId(String DocorId, String AppointmentDate)
+    public void saveDoctorId(String DocorId, String AppointmentDate, String docName)
     {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES,DocorId);
+        editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, docName);
         editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, AppointmentDate);
         editor.commit();
     }
