@@ -41,7 +41,6 @@ public class MDLiveWaitingRoom extends Activity{
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
     private String userName=null,password=null;
     private boolean isReturning;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +53,6 @@ public class MDLiveWaitingRoom extends Activity{
                 movetohome();
             }
         });
-
     }
 
 
@@ -78,6 +76,7 @@ public class MDLiveWaitingRoom extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response Provider Status Error", error.toString());
+                Utils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
 
@@ -163,7 +162,7 @@ public class MDLiveWaitingRoom extends Activity{
                 getVSEECredentials();
             }else if(isReturning && !resObj.getString("provider_status").equals("true")) {
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
             }else {
