@@ -322,6 +322,8 @@ public class MDLiveFamilymember extends Activity {
 
     /**
      * Successful Response Handler for getting Current Location
+     *
+     * After child added successfully, redirect back to Get Stared Screen
      */
 
     private void handlePostPediatricResponse(JSONObject response) {
@@ -329,7 +331,12 @@ public class MDLiveFamilymember extends Activity {
             pDialog.dismiss();
             //Fetch Data From the Services
             Log.e("MDlivePediatric->",response.toString());
-            Utils.showDialog(this, "Child Added", response.optString("message"));
+            Utils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
