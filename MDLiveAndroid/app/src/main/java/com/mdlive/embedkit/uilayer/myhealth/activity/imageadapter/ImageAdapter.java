@@ -84,7 +84,7 @@ public class ImageAdapter extends BaseAdapter {
             progressBar = (ProgressBar)convertView.findViewById(R.id.thumpProgressBar);
         }
 
-        if(myPhotosList != null && !TextUtils.isEmpty((String)myPhotosList.get(position).get("download_link"))){
+        if(myPhotosList != null && !TextUtils.isEmpty((String) myPhotosList.get(position).get("download_link"))){
             //if(Utils.mphotoList != null && Utils.mphotoList.get(myPhotosList.get(position).get("id")) != null){
             if(ApplicationController.getInstance().getBitmapLruCache() != null &&
                     ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id")+"") == null){
@@ -97,13 +97,12 @@ public class ImageAdapter extends BaseAdapter {
                     }else{
                         progressBar.setVisibility(View.GONE);
                         imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
-                       // ApplicationController.getInstance().getRequestQueue(activity).getCache().remove(myPhotosList.get(position).get("id")+"");
+                        // ApplicationController.getInstance().getRequestQueue(activity).getCache().remove(myPhotosList.get(position).get("id")+"");
                     }
-
                 }
             }else if(ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id")+"") != null){
                 imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id")+""));
-                   progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
             }
             else{
                 progressBar.setVisibility(View.VISIBLE);
@@ -123,6 +122,7 @@ public class ImageAdapter extends BaseAdapter {
                 }
             });
         }
+
         return convertView;
     }
 
@@ -133,8 +133,9 @@ public class ImageAdapter extends BaseAdapter {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = false;
             options.inSampleSize = 8;
+            options.inMutable = true;
             options.inScaled = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
             Bitmap b = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
             if(b != null){
                 // Calculate inSampleSize
@@ -158,7 +159,7 @@ public class ImageAdapter extends BaseAdapter {
     //Given the bitmap size and View size calculate a subsampling size (powers of 2)
     static int calculateInSampleSize( BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
-        int inSampleSize = 1;	//Default subsampling size
+        int inSampleSize = 8;	//Default subsampling size
         // See if image raw height and width is bigger than that of required view
         if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
             //bigger

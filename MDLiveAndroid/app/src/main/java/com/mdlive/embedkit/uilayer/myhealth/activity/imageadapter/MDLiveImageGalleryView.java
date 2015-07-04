@@ -90,6 +90,7 @@ public class MDLiveImageGalleryView extends Activity {
     }
 
 
+
     /**
      * Checks user medical history aggregation details.
      * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
@@ -108,6 +109,8 @@ public class MDLiveImageGalleryView extends Activity {
                         Log.e("Response", response.toString());
                         if(response.has("message")){
                             if(response.getString("message").equals("Customer document deleted successfully")){
+                                ApplicationController.getInstance().getBitmapLruCache().remove(getIntent().getIntExtra("id", 0)+"");
+                                ApplicationController.getInstance().getRequestQueue(MDLiveImageGalleryView.this).getCache().remove(getIntent().getIntExtra("id", 0)+"");
                                 setResult(RESULT_OK);
                                 finish();
                             }
