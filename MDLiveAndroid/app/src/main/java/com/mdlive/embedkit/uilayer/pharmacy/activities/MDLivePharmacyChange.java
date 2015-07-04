@@ -244,7 +244,7 @@ public class MDLivePharmacyChange extends Activity {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 3) {
+                if (s != null && s.length() > 3&&!s.toString().startsWith(" ")) {
                     addSearchTextHistory(s.toString());
                 }
             }
