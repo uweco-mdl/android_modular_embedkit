@@ -29,7 +29,11 @@ public class MDLiveSummary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
+        TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
+
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        txtDocName.setText(docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,""));
         payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         pDialog = Utils.getProgressDialog("Please wait", this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);

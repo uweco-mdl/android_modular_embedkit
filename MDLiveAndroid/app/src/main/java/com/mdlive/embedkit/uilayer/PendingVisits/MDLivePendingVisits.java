@@ -69,7 +69,7 @@ public class MDLivePendingVisits extends Activity {
         // Provider name that needs to be shon at thank you screen.
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, extras.getString("DocName",""));
+        editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, extras.getString("DocName",""));
         editor.commit();
     }
 

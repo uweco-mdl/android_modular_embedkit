@@ -359,7 +359,7 @@ public class MDLiveChooseProvider extends Activity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES,DocorId);
-        editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, docName);
+        editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, docName);
         editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, AppointmentDate);
         editor.commit();
     }

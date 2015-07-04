@@ -54,20 +54,47 @@
             android:hint="Summary"
             android:id="@+id/textView10" />
 
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
-                android:hint="$49.00"
-                android:id="@+id/txtPaymentSummary" />
+                android:hint=""
+                android:id="@+id/txtDoctorName" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:hint=""
+                android:id="@+id/txtTotalTime" />
 
         </LinearLayout>
 
+                 <LinearLayout
+                     android:layout_alignParentRight="true"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="10dp"
+                     android:orientation="vertical">
+
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:textSize="25sp"
+                         android:hint="$49.00"
+                         android:id="@+id/txtPaymentSummary" />
+
+                 </LinearLayout>
+     </RelativeLayout>
              <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="20dp"
@@ -85,7 +112,7 @@
             style="@style/RatingBarTheme"
             android:id="@+id/ratingBar" />
 
-             <TextView
+            <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
             android:hint="Next Steps"
@@ -104,8 +131,6 @@
                  android:text="Done"
                  android:layout_marginTop="18dp"
                  android:textAllCaps="false" />
-
-
     </LinearLayout>
 </LinearLayout>
 </ScrollView>
