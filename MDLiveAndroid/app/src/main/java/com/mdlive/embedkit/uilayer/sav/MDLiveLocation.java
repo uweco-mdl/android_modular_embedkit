@@ -123,7 +123,6 @@ public class MDLiveLocation extends Activity {
                         String getEditTextValue = ZipcodeEditTxt.getText().toString();
                         if(Utils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
-
                         }else{
                             Utils.alert(pDialog,MDLiveLocation.this,"Please enter a valid Zip Code");
                         }
@@ -296,52 +295,62 @@ public class MDLiveLocation extends Activity {
             //Fetch Data From the Services
 
             Log.e("Response Zip ,ciode",response.toString());
+
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
 
+
             JsonArray responArray = responObj.get("results").getAsJsonArray();
-            for (int i = 0; i < responArray.size(); i++) {
-                JsonObject ZipJsonObject = responArray.get(i).getAsJsonObject();
-                JsonArray ZipresponArray = ZipJsonObject.get("address_components").getAsJsonArray();
+            if(!response.toString().contains("ZERO_RESULTS"))
+            {
+                for (int i = 0; i < responArray.size(); i++) {
+                    JsonObject ZipJsonObject = responArray.get(i).getAsJsonObject();
+                    JsonArray ZipresponArray = ZipJsonObject.get("address_components").getAsJsonArray();
 
-                for (int j = 0; j < ZipresponArray.size(); j++) {
-                    JsonObject localZip = ZipresponArray.get(j).getAsJsonObject();
-                    JsonArray TyprArray = localZip.get("types").getAsJsonArray();
-                    for (int k = 0; k < TyprArray.size(); k++) {
-                        String zip = TyprArray.get(k).getAsString();
-                        Log.e("responObj", zip.toString());
-                        if (zip.equalsIgnoreCase("administrative_area_level_1")) {
-                            SelectedZipCodeCity = localZip.get("short_name").getAsString();
-                            Log.e("Results", SelectedZipCodeCity);
-                            //This is for long name like Florida.
+                    for (int j = 0; j < ZipresponArray.size(); j++) {
+                        JsonObject localZip = ZipresponArray.get(j).getAsJsonObject();
+                        JsonArray TyprArray = localZip.get("types").getAsJsonArray();
+                        for (int k = 0; k < TyprArray.size(); k++) {
+                            String zip = TyprArray.get(k).getAsString();
+                            Log.e("responObj", zip.toString());
+                            if (zip.equalsIgnoreCase("administrative_area_level_1")) {
+                                SelectedZipCodeCity = localZip.get("short_name").getAsString();
+                                Log.e("Results", SelectedZipCodeCity);
+                                //This is for long name like Florida.
 
-                            zipcode_longNameText = localZip.get("long_name").getAsString();
-                            //This is for Short name like FL
+                                zipcode_longNameText = localZip.get("long_name").getAsString();
+                                //This is for Short name like FL
 
-                            for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
-                                if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
-                                    longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
-                                    SaveZipCodeCity(longNameText);
-                                    isCityFound=true;
-                                    Log.e("Location Service -->", Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l));
-                                    break;
+                                for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
+                                    if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
+                                        longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
+                                        SaveZipCodeCity(longNameText);
+                                        isCityFound=true;
+                                        Log.e("Location Service -->", Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l));
+                                        break;
 
+                                    }
                                 }
-                            }
-                            if(!isCityFound){
-                                Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
-                            }
+                                if(!isCityFound){
+                                    Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+                                }
 
 
 //                            SaveZipCodeCity(SelectedZipCodeCity);
 //                            Intent resultIntent = new Intent();
 //                            resultIntent.putExtra("ZipCodeCity", ZipCodeCity);
 //                            setResult(RESULT_OK, resultIntent);
+                            }
                         }
-                    }
 
+                    }
                 }
+            }else{
+
+          Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
