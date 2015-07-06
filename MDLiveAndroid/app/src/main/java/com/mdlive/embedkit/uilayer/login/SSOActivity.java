@@ -55,11 +55,9 @@ public class SSOActivity extends Activity {
      */
     private SSOUser getUser() {
         SSOUser user = null;
-
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(SSOUser.SSO_USER) != null) {
             user = getIntent().getExtras().getParcelable(SSOUser.SSO_USER);
         }
-
         return user;
     }
 
@@ -110,17 +108,7 @@ public class SSOActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 mProgressDialog.dismiss();
-
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
-                    }
-                    else
-                    {
-                        Utils.alert(mProgressDialog, SSOActivity.this,error.toString());
-                    }
-                }
+                Utils.handelVolleyErrorResponse(SSOActivity.this, error,mProgressDialog);
             }
         };
 
@@ -148,8 +136,6 @@ public class SSOActivity extends Activity {
             @Override
             public void onResponse(JSONObject response) {
                 Utils.hideProgressDialog(mProgressDialog);
-
-
                 handleSuccessResponse(response);
             }
         };

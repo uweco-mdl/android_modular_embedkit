@@ -36,13 +36,14 @@ import java.util.HashMap;
 public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActivity {
 
     protected boolean isPerformingAutoSuggestion;
-
+    private static int count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Medications
         type = TYPE_CONSTANT.MEDICATION;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
+        count = 0;
         ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medication));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt
@@ -66,7 +67,9 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateConditionsOrAllergies();
+                        if(++count == newConditions.size()) {
+                            updateConditionsOrAllergies();
+                        }
                     }
                 };
                 NetworkErrorListener errorListener = new NetworkErrorListener() {
