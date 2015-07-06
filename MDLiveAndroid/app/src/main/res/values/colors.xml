@@ -13,9 +13,9 @@
     <color name="grey_txt">#878f95</color>
     <color name="parentView_color">#D2D5D7</color>
     <color name="childView_color">#E7E7E7</color>
-    <color name="continueBtn_color">#5877AD</color>
+    <color name="continueBtn_color">#2a7db5</color>
     <color name="headerStyle_color">#F7F6F5</color>
-    <color name="green">#2A7DB6</color>
+    <color name="mdlivePrimaryBtnColor">#2A7DB6</color>
     <color name="red">#FA5858</color>
     <color name="location_color">#35393d</color>
 

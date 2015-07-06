@@ -479,7 +479,7 @@
         <item name="android:layout_margin">18dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:background">#2a7db5</item>
+        <item name="android:background">@color/continueBtn_color</item>
     </style>
 
     <style name="PharmacyContinueButtonStyle">

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/home_icon"
             android:id="@+id/homeImg"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
