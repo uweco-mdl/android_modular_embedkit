@@ -42,7 +42,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:gravity="end|right|center"
-            android:text="Apply"
+            android:text="APPLY"
             />
     </RelativeLayout>
 

@@ -135,6 +135,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
         String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        Log.e("Getstarted page",longNameLocation);
         locationTxt.setText(longNameLocation);
     }
     /**

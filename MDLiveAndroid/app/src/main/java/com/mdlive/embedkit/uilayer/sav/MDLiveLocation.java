@@ -54,6 +54,7 @@ public class MDLiveLocation extends Activity {
     private List<String> ShortNameList = new ArrayList<String>();
     private String ZipCodeCity,selectedCity,longNameText,shortNameText,zipcode_longNameText;
     private int keyDel=0;
+    boolean isCityFound=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,6 +294,8 @@ public class MDLiveLocation extends Activity {
         try {
             pDialog.dismiss();
             //Fetch Data From the Services
+
+            Log.e("Response Zip ,ciode",response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
 
@@ -311,17 +314,22 @@ public class MDLiveLocation extends Activity {
                             SelectedZipCodeCity = localZip.get("short_name").getAsString();
                             Log.e("Results", SelectedZipCodeCity);
                             //This is for long name like Florida.
-                            zipcode_longNameText = SelectedZipCodeCity;
+
+                            zipcode_longNameText = localZip.get("long_name").getAsString();
                             //This is for Short name like FL
 
                             for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
-                                if (zipcode_longNameText.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
-                                    zipcode_longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
-                                    SaveZipCodeCity(zipcode_longNameText);
+                                if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
+                                    longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
+                                    SaveZipCodeCity(longNameText);
+                                    isCityFound=true;
                                     Log.e("Location Service -->", Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l));
-                                } else {
-                                    Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+                                    break;
+
                                 }
+                            }
+                            if(!isCityFound){
+                                Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
                             }
 
 
@@ -400,18 +408,24 @@ public class MDLiveLocation extends Activity {
     public void SaveZipCodeCity(String ZipCodeCity) {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
-        String activityCaller     = getIntent().getStringExtra("activitycaller");
+        String activityCaller  = getIntent().getStringExtra("activitycaller");
+        Log.e("Caller bname",activityCaller);
         if(activityCaller.equals("getstarted")){
-        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
-        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
+            editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+            editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
+            editor.commit();
         }
         else
         {
-            editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
-            editor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, longNameText);
+            SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+            SharedPreferences.Editor searchEditor = searchPref.edit();
+            searchEditor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+            searchEditor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, longNameText);
+            searchEditor.commit();
 
         }
-    editor.commit();
+        finish();
+
     }
 
     /**

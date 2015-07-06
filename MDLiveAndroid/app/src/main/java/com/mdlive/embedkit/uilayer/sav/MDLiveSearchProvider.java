@@ -78,9 +78,10 @@ public class MDLiveSearchProvider extends Activity {
 
       //Load Services
         loadSearchproviderDetails();
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
-        filter_SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
+//        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
+        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -246,9 +247,9 @@ public class MDLiveSearchProvider extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SavedLocation = settings.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
-        filter_SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
         LocationTxtView.setText(SavedLocation);
     }
 
