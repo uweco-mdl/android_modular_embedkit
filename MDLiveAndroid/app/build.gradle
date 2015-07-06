@@ -1,5 +1,5 @@
-//apply plugin: 'com.android.library'
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
 
 // VSee integration:
 //
@@ -29,7 +29,6 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.mdlive.embedkit"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
@@ -48,7 +47,6 @@ android {
     }
 }
 
-
 // VSee integration:
 // If you don't include this section you will get errors due to duplicate files in
 // 3rd party dependencies.
@@ -62,32 +60,18 @@ android.packagingOptions {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // MultiDex support for building VSee embedded (to resolve asyncHttpClient-related issues)
-    compile 'com.android.support:multidex:1.0.0'
-    compile 'com.android.support:support-v13:21.0.3'
-    compile 'com.loopj.android:android-async-http:1.4.3'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-//    compile 'io.card:android-sdk:5.0.1'
-    compile 'com.android.support:recyclerview-v7:22.1.1'
-    compile project (':unifiedmiddleware')
-    compile 'com.google.android.gms:play-services-maps:6.5.87'
+
     // VSee integration:
     compile('com.vsee:vsee-kit:0.3.20524@aar') {
         transitive = true
     }
-
-    /*
-    // Robolectric supporting files & JUnit supporting files
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-core:1.1'
-    testCompile 'org.hamcrest:hamcrest-library:1.1'
-    testCompile 'org.hamcrest:hamcrest-integration:1.1'
-    testCompile 'com.squareup:fest-android:1.0.8'
-
-    *//*This lib having feature of Assert That for Robolectric Testing*//*
-    // This library requires to access all class of Robolectric.
-    testCompile 'org.robolectric:robolectric:2.4'*/
-
-    /*compile 'com.google.android.gms:play-services:7.3.0'*/
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:support-v13:22.1.1'
+    compile 'com.loopj.android:android-async-http:1.4.3'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:recyclerview-v7:22.1.1'
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    compile files('libs/volley.jar')
+    compile 'com.google.code.gson:gson:2.2.2'
 
 }
