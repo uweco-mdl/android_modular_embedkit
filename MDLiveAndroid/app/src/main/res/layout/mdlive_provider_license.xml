@@ -8,7 +8,7 @@
         android:orientation="vertical">
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailHeaderStyle"
-            android:text="Hospital Affiliations"
+            android:text="Licensed In"
             />
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailContentStyle"

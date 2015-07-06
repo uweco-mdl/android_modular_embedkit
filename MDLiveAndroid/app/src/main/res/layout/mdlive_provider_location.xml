@@ -8,7 +8,7 @@
         android:orientation="vertical">
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailHeaderStyle"
-            android:text="Board Certifications"
+            android:text="Location"
             />
         <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
             style="@style/ProviderDetailContentStyle"
