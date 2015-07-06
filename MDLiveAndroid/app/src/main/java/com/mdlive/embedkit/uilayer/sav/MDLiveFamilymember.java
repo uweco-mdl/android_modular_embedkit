@@ -130,8 +130,8 @@ public class MDLiveFamilymember extends Activity {
                     public void onClick(View v) {
                         firstNameEditTextValue = firstNameEditText.getText().toString().trim();
                         lastNameEditTextValue = lastNameEditText.getText().toString().trim();
-                        if (TextUtils.isEmpty(firstNameEditTextValue) && TextUtils.isEmpty(lastNameEditTextValue)
-                                && TextUtils.isEmpty(strDate) && TextUtils.isEmpty(strGender)) {
+                        if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
+                                && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
                             HashMap<String, HashMap<String, String>> map = new HashMap<>();
                             HashMap params = new HashMap();
                             params.put("computer", "Mac");
