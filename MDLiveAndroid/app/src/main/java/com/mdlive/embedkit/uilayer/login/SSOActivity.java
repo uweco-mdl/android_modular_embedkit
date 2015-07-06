@@ -75,6 +75,7 @@ public class SSOActivity extends Activity {
      */
     private void makeSSOCall() {
         final SSOUser user = getUser();
+        Utils.ssoInstance = getUser();
         if (user == null) {
             Utils.showDialog(this, "Error", getString(R.string.user_details_missing), new DialogInterface.OnClickListener () {
                 @Override

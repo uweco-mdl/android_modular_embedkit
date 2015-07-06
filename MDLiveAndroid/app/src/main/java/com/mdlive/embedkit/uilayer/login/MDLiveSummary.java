@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -46,6 +48,25 @@ public class MDLiveSummary extends Activity {
         });
     }
 
+    /**
+     * This function is for clear preference datas from app.
+     * This is will reduce size of memory of app.
+     */
+
+    public void clearPref(){
+        Utils.clearSharedPrefValues(this);
+    }
+
+    /**
+     * This function is for clear preference datas from app.
+     * This is will reduce size of memory of app.
+     */
+
+    public void clearCacheInVolley(){
+        ApplicationController.getInstance().getRequestQueue(MDLiveSummary.this).getCache().clear();
+        ApplicationController.getInstance().getBitmapLruCache().evictAll();
+    }
+
     public void sendRating(){
         pDialog.show();
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
@@ -55,10 +76,22 @@ public class MDLiveSummary extends Activity {
             public void onResponse(Object response) {
                 pDialog.dismiss();
                 Log.e("Response Summary", response.toString());
-                Intent i = new Intent(MDLiveSummary.this, MDLiveLogin.class);
-                startActivity(i);
+                try {
+                    clearPref();
+                    clearCacheInVolley();
+                } catch (Exception e) {
+                    e.printStackTrace();
+            }
+                Intent intent = new Intent();
+                ComponentName cn = new ComponentName(Utils.ssoInstance.getparentPackagename(),
+                        Utils.ssoInstance.getparentClassname());
+                intent.setComponent(cn);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         };
+
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

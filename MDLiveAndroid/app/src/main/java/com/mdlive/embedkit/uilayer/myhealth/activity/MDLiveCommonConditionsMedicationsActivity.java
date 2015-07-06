@@ -697,7 +697,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
 
         pDialog.dismiss();
         setResult(RESULT_OK, resultData);
-        Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
+        //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
         finish();
     }
 }

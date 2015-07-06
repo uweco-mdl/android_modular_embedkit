@@ -99,20 +99,22 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         }
         @Override
         protected Void doInBackground(Void... params) {
-            if (existingConditions.size() == 0) {
-                pDialog.dismiss();
-            } else {
-                for (int i = 0; i < existingConditions.size(); i++) {
-                    HashMap<String, String> medication = existingConditions.get(i);
-                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                    postBody.put("medication", medication);
-                    try{
-                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICATION_UPDATE + "/"+medication.get("id"),
-                                new Gson().toJson(postBody));
-                    }catch (Exception e){
-                        e.printStackTrace();
+            try{
+                if (existingConditions.size() != 0){
+                    for (int i = 0; i < existingConditions.size(); i++) {
+                        HashMap<String, String> medication = existingConditions.get(i);
+                        HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
+                        postBody.put("medication", medication);
+                        try{
+                            updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICATION_UPDATE + "/"+medication.get("id"),
+                                    new Gson().toJson(postBody));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
             return null;
         }
@@ -250,7 +252,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         if(IsThisPageEdited)
             checkMedicalAggregation();
         else
-            super.onBackPressed();
+            finish();
     }
 
     /**
