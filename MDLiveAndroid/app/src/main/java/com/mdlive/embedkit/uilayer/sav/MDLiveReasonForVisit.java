@@ -24,7 +24,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
-import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMedicalHistory;
+import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
