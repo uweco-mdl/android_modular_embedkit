@@ -130,7 +130,8 @@ public class MDLiveFamilymember extends Activity {
                     public void onClick(View v) {
                         firstNameEditTextValue = firstNameEditText.getText().toString().trim();
                         lastNameEditTextValue = lastNameEditText.getText().toString().trim();
-                        if (Utils.isValidName(firstNameEditTextValue) && Utils.isValidName(lastNameEditTextValue)) {
+                        if (TextUtils.isEmpty(firstNameEditTextValue) && TextUtils.isEmpty(lastNameEditTextValue)
+                                && TextUtils.isEmpty(strDate) && TextUtils.isEmpty(strGender)) {
                             HashMap<String, HashMap<String, String>> map = new HashMap<>();
                             HashMap params = new HashMap();
                             params.put("computer", "Mac");
@@ -179,7 +180,7 @@ public class MDLiveFamilymember extends Activity {
 
                             PostLifeStyleServices();
                         } else {
-                            Utils.showDialog(MDLiveFamilymember.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_name));
+                            Utils.showDialog(MDLiveFamilymember.this,getResources().getString(R.string.app_name),getResources().getString(R.string.please_enter_mandetory_fileds));
                         }
                     }
                 });
@@ -350,6 +351,7 @@ public class MDLiveFamilymember extends Activity {
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
+        datePickerDialog.getDatePicker().setMinDate(Utils.getDateBeforeNumberOfYears(18));
         datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
     }
     /**
