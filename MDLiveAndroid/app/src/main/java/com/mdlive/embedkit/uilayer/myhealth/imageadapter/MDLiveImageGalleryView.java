@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myhealth.activity.imageadapter;
+package com.mdlive.embedkit.uilayer.myhealth.imageadapter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Cache;
@@ -35,12 +36,14 @@ import org.json.JSONObject;
 public class MDLiveImageGalleryView extends Activity {
 
     private ProgressDialog pDialog;
+    private RelativeLayout progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Allergy
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_image_galleryview);
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
 
         ((TextView) findViewById(R.id.doneText)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +102,13 @@ public class MDLiveImageGalleryView extends Activity {
      */
 
     private void deleteMedicalRecordService() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 try {
                     if(response != null){
                         Log.e("Response", response.toString());
@@ -136,7 +141,8 @@ public class MDLiveImageGalleryView extends Activity {
      * Error Response Handler for Medical History Completion.
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
-        pDialog.dismiss();
+//        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
         if (error.networkResponse == null) {
             if (error.getClass().equals(TimeoutError.class)) {
                 DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {

@@ -17,8 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -44,6 +44,7 @@ import java.util.ArrayList;
 public class MDLiveReasonForVisit extends Activity {
     private ListView listView;
     private ProgressDialog pDialog;
+    private ProgressBar progressBar;
     private ArrayList<String> ReasonList;
     private TextView NoResults,SubmitResults;
     private LinearLayout NoresultsLinearlay;
@@ -56,10 +57,12 @@ public class MDLiveReasonForVisit extends Activity {
         NoResults = (TextView) findViewById(R.id.noresults);
         SubmitResults = (TextView) findViewById(R.id.submitresult);
         NoresultsLinearlay = (LinearLayout) findViewById(R.id.linearlayoutresults);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         ReasonList = new ArrayList<String>();
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
         ReasonForVisit();
         SubmitResults.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +83,7 @@ public class MDLiveReasonForVisit extends Activity {
                     startActivity(Reasonintent);
                     finish();
                 }else{
-                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this,MDLiveMedicalHistory.class);
+                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
                 }
 
@@ -117,7 +120,8 @@ public class MDLiveReasonForVisit extends Activity {
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
     private void ReasonForVisit() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -129,7 +133,8 @@ public class MDLiveReasonForVisit extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+//                pDialog.dismiss();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -153,7 +158,8 @@ public class MDLiveReasonForVisit extends Activity {
      */
     private void handleSuccessListener(JSONObject response) {
         try {
-            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+//            pDialog.dismiss();
            //Fetch Data From the Services
             JSONArray arr = response.getJSONArray("chief_complaint");
 
@@ -236,7 +242,7 @@ public class MDLiveReasonForVisit extends Activity {
                     startActivity(Reasonintent);
 
                 }else{
-                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this,MDLiveMedicalHistory.class);
+                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
                 }
             }catch (Exception e){

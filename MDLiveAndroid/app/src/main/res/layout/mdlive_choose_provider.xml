@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     android:background="@color/white"
     >
+
     <RelativeLayout
+        android:id="@+id/header"
         style="@style/wagHeaderLinearLayoutStyle"
         android:elevation="20dp"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,21 +34,18 @@
             style = "@style/HeaderTextViewStyle"
             android:gravity="start|center"
             android:layout_centerInParent="true"
-            android:text="Choose Doctor">
+            android:text="Choose Doctor"/>
 
-        </TextView>
     </RelativeLayout>
-<LinearLayout
-  style="@style/LinearLayoutStyle"
-    android:id="@+id/headerLl"
-    android:visibility="gone"
-    android:orientation="vertical">
+
     <LinearLayout
         style="@style/providerBgdLinearLayoutStyle"
         android:id="@+id/DocOnCalLinLay"
         android:orientation="vertical"
+        android:layout_below="@id/header"
         android:layout_width="match_parent"
         >
+
         <com.android.volley.toolbox.NetworkImageView
             style="@style/DoctorOnCallImgViewStyle"
             android:id="@+id/ProfileImg"
@@ -66,29 +66,49 @@
 
         <TextView
             style="@style/DoctorTxtStyle"
-            android:text="Average Wait: 6 min"
+            android:text="Average Wait: ..."
             android:textSize="18dp"
             android:gravity="center"
             android:textColor="#878f95"
             android:id="@+id/Time"/>
+
         <Button
             android:id="@+id/seenextAvailableBtn"
             style="@style/ContinueButtonStyle"
             android:text="See Doctor on Call"
             android:layout_marginTop="5dp"
             android:textAllCaps="false" />
+
     </LinearLayout>
 
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/DocOnCalLinLay"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/progressBar"
+        layout="@layout/custom_progress_bar"
+        />
+
+    <TextView
+        android:id="@+id/loadingTxt"
+        style="@style/common_style_W_Wrap_H_Wrap"
+        android:text="locating available doctors"
+        android:layout_below="@id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:id="@+id/filterRl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#ECF5FA">
+        android:background="#ECF5FA"
+        android:visibility="gone"
+        >
 
         <TextView
             android:text="Choose other doctor"
@@ -113,11 +133,15 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
-</LinearLayout>
+
     <ListView
-        android:layout_width="match_parent"
+        android:layout_below="@id/header"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:divider="@null"
-        android:id="@+id/chooseProviderList" />
-</LinearLayout>
+        android:id="@+id/chooseProviderList"
+        />
+
+</RelativeLayout>

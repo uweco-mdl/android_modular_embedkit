@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class MDLivePharmacy extends FragmentActivity {
     private ProgressDialog pDialog;
     private Button continueButton;
     private SupportMapFragment mapView;
+    private RelativeLayout progressBar;
     private GoogleMap map;
     private Bundle bundletoSend = new Bundle();
 
@@ -82,6 +84,7 @@ public class MDLivePharmacy extends FragmentActivity {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
         addressline3 = ((TextView) findViewById(R.id.addressline3));
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         ((Button) findViewById(R.id.SavContinueBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +120,7 @@ public class MDLivePharmacy extends FragmentActivity {
             }
         });
 
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
     }
 
 
@@ -130,11 +133,13 @@ public class MDLivePharmacy extends FragmentActivity {
      */
 
     public void checkInsuranceEligibility(){
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                Log.e("Zero Dollar Insurance", response.toString());
                 try{
                     JSONObject jobj=new JSONObject(response.toString());
@@ -158,7 +163,8 @@ public class MDLivePharmacy extends FragmentActivity {
         NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
             }
         };
@@ -187,12 +193,14 @@ public class MDLivePharmacy extends FragmentActivity {
      *
      */
     private void doConfirmAppointment() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    pDialog.dismiss();
+//                    pDialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -213,7 +221,8 @@ public class MDLivePharmacy extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
                 /*if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -271,7 +280,8 @@ public class MDLivePharmacy extends FragmentActivity {
    */
 
     public void getUserPharmacyDetails() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -281,7 +291,8 @@ public class MDLivePharmacy extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 Utils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
             }
         };
@@ -331,7 +342,8 @@ public class MDLivePharmacy extends FragmentActivity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
 
             JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name")+" "+pharmacyDatas.getString("distance"));

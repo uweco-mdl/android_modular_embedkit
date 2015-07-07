@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -56,6 +57,7 @@ public class MDLiveFamilymember extends Activity {
     private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
+    private RelativeLayout progressBar;
     private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
     private LinearLayout genderll,dobLl;
     private DatePickerDialog datePickerDialog;
@@ -69,13 +71,7 @@ public class MDLiveFamilymember extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_familymember);
-
-        if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
-            userInfoJSONString = getIntent().getExtras().getString("user_info");
-        }
-
-
-        pDialog = Utils.getProgressDialog("Please wait...",this);
+//        pDialog = Utils.getProgressDialog("Please wait...",this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
         lastNameEditText = (EditText) findViewById(R.id.patient2Et);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
@@ -83,6 +79,7 @@ public class MDLiveFamilymember extends Activity {
         genderll = (LinearLayout) findViewById(R.id.genderLl);
         dobLl = (LinearLayout) findViewById(R.id.dobLl);
         addChildBtn = (Button)findViewById(R.id.addChildBtn);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         getDateOfBirth();
         GetCurrentDate((TextView) findViewById(R.id.dobTxt));
         /**
@@ -281,7 +278,8 @@ public class MDLiveFamilymember extends Activity {
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
     private void PostLifeStyleServices() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -294,7 +292,8 @@ public class MDLiveFamilymember extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 try {
                     if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
@@ -329,7 +328,8 @@ public class MDLiveFamilymember extends Activity {
 
     private void handlePostPediatricResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
             //Fetch Data From the Services
             Log.e("MDlivePediatric->",response.toString());
             Utils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {

@@ -19,13 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -55,6 +55,9 @@ public class MDLivePediatric extends Activity {
     private List<String> dietList;
     private TextView txtDietType;
     private ProgressDialog pDialog;
+    private RelativeLayout progressDialog;
+    private LinearLayout infoView;
+//    private ProgressBar progressBar;
     public ArrayList<HashMap<String,String>> questionList;
     public HashMap<String ,String> questionItem,weightMap;
     public HashMap<String,ArrayList<HashMap<String,String>>> questionsMap;
@@ -73,7 +76,7 @@ public class MDLivePediatric extends Activity {
 
 
     }
-   /***
+    /***
      * This method will handles on touch listers and hides the keyboard when user touches outside necessary UI
      */
     public void touchHandlers(){
@@ -108,12 +111,16 @@ public class MDLivePediatric extends Activity {
         questionList=new ArrayList<>();
         questionsMap=new HashMap<>();
         postParams=new HashMap<>();
-        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
+//        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         weightMap=new HashMap<>();
         txtDietType= (TextView) findViewById(R.id.txt_dietType);
         TextView txtAge= (TextView) findViewById(R.id.ageTxt);
         saveButton= (Button) findViewById(R.id.btn_continue_pediatric);
+        infoView = (LinearLayout)findViewById(R.id.infoView);
         edtCurrentWeight= (EditText) findViewById(R.id.edt_currentweight);
+//        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
+
         edtCurrentWeight.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -157,17 +164,17 @@ public class MDLivePediatric extends Activity {
         edtLastShot= (EditText) findViewById(R.id.edt_lastshot);
         lasShotLabel= (TextView) findViewById(R.id.txt_lastShot_label);
         birthComplicationLayout= (RelativeLayout) findViewById(R.id.layout_birthComplications);
-       if(checkPerdiatricAge()){
+        if(checkPerdiatricAge()){
             txtAge.setText("Patient under 13 years of age");
-             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
-             edtBirthComplications.setVisibility(View.GONE);
-             txtDietType.setVisibility(View.GONE);
-     }else{
-           txtAge.setText("Patient under 2 years of age");
-           birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
-           //edtBirthComplications.setVisibility(View.VISIBLE);
-           txtDietType.setVisibility(View.VISIBLE);
-       }
+            birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
+            edtBirthComplications.setVisibility(View.GONE);
+            txtDietType.setVisibility(View.GONE);
+        }else{
+            txtAge.setText("Patient under 2 years of age");
+            birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
+            //edtBirthComplications.setVisibility(View.VISIBLE);
+            txtDietType.setVisibility(View.VISIBLE);
+        }
         explanationListners();
         dietList=new ArrayList<>();
         dietList = Arrays.asList(getResources().getStringArray(R.array.dietlist));
@@ -220,10 +227,10 @@ public class MDLivePediatric extends Activity {
 
 
                 enableSaveButton();
-                String text=s.toString();
-                if(text.length()!=0 && !text.startsWith(" ")){
-                    updateExplanationParams("Birth complications explanation",s.toString());
-                }else{
+                String text = s.toString();
+                if (text.length() != 0 && !text.startsWith(" ")) {
+                    updateExplanationParams("Birth complications explanation", s.toString());
+                } else {
                     enableSaveButton();
                 }
 
@@ -251,10 +258,10 @@ public class MDLivePediatric extends Activity {
                     Toast.makeText(getApplicationContext(),"Positive",Toast.LENGTH_SHORT).show();
                 }*/
                 enableSaveButton();
-                String text=s.toString();
-                if(text.length()!=0 && !text.startsWith(" ")){
-                    updateExplanationParams("Last shot",s.toString());
-                }else{
+                String text = s.toString();
+                if (text.length() != 0 && !text.startsWith(" ")) {
+                    updateExplanationParams("Last shot", s.toString());
+                } else {
                     enableSaveButton();
                 }
             }
@@ -433,24 +440,28 @@ public class MDLivePediatric extends Activity {
      * Pediatric profile.
      */
     private void getPediatricProfileBelowTwo(){
-        Utils.showProgressDialog(pDialog);
+//        Utils.showProgressDialog(pDialog);
+        setProgressBarVisibility();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 handleSuccessResponse(response.toString());
                 Log.e("Pediatric Profile",response.toString());
-                Utils.hideProgressDialog(pDialog);
+                //Utils.hideProgressDialog(pDialog);
+                setInfoVisibilty();
             }
         };
         NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                setInfoVisibilty();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Utils.hideProgressDialog(pDialog);
+//                                Utils.hideProgressDialog(pDialog);
+                                setInfoVisibilty();
                             }
                         };
                         // Show timeout error message
@@ -509,7 +520,7 @@ public class MDLivePediatric extends Activity {
      */
 
     public void enableRadioButtons(String name,String value){
-       if("Smoking exposure".equals(name)){
+        if("Smoking exposure".equals(name)){
             if("Yes".equals(value)) {
                 ((RadioButton) findViewById(R.id.smoking_yesButton)).setChecked(true);
             }else if("No".equals(value)){
@@ -536,8 +547,8 @@ public class MDLivePediatric extends Activity {
         }else if("Birth complications explanation".equals(name)){
             edtBirthComplications.setText(value);
         }else if("Current Diet".equals(name)) {
-           txtDietType.setText(value);
-       }
+            txtDietType.setText(value);
+        }
     }
 
     /**
@@ -559,13 +570,15 @@ public class MDLivePediatric extends Activity {
      */
 
     public void callUpdateService(){
-        Utils.showProgressDialog(pDialog);
+//        Utils.showProgressDialog(pDialog);
+        progressDialog.setVisibility(View.VISIBLE);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-               // handleSuccessResponse(response.toString());
+                // handleSuccessResponse(response.toString());
                 Log.e("Pediatric Update ",response.toString());
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                progressDialog.setVisibility(View.GONE);
                 Intent intent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
                 startActivity(intent);
             }
@@ -577,7 +590,8 @@ public class MDLivePediatric extends Activity {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Utils.hideProgressDialog(pDialog);
+//                                Utils.hideProgressDialog(pDialog);
+                                progressDialog.setVisibility(View.GONE);
                             }
                         };
                         // Show timeout error message
@@ -685,6 +699,24 @@ public class MDLivePediatric extends Activity {
         Utils.movetohome(MDLivePediatric.this, MDLiveLogin.class);
     }
 
+    /*
+       * set visible for the progress bar
+       */
+    public void setProgressBarVisibility()
+    {
+        progressDialog.setVisibility(View.VISIBLE);
+        infoView.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+    }
 
+    /*
+    * set visible for the details view layout
+    */
+    public void setInfoVisibilty()
+    {
+        progressDialog.setVisibility(View.GONE);
+        infoView.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.VISIBLE);
+    }
 
 }

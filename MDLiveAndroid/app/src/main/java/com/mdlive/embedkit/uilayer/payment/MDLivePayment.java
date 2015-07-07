@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,14 +17,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +41,6 @@ import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,6 +55,7 @@ public class MDLivePayment extends Activity {
     private WebView HostedPCI;
     private DatePicker datePicker;
     protected static ProgressDialog pDialog;
+    private RelativeLayout progressBar;
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
@@ -81,6 +79,7 @@ public class MDLivePayment extends Activity {
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +118,8 @@ public class MDLivePayment extends Activity {
         }
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
+//        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
+        //pDialog.show();
         textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -225,11 +225,14 @@ public class MDLivePayment extends Activity {
 
     public void updateCardDetails(String params){
         showDialog(pDialog);
+        //progressBar.setVisibility(View.VISIBLE);
         final NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 try{
                     dismissDialog(pDialog);
+                    //progressBar.setVisibility(View.GONE);
+                    Log.e("Succes Update",response.toString());
                     JSONObject resObj=new JSONObject(response.toString());
                     if(resObj.has("message")){
                         doConfirmAppointment();
@@ -243,7 +246,8 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
-                    dismissDialog(pDialog);
+                   dismissDialog(pDialog);
+                    //progressBar.setVisibility(View.GONE);
                     Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
 
                 }catch (Exception e){
@@ -343,7 +347,7 @@ public class MDLivePayment extends Activity {
         runOnUiThread(new Runnable(){
             public void run() {
                 try {
-                    dialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
                 }
@@ -354,7 +358,7 @@ public class MDLivePayment extends Activity {
         runOnUiThread(new Runnable(){
             public void run() {
                 try {
-                    dialog.show();
+                    progressBar.setVisibility(View.VISIBLE);
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
                 }
@@ -365,10 +369,12 @@ public class MDLivePayment extends Activity {
 
     private void doConfirmAppointment() {
        showDialog(pDialog);
+       // progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 dismissDialog(pDialog);
+                //progressBar.setVisibility(View.GONE);
                 Log.e("Response Payment",response.toString());
                 try {
                     isPaymentLoading = false;
@@ -386,6 +392,7 @@ public class MDLivePayment extends Activity {
 
                 } catch (Exception e) {
                     dismissDialog(pDialog);
+                    //progressBar.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
@@ -395,10 +402,13 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
+
                     dismissDialog(pDialog);
+//                    progressBar.setVisibility(View.GONE);
                     Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
                 }catch (Exception e){
                     dismissDialog(pDialog);
+//                    progressBar.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }
@@ -465,10 +475,12 @@ public class MDLivePayment extends Activity {
 
     public void applyPromoCode(String promoCode){
        showDialog(pDialog);
+//        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 dismissDialog(pDialog);
+//                progressBar.setVisibility(View.GONE);
                 handlePromocodeResponse(response.toString());
                 Log.e("Response Succeed",response.toString());
             }
@@ -478,6 +490,7 @@ public class MDLivePayment extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dismissDialog(pDialog);
+//                progressBar.setVisibility(View.GONE);
                 Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
                /* try{
                     String responseBody = new String(error.networkResponse.data, "utf-8" );

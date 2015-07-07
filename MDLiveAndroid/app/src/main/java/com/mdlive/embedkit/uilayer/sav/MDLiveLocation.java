@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -49,6 +50,7 @@ public class MDLiveLocation extends Activity {
     private EditText ZipcodeEditTxt;
     private TextView CurrentLocationTxt,StateTxt;
     private String SelectedZipCodeCity;
+    private RelativeLayout progressBar;
     private ArrayList<String> StateName = new ArrayList<String>();
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
@@ -62,8 +64,9 @@ public class MDLiveLocation extends Activity {
         setContentView(R.layout.mdlive_location);
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         LocalisationHelper.localiseLayout(this, view);
-        pDialog = Utils.getProgressDialog("Please Wait...", this);
+//        pDialog = Utils.getProgressDialog("Please Wait...", this);
         StateTxt = (TextView) findViewById(R.id.StateTxt);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         StateTxt.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +162,8 @@ public class MDLiveLocation extends Activity {
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pDialog.show();
+//                pDialog.show();
+                progressBar.setVisibility(View.VISIBLE);
                 getLocationCoordinates();
             }
         });
@@ -210,7 +214,8 @@ public class MDLiveLocation extends Activity {
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
     private void loadCurrentLocation(String latitude, String longitude) {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -222,8 +227,9 @@ public class MDLiveLocation extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
-                Utils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+                //Location Alert have to handle
                /* if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -253,7 +259,8 @@ public class MDLiveLocation extends Activity {
 
 
     private void loadZipCode(String EditTextValue) {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -267,7 +274,8 @@ public class MDLiveLocation extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -291,7 +299,8 @@ public class MDLiveLocation extends Activity {
      */
     private void ZipCodeResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
             //Fetch Data From the Services
 
             Log.e("Response Zip ,ciode",response.toString());
@@ -364,7 +373,8 @@ public class MDLiveLocation extends Activity {
 
     private void CurrentLocationResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
 
             //Fetch Data From the Services
             selectedCity = response.getString("state");
@@ -392,7 +402,8 @@ public class MDLiveLocation extends Activity {
                                 loadCurrentLocation(location.getLatitude() + "", location.getLongitude() + "");
                             }
                             else{
-                                pDialog.dismiss();
+//                                pDialog.dismiss();
+                                progressBar.setVisibility(View.GONE);
                                 Utils.showGPSSettingsAlert(MDLiveLocation.this);
                             }
 

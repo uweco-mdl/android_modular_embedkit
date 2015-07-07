@@ -60,12 +60,13 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
     private HashMap<Marker, Integer> markerIdCollection = new HashMap<Marker, Integer>();
     private ProgressDialog pDialog;
+    private RelativeLayout progressBar;
     private Bundle bundleToSend = new Bundle();
     private SupportMapFragment mapView;
     private GoogleMap googleMap;
     private ListView pharmList;
     private PharmacyListAdaper adaper;
-    private ProgressBar loadingIndicator;
+//    private ProgressBar loadingIndicator;
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
     boolean isMarkerPointAdded = false;
@@ -99,7 +100,8 @@ public class MDLivePharmacyResult extends FragmentActivity {
         LocalisationHelper.localiseLayout(this, view);
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
         keyParams = new HashMap<String, Object>();
-        loadingIndicator = (ProgressBar) findViewById(R.id.loadingIndicator);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+
 
         ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +173,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
 
     public void getPharmacySearchResults(String postBody) {
-        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
+//        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -183,12 +185,16 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+//                infoView.setVisibility(View.VISIBLE);
                 resetLoadingViews();
                 Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
+//        infoView.setVisibility(View.GONE);
         ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
         services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
     }
@@ -200,7 +206,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private void resetLoadingViews() {
         isLoading = false;
         pharmList.setEnabled(true);
-        loadingIndicator.setVisibility(View.GONE);
+//        loadingIndicator.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+//        infoView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -269,7 +277,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private void handleListSuccessResponse(JSONObject response) {
         JsonObject responObj = null;
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+//            infoView.setVisibility(View.VISIBLE);
             Log.e("response", response.toString());
             JsonParser parser = new JsonParser();
             responObj = (JsonObject) parser.parse(response.toString());
@@ -395,7 +405,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
                         if (!isLoading) {
                             pharmList.setEnabled(false);
                             isLoading = true;
-                            loadingIndicator.setVisibility(View.VISIBLE);
+//                            loadingIndicator.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
+//                            infoView.setVisibility(View.GONE);
                             keyParams.put("page", ((int) keyParams.get("page")) + 1);
                             keyParams.put("per_page", 10);
                             Gson gson = new Gson();
@@ -414,8 +426,10 @@ public class MDLivePharmacyResult extends FragmentActivity {
      * While user clicks on the usePharmacy button which will set pharmacy as a user's default.
      */
     public void setPharmacyAsADefault(int pharmacyId) {
-        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
-        pDialog.show();
+//        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
+//        infoView.setVisibility(View.GONE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -426,6 +440,8 @@ public class MDLivePharmacyResult extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 /*pDialog.dismiss();*/
+                progressBar.setVisibility(View.GONE);
+//                infoView.setVisibility(View.VISIBLE);
                 Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
@@ -443,7 +459,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+//            infoView.setVisibility(View.VISIBLE);
             Log.d("Response", response.toString());
             if (response.getString("message").equals("Pharmacy details updated")) {
                 Toast.makeText(getApplicationContext(), "Default Pharmacy Saved!", Toast.LENGTH_SHORT).show();

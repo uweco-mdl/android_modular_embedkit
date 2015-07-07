@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,6 +53,9 @@ public class MDLiveChooseProvider extends Activity {
 
     private ListView listView;
     private ProgressDialog pDialog;
+    private ProgressBar progressBar;
+
+
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
     private long StrDate;
     private ArrayList<HashMap<String, String>> ProviderListMap;
@@ -60,16 +64,22 @@ public class MDLiveChooseProvider extends Activity {
     private LinearLayout dcotorOnCallHeader,DocOnCalLinLay;
     private RelativeLayout filterRl;
     private Button seenextAvailableBtn;
+    private TextView loadingTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider);
         ProviderListMap = new ArrayList<HashMap<String, String>>();
-        pDialog = Utils.getProgressDialog("Please wait...", this);
-        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
         DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
-        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
+//        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
+        loadingTxt= (TextView)findViewById(R.id.loadingTxt);
+
+
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
 
         ChooseProviderResponseList();
@@ -122,7 +132,8 @@ public class MDLiveChooseProvider extends Activity {
      *
      */
     private void ChooseProviderResponseList() {
-        pDialog.show();
+//        pDialog.show();
+        setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -135,9 +146,11 @@ public class MDLiveChooseProvider extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
-                pDialog.dismiss();
-                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                filterRl.setVisibility(View.GONE);
+//                pDialog.dismiss();
+                setInfoVisibilty();
+                DocOnCalLinLay.setVisibility(View.VISIBLE);
+//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//                filterRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
                     if (error.networkResponse == null) {
@@ -179,7 +192,9 @@ public class MDLiveChooseProvider extends Activity {
      */
     private void handleSuccessResponse(String response) {
         try {
-            pDialog.dismiss();
+            setInfoVisibilty();
+//            pDialog.dismiss();
+            DocOnCalLinLay.setVisibility(View.GONE);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             Log.e("Provider Response", response);
@@ -187,10 +202,11 @@ public class MDLiveChooseProvider extends Activity {
             if(StrDoctorOnCall.equals("false"))
             {
                 Log.e("StrDoctorOnCall-->",StrDoctorOnCall);
+                DocOnCalLinLay.setVisibility(View.GONE);
                 JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                 if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                    filterRl.setVisibility(View.GONE);
+//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//                    filterRl.setVisibility(View.GONE);
                     doctorOnCallButtonClick();
                 }else {
                     dcotorOnCallHeader.setVisibility(View.VISIBLE);
@@ -405,5 +421,23 @@ public class MDLiveChooseProvider extends Activity {
     public void movetohome()
     {
         Utils.movetohome(MDLiveChooseProvider.this, MDLiveLogin.class);
+    }
+
+    /*
+    * set visible for the progress bar
+    */
+    public void setProgressBarVisibility()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        loadingTxt.setVisibility(View.VISIBLE);
+    }
+
+    /*
+    * set visible for the details view layout
+    */
+    public void setInfoVisibilty()
+    {
+        progressBar.setVisibility(View.GONE);
+        loadingTxt.setVisibility(View.GONE);
     }
 }

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class MDLivePharmacyChange extends Activity {
     private AlertDialog stateDialog;
     private Button getlocationButton;
     private ProgressDialog pDialog;
+    private RelativeLayout progressBar;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> suggestionList = new ArrayList<String>();
     private LocationCooridnates locationService;
@@ -89,7 +91,8 @@ public class MDLivePharmacyChange extends Activity {
         zipcodeText = ((EditText) findViewById(R.id.zipcodeText));
         cityText = ((EditText) findViewById(R.id.cityText));
         getlocationButton = ((Button) findViewById(R.id.getlocationButton));
-        pDialog = Utils.getProgressDialog("Loading...", this);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+//        pDialog = Utils.getProgressDialog("Loading...", this);
         //Initialize Intent for Pharmacy Results
         sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -257,14 +260,16 @@ public class MDLivePharmacyChange extends Activity {
      */
     private void getLocationBtnOnClickAction() {
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-            pDialog.show();
+//            pDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
             locationService.getLocation(this, new LocationCooridnates.LocationResult() {
                 @Override
                 public void gotLocation(final Location location) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            pDialog.dismiss();
+//                            pDialog.dismiss();
+                            progressBar.setVisibility(View.GONE);
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
                                 Utils.hideSoftKeyboard(MDLivePharmacyChange.this);

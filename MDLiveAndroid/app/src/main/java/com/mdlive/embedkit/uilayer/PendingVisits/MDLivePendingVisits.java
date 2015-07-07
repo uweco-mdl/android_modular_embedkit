@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -30,13 +31,14 @@ public class MDLivePendingVisits extends Activity {
     private ProgressDialog pDialog;
     private Button resumeBtn;
     private TextView txtPatientName,txtReason,txtDoctorName,txtAddress;
+    private RelativeLayout progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pending_visits);
-        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
+//        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
         getUserInformation();
 
     }
@@ -51,6 +53,7 @@ public class MDLivePendingVisits extends Activity {
         txtDoctorName= (TextView) findViewById(R.id.txtPendingDoctorName);
         txtReason= (TextView) findViewById(R.id.txtPendingReason);
         txtAddress = (TextView) findViewById(R.id.txtPharmacyAddress);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         resumeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,12 +83,13 @@ public class MDLivePendingVisits extends Activity {
      */
 
     public void getUserInformation(){
-        Utils.showProgressDialog(pDialog);
+//        Utils.showProgressDialog(pDialog);
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                Utils.hideProgressDialog(pDialog);
-
+//                Utils.hideProgressDialog(pDialog);
+                progressBar.setVisibility(View.GONE);
                 Log.e("UserInfo Response", response.toString());
                 handleUserInfoResponse(response.toString());
             }
@@ -93,7 +97,8 @@ public class MDLivePendingVisits extends Activity {
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                progressBar.setVisibility(View.GONE);
                 Log.e("UserInfo Error Response",error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {

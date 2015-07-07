@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -67,13 +68,14 @@ public class MDLiveSearchProvider extends Activity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String,String> postParams=new HashMap<>();
+    private RelativeLayout progressDialog;
     public String filter_SavedLocation,SavedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_search_provider);
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
         initialiseData();
 
       //Load Services
@@ -242,6 +244,7 @@ public class MDLiveSearchProvider extends Activity {
         TextView SpeaksTxtView = (TextView) findViewById(R.id.SpeaksTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch= (TextView) findViewById(R.id.edt_searchProvider);
+        progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
     }
 
     @Override
@@ -264,7 +267,8 @@ public class MDLiveSearchProvider extends Activity {
      *
      */
     private void loadSearchproviderDetails() {
-        pDialog.show();
+//        pDialog.show();
+        progressDialog.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -276,7 +280,8 @@ public class MDLiveSearchProvider extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressDialog.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -301,7 +306,9 @@ public class MDLiveSearchProvider extends Activity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+
+            progressDialog.setVisibility(View.GONE);
+//            pDialog.dismiss();
             //Fetch Data From the Services
 
             JsonParser parser = new JsonParser();
@@ -489,7 +496,8 @@ public class MDLiveSearchProvider extends Activity {
      *
      */
     private void LoadFilterSearchServices() {
-        pDialog.show();
+//        pDialog.show();
+        progressDialog.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -503,7 +511,8 @@ public class MDLiveSearchProvider extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressDialog.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -527,8 +536,8 @@ public class MDLiveSearchProvider extends Activity {
 
     private void handleFilterSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
-
+//            pDialog.dismiss();
+            progressDialog.setVisibility(View.GONE);
             //Fetch Data From the Services
 
             JsonParser parser = new JsonParser();

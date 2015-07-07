@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -53,12 +54,13 @@ import java.util.HashMap;
 import static java.util.Calendar.MONTH;
 
 public class MDLiveGetStarted extends FragmentActivity{
-    private LinearLayout DobLl,LocationLl;
-    private ProgressDialog pDialog;
+    private LinearLayout DobLl,LocationLl,patientInfo;
+    private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
     private int month,day,year;
     private String strPatientName,SavedLocation,dependentNmaeStr;
     private DatePickerDialog datePickerDialog;
+    private RelativeLayout progressBar;
     public static boolean isFemale;
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> GenderList = new ArrayList<String>();
@@ -80,7 +82,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         setContentView(R.layout.mdlive_get_started);
         MDLiveConfig.setData();
         setRemoteUserId();
-        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
+//        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         Utils.hideSoftKeyboard(this);
         initialiseData();
         setonClickListener();
@@ -149,6 +151,8 @@ public class MDLiveGetStarted extends FragmentActivity{
         LocationLl = (LinearLayout) findViewById(R.id.locationLl);
         genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        patientInfo= (LinearLayout) findViewById(R.id.patientInfo);
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -553,14 +557,14 @@ public class MDLiveGetStarted extends FragmentActivity{
      *
      */
     private void loadUserInformationDetails() {
-        if(!pDialog.isShowing()) {
-            pDialog.show();
-        }
+        setProgressBarVisibility();
+
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                setInfoVisibilty();
                 handleSuccessResponse(response);
 
             }
@@ -570,7 +574,10 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+
+                setInfoVisibilty();
+
                 Utils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
                /* if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -596,15 +603,19 @@ public class MDLiveGetStarted extends FragmentActivity{
      */
 
     private void loadDependentUserInformationDetails(String depenedentId) {
-        if(!pDialog.isShowing()) {
-            pDialog.show();
-        }
+//        if(!pDialog.isShowing()) {
+//            pDialog.show();
+//        }
+
+        setProgressBarVisibility();
+
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("Dep Response", response.toString());
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                setInfoVisibilty();
                 handleDependentSuccessResponse(response);
             }
         };
@@ -622,7 +633,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                             }
                         };
                         // Show timeout error message
-                        pDialog.dismiss();
+//                        pDialog.dismiss();
+                        setInfoVisibilty();
                         Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
                     }
                 }
@@ -641,7 +653,8 @@ public class MDLiveGetStarted extends FragmentActivity{
         try {
             isUserInfo=false;
             if(serviceCount == 2){
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                setInfoVisibilty();
                 serviceCount = 0;
             }
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -747,7 +760,8 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            setInfoVisibilty();
             handleSuccessResponseFamilyMember(response);
 
         }catch(Exception e){
@@ -778,12 +792,13 @@ public class MDLiveGetStarted extends FragmentActivity{
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-            pDialog.dismiss();
+//            pDialog.dismiss();
             Log.e("Pending Appt",notiObj.getString("upcoming_appointments"));
             if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
             }
 
+            setInfoVisibilty();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -859,5 +874,20 @@ public class MDLiveGetStarted extends FragmentActivity{
         Utils.movetohome(MDLiveGetStarted.this, MDLiveLogin.class);
     }
 
+    /*
+    * set visible for the progress bar
+    */
+    public void setProgressBarVisibility()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    /*
+    * set visible for the details view layout
+    */
+    public void setInfoVisibilty()
+    {
+        progressBar.setVisibility(View.GONE);
+    }
 }
 

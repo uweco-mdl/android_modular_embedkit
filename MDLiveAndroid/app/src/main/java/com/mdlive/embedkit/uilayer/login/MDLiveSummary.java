@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -26,19 +26,14 @@ import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 public class MDLiveSummary extends Activity {
 
     private ProgressDialog pDialog;
+    private RelativeLayout progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
-        TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
-        TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
-
-        SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        txtDocName.setText(docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,""));
-        payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
-        pDialog = Utils.getProgressDialog("Please wait", this);
+//        pDialog = Utils.getProgressDialog("Please wait", this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         ratingBar.setRating(0);
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,13 +63,15 @@ public class MDLiveSummary extends Activity {
     }
 
     public void sendRating(){
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
 
             @Override
             public void onResponse(Object response) {
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 Log.e("Response Summary", response.toString());
                 try {
                     clearPref();
@@ -96,7 +93,8 @@ public class MDLiveSummary extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response Vsee", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
 

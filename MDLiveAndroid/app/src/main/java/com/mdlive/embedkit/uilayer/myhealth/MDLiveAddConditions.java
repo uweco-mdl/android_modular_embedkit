@@ -1,9 +1,10 @@
-package com.mdlive.embedkit.uilayer.myhealth.activity;
+package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -17,57 +18,85 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.MedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.SuggestMedicationService;
+import com.mdlive.unifiedmiddleware.services.myhealth.AddMedicalConditionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicalConditionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionAutoSuggestionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionListServices;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+
 /**
- * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Medications.
+ * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Conditions.
  *
  * This class extends with MDLiveCommonConditionsMedicationsActivity
  *  which has all functions that is helped to achieve CRUD functions.
  *
  */
-public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActivity {
+
+public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivity {
 
     protected boolean isPerformingAutoSuggestion;
-    private static int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Setting up type in parent class for Medications
-        type = TYPE_CONSTANT.MEDICATION;
+        //Setting up type in parent class for Conditions
+        type = TYPE_CONSTANT.CONDITION;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
-        count = 0;
-        ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medication));
+        ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_medical_condition));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView) findViewById(R.id.reason_patientTxt
-        )).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
+        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
     }
 
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
      *
-     * This function is used to save new medication details entered by user.
+     * This function is used to save new condition details entered by user.
      *
      */
     @Override
     protected void saveNewConditionsOrAllergies() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
+        setResult(RESULT_OK);
         IsThisPageEdited = true;
         if (newConditions.size() == 0) {
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
             updateConditionsOrAllergies();
         } else {
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+//                    pDialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
+                    updateConditionsOrAllergies();
+              /*      if (newConditions.size() == ++addConditionsCount) {
+
+                    }*/
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    medicalCommonErrorResponseHandler(error);
+                }
+            };
+
+            AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
+            services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions);
+            /*
             for (int i = 0; i < newConditions.size(); i++) {
                 NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
                     @Override
                     public void onResponse(JSONObject response) {
-                        if(++count == newConditions.size()) {
+                        if (newConditions.size() == ++addConditionsCount) {
+                            pDialog.dismiss();
                             updateConditionsOrAllergies();
                         }
                     }
@@ -78,83 +107,86 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                         medicalCommonErrorResponseHandler(error);
                     }
                 };
-                HashMap<String, String> medication = new HashMap<String, String>();
-                medication.put("name", newConditions.get(i));
-                HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                postBody.put("medication", medication);
-                AddMedicationService services = new AddMedicationService(MDLiveAddMedications.this, null);
-                services.doLoginRequest(new Gson().toJson(postBody), successCallBackListener, errorListener);
-            }
+                AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
+                services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions.get(i));
+            }*/
         }
     }
 
-    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected void onPreExecute() {
-            pDialog.show();
-            super.onPreExecute();
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            pDialog.dismiss();
-            checkMedicalAggregation();
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            try{
-                if (existingConditions.size() != 0){
-                    for (int i = 0; i < existingConditions.size(); i++) {
-                        HashMap<String, String> medication = existingConditions.get(i);
-                        HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                        postBody.put("medication", medication);
-                        try{
-                            updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICATION_UPDATE + "/"+medication.get("id"),
-                                    new Gson().toJson(postBody));
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
- /*   public void setDatas(){
+  /*  public void setDatas(){
         for(int i = 0; i < newConditions.size(); i++){
             conditionsText += newConditions.get(i)+", ";
         }
         for(int i = 0; i < existingConditions.size(); i++){
             HashMap<String, String> data = existingConditions.get(i);
-            conditionsText += data.get("name")+", ";
+            if(data.get("name")!=null)
+                conditionsText += data.get("name")+", ";
         }
         Intent resultData = new Intent();
         if(conditionsText == null || conditionsText.trim().length() == 0)
-            conditionsText = "No medications reported";
-        else
-            conditionsText += "...";
-        resultData.putExtra("medicationData", conditionsText);
+            conditionsText = "No conditions reported";
+        resultData.putExtra("conditionsData", conditionsText);
         setResult(RESULT_OK, resultData);
     }*/
+
 
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
      *
-     * This function is used to update medication details modified by user.
+     * This function is used to update conditions details modified by user.
      *
      */
+
     @Override
     protected void updateConditionsOrAllergies() {
         try {
-           IsThisPageEdited = true;
-           new UpdateExistingConditionsService().execute();
+            IsThisPageEdited = true;
+            new UpdateExistingConditionsService().execute();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
+
+    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected void onPreExecute() {
+//             pDialog.dismiss();
+    progressBar.setVisibility(View.GONE);
+            super.onPreExecute();
+
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+            checkMedicalAggregation();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (existingConditions.size() == 0) {
+            } else {
+                for (int i = 0; i < existingConditions.size(); i++) {
+                    HashMap<String, String> condition = existingConditions.get(i);
+                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
+                    condition.put("condition", condition.get("name"));
+                    condition.remove("name");
+                    postBody.put("medical_condition", condition);
+
+                    try{
+                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICAL_CONDITIONS_LIST + "/" +condition.get("id"),
+                                new Gson().toJson(postBody));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
 
     /**
      * This function will retrieve the known allergies from the server.
@@ -164,7 +196,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
 
     @Override
     protected void getConditionsOrAllergiesData() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -178,21 +211,22 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        MedicationService services = new MedicationService(MDLiveAddMedications.this, null);
-        services.doLoginRequest(successCallBackListener, errorListener);
+        MedicalConditionListServices services = new MedicalConditionListServices(MDLiveAddConditions.this, null);
+        services.getMedicalConditionsListRequest(successCallBackListener, errorListener);
     }
 
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
      *
-     * This function is used to delete medication details
+     * This function is used to delete allergy details
      * @param deleteView        :: The image has clicklistner to delete
-     * @param addConditionsLl :: Holder of all medication list datas.
+     * @param addConditionsLl :: Holder of all allergy list datas.
      *
      */
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -200,7 +234,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -209,12 +244,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-
-        HashMap<String, String> postBody = new HashMap<String, String>();
-        postBody.put("id", (String) ((ViewGroup) (deleteView.getParent())).getTag());
-        DeleteMedicationService services = new DeleteMedicationService(MDLiveAddMedications.this, null);
-        services.doLoginRequest(new Gson().toJson(postBody), (String) ((ViewGroup) (deleteView.getParent())).getTag(),
-                successCallBackListener, errorListener);
+        DeleteMedicalConditionServices services = new DeleteMedicalConditionServices(MDLiveAddConditions.this, null);
+        services.deleteMedicalConditionsRequest(successCallBackListener, errorListener, (String) ((ViewGroup) (deleteView.getParent())).getTag());
     }
 
 
@@ -243,8 +274,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
             }
         };
         if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(constraint)) {
-            SuggestMedicationService services = new SuggestMedicationService(MDLiveAddMedications.this, null);
-            services.doLoginRequest(constraint, successCallBackListener, errorListener);
+            MedicalConditionAutoSuggestionServices services = new MedicalConditionAutoSuggestionServices(MDLiveAddConditions.this, null);
+            services.getMedicalConditionsAutoSuggestionRequest(successCallBackListener, errorListener, constraint);
             previousSearch = constraint;
             isPerformingAutoSuggestion = true;
         }
@@ -255,7 +286,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         if(IsThisPageEdited)
             checkMedicalAggregation();
         else
-            finish();
+            super.onBackPressed();
     }
 
     /**
@@ -271,6 +302,5 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         medicalHistory.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(medicalHistory);*/
     }
-
 
 }

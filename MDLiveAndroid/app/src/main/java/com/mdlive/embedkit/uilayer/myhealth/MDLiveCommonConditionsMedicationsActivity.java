@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myhealth.activity;
+package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -73,6 +73,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     protected int existingConditionsCount = 0;
     public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION};
     protected TYPE_CONSTANT type;
+    public RelativeLayout progressBar;
     public String conditionsText = "";
     public static boolean isNewAdded = false;
     public Intent resultData = new Intent();
@@ -85,8 +86,9 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         conditionsList = new ArrayList<HashMap<String,String>>();
         newConditions = new ArrayList<String>();
         existingConditions = new ArrayList<HashMap<String, String>>();
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
 
-        pDialog = Utils.getProgressDialog("Loading...", this);
+//        pDialog = Utils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
         findViewById(R.id.SaveBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,10 +269,12 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
 //            }
 //            addBlankConditionOrAllergy();
 
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
         }catch (Exception e){
             e.printStackTrace();
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -501,7 +505,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
      */
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
         previousSearch = "";
-        pDialog.dismiss();
+//        pDialog.dismiss();
+        progressBar.setVisibility(View.GONE);
         NetworkResponse networkResponse = error.networkResponse;
 /*
         try {

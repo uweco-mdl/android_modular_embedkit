@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
+<LinearLayout
     style="@style/ContainerStyle"
     android:background="@color/mdliveBackgroundColor"
     >
@@ -555,7 +556,8 @@
 
     </ScrollView>
 
-    <include
-        layout="@layout/mdlive_footer"
-        style="@style/Footer_Style" />
 </LinearLayout>
+    <include
+        layout="@layout/custom_progress_dialog"
+        />
+    </merge>
