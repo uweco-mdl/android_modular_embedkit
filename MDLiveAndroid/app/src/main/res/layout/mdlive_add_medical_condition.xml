@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
 <LinearLayout
-    style="@style/ContainerStyle"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    style="@style/ContainerStyle">
 <!--
     <include layout="@layout/header" />-->
     <LinearLayout
@@ -53,9 +54,6 @@
             android:id="@+id/AddConditionsLl"
             >
 
-
-
-
         </LinearLayout>
 
     </ScrollView>
@@ -66,3 +64,6 @@
         android:id="@+id/SaveBtn" />
 
 </LinearLayout>
+    <include
+        layout="@layout/custom_progress_dialog" />
+</merge>

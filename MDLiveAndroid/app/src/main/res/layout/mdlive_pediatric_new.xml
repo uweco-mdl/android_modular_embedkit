@@ -1,361 +1,381 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pediatricContainer"
-    style="@style/ContainerStyle"
-    android:background="@color/mdliveBackgroundColor">
-
-    <LinearLayout
-        android:id="@+id/header"
-        style="@style/wagHeaderLinearLayoutStyle"
-        android:layout_height="70dp"
-        android:elevation="20dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/backImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/back_arrow_hdpi" />
-
-        <ImageView
-            android:id="@+id/homeImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
-            android:background="@drawable/home_icon" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
+    <RelativeLayout
+        android:id="@+id/pediatricContainer"
+        style="@style/ContainerStyle"
+        android:background="@color/mdliveBackgroundColor"
+        >
 
         <LinearLayout
-            style="@style/LinearLayoutStyle"
+            android:id="@+id/header"
+            style="@style/wagHeaderLinearLayoutStyle"
+            android:elevation="20dp"
             android:layout_height="70dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                style="@style/ReasonHeaderTxtStyle"
-                android:text="Pediatric Profile" />
-
-            <TextView
-                android:id="@+id/reason_patientTxt"
-                style="@style/ReasonsubHeaderTxtStyle"
-                android:text="Michelle Marino" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back_arrow_hdpi"
+                android:id="@+id/backImg"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_icon"
+                android:id="@+id/homeImg"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/backImg"
+                />
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:layout_height="70dp"
+                >
+                <TextView
+                    style = "@style/ReasonHeaderTxtStyle"
+                    android:text="Pediatric Profile"
+                    />
+                <TextView
+                    android:id="@+id/reason_patientTxt"
+                    style = "@style/ReasonsubHeaderTxtStyle"
+                    android:text="Michelle Marino"
+                    />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
 
-    <ScrollView
-        android:id="@+id/pediatricScroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_continue_pediatric"
-        android:layout_below="@+id/header">
-
-        <LinearLayout style="@style/ContainerStyle"
-
-
+        <ScrollView
+            android:id="@+id/pediatricScroll"
+            android:layout_below="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_continue_pediatric"
             >
 
-            <TextView
-                android:id="@+id/ageTxt"
-                style="@style/Pediatric_TextStyle"
-                android:text="Patient under 2 years of age"
-
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                style="@style/Pediatric_TextStyle"
-                android:text="@string/pediatric_please_text"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-
             <LinearLayout
-                style="@style/Pediatric_Weight_Layout_style"
-                android:visibility="gone">
+                style="@style/ContainerStyle"
+                >
+                <TextView
+                    style="@style/Pediatric_TextStyle"
+                    android:id="@+id/ageTxt"
+                    android:text="Patient under 2 years of age"
+
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
 
                 <TextView
-                    style="@style/Pediatric_Weight_text_style"
+                    style="@style/Pediatric_TextStyle"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:text="@string/pediatric_please_text" />
 
-                    android:text="@string/pediatric_Birth_Weight_text" />
 
-                <EditText
-                    android:id="@+id/edt_birthweight"
-                    style="@style/Pediatric_Weight_edittext_style" />
+                <LinearLayout style="@style/Pediatric_Weight_Layout_style"
+                    android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/pediatric_lbs_text" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/WagLinearLayoutStylePediatric"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    style="@style/Pediatric_relative_layout_style"
-                    android:orientation="vertical"
-
-                    >
-
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    <TextView
                         style="@style/Pediatric_Weight_text_style"
-                        android:layout_width="match_parent"
-                        android:text="@string/pediatric_current_Weight_text"
-                        android:visibility="visible" />
+
+                        android:text="@string/pediatric_Birth_Weight_text" />
 
                     <EditText
-                        android:id="@+id/edt_currentweight"
-                        style="@style/Pediatric_drop_text_style"
-                        android:layout_width="match_parent"
-                        android:background="#ffffff"
-                        android:gravity="start|left"
-                        android:hint=""
-                        android:inputType="number"
-                        android:maxLength="3" />
-
+                        android:id="@+id/edt_birthweight"
+                        style="@style/Pediatric_Weight_edittext_style" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:text="@string/pediatric_lbs_text"
-                        android:textColorHighlight="@color/black"
-                        android:textSize="18sp"
-                        android:visibility="gone" />
+                        android:text="@string/pediatric_lbs_text" />
+
                 </LinearLayout>
+                <LinearLayout style="@style/WagLinearLayoutStylePediatric"
+                    android:orientation="vertical"
+                    android:background="@color/white">
 
-                <View style="@style/ViewStyle" />
+                    <LinearLayout style="@style/Pediatric_relative_layout_style"
+                        android:orientation="vertical"
+                        >
 
-                <TextView
-                    android:id="@+id/txt_dietType"
-                    style="@style/Pediatric_drop_text_style"
-                    android:background="#ffffff"
-                    android:drawableEnd="@drawable/dropdown_icon"
-                    android:hint="Current Diet"
-                    android:textSize="18sp" />
+                        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                            style="@style/Pediatric_Weight_text_style"
+                            android:visibility="visible"
+                            android:layout_width="match_parent"
+                            android:text="@string/pediatric_current_Weight_text" />
+
+                        <EditText
+                            style="@style/Pediatric_drop_text_style"
+                            android:id="@+id/edt_currentweight"
+                            android:hint=""
+                            android:gravity="start|left"
+                            android:maxLength="3"
+                            android:inputType="number"
+                            android:background="#ffffff"
+                            android:layout_width="match_parent"
+                            />
 
 
-                <TextView
-                    style="@style/Pediatric_TextStyle"
-                    android:text="@string/pediatric_delivery_text"
-                    android:visibility="gone" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:visibility="gone"
+                            android:textColorHighlight="@color/black"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/pediatric_lbs_text" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txt_deliveryType"
-                    style="@style/Pediatric_drop_text_style"
-                    android:hint="@string/pediatric_select_hint"
-                    android:visibility="gone" />
+
+                    <View style="@style/ViewStyle"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_dietType"
+                        android:hint="Current Diet"
+                        android:textSize="18sp"
+                        android:background="#ffffff"
+                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:visibility="gone"
+                        style="@style/Pediatric_drop_text_style"
+                        />
+
+                    <TextView
+                        style="@style/Pediatric_TextStyle"
+                        android:text="@string/pediatric_delivery_text"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/txt_deliveryType"
+                        android:hint="@string/pediatric_select_hint"
+                        android:visibility="gone"
+                        style="@style/Pediatric_drop_text_style"
+                        />
+                </LinearLayout>
+                <!--<include-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="50dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:id="@+id/progressBar"-->
+                <!--layout="@layout/custom_progress_bar"-->
+                <!--/>-->
+                <LinearLayout
+                    android:id="@+id/infoView"
+                    style="@style/common_style_W_Wrap_H_Wrap_O_Vertical"
+                    android:visibility="gone"
+                    >
+                    <LinearLayout
+                        style="@style/LinearLayoutStyle"
+                        android:orientation="vertical"
+                        >
+
+                        <RelativeLayout
+                            android:id="@+id/layout_birthComplications"
+                            style="@style/Pediatric_relative_layout_style"
+                            >
+
+                            <TextView
+                                style="@style/Pediatric_TextStyle"
+                                android:layout_centerVertical="true"
+                                android:text="@string/pediatric_birthComplications_text" />
+
+
+                            <RadioGroup
+                                android:id="@+id/birthComplications_group"
+                                style="@style/Pediatric_radio_group_style">
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/birthComplications_yesButton"
+                                    android:text="@string/radio_yes_text"/>
+
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/birthComplications_noButton"
+                                    android:text="@string/radio_No_text"/>
+
+                            </RadioGroup>
+                        </RelativeLayout>
+                        <EditText
+                            android:id="@+id/edt_pleaseDescribe"
+                            style="@style/Pediatric_birth_compl_descr_style"
+                            android:visibility="gone"
+                            android:hint="@string/pediatric_birth_describe"
+                            />
+
+                        <View style="@style/viewstyle_behavioural" />
+
+                        <RelativeLayout
+                            style="@style/Pediatric_relative_layout_style"
+                            >
+
+                            <TextView
+                                style="@style/Pediatric_TextStyle"
+                                android:layout_centerVertical="true"
+                                android:text="@string/pediatric_immunization_text" />
+
+
+                            <RadioGroup
+                                android:id="@+id/immunization_group"
+                                style="@style/Pediatric_radio_group_style">
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/immunization_yesButton"
+                                    android:text="@string/radio_yes_text"/>
+
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/immunization_noButton"
+                                    android:text="@string/radio_No_text"/>
+
+                            </RadioGroup>
+
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/txt_lastShot_label"
+                            style="@style/Pediatric_TextStyle"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
+                            android:text="@string/pediatric_last_shot" />
+
+
+                        <EditText
+                            android:id="@+id/edt_lastshot"
+                            style="@style/Pediatric_birth_compl_descr_style"
+                            android:hint="@string/pediatric_edt_last_shot"
+                            android:visibility="gone"
+                            />
+
+                        <View style="@style/viewstyle_behavioural" />
+                        <RelativeLayout
+                            style="@style/Pediatric_relative_layout_style"
+                            >
+
+                            <TextView
+                                style="@style/Pediatric_TextStyle"
+                                android:layout_centerVertical="true"
+                                android:text="@string/pediatric_smoking_text" />
+
+
+                            <RadioGroup
+                                android:id="@+id/smoking_group"
+                                style="@style/Pediatric_radio_group_style">
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/smoking_yesButton"
+                                    android:text="@string/radio_yes_text"/>
+
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/smoking_noButton"
+                                    android:text="@string/radio_No_text"/>
+
+                            </RadioGroup>
+
+
+
+                        </RelativeLayout>
+
+                        <View style="@style/viewstyle_behavioural" />
+                        <RelativeLayout
+                            style="@style/Pediatric_relative_layout_style"
+                            >
+
+                            <TextView
+                                style="@style/Pediatric_TextStyle"
+                                android:layout_centerVertical="true"
+                                android:text="@string/pediatric_childcare_text" />
+
+
+                            <RadioGroup
+                                android:id="@+id/childcare_group"
+                                style="@style/Pediatric_radio_group_style">
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/childcare_yesButton"
+                                    android:text="@string/radio_yes_text"/>
+
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/childcare_noButton"
+                                    android:text="@string/radio_No_text"/>
+
+                            </RadioGroup>
+
+
+
+                        </RelativeLayout>
+
+                        <View style="@style/viewstyle_behavioural" />
+                        <RelativeLayout
+                            style="@style/Pediatric_relative_layout_style"
+                            >
+
+                            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                                style="@style/Pediatric_TextStyle"
+                                android:layout_centerVertical="true"
+                                android:text="@string/pediatric_siblings_text" />
+
+
+                            <RadioGroup
+                                android:id="@+id/siblings_group"
+                                style="@style/Pediatric_radio_group_style">
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/siblings_yesButton"
+                                    android:text="@string/radio_yes_text"/>
+
+                                <RadioButton
+                                    style="@style/Pediatric_radio_button_style"
+                                    android:id="@+id/siblings_noButton"
+                                    android:text="@string/radio_No_text"/>
+
+                            </RadioGroup>
+
+
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View style="@style/viewstyle_behavioural" />
+
+
+
+                    <TextView
+                        style="@style/Pediatric_TextStyle"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone"
+                        android:text="@string/pediatric_mandatory_text" />
+
+
+                </LinearLayout>
             </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/layout_birthComplications"
-                    style="@style/Pediatric_relative_layout_style">
-
-                    <TextView
-                        style="@style/Pediatric_TextStyle"
-                        android:layout_centerVertical="true"
-                        android:text="@string/pediatric_birthComplications_text" />
-
-
-                    <RadioGroup
-                        android:id="@+id/birthComplications_group"
-                        style="@style/Pediatric_radio_group_style">
-
-                        <RadioButton
-                            android:id="@+id/birthComplications_yesButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_yes_text" />
-
-                        <RadioButton
-                            android:id="@+id/birthComplications_noButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_No_text" />
-
-                    </RadioGroup>
-                </RelativeLayout>
-
-                <EditText
-                    android:id="@+id/edt_pleaseDescribe"
-                    style="@style/Pediatric_birth_compl_descr_style"
-                    android:hint="@string/pediatric_birth_describe"
-                    android:visibility="gone" />
-
-                <View style="@style/viewstyle_behavioural" />
-
-                <RelativeLayout style="@style/Pediatric_relative_layout_style">
-
-                    <TextView
-                        style="@style/Pediatric_TextStyle"
-                        android:layout_centerVertical="true"
-                        android:text="@string/pediatric_immunization_text" />
+        <Button
+            android:id="@+id/btn_continue_pediatric"
+            android:text="Next"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:onClick="continueBtn"
+            android:clickable="false"
+            android:visibility="gone"
+            style="@style/ContinueButtonStyle">
+        </Button>
 
 
-                    <RadioGroup
-                        android:id="@+id/immunization_group"
-                        style="@style/Pediatric_radio_group_style">
-
-                        <RadioButton
-                            android:id="@+id/immunization_yesButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_yes_text" />
-
-                        <RadioButton
-                            android:id="@+id/immunization_noButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_No_text" />
-
-                    </RadioGroup>
-
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/txt_lastShot_label"
-                    style="@style/Pediatric_TextStyle"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pediatric_last_shot"
-                    android:visibility="gone" />
-
-
-                <EditText
-                    android:id="@+id/edt_lastshot"
-                    style="@style/Pediatric_birth_compl_descr_style"
-                    android:hint="@string/pediatric_edt_last_shot"
-                    android:visibility="gone" />
-
-                <View style="@style/viewstyle_behavioural" />
-
-                <RelativeLayout style="@style/Pediatric_relative_layout_style">
-
-                    <TextView
-                        style="@style/Pediatric_TextStyle"
-                        android:layout_centerVertical="true"
-                        android:text="@string/pediatric_smoking_text" />
-
-
-                    <RadioGroup
-                        android:id="@+id/smoking_group"
-                        style="@style/Pediatric_radio_group_style">
-
-                        <RadioButton
-                            android:id="@+id/smoking_yesButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_yes_text" />
-
-                        <RadioButton
-                            android:id="@+id/smoking_noButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_No_text" />
-
-                    </RadioGroup>
-
-
-                </RelativeLayout>
-
-                <View style="@style/viewstyle_behavioural" />
-
-                <RelativeLayout style="@style/Pediatric_relative_layout_style">
-
-                    <TextView
-                        style="@style/Pediatric_TextStyle"
-                        android:layout_centerVertical="true"
-                        android:text="@string/pediatric_childcare_text" />
-
-
-                    <RadioGroup
-                        android:id="@+id/childcare_group"
-                        style="@style/Pediatric_radio_group_style">
-
-                        <RadioButton
-                            android:id="@+id/childcare_yesButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_yes_text" />
-
-                        <RadioButton
-                            android:id="@+id/childcare_noButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_No_text" />
-
-                    </RadioGroup>
-
-
-                </RelativeLayout>
-
-                <View style="@style/viewstyle_behavioural" />
-
-                <RelativeLayout style="@style/Pediatric_relative_layout_style">
-
-                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
-                        style="@style/Pediatric_TextStyle"
-                        android:layout_centerVertical="true"
-                        android:text="@string/pediatric_siblings_text" />
-
-
-                    <RadioGroup
-                        android:id="@+id/siblings_group"
-                        style="@style/Pediatric_radio_group_style">
-
-                        <RadioButton
-                            android:id="@+id/siblings_yesButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_yes_text" />
-
-                        <RadioButton
-                            android:id="@+id/siblings_noButton"
-                            style="@style/Pediatric_radio_button_style"
-                            android:text="@string/radio_No_text" />
-
-                    </RadioGroup>
-
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <View style="@style/viewstyle_behavioural" />
-
-
-            <TextView
-                style="@style/Pediatric_TextStyle"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/pediatric_mandatory_text"
-                android:visibility="gone" />
-
-
-        </LinearLayout>
-
-    </ScrollView>
-
+    </RelativeLayout>
     <include
-        android:id="@+id/footer"
-        layout="@layout/mdlive_footer"
-        style="@style/Footer_Style"
-        android:layout_alignParentBottom="true"/>
-
-    <Button
-        android:id="@+id/btn_continue_pediatric"
-        style="@style/ContinueButtonStyle"
-        android:layout_above="@id/footer"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp"
-        android:clickable="false"
-        android:onClick="continueBtn"
-        android:text="Next"></Button>
-
-
-</RelativeLayout>
+        layout="@layout/custom_progress_dialog"
+        />
+</merge>

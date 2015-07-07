@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     >
 
     <LinearLayout
+        android:id="@+id/header"
         style="@style/LinearLayoutStyle"
         android:orientation="vertical"
-         android:background="@color/mdlivePrimaryBlueColor"
+        android:background="@color/mdlivePrimaryBlueColor"
         android:elevation="20dp"
        >
         <RelativeLayout
@@ -30,6 +31,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/backImg"
                 />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +46,6 @@
                     android:textColor="@color/white"
                     android:text="Reason for Visit">
                 </TextView>
-
 
                 <TextView
                     android:id="@+id/reason_patientTxt"
@@ -65,6 +66,7 @@
             android:layout_margin="10dp"
             android:background="@color/white"
             android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -72,51 +74,59 @@
                 android:id="@+id/search_img"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-
                 />
 
             <EditText
-            style="@style/reasonSearch_edittext"
-            android:layout_toRightOf="@+id/search_img"
-            android:hint="@string/searchsymptom_txt"
+                style="@style/reasonSearch_edittext"
+                android:layout_toRightOf="@+id/search_img"
+                android:hint="@string/searchsymptom_txt"
                 android:padding="5dp"
                 android:layout_marginLeft="15dp"
                 android:textSize="14sp"
                 android:layout_centerVertical="true"
-            android:id="@+id/search_edit"
-            android:inputType="textPersonName"
-            android:layout_gravity="center_horizontal"
-
+                android:id="@+id/search_edit"
+                android:inputType="textPersonName"
+                android:layout_gravity="center_horizontal"
            />
 
 </RelativeLayout>
         </LinearLayout>
 
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/custom_progress_bar"
+        />
+
 
     <LinearLayout
         style="@style/LinearLayoutStyle"
         android:id="@+id/linearlayoutresults"
+        android:layout_centerInParent="true"
         android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
             style="@style/NoResultsReasonTextViewStyle"
             android:text="Search Results"
+            android:layout_gravity="center"
             android:visibility="gone"
          />
         <TextView
             android:id="@+id/noresults"
             style="@style/NoResultsReasonTextViewStyle"
+            android:layout_gravity="center"
             android:text="No results found for zz"
             />
         <TextView
             android:id="@+id/submitresult"
             style="@style/NoResultsReasonTextViewStyle"
+            android:layout_gravity="center"
             android:text="Submit ZZ as your symptom "
             />
         </LinearLayout>
 
     <LinearLayout
+        android:layout_below="@id/header"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -130,4 +140,4 @@
             android:dividerHeight="0.1dip"
             android:id="@+id/reasonList" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

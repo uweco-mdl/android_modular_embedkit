@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
+<LinearLayout
     style="@style/ContainerStyle">
+
     <RelativeLayout
         android:id="@+id/defaultPharmlayout"
         style="@style/wagHeaderLinearLayoutStyle"
@@ -61,14 +63,10 @@
 
     </RelativeLayout>
 
-
-
-
     <RelativeLayout
         android:id="@+id/bottomLayout"
         style="@style/wagHeaderLinearLayoutStyle"
         android:padding="10dp">
-
 
         <TextView
             android:id="@+id/deleteImageText"
@@ -83,3 +81,7 @@
 
     </RelativeLayout>
 </LinearLayout>
+    <include
+        layout="@layout/custom_progress_dialog"
+        />
+    </merge>

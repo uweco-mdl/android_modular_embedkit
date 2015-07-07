@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -41,9 +43,11 @@ public class MDLiveLogin extends Activity {
 
     private Button loginBtn;
     private EditText usernameEt,passwordEt;
-    private ProgressDialog pDialog;
+    private ProgressDialog pDialog = null;
     private LocalisationHelper localisationHelper;
     private String token=null;
+    private RelativeLayout progressBar;
+    private LinearLayout loginInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +57,12 @@ public class MDLiveLogin extends Activity {
         usernameEt = (EditText)findViewById(R.id.UserNameEt);
         passwordEt = (EditText)findViewById(R.id.PasswordEt);
         loginBtn = (Button)findViewById(R.id.LoginBtn);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        loginInfo = (LinearLayout)findViewById(R.id.infoView);
 
         ViewGroup view = (ViewGroup)getWindow().getDecorView();
         Utils.clearSharedPrefValues(this);
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
         loginBtn.setOnClickListener(getLoginOnClickListener());
 
     }
@@ -71,7 +77,8 @@ public class MDLiveLogin extends Activity {
                 if(validateData(username,password)){
                     // Call service to check login
                     /**/
-                    pDialog.show();
+//                    pDialog.show();
+                    setProgressBarVisibility();
                     NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
                         @Override
@@ -92,7 +99,8 @@ public class MDLiveLogin extends Activity {
                     NetworkErrorListener errorListener = new NetworkErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            pDialog.dismiss();
+//                            pDialog.dismiss();
+                            setInfoVisibilty();
                             if (error.networkResponse == null) {
                                 if (error.getClass().equals(TimeoutError.class)) {
                                     DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -121,7 +129,8 @@ public class MDLiveLogin extends Activity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            setInfoVisibilty();
             Log.d("Response", response.toString());
             if (response.has("msg") && response.getString("msg").equalsIgnoreCase("Success")){
                 usernameEt.setText("");
@@ -135,9 +144,7 @@ public class MDLiveLogin extends Activity {
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
-
 
     /***
      *This method is used to get user Pending Appointments History from server.
@@ -145,11 +152,13 @@ public class MDLiveLogin extends Activity {
      */
 
     public void getPendingAppointments(){
-        Utils.showProgressDialog(pDialog);
+//        Utils.showProgressDialog(pDialog);
+        setProgressBarVisibility();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+//                setInfoVisibilty();
                 handlePendingResponse(response.toString());
                 Log.e("Pending Response",response.toString());
             }
@@ -157,7 +166,8 @@ public class MDLiveLogin extends Activity {
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.hideProgressDialog(pDialog);
+//                Utils.hideProgressDialog(pDialog);
+                setInfoVisibilty();
                 Log.e("Pending Error Response",error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -196,8 +206,8 @@ public class MDLiveLogin extends Activity {
                 String chiefComplaint=appointArray.getJSONObject(0).getString("chief_complaint");
                 Intent pendingVisitIntent = new Intent(getApplicationContext(), MDLivePendingVisits.class);
                 pendingVisitIntent.putExtra("DocName",docName); // The doctor name  from service on successful response
-                pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
-                pendingVisitIntent.putExtra("Reason",chiefComplaint); // The Reason for visit from service on successful response
+                pendingVisitIntent.putExtra("AppointmentID", appointmnetID); // The Appointment id  from service on successful response
+                pendingVisitIntent.putExtra("Reason", chiefComplaint); // The Reason for visit from service on successful response
                 startActivity(pendingVisitIntent);
                 finish();
             }else {
@@ -212,10 +222,6 @@ public class MDLiveLogin extends Activity {
         }
 
     }
-
-
-
-
 
     /**
      *
@@ -252,5 +258,23 @@ public class MDLiveLogin extends Activity {
         };
         // Show timeout error message
         Utils.showDialog(MDLiveLogin.this, MDLiveLogin.this.getApplicationInfo().loadLabel(MDLiveLogin.this.getPackageManager()).toString(),message, localisationHelper.getLocalizedStringFromPrefs(this, "OK"),null, onClickListener,null);
+    }
+
+    /*
+   * set visible for the progress bar
+   */
+    public void setProgressBarVisibility()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+    }
+
+    /*
+    * set visible for the details view layout
+    */
+    public void setInfoVisibilty()
+    {
+        progressBar.setVisibility(View.GONE);
+
     }
 }
