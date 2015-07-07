@@ -131,14 +131,15 @@
        <LinearLayout
         style="@style/LinearLayoutStyle"
                     android:id="@+id/educationLl"
+           android:layout_marginStart="5dp"
            android:layout_marginTop="10dp">
                     <include layout="@layout/mdlive_provider_education"/>
        </LinearLayout>
 
        <LinearLayout
          style="@style/LinearLayoutStyle"
-                    android:id="@+id/languagesLl"
-                    android:layout_marginLeft="5dp"
+         android:id="@+id/languagesLl"
+        android:layout_marginLeft="5dp"
            android:layout_marginTop="10dp">
                     <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>

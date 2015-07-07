@@ -68,26 +68,16 @@ public class MDLiveWaitingRoom extends Activity{
 
             @Override
             public void onResponse(Object response) {
-                Log.e("Response Provider Status", response.toString());
+                Log.e("Response Provider", response.toString());
                 handleSuccessResponse(response.toString());//Method to handle the response from Server
             }
         };
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response Provider Status Error", error.toString());
+                Log.e("Response Provider Error", error.toString());
                 Utils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
 
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
-                    }
-                }
                 if(isReturning){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -262,6 +252,8 @@ public class MDLiveWaitingRoom extends Activity{
     protected void onResume() {
         super.onResume();
         isReturning = getIntent().getBooleanExtra("isReturning",false);
-        getProviderStatus();
+        if(isReturning){
+            getProviderStatus();
+        }
     }
 }

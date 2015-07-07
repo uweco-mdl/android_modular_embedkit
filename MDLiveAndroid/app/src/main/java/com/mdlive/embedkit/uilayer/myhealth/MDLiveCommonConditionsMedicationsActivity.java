@@ -63,7 +63,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity {
 
-    public static ProgressDialog pDialog;
+    //public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";

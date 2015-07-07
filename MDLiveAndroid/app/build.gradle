@@ -60,7 +60,6 @@ android.packagingOptions {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
     // VSee integration:
     compile('com.vsee:vsee-kit:0.3.20524@aar') {
         transitive = true
@@ -73,5 +72,4 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:6.5.87'
     compile files('libs/volley.jar')
     compile 'com.google.code.gson:gson:2.2.2'
-
 }

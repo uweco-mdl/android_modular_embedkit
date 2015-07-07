@@ -92,13 +92,13 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
-            pDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
             checkMedicalAggregation();
         }
         @Override
