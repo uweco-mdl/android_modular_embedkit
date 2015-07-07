@@ -40,7 +40,6 @@
         android:id="@+id/offerCode"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
-        android:background="@null"
         android:textCursorDrawable="@null"
         android:layout_gravity="center_vertical"
          />

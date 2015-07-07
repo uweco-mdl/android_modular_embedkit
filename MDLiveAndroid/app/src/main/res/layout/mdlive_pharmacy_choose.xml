@@ -181,6 +181,7 @@
             android:id="@+id/chooseState"
             android:layout_marginTop="10dp"
             />
+            <View style="@style/ViewStyle" />
             </LinearLayout>
 
 
