@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -386,6 +387,7 @@ public class MDLivePayment extends Activity {
                         editor.commit();
                         Intent i = new Intent(MDLivePayment.this, MDLiveWaitingRoom.class);
                         startActivity(i);
+                        Utils.startActivityAnimation(MDLivePayment.this);
                     } else {
                         Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     }
@@ -566,6 +568,24 @@ public class MDLivePayment extends Activity {
 
 
 
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
 
 
 

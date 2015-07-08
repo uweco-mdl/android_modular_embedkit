@@ -82,6 +82,7 @@ public class MDLiveWaitingRoom extends Activity{
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
+                    Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     finish();
                 }
             }
@@ -125,6 +126,7 @@ public class MDLiveWaitingRoom extends Activity{
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
+                    Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     finish();
                 }
             }
@@ -154,6 +156,7 @@ public class MDLiveWaitingRoom extends Activity{
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
+                Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                 finish();
             }else {
                 getProviderStatus();
@@ -245,15 +248,25 @@ public class MDLiveWaitingRoom extends Activity{
     }
 
     @Override
-    public void onBackPressed() {
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         isReturning = getIntent().getBooleanExtra("isReturning",false);
         if(isReturning){
             getProviderStatus();
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

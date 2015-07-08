@@ -33,7 +33,6 @@
         android:largeHeap="true"
       >
 
-
         <activity
             android:name=".uilayer.login.MDLiveLogin"
             android:screenOrientation="portrait">
@@ -87,19 +86,19 @@
 
         <!-- Pharmacy Activities-->
         <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacy"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyChange"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>
 
-        <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyDetails"
-            android:screenOrientation="portrait"></activity>
+       <!-- <activity
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyDetails"
+            android:screenOrientation="portrait"></activity>-->
 
         <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.activities.MDLivePharmacyResult"
+            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult"
             android:screenOrientation="portrait"></activity>
 
 

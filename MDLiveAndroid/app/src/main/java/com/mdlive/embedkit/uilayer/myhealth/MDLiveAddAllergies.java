@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddAllergyServices;
@@ -230,10 +231,13 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     @Override
     public void onBackPressed() {
-        if(IsThisPageEdited)
+        if(IsThisPageEdited){
             checkMedicalAggregation();
-        else
+        }
+        else{
             super.onBackPressed();
+            Utils.closingActivityAnimation(this);
+        }
     }
 
     /**
@@ -247,4 +251,14 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         finish();
     }
 
+
+
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
 }

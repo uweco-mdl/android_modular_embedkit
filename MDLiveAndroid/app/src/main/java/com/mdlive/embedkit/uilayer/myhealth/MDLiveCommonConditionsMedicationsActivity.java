@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
@@ -63,7 +62,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity {
 
-    //public static ProgressDialog pDialog;
+    public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
@@ -88,9 +87,9 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         existingConditions = new ArrayList<HashMap<String, String>>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
 
-//        pDialog = Utils.getProgressDialog("Loading...", this);
+        pDialog = Utils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
-        findViewById(R.id.SaveBtn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.doneTxt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveBtnAction();
@@ -102,12 +101,12 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
                 checkMedicalAggregation();
             }
         });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+        /*((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.movetohome(MDLiveCommonConditionsMedicationsActivity.this, MDLiveLogin.class);
             }
-        });
+        });*/
     }
     /**
      *

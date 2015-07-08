@@ -7,29 +7,27 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/homeImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/home_icon"
-            android:id="@+id/homeImg"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/backImg"
-            />
+            android:background="@drawable/home_icon" />
+
         <TextView
             android:id="@+id/headerTxt"
-            style = "@style/HeaderTextViewStyle"
+            style="@style/HeaderTextViewStyle"
             android:layout_centerInParent="true"
-            android:text="Waiting Room"
-            />
+            android:text="Waiting Room" />
     </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ImageView
 
@@ -68,8 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
-            android:text="1"
             android:padding="10dp"
+            android:text="1"
 
             android:textSize="125sp" />
 
@@ -79,9 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
+            android:padding="10dp"
             android:text="2"
             android:textColor="@color/grey_txt"
-            android:padding="10dp"
             android:textSize="125sp" />
 
         <TextView
@@ -90,25 +88,27 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
+            android:padding="10dp"
             android:text="3"
             android:textColor="@color/green"
-            android:padding="10dp"
             android:textSize="125sp" />
 
     </LinearLayout>
 
-
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:paddingBottom="50dp"
         android:text="@string/waiting_warn_complete"
         android:textSize="18sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
+
+    <include
+        style="@style/Footer_Style"
+        layout="@layout/mdlive_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
 
 </LinearLayout>

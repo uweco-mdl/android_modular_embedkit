@@ -88,7 +88,7 @@ public class MDLivePediatric extends Activity {
                 return false;
             }
         });
-        RelativeLayout container= (RelativeLayout) findViewById(R.id.pediatricContainer);
+        LinearLayout container= (LinearLayout) findViewById(R.id.pediatricContainer);
         container.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -581,6 +581,7 @@ public class MDLivePediatric extends Activity {
                 progressDialog.setVisibility(View.GONE);
                 Intent intent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
                 startActivity(intent);
+                Utils.startActivityAnimation(MDLivePediatric.this);
             }
         };
         NetworkErrorListener errorListener=new NetworkErrorListener() {
@@ -718,5 +719,26 @@ public class MDLivePediatric extends Activity {
         infoView.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
     }
+
+
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+
 
 }

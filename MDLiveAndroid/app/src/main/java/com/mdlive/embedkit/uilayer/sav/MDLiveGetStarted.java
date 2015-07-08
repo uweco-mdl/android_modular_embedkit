@@ -152,7 +152,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-        patientInfo= (LinearLayout) findViewById(R.id.patientInfo);
+//        patientInfo= (LinearLayout) findViewById(R.id.patientInfo);
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -198,6 +198,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));// TODO : Change it one number is confirmed
                                         startActivity(intent);
+                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
                                 };
 
@@ -220,6 +221,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     Log.e("TEST", "JSON :" + userInfoJSONString);
                                     intent.putExtra("user_info", userInfoJSONString);
                                     startActivity(intent);
+                                    Utils.startActivityAnimation(MDLiveGetStarted.this);
                                 } else {
                                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -236,6 +238,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     {
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
+                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
 
                                 }
@@ -263,6 +266,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
                     LocationIntent.putExtra("activitycaller", "getstarted");
                     startActivityForResult(LocationIntent, 2222);
+                    Utils.startActivityAnimation(MDLiveGetStarted.this);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                     String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
                     SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
@@ -311,6 +315,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
                                         startActivity(intent);
+                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
                                 };
 
@@ -333,6 +338,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 Log.e("TEST", "JSON :" + userInfoJSONString);
                                 intent.putExtra("user_info", userInfoJSONString);
                                 startActivity(intent);
+                                Utils.startActivityAnimation(MDLiveGetStarted.this);
                             }else {
                                 loadDependentInformationDetails(dependentName,position);
                             }
@@ -455,6 +461,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
                 pendingVisitIntent.putExtra("Reason",chiefComplaint); // The Reason for visit from service on successful response
                 startActivity(pendingVisitIntent);
+                Utils.startActivityAnimation(MDLiveGetStarted.this);
                 finish();
             }
         }catch (Exception e){
@@ -889,5 +896,21 @@ public class MDLiveGetStarted extends FragmentActivity{
     {
         progressBar.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveGetStarted.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+
+
+
 }
+
 

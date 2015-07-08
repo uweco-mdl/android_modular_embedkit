@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
-    <LinearLayout
-        style="@style/ContainerStyle"
-        >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout style="@style/ContainerStyle">
+
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutStyle"
             android:elevation="20dp"
             android:orientation="horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/back_arrow_hdpi"
-                android:id="@+id/backImg"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp" />
 
             <ImageView
+                android:id="@+id/backImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_icon"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/back_arrow_hdpi" />
+
+            <ImageView
                 android:id="@+id/homeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/backImg"
-                />
+                android:background="@drawable/home_icon" />
 
             <TextView
                 android:id="@+id/headerTxt"
-                style = "@style/HeaderTextViewStyle"
-                android:gravity="start|center"
+                style="@style/HeaderTextViewStyle"
                 android:layout_centerInParent="true"
+                android:gravity="start|center"
                 android:text="Choose Pharmacy">
 
             </TextView>
         </RelativeLayout>
-        <ScrollView
-            style="@style/ScrollViewHolderStyle"
-            >
-            <LinearLayout
-                style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-                >
+
+        <ScrollView style="@style/ScrollViewHolderStyleNew">
+
+            <LinearLayout style="@style/common_style_W_Match_H_Wrap_O_Vertical">
 
                 <LinearLayout
                     style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-                    android:padding="5dp"
+                    android:background="@drawable/pharmacy_line_bg"
                     android:gravity="center_horizontal"
-                    android:background="@drawable/pharmacy_line_bg">
+                    android:padding="5dp">
 
 
                     <LinearLayout
@@ -54,21 +52,21 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/textView17"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Previous Pharmacy"
-                            android:textSize="18sp"
                             android:textColor="@color/black"
-                            android:id="@+id/textView17" />
+                            android:textSize="18sp" />
 
                         <TextView
+                            android:id="@+id/textView18"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:textColor="@color/black"
                             android:text="Please select a pharmacy in the event your doctor prescribes a medication"
-                            android:textSize="16sp"
-                            android:id="@+id/textView18" />
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -76,33 +74,31 @@
                         android:layout_height="200dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:orientation="vertical"
+                        android:background="@color/grey_txt"
                         android:gravity="center_horizontal"
-                        android:background="@color/grey_txt">
+                        android:orientation="vertical">
 
-                        <fragment
-                            xmlns:android="http://schemas.android.com/apk/res/android"
+                        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                             android:id="@+id/mapView"
                             style="@style/common_style_W_Match_M_Match"
-                            class="com.google.android.gms.maps.SupportMapFragment"/>
+                            class="com.google.android.gms.maps.SupportMapFragment" />
 
                     </LinearLayout>
 
                     <RelativeLayout
                         android:id="@+id/defaultPharmlayout"
-                        style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-                        >
+                        style="@style/common_style_W_Match_H_Wrap_O_Vertical">
 
                         <LinearLayout
+                            android:id="@+id/textView3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/textView3"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_horizontal|left"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_horizontal|left"
                             android:orientation="vertical">
 
                             <TextView
@@ -110,59 +106,63 @@
                                 style="@style/addressLineStyle"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:textSize="17sp"
-                                />
+                                android:textSize="17sp" />
+
                             <TextView
                                 android:id="@+id/addressline2"
                                 style="@style/addressLineStyle"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:textSize="13sp"
-                                />
+                                android:textSize="13sp" />
+
                             <TextView
                                 android:id="@+id/addressline3"
                                 style="@style/addressLineStyle"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:textSize="13sp"
-                                />
+                                android:textSize="13sp" />
+
                             <TextView
                                 android:id="@+id/addressline4"
-                                android:textColor="#4671BD"
                                 style="@style/addressLineStyle"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:textSize="13sp"
-                                />
+                                android:textColor="#4671BD"
+                                android:textSize="13sp" />
 
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/SavContinueBtn"
+                    style="@style/ContinueButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:background="#009933"
+                    android:tag="change_pharmacy"
+                    android:text="Use this Pharmacy" />
+
+                <Button
+                    android:id="@+id/changePharmacyButton"
+                    style="@style/ContinueButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:tag="change_pharmacy"
+                    android:text="Choose different pharmacy" />
             </LinearLayout>
 
         </ScrollView>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Use this Pharmacy"
-            android:tag="change_pharmacy"
-            android:layout_margin="10dp"
-            style="@style/ContinueButtonStyle"
-            android:background="#009933"
-            android:id="@+id/SavContinueBtn"
-            android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose different pharmacy"
-            android:tag="change_pharmacy"
-            android:layout_margin="10dp"
-            style="@style/ContinueButtonStyle"
-            android:id="@+id/changePharmacyButton"
-            android:layout_gravity="center_horizontal" />
+        <include
+            style="@style/Footer_Style"
+            layout="@layout/mdlive_footer" />
+
     </LinearLayout>
-    <include
-        layout="@layout/custom_progress_dialog"
-        />
+
+    <include layout="@layout/custom_progress_dialog" />
 </merge>

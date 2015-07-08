@@ -71,6 +71,10 @@ public class MDLiveFamilymember extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_familymember);
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
+            userInfoJSONString = getIntent().getExtras().getString("user_info");
+        }
 //        pDialog = Utils.getProgressDialog("Please wait...",this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
         lastNameEditText = (EditText) findViewById(R.id.patient2Et);
@@ -216,7 +220,7 @@ public class MDLiveFamilymember extends Activity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
 //        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
-        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", certify that i'm the legal parent / guardian of the minor above.");
+        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", Confirm that i'm the legal parent / guardian of the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -435,6 +439,24 @@ public class MDLiveFamilymember extends Activity {
     public void movetohome()
     {
         Utils.movetohome(MDLiveFamilymember.this, MDLiveLogin.class);
+    }
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }
 

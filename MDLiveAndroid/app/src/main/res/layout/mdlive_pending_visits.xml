@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
     style="@style/ContainerStyle">
 
     <LinearLayout
@@ -170,3 +172,5 @@
         />
 
 </LinearLayout>
+<include layout="@layout/custom_progress_dialog" />
+ </merge>

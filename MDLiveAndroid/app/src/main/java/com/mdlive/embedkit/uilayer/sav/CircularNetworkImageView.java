@@ -61,4 +61,10 @@ public class CircularNetworkImageView extends NetworkImageView {
 
         return output;
     }
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+
 }

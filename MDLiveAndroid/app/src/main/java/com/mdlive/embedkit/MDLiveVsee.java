@@ -146,10 +146,17 @@ public class MDLiveVsee extends Activity
 
     @Override
     protected void onDestroy() {
+
+        try{
+            VSeeVideoManager.instance().endVideoCalls();
+            VSeeVideoManager.instance().finishVideoActivity();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
-		simpleServerConnectionReceiver = null;
-		simpleVidManagerReceiver = null;
+        simpleServerConnectionReceiver = null;
+        simpleVidManagerReceiver = null;
         Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
 //        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("isReturning", true);

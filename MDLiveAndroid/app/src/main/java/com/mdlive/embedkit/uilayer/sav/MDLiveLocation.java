@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -74,7 +75,7 @@ public class MDLiveLocation extends Activity {
                 showListViewDialog(LongNameList, (TextView) v);
             }
         });
-        Utils.checkGpsLocation(MDLiveLocation.this);
+
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -158,7 +159,8 @@ public class MDLiveLocation extends Activity {
                 finish();
             }
         });
-        CurrentLocationTxt = (TextView) findViewById(R.id.currentLocation);
+
+        CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -476,6 +478,24 @@ public class MDLiveLocation extends Activity {
                 dialog.dismiss();
             }
         });
+    }
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveLocation.this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
 }

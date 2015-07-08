@@ -27,6 +27,7 @@ import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -81,10 +82,12 @@ public class MDLiveReasonForVisit extends Activity {
                 if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
+                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
                     finish();
                 }else{
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
+                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
 
             }
@@ -240,10 +243,12 @@ public class MDLiveReasonForVisit extends Activity {
                 if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
+                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
 
                 }else{
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
+                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
             }catch (Exception e){
             e.printStackTrace();
@@ -260,7 +265,21 @@ public class MDLiveReasonForVisit extends Activity {
      */
     public void movetohome()
     {
+
         Utils.movetohome(MDLiveReasonForVisit.this, MDLiveLogin.class);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveReasonForVisit.this);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+    }
+
 

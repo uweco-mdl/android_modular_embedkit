@@ -24,7 +24,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MDLivePendingVisits extends Activity {
@@ -39,7 +38,15 @@ public class MDLivePendingVisits extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pending_visits);
 //        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
+        initializeUI();
         getUserInformation();
+        TextView txtCancel= (TextView) findViewById(R.id.txtCancelPending);
+        txtCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.movetohome(MDLivePendingVisits.this,null);
+            }
+        });
 
     }
 
@@ -63,13 +70,14 @@ public class MDLivePendingVisits extends Activity {
                 editor.commit();
                 Intent waitingRoomIntent=new Intent(MDLivePendingVisits.this, MDLiveWaitingRoom.class);
                 startActivity(waitingRoomIntent);
+                Utils.startActivityAnimation(MDLivePendingVisits.this);
             }
         });
 
         Bundle extras=getIntent().getExtras();
         txtDoctorName.setText(extras.getString("DocName",""));
         txtReason.setText(extras.getString("Reason",""));
-        // Provider name that needs to be shon at thank you screen.
+        // Provider name that needs to be shown at thank you screen.
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, extras.getString("DocName",""));
@@ -125,7 +133,6 @@ public class MDLivePendingVisits extends Activity {
 
     public void handleUserInfoResponse(String response){
         try{
-            initializeUI();
             JSONObject resObject=new JSONObject(response);
             JSONObject personalObj=resObject.getJSONObject("personal_info");
             JSONObject notificationsObj=resObject.getJSONObject("notifications");
@@ -148,6 +155,28 @@ public class MDLivePendingVisits extends Activity {
     public void cancelVisit(View v){
         Utils.movetohome(MDLivePendingVisits.this, MDLiveLogin.class);
     }
+
+
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ////ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+
+
 
 
 }

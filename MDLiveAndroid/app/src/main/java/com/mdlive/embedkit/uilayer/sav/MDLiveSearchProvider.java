@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -164,6 +165,7 @@ public class MDLiveSearchProvider extends Activity {
                 Intent intent = new Intent(MDLiveSearchProvider.this, MDLiveLocation.class);
                 intent.putExtra("activitycaller", "searchprovider");
                 startActivity(intent);
+                Utils.startActivityAnimation(MDLiveSearchProvider.this);
             }
         });
         /**
@@ -676,5 +678,22 @@ public class MDLiveSearchProvider extends Activity {
     public void movetohome()
     {
         Utils.movetohome(MDLiveSearchProvider.this, MDLiveLogin.class);
+    }
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveSearchProvider.this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

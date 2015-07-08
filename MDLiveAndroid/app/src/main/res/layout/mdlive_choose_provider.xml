@@ -100,12 +100,14 @@
         />
 
     <RelativeLayout
-        android:id="@+id/filterRl"
+        android:id="@+id/filterMainRl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/header"
         android:background="#ECF5FA"
         android:visibility="gone"
         >
@@ -137,7 +139,7 @@
     </RelativeLayout>
 
     <ListView
-        android:layout_below="@id/header"
+        android:layout_below="@id/filterMainRl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:divider="@null"

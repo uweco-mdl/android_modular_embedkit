@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -40,6 +41,7 @@ public class MDLiveProviderDetails extends Activity{
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private Button tapSeetheDoctorTxt;
+    private RelativeLayout progressBar;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
 
@@ -47,7 +49,7 @@ public class MDLiveProviderDetails extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
-        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", this);
         getPreferenceDetails();
         Initialization();
         //Service call Method
@@ -85,6 +87,7 @@ public class MDLiveProviderDetails extends Activity{
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
         withpatientTxt = (TextView)findViewById(R.id.withpatientTxt);
@@ -101,6 +104,7 @@ public class MDLiveProviderDetails extends Activity{
             public void onClick(View v) {
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
+                Utils.startActivityAnimation(MDLiveProviderDetails.this);
             }
         });
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
@@ -120,7 +124,8 @@ public class MDLiveProviderDetails extends Activity{
      * message to user or Get started screen will shown to user).
      */
     private void loadProviderDetails() {
-        pDialog.show();
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -134,7 +139,8 @@ public class MDLiveProviderDetails extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                pDialog.dismiss();
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
                 tapSeetheDoctorTxt.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
                 tapSeetheDoctorTxt.setVisibility(View.GONE);
@@ -166,7 +172,8 @@ public class MDLiveProviderDetails extends Activity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+//            pDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
             //Fetch Data From the Services
             Log.e("details-->",response.toString());
             JsonParser parser = new JsonParser();
@@ -381,5 +388,15 @@ public class MDLiveProviderDetails extends Activity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveProviderDetails.this);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
 }

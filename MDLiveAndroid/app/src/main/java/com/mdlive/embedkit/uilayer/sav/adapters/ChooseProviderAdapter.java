@@ -17,6 +17,7 @@ import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
 import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
 import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +80,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent intent  = new Intent(context, MDLiveSearchProvider.class);
                     ((Activity)context).startActivityForResult(intent,1);
+                    Utils.hideSoftKeyboard(((Activity)context));
                 }
             });
             ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
@@ -87,6 +89,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
                     Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.getApplicationContext().startActivity(intent);
+                    Utils.hideSoftKeyboard(((Activity)context));
                 }
             });
         }

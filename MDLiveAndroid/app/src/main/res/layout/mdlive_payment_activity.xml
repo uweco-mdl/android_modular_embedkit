@@ -1,207 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
-    <LinearLayout
-        style="@style/ContainerStyle"
-        >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout style="@style/ContainerStyle">
+
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
             android:elevation="20dp"
             android:orientation="horizontal">
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/back_arrow_hdpi"
                 android:id="@+id/backImg"
-                android:layout_gravity="center"
-                android:layout_marginStart="19dp" />
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/home_icon"
+                android:layout_gravity="center"
+                android:layout_marginStart="19dp"
+                android:background="@drawable/back_arrow_hdpi" />
+
+            <ImageView
                 android:id="@+id/homeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/backImg"
-                />
+                android:background="@drawable/home_icon" />
+
             <TextView
                 android:id="@+id/headerTxt"
-                style = "@style/HeaderTextViewStyle"
-                android:text="Billing information"
-                />
+                style="@style/HeaderTextViewStyle"
+                android:text="Billing information" />
         </LinearLayout>
+
         <ScrollView
-            style="@style/WagLinearLayoutStylePediatric"
+            style="@style/WagLinearLayoutStylePediatricNew"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
-                    style="@style/Pediatric_TextStyle"
                     android:id="@+id/ageTxt"
+                    style="@style/Pediatric_TextStyle"
                     android:text="Credit Card"
-                    android:visibility="gone"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:visibility="gone" />
 
                 <TextView
                     style="@style/Pediatric_TextStyle"
-                    android:textSize="16sp"
+                    android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation."
                     android:textColor="@color/black"
-                    android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation." />
+                    android:textSize="16sp" />
+<!--
                 <WebView
+                    android:id="@+id/HostedPCI"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:id="@+id/HostedPCI"
-                    android:layout_marginTop="20px"
                     android:layout_marginBottom="20px"
+                    android:layout_marginLeft="15px"
                     android:layout_marginRight="15px"
-                    android:layout_marginLeft="15px"/>
+                    android:layout_marginTop="20px" />-->
 
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginLeft="25px"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/txtexpDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Expiry Date"
-                        android:textSize="16sp"
-                        android:id="@+id/txtexpDate"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        />
+                        android:textSize="16sp" />
 
                     <EditText
+                        android:id="@+id/edtExpiryDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/edtExpiryDate"
-                        android:textSize="17sp"
                         android:background="@null"
-                        android:hint="mm/yy"
-                        android:textColor="@color/black"
                         android:editable="false"
-                        android:maxLines="1" />
+                        android:hint="mm/yy"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginLeft="25px"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Zip Code"
 
-                        android:id="@+id/textView2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        android:textSize="16sp"
-                        />
+                        android:textSize="16sp" />
 
                     <EditText
+                        android:id="@+id/edtZipCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/edtZipCode"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:layout_weight="1"
                         android:background="@null"
                         android:hint="12345-7890"
-                        android:layout_weight="1"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
                 </LinearLayout>
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginTop="20px"
                     android:layout_marginBottom="20px"
+                    android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
-                    android:layout_marginLeft="30px">
+                    android:layout_marginTop="20px">
+
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="left|center"
                         android:layout_gravity="center"
-                        android:text="Is this an FSA/HSA card?"
-                        android:checked="false" />
-
-
+                        android:checked="false"
+                        android:gravity="left|center"
+                        android:text="Is this an FSA/HSA card?" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="25px"
                     android:layout_marginLeft="25px"
+                    android:layout_marginRight="25px"
                     android:background="#ECF5FA"
                     android:orientation="vertical">
+
                     <RelativeLayout
+                        android:id="@+id/LinearLayout5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="25px"
-                        android:id="@+id/LinearLayout5"
 
                         >
 
                         <TextView
+                            android:id="@+id/textView5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Apply Offer Code"
-                            android:id="@+id/textView5"
-                            android:textSize="18sp"
                             android:layout_alignParentLeft="true"
+                            android:text="Apply Offer Code"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#6EAEDB"
-                            />
+                            android:textSize="18sp" />
 
                         <TextView
+                            android:id="@+id/cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Total :$49.00"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/black"
                             android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:id="@+id/cost"
-                            />
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
-                    <LinearLayout
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:background="#ECF5FA"
                         android:layout_marginBottom="20px"
+                        android:layout_marginLeft="15px"
                         android:layout_marginRight="15px"
-                        android:layout_marginLeft="15px">
+                        android:background="#ECF5FA">
+
                         <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Pay Now"
                             android:id="@+id/paynow"
-                            android:background="#2A7DB6"
-                            android:textColor="#fff"
-                            android:layout_marginTop="20dp"/>
-                    </LinearLayout>
+                            style="@style/ContinueButtonStyle"
+                            android:text="Next"
+                             />
+                    </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
+        <include layout="@layout/mdlive_footer"
+            style="@style/Footer_Style"/>
     </LinearLayout>
-    <include
-        layout="@layout/custom_progress_dialog"
-        />
+
+    <include layout="@layout/custom_progress_dialog" />
 </merge>

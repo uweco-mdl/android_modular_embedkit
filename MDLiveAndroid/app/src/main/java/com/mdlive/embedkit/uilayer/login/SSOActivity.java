@@ -8,7 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.view.View;
+import android.widget.RelativeLayout;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -20,9 +21,10 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SSOUser;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 import com.mdlive.unifiedmiddleware.services.SSOService;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,15 +33,18 @@ import org.json.JSONObject;
  */
 public class SSOActivity extends Activity {
     private ProgressDialog mProgressDialog;
+    private String mToken;
+    private RelativeLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_sso);
-
+        Utils.clearSharedPrefValues(this);
         MDLiveConfig.setData();
 
         mProgressDialog = Utils.getProgressDialog("Please Wait.....", this);
+        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
 
         makeSSOCall();
     }
@@ -85,17 +90,19 @@ public class SSOActivity extends Activity {
             return;
         }
 
-        mProgressDialog.show();
+        setProgressBarVisibility();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 try {
+                    setInfoVisibilty();
                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(PreferenceConstants.USER_UNIQUE_ID,response.getString("uniqueid"));
                     editor.commit();
+                    mToken = response.getString("token");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -127,15 +134,13 @@ public class SSOActivity extends Activity {
      * After getting the uniqueid save it to shared preference.
      */
     private void loadUserInformationDetails() {
-        if(!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
+        setProgressBarVisibility();
 
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                Utils.hideProgressDialog(mProgressDialog);
+                setInfoVisibilty();
                 handleSuccessResponse(response);
             }
         };
@@ -144,7 +149,7 @@ public class SSOActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                mProgressDialog.dismiss();
+                setInfoVisibilty();
                 //Utils.handelVolleyErrorResponse(SSOActivity.this, error, mProgressDialog);
                if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -174,16 +179,20 @@ public class SSOActivity extends Activity {
             if(response !=  null){
                 if(response.has("notifications")){
                     JSONObject notifications = response.getJSONObject("notifications");
-                    if(notifications.has("upcoming_appointments")){
-                        Intent intent = null;
+                    if(notifications.has("upcoming_appointments")) {
 
                         if(notifications.getInt("upcoming_appointments") > 0){
-                            intent = new Intent(getBaseContext(), MDLivePendingVisits.class);
+                            getPendingAppointments();
                         }else{
-                            intent = new Intent(getBaseContext(), MDLiveGetStarted.class);
+                            setInfoVisibilty();
+
+
+                            final Intent intent = new Intent(getBaseContext(), MDLiveGetStarted.class);
+                            intent.putExtra("token", mToken);
+                            startActivity(intent);
                         }
 
-                        startActivity(intent);
+
 
                         finish();
                     }
@@ -192,6 +201,101 @@ public class SSOActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+    }
+
+    /***
+     *This method is used to get user Pending Appointments History from server.
+     * MDLivePendigVisitService-class is responsible for sending request to the server
+     */
+
+    public void getPendingAppointments(){
+        setProgressBarVisibility();
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                //Utils.hideProgressDialog(mProgressDialog);
+                setInfoVisibilty();
+                handlePendingResponse(response.toString());
+                Log.e("Pending Response",response.toString());
+            }
+        };
+        NetworkErrorListener errorListner=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+               // Utils.hideProgressDialog(mProgressDialog);
+                setInfoVisibilty();
+                Log.e("Pending Error Response", error.toString());
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        Utils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
+                    }
+                }
+
+            }
+        };
+
+        MDLivePendigVisitService getApponitmentsService=new MDLivePendigVisitService(SSOActivity.this, mProgressDialog);
+        getApponitmentsService.getUserPendingHistory(successListener, errorListner);
+    }
+
+    /**
+     *
+     * THis function handles the pending visits if any. If there is any pending visits,
+     * the user will be taken to PEndingVisits screen, else the user will ber taken to
+     * getstarted screen.
+     *
+     * @param response
+     */
+    public void handlePendingResponse(String response){
+        setInfoVisibilty();
+
+        try{
+            JSONObject resObj=new JSONObject(response);
+            JSONArray appointArray=resObj.getJSONArray("appointments");
+            JSONArray onCallAppointmentArray=resObj.getJSONArray("oncall_appointments");
+            if(appointArray.length()!=0){
+                String docName=appointArray.getJSONObject(0).getString("physician_name");
+                String appointmnetID=appointArray.getJSONObject(0).getString("id");
+                String chiefComplaint=appointArray.getJSONObject(0).getString("chief_complaint");
+                Intent pendingVisitIntent = new Intent(SSOActivity.this, MDLivePendingVisits.class);
+                pendingVisitIntent.putExtra("DocName",docName); // The doctor name  from service on successful response
+                pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
+                pendingVisitIntent.putExtra("Reason",chiefComplaint); // The Reason for visit from service on successful response
+                startActivity(pendingVisitIntent);
+                finish();
+            }else {
+                Intent i = new Intent(getApplicationContext(), MDLiveGetStarted.class);
+                i.putExtra("token", mToken); // The token received from service on successful login
+                startActivity(i);
+                finish();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    /*
+  * set visible for the progress bar
+  */
+    public void setProgressBarVisibility()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+    }
+
+    /*
+    * set visible for the details view layout
+    */
+    public void setInfoVisibilty()
+    {
+        progressBar.setVisibility(View.GONE);
 
     }
 }

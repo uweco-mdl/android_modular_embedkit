@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -31,9 +32,17 @@ public class MDLiveSummary extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
-//        pDialog = Utils.getProgressDialog("Please wait", this);
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
+        TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
+
+        SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        txtDocName.setText(docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,""));
+        payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
+        pDialog = Utils.getProgressDialog("Please wait", this);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +50,10 @@ public class MDLiveSummary extends Activity {
                 sendRating();
             }
         });
+//        pDialog = Utils.getProgressDialog("Please wait", this);
+
+
+
     }
 
     /**
@@ -115,8 +128,21 @@ public class MDLiveSummary extends Activity {
         summaryService.sendRating(rating,successListener,errorListner );
     }
 
+    /**
+     * This method will close the activity with transition effect.
+     */
+
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
+        Utils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

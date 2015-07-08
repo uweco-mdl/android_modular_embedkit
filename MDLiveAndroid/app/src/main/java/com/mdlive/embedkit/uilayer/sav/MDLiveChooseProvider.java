@@ -62,7 +62,7 @@ public class MDLiveChooseProvider extends Activity {
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
     private LinearLayout dcotorOnCallHeader,DocOnCalLinLay;
-    private RelativeLayout filterRl;
+    private RelativeLayout filterRl,filterMainRl;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
 
@@ -74,7 +74,8 @@ public class MDLiveChooseProvider extends Activity {
 //        pDialog = Utils.getProgressDialog("Please wait...", this);
 //        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
         DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
-//        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
+        filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
+        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
 
 
@@ -110,6 +111,7 @@ public class MDLiveChooseProvider extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(MDLiveChooseProvider.this,MDLiveReasonForVisit.class);
                 startActivity(intent);
+                Utils.startActivityAnimation(MDLiveChooseProvider.this);
 
             }
         });
@@ -118,6 +120,7 @@ public class MDLiveChooseProvider extends Activity {
                 public void onClick(View v) {
                     Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
                     startActivity(intent);
+                    Utils.startActivityAnimation(MDLiveChooseProvider.this);
 
                 }
             });
@@ -145,7 +148,8 @@ public class MDLiveChooseProvider extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Error Response", error.toString());
+//                Log.d("Error Response", error.toString());
+
 //                pDialog.dismiss();
                 setInfoVisibilty();
                 DocOnCalLinLay.setVisibility(View.VISIBLE);
@@ -201,17 +205,16 @@ public class MDLiveChooseProvider extends Activity {
             String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
             if(StrDoctorOnCall.equals("false"))
             {
-                Log.e("StrDoctorOnCall-->",StrDoctorOnCall);
-                DocOnCalLinLay.setVisibility(View.GONE);
+                Log.e("StrDoctorOnCall-->", StrDoctorOnCall);
                 JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                 if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
 //                dcotorOnCallHeader.setVisibility(View.VISIBLE);
 //                    filterRl.setVisibility(View.GONE);
                     doctorOnCallButtonClick();
                 }else {
-                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
                     DocOnCalLinLay.setVisibility(View.GONE);
-                    filterRl.setVisibility(View.VISIBLE);
+                    filterMainRl.setVisibility(View.VISIBLE);
                     doctorOnCallButtonClick();
                 }
             }
@@ -219,8 +222,8 @@ public class MDLiveChooseProvider extends Activity {
             //Setting the Doctor On Call Header
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-                filterRl.setVisibility(View.GONE);
+//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
+//                filterRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
             }else{
                 setHeaderContent(StrDoctorOnCall);
@@ -334,6 +337,7 @@ public class MDLiveChooseProvider extends Activity {
                             ProviderListMap.get(position).get("name"));
                     Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                     startActivity(Reasonintent);
+                Utils.startActivityAnimation(MDLiveChooseProvider.this);
 //                }
 
 }
@@ -439,5 +443,16 @@ public class MDLiveChooseProvider extends Activity {
     {
         progressBar.setVisibility(View.GONE);
         loadingTxt.setVisibility(View.GONE);
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Utils.closingActivityAnimation(MDLiveChooseProvider.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }
