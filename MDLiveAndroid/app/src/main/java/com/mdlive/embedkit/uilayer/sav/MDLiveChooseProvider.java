@@ -30,7 +30,7 @@ import com.mdlive.embedkit.uilayer.sav.adapters.ChooseProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
@@ -93,7 +93,7 @@ public class MDLiveChooseProvider extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveChooseProvider.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveChooseProvider.this);
                 finish();
             }
         });
@@ -111,7 +111,7 @@ public class MDLiveChooseProvider extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(MDLiveChooseProvider.this,MDLiveReasonForVisit.class);
                 startActivity(intent);
-                Utils.startActivityAnimation(MDLiveChooseProvider.this);
+                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
 
             }
         });
@@ -120,7 +120,7 @@ public class MDLiveChooseProvider extends Activity {
                 public void onClick(View v) {
                     Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
                     startActivity(intent);
-                    Utils.startActivityAnimation(MDLiveChooseProvider.this);
+                    MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
 
                 }
             });
@@ -164,7 +164,7 @@ public class MDLiveChooseProvider extends Activity {
                                     dialog.dismiss();
                                 }
                             };
-                            Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
                         }
                     }
                     DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
@@ -177,9 +177,9 @@ public class MDLiveChooseProvider extends Activity {
                     };
 
                     JSONObject obj = new JSONObject(error.toString());
-                    Utils.showDialog(MDLiveChooseProvider.this,MDLiveChooseProvider.this.getResources().getString(R.string.app_name),obj.getString("error"),MDLiveChooseProvider.this.getResources().getString(R.string.ok),null,positiveOnclickListener,null);
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this, MDLiveChooseProvider.this.getResources().getString(R.string.app_name), obj.getString("error"), MDLiveChooseProvider.this.getResources().getString(R.string.ok), null, positiveOnclickListener, null);
                 }catch(Exception e){
-                    Utils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
                     e.printStackTrace();
                 }
             }};
@@ -337,7 +337,7 @@ public class MDLiveChooseProvider extends Activity {
                             ProviderListMap.get(position).get("name"));
                     Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                     startActivity(Reasonintent);
-                Utils.startActivityAnimation(MDLiveChooseProvider.this);
+                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
 //                }
 
 }
@@ -403,7 +403,7 @@ public class MDLiveChooseProvider extends Activity {
                     baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
                     listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
-                    Utils.alert(pDialog,MDLiveChooseProvider.this,jArray.get(0).toString());
+                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, jArray.get(0).toString());
 //                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
 //                    doctorOnCallButtonClick();
 
@@ -424,7 +424,7 @@ public class MDLiveChooseProvider extends Activity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLiveChooseProvider.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveChooseProvider.this, MDLiveLogin.class);
     }
 
     /*
@@ -447,7 +447,7 @@ public class MDLiveChooseProvider extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveChooseProvider.this);
+        MdliveUtils.closingActivityAnimation(MDLiveChooseProvider.this);
     }
 
     @Override

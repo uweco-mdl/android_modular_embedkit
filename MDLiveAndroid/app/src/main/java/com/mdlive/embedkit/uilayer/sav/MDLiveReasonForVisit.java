@@ -27,9 +27,8 @@ import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
@@ -68,8 +67,8 @@ public class MDLiveReasonForVisit extends Activity {
         SubmitResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Utils.isValidName(((EditText)findViewById(R.id.search_edit)).getText().toString())){
-                    Utils.showDialog(MDLiveReasonForVisit.this,getResources().getString(R.string.app_name),getResources().getString(R.string.invalid_symptom));
+                if(!MdliveUtils.isValidName(((EditText) findViewById(R.id.search_edit)).getText().toString())){
+                    MdliveUtils.showDialog(MDLiveReasonForVisit.this, getResources().getString(R.string.app_name), getResources().getString(R.string.invalid_symptom));
                     return;
                 }
 
@@ -78,16 +77,16 @@ public class MDLiveReasonForVisit extends Activity {
 
 
 
-                Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
-                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
+                Log.e("Age,Month,Days",""+ MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+ MdliveUtils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+ MdliveUtils.daysFromPrefs(MDLiveReasonForVisit.this));
+                if(MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
-                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
                     finish();
                 }else{
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
-                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
 
             }
@@ -100,7 +99,7 @@ public class MDLiveReasonForVisit extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveReasonForVisit.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveReasonForVisit.this);
                 finish();
             }
         });
@@ -146,7 +145,7 @@ public class MDLiveReasonForVisit extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveReasonForVisit.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveReasonForVisit.this);
                     }
                 }
             }};
@@ -216,7 +215,7 @@ public class MDLiveReasonForVisit extends Activity {
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
                 }else{
-                    Utils.alert(pDialog,MDLiveReasonForVisit.this,"Please enter the character");//TO DO Need to confirm the alert message
+                    MdliveUtils.alert(pDialog, MDLiveReasonForVisit.this, "Please enter the character");//TO DO Need to confirm the alert message
 
                 }
             }
@@ -231,7 +230,7 @@ public class MDLiveReasonForVisit extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("Age,Month,Days",""+Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+Utils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+Utils.daysFromPrefs(MDLiveReasonForVisit.this));
+                Log.e("Age,Month,Days",""+ MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+ MdliveUtils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+ MdliveUtils.daysFromPrefs(MDLiveReasonForVisit.this));
             try{
                 SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -240,15 +239,15 @@ public class MDLiveReasonForVisit extends Activity {
                 editor.commit();
 
                 //MDLivePharmacy
-                if(Utils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
+                if(MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
                     Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
                     startActivity(Reasonintent);
-                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
 
                 }else{
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);
-                    Utils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
             }catch (Exception e){
             e.printStackTrace();
@@ -266,13 +265,13 @@ public class MDLiveReasonForVisit extends Activity {
     public void movetohome()
     {
 
-        Utils.movetohome(MDLiveReasonForVisit.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveReasonForVisit.this, MDLiveLogin.class);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveReasonForVisit.this);
+        MdliveUtils.closingActivityAnimation(MDLiveReasonForVisit.this);
     }
 
     @Override

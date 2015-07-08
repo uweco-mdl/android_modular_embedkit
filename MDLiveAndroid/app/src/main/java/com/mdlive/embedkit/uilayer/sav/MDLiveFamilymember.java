@@ -32,7 +32,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.AddChildServices;
@@ -94,7 +94,7 @@ public class MDLiveFamilymember extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveFamilymember.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
                 finish();
             }
         });
@@ -181,7 +181,7 @@ public class MDLiveFamilymember extends Activity {
 
                             PostLifeStyleServices();
                         } else {
-                            Utils.showDialog(MDLiveFamilymember.this,getResources().getString(R.string.app_name),getResources().getString(R.string.please_enter_mandetory_fileds));
+                            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
                         }
                     }
                 });
@@ -307,11 +307,11 @@ public class MDLiveFamilymember extends Activity {
                                 }
                             };
                             // Show timeout error message
-                            Utils.connectionTimeoutError(pDialog, MDLiveFamilymember.this);
+                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilymember.this);
                         }
                     }else
                     {
-                        Utils.alert(pDialog,MDLiveFamilymember.this,error.toString());
+                        MdliveUtils.alert(pDialog, MDLiveFamilymember.this, error.toString());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -336,7 +336,7 @@ public class MDLiveFamilymember extends Activity {
             progressBar.setVisibility(View.GONE);
             //Fetch Data From the Services
             Log.e("MDlivePediatric->",response.toString());
-            Utils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {
+            MdliveUtils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
@@ -355,7 +355,7 @@ public class MDLiveFamilymember extends Activity {
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
-        datePickerDialog.getDatePicker().setMinDate(Utils.getDateBeforeNumberOfYears(18));
+        datePickerDialog.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(18));
         datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
     }
     /**
@@ -438,7 +438,7 @@ public class MDLiveFamilymember extends Activity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLiveFamilymember.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveFamilymember.this, MDLiveLogin.class);
     }
 
     /**
@@ -448,7 +448,7 @@ public class MDLiveFamilymember extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

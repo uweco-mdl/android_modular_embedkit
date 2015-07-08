@@ -33,9 +33,8 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -103,7 +102,7 @@ public class MDLivePayment extends Activity {
             public void afterTextChanged(Editable s) {
                 if(edtZipCode.getText().toString().length()>=9){
                     if(!edtZipCode.getText().toString().contains("-")){
-                        String formattedString=Utils.zipCodeFormat(Long.parseLong(edtZipCode.getText().toString()));
+                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(edtZipCode.getText().toString()));
                         edtZipCode.setText(formattedString);
                     }
 
@@ -138,7 +137,7 @@ public class MDLivePayment extends Activity {
         findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Utils.movetohome(MDLivePayment.this, MDLiveLogin.class);
+                 MdliveUtils.movetohome(MDLivePayment.this, MDLiveLogin.class);
             }
         });
     }
@@ -159,7 +158,7 @@ public class MDLivePayment extends Activity {
                     Log.e("Params",params+billingResponse);
                     updateCardDetails(params);
                 }else{
-                    Utils.alert(pDialog, MDLivePayment.this, jobj.getString("status"));
+                    MdliveUtils.alert(pDialog, MDLivePayment.this, jobj.getString("status"));
                 }
 
             }catch (Exception e){
@@ -249,7 +248,7 @@ public class MDLivePayment extends Activity {
                 try{
                    dismissDialog(pDialog);
                     //progressBar.setVisibility(View.GONE);
-                    Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -301,14 +300,14 @@ public class MDLivePayment extends Activity {
                 doConfirmAppointment();
             }else{
                 if(edtZipCode.getText().toString().length()!=0&&dateView.getText().toString().length()!=0){
-                    if(Utils.validateZipCode(edtZipCode.getText().toString())){
+                    if(MdliveUtils.validateZipCode(edtZipCode.getText().toString())){
                         HostedPCI.loadUrl("javascript:tokenizeForm()");
                     }else{
-                        Utils.alert(pDialog,MDLivePayment.this,"Please enter a valid Zipcode.");
+                        MdliveUtils.alert(pDialog, MDLivePayment.this, "Please enter a valid Zipcode.");
                     }
 
                 }else{
-                    Utils.alert(pDialog,MDLivePayment.this,"Please fill in all the required fields");
+                    MdliveUtils.alert(pDialog, MDLivePayment.this, "Please fill in all the required fields");
 
                 }
             }
@@ -387,7 +386,7 @@ public class MDLivePayment extends Activity {
                         editor.commit();
                         Intent i = new Intent(MDLivePayment.this, MDLiveWaitingRoom.class);
                         startActivity(i);
-                        Utils.startActivityAnimation(MDLivePayment.this);
+                        MdliveUtils.startActivityAnimation(MDLivePayment.this);
                     } else {
                         Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     }
@@ -407,7 +406,7 @@ public class MDLivePayment extends Activity {
 
                     dismissDialog(pDialog);
 //                    progressBar.setVisibility(View.GONE);
-                    Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
                 }catch (Exception e){
                     dismissDialog(pDialog);
 //                    progressBar.setVisibility(View.GONE);
@@ -493,7 +492,7 @@ public class MDLivePayment extends Activity {
             public void onErrorResponse(VolleyError error) {
                 dismissDialog(pDialog);
 //                progressBar.setVisibility(View.GONE);
-                Utils.handelVolleyErrorResponse(MDLivePayment.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
                /* try{
                     String responseBody = new String(error.networkResponse.data, "utf-8" );
                     JSONObject errorObj = new JSONObject( responseBody );
@@ -559,7 +558,7 @@ public class MDLivePayment extends Activity {
         try{
             JSONObject resObject=new JSONObject(errorResponse);
             if(resObject.has("error")){
-                Utils.alert(pDialog,MDLivePayment.this,resObject.getString("error"));
+                MdliveUtils.alert(pDialog, MDLivePayment.this, resObject.getString("error"));
             }
         }catch (Exception e){
 
@@ -576,7 +575,7 @@ public class MDLivePayment extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

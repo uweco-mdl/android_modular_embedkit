@@ -34,7 +34,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.PediatricService;
@@ -56,7 +56,7 @@ public class MDLivePediatric extends Activity {
     private TextView txtDietType;
     private ProgressDialog pDialog;
     private RelativeLayout progressDialog;
-    private LinearLayout infoView;
+
 //    private ProgressBar progressBar;
     public ArrayList<HashMap<String,String>> questionList;
     public HashMap<String ,String> questionItem,weightMap;
@@ -84,7 +84,7 @@ public class MDLivePediatric extends Activity {
         scrollTouch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Utils.hideKeyboard(cxt,v);
+                MdliveUtils.hideKeyboard(cxt, v);
                 return false;
             }
         });
@@ -92,7 +92,7 @@ public class MDLivePediatric extends Activity {
         container.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Utils.hideKeyboard(cxt,v);
+                MdliveUtils.hideKeyboard(cxt, v);
                 return false;
             }
         });
@@ -116,7 +116,6 @@ public class MDLivePediatric extends Activity {
         txtDietType= (TextView) findViewById(R.id.txt_dietType);
         TextView txtAge= (TextView) findViewById(R.id.ageTxt);
         saveButton= (Button) findViewById(R.id.btn_continue_pediatric);
-        infoView = (LinearLayout)findViewById(R.id.infoView);
         edtCurrentWeight= (EditText) findViewById(R.id.edt_currentweight);
 //        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
@@ -184,14 +183,14 @@ public class MDLivePediatric extends Activity {
     }
 
     public boolean checkPerdiatricAge(){
-        if(Utils.calculteAgeFromPrefs(MDLivePediatric.this)>2 && Utils.calculteAgeFromPrefs(MDLivePediatric.this)<13){
+        if(MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this)>2 && MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this)<13){
             return true;
-        }else if(Utils.calculteAgeFromPrefs(MDLivePediatric.this) == 2){
-            if(Utils.calculteMonthFromPrefs(MDLivePediatric.this) > 0 && Utils.daysFromPrefs(MDLivePediatric.this) > 0){
+        }else if(MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == 2){
+            if(MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) > 0 && MdliveUtils.daysFromPrefs(MDLivePediatric.this) > 0){
                 return true;
             }
-        }else if(Utils.calculteAgeFromPrefs(MDLivePediatric.this) == 13){
-            if(Utils.calculteMonthFromPrefs(MDLivePediatric.this) == 0 && Utils.daysFromPrefs(MDLivePediatric.this) == 0){
+        }else if(MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == 13){
+            if(MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) == 0 && MdliveUtils.daysFromPrefs(MDLivePediatric.this) == 0){
                 return true;
             }
         }
@@ -426,7 +425,7 @@ public class MDLivePediatric extends Activity {
             @Override
             public void onClick(View v) {
                 showListViewDialog(dietList,txtDietType,"Current Diet");
-                Utils.hideSoftKeyboard(MDLivePediatric.this);
+                MdliveUtils.hideSoftKeyboard(MDLivePediatric.this);
                 touchHandlers();
 
             }
@@ -465,7 +464,7 @@ public class MDLivePediatric extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePediatric.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLivePediatric.this);
                     }
                 }
             }
@@ -581,7 +580,7 @@ public class MDLivePediatric extends Activity {
                 progressDialog.setVisibility(View.GONE);
                 Intent intent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
                 startActivity(intent);
-                Utils.startActivityAnimation(MDLivePediatric.this);
+                MdliveUtils.startActivityAnimation(MDLivePediatric.this);
             }
         };
         NetworkErrorListener errorListener=new NetworkErrorListener() {
@@ -596,7 +595,7 @@ public class MDLivePediatric extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePediatric.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLivePediatric.this);
                     }
                 }
             }
@@ -697,7 +696,7 @@ public class MDLivePediatric extends Activity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLivePediatric.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePediatric.this, MDLiveLogin.class);
     }
 
     /*
@@ -706,7 +705,6 @@ public class MDLivePediatric extends Activity {
     public void setProgressBarVisibility()
     {
         progressDialog.setVisibility(View.VISIBLE);
-        infoView.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
     }
 
@@ -716,7 +714,6 @@ public class MDLivePediatric extends Activity {
     public void setInfoVisibilty()
     {
         progressDialog.setVisibility(View.GONE);
-        infoView.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
     }
 
@@ -729,7 +726,7 @@ public class MDLivePediatric extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

@@ -20,7 +20,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 
@@ -76,13 +76,13 @@ public class MDLiveWaitingRoom extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response Provider Error", error.toString());
-                Utils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
 
                 if(isReturning){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
-                    Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                    MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     finish();
                 }
             }
@@ -119,14 +119,14 @@ public class MDLiveWaitingRoom extends Activity{
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
+                        MdliveUtils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
                     }
                 }
                 if(isReturning){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
-                    Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                    MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     finish();
                 }
             }
@@ -156,7 +156,7 @@ public class MDLiveWaitingRoom extends Activity{
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
-                Utils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                 finish();
             }else {
                 getProviderStatus();
@@ -244,7 +244,7 @@ public class MDLiveWaitingRoom extends Activity{
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLiveWaitingRoom.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveWaitingRoom.this, MDLiveLogin.class);
     }
 
     @Override

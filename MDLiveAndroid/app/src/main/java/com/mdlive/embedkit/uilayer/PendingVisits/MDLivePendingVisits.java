@@ -19,7 +19,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
@@ -44,7 +44,7 @@ public class MDLivePendingVisits extends Activity {
         txtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.movetohome(MDLivePendingVisits.this,null);
+                MdliveUtils.movetohome(MDLivePendingVisits.this, null);
             }
         });
 
@@ -70,7 +70,7 @@ public class MDLivePendingVisits extends Activity {
                 editor.commit();
                 Intent waitingRoomIntent=new Intent(MDLivePendingVisits.this, MDLiveWaitingRoom.class);
                 startActivity(waitingRoomIntent);
-                Utils.startActivityAnimation(MDLivePendingVisits.this);
+                MdliveUtils.startActivityAnimation(MDLivePendingVisits.this);
             }
         });
 
@@ -115,7 +115,7 @@ public class MDLivePendingVisits extends Activity {
                                 dialog.dismiss();
                             }
                         };
-                        Utils.connectionTimeoutError(pDialog, MDLivePendingVisits.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLivePendingVisits.this);
                     }
                 }
 
@@ -153,7 +153,7 @@ public class MDLivePendingVisits extends Activity {
      * @param v-User clicked view from the screen
      */
     public void cancelVisit(View v){
-        Utils.movetohome(MDLivePendingVisits.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePendingVisits.this, MDLiveLogin.class);
     }
 
 
@@ -165,7 +165,7 @@ public class MDLivePendingVisits extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

@@ -47,7 +47,7 @@ import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalImageService;
@@ -142,7 +142,7 @@ public class MDLiveMedicalHistory extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
                 startActivityForResult(i, RELOAD_REQUEST_CODE);
-                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             }
         });
 
@@ -151,7 +151,7 @@ public class MDLiveMedicalHistory extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
                 startActivityForResult(i, RELOAD_REQUEST_CODE);
-                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             }
         });
 
@@ -160,7 +160,7 @@ public class MDLiveMedicalHistory extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
                 startActivityForResult(i, RELOAD_REQUEST_CODE);
-                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             }
         });
 
@@ -256,7 +256,7 @@ public class MDLiveMedicalHistory extends Activity {
                     PreExisitingGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
                     startActivityForResult(i, RELOAD_REQUEST_CODE);
-                    Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                    MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                 }else{
                     ValidateModuleFields();
                 }
@@ -269,7 +269,7 @@ public class MDLiveMedicalHistory extends Activity {
                     MedicationsGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
                     startActivityForResult(i, RELOAD_REQUEST_CODE);
-                    Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                    MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                 }else{
                     ValidateModuleFields();
                 }
@@ -282,7 +282,7 @@ public class MDLiveMedicalHistory extends Activity {
                     AllergiesGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
                     startActivityForResult(i, RELOAD_REQUEST_CODE);
-                    Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                    MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                 }else{
                     ValidateModuleFields();
                 }
@@ -295,7 +295,7 @@ public class MDLiveMedicalHistory extends Activity {
                 if (checkedId == R.id.proceduresYesButton) {
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
                     startActivity(i);
-                    Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                    MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                 }
                 ValidateModuleFields();
             }
@@ -305,7 +305,7 @@ public class MDLiveMedicalHistory extends Activity {
             @Override
             public void onClick(View v) {
                 if(myPhotosList.size() >= 8){
-                    Utils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
+                    MdliveUtils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
                 }else{
                     imagePickerDialog.show();
                 }
@@ -354,7 +354,7 @@ public class MDLiveMedicalHistory extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         imagePickerDialog.dismiss();
                         if (!isDeviceSupportCamera()){
-                            Utils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
+                            MdliveUtils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
                         }else{
                                 captureImage();
                         }
@@ -368,7 +368,7 @@ public class MDLiveMedicalHistory extends Activity {
                         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                         photoPickerIntent.setType("image/*");
                         startActivityForResult(photoPickerIntent, PICK_IMAGE_REQUEST_CODE);
-                        Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                     }
                 })
                 .setNeutralButton("Close", new DialogInterface.OnClickListener(){
@@ -391,7 +391,7 @@ public class MDLiveMedicalHistory extends Activity {
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0); // set the video image quality to high
         // start the image capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-        Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
     }
     /**
      * Creating file uri to store image/video
@@ -1057,8 +1057,8 @@ public class MDLiveMedicalHistory extends Activity {
             } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
                 message = "Page Not Found";
             }
-            Utils.showDialog(MDLiveMedicalHistory.this, "Error",
-                            "Server Response : " + message);
+            MdliveUtils.showDialog(MDLiveMedicalHistory.this, "Error",
+                    "Server Response : " + message);
 
         }
     }
@@ -1139,7 +1139,7 @@ public class MDLiveMedicalHistory extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(Utils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10) {
+            if(MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10) {
                         if(gender.equalsIgnoreCase("Female")){
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                             ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
@@ -1449,7 +1449,7 @@ public class MDLiveMedicalHistory extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveMedicalHistory.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveMedicalHistory.this);
                     }
                 }
             }
@@ -1497,7 +1497,7 @@ public class MDLiveMedicalHistory extends Activity {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
                 i.putExtra("Response",res);
                 startActivity(i);
-                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             }
 
         } catch (Exception e) {
@@ -1529,12 +1529,12 @@ public class MDLiveMedicalHistory extends Activity {
                                 i.putExtra("longitude", location.getLongitude());
                                 i.putExtra("latitude", location.getLatitude());
                                 startActivity(i);
-                                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                             }else{
                                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
                                 i.putExtra("Response",jsonResponse);
                                 startActivity(i);
-                                Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+                                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                             }
                         }
                     });
@@ -1544,7 +1544,7 @@ public class MDLiveMedicalHistory extends Activity {
             Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
             i.putExtra("Response",jsonResponse);
             startActivity(i);
-            Utils.startActivityAnimation(MDLiveMedicalHistory.this);
+            MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             //Utils.showGPSSettingsAlert(MDLiveMedicalHistory.this);
         }
     }
@@ -1556,7 +1556,7 @@ public class MDLiveMedicalHistory extends Activity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLiveMedicalHistory.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveMedicalHistory.this, MDLiveLogin.class);
     }
 
 
@@ -1567,7 +1567,7 @@ public class MDLiveMedicalHistory extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

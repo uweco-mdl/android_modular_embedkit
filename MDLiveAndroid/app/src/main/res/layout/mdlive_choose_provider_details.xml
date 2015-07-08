@@ -180,12 +180,21 @@
             </LinearLayout>
         </ScrollView>
 
-        <Button
-            android:id="@+id/reqappointmentBtn"
-            style="@style/ContinueButtonStyle"
-            android:text="Request Appointment"
-            android:textAllCaps="false"
-            android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/reqappointmentBtn"
+                style="@style/ContinueButtonStyle"
+                android:text="Request Appointment"
+                android:textAllCaps="false"
+                android:visibility="gone" />
+
+            <include layout="@layout/mdlive_footer"
+                style="@style/Footer_Style"/>
+        </LinearLayout>
     </LinearLayout>
 
     <include layout="@layout/custom_progress_dialog" />

@@ -23,7 +23,7 @@ import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.LoginServices;
@@ -61,7 +61,7 @@ public class MDLiveLogin extends Activity {
         loginInfo = (LinearLayout)findViewById(R.id.infoView);
 
         ViewGroup view = (ViewGroup)getWindow().getDecorView();
-        Utils.clearSharedPrefValues(this);
+        MdliveUtils.clearSharedPrefValues(this);
 //        pDialog = Utils.getProgressDialog("Please wait...", this);
         loginBtn.setOnClickListener(getLoginOnClickListener());
 
@@ -71,7 +71,7 @@ public class MDLiveLogin extends Activity {
         View.OnClickListener loginOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveLogin.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveLogin.this);
                 String username = usernameEt.getText().toString();
                 String password = passwordEt.getText().toString();
                 if(validateData(username,password)){
@@ -110,11 +110,11 @@ public class MDLiveLogin extends Activity {
                                         }
                                     };
                                     // Show timeout error message
-                                    Utils.connectionTimeoutError(pDialog, MDLiveLogin.this);
+                                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveLogin.this);
                                 }
                                 else
                                 {
-                                    Utils.alert(pDialog,MDLiveLogin.this,error.toString());
+                                    MdliveUtils.alert(pDialog, MDLiveLogin.this, error.toString());
                                 }
                             }
                         }};
@@ -139,7 +139,7 @@ public class MDLiveLogin extends Activity {
                 getPendingAppointments();
             } else {
 //                displayMessage(response.has("token")?response.getString("token"):localisationHelper.getLocalizedStringFromPrefs(this, "invalid_credentials"));
-                Utils.alert(pDialog,MDLiveLogin.this,"invalid_credentials");
+                MdliveUtils.alert(pDialog, MDLiveLogin.this, "invalid_credentials");
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class MDLiveLogin extends Activity {
                                 dialog.dismiss();
                             }
                         };
-                        Utils.connectionTimeoutError(pDialog, MDLiveLogin.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveLogin.this);
                     }
                 }
 
@@ -235,16 +235,16 @@ public class MDLiveLogin extends Activity {
      */
     protected boolean validateData(String username, String password){
         if(username!=null && username.trim().length()>0 && password!=null && password.trim().length()>0){
-            if(Utils.isValidUserName(username) && Utils.isValidPassword(password)){
+            if(MdliveUtils.isValidUserName(username) && MdliveUtils.isValidPassword(password)){
                 return true;
             }
             else{
 //                displayMessage(localisationHelper.getLocalizedStringFromPrefs(this, "invalid_credentials"));
-                Utils.alert(pDialog,MDLiveLogin.this,"invalid_credentials");
+                MdliveUtils.alert(pDialog, MDLiveLogin.this, "invalid_credentials");
             }
         } else{
 //            displayMessage(localisationHelper.getLocalizedStringFromPrefs(this, "empty_credentials"));
-            Utils.alert(pDialog,MDLiveLogin.this,"empty_credentials");
+            MdliveUtils.alert(pDialog, MDLiveLogin.this, "empty_credentials");
         }
         return false;
     }
@@ -257,7 +257,7 @@ public class MDLiveLogin extends Activity {
             }
         };
         // Show timeout error message
-        Utils.showDialog(MDLiveLogin.this, MDLiveLogin.this.getApplicationInfo().loadLabel(MDLiveLogin.this.getPackageManager()).toString(),message, localisationHelper.getLocalizedStringFromPrefs(this, "OK"),null, onClickListener,null);
+        MdliveUtils.showDialog(MDLiveLogin.this, MDLiveLogin.this.getApplicationInfo().loadLabel(MDLiveLogin.this.getPackageManager()).toString(), message, localisationHelper.getLocalizedStringFromPrefs(this, "OK"), null, onClickListener, null);
     }
 
     /*

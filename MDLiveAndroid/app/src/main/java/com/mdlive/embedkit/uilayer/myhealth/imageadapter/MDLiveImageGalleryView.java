@@ -17,7 +17,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicalServices;
@@ -151,7 +151,7 @@ public class MDLiveImageGalleryView extends Activity {
                     }
                 };
                 // Show timeout error message
-                Utils.connectionTimeoutError(pDialog, MDLiveImageGalleryView.this);
+                MdliveUtils.connectionTimeoutError(pDialog, MDLiveImageGalleryView.this);
             }
         }
     }
@@ -164,7 +164,7 @@ public class MDLiveImageGalleryView extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

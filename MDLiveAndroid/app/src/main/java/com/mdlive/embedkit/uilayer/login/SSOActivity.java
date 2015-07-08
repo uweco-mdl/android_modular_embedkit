@@ -17,7 +17,7 @@ import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SSOUser;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -40,10 +40,10 @@ public class SSOActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_sso);
-        Utils.clearSharedPrefValues(this);
+        MdliveUtils.clearSharedPrefValues(this);
         MDLiveConfig.setData();
 
-        mProgressDialog = Utils.getProgressDialog("Please Wait.....", this);
+        mProgressDialog = MdliveUtils.getProgressDialog("Please Wait.....", this);
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
 
         makeSSOCall();
@@ -78,9 +78,9 @@ public class SSOActivity extends Activity {
      */
     private void makeSSOCall() {
         final SSOUser user = getUser();
-        Utils.ssoInstance = getUser();
+        MdliveUtils.ssoInstance = getUser();
         if (user == null) {
-            Utils.showDialog(this, "Error", getString(R.string.user_details_missing), new DialogInterface.OnClickListener () {
+            MdliveUtils.showDialog(this, "Error", getString(R.string.user_details_missing), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
@@ -115,7 +115,7 @@ public class SSOActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 mProgressDialog.dismiss();
-                Utils.handelVolleyErrorResponse(SSOActivity.this, error,mProgressDialog);
+                MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, mProgressDialog);
             }
         };
 
@@ -160,7 +160,7 @@ public class SSOActivity extends Activity {
                         };
                         // Show timeout error message
                         mProgressDialog.dismiss();
-                        Utils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
+                        MdliveUtils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
                     }
                 }
             }};
@@ -233,7 +233,7 @@ public class SSOActivity extends Activity {
                                 dialog.dismiss();
                             }
                         };
-                        Utils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
+                        MdliveUtils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
                     }
                 }
 

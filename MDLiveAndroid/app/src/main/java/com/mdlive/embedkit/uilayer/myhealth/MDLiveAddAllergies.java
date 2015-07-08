@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddAllergyServices;
@@ -236,7 +236,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         }
         else{
             super.onBackPressed();
-            Utils.closingActivityAnimation(this);
+            MdliveUtils.closingActivityAnimation(this);
         }
     }
 

@@ -36,7 +36,7 @@ import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
@@ -83,7 +83,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         MDLiveConfig.setData();
         setRemoteUserId();
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
-        Utils.hideSoftKeyboard(this);
+        MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         setonClickListener();
          /*  Load Services*/
@@ -161,7 +161,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveGetStarted.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
                 finish();
             }
         });
@@ -198,7 +198,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));// TODO : Change it one number is confirmed
                                         startActivity(intent);
-                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
+                                        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
                                 };
 
@@ -209,9 +209,9 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     }
                                 };
 
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
+                                MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
                                                 "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
-                                        positiveOnClickListener,negativeOnClickListener);
+                                        positiveOnClickListener, negativeOnClickListener);
                                 /*new AlertDialog.Builder(
                                         new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
@@ -221,7 +221,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     Log.e("TEST", "JSON :" + userInfoJSONString);
                                     intent.putExtra("user_info", userInfoJSONString);
                                     startActivity(intent);
-                                    Utils.startActivityAnimation(MDLiveGetStarted.this);
+                                    MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                 } else {
                                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -232,13 +232,13 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     editor.commit();
                                     if(phonrNmberEditTxt.getText().toString().length()<10)
                                     {
-                                        Utils.alert(pDialog,MDLiveGetStarted.this,"Please enter the Valid Phone number");
+                                        MdliveUtils.alert(pDialog, MDLiveGetStarted.this, "Please enter the Valid Phone number");
 
                                     }else
                                     {
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
-                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
+                                        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
 
                                 }
@@ -266,7 +266,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
                     LocationIntent.putExtra("activitycaller", "getstarted");
                     startActivityForResult(LocationIntent, 2222);
-                    Utils.startActivityAnimation(MDLiveGetStarted.this);
+                    MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                     String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
                     SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
@@ -315,7 +315,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
                                         startActivity(intent);
-                                        Utils.startActivityAnimation(MDLiveGetStarted.this);
+                                        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
                                 };
 
@@ -325,8 +325,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         dialogInterface.dismiss();
                                     }
                                 };
-                                Utils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
-                                        positiveOnClickListener,negativeOnClickListener);
+                                MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
+                                        positiveOnClickListener, negativeOnClickListener);
                             }else
                             {
                                 Log.d("Dep Name", dependentName);
@@ -338,7 +338,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 Log.e("TEST", "JSON :" + userInfoJSONString);
                                 intent.putExtra("user_info", userInfoJSONString);
                                 startActivity(intent);
-                                Utils.startActivityAnimation(MDLiveGetStarted.this);
+                                MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             }else {
                                 loadDependentInformationDetails(dependentName,position);
                             }
@@ -379,7 +379,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                         }
                     };
 //
-                    Utils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok","", positiveOnClickListener,null);
+                    MdliveUtils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok", "", positiveOnClickListener, null);
 
                 }
             }
@@ -405,11 +405,11 @@ public class MDLiveGetStarted extends FragmentActivity{
      */
 
     public void getPendingAppointments(){
-        Utils.showProgressDialog(pDialog);
+        MdliveUtils.showProgressDialog(pDialog);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                Utils.hideProgressDialog(pDialog);
+                MdliveUtils.hideProgressDialog(pDialog);
                 handlePendingResponse(response.toString());
                 Log.e("Pending Response",response.toString());
             }
@@ -417,7 +417,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utils.hideProgressDialog(pDialog);
+                MdliveUtils.hideProgressDialog(pDialog);
                 Log.e("Pending Error Response",error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -426,7 +426,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 dialog.dismiss();
                             }
                         };
-                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
                     }
                 }
 
@@ -461,7 +461,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 pendingVisitIntent.putExtra("AppointmentID",appointmnetID); // The Appointment id  from service on successful response
                 pendingVisitIntent.putExtra("Reason",chiefComplaint); // The Reason for visit from service on successful response
                 startActivity(pendingVisitIntent);
-                Utils.startActivityAnimation(MDLiveGetStarted.this);
+                MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                 finish();
             }
         }catch (Exception e){
@@ -585,7 +585,7 @@ public class MDLiveGetStarted extends FragmentActivity{
 
                 setInfoVisibilty();
 
-                Utils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
                /* if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -631,7 +631,7 @@ public class MDLiveGetStarted extends FragmentActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                Utils.hideProgressDialog(pDialog);
+                MdliveUtils.hideProgressDialog(pDialog);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -642,7 +642,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                         // Show timeout error message
 //                        pDialog.dismiss();
                         setInfoVisibilty();
-                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
                     }
                 }
             }};
@@ -725,7 +725,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                 String numStr = personalInfo.getString("phone");
                 try {
     //                numStr = "(" + numStr.substring(0,3) + ")" + "-"+numStr.substring(4,7)+"-"+numStr.substring(8);
-                    String formattedString=Utils.phoneNumberFormat(Long.parseLong(numStr));
+                    String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
                     Log.e("formattedNumber---->",formattedString);
                     phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
 
@@ -740,7 +740,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                             String changeEditText = phonrNmberEditTxt.getText().toString();
                             if(changeEditText.length()>=11){
                                 if(!changeEditText.contains("-")){
-                                    String formattedString=Utils.phoneNumberFormat(Long.parseLong(changeEditText));
+                                    String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(changeEditText));
                                     phonrNmberEditTxt.setText(formattedString);
                                 }
 
@@ -878,7 +878,7 @@ public class MDLiveGetStarted extends FragmentActivity{
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLiveGetStarted.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveGetStarted.this, MDLiveLogin.class);
     }
 
     /*
@@ -900,7 +900,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveGetStarted.this);
+        MdliveUtils.closingActivityAnimation(MDLiveGetStarted.this);
     }
 
     @Override

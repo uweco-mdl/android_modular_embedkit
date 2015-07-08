@@ -44,7 +44,7 @@ public class PharmacyListAdaper extends BaseAdapter{
         ((TextView) convertView.findViewById(R.id.pharmacyName)).setText(
                 (String)getItem(position).get("store_name")+" "+
                         (((getItem(position).get("distance")!= null) &&
-                        ((String)getItem(position).get("distance")).length() != 0) ? (String)getItem(position).get("distance")+"mi":""));
+                                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 

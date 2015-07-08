@@ -27,9 +27,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
@@ -165,7 +164,7 @@ public class MDLiveSearchProvider extends Activity {
                 Intent intent = new Intent(MDLiveSearchProvider.this, MDLiveLocation.class);
                 intent.putExtra("activitycaller", "searchprovider");
                 startActivity(intent);
-                Utils.startActivityAnimation(MDLiveSearchProvider.this);
+                MdliveUtils.startActivityAnimation(MDLiveSearchProvider.this);
             }
         });
         /**
@@ -231,7 +230,7 @@ public class MDLiveSearchProvider extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveSearchProvider.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
                 finish();
 
             }
@@ -292,7 +291,7 @@ public class MDLiveSearchProvider extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
                     }
                 }
             }};
@@ -523,7 +522,7 @@ public class MDLiveSearchProvider extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
                     }
                 }
             }};
@@ -547,7 +546,7 @@ public class MDLiveSearchProvider extends Activity {
             Intent intent=new Intent();
             intent.putExtra("Response",response.toString());
             setResult(1,intent);
-            Utils.hideSoftKeyboard(MDLiveSearchProvider.this);
+            MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
             finish();
             Log.e("Filter Response----->",responObj.toString());
         } catch (Exception e) {
@@ -677,7 +676,7 @@ public class MDLiveSearchProvider extends Activity {
 
     public void movetohome()
     {
-        Utils.movetohome(MDLiveSearchProvider.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveSearchProvider.this, MDLiveLogin.class);
     }
 
     /**
@@ -686,7 +685,7 @@ public class MDLiveSearchProvider extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveSearchProvider.this);
+        MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

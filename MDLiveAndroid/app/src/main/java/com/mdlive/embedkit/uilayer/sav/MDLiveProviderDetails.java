@@ -24,7 +24,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
@@ -68,7 +68,7 @@ public class MDLiveProviderDetails extends Activity{
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
         if(AppointmentDate!=null && AppointmentDate.length() != 0){
-            AppointmentDate = Utils.getFormattedDate(AppointmentDate);
+            AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
 
         }
 
@@ -104,13 +104,13 @@ public class MDLiveProviderDetails extends Activity{
             public void onClick(View v) {
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
-                Utils.startActivityAnimation(MDLiveProviderDetails.this);
+                MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
             }
         });
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveProviderDetails.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveProviderDetails.this);
                 finish();
             }
         });
@@ -154,7 +154,7 @@ public class MDLiveProviderDetails extends Activity{
                         tapSeetheDoctorTxt.setClickable(false);
                         tapSeetheDoctorTxt.setVisibility(View.GONE);
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveProviderDetails.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveProviderDetails.this);
                     }
                 }
             }};
@@ -182,28 +182,28 @@ public class MDLiveProviderDetails extends Activity{
             JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
             //Doctor Name
             String str_DoctorName ="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"name")) {
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "name")) {
                  str_DoctorName = providerdetObj.get("name").getAsString();
             }
             String str_BoardCertifications="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"board_certifications")) {
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "board_certifications")) {
                  str_BoardCertifications = providerdetObj.get("board_certifications").getAsString();
             }
             String str_AboutMe="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"about_me"))
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "about_me"))
             {
                  str_AboutMe = providerdetObj.get("about_me").getAsString();
             }
             String str_ProfileImg="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"provider_image_url")) {
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "provider_image_url")) {
                  str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
             }
             String str_Availability_Type="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"availability_type")) {
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
                  str_Availability_Type = providerdetObj.get("availability_type").getAsString();
             }
             String str_education="";
-            if(Utils.checkJSONResponseHasString(providerdetObj,"education")) {
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "education")) {
                 str_education = providerdetObj.get("education").getAsString();
             }
             if(str_Availability_Type.equals("Available now"))
@@ -391,7 +391,7 @@ public class MDLiveProviderDetails extends Activity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveProviderDetails.this);
+        MdliveUtils.closingActivityAnimation(MDLiveProviderDetails.this);
     }
 
     @Override

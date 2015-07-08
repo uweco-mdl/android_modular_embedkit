@@ -31,7 +31,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
@@ -109,7 +109,7 @@ public class MDLiveLocation extends Activity {
             public void afterTextChanged(Editable s) {
                 if(ZipcodeEditTxt.getText().toString().length()>=9){
                     if(!ZipcodeEditTxt.getText().toString().contains("-")){
-                        String formattedString=Utils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
+                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
                         ZipcodeEditTxt.setText(formattedString);
                     }
 
@@ -121,14 +121,14 @@ public class MDLiveLocation extends Activity {
         SavContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveLocation.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
                 if(ZipcodeEditTxt.getText().toString().length()!=0||StateTxt.getText().toString().length()!=0){
                     if(ZipcodeEditTxt.getText().length()!=0){
                         String getEditTextValue = ZipcodeEditTxt.getText().toString();
-                        if(Utils.validateZipCode(getEditTextValue)){
+                        if(MdliveUtils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
                         }else{
-                            Utils.alert(pDialog,MDLiveLocation.this,"Please enter a valid Zip Code");
+                            MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a valid Zip Code");
                         }
                     }else{
                         SaveZipCodeCity(selectedCity);
@@ -136,7 +136,7 @@ public class MDLiveLocation extends Activity {
                     }
 
                 }else{
-                    Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
+                    MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a Zipcode or select a State");
                 }
 
 
@@ -155,7 +155,7 @@ public class MDLiveLocation extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLiveLocation.this);
+                MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
                 finish();
             }
         });
@@ -286,7 +286,7 @@ public class MDLiveLocation extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveLocation.this);
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveLocation.this);
                     }
                 }
             }
@@ -343,7 +343,7 @@ public class MDLiveLocation extends Activity {
                                     }
                                 }
                                 if(!isCityFound){
-                                    Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+                                    MdliveUtils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
                                 }
 
 
@@ -358,7 +358,7 @@ public class MDLiveLocation extends Activity {
                 }
             }else{
 
-          Utils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+          MdliveUtils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
 
             }
 
@@ -406,7 +406,7 @@ public class MDLiveLocation extends Activity {
                             else{
 //                                pDialog.dismiss();
                                 progressBar.setVisibility(View.GONE);
-                                Utils.showGPSSettingsAlert(MDLiveLocation.this);
+                                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);
                             }
 
                         }
@@ -415,7 +415,7 @@ public class MDLiveLocation extends Activity {
                 }
             });
         } else {
-            Utils.showGPSSettingsAlert(MDLiveLocation.this);
+            MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);
 //            Toast.makeText(getApplicationContext(), "Please enable location service...", Toast.LENGTH_SHORT).show();
         }
     }
@@ -487,7 +487,7 @@ public class MDLiveLocation extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(MDLiveLocation.this);
+        MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

@@ -29,7 +29,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
@@ -87,7 +87,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         existingConditions = new ArrayList<HashMap<String, String>>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
 
-        pDialog = Utils.getProgressDialog("Loading...", this);
+        pDialog = MdliveUtils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
         findViewById(R.id.doneTxt).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,13 +153,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         listToSet.addAll(tmpExistingCond);
 
         if(emptyFieldCount > 1){
-            Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
+            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
         }
         else{
             if(((newConditions.size()+existingConditions.size()) == listToSet.size())){
                 saveNewConditionsOrAllergies();
             }else{
-                Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
+                MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
             }
         }
     }
@@ -431,8 +431,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
      * @param conditionDetails :: The optional condition Details(Name and Id)
      */
     protected void createSingleConditionAllergiesViews(int position, EditText conditonEt, ImageView deleteView, HashMap<String, String> conditionDetails) {
-        conditonEt.setId(Utils.generateViewId());
-        deleteView.setId(Utils.generateViewId());
+        conditonEt.setId(MdliveUtils.generateViewId());
+        deleteView.setId(MdliveUtils.generateViewId());
         String hint = (type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_medications_hint) : getResources().getString(R.string.add_medications_hint));
 //        String hint = (type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_with_eg_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_with_eg_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_meidations_with_eg_hint) : getResources().getString(R.string.add_medications_hint));
         conditonEt.setHint(hint);
@@ -524,8 +524,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
                 message = "Page Not Found";
             }
-            Utils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "Error",
-                    "Status Code : " + error.networkResponse.statusCode +"\n"+
+            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "Error",
+                    "Status Code : " + error.networkResponse.statusCode + "\n" +
                             "Server Response : " + message);
         }
 

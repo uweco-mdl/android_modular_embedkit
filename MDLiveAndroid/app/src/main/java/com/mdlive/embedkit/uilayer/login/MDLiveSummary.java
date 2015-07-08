@@ -19,7 +19,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
@@ -41,7 +41,7 @@ public class MDLiveSummary extends Activity {
         SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         txtDocName.setText(docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,""));
         payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
-        pDialog = Utils.getProgressDialog("Please wait", this);
+        pDialog = MdliveUtils.getProgressDialog("Please wait", this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
@@ -62,7 +62,7 @@ public class MDLiveSummary extends Activity {
      */
 
     public void clearPref(){
-        Utils.clearSharedPrefValues(this);
+        MdliveUtils.clearSharedPrefValues(this);
     }
 
     /**
@@ -93,8 +93,8 @@ public class MDLiveSummary extends Activity {
                     e.printStackTrace();
             }
                 Intent intent = new Intent();
-                ComponentName cn = new ComponentName(Utils.ssoInstance.getparentPackagename(),
-                        Utils.ssoInstance.getparentClassname());
+                ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                        MdliveUtils.ssoInstance.getparentClassname());
                 intent.setComponent(cn);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -116,7 +116,7 @@ public class MDLiveSummary extends Activity {
                             }
                         };
                         // Show timeout error message
-                        Utils.connectionTimeoutError(null, MDLiveSummary.this);
+                        MdliveUtils.connectionTimeoutError(null, MDLiveSummary.this);
                     }
                 } else {
                     Intent i = new Intent(MDLiveSummary.this, MDLiveLogin.class);
@@ -135,7 +135,7 @@ public class MDLiveSummary extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.closingActivityAnimation(this);
+        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.
