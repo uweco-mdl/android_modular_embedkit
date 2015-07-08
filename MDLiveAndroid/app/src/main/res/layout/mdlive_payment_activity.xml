@@ -55,7 +55,6 @@
                     android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation."
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-<!--
                 <WebView
                     android:id="@+id/HostedPCI"
                     android:layout_width="match_parent"
@@ -63,7 +62,7 @@
                     android:layout_marginBottom="20px"
                     android:layout_marginLeft="15px"
                     android:layout_marginRight="15px"
-                    android:layout_marginTop="20px" />-->
+                    android:layout_marginTop="20px" />
 
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
