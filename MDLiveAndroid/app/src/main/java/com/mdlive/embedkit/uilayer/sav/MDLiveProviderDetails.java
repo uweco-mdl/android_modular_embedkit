@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -41,7 +40,6 @@ public class MDLiveProviderDetails extends Activity{
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private Button tapSeetheDoctorTxt;
-    private RelativeLayout progressBar;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
 
@@ -49,7 +47,7 @@ public class MDLiveProviderDetails extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
-//        pDialog = Utils.getProgressDialog("Please wait...", this);
+        pDialog = Utils.getProgressDialog("Please wait...", this);
         getPreferenceDetails();
         Initialization();
         //Service call Method
@@ -87,7 +85,6 @@ public class MDLiveProviderDetails extends Activity{
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
         withpatientTxt = (TextView)findViewById(R.id.withpatientTxt);
@@ -123,8 +120,7 @@ public class MDLiveProviderDetails extends Activity{
      * message to user or Get started screen will shown to user).
      */
     private void loadProviderDetails() {
-//        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        pDialog.show();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -138,8 +134,7 @@ public class MDLiveProviderDetails extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-//                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                pDialog.dismiss();
                 tapSeetheDoctorTxt.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
                 tapSeetheDoctorTxt.setVisibility(View.GONE);
@@ -171,8 +166,7 @@ public class MDLiveProviderDetails extends Activity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-//            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            pDialog.dismiss();
             //Fetch Data From the Services
             Log.e("details-->",response.toString());
             JsonParser parser = new JsonParser();
@@ -207,24 +201,26 @@ public class MDLiveProviderDetails extends Activity{
             }
             if(str_Availability_Type.equals("Available now"))
             {
-                withpatientTxt.setText(str_Availability_Type);
-                withpatientTxt.setTextColor(Color.parseColor("#31B404"));
+//                withpatientTxt.setText(str_Availability_Type);
+//                withpatientTxt.setTextColor(Color.parseColor("#31B404"));
+                withpatientTxt.setVisibility(View.GONE);
 
             }
             else if(str_Availability_Type.equals("With Patient"))
             {
                 withpatientTxt.setText(str_Availability_Type);
-                withpatientTxt.setTextColor(Color.parseColor("#FF4000"));
+                withpatientTxt.setTextColor(Color.parseColor("#F18032"));
                 tapSeetheDoctorTxt.setClickable(false);
                 tapSeetheDoctorTxt.setBackgroundColor(getResources().getColor(R.color.search_bgd));
                 tapSeetheDoctorTxt.setText("Currently with patient");
             }
             else if(str_Availability_Type.equals("not available"))
             {
-                withpatientTxt.setVisibility(View.GONE);
+                if(!str_Availability_Type.equals("With Patient"))
+                    withpatientTxt.setVisibility(View.GONE);
             }
 
-            Log.e("str_Availability_Type--->",str_Availability_Type);
+            Log.e("str_Availability_type",str_Availability_Type);
 
             ProfileImg.setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
             ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
@@ -238,7 +234,8 @@ public class MDLiveProviderDetails extends Activity{
 
             }else
             {
-                tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
+                if(!str_Availability_Type.equals("With Patient"))
+                   tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
             }
             Log.e("About me",str_AboutMe.length()+"");
            if(str_AboutMe.length()!=0)
@@ -246,7 +243,7 @@ public class MDLiveProviderDetails extends Activity{
                aboutme_txt.setText(str_AboutMe);
            }else
            {
-              Log.e("str_AboutMe-------------->",str_AboutMe);
+              Log.e("str_AboutMe-->",str_AboutMe);
 
                ((LinearLayout)findViewById(R.id.aboutmeLl)).setVisibility(View.GONE);
            }
