@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
     android:background="@color/mdliveBackgroundColor"
     >
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
-        android:elevation="20dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
@@ -54,7 +52,6 @@
                 android:layout_marginStart="5dp"
                 android:gravity="left|center"
                 android:textColor="#35393d"
-                android:textSize="18sp"
                 />
            <LinearLayout
               style="@style/LinearLayoutStyle"
@@ -67,7 +64,6 @@
                android:textColor="#878f95"
                android:gravity="left|center"
                android:layout_width="wrap_content"
-                android:textSize="18sp"
                 />
            <TextView
                style="@style/ProviderDetailsDoctorTxtStyle"
@@ -75,7 +71,6 @@
                android:id="@+id/withpatientTxt"
                android:textColor="#31B404"
                android:gravity="end|right|center"
-               android:textSize="18sp"
                />
            </LinearLayout>
            <TextView
@@ -84,16 +79,15 @@
                android:textColor="#878f95"
                android:gravity="left|center"
                android:layout_marginStart="5dp"
-               android:textSize="18sp"
                />
         </LinearLayout>
 
         <Button
             android:id="@+id/tapBtn"
             style="@style/ContinueButtonStyle"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:text=""
-            android:textStyle="bold"
+
             android:singleLine="true"
             android:ellipsize="end"
             android:textAllCaps="false" />
@@ -109,15 +103,13 @@
                 android:ellipsize="end"
                 android:layout_marginStart="15dp"
                 android:textColor="#35393d"
-                android:textSize="20sp"
                 android:textStyle="bold"
                 android:text="Qualifications"
                 />
-
             <LinearLayout
                 style="@style/LinearLayoutStyle"
                 android:id="@+id/specialitiesLl"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="5dp">
                 <include layout="@layout/mdlive_provider_specialities"/>
             </LinearLayout>
@@ -131,15 +123,15 @@
        <LinearLayout
         style="@style/LinearLayoutStyle"
                     android:id="@+id/educationLl"
-           android:layout_marginStart="5dp"
+           android:layout_marginLeft="5dp"
            android:layout_marginTop="10dp">
                     <include layout="@layout/mdlive_provider_education"/>
        </LinearLayout>
 
        <LinearLayout
          style="@style/LinearLayoutStyle"
-         android:id="@+id/languagesLl"
-        android:layout_marginLeft="5dp"
+                    android:id="@+id/languagesLl"
+                    android:layout_marginLeft="5dp"
            android:layout_marginTop="10dp">
                     <include layout="@layout/mdlive_provider_languages"/>
        </LinearLayout>
@@ -175,7 +167,3 @@
         android:visibility="gone"
         android:textAllCaps="false" />
     </LinearLayout>
-    <include
-        layout="@layout/custom_progress_dialog"
-        />
-    </merge>
