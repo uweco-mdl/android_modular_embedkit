@@ -251,17 +251,17 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 }else{
                     enableSaveButton();
                 }*/
+                if (s.length() > 0 && s.subSequence(0, 1).toString().equalsIgnoreCase(" ")) {
+                    edtLastShot.setText("");
+                }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-              /*  if(edtLastShot.getText().toString().startsWith(" ")){
-                    Toast.makeText(getApplicationContext(),"Positive",Toast.LENGTH_SHORT).show();
-                }*/
+            public void afterTextChanged(Editable s){
                 enableSaveButton();
-                String text = s.toString();
-                if (text.length() != 0 && !text.startsWith(" ")) {
-                    updateExplanationParams("Last shot", s.toString());
+                String text = s.toString().trim();
+                if (text.length() != 0) {
+                    updateExplanationParams("Last shot", text);
                 } else {
                     enableSaveButton();
                 }
@@ -320,7 +320,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                     //If user clicks no update the post params.
                     lasShotLabel.setVisibility(View.VISIBLE);
                     edtLastShot.setVisibility(View.VISIBLE);
-                    updateExplanationParams("Last shot",edtLastShot.getText().toString());
+                    updateExplanationParams("Last shot",edtLastShot.getText().toString().trim());
                     enableSaveButton();
                 }
             }
@@ -682,7 +682,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         }
         if(lasShotLabel.getVisibility()==View.VISIBLE){
             Log.e("lasShotLabel","Coming");
-            if(edtLastShot.getText().toString().length()==0||edtLastShot.getText().toString().startsWith(" ")){
+            if(edtLastShot.getText().toString().trim().length()==0){
                 return false;
             }
 
