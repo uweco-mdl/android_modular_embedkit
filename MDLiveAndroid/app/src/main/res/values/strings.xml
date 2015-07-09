@@ -125,11 +125,15 @@
     <string name="phone_txt">Phone</string>
     <string name="distance_txt">Distance</string>
     <string name="getdir_text">Get directions</string>
-    <string name="use_pharm_txt">Use this pharmacy</string>
+    <string name="choose_phr_txt">Choose Pharmacy</string>
+    <string name="use_pharm_txt">Use This Pharmacy</string>
+    <string name="choose_pharm_txt">Choose Different Pharmacy</string>
     <string name="pharm_near_txt">PHARMACIES NEAR</string>
     <string name="select_pharmcity">Select Pharmacy City</string>
     <string name="title_activity_maps">Map</string>
+    <string name="previous_pharm_txt">Previous Pharmacy</string>
 
+    <string name="default_pharm_text">Please select a pharmacy in the event your doctor prescribes a medication.</string>
 
     <!-- My Health -->
     <string name="my_health_txt">Medical History</string>
@@ -337,5 +341,6 @@ WEST VIRGINIA</item>
 
     <!-- Used in SSO Screen -->
     <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
+    <string name="home_dialog_text">Your progress will not be saved if you leave.</string>
 
 </resources>
