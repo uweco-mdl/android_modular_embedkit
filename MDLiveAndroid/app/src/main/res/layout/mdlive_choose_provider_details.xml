@@ -34,7 +34,7 @@
 
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
-                    android:layout_height="280dp"
+                    android:layout_height="250dp"
                     android:orientation="vertical"
 
                     >
@@ -44,7 +44,7 @@
                         style="@style/DoctorOnCallImgViewStyle"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="10dp"
                         android:src="@drawable/doctor_icon"
                         android:visibility="visible" />
 
@@ -88,7 +88,7 @@
                 <Button
                     android:id="@+id/tapBtn"
                     style="@style/ContinueButtonStyle"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="1dp"
                     android:ellipsize="end"
 
                     android:singleLine="true"

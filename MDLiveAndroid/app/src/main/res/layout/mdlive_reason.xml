@@ -64,7 +64,7 @@
            android:layout_height="40dp"
             android:layout_width="match_parent"
             android:layout_margin="10dp"
-            android:background="@color/white"
+            android:background="@drawable/grey_rounded_bg"
             android:orientation="horizontal">
 
             <ImageView
