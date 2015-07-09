@@ -39,7 +39,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     private WaitingRoomService waitingService;
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
     private String userName=null,password=null;
-    private boolean isReturning;
+    private boolean isReturning,isStartedSummary;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +77,12 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 Log.e("Response Provider Error", error.toString());
                 MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
 
-                if(isReturning){
+                if(isReturning && !isStartedSummary){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                    isStartedSummary = true;
                     finish();
                 }
             }
@@ -121,11 +122,12 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                         MdliveUtils.connectionTimeoutError(null, MDLiveWaitingRoom.this);
                     }
                 }
-                if(isReturning){
+                if(isReturning && !isStartedSummary){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                    isStartedSummary = true;
                     finish();
                 }
             }
@@ -151,11 +153,12 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
                 getVSEECredentials();
-            }else if(isReturning && !resObj.getString("provider_status").equals("true")) {
+            }else if(isReturning && !resObj.getString("provider_status").equals("true") && !isStartedSummary) {
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
                 MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                isStartedSummary = true;
                 finish();
             }else {
                 getProviderStatus();
@@ -191,8 +194,11 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                         Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
                         i.putExtra("username",userName);
                         i.putExtra("password",password);
-                        startActivity(i);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(i);
+                        overridePendingTransition(0, 0);
                     }
                 }, 5000);
             }
@@ -250,6 +256,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     protected void onResume() {
         super.onResume();
         isReturning = getIntent().getBooleanExtra("isReturning",false);
+        isStartedSummary = false;
         if(isReturning){
             getProviderStatus();
         }
