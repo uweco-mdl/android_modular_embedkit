@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -114,7 +115,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange.class);
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
                 startActivityForResult(i, 4000);
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
@@ -398,7 +399,17 @@ public class MDLivePharmacyResult extends FragmentActivity {
             e.printStackTrace();
         }
         if(responObj.get("total_pages").isJsonNull()){
-            MdliveUtils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
+//            MdliveUtils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
+            MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
+                    new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                            startActivityForResult(i, 4000);
+                            MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+                        }
+                    });
         }
         if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
             pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {

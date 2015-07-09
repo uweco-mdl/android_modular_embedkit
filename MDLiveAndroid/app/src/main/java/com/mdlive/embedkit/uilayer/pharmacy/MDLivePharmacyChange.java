@@ -150,6 +150,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                     startActivity(sendingIntent);
                     MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                     finish();
+                    MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
                 }else{
                     MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
                 }
@@ -166,6 +167,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                 finish();
+                MdliveUtils.closingActivityAnimation(MDLivePharmacyChange.this);
             }
         });
 
@@ -272,6 +274,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                                 addExtrasForLocationInIntent(location);
                                 startActivity(sendingIntent);
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                                MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
                             }

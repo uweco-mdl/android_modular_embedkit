@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -150,6 +151,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                MdliveUtils.closingActivityAnimation(MDLivePediatric.this);
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
