@@ -111,7 +111,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             super.onPostExecute(aVoid);
             //pDialog.dismiss();
             progressBar.setVisibility(View.GONE);
-            finish();
+            checkMedicalAggregation();
         }
 
     @Override
