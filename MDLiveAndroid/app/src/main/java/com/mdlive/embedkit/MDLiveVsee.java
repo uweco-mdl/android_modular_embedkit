@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -38,6 +40,17 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_vsee);
+
+        /**
+         * This function will handles home button click listener
+         */
+        ImageView homeImage= (ImageView) findViewById(R.id.homeImg);
+        homeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MdliveUtils.movetohome(MDLiveVsee.this);
+            }
+        });
 
         CONSULTED = false;
 

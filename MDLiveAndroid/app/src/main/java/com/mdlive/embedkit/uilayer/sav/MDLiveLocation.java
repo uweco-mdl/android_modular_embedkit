@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -222,6 +223,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
+                Log.e("Response",response.toString());
+                progressBar.setVisibility(View.GONE);
                 CurrentLocationResponse(response);
             }
         };
@@ -230,19 +233,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
+                Log.e("Response",error.toString());
                 progressBar.setVisibility(View.GONE);
-                //Location Alert have to handle
-               /* if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLiveLocation.this);
-                    }
-                }*/
+                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
+
             }
         };
 
@@ -377,7 +371,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         try {
 //            pDialog.dismiss();
             progressBar.setVisibility(View.GONE);
-
             //Fetch Data From the Services
             selectedCity = response.getString("state");
 //            SaveZipCodeCity(response.getString("state"));
@@ -392,7 +385,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
      */
     public void getLocationCoordinates() {
         LocationCooridnates locationService = new LocationCooridnates();
-
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
             locationService.getLocation(this, new LocationCooridnates.LocationResult() {
                 @Override
@@ -406,7 +398,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                             else{
 //                                pDialog.dismiss();
                                 progressBar.setVisibility(View.GONE);
-                                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);
+                                Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
+                                /*MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);*/
                             }
 
                         }
@@ -415,7 +408,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 }
             });
         } else {
-            MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);
+            progressBar.setVisibility(View.GONE);
+            MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,progressBar);
 //            Toast.makeText(getApplicationContext(), "Please enable location service...", Toast.LENGTH_SHORT).show();
         }
     }

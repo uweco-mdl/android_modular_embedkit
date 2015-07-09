@@ -283,7 +283,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 }
             });
         } else {
-            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this);
+            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this,progressBar);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
