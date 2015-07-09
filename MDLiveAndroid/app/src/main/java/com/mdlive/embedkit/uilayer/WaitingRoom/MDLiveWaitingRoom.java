@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.WaitingRoom;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -34,14 +34,14 @@ import java.util.HashMap;
  * to this swcreen by Vsee, if the provider status is false, MDLiveSummary activity  is called.
  *
  */
-public class MDLiveWaitingRoom extends Activity{
+public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
     private WaitingRoomService waitingService;
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
     private String userName=null,password=null;
     private boolean isReturning;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
         isReturning = getIntent().getBooleanExtra("isReturning",false);
@@ -264,7 +264,7 @@ public class MDLiveWaitingRoom extends Activity{
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

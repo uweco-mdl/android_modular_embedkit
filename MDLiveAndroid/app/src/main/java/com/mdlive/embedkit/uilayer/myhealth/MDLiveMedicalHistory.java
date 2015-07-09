@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,6 +37,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
@@ -89,7 +89,7 @@ import javax.net.ssl.HttpsURLConnection;
  * For female Pediatric users has two more questions to fill up.
  */
 
-public class MDLiveMedicalHistory extends Activity {
+public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
 
     public static ProgressDialog pDialog;
@@ -113,7 +113,7 @@ public class MDLiveMedicalHistory extends Activity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_medical_history);
         btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
@@ -1627,7 +1627,7 @@ public class MDLiveMedicalHistory extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

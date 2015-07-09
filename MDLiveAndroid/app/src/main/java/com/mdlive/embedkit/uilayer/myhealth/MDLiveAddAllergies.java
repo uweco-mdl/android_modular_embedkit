@@ -41,7 +41,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     protected boolean isPerformingAutoSuggestion;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Allergy
         type = TYPE_CONSTANT.ALLERGY;
         super.onCreate(savedInstanceState);
@@ -257,7 +257,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 //        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

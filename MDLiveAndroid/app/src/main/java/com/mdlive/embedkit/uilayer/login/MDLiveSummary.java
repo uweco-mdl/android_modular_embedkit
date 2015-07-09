@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,9 +12,9 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -24,12 +22,12 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 
-public class MDLiveSummary extends Activity {
+public class MDLiveSummary extends MDLiveBaseActivity {
 
     private ProgressDialog pDialog;
     private RelativeLayout progressBar;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
 
@@ -105,7 +103,13 @@ public class MDLiveSummary extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
             }
-                redirectToParent();
+                Intent intent = new Intent();
+                ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                        MdliveUtils.ssoInstance.getparentClassname());
+                intent.setComponent(cn);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         };
 
@@ -134,7 +138,7 @@ public class MDLiveSummary extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 //        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

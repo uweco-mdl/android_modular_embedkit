@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 /**
  * Created by sudha_s on 5/18/2015.
  */
-public class MDLiveReasonForVisit extends Activity {
+public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     private ListView listView;
     private ProgressDialog pDialog;
     private ProgressBar progressBar;
@@ -50,7 +50,7 @@ public class MDLiveReasonForVisit extends Activity {
     ReasonForVisitAdapter baseadapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_reason);
         NoResults = (TextView) findViewById(R.id.noresults);
@@ -274,7 +274,7 @@ public class MDLiveReasonForVisit extends Activity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

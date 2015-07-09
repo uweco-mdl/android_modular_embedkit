@@ -45,4 +45,7 @@
     <drawable name="pressed_gray">#0c000000</drawable>
 
     <drawable name="selected_gray">#2c000000</drawable>
+
+    <!-- STATUS BAR COLOR -->
+    <color name="status_bar_color">#224D70</color>
 </resources>

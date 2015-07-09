@@ -5,7 +5,6 @@
 
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
-
         android:orientation="horizontal">
 
         <ImageView

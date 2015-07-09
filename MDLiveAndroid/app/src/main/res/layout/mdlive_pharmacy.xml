@@ -6,7 +6,6 @@
         >
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutStyle"
-            android:elevation="20dp"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"

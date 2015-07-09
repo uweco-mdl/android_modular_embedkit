@@ -6,7 +6,6 @@
         android:orientation="vertical"
         style="@style/LinearLayoutStyle"
         android:weightSum="1">
-
             <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
                 style="@style/PediatricheaderTxtViewStyle"
                 />

@@ -90,7 +90,6 @@
                     style="@style/ContinueButtonStyle"
                     android:layout_marginTop="1dp"
                     android:ellipsize="end"
-
                     android:singleLine="true"
                     android:text=""
                     android:textAllCaps="false" />
@@ -176,7 +175,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="20dp" />
             </LinearLayout>
         </ScrollView>
 

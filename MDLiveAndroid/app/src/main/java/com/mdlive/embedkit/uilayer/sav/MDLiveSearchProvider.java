@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -26,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -49,7 +49,7 @@ import static java.util.Calendar.MONTH;
 /**
  * class : MDLiveSearchProvider - This class is used to Filter the provider list.
  */
-public class MDLiveSearchProvider extends Activity {
+public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private  TextView AppointmentTxtView,LocationTxtView, ProviderTypeTxtView,genderTxtView,edtSearch;
     private int month,day,year;
@@ -71,7 +71,7 @@ public class MDLiveSearchProvider extends Activity {
     public String filter_SavedLocation,SavedLocation;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_search_provider);
 //        pDialog = Utils.getProgressDialog("Please wait...", this);
@@ -690,7 +690,7 @@ public class MDLiveSearchProvider extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

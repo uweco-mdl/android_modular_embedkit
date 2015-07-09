@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -25,7 +26,7 @@ import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 
 import org.json.JSONObject;
 
-public class MDLivePendingVisits extends Activity {
+public class MDLivePendingVisits extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private Button resumeBtn;
     private TextView txtPatientName,txtReason,txtDoctorName,txtAddress;
@@ -33,7 +34,7 @@ public class MDLivePendingVisits extends Activity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pending_visits);
 //        pDialog= Utils.getProgressDialog("Please wait...", MDLivePendingVisits.this);
@@ -170,7 +171,7 @@ public class MDLivePendingVisits extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         ////ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

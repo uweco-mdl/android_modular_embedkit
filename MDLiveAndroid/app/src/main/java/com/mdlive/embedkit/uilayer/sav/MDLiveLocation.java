@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -29,6 +28,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * Created by sudha_s on 5/14/2015.
  */
-public class MDLiveLocation extends Activity {
+public class MDLiveLocation extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private EditText ZipcodeEditTxt;
     private TextView CurrentLocationTxt,StateTxt;
@@ -60,7 +60,7 @@ public class MDLiveLocation extends Activity {
     boolean isCityFound=false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_location);
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
@@ -493,7 +493,7 @@ public class MDLiveLocation extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

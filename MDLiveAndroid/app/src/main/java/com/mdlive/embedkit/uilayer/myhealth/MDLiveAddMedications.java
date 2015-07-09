@@ -40,7 +40,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     protected boolean isPerformingAutoSuggestion;
     private static int count = 0;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Medications
         type = MDLiveCommonConditionsMedicationsActivity.TYPE_CONSTANT.MEDICATION;
         super.onCreate(savedInstanceState);
@@ -284,7 +284,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

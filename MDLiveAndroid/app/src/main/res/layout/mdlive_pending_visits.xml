@@ -6,7 +6,6 @@
 
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
-        android:elevation="21dp"
         android:orientation="horizontal">
 
 
@@ -170,6 +169,10 @@
         android:textAllCaps="false"
         android:text="Resume Consultation"
         />
+
+    <include
+        style="@style/Footer_Style"
+        layout="@layout/mdlive_footer" />
 
 </LinearLayout>
 <include layout="@layout/custom_progress_dialog" />
