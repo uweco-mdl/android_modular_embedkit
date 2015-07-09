@@ -210,9 +210,9 @@ public class MDLiveGetStarted extends FragmentActivity{
                                 };
 
                                 MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
-                                                "1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
-                                        positiveOnClickListener, negativeOnClickListener);
-                                /*new AlertDialog.Builder(
+                                                "1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                                        negativeOnClickListener,  positiveOnClickListener);
+                                                                /*new AlertDialog.Builder(
                                         new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
                             } else {
@@ -232,7 +232,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                                     editor.commit();
                                     if(phonrNmberEditTxt.getText().toString().length()<10)
                                     {
-                                        MdliveUtils.alert(pDialog, MDLiveGetStarted.this, "Please enter the Valid Phone number");
+                                        MdliveUtils.alert(pDialog, MDLiveGetStarted.this, "Please enter a valid Phone number");
 
                                     }else
                                     {
@@ -325,8 +325,8 @@ public class MDLiveGetStarted extends FragmentActivity{
                                         dialogInterface.dismiss();
                                     }
                                 };
-                                MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_CALLNOW, StringConstants.ALERT_DISMISS,
-                                        positiveOnClickListener, negativeOnClickListener);
+                                MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                                        negativeOnClickListener,positiveOnClickListener );
                             }else
                             {
                                 Log.d("Dep Name", dependentName);

@@ -61,7 +61,7 @@
 
                     <Spinner
                         android:id="@+id/patientSpinner"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="8dp"
                         style="@style/SpinnerButtonStyle"/>
                     <View style="@style/ViewStyle"
                         android:layout_marginTop="7dp"
@@ -171,7 +171,7 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/ContinueButtonStyle"
-                    android:text="NEXT"
+                    android:text="Next"
                     />
             </LinearLayout>
         </ScrollView>
