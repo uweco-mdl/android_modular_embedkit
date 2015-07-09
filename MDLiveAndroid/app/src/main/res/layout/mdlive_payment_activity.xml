@@ -193,7 +193,7 @@
                         <Button
                             android:id="@+id/paynow"
                             style="@style/ContinueButtonStyle"
-                            android:text="Next"
+                            android:text="@string/next_btn"
                              />
                     </RelativeLayout>
                 </LinearLayout>
