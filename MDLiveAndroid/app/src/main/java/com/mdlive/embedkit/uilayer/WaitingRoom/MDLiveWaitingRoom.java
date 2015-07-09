@@ -17,7 +17,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -244,7 +243,7 @@ public class MDLiveWaitingRoom extends Activity{
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveWaitingRoom.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveWaitingRoom.this);
     }
 
     @Override

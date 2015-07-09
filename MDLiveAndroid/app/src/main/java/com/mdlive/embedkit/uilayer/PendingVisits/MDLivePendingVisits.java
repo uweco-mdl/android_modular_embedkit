@@ -17,7 +17,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -44,7 +43,7 @@ public class MDLivePendingVisits extends Activity {
         txtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MdliveUtils.movetohome(MDLivePendingVisits.this, null);
+                MdliveUtils.movetohome(MDLivePendingVisits.this);
             }
         });
 
@@ -153,7 +152,7 @@ public class MDLivePendingVisits extends Activity {
      * @param v-User clicked view from the screen
      */
     public void cancelVisit(View v){
-        MdliveUtils.movetohome(MDLivePendingVisits.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePendingVisits.this);
     }
 
 

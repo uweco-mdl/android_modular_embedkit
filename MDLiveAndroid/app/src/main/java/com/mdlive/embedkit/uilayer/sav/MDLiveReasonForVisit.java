@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
@@ -265,7 +264,7 @@ public class MDLiveReasonForVisit extends Activity {
     public void movetohome()
     {
 
-        MdliveUtils.movetohome(MDLiveReasonForVisit.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveReasonForVisit.this);
     }
 
     @Override

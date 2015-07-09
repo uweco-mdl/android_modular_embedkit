@@ -41,12 +41,12 @@ public class SSOActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_sso);
         MdliveUtils.clearSharedPrefValues(this);
-        MDLiveConfig.setData();
 
         mProgressDialog = MdliveUtils.getProgressDialog("Please Wait.....", this);
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-
-        makeSSOCall();
+        SSOUser ssoUser = getUser();
+        MDLiveConfig.setData(ssoUser.getCurrentEnvironment());
+        makeSSOCall(ssoUser);
     }
 
     @Override
@@ -76,9 +76,8 @@ public class SSOActivity extends Activity {
      *
      * After getting the uniqueid save it to shared preference.
      */
-    private void makeSSOCall() {
-        final SSOUser user = getUser();
-        MdliveUtils.ssoInstance = getUser();
+    private void makeSSOCall(final SSOUser user) {
+        MdliveUtils.ssoInstance = user;
         if (user == null) {
             MdliveUtils.showDialog(this, "Error", getString(R.string.user_details_missing), new DialogInterface.OnClickListener() {
                 @Override

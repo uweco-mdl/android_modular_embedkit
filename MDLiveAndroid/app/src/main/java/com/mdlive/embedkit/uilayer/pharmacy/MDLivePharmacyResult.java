@@ -27,7 +27,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -482,7 +481,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePharmacyResult.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePharmacyResult.this);
     }
 
     /**

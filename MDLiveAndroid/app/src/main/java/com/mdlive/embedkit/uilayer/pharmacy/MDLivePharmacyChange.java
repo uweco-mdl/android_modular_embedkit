@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -432,7 +431,7 @@ public class MDLivePharmacyChange extends Activity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePharmacyChange.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePharmacyChange.this);
     }
 
 

@@ -32,7 +32,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -137,7 +136,7 @@ public class MDLivePayment extends Activity {
         findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 MdliveUtils.movetohome(MDLivePayment.this, MDLiveLogin.class);
+                 MdliveUtils.movetohome(MDLivePayment.this);
             }
         });
     }

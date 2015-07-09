@@ -26,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -676,7 +675,7 @@ public class MDLiveSearchProvider extends Activity {
 
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveSearchProvider.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveSearchProvider.this);
     }
 
     /**

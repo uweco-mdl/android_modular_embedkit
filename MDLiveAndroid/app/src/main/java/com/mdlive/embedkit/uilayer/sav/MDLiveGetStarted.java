@@ -32,7 +32,6 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -80,7 +79,6 @@ public class MDLiveGetStarted extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
-        MDLiveConfig.setData();
         setRemoteUserId();
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
@@ -878,7 +876,7 @@ public class MDLiveGetStarted extends FragmentActivity{
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveGetStarted.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveGetStarted.this);
     }
 
     /*

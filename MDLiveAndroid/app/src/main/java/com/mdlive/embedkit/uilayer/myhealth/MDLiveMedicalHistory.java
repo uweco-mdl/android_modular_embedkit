@@ -38,7 +38,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
@@ -1611,7 +1610,7 @@ public class MDLiveMedicalHistory extends Activity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveMedicalHistory.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveMedicalHistory.this);
     }
 
 

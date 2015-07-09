@@ -10,9 +10,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
  */
 public class MDLiveConfig {
 
-    private static final String BASE_URL ="https://stage-rtl.mdlive.com/services";
-//    private static final String BASE_URL ="https://dev-members.mdlive.com/services";
-//    private static final String BASE_URL ="https://pluto-members.mdtestsite.net/services";
     public static final String SSO_SERVICE = "/customer_logins/embed_kit";
     public static final String LOGIN_SERVICES = "/customer_logins";
     public static final String URL_USER_INFORMATION = "/customer/:id";
@@ -31,18 +28,6 @@ public class MDLiveConfig {
     private static final String DOWNLOAD_MEDICALREPORT = "/customer/records?images_only=true";
     private static final String DELETE_MEDICALREPORT = "/customer/delete_document";
     private static final String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
-
-    //Stage Secret Keys...
-    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
-
-    //dev Secret Keys..
-//    private static final String MDLIVE_SECRET_KEY = "843f117b0bf7368ed5d";
-//    private static final String MDLIVE_API_KEY = "a775f7e2ed1ce6cb313b";
-
-    //Pluto QA
-//    private static final String MDLIVE_API_KEY = "b74d0fb9a114904c009b";
-//    private static final String MDLIVE_SECRET_KEY ="89c8d3ea88501e8e62a";
 
     public static final String DEFAULT_USER_ID = "MobileUser";
 
@@ -84,29 +69,35 @@ public class MDLiveConfig {
     private static final String URL_RATINGS = "/ratings";
     private static final String URL_ZERO_INSURANCE = "/customer/check_eligibility";
 
-    /*Dev Services*/
-   /*
-    private static final String BASE_URL ="https://dev-sso.mdlive.com";
-    private static final String LOGIN_SERVICES = "/services/customer_logins";
-    public static final String URL_USER_INFORMATION = "/services/customer/:id";
-    public static final String URL_PROVIDER_TYPE = "/services/providers/provider_type_list";
-    public static final String URL_FAMILY_MEMBER = "/services/customer/family_members";
-    public static final String URL_CHOOSE_PROVIDER = "/services/providers/search_providers";
-    public static final String URL_REASON_FOR_VISIT = "/services/support/chief_complaint_reasons";
-    public static final String URL_LIFE_STYLE = "/services/life_style_conditions";
-    public static final String URL_ZIPCODE = "/services/providers/search_providers";
-    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
-    private static final String DEFAULT_USER_ID = "MobileUser";
-    private static final String URL_PHARMACIES_CURRENT = "/services/pharmacies/current";
-    public static final String URL_PHARMACIES_SEARCH_LOCATION = "/services/pharmacies/search";
-    */
+    public static void setData(int currentEnvironment){
+        switch (currentEnvironment){
+            case 1:
+                AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
+                AppSpecificConfig.API_KEY = "843f117b0bf7368ed5d";
+                AppSpecificConfig.SECRET_KEY = "a775f7e2ed1ce6cb313b";
+                break;
+            case 2:
+                AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
+                AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
+                AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
+                break;
+            case 3:
+                AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
+                AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
+                AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
+                break;
+            case 4:
+                AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com";
+                AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
+                AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
+                break;
+            default:
+                AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
+                AppSpecificConfig.API_KEY = "843f117b0bf7368ed5d";
+                AppSpecificConfig.SECRET_KEY = "a775f7e2ed1ce6cb313b";
+        }
 
-    public static void setData(){
-        AppSpecificConfig.BASE_URL = BASE_URL;
         AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;
-        AppSpecificConfig.API_KEY = MDLIVE_API_KEY;
-        AppSpecificConfig.SECRET_KEY = MDLIVE_SECRET_KEY;
         AppSpecificConfig.DEFAULT_USER_ID = DEFAULT_USER_ID;
         AppSpecificConfig.URL_USER_INFORMATION = URL_USER_INFORMATION;
         AppSpecificConfig.URL_FAMILY_MEMBER = URL_FAMILY_MEMBER;

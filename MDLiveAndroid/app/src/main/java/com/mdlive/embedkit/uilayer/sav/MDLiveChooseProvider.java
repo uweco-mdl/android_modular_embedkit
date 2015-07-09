@@ -25,7 +25,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.sav.adapters.ChooseProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -424,7 +423,7 @@ public class MDLiveChooseProvider extends Activity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveChooseProvider.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveChooseProvider.this);
     }
 
     /*

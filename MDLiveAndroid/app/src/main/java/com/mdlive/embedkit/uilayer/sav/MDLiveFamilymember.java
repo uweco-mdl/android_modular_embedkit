@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -441,7 +440,7 @@ public class MDLiveFamilymember extends Activity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveFamilymember.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLiveFamilymember.this);
     }
 
     /**

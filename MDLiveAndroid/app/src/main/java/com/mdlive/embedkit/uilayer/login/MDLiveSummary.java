@@ -74,7 +74,20 @@ public class MDLiveSummary extends Activity {
         ApplicationController.getInstance().getRequestQueue(MDLiveSummary.this).getCache().clear();
         ApplicationController.getInstance().getBitmapLruCache().evictAll();
     }
+    private void redirectToParent(){
+        try{
+            Intent intent = new Intent();
+            ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                    MdliveUtils.ssoInstance.getparentClassname());
+            intent.setComponent(cn);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }catch (Exception e){
+            Log.e("Execption Occured", e.getLocalizedMessage()+"");
+        }
 
+    }
     public void sendRating(){
 //        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
@@ -92,13 +105,7 @@ public class MDLiveSummary extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
             }
-                Intent intent = new Intent();
-                ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
-                        MdliveUtils.ssoInstance.getparentClassname());
-                intent.setComponent(cn);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                redirectToParent();
             }
         };
 
@@ -106,25 +113,11 @@ public class MDLiveSummary extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response Vsee", error.toString());
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        };
-                        // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(null, MDLiveSummary.this);
-                    }
-                } else {
-                    Intent i = new Intent(MDLiveSummary.this, MDLiveLogin.class);
-                    startActivity(i);
-                }
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
             }
         };
-        SummaryService summaryService = new SummaryService(this,pDialog );
+        SummaryService summaryService = new SummaryService(this, pDialog );
         summaryService.sendRating(rating,successListener,errorListner );
     }
 
