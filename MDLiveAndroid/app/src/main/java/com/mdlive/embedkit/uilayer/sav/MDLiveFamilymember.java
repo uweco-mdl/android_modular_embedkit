@@ -256,6 +256,9 @@ public class MDLiveFamilymember extends Activity {
         if(TextUtils.isEmpty(firstNameEditText.getText().toString())){
             isAllFieldsfilled = false;
         }
+        if(TextUtils.isEmpty(lastNameEditText.getText().toString())){
+            isAllFieldsfilled = false;
+        }
 //        if(TextUtils.isEmpty(dateTxt.getText())){
 //            isAllFieldsfilled = false;
 //        }

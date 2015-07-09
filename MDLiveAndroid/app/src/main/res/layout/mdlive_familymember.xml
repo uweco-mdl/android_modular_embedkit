@@ -62,6 +62,7 @@
                             android:background="@null"
                             android:hint="@string/first_name"
                             android:textColor="@color/black"
+                            android:textCursorDrawable="@null"
                             android:textSize="18sp" />
 
 
@@ -84,6 +85,7 @@
                             style="@style/GetStartedContentTxtStyle"
                             android:background="@null"
                             android:hint="@string/last_name"
+                            android:textCursorDrawable="@null"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
@@ -168,7 +170,6 @@
             <Button
                 android:id="@+id/addChildBtn"
                 style="@style/ContinueButtonStyle"
-                android:layout_marginTop="20dp"
                 android:text="Add Child" />
         </LinearLayout>
 
