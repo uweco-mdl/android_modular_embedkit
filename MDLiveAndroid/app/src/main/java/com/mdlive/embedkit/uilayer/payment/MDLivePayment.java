@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.payment;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -31,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -45,7 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class MDLivePayment extends Activity {
+public class MDLivePayment extends MDLiveBaseActivity {
 
     private EditText dateView, edtZipCode;
     private int year, month, day;
@@ -64,7 +64,7 @@ public class MDLivePayment extends Activity {
 
 
 
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
 
@@ -580,7 +580,7 @@ public class MDLivePayment extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

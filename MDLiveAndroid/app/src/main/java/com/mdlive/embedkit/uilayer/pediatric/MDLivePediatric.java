@@ -31,6 +31,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -47,7 +48,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class MDLivePediatric extends Activity {
+public class MDLivePediatric extends MDLiveBaseActivity {
     private RadioGroup birthComplicationGroup,newBornComplicationGroup,lastShotGroup,prematureGroup,jaundiceGroup
             ,breathingPbmGroup,infectionsGroup,colicGroup,feedingGroup,smokingGroup,childOutGroup,siblingsGroup;
     public EditText edtBirthComplications,edtLastShot,edtCurrentWeight;
@@ -67,7 +68,7 @@ public class MDLivePediatric extends Activity {
     Activity cxt;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cxt=this;
         initializeUI();
@@ -731,7 +732,7 @@ public class MDLivePediatric extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

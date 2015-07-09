@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -48,7 +48,7 @@ import java.util.List;
  * Once user chooses options from search, it will navigate to MDLBTPharmacy_ResultTab page.
  */
 
-public class MDLivePharmacyChange extends Activity {
+public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     private AutoCompleteTextView pharmacy_search_name;
     private EditText zipcodeText, cityText;
@@ -448,7 +448,7 @@ public class MDLivePharmacyChange extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

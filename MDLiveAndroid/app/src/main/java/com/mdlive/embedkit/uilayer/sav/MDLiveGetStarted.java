@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +29,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -51,7 +52,7 @@ import java.util.HashMap;
 
 import static java.util.Calendar.MONTH;
 
-public class MDLiveGetStarted extends FragmentActivity{
+public class MDLiveGetStarted extends MDLiveBaseActivity {
     private LinearLayout DobLl,LocationLl,patientInfo;
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
@@ -75,9 +76,10 @@ public class MDLiveGetStarted extends FragmentActivity{
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
+        MDLiveConfig.setData(1);
         setRemoteUserId();
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
@@ -901,7 +903,7 @@ public class MDLiveGetStarted extends FragmentActivity{
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 //        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

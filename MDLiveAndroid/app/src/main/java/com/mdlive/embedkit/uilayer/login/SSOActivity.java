@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,10 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -24,6 +25,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 import com.mdlive.unifiedmiddleware.services.SSOService;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,13 +33,13 @@ import org.json.JSONObject;
 /**
  * Created by dhiman_da on 7/2/2015.
  */
-public class SSOActivity extends Activity {
+public class SSOActivity extends MDLiveBaseActivity {
     private ProgressDialog mProgressDialog;
     private String mToken;
     private RelativeLayout progressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_sso);
         MdliveUtils.clearSharedPrefValues(this);

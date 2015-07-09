@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.sav.adapters.ChooseProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -48,7 +48,7 @@ import java.util.TimeZone;
 /**
  * Created by sudha_s on 5/12/2015.
  */
-public class MDLiveChooseProvider extends Activity {
+public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     private ListView listView;
     private ProgressDialog pDialog;
@@ -66,11 +66,11 @@ public class MDLiveChooseProvider extends Activity {
     private TextView loadingTxt;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider);
         ProviderListMap = new ArrayList<HashMap<String, String>>();
-//        pDialog = Utils.getProgressDialog("Please wait...", this);
+        pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
 //        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
         DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
         filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
@@ -118,7 +118,7 @@ public class MDLiveChooseProvider extends Activity {
                 @Override
                 public void onClick(View v) {
                     Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,1);
                     MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
 
                 }
@@ -450,7 +450,7 @@ public class MDLiveChooseProvider extends Activity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 //        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

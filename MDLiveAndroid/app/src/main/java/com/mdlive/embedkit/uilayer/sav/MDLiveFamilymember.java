@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -49,7 +49,7 @@ import static java.util.Calendar.MONTH;
 /**
  * This class handles the Add FamilyMember related functionalities implementation.
  */
-public class MDLiveFamilymember extends Activity {
+public class MDLiveFamilymember extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private SwitchCompat mySwitch;
     private Button addChildBtn;
@@ -67,7 +67,7 @@ public class MDLiveFamilymember extends Activity {
     private String userInfoJSONString;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_familymember);
 
@@ -456,7 +456,7 @@ public class MDLiveFamilymember extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }

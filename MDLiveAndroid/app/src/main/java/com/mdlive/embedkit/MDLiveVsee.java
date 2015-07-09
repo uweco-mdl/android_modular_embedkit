@@ -1,7 +1,6 @@
 package com.mdlive.embedkit;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
@@ -21,7 +21,7 @@ import com.vsee.kit.VSeeVideoManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MDLiveVsee extends Activity
+public class MDLiveVsee extends MDLiveBaseActivity
 {
     private boolean stopUpdatingStatus = false;
     private static boolean CONSULTED = false,
@@ -145,7 +145,7 @@ public class MDLiveVsee extends Activity
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
 
         try{
             VSeeVideoManager.instance().endVideoCalls();

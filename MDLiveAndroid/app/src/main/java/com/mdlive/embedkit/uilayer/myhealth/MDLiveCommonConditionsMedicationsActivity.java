@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -60,7 +60,7 @@ import javax.net.ssl.HttpsURLConnection;
  *
  */
 
-public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity {
+public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBaseActivity {
 
     public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
@@ -79,7 +79,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
     public static boolean IsThisPageEdited = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_add_medical_condition);
         conditionsList = new ArrayList<HashMap<String,String>>();
