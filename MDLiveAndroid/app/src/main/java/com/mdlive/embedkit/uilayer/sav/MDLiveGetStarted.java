@@ -30,7 +30,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -134,7 +133,7 @@ public class MDLiveGetStarted extends FragmentActivity{
         }
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "");
         Log.e("Getstarted page",longNameLocation);
         locationTxt.setText(longNameLocation);
     }
@@ -266,7 +265,7 @@ public class MDLiveGetStarted extends FragmentActivity{
                     startActivityForResult(LocationIntent, 2222);
                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+                    String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "");
                     SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
                     if(longLocation != null && longLocation.length() != 0)
                         locationTxt.setText(longLocation);

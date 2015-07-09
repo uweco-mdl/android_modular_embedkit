@@ -6,8 +6,6 @@
     <include layout="@layout/header" />-->
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
-        android:elevation="20dp"
-        android:layout_height="70dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"

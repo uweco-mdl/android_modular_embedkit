@@ -6,7 +6,6 @@
 
     <LinearLayout
         style="@style/wagHeaderLinearLayoutStyle"
-        android:elevation="21dp"
         android:orientation="horizontal">
 
 
