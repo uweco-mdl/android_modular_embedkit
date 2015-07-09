@@ -171,6 +171,10 @@
         android:text="Resume Consultation"
         />
 
+    <include
+        style="@style/Footer_Style"
+        layout="@layout/mdlive_footer" />
+
 </LinearLayout>
 <include layout="@layout/custom_progress_dialog" />
  </merge>

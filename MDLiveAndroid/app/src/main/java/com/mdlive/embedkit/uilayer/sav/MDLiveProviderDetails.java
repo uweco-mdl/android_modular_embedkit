@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -34,7 +34,7 @@ import org.json.JSONObject;
 /**
  * This class returns the Provider profile for the corresponding providers.
  */
-public class MDLiveProviderDetails extends Activity{
+public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private ProgressDialog pDialog;
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,withpatientTxt;
     private CircularNetworkImageView ProfileImg;
@@ -46,7 +46,7 @@ public class MDLiveProviderDetails extends Activity{
     private LinearLayout providerImageHolder,detailsLl;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
 //        pDialog = Utils.getProgressDialog("Please wait...", this);
@@ -395,7 +395,7 @@ public class MDLiveProviderDetails extends Activity{
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
