@@ -8,7 +8,6 @@
         style="@style/LinearLayoutStyle"
         android:orientation="vertical"
         android:background="@color/mdlivePrimaryBlueColor"
-        android:elevation="20dp"
        >
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutStyle"

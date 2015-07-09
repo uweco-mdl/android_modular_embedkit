@@ -7,8 +7,6 @@
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
-            android:layout_height="70dp"
-            android:elevation="20dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -522,7 +520,7 @@
                         android:id="@+id/takephotoTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="30dp"
                         android:gravity="center_vertical"
                         android:text="Take a photo"
                         android:textColor="@android:color/black"
@@ -548,10 +546,6 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/ContinueButtonStyle"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="15dp"
                     android:text="@string/next_btn" />
 
 

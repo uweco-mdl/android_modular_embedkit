@@ -14,7 +14,6 @@
 
          <RelativeLayout
              style="@style/wagHeaderLinearLayoutStyle"
-             android:elevation="20dp"
              android:orientation="horizontal">
 
 
