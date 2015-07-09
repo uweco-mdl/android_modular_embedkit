@@ -12,9 +12,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="@color/green"
         android:textStyle="bold"
-        android:text="Offer Code"
+        android:text="APPLY OFFER CODE"
 
         android:layout_gravity="center_vertical" />
     <LinearLayout
