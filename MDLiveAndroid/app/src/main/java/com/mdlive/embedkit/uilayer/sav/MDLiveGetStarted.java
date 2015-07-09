@@ -29,7 +29,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
@@ -79,7 +78,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
-        MDLiveConfig.setData(1);
         setRemoteUserId();
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
