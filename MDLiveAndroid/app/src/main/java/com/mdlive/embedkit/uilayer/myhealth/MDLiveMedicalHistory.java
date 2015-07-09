@@ -137,7 +137,7 @@ public class MDLiveMedicalHistory extends Activity {
 //        Utils.photoList.clear();
 
 
-        findViewById(R.id.editConditionsTxt).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.MyHealthConditionsLl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
@@ -146,7 +146,7 @@ public class MDLiveMedicalHistory extends Activity {
             }
         });
 
-        findViewById(R.id.editMedicationsTxt).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.MedicationsLl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
@@ -155,7 +155,7 @@ public class MDLiveMedicalHistory extends Activity {
             }
         });
 
-        findViewById(R.id.editAllergiesTxt).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.AllergiesLl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
@@ -444,6 +444,20 @@ public class MDLiveMedicalHistory extends Activity {
         return mediaFile;
     }
 
+    public String checkSizeOfImageAndType(File file){
+        boolean acceptSize = true;
+        long Filesize= file.length()/1024;
+        if(Filesize>=1024){
+            if(Filesize/1024 >= 11){
+                acceptSize = false;
+            }
+        }
+        if(!acceptSize)
+            return "Please add a photo with a maximum size of 10 MB.";
+        else
+            return null;
+    }
+
     /**
      * Receiving activity result method will be called after closing the camera
      */
@@ -455,10 +469,28 @@ public class MDLiveMedicalHistory extends Activity {
                 // successfully captured the image
                 if(fileUri != null){
                     File file = new File(fileUri.getPath());
-                    if(file.exists()){
+                    String hasErrorText = checkSizeOfImageAndType(file);
+                    if(file.exists() && hasErrorText == null){
                         //int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
                         //Log.e("Size of File..", file_size+"");
                         uploadMedicalRecordService(fileUri.getPath());
+                    }else{
+                        MdliveUtils.showDialog(MDLiveMedicalHistory.this,
+                                hasErrorText,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        captureImage();
+                                    }
+                                },
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        );
                     }
                 }
             } else {
@@ -473,8 +505,31 @@ public class MDLiveMedicalHistory extends Activity {
             if (resultCode == RESULT_OK) {
                 try {
                     fileUri = data.getData();
-                    if(fileUri != null)
+                    File file = new File(fileUri.getPath());
+                    String hasErrorText = checkSizeOfImageAndType(file);
+                    if(fileUri != null && hasErrorText == null){
                         uploadMedicalRecordService(getPath(fileUri));
+                    }else{
+                        MdliveUtils.showDialog(MDLiveMedicalHistory.this,
+                                hasErrorText,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                        photoPickerIntent.setType("image/*");
+                                        startActivityForResult(photoPickerIntent, PICK_IMAGE_REQUEST_CODE);
+                                        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+                                    }
+                                },
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                                );
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

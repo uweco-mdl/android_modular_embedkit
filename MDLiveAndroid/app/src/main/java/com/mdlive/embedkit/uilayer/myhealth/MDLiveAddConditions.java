@@ -153,7 +153,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         @Override
         protected void onPreExecute() {
 //             pDialog.dismiss();
-    progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
             super.onPreExecute();
 
         }

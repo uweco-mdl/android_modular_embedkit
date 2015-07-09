@@ -92,13 +92,19 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
         findViewById(R.id.doneTxt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveBtnAction();
+                    saveBtnAction();
             }
         });
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkMedicalAggregation();
+                if(IsThisPageEdited)
+                    checkMedicalAggregation();
+                else{
+                    finish();
+                    MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
+                }
+
             }
         });
         /*((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
@@ -699,9 +705,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends Activity
             e.printStackTrace();
         }
 
-        pDialog.dismiss();
         setResult(RESULT_OK, resultData);
-        //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
         finish();
+        MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
+        //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
+
     }
 }
