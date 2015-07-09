@@ -8,7 +8,7 @@
         android:orientation="vertical">
         <TextView
             style="@style/ProviderDetailHeaderStyle"
-            android:text="Specialties"
+            android:text="Specialities"
             />
         <TextView
             style="@style/ProviderDetailContentStyle"
