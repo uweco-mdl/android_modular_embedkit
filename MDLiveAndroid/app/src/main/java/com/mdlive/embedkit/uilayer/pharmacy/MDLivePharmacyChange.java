@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.pharmacy.activities;
+package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,7 +29,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SuggestPharmayService;
@@ -73,7 +73,6 @@ public class MDLivePharmacyChange extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
         //initialize views of activity
-        Utils.checkGpsLocation(MDLivePharmacyChange.this);
         initializeViews();
     }
 
@@ -127,7 +126,7 @@ public class MDLivePharmacyChange extends Activity {
             public void afterTextChanged(Editable s) {
                 if(zipcodeText.getText().toString().length()>=9){
                     if(!zipcodeText.getText().toString().contains("-")){
-                        String formattedString=Utils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
+                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
                         zipcodeText.setText(formattedString);
                     }
 
@@ -149,11 +148,11 @@ public class MDLivePharmacyChange extends Activity {
                 String hasErrorMessage = hasValidationMessage();
                 if(hasErrorMessage == null){
                     addExtrasInIntent();
-                    Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
                     startActivity(sendingIntent);
+                    MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                     finish();
                 }else{
-                    Utils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
+                    MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
                 }
             }
         });
@@ -166,7 +165,7 @@ public class MDLivePharmacyChange extends Activity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                 finish();
             }
         });
@@ -192,7 +191,7 @@ public class MDLivePharmacyChange extends Activity {
 
     public String hasValidationMessage(){
         if(zipcodeText.getText()!=null && !zipcodeText.getText().toString().trim().equals("")){
-            if(Utils.validateZipCode(zipcodeText.getText().toString())){
+            if(MdliveUtils.validateZipCode(zipcodeText.getText().toString())){
                 if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
                     errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                          +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state.";
@@ -272,8 +271,8 @@ public class MDLivePharmacyChange extends Activity {
                             progressBar.setVisibility(View.GONE);
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
-                                Utils.hideSoftKeyboard(MDLivePharmacyChange.this);
                                 startActivity(sendingIntent);
+                                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
                             }
@@ -282,7 +281,7 @@ public class MDLivePharmacyChange extends Activity {
                 }
             });
         } else {
-            Utils.showGPSSettingsAlert(MDLivePharmacyChange.this);
+            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this);
         }
     }
 
@@ -305,7 +304,7 @@ public class MDLivePharmacyChange extends Activity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                 Utils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
+                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
         SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
@@ -433,6 +432,25 @@ public class MDLivePharmacyChange extends Activity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLivePharmacyChange.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePharmacyChange.this, MDLiveLogin.class);
+    }
+
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MdliveUtils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

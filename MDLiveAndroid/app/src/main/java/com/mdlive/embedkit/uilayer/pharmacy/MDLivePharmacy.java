@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.pharmacy.activities;
+package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,7 +30,7 @@ import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -56,6 +56,7 @@ public class MDLivePharmacy extends FragmentActivity {
     private SupportMapFragment mapView;
     private RelativeLayout progressBar;
     private GoogleMap map;
+
     private Bundle bundletoSend = new Bundle();
 
     @Override
@@ -99,6 +100,7 @@ public class MDLivePharmacy extends FragmentActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
                 startActivity(i);
+                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
             }
         });
         /**
@@ -109,7 +111,7 @@ public class MDLivePharmacy extends FragmentActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLivePharmacy.this);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacy.this);
                 finish();
             }
         });
@@ -148,6 +150,7 @@ public class MDLivePharmacy extends FragmentActivity {
                             Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
                             i.putExtra("final_amount",jobj.getString("final_amount"));
                             startActivity(i);
+                            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                         }else{
                             doConfirmAppointment();
                         }
@@ -165,7 +168,7 @@ public class MDLivePharmacy extends FragmentActivity {
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
             }
         };
         PharmacyService insuranceService=new PharmacyService(MDLivePharmacy.this,pDialog);
@@ -209,6 +212,7 @@ public class MDLivePharmacy extends FragmentActivity {
                         editor.commit();
                         Intent i = new Intent(MDLivePharmacy.this, MDLiveWaitingRoom.class);
                         startActivity(i);
+                        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                     } else {
                         Toast.makeText(MDLivePharmacy.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     }
@@ -223,7 +227,7 @@ public class MDLivePharmacy extends FragmentActivity {
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                Utils.handelVolleyErrorResponse(MDLivePharmacy.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
                 /*if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -293,7 +297,7 @@ public class MDLivePharmacy extends FragmentActivity {
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                Utils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, pDialog);
             }
         };
         PharmacyService services = new PharmacyService(MDLivePharmacy.this, pDialog);
@@ -420,7 +424,28 @@ public class MDLivePharmacy extends FragmentActivity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLivePharmacy.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePharmacy.this, MDLiveLogin.class);
     }
+
+
+
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MdliveUtils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+
 
 }

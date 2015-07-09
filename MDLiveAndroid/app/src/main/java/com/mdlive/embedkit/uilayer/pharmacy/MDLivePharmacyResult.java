@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.pharmacy.activities;
+package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +30,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveLogin;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.Utils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
@@ -106,8 +105,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                Intent i = new Intent(getApplicationContext(), com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange.class);
                 startActivityForResult(i, 4000);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
         });
         /**
@@ -118,7 +118,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(MDLivePharmacyResult.this);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
                 finish();
             }
         });
@@ -189,7 +189,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 progressBar.setVisibility(View.GONE);
 //                infoView.setVisibility(View.VISIBLE);
                 resetLoadingViews();
-                Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
 //        pDialog.show();
@@ -296,29 +296,29 @@ public class MDLivePharmacyResult extends FragmentActivity {
             googleMap = mapView.getMap();
             LatLng markerPoint = null;
             for (int i = 0; i < responArray.size(); i++) {
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "state"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "state"))
                     state = responArray.get(i).getAsJsonObject().get("state").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "pharmacy_id"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "pharmacy_id"))
                     pharmacy_id = responArray.get(i).getAsJsonObject().get("pharmacy_id").getAsInt();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "store_name"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "store_name"))
                     store_name = responArray.get(i).getAsJsonObject().get("store_name").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "phone"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "phone"))
                     phone = responArray.get(i).getAsJsonObject().get("phone").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address1"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address1"))
                     address1 = responArray.get(i).getAsJsonObject().get("address1").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "active"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "active"))
                     active = responArray.get(i).getAsJsonObject().get("active").getAsBoolean();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address2"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address2"))
                     address2 = responArray.get(i).getAsJsonObject().get("address2").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "zipcode"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "zipcode"))
                     zipcode = responArray.get(i).getAsJsonObject().get("zipcode").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "fax"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "fax"))
                     fax = responArray.get(i).getAsJsonObject().get("fax").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "city"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "city"))
                     city = responArray.get(i).getAsJsonObject().get("city").getAsString();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "twenty_four_hours"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "twenty_four_hours"))
                     twenty_four_hours = responArray.get(i).getAsJsonObject().get("twenty_four_hours").getAsBoolean();
-                if(Utils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "distance"))
+                if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "distance"))
                     distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
 
                 try {
@@ -389,7 +389,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
             e.printStackTrace();
         }
         if(responObj.get("total_pages").isJsonNull()){
-            Utils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
+            MdliveUtils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
         }
         if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
             pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -442,7 +442,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 /*pDialog.dismiss();*/
                 progressBar.setVisibility(View.GONE);
 //                infoView.setVisibility(View.VISIBLE);
-                Utils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
             }
         };
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
@@ -469,6 +469,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -481,7 +482,24 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
     public void movetohome()
     {
-        Utils.movetohome(MDLivePharmacyResult.this, MDLiveLogin.class);
+        MdliveUtils.movetohome(MDLivePharmacyResult.this, MDLiveLogin.class);
     }
 
+    /**
+     * This method will close the activity with transition effect.
+     */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MdliveUtils.closingActivityAnimation(this);
+    }
+    /**
+     * This method will stop the service call if activity is closed during service call.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
 }
