@@ -192,7 +192,8 @@
                         android:background="@drawable/btn_rounded_bg"
                         android:text="Resume Consultation"
                         android:textAllCaps="false"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
