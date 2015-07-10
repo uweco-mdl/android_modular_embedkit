@@ -96,34 +96,6 @@
         layout="@layout/custom_progress_bar"
         />
 
-
-    <LinearLayout
-        style="@style/LinearLayoutStyle"
-        android:id="@+id/linearlayoutresults"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/NoResultsReasonTextViewStyle"
-            android:text="Search Results"
-            android:layout_gravity="center"
-            android:visibility="gone"
-         />
-        <TextView
-            android:id="@+id/noresults"
-            style="@style/NoResultsReasonTextViewStyle"
-            android:layout_gravity="center"
-            android:text="No results found for zz"
-            />
-        <TextView
-            android:id="@+id/submitresult"
-            style="@style/NoResultsReasonTextViewStyle"
-            android:layout_gravity="center"
-            android:text="Submit ZZ as your symptom "
-            />
-        </LinearLayout>
-
     <LinearLayout
         android:layout_below="@id/header"
         android:orientation="vertical"

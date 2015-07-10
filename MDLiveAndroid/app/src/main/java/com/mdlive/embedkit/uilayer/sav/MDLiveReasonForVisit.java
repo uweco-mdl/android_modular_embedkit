@@ -45,17 +45,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private ProgressBar progressBar;
     private ArrayList<String> ReasonList;
-    private TextView NoResults,SubmitResults;
-    private LinearLayout NoresultsLinearlay;
     ReasonForVisitAdapter baseadapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_reason);
-        NoResults = (TextView) findViewById(R.id.noresults);
-        SubmitResults = (TextView) findViewById(R.id.submitresult);
-        NoresultsLinearlay = (LinearLayout) findViewById(R.id.linearlayoutresults);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -63,33 +58,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         ReasonList = new ArrayList<String>();
 //        pDialog = Utils.getProgressDialog("Please wait...", this);
         ReasonForVisit();
-        SubmitResults.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!MdliveUtils.isValidName(((EditText) findViewById(R.id.search_edit)).getText().toString())){
-                    MdliveUtils.showDialog(MDLiveReasonForVisit.this, getResources().getString(R.string.app_name), getResources().getString(R.string.invalid_symptom));
-                    return;
-                }
 
-
-
-
-
-
-                Log.e("Age,Month,Days",""+ MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)+"Month"+ MdliveUtils.calculteMonthFromPrefs(MDLiveReasonForVisit.this)+"Days"+ MdliveUtils.daysFromPrefs(MDLiveReasonForVisit.this));
-                if(MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this)<=13){
-                    Intent Reasonintent = new Intent(MDLiveReasonForVisit.this,MDLivePediatric.class);
-                    startActivity(Reasonintent);
-                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-                    finish();
-                }else{
-                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
-                    startActivity(medicalIntent);
-                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-                }
-
-            }
-        });
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -181,7 +150,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             listView.addFooterView(footerView, null, false);
         }
 
-        baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,(LinearLayout)findViewById(R.id.linearlayoutresults),(TextView)findViewById(R.id.noresults),(TextView)findViewById(R.id.submitresult));
+        baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
             listView.setAdapter(baseadapter);
             RefineSearch();
             ListItemClickListener();
@@ -195,7 +164,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
      */
     public void RefineSearch()
     {
-         EditText search_edit = (EditText)findViewById(R.id.search_edit);
+        final EditText search_edit = (EditText)findViewById(R.id.search_edit);
         search_edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -205,7 +174,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-
+                if (s.length() > 0 && s.subSequence(0, 1).toString().equalsIgnoreCase(" ")) {
+                    search_edit.setText("");
+                }
             }
 
             @Override
@@ -213,9 +184,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 String text=s.toString();
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
-                }else{
-                    MdliveUtils.alert(pDialog, MDLiveReasonForVisit.this, "Please enter the character");//TO DO Need to confirm the alert message
-
                 }
             }
         });
