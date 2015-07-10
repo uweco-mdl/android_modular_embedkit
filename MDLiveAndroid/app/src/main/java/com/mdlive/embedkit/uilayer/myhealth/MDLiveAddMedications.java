@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -61,7 +60,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void saveNewConditionsOrAllergies() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         if (newConditions.size() == 0) {
             updateConditionsOrAllergies();
         } else {
@@ -93,13 +92,13 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            showProgress();
             super.onPreExecute();
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             checkMedicalAggregation();
         }
         @Override
@@ -167,7 +166,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void getConditionsOrAllergiesData() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -196,7 +195,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -204,7 +203,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
 //                pDialog.dismiss();
             }
         };

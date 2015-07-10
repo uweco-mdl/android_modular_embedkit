@@ -584,7 +584,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         ValidateModuleFields();
         /*if(imageAdapter != null)
             imageAdapter.notifyWithDataSet(myPhotosList);*/

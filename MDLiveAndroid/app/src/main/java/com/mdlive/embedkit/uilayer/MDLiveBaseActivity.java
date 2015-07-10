@@ -4,15 +4,18 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by srinivasan_ka on 7/8/2015.
  */
 public class MDLiveBaseActivity extends Activity {
+    public View progressBarLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,20 +58,35 @@ public class MDLiveBaseActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
     public void showProgress() {
-
+        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
+            progressBarLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void hideProgress() {
-
+        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
+            progressBarLayout.setVisibility(View.GONE);
+        }
     }
 
     public void movetohome() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!MdliveUtils.isNetworkAvailable(this)){
+           hideProgress();
+        }
+
+    }
+    public void setProgressBar(View progressBarLayout){
+        this.progressBarLayout=progressBarLayout;
     }
 
 

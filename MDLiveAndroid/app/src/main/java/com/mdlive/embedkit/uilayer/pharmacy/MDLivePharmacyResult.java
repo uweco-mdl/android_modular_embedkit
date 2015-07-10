@@ -1,8 +1,10 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -26,15 +28,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
+import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
 
@@ -89,6 +97,17 @@ public class MDLivePharmacyResult extends FragmentActivity {
         initializeListView();
         initializeMapView();
         getPharmacySearchResults(getPostBody(getIntent()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!MdliveUtils.isNetworkAvailable(MDLivePharmacyResult.this)){
+            if(progressBar!=null&&progressBar.getVisibility()== View.VISIBLE){
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     @Override
@@ -407,7 +426,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
                             dialog.dismiss();
                             Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
                             startActivityForResult(i, 4000);
+                            finish();
                             MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+                            //MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
                         }
                     });
         }
@@ -484,17 +505,164 @@ public class MDLivePharmacyResult extends FragmentActivity {
 //            infoView.setVisibility(View.VISIBLE);
             Log.d("Response", response.toString());
             if (response.getString("message").equals("Pharmacy details updated")) {
-                Toast.makeText(getApplicationContext(), "Default Pharmacy Saved!", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
+                checkInsuranceEligibility();
+                /*Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * This method handles checks user insurance eligibility and return the final amount for the user.
+     * successListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * PharmacyService-Class will send the request to the server and get the responses
+     *doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
+     */
+
+    public void checkInsuranceEligibility(){
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+                Log.e("Zero Dollar Insurance", response.toString());
+                try{
+                    JSONObject jobj=new JSONObject(response.toString());
+                    if(jobj.has("final_amount")){
+                        if(Integer.parseInt(jobj.getString("final_amount"))>0){
+                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
+                            i.putExtra("final_amount",jobj.getString("final_amount"));
+                            startActivity(i);
+                            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                        }else{
+                            doConfirmAppointment();
+                        }
+
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        NetworkErrorListener errorListener=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+            }
+        };
+        PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,pDialog);
+        insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(),successListener,errorListener);
+    }
+
+    public String formPostInsuranceParams(){
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        HashMap<String,String> insuranceMap=new HashMap<>();
+        insuranceMap.put("appointment_method","1");
+        insuranceMap.put("provider_id",settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        insuranceMap.put("timeslot","Now");
+        insuranceMap.put("provider_type_id","3");
+        insuranceMap.put("state_id",settings.getString(PreferenceConstants.LOCATION,"FL"));
+        return new Gson().toJson(insuranceMap);
+    }
+
+    /**
+     * This method handles appointment confirmation for zero dollar user
+     * responseListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * ConfirmAppointmentServices-Class will send the request to the server and get the responses
+     *
+     */
+    private void doConfirmAppointment() {
+//        pDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+//                    pDialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
+                    String apptId = response.getString("appointment_id");
+                    if (apptId != null) {
+                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(PreferenceConstants.APPT_ID, apptId);
+                        editor.commit();
+                        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveWaitingRoom.class);
+                        startActivity(i);
+                        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                    } else {
+                        Toast.makeText(MDLivePharmacyResult.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                pDialog.dismiss();
+                progressBar.setVisibility(View.GONE);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                /*if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyResult.this);
+                    }
+                }*/
+            }
+        };
+
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+
+        HashMap<String, Object> params = new HashMap<String, Object>();
+
+        params.put("appointment_method", "1");
+        params.put("do_you_have_primary_care_physician","No");
+        // params.put("phys_availability_id", null);
+        params.put("timeslot", "Now");
+        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
+        params.put("customer_call_in_number", "9068906789");
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
+        Log.e("ConfirmAPPT Params",params.toString());
+
+
+      /*  params.put("appointment_method", "1");
+        params.put("phys_availability_id", null);
+        params.put("timeslot", "Now");
+        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        params.put("chief_complaint", "Not Sure");
+        params.put("state_id", "FL");
+        params.put("customer_call_in_number", "9068906789");
+        params.put("chief_complaint_reasons", null);
+        params.put("alternate_visit_option", "alternate_visit_option");
+        params.put("do_you_have_primary_care_physician", "No");*/
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, pDialog);
+        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
+    }
+
 
     /**
      * The back image will pull you back to the Previous activity

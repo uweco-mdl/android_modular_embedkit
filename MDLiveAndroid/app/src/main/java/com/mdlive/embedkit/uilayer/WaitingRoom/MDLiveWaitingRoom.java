@@ -253,7 +253,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         isReturning = getIntent().getBooleanExtra("isReturning",false);
         isStartedSummary = false;

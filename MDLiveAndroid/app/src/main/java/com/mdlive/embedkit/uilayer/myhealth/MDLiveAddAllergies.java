@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -55,13 +54,13 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     @Override
     protected void saveNewConditionsOrAllergies() {
 //        pDialog.show();
-        
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
+        //showProgress();
         setResult(RESULT_OK);
         IsThisPageEdited = true;
         if(newConditions.size() == 0){
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             updateConditionsOrAllergies();
         } else {
             NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -69,7 +68,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 @Override
                 public void onResponse(JSONObject response) {
 //                    pDialog.dismiss();
-                    progressBar.setVisibility(View.GONE);
+                    hideProgress();
                     updateConditionsOrAllergies();
                   /*  if (newConditions.size() == ++addConditionsCount) {
                     }*/
@@ -103,14 +102,14 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         @Override
         protected void onPreExecute() {
            // pDialog.show();
-            progressBar.setVisibility(View.VISIBLE);
+            showProgress();
             super.onPreExecute();
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             checkMedicalAggregation();
         }
 
@@ -146,7 +145,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     @Override
     protected void getConditionsOrAllergiesData() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -167,7 +166,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -176,7 +175,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                     addBlankConditionOrAllergy();
                 }
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
             }
         };
 

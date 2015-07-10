@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -42,7 +41,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private Button tapSeetheDoctorTxt;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
 
@@ -88,7 +87,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         specialist_txt = (TextView)findViewById(R.id.specalist);
         withpatientTxt = (TextView)findViewById(R.id.withpatientTxt);
@@ -126,7 +126,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      */
     private void loadProviderDetails() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -141,7 +142,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 tapSeetheDoctorTxt.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
                 tapSeetheDoctorTxt.setVisibility(View.GONE);
@@ -174,7 +176,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private void handleSuccessResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
             //Fetch Data From the Services
             Log.e("details-->",response.toString());
             JsonParser parser = new JsonParser();

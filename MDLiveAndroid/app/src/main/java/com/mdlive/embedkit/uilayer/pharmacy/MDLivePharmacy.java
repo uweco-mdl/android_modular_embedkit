@@ -57,7 +57,6 @@ public class MDLivePharmacy extends FragmentActivity {
     private SupportMapFragment mapView;
     private RelativeLayout progressBar;
     private GoogleMap map;
-
     private Bundle bundletoSend = new Bundle();
 
     @Override
@@ -84,10 +83,20 @@ public class MDLivePharmacy extends FragmentActivity {
             getUserPharmacyDetails();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!MdliveUtils.isNetworkAvailable(MDLivePharmacy.this)){
+            if(progressBar!=null&&progressBar.getVisibility()== View.VISIBLE){
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+    }
+
     /*
-    * This function is mainly focused on initializing view in layout.
-    * LocalisationHelper will be initialized over here to update tag details of view declared in xml
-    */
+        * This function is mainly focused on initializing view in layout.
+        * LocalisationHelper will be initialized over here to update tag details of view declared in xml
+        */
     public void initializeViews() {
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         LocalisationHelper.localiseLayout(this, view);

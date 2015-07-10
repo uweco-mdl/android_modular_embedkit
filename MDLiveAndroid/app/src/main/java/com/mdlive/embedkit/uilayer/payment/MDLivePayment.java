@@ -79,6 +79,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +110,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
+
         HostedPCI.getSettings().setJavaScriptEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -116,7 +118,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
         }
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-
+//        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
+        //pDialog.show();
         TextView textview = (TextView) findViewById((R.id.ApplyOfferCode));
         textview.setOnClickListener(new View.OnClickListener() {
 
@@ -346,6 +349,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void run() {
                 try {
                     progressBar.setVisibility(View.GONE);
+                    hideProgress();
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
                 }
@@ -357,6 +361,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void run() {
                 try {
                     progressBar.setVisibility(View.VISIBLE);
+                    showProgress();
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
                 }

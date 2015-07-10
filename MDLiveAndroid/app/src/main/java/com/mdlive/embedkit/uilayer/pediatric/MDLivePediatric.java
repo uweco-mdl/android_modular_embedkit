@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.pediatric;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -56,7 +57,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     private List<String> dietList;
     private TextView txtDietType;
     private ProgressDialog pDialog;
-    private RelativeLayout progressDialog;
+    //private RelativeLayout progressDialog;
 
 //    private ProgressBar progressBar;
     public ArrayList<HashMap<String,String>> questionList;
@@ -119,7 +120,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         saveButton= (Button) findViewById(R.id.btn_continue_pediatric);
         edtCurrentWeight= (EditText) findViewById(R.id.edt_currentweight);
 //        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
 
         edtCurrentWeight.addTextChangedListener(new TextWatcher() {
 
@@ -572,14 +574,16 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     public void callUpdateService(){
 //        Utils.showProgressDialog(pDialog);
-        progressDialog.setVisibility(View.VISIBLE);
+        //progressDialog.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 // handleSuccessResponse(response.toString());
                 Log.e("Pediatric Update ",response.toString());
 //                Utils.hideProgressDialog(pDialog);
-                progressDialog.setVisibility(View.GONE);
+                //progressDialog.setVisibility(View.GONE);
+                hideProgress();
                 Intent intent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
                 startActivity(intent);
                 MdliveUtils.startActivityAnimation(MDLivePediatric.this);
@@ -593,7 +597,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 //                                Utils.hideProgressDialog(pDialog);
-                                progressDialog.setVisibility(View.GONE);
+                                //progressDialog.setVisibility(View.GONE);
+
                             }
                         };
                         // Show timeout error message
@@ -634,6 +639,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void enableSaveButton(){
         if(isFieldsNotEmpty()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -717,7 +723,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
        */
     public void setProgressBarVisibility()
     {
-        progressDialog.setVisibility(View.VISIBLE);
+        //progressDialog.setVisibility(View.VISIBLE);
+        showProgress();
         saveButton.setVisibility(View.GONE);
     }
 
@@ -726,7 +733,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     */
     public void setInfoVisibilty()
     {
-        progressDialog.setVisibility(View.GONE);
+        hideProgress();
         saveButton.setVisibility(View.VISIBLE);
     }
 

@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -57,7 +58,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private AlertDialog stateDialog;
     private Button getlocationButton;
     private ProgressDialog pDialog;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> suggestionList = new ArrayList<String>();
     private LocationCooridnates locationService;
@@ -89,7 +90,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         zipcodeText = ((EditText) findViewById(R.id.zipcodeText));
         cityText = ((EditText) findViewById(R.id.cityText));
         getlocationButton = ((Button) findViewById(R.id.getlocationButton));
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
 //        pDialog = Utils.getProgressDialog("Loading...", this);
         //Initialize Intent for Pharmacy Results
         sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
@@ -150,7 +152,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                     startActivity(sendingIntent);
                     MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                     finish();
-                    MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                    //MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
                 }else{
                     MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
                 }
@@ -167,7 +169,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                 finish();
-                MdliveUtils.closingActivityAnimation(MDLivePharmacyChange.this);
+                //MdliveUtils.closingActivityAnimation(MDLivePharmacyChange.this);
             }
         });
 
@@ -261,7 +263,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void getLocationBtnOnClickAction() {
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
 //            pDialog.show();
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
+            showProgress();
             locationService.getLocation(this, new LocationCooridnates.LocationResult() {
                 @Override
                 public void gotLocation(final Location location) {
@@ -269,7 +272,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                         @Override
                         public void run() {
 //                            pDialog.dismiss();
-                            progressBar.setVisibility(View.GONE);
+                            //progressBar.setVisibility(View.GONE);
+                            hideProgress();
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
                                 startActivity(sendingIntent);
@@ -283,8 +287,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 }
             });
         } else {
-            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this,progressBar);
-            progressBar.setVisibility(View.GONE);
+            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this,(RelativeLayout)findViewById(R.id.progressDialog));
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
         }
     }
 
@@ -310,6 +315,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                  MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
+        ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
         SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
         services.doSuggestionRequest(searchText, responseListener, errorListener);
     }

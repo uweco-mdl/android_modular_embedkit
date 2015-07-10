@@ -122,7 +122,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      *
      */
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
             loadUserInformationDetails();
@@ -148,7 +148,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         LocationLl = (LinearLayout) findViewById(R.id.locationLl);
         genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
 //        patientInfo= (LinearLayout) findViewById(R.id.patientInfo);
         /**
          * The back image will pull you back to the Previous activity
@@ -233,7 +234,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
-//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveReasonForVisit.class);
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
@@ -248,8 +249,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-
-
                 }
             });
             DobLl.setOnClickListener(new View.OnClickListener() {
@@ -562,15 +561,16 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      *
      */
     private void loadUserInformationDetails() {
-        setProgressBarVisibility();
+        showProgress();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
 //                Utils.hideProgressDialog(pDialog);
-                setInfoVisibilty();
-                handleSuccessResponse(response);
+                           hideProgress();
+
+    handleSuccessResponse(response);
 
             }
         };
@@ -581,7 +581,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                 Log.d("Response", error.toString());
 //                pDialog.dismiss();
 
-                setInfoVisibilty();
+               hideProgress();
 
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
                /* if (error.networkResponse == null) {
@@ -612,7 +612,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 //            pDialog.show();
 //        }
 
-        setProgressBarVisibility();
+        showProgress();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -620,7 +620,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 Log.e("Dep Response", response.toString());
 //                Utils.hideProgressDialog(pDialog);
-                setInfoVisibilty();
+               hideProgress();
                 handleDependentSuccessResponse(response);
             }
         };
@@ -639,7 +639,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                         };
                         // Show timeout error message
 //                        pDialog.dismiss();
-                        setInfoVisibilty();
+                       hideProgress();
                         MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
                     }
                 }
@@ -659,7 +659,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             isUserInfo=false;
             if(serviceCount == 2){
 //                pDialog.dismiss();
-                setInfoVisibilty();
+               hideProgress();
                 serviceCount = 0;
             }
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -766,7 +766,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
 //            pDialog.dismiss();
-            setInfoVisibilty();
+           hideProgress();
             handleSuccessResponseFamilyMember(response);
 
         }catch(Exception e){
@@ -803,7 +803,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                 getPendingAppointments();
             }
 
-            setInfoVisibilty();
+           hideProgress();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -882,18 +882,18 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     /*
     * set visible for the progress bar
     */
-    public void setProgressBarVisibility()
+    /*public void showProgress()
     {
         progressBar.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     /*
     * set visible for the details view layout
     */
-    public void setInfoVisibilty()
+    /*public voidhideProgress()
     {
         progressBar.setVisibility(View.GONE);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

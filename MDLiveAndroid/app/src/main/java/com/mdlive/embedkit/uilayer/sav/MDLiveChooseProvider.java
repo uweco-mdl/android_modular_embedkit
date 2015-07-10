@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,7 +51,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     private ListView listView;
     private ProgressDialog pDialog;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
 
 
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
@@ -78,7 +77,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
 
 
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        //progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        setProgressBar(findViewById(R.id.progressBar));
 
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
 
@@ -448,7 +448,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     */
     public void setProgressBarVisibility()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         loadingTxt.setVisibility(View.VISIBLE);
     }
 
@@ -457,7 +458,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     */
     public void setInfoVisibilty()
     {
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
+        hideProgress();
         loadingTxt.setVisibility(View.GONE);
     }
     @Override

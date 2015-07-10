@@ -52,7 +52,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private EditText ZipcodeEditTxt;
     private TextView CurrentLocationTxt,StateTxt;
     private String SelectedZipCodeCity;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private ArrayList<String> StateName = new ArrayList<String>();
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
@@ -68,7 +68,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         LocalisationHelper.localiseLayout(this, view);
 //        pDialog = Utils.getProgressDialog("Please Wait...", this);
         StateTxt = (TextView) findViewById(R.id.StateTxt);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         StateTxt.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,8 +168,9 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
 //                pDialog.show();
-                progressBar.setVisibility(View.VISIBLE);
-                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
+                showProgress();
+                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,(RelativeLayout)findViewById(R.id.progressDialog));
                 getLocationCoordinates();
             }
         });
@@ -220,13 +222,15 @@ public class MDLiveLocation extends MDLiveBaseActivity {
      */
     private void loadCurrentLocation(String latitude, String longitude) {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("Response",response.toString());
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 CurrentLocationResponse(response);
             }
         };
@@ -236,7 +240,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
                 Log.e("Response",error.toString());
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
 
             }
@@ -258,7 +263,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
     private void loadZipCode(String EditTextValue) {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -273,7 +279,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -298,7 +305,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private void ZipCodeResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
             //Fetch Data From the Services
 
             Log.e("Response Zip ,ciode",response.toString());
@@ -372,7 +380,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private void CurrentLocationResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
             //Fetch Data From the Services
             selectedCity = response.getString("state");
 //            SaveZipCodeCity(response.getString("state"));
@@ -399,7 +408,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                             }
                             else{
 //                                pDialog.dismiss();
-                                progressBar.setVisibility(View.GONE);
+                                //progressBar.setVisibility(View.GONE);
+                                hideProgress();
                                 Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
                                 /*MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);*/
                             }
@@ -410,8 +420,9 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 }
             });
         } else {
-            progressBar.setVisibility(View.GONE);
-            MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,progressBar);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
+            MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,(RelativeLayout)findViewById(R.id.progressDialog));
 //            Toast.makeText(getApplicationContext(), "Please enable location service...", Toast.LENGTH_SHORT).show();
         }
     }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -25,13 +24,14 @@ import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 public class MDLiveSummary extends MDLiveBaseActivity {
 
     private ProgressDialog pDialog;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
 
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
@@ -88,14 +88,16 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     }
     public void sendRating(){
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
 
             @Override
             public void onResponse(Object response) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 Log.e("Response Summary", response.toString());
                 try {
                     clearPref();
@@ -117,7 +119,8 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response Vsee", error.toString());
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
             }
         };

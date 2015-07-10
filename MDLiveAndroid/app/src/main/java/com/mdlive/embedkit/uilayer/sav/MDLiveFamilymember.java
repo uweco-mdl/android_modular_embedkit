@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -57,7 +56,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
     private LinearLayout genderll,dobLl;
     private DatePickerDialog datePickerDialog;
@@ -83,7 +82,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         genderll = (LinearLayout) findViewById(R.id.genderLl);
         dobLl = (LinearLayout) findViewById(R.id.dobLl);
         addChildBtn = (Button)findViewById(R.id.addChildBtn);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         getDateOfBirth();
         GetCurrentDate((TextView) findViewById(R.id.dobTxt));
         /**
@@ -295,7 +295,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      */
     private void PostLifeStyleServices() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -309,7 +310,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 try {
                     if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
@@ -345,7 +347,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private void handlePostPediatricResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
             //Fetch Data From the Services
             Log.e("MDlivePediatric->",response.toString());
             MdliveUtils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {

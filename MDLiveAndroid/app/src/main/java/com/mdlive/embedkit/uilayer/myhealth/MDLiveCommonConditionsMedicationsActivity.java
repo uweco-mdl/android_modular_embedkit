@@ -72,7 +72,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected int existingConditionsCount = 0;
     public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION};
     protected TYPE_CONSTANT type;
-    public RelativeLayout progressBar;
+    //public RelativeLayout progressBar;
     public String conditionsText = "";
     public static boolean isNewAdded = false;
     public Intent resultData = new Intent();
@@ -85,7 +85,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditionsList = new ArrayList<HashMap<String,String>>();
         newConditions = new ArrayList<String>();
         existingConditions = new ArrayList<HashMap<String, String>>();
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
 
         pDialog = MdliveUtils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
@@ -165,16 +166,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             if(((newConditions.size()+existingConditions.size()) == listToSet.size())){
                 saveNewConditionsOrAllergies();
             }else{
-                if(type == TYPE_CONSTANT.CONDITION){
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The condition you entered is already in your Health History.");
-                }else if(type == TYPE_CONSTANT.ALLERGY){
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The allergy you entered is already in your Health History.");
-
-                }else if(type == TYPE_CONSTANT.MEDICATION){
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The medication you entered is already in your Health History.");
-
-                }
-
+                MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
             }
         }
     }
@@ -284,11 +276,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
 //            addBlankConditionOrAllergy();
 
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
         }catch (Exception e){
             e.printStackTrace();
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
         }
     }
 
@@ -429,6 +423,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 } else {
                     deleteView.setVisibility(View.VISIBLE);
                 }
+//                ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
                 getAutoCompleteData((AutoCompleteTextView)conditonEt,text);
             }
         };
@@ -520,7 +515,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
         previousSearch = "";
 //        pDialog.dismiss();
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
+        hideProgress();
         NetworkResponse networkResponse = error.networkResponse;
 /*
         try {

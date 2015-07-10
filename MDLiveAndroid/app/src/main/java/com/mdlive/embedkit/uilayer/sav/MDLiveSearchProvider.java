@@ -17,7 +17,6 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -67,7 +66,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String,String> postParams=new HashMap<>();
-    private RelativeLayout progressDialog;
+    //private RelativeLayout progressDialog;
     public String filter_SavedLocation,SavedLocation;
 
     @Override
@@ -244,11 +243,12 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         TextView SpeaksTxtView = (TextView) findViewById(R.id.SpeaksTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch= (TextView) findViewById(R.id.edt_searchProvider);
-        progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressDialog = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
@@ -268,7 +268,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     private void loadSearchproviderDetails() {
 //        pDialog.show();
-        progressDialog.setVisibility(View.VISIBLE);
+        //progressDialog.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -281,7 +282,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
-                progressDialog.setVisibility(View.GONE);
+                //progressDialog.setVisibility(View.GONE);
+                hideProgress();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -307,7 +309,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
 
-            progressDialog.setVisibility(View.GONE);
+            //progressDialog.setVisibility(View.GONE);
+            hideProgress();
 //            pDialog.dismiss();
             //Fetch Data From the Services
 
@@ -497,7 +500,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     private void LoadFilterSearchServices() {
 //        pDialog.show();
-        progressDialog.setVisibility(View.VISIBLE);
+        //progressDialog.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -512,7 +516,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
 //                pDialog.dismiss();
-                progressDialog.setVisibility(View.GONE);
+                //progressDialog.setVisibility(View.GONE);
+                hideProgress();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -537,7 +542,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private void handleFilterSuccessResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressDialog.setVisibility(View.GONE);
+            //progressDialog.setVisibility(View.GONE);
+            hideProgress();
             //Fetch Data From the Services
 
             JsonParser parser = new JsonParser();

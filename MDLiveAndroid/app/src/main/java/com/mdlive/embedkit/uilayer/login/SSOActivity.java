@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -36,7 +34,7 @@ import org.json.JSONObject;
 public class SSOActivity extends MDLiveBaseActivity {
     private ProgressDialog mProgressDialog;
     private String mToken;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +43,8 @@ public class SSOActivity extends MDLiveBaseActivity {
         MdliveUtils.clearSharedPrefValues(this);
 
         mProgressDialog = MdliveUtils.getProgressDialog("Please Wait.....", this);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         SSOUser ssoUser = getUser();
         MDLiveConfig.setData(ssoUser.getCurrentEnvironment());
         makeSSOCall(ssoUser);
@@ -91,14 +90,14 @@ public class SSOActivity extends MDLiveBaseActivity {
             return;
         }
 
-        setProgressBarVisibility();
+        showProgress();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 try {
-                    setInfoVisibilty();
+                    hideProgress();
                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(PreferenceConstants.USER_UNIQUE_ID,response.getString("uniqueid"));
@@ -113,9 +112,10 @@ public class SSOActivity extends MDLiveBaseActivity {
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
-                mProgressDialog.dismiss();
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, mProgressDialog);
             }
         };
@@ -135,13 +135,13 @@ public class SSOActivity extends MDLiveBaseActivity {
      * After getting the uniqueid save it to shared preference.
      */
     private void loadUserInformationDetails() {
-        setProgressBarVisibility();
+        showProgress();
 
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                setInfoVisibilty();
+                hideProgress();
                 handleSuccessResponse(response);
             }
         };
@@ -150,7 +150,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                setInfoVisibilty();
+                hideProgress();
                 //Utils.handelVolleyErrorResponse(SSOActivity.this, error, mProgressDialog);
                if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -185,17 +185,15 @@ public class SSOActivity extends MDLiveBaseActivity {
                         if(notifications.getInt("upcoming_appointments") > 0){
                             getPendingAppointments();
                         }else{
-                            setInfoVisibilty();
+                            hideProgress();
 
 
                             final Intent intent = new Intent(getBaseContext(), MDLiveGetStarted.class);
                             intent.putExtra("token", mToken);
                             startActivity(intent);
+
+                            finish();
                         }
-
-
-
-                        finish();
                     }
                 }
             }
@@ -211,12 +209,12 @@ public class SSOActivity extends MDLiveBaseActivity {
      */
 
     public void getPendingAppointments(){
-        setProgressBarVisibility();
+        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 //Utils.hideProgressDialog(mProgressDialog);
-                setInfoVisibilty();
+                hideProgress();
                 handlePendingResponse(response.toString());
                 Log.e("Pending Response",response.toString());
             }
@@ -225,7 +223,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                // Utils.hideProgressDialog(mProgressDialog);
-                setInfoVisibilty();
+                hideProgress();
                 Log.e("Pending Error Response", error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -254,7 +252,7 @@ public class SSOActivity extends MDLiveBaseActivity {
      * @param response
      */
     public void handlePendingResponse(String response){
-        setInfoVisibilty();
+        hideProgress();
 
         try{
             JSONObject resObj=new JSONObject(response);
@@ -285,18 +283,18 @@ public class SSOActivity extends MDLiveBaseActivity {
     /*
   * set visible for the progress bar
   */
-    public void setProgressBarVisibility()
+    /*public void setProgressBarVisibility()
     {
         progressBar.setVisibility(View.VISIBLE);
 
-    }
+    }*/
 
     /*
     * set visible for the details view layout
     */
-    public void setInfoVisibilty()
+    /*public void setInfoVisibilty()
     {
         progressBar.setVisibility(View.GONE);
 
-    }
+    }*/
 }

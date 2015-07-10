@@ -142,7 +142,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onResume();
 
-        if(CONSULTED)   // if user returned to this page after a consultation
+        if(CONSULTED && !isFinishing())   // if user returned to this page after a consultation
         {
             FINISH = true;
             VSeeVideoManager.instance().finishVideoActivity();
@@ -170,10 +170,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
         simpleServerConnectionReceiver = null;
         simpleVidManagerReceiver = null;
-        Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
-//        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.putExtra("isReturning", true);
-//        startActivity(i);
         super.onDestroy();
     }
 
