@@ -13,7 +13,6 @@
         android:layout_marginTop="30dp"
         android:textSize="20sp"
         android:textColor="@color/green"
-        android:textStyle="bold"
         android:text="APPLY OFFER CODE"
 
         android:layout_gravity="center_vertical" />

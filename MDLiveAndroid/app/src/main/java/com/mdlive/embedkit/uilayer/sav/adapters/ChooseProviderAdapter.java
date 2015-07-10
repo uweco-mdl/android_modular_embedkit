@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,7 +64,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
         TextView PatientNmaeTxt,SPecialistTxt,DateTxt;
-        ImageView callImg;
+        TextView withPatientTxt;
         final CircularNetworkImageView ProfileImg;
         View row = null;
         if(array.get(pos).get("isheader").equals("1"))
@@ -123,14 +122,12 @@ public class ChooseProviderAdapter extends BaseAdapter {
              //   if it is through phone calling icon should be visible or if it is either through
              //   video then the video icon should be visible .
 
-            callImg = (ImageView) row.findViewById(R.id.callImg);
-            if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.video_or_phonr))) {
-                callImg.setVisibility(View.GONE);
-                callImg.setBackgroundResource(R.drawable.videoicon);
-            }
-            if (array.get(pos).get("availability_type").equalsIgnoreCase(context.getResources().getString(R.string.phone))) {
-                callImg.setVisibility(View.GONE);
-                callImg.setBackgroundResource(R.drawable.callicon);
+            withPatientTxt = (TextView) row.findViewById(R.id.callImg);
+
+            if (array.get(pos).get("availability_type").equalsIgnoreCase("With Patient")) {
+                withPatientTxt.setVisibility(View.VISIBLE);
+                withPatientTxt.setText("With Patient");
+
             }
         }
 

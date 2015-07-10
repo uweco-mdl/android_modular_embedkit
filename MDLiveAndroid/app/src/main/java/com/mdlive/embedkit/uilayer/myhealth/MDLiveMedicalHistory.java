@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -1054,10 +1055,18 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             isAllFieldsfilled = false;
         }
         if (isAllFieldsfilled) {
-            btnSaveContinue.setBackgroundColor(Color.parseColor("#2b7db5"));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+            } else {
+                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_bg);
+            }
             btnSaveContinue.setClickable(true);
         } else {
-            btnSaveContinue.setBackgroundColor(getResources().getColor(R.color.grey_txt));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+            } else {
+                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_grey);
+            }
             btnSaveContinue.setClickable(false);
         }
     }

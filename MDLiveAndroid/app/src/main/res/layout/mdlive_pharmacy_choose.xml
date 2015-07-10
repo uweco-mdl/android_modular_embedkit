@@ -51,13 +51,13 @@
         >
      <LinearLayout
         style="@style/WagLinearLayoutStyle"
-         >
 
+         >
 
 
     <LinearLayout
         style="@style/common_style_W_Match_H_Wrap_O_Vertical"
-        android:layout_marginLeft="5dp"
+
 
         >
         <LinearLayout
@@ -69,6 +69,7 @@
                 android:layout_marginTop="15dp"
                 android:hint="Pharmacy name"
                 android:textSize="18sp"
+
                 android:tag="manual_txt"
                />
 
@@ -90,7 +91,6 @@
             android:text="@string/current_loc_txt"
             android:tag="current_loc_txt"
             android:drawableLeft="@drawable/location_icon"
-            android:layout_margin="10dp"
             style="@style/ContinueButtonStyle"
             android:id="@+id/getlocationButton"
             android:layout_gravity="center_horizontal"
@@ -113,8 +113,8 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="Zip Code"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:textSize="18sp"
                  />
 
@@ -139,16 +139,16 @@
             style="@style/common_style_W_Match_M_Match"
             android:tag="or"
             android:text="Or"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textSize="18sp"
             android:id="@+id/textView8" />
             <TextView
                 style="@style/common_style_W_Match_M_Match"
                 android:text="City"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:textSize="18sp"
                 />
         <EditText
@@ -168,15 +168,15 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="State"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:textSize="18sp"
                 />
         <TextView
             style="@style/location_edittext"
             android:singleLine="true"
             android:tag="select_stg"
-            android:hint=""
+            android:hint="Select State"
             android:drawableEnd="@drawable/dropdown_icon"
             android:id="@+id/chooseState"
             android:layout_marginTop="10dp"

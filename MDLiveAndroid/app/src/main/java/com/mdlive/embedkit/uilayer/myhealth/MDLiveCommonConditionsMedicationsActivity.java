@@ -165,7 +165,16 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             if(((newConditions.size()+existingConditions.size()) == listToSet.size())){
                 saveNewConditionsOrAllergies();
             }else{
-                MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
+                if(type == TYPE_CONSTANT.CONDITION){
+                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The condition you entered is already in your Health History.");
+                }else if(type == TYPE_CONSTANT.ALLERGY){
+                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The allergy you entered is already in your Health History.");
+
+                }else if(type == TYPE_CONSTANT.MEDICATION){
+                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The medication you entered is already in your Health History.");
+
+                }
+
             }
         }
     }

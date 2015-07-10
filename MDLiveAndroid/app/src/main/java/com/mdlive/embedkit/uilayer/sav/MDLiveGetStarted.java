@@ -69,7 +69,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     private boolean isUserInfo=false;
     private HashMap<String,Object> userInfoObject;
     private String parentName,dependentName=null;//Variable to save the parent name.
-
     private String userInfoJSONString;
 
 
@@ -79,6 +78,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         setRemoteUserId();
+
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
@@ -133,7 +133,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         }
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "");
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
         Log.e("Getstarted page",longNameLocation);
         locationTxt.setText(longNameLocation);
     }
@@ -233,6 +233,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
+//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
@@ -265,7 +266,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     startActivityForResult(LocationIntent, 2222);
                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "");
+                    String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
                     SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
                     if(longLocation != null && longLocation.length() != 0)
                         locationTxt.setText(longLocation);
@@ -597,7 +598,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                 }*/
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
-        services.getUserBasicInfoRequest("",successCallBackListener, errorListener);
+        services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
     /**
      * Load Family Member Type Details.
@@ -797,7 +798,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
 //            pDialog.dismiss();
-            Log.e("Pending Appt",notiObj.getString("upcoming_appointments"));
+            Log.e("Pending Appt", notiObj.getString("upcoming_appointments"));
             if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
             }
