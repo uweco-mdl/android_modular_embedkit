@@ -342,5 +342,5 @@ West Virginia</item>
     <!-- Used in SSO Screen -->
     <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
     <string name="home_dialog_text">Your progress will not be saved if you leave.</string>
-
+    <string name="home_dialog_title">Leave [Doctor Consultation]?</string>
 </resources>
