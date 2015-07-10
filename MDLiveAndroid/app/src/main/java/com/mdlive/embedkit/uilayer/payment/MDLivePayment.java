@@ -109,7 +109,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
-        TextView textview = (TextView) findViewById((R.id.textView5));
         HostedPCI.getSettings().setJavaScriptEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -117,8 +116,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
         }
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-//        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
-        //pDialog.show();
+
+        TextView textview = (TextView) findViewById((R.id.ApplyOfferCode));
         textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
