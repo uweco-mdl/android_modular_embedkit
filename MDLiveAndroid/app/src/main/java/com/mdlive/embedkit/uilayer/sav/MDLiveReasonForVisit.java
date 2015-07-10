@@ -234,7 +234,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     public void movetohome()
     {
 
-        MdliveUtils.movetohome(MDLiveReasonForVisit.this);
+        MdliveUtils.movetohome(MDLiveReasonForVisit.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     @Override

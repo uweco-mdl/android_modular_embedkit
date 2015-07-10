@@ -1638,7 +1638,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveMedicalHistory.this);
+        MdliveUtils.movetohome(MDLiveMedicalHistory.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
 

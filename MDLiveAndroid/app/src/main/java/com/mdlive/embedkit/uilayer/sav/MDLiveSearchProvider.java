@@ -681,7 +681,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveSearchProvider.this);
+        MdliveUtils.movetohome(MDLiveSearchProvider.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /**

@@ -137,7 +137,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 MdliveUtils.movetohome(MDLivePayment.this);
+                 MdliveUtils.movetohome(MDLivePayment.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
             }
         });
     }

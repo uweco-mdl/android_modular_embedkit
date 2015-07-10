@@ -48,7 +48,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
         homeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MdliveUtils.movetohome(MDLiveVsee.this);
+                MdliveUtils.movetohome(MDLiveVsee.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
             }
         });
 

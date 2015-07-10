@@ -442,7 +442,7 @@ public class MDLivePharmacy extends FragmentActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePharmacy.this);
+        MdliveUtils.movetohome(MDLivePharmacy.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
 

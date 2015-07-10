@@ -440,7 +440,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveChooseProvider.this);
+        MdliveUtils.movetohome(MDLiveChooseProvider.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /*

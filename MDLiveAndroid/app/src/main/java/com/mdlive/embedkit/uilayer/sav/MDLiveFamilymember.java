@@ -453,7 +453,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveFamilymember.this);
+        MdliveUtils.movetohome(MDLiveFamilymember.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /**

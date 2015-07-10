@@ -42,7 +42,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
         txtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MdliveUtils.movetohome(MDLivePendingVisits.this);
+                MdliveUtils.movetohome(MDLivePendingVisits.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
             }
         });
 
@@ -155,7 +155,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
      * @param v-User clicked view from the screen
      */
     public void cancelVisit(View v){
-        MdliveUtils.movetohome(MDLivePendingVisits.this);
+        MdliveUtils.movetohome(MDLivePendingVisits.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
 

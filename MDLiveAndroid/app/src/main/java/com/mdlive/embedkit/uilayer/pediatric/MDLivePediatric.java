@@ -343,10 +343,10 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 enableSaveButton();
-                if(checkedId== R.id.childcare_yesButton){
-                    updateParams("Childcare outside home","Yes");
-                }else{
-                    updateParams("Childcare outside home","No");
+                if (checkedId == R.id.childcare_yesButton) {
+                    updateParams("Childcare outside home", "Yes");
+                } else {
+                    updateParams("Childcare outside home", "No");
                 }
             }
         });
@@ -354,10 +354,10 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 enableSaveButton();
-                if(checkedId== R.id.siblings_yesButton){
-                    updateParams("Siblings","Yes");
-                }else{
-                    updateParams("Siblings","No");
+                if (checkedId == R.id.siblings_yesButton) {
+                    updateParams("Siblings", "Yes");
+                } else {
+                    updateParams("Siblings", "No");
                 }
             }
         });
@@ -714,7 +714,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePediatric.this);
+        MdliveUtils.movetohome(MDLivePediatric.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /*

@@ -441,7 +441,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePharmacyChange.this);
+        MdliveUtils.movetohome(MDLivePharmacyChange.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
 

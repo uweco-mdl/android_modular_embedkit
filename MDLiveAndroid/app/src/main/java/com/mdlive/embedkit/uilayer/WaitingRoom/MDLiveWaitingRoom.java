@@ -249,7 +249,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveWaitingRoom.this);
+        MdliveUtils.movetohome(MDLiveWaitingRoom.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     @Override

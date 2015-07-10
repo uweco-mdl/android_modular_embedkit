@@ -875,7 +875,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveGetStarted.this);
+        MdliveUtils.movetohome(MDLiveGetStarted.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /*
