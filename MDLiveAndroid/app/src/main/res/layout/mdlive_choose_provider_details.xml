@@ -88,7 +88,7 @@
                 <Button
                     android:id="@+id/tapBtn"
                     style="@style/ContinueButtonStyle"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="10dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text=""

@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
@@ -270,10 +271,19 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         }
 
         if(isAllFieldsfilled){
-            addChildBtn.setBackgroundColor(getResources().getColor(R.color.green));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                addChildBtn.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+            } else {
+                addChildBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            }
             addChildBtn.setClickable(true);
         }else{
-            addChildBtn.setBackgroundColor(getResources().getColor(R.color.grey_txt));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                addChildBtn.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+            } else {
+                addChildBtn.setBackgroundResource(R.drawable.btn_rounded_grey);
+            }
             addChildBtn.setClickable(false);
         }
     }

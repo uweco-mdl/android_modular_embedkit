@@ -157,6 +157,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
+                MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
                 finish();
             }
         });
@@ -167,6 +168,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onClick(View v) {
 //                pDialog.show();
                 progressBar.setVisibility(View.VISIBLE);
+                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,progressBar);
                 getLocationCoordinates();
             }
         });

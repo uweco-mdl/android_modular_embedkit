@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -218,7 +219,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 withpatientTxt.setText(str_Availability_Type);
                 withpatientTxt.setTextColor(Color.parseColor("#F18032"));
                 tapSeetheDoctorTxt.setClickable(false);
-                tapSeetheDoctorTxt.setBackgroundColor(getResources().getColor(R.color.search_bgd));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                } else {
+                    tapSeetheDoctorTxt.setBackgroundResource(R.drawable.btn_rounded_grey);
+                }
                 tapSeetheDoctorTxt.setText("Currently with patient");
             }
             else if(str_Availability_Type.equals("not available"))

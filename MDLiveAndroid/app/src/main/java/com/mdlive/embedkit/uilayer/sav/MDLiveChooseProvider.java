@@ -61,7 +61,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
     private LinearLayout dcotorOnCallHeader,DocOnCalLinLay;
-    private RelativeLayout filterRl,filterMainRl;
+    private RelativeLayout filterMainRl;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
 
@@ -74,7 +74,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 //        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
         DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
         filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
-        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
+//        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
 
 
@@ -93,6 +93,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveChooseProvider.this);
+                MdliveUtils.closingActivityAnimation(MDLiveChooseProvider.this);
                 finish();
             }
         });
@@ -153,7 +154,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 setInfoVisibilty();
                 DocOnCalLinLay.setVisibility(View.VISIBLE);
 //                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//                filterRl.setVisibility(View.GONE);
+                filterMainRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
                     if (error.networkResponse == null) {
@@ -178,6 +179,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     JSONObject obj = new JSONObject(error.toString());
                     MdliveUtils.showDialog(MDLiveChooseProvider.this, MDLiveChooseProvider.this.getResources().getString(R.string.app_name), obj.getString("error"), MDLiveChooseProvider.this.getResources().getString(R.string.ok), null, positiveOnclickListener, null);
                 }catch(Exception e){
+                    setInfoVisibilty();
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
                     e.printStackTrace();
                 }
@@ -207,14 +209,30 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Log.e("StrDoctorOnCall-->", StrDoctorOnCall);
                 JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                 if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//                    filterRl.setVisibility(View.GONE);
-                    doctorOnCallButtonClick();
-                }else {
-//                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                    // Here the Array has "No Providers listed with given criteria" string in response
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
                     DocOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.VISIBLE);
-                    doctorOnCallButtonClick();
+                    filterMainRl.setVisibility(View.GONE);
+
+                    return;
+                }else {
+                    // Here the Array has blank string in response
+                    if (responArray.size() > 0) {
+                        dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                        DocOnCalLinLay.setVisibility(View.GONE);
+                        filterMainRl.setVisibility(View.VISIBLE);
+                        doctorOnCallButtonClick();
+                    } else {
+                        dcotorOnCallHeader.setVisibility(View.VISIBLE);
+                        DocOnCalLinLay.setVisibility(View.GONE);
+                        filterMainRl.setVisibility(View.GONE);
+                    }
+//
                 }
             }
 
