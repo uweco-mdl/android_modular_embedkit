@@ -74,7 +74,7 @@
                         android:id="@+id/txtexpDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Expirational Date"
+                        android:text="Expiration Date"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
                         android:textSize="16sp" />

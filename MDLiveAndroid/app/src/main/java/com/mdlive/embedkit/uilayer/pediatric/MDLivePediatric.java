@@ -645,7 +645,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
             } else {
-                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+                saveButton.setBackgroundResource(R.drawable.btn_rounded_bg);
 
             }
             saveButton.setClickable(true);
@@ -653,10 +653,9 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
             } else {
-                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                saveButton.setBackgroundResource(R.drawable.btn_rounded_grey);
 
             }
-            saveButton.setBackgroundColor(getResources().getColor(R.color.grey_txt));
             saveButton.setClickable(false);
         }
     }

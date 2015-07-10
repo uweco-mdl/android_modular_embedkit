@@ -519,7 +519,7 @@
                         android:id="@+id/takephotoTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:gravity="center_vertical"
                         android:text="Take a photo"
                         android:textColor="@android:color/black"

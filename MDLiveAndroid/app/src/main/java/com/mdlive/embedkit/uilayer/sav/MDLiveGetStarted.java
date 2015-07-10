@@ -755,7 +755,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 //                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
             }
 
-            dependentList.add(0,personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
+            dependentList.add(0, personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             parentName=personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());

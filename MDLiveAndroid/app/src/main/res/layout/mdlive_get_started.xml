@@ -154,7 +154,7 @@
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:background="@color/transparent_native"
-                            android:maxLength="15"
+                            android:maxLength="14"
                             android:inputType="number"
                             android:text=""/>
                         <View style="@style/ViewStyle"
