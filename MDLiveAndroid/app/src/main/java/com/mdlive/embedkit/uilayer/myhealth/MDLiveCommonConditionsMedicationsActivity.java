@@ -128,19 +128,19 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         newConditions.clear();
         int emptyFieldCount = 0;
 
-        for(int i = 0;i<addConditionsLl.getChildCount();i++){
+        for (int i = 0; i < addConditionsLl.getChildCount(); i++) {
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
-            if(conditionRl.getTag()==null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
-                    !(((EditText)conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())){
-                newConditions.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
-            } else if(conditionRl.getTag()!=null && (((EditText)conditionRl.getChildAt(0)).getText() != null) &&
-                    !(((EditText)conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())) {
+            if (conditionRl.getTag() == null && (((EditText) conditionRl.getChildAt(0)).getText() != null) &&
+                    !(((EditText) conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())) {
+                newConditions.add(((EditText) conditionRl.getChildAt(0)).getText().toString());
+            } else if (conditionRl.getTag() != null && (((EditText) conditionRl.getChildAt(0)).getText() != null) &&
+                    !(((EditText) conditionRl.getChildAt(0)).getText().toString().trim().isEmpty())) {
                 HashMap<String, String> items = new HashMap<String, String>();
                 items.put("id", conditionRl.getTag().toString());
-                items.put("name",((EditText)conditionRl.getChildAt(0)).getText().toString());
-                tmpExistingCond.add(((EditText)conditionRl.getChildAt(0)).getText().toString());
+                items.put("name", ((EditText) conditionRl.getChildAt(0)).getText().toString());
+                tmpExistingCond.add(((EditText) conditionRl.getChildAt(0)).getText().toString());
                 existingConditions.add(items);
-            }else{
+            } else {
                 emptyFieldCount++;
             }
         }
@@ -159,14 +159,19 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         listToSet.addAll(newConditions);
         listToSet.addAll(tmpExistingCond);
 
-        if(emptyFieldCount > 1){
+        if (emptyFieldCount > 1) {
             MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
-        }
-        else{
-            if(((newConditions.size()+existingConditions.size()) == listToSet.size())){
+        } else {
+            if (((newConditions.size() + existingConditions.size()) == listToSet.size())) {
                 saveNewConditionsOrAllergies();
-            }else{
-                MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
+            } else {
+                if (type == TYPE_CONSTANT.CONDITION) {
+                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Duplicate items found in list. Please modify details.");
+                } else if (type == TYPE_CONSTANT.CONDITION) {
+
+                } else if (type == TYPE_CONSTANT.CONDITION) {
+
+                }
             }
         }
     }
