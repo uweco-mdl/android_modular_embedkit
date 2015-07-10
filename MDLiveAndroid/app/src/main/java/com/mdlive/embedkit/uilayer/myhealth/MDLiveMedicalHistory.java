@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,7 +101,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             MedicationsGroup, AllergiesGroup, ProceduresGroup;
     private ArrayList<HashMap<String, Object>> myPhotosList;
     private ImageAdapter imageAdapter;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private GridView gridview;
     public static Uri fileUri;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -128,7 +126,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         PediatricAgeCheckGroup_1 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) findViewById(R.id.conditionsGroup));
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        setProgressBar(findViewById(R.id.progressDialog));
         MedicationsGroup = ((RadioGroup) findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
         ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
@@ -187,7 +186,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private void updateMedicalHistory(){
 
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -613,12 +613,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     private void uploadMedicalRecordService(String filePath) {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 try {
                     if(response!= null){
                         if(response.has("message")){
@@ -657,7 +659,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     private void downloadMedicalRecordService() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -677,7 +680,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     public void handleDownloadRecordService(JSONObject response){
 //        pDialog.dismiss();
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
+        hideProgress();
         ArrayList<HashMap<String, Object>> listDatas = new ArrayList<>();
         try {
             if(response != null && response.toString().contains("No Previous Documents Found")){
@@ -685,7 +689,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }else if(response != null && response.has("records")){
                 listDatas.clear();
                 JSONArray recordsArray = response.getJSONArray("records");
-                Log.e("myPhotosList", response.toString());
+                //Log.e("myPhotosList", response.toString());
                 for(int i = 0; i<recordsArray.length(); i++){
                     JSONObject jsonObject = recordsArray.getJSONObject(i);
                     HashMap<String, Object> data = new HashMap<>();
@@ -849,7 +853,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             sb.append(line);
         }
         inputStream.close();*/
-        Log.e("Data... ", writer.toString());
+        //Log.e("Data... ", writer.toString());
         return writer.toString();
     }
 
@@ -871,7 +875,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -930,22 +935,24 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     private void checkMedicalDateHistory() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 try {
                     if(response.get("health_last_update") instanceof Number){
-                        Log.e("health_last_update ", "number");
+                        //Log.e("health_last_update ", "number");
                         long num=response.getLong("health_last_update");
                         int length = (int) Math.log10(num) + 1;
                         System.out.println(length);
                     }else if(response.get("health_last_update") instanceof CharSequence){
-                        Log.e("health_last_update ", "String");
+                        //Log.e("health_last_update ", "String");
                         if(response.getString("health_last_update").equals("")){
-                            Log.e("health_last_update ", "String is empty");
+                          //  Log.e("health_last_update ", "String is empty");
                         }
                     }
 
@@ -997,7 +1004,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     private void checkMedicalAggregation() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -1008,7 +1016,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("error", error.getMessage());
+               // Log.e("error", error.getMessage());
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -1023,7 +1031,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private void medicalAggregationHandleSuccessResponse(JSONObject response) {
         try {
             medicalAggregationJsonObject = response;
-            Log.e("Health History -->", medicalAggregationJsonObject.toString());
+           // Log.e("Health History -->", medicalAggregationJsonObject.toString());
             checkMedicalCompletion();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1079,7 +1087,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     private void checkMedicalCompletion() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -1101,7 +1110,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
 //        pDialog.dismiss();
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
+        hideProgress();
         NetworkResponse networkResponse = error.networkResponse;
 /*
         try {
@@ -1253,7 +1263,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             findViewById(R.id.ContainerScrollView).setVisibility(View.VISIBLE);
 //            findViewById(R.id.SavContinueBtn).setVisibility(View.VISIBLE);
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1453,13 +1464,15 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         postBody.put("female_questions", femaleAttributes);
 
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 getUserPharmacyDetails();
 //                Intent i = new Intent(MDLiveMedicalHistory.this, MDLivePharmacy.class);
 //                startActivity(i);
@@ -1470,7 +1483,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -1492,7 +1506,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     public void getUserPharmacyDetails() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -1503,7 +1518,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                pDialog.dismiss();
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -1531,7 +1547,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
 //            pDialog.dismiss();
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
             jsonResponse = response.toString();
 
             if(response.has("message")){
@@ -1578,7 +1595,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         LocationCooridnates locationService = new LocationCooridnates();
         if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
 //            pDialog.show();
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
+            showProgress();
             locationService.getLocation(this, new LocationCooridnates.LocationResult(){
                 @Override
                 public void gotLocation(final Location location) {
@@ -1586,7 +1604,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                         @Override
                         public void run() {
 //                            pDialog.dismiss();
-                            progressBar.setVisibility(View.GONE);
+                            //progressBar.setVisibility(View.GONE);
+                            hideProgress();
                             if(location != null){
                                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
                                 i.putExtra("longitude", location.getLongitude());
