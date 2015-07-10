@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
@@ -104,6 +105,13 @@ public class MDLiveVsee extends MDLiveBaseActivity
                     }
                 }
 
+                @Override
+                public void onEndedCall(String[] usernames) {
+                    super.onEndedCall(usernames);
+                    Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
+                    startActivity(i);
+                    finish();
+                }
             };
 
         Bundle extras = getIntent().getExtras();
