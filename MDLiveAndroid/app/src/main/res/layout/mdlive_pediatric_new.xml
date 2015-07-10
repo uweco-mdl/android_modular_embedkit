@@ -4,7 +4,7 @@
     <LinearLayout
         android:id="@+id/pediatricContainer"
         style="@style/ContainerStyle"
-        android:background="@color/mdliveBackgroundColor">
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/header"

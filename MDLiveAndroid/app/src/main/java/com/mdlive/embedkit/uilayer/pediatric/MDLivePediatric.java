@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,7 +34,6 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
-import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -636,9 +636,20 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     public void enableSaveButton(){
         if(isFieldsNotEmpty()){
-            saveButton.setBackgroundColor(getResources().getColor(R.color.green));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+            } else {
+                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+
+            }
             saveButton.setClickable(true);
         }else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+            } else {
+                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+
+            }
             saveButton.setBackgroundColor(getResources().getColor(R.color.grey_txt));
             saveButton.setClickable(false);
         }

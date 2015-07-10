@@ -223,12 +223,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }else {
                     // Here the Array has blank string in response
                     if (responArray.size() > 0) {
-                        dcotorOnCallHeader.setVisibility(View.VISIBLE);
+
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.VISIBLE);
                         doctorOnCallButtonClick();
                     } else {
-                        dcotorOnCallHeader.setVisibility(View.VISIBLE);
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.GONE);
                     }
