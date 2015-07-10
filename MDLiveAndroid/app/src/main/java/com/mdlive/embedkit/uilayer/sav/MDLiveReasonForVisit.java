@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     private ListView listView;
     private ProgressDialog pDialog;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private ArrayList<String> ReasonList;
     ReasonForVisitAdapter baseadapter;
 
@@ -50,7 +49,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_reason);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        //progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        setProgressBar(findViewById(R.id.progressBar));
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -90,7 +90,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
      */
     private void ReasonForVisit() {
 //        pDialog.show();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -102,7 +103,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
 //                pDialog.dismiss();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -127,7 +129,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
      */
     private void handleSuccessListener(JSONObject response) {
         try {
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
+            hideProgress();
 //            pDialog.dismiss();
            //Fetch Data From the Services
             JSONArray arr = response.getJSONArray("chief_complaint");

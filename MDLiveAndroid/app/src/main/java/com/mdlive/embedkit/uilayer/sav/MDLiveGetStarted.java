@@ -19,7 +19,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,7 +57,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     private int month,day,year;
     private String strPatientName,SavedLocation,dependentNmaeStr;
     private DatePickerDialog datePickerDialog;
-    private RelativeLayout progressBar;
+   // private RelativeLayout progressBar;
     public static boolean isFemale;
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> GenderList = new ArrayList<String>();

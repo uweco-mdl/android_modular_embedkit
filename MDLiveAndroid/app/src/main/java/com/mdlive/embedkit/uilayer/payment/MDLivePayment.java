@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +53,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private WebView HostedPCI;
     private DatePicker datePicker;
     protected static ProgressDialog pDialog;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private boolean isPaymentLoading;
     private int keyDel=0;
     private HashMap<String,HashMap<String,String>> billingParams;
@@ -78,7 +77,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,7 +347,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         runOnUiThread(new Runnable(){
             public void run() {
                 try {
-                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setVisibility(View.GONE);
                     hideProgress();
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
@@ -360,7 +359,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         runOnUiThread(new Runnable(){
             public void run() {
                 try {
-                    progressBar.setVisibility(View.VISIBLE);
+                    //progressBar.setVisibility(View.VISIBLE);
                     showProgress();
                 } catch (final Exception ex) {
                     Log.i("---","Exception in thread");
