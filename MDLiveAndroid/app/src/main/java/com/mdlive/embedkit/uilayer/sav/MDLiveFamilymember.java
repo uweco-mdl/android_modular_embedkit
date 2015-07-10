@@ -220,7 +220,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
 //        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
-        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", Confirm that i'm the legal parent / guardian of the minor above.");
+        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", confirm that i'm the legal parent / guardian of the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
