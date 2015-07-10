@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
@@ -26,7 +27,7 @@ import java.util.TimerTask;
 public class MDLiveVsee extends MDLiveBaseActivity
 {
     private boolean stopUpdatingStatus = false;
-    private static boolean CONSULTED = false,
+    private static boolean CONSULTED = false,CALL_ENDED = false,
             FINISH = false;
 
     private static VSeeServerConnection.SimpleVSeeServerConnectionReceiver simpleServerConnectionReceiver = null;
@@ -53,6 +54,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
         });
 
         CONSULTED = false;
+        CALL_ENDED = false;
 
         // Must always come first when using VSeeKit.  Doesn't consume many resources so it can always be done at app startup.
         //
@@ -104,6 +106,14 @@ public class MDLiveVsee extends MDLiveBaseActivity
                     }
                 }
 
+                @Override
+                public void onEndedCall(String[] usernames) {
+                    super.onEndedCall(usernames);
+                    CALL_ENDED = true;
+                    Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
+                    startActivity(i);
+                    finish();
+                }
             };
 
         Bundle extras = getIntent().getExtras();
@@ -142,7 +152,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onResume();
 
-        if(CONSULTED && !isFinishing())   // if user returned to this page after a consultation
+        if(CONSULTED && !isFinishing() && !CALL_ENDED)   // if user returned to this page after a consultation
         {
             FINISH = true;
             VSeeVideoManager.instance().finishVideoActivity();
