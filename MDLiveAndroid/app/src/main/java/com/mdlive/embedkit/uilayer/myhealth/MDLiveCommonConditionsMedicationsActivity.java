@@ -126,7 +126,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         LinearLayout addConditionsLl = (LinearLayout) findViewById(R.id.AddConditionsLl);
         existingConditions.clear();
         newConditions.clear();
-        int emptyFieldCount = 0;
 
         for (int i = 0; i < addConditionsLl.getChildCount(); i++) {
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
@@ -140,8 +139,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 items.put("name", ((EditText) conditionRl.getChildAt(0)).getText().toString());
                 tmpExistingCond.add(((EditText) conditionRl.getChildAt(0)).getText().toString());
                 existingConditions.add(items);
-            } else {
-                emptyFieldCount++;
             }
         }
 
@@ -159,9 +156,9 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         listToSet.addAll(newConditions);
         listToSet.addAll(tmpExistingCond);
 
-        if (emptyFieldCount > 1) {
-            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
-        } else {
+//        if (emptyFieldCount > 1) {
+//            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
+//        } else {
             if (((newConditions.size() + existingConditions.size()) == listToSet.size())) {
                 saveNewConditionsOrAllergies();
             } else {
@@ -174,7 +171,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Allergy you have entered already exists");
                 }
             }
-        }
+//        }
     }
 
     /* For Testing Purpose Get Method Call*/
