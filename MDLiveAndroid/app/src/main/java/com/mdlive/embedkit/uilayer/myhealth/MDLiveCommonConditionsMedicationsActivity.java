@@ -426,6 +426,14 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+                    if((conditonEt.getText().toString()).startsWith(" "))
+                    {
+                        conditonEt.getText().clear();
+                    }
+
+
+
             }
 
             @Override
