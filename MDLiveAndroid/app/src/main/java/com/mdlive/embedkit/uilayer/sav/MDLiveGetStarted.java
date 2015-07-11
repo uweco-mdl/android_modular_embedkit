@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.util.Calendar.MONTH;
 
@@ -193,7 +194,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                 DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));// TODO : Change it one number is confirmed
+                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
@@ -787,7 +788,18 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             JSONObject notiObj=response.getJSONObject("notifications");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
-            locationTxt.setText(personalInfo.getString("state"));
+            String state = personalInfo.getString("state");
+            if(state.length()<3) {
+                List<String> stateArr = Arrays.asList(getResources().getStringArray(R.array.stateName));
+                List<String> stateIdArr = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+                for (int l = 0; l < stateIdArr.size(); l++) {
+                    if (state.equals(stateIdArr.get(l))) {
+                        state = stateArr.get(l);
+                        break;
+                    }
+                }
+            }
+            locationTxt.setText(state);
             genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
