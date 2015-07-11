@@ -179,12 +179,19 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 if (s.length() > 0 && s.subSequence(0, 1).toString().equalsIgnoreCase(" ")) {
                     search_edit.setText("");
                 }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 String text=s.toString();
                 if(!text.startsWith(" ")){
+                    baseadapter.getFilter().filter(s.toString());
+                }
+                if(search_edit.getText().length() == 0){
+                    baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
+                    listView.setAdapter(baseadapter);
+                    baseadapter.notifyDataSetChanged();
                     baseadapter.getFilter().filter(s.toString());
                 }
             }
