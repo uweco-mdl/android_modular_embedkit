@@ -2,10 +2,12 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -170,7 +172,11 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 //                pDialog.show();
                 //progressBar.setVisibility(View.VISIBLE);
                 showProgress();
-                MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,(RelativeLayout)findViewById(R.id.progressDialog));
+                LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);;
+                boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if(!enabled) {
+                    MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this, (RelativeLayout) findViewById(R.id.progressDialog));
+                }
                 getLocationCoordinates();
             }
         });
