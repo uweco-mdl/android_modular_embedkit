@@ -333,17 +333,24 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt,addConditionsLl, deleteView));
 
         conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, deleteView));
-
+        if(position == 0){
+            deleteView.setVisibility(View.GONE);
+        }
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setResult(RESULT_OK);
-                if(((ViewGroup)(deleteView.getParent())).getTag()!=null) {
+                boolean isTagNull = ((ViewGroup)(deleteView.getParent())).getTag()!=null;
+                if(isTagNull) {
                     deleteMedicalConditionsOrAllergyAction(deleteView, addConditionsLl);
-                } else {
+                }
+//                } else {
+//                    addBlankConditionOrAllergy();
+//                }
+                addConditionsLl.removeView(singleConditionView);
+                if (addConditionsLl.getChildCount() == 0 && !isTagNull) {
                     addBlankConditionOrAllergy();
                 }
-                addConditionsLl.removeView(singleConditionView);
             }
         });
 
