@@ -67,19 +67,16 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
             @Override
             public void onResponse(Object response) {
-                Log.e("Response Provider", response.toString());
                 handleSuccessResponse(response.toString());//Method to handle the response from Server
             }
         };
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response Provider Error", error.toString());
                 MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
 
                 if(isReturning && !isStartedSummary){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     isStartedSummary = true;
@@ -105,13 +102,11 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             @Override
             public void onResponse(Object response) {
                handleVSeeResponse(response.toString());
-                Log.e("Response Vsee", response.toString());
             }
         };
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("error Vsee", error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -124,7 +119,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 }
                 if(isReturning && !isStartedSummary){
                     Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                     isStartedSummary = true;
@@ -146,7 +140,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void handleSuccessResponse(String response) {
         try{
             JSONObject resObj=new JSONObject(response);
-            Log.d("isReturning",isReturning + "" + " - Provider status" + resObj.getString("provider_status"));
             if(resObj.getString("provider_status").equals("true")){
                 ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
@@ -154,8 +147,8 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
                 getVSEECredentials();
             }else if(isReturning && !resObj.getString("provider_status").equals("true") && !isStartedSummary) {
+                Log.d("Waiting Room -->","handleSuccessResponse ==");
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
                 MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
                 isStartedSummary = true;

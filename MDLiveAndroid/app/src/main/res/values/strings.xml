@@ -149,11 +149,14 @@
     <string name="add_allergies_with_eg_hint">Add Allergies (E.g. Diabetes)</string>
     <string name="add_allergies_hint">Add Allergies</string>
     <string name="add_meidations_with_eg_hint">Add Medications</string>
+    <string name="medication_already_exist">Medication you have entered already exists</string>
+    <string name="allergy_already_exist">Allergy you have entered already exists</string>
     <string name="add_medications_hint">Add Medications</string>
     <string name="add_medication">Add Medications</string>
 
     <string name="age_check1">Are you currently or could you possibly be pregnant?</string>
     <string name="age_check2">Are you currently breastfeeding?</string>
+    <string name="condition_already_exist">Condition you have entered already exists</string>
 
 
     <!-- My Health -->
@@ -193,7 +196,7 @@
     <string name="waiting_text">Please sit down and relax, your visit will \n begin shortly</string>
     <string name="waiting_warn_text">Please do not leave this screen</string>
     <string name="waiting_warn_complete">Please do not leave this screen</string>
-    <string name="waiting_provider_text">Starting Consultation</string>
+    <string name="waiting_provider_text">Starting Consultation...</string>
 
     <!-- Waiting Room -->
 

@@ -125,7 +125,7 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.mdlive.embedkit.uilayer.login.MDLiveSummary" android:theme="@style/MDLIVEactivityTheme"
+            android:name="com.mdlive.embedkit.uilayer.login.MDLiveSummary" android:theme="@style/MDLIVEactivityTheme" android:launchMode="singleInstance"
             android:screenOrientation="portrait"></activity>
 
 

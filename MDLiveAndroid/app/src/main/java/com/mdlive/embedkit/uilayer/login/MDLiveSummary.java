@@ -43,7 +43,8 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         pDialog = MdliveUtils.getProgressDialog("Please wait", this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{"'"+docName.substring(docName.lastIndexOf(" ")+1)+"'"}));
+        String shortDocName = docName.split(",")[0];
+        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

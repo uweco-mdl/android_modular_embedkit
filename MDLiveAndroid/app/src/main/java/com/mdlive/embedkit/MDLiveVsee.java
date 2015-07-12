@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.vsee.kit.VSeeKit;
@@ -27,7 +26,7 @@ import java.util.TimerTask;
 public class MDLiveVsee extends MDLiveBaseActivity
 {
     private boolean stopUpdatingStatus = false;
-    private static boolean CONSULTED = false,CALL_ENDED = false,
+    private static boolean CONSULTED = false,CALL_ENDED = false, RETURNED = false,
             FINISH = false;
 
     private static VSeeServerConnection.SimpleVSeeServerConnectionReceiver simpleServerConnectionReceiver = null;
@@ -77,6 +76,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
                     }
                 }
 
+
                 @Override
                 public void onLoginStateChange(VSeeServerConnection.LoginState newState) {
                     updateLoginState(newState);
@@ -95,11 +95,12 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
                     Log.e("VSeeMainActivity", "onRemoveRemoteVideoView() got called.");
 
-                    if (isLast) {
+                    if (isLast && !RETURNED && !CALL_ENDED && !isFinishing()) {
                         // video call is over... end the call activity if it is open
                         VSeeServerConnection.instance().logout();
                         VSeeVideoManager.instance().finishVideoActivity();
-                        Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
+                        Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
+                        RETURNED = false;
                         i.putExtra("isReturning", true);
                         startActivity(i);
                         finish();
@@ -107,12 +108,27 @@ public class MDLiveVsee extends MDLiveBaseActivity
                 }
 
                 @Override
+                public void onDeclinedCall(String username) {
+                    super.onDeclinedCall(username);
+                    Log.d("VSEE","Declined Call");
+                    CALL_ENDED = true;
+                    Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                    finish();
+                }
+
+
+                @Override
                 public void onEndedCall(String[] usernames) {
                     super.onEndedCall(usernames);
                     CALL_ENDED = true;
-                    Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
-                    startActivity(i);
-                    finish();
+                    if(!isFinishing()) {
+                        Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        finish();
+                    }
                 }
             };
 
@@ -143,7 +159,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
         FrameLayout frame = (FrameLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.mdlive_vseewaitingmessage, null);
         TextView waitConnectMesg = (TextView)frame.findViewById(R.id.txtWaitCallConnect);
-        waitConnectMesg.setText("Waiting for call to connect");
+        waitConnectMesg.setText("Waiting for call to connect...");
         return(frame);
     }
 
@@ -151,7 +167,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     public void onResume()
     {
         super.onResume();
-
+        RETURNED = true;
         if(CONSULTED && !isFinishing() && !CALL_ENDED)   // if user returned to this page after a consultation
         {
             FINISH = true;
@@ -160,7 +176,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
             VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
 			simpleServerConnectionReceiver = null;
 			simpleVidManagerReceiver = null;
-            Intent i = new Intent(MDLiveVsee.this, MDLiveWaitingRoom.class);
+            Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
             i.putExtra("isReturning", true);
             startActivity(i);
             finish();
@@ -230,7 +246,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
                 break;
 
             case LOGGED_IN:
-
+                RETURNED = false;
                 // make sure auto-accept is enabled even for cases of reconnection
                 VSeeServerConnection.instance().setAutoAccept(true);
 
