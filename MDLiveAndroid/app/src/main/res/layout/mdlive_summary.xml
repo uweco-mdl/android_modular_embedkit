@@ -24,7 +24,6 @@
                  android:layout_alignParentLeft="true"
                  android:layout_centerVertical="true"
                  android:layout_marginLeft="20dp"
-                 android:layout_toEndOf="@+id/backImg"
                  android:text="Your Consultation"
                  android:textColor="@color/white"
                  android:textSize="20sp"
@@ -44,19 +43,24 @@
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
             android:textColor="@color/black"
-            android:hint="Thank you for Using MDLIVE!"
+            android:text="@string/summary_thankyou_txt"
             android:id="@+id/textView9"
             android:textSize="16sp" />
 
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="25dp"
-            android:hint="Summary"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="SUMMARY"
             android:id="@+id/textView10" />
 
              <RelativeLayout
                  android:layout_width="match_parent"
-                 android:layout_height="wrap_content">
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                 >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,40 +69,48 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:hint=""
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="Test"
                 android:id="@+id/txtDoctorName" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:hint=""
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                android:text=""
                 android:id="@+id/txtTotalTime" />
 
         </LinearLayout>
 
-                 <LinearLayout
-                     android:layout_alignParentRight="true"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="10dp"
-                     android:orientation="vertical">
+         <LinearLayout
+             android:layout_alignParentRight="true"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:gravity="center"
+             android:orientation="vertical">
 
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textSize="25sp"
-                         android:hint="$49.00"
-                         android:id="@+id/txtPaymentSummary" />
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textSize="25sp"
+                 android:textColor="@color/black"
+                 android:text="$49.00"
+                 android:id="@+id/txtPaymentSummary" />
 
-                 </LinearLayout>
+         </LinearLayout>
      </RelativeLayout>
              <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="20dp"
-            android:hint="Rate Consultation"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="RATE CONSULTATION"
             android:id="@+id/textView15" />
 
         <RatingBar
@@ -115,14 +127,19 @@
             <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
-            android:hint="Next Steps"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@string/next_steps_txt"
             android:id="@+id/textView16" />
 
            <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
-            android:hint="You will receive an email with your receipt, Doctor's contact info, and prescription details if necessary"
-            android:id="@+id/textView19" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/NextStepsContentTv" />
 
              <Button
                  android:id="@+id/DoneRatingBtn"
@@ -130,6 +147,7 @@
                  android:layout_margin="10dp"
                  android:text="Done"
                  android:layout_marginTop="18dp"
+                 android:textSize="16sp"
                  android:textAllCaps="false" />
     </LinearLayout>
 </LinearLayout>

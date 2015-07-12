@@ -36,12 +36,14 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        txtDocName.setText(docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,""));
+        SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String docName = docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,"");
+        txtDocName.setText(docName);
         payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         pDialog = MdliveUtils.getProgressDialog("Please wait", this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
+        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{"'"+docName.substring(docName.lastIndexOf(" ")+1)+"'"}));
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
