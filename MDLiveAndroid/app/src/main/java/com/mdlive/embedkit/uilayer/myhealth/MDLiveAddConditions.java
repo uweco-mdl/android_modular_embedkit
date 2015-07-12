@@ -89,46 +89,9 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
             AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
             services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions);
-            /*
-            for (int i = 0; i < newConditions.size(); i++) {
-                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (newConditions.size() == ++addConditionsCount) {
-                            pDialog.dismiss();
-                            updateConditionsOrAllergies();
-                        }
-                    }
-                };
-                NetworkErrorListener errorListener = new NetworkErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        medicalCommonErrorResponseHandler(error);
-                    }
-                };
-                AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
-                services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions.get(i));
-            }*/
         }
     }
-
-  /*  public void setDatas(){
-        for(int i = 0; i < newConditions.size(); i++){
-            conditionsText += newConditions.get(i)+", ";
-        }
-        for(int i = 0; i < existingConditions.size(); i++){
-            HashMap<String, String> data = existingConditions.get(i);
-            if(data.get("name")!=null)
-                conditionsText += data.get("name")+", ";
-        }
-        Intent resultData = new Intent();
-        if(conditionsText == null || conditionsText.trim().length() == 0)
-            conditionsText = "No conditions reported";
-        resultData.putExtra("conditionsData", conditionsText);
-        setResult(RESULT_OK, resultData);
-    }*/
-
 
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity

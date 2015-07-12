@@ -62,7 +62,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBaseActivity {
 
-    public static ProgressDialog pDialog;
+//    public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
@@ -88,7 +88,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
 
-        pDialog = MdliveUtils.getProgressDialog("Loading...", this);
+        //pDialog = MdliveUtils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
         findViewById(R.id.doneTxt).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,11 +164,11 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             } else {
                 String name = (type == TYPE_CONSTANT.CONDITION) ? "condition": (type == TYPE_CONSTANT.ALLERGY)?"allergy":"medication";
                 if (type == TYPE_CONSTANT.CONDITION) {
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Condition you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Condition you have entered already exists");
                 } else if (type == TYPE_CONSTANT.MEDICATION) {
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Medication you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Medication you have entered already exists");
                 } else if (type == TYPE_CONSTANT.ALLERGY) {
-                    MdliveUtils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "Allergy you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Allergy you have entered already exists");
                 }
             }
 //        }
@@ -398,7 +398,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 } else {
                     if (conditonEt.getText().toString().trim().equals("")) {
                         deleteView.setVisibility(View.GONE);
-                    } else {
+                    }else {
                         deleteView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -423,14 +423,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
                     if((conditonEt.getText().toString()).startsWith(" "))
                     {
                         conditonEt.getText().clear();
                     }
-
-
-
             }
 
             @Override
@@ -659,7 +655,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      */
 
     public void checkMedicalAggregation() {
-        pDialog.show();
+        showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -729,6 +725,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         }
 
         setResult(RESULT_OK, resultData);
+        hideProgress();
         finish();
         MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
         //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);

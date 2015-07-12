@@ -78,7 +78,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
 //    private ProgressBar loadingIndicator;
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
-    boolean isMarkerPointAdded = false;
+//    boolean isMarkerPointAdded = false;
     private String errorMesssage ="No Pharmacies Found!";
 
     @Override
@@ -396,7 +396,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 map.put("twenty_four_hours", twenty_four_hours);
                 map.put("distance", distance);
                 map.put("active", active);
-                if (googleMap != null && !isMarkerPointAdded) {
+                if (googleMap != null) {
                     if(store_name.contains("Walgreen")){
                         markerPoint = new LatLng(latitude, longitude);
                         Marker marker = googleMap.addMarker(new MarkerOptions().position(
@@ -404,7 +404,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
                                         .title(store_name)
                         );
                         markerIdCollection.put(marker, i);
-                        isMarkerPointAdded = true;
                     }
                 }
                 list.add(map);
