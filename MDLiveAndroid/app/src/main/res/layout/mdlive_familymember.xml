@@ -56,13 +56,14 @@
                             android:text="@string/first_name" />
 
                         <EditText
-                            android:id="@+id/patientEt"
-                            style="@style/GetStartedContentTxtStyle"
-                            android:background="@null"
+
+                            style="@style/reasonSearch_edittext"
                             android:hint="@string/first_name"
-                            android:textColor="@color/black"
-                            android:textCursorDrawable="@color/black"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:id="@+id/patientEt"
+                            android:inputType="textPersonName"
+
+                           />
 
 
                     </LinearLayout>
@@ -80,13 +81,25 @@
                             android:text="@string/last_name" />
 
                         <EditText
-                            android:id="@+id/patient2Et"
-                            style="@style/GetStartedContentTxtStyle"
-                            android:background="@null"
+                            style="@style/reasonSearch_edittext"
                             android:hint="@string/last_name"
-                            android:textCursorDrawable="@color/black"
+                            android:textSize="18sp"
+                            android:id="@+id/patient2Et"
+                            android:inputType="textPersonName"
+                          />
+
+
+                        <!--    android:id="@+id/patient2Et"
+                            style="@style/GetStartedContentTxtStyle"
+                            android:background="@color/transparent_native"
+                            android:hint="@string/last_name"
+                            android:cursorVisible="true"
+                            android:ellipsize="start"
+                            android:textCursorDrawable="@null"
                             android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:inputType="textPersonName"
+                            android:textSize="18sp"-->
+
 
 
                     </LinearLayout>
