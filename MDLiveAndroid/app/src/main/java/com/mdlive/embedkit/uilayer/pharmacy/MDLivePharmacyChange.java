@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,9 +10,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -67,6 +70,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private Intent sendingIntent;
     private int keyDel=0;
     private String errorMesssage = "No Pharmacies listed in your location.";
+    protected boolean isPerformingAutoSuggestion;
+    protected static String previousSearch = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
         pharmacy_search_name.setThreshold(3);
         pharmacy_search_name.setAdapter(adapter);
+
         zipcodeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -233,6 +239,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     }
 
 
+
     /**
      * The textwatcher for Pharmacy Search Name. This will initiate the autosuggestion for
      * pharmacy search name.
@@ -249,7 +256,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 3&&!s.toString().startsWith(" ")) {
+                if (s != null && s.length() >= 3 && !s.toString().startsWith(" ") && !previousSearch.trim().equalsIgnoreCase(s.toString().trim())) {
                     addSearchTextHistory(s.toString());
                 }
             }
@@ -303,21 +310,28 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      * @param searchText - This text is enter by users
      */
     public void addSearchTextHistory(String searchText) {
+        Log.e("Hitting Service....", "********************");
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                isPerformingAutoSuggestion = false;
                 handleSuggestionSuccessResponse(response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                isPerformingAutoSuggestion = false;
                  MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
             }
         };
-        ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-        SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
-        services.doSuggestionRequest(searchText, responseListener, errorListener);
+        if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(searchText)) {
+            ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+            SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
+            services.doSuggestionRequest(searchText, responseListener, errorListener);
+            previousSearch = searchText;
+            isPerformingAutoSuggestion = true;
+        }
     }
 
     /**
@@ -334,10 +348,25 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             for (int i = 0; i < jarray.length(); i++) {
                 suggestionList.add(jarray.getString(i));
             }
+
+            if(suggestionList.size() > 0){
+                ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                pharmacy_search_name.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+
+/*
             adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
             pharmacy_search_name.setThreshold(3);
             pharmacy_search_name.setAdapter(adapter);
-            pharmacy_search_name.showDropDown();
+            if(!selectedFromAutoComplete)
+                 pharmacy_search_name.showDropDown();
+*/
+
+
+            //    pharmacy_search_name.showDropDown();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -365,6 +394,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                     @Override
                     public void onClick(View view) {
                         atv.setText(text.getText().toString());
+                        previousSearch = text.getText().toString();
                         atv.dismissDropDown();
                         atv.setAdapter(null);
                     }
