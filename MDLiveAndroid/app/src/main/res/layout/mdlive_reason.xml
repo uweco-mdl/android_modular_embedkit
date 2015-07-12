@@ -84,11 +84,24 @@
                 android:textSize="14sp"
                 android:layout_centerVertical="true"
                 android:id="@+id/search_edit"
+                android:layout_marginRight="5dp"
                 android:inputType="textPersonName"
                 android:layout_gravity="center_horizontal"
-           />
+                android:layout_toStartOf="@+id/deleteTextBtn"
+                android:layout_toLeftOf="@+id/deleteTextBtn" />
 
-</RelativeLayout>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/deleteTextBtn"
+                android:src="@drawable/icon_x"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
         </LinearLayout>
 
     <include

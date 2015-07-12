@@ -44,13 +44,15 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
     //private ProgressBar progressBar;
     private ArrayList<String> ReasonList;
     ReasonForVisitAdapter baseadapter;
-
+    private ImageView deleteTextBtn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_reason);
         //progressBar = (ProgressBar)findViewById(R.id.progressBar);
         setProgressBar(findViewById(R.id.progressBar));
+
+        deleteTextBtn = (ImageView) findViewById(R.id.deleteTextBtn);
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -62,6 +64,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
          */
+        deleteTextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((EditText)findViewById(R.id.search_edit)).setText("");
+            }
+        });
 
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,21 +178,21 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         search_edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 if (s.length() > 0 && s.subSequence(0, 1).toString().equalsIgnoreCase(" ")) {
                     search_edit.setText("");
                 }
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 String text=s.toString();
+                if(text.length() == 0){
+                    deleteTextBtn.setVisibility(View.GONE);
+                }else{
+                    deleteTextBtn.setVisibility(View.VISIBLE);
+                }
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
                 }
