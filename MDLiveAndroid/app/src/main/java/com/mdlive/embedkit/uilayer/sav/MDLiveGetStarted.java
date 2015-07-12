@@ -197,12 +197,15 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+
                                     }
                                 };
 
                                 DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+
+
                                         dialogInterface.dismiss();
                                     }
                                 };
@@ -210,6 +213,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                 MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call " +
                                                 "1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
                                         negativeOnClickListener,  positiveOnClickListener);
+
                                                                 /*new AlertDialog.Builder(
                                         new ContextThemeWrapper(MDLiveGetStarted.this,R.style.AppCompatAlertDialogStyle));*/
 //                                Utils.alert(pDialog, MDLiveGetStarted.this, "Please call 1-800-XXX-XXXX to \nadd another child.");
@@ -296,7 +300,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 int item = spinner.getSelectedItemPosition();
                 dependentName = spinner.getSelectedItem().toString();
                 if(dependentName.equals(parentName)){
@@ -313,13 +317,24 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+                                        Log.e("Test!!","Clicking CallNw Btn");
+
+
+
                                     }
                                 };
 
                                 DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        Log.e("Test!!","Clicking Close Btn");
                                         dialogInterface.dismiss();
+                                        //This method is called bcs primary name shld come first after tapping the Add child btn
+                                        loadUserInformationDetails();
+//
+
+
                                     }
                                 };
                                 MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
