@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -446,11 +447,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     public String checkSizeOfImageAndType(File file){
         boolean acceptSize = true;
-        long Filesize= file.length()/1024;
-        if(Filesize>=1024){
-            if(Filesize/1024 >= 11){
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        double megabytes = (kilobytes / 1024);
+        double hasexceededSize = 10.0000000 - megabytes;
+        if(hasexceededSize < 0){
                 acceptSize = false;
-            }
         }
         if(!acceptSize)
             return "Please add a photo with a maximum size of 10 MB.";
@@ -493,11 +495,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                         );
                     }
                 }
-            } else {
-                // failed to capture image
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! Failed to Upload Image!", Toast.LENGTH_SHORT)
-                        .show();
             }
         }
 
@@ -505,8 +502,16 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             if (resultCode == RESULT_OK) {
                 try {
                     fileUri = data.getData();
-                    File file = new File(fileUri.getPath());
+
+                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                    Cursor cursor = getContentResolver().query(fileUri,filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
+                    File file = new File(picturePath);
                     String hasErrorText = checkSizeOfImageAndType(file);
+
                     if(fileUri != null && hasErrorText == null){
                         uploadMedicalRecordService(getPath(fileUri));
                     }else{
@@ -822,6 +827,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
         urlConnection.setConnectTimeout(30000);
+        urlConnection.setRequestProperty("Connection", "Keep-Alive");
+        urlConnection.setChunkedStreamingMode(0);
+
         String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
