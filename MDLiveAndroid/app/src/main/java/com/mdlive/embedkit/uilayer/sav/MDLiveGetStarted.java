@@ -417,11 +417,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
 
     public void getPendingAppointments(){
-        MdliveUtils.showProgressDialog(pDialog);
+        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                MdliveUtils.hideProgressDialog(pDialog);
+                hideProgress();
                 handlePendingResponse(response.toString());
                 Log.e("Pending Response",response.toString());
             }
@@ -429,7 +429,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                MdliveUtils.hideProgressDialog(pDialog);
+                hideProgress();
                 Log.e("Pending Error Response",error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
