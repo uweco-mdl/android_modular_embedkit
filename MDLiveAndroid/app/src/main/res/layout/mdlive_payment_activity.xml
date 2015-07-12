@@ -66,7 +66,7 @@
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="25px"
                     android:orientation="vertical">
 
@@ -85,6 +85,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:editable="false"
+                        android:layout_marginTop="5dp"
                         android:hint="mm/yy"
                         android:maxLines="1"
                         android:textColor="@color/black"
@@ -103,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Zip Code"
-
+                        android:layout_marginTop="5dp"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
                         android:textSize="16sp" />
@@ -113,6 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginTop="5dp"
                         android:background="@null"
                         android:hint="12345-7890"
                         android:inputType="number"
@@ -131,7 +133,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-                    <android.support.v7.widget.SwitchCompat
+                <android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -139,7 +141,7 @@
                         android:checked="false"
                         android:gravity="left|center"
                         android:text="Is this an FSA/HSA card?" />
-
+-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -185,8 +187,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginBottom="20px"
-                        android:layout_marginLeft="15px"
-                        android:layout_marginRight="15px"
                         android:background="#ECF5FA">
 
                         <Button
