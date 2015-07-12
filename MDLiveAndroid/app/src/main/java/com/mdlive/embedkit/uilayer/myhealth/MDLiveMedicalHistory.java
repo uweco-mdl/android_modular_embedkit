@@ -305,10 +305,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         ((LinearLayout) findViewById(R.id.MyHealthAddPhotoL2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(myPhotosList.size() >= 8){
-                    MdliveUtils.alert(null, MDLiveMedicalHistory.this, "Maximum allowed photos is 8!");
-                }else{
-                    imagePickerDialog.show();
+                if(!(myPhotosList.size() >= 8)){
+                   imagePickerDialog.show();
                 }
             }
         });
@@ -728,7 +726,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                         getWindowManager().getDefaultDisplay().getMetrics(dm);
                         int width = dm.widthPixels;
                         gridview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                (width/2)+50));
+                                (width/2)+100));
                     }else if(recordsArray.length() > 0){
                         DisplayMetrics dm = new DisplayMetrics();
                         getWindowManager().getDefaultDisplay().getMetrics(dm);
