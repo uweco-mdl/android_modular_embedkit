@@ -100,6 +100,7 @@
         <activity
             android:name=".uilayer.myhealth.MDLiveMedicalHistory" android:theme="@style/MDLIVEactivityTheme"
             android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".uilayer.myhealth.imageadapter.MDLiveImageGalleryView" android:theme="@style/MDLIVEactivityTheme"

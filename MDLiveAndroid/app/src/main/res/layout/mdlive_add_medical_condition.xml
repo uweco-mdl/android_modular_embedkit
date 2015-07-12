@@ -88,6 +88,7 @@
             style="@style/LinearLayoutStyle"
             android:orientation="vertical"
             android:id="@+id/AddConditionsLl"
+            android:focusableInTouchMode="true"
             >
 
         </LinearLayout>
