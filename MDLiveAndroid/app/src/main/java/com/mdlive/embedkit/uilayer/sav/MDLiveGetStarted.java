@@ -30,7 +30,6 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
-import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -239,8 +238,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
-                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveMedicalHistory.class);
-//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveMedicalHistory.class);
+                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
