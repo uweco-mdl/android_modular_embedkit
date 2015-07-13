@@ -149,14 +149,14 @@
     <string name="add_allergies_with_eg_hint">Add Allergies (E.g. Diabetes)</string>
     <string name="add_allergies_hint">Add Allergies</string>
     <string name="add_meidations_with_eg_hint">Add Medications</string>
-    <string name="medication_already_exist">Medication you have entered already exists</string>
-    <string name="allergy_already_exist">Allergy you have entered already exists</string>
+    <string name="medication_already_exist">The medication you entered is already in your Health History.</string>
+    <string name="allergy_already_exist">The allergy you entered is already in your Health History.</string>
     <string name="add_medications_hint">Add Medications</string>
     <string name="add_medication">Add Medications</string>
 
     <string name="age_check1">Are you currently or could you possibly be pregnant?</string>
     <string name="age_check2">Are you currently breastfeeding?</string>
-    <string name="condition_already_exist">Condition you have entered already exists</string>
+    <string name="condition_already_exist">The condition you entered is already in your Health History.</string>
 
 
     <!-- My Health -->
@@ -333,6 +333,7 @@ West Virginia</item>
     <string name="service_provided_by">Service Provided by</string>
 
     <!-- Strings for Add Family Screen -->
+    <string name="age_error_message">Child must be younger than 18 years old</string>
     <string name="add_child">Add Child</string>
     <string name="child_must_be_younger_than">Child must be younger than 18 years old.</string>
     <string name="first_name">First Name</string>
@@ -344,10 +345,14 @@ West Virginia</item>
 
     <string name="summary_thankyou_txt">Thank you for using [Doctor Consultation]!</string>
     <string name="next_steps_txt">NEXT STEPS</string>
-    <string name="next_steps_content_txt">You will receive an email with your receipt, {0}\'s contact info, and prescription details if necessary.</string>
+    <string name="next_steps_content_txt">You will receive an email with your receipt, Dr. {0}\'s contact info, and prescription details if necessary.</string>
     
     <!-- Used in SSO Screen -->
     <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
     <string name="home_dialog_text">Your progress will not be saved if you leave.</string>
     <string name="home_dialog_title">Leave [Doctor Consultation]?</string>
+
+
+
+
 </resources>

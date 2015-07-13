@@ -38,6 +38,8 @@ import com.mdlive.unifiedmiddleware.services.userinfo.AddChildServices;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -126,65 +128,66 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         addChildBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addChildBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
                         firstNameEditTextValue = firstNameEditText.getText().toString().trim();
                         lastNameEditTextValue = lastNameEditText.getText().toString().trim();
                         if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
                                 && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
-                            HashMap<String, HashMap<String, String>> map = new HashMap<>();
-                            HashMap params = new HashMap();
-                            params.put("computer", "Mac");
-                            array.put("camera", params);
+                            if(checkPerdiatricAge()){
+                                HashMap<String, HashMap<String, String>> map = new HashMap<>();
+                                HashMap params = new HashMap();
+                                params.put("computer", "Mac");
+                                array.put("camera", params);
 
-                            JSONObject userObject = null;
+                                JSONObject userObject = null;
 
-                            try {
+                                try {
 
-                                Log.d("TEST", "User : " +  userInfoJSONString);
+                                    Log.d("TEST", "User : " +  userInfoJSONString);
 
-                                userObject = new JSONObject(userInfoJSONString);
+                                    userObject = new JSONObject(userInfoJSONString);
 
-                                Log.d("TEST", userObject.optString("email"));
-                                Log.d("TEST", userObject.optString("phone"));
-                                Log.d("TEST", userObject.optString("address1"));
-                                Log.d("TEST", userObject.optString("address2"));
-                                Log.d("TEST", userObject.optString("city"));
-                                Log.d("TEST", userObject.optString("state"));
-                                Log.d("TEST", userObject.optString("zipcode"));
-                            } catch (Exception e) {
-                                Log.d("TEST", "Exception : " + e.getMessage());
-                                return;
+                                    Log.d("TEST", userObject.optString("email"));
+                                    Log.d("TEST", userObject.optString("phone"));
+                                    Log.d("TEST", userObject.optString("address1"));
+                                    Log.d("TEST", userObject.optString("address2"));
+                                    Log.d("TEST", userObject.optString("city"));
+                                    Log.d("TEST", userObject.optString("state"));
+                                    Log.d("TEST", userObject.optString("zipcode"));
+                                } catch (Exception e) {
+                                    Log.d("TEST", "Exception : " + e.getMessage());
+                                    return;
+                                }
+
+
+                                HashMap params1 = new HashMap();
+                                //params1.put("username", firstNameEditTextValue);
+                                params1.put("first_name", firstNameEditTextValue);
+                                params1.put("middle_name", "");
+                                params1.put("last_name", lastNameEditTextValue);
+                                params1.put("gender", strGender);
+                                params1.put("email", userObject.optString("email"));
+                                params1.put("phone", userObject.optString("phone"));
+                                params1.put("address1", userObject.optString("address1"));
+                                params1.put("address2", userObject.optString("address2"));
+                                params1.put("work_phone", "");
+                                params1.put("fax", "");
+                                params1.put("city", userObject.optString("city"));
+                                params1.put("state_id", userObject.optString("state"));
+                                params1.put("zip", userObject.optString("zipcode"));
+                                params1.put("birthdate", strDate);
+                                params1.put("answer", "");
+
+                                array.put("member", params1);
+
+                                PostLifeStyleServices();
+                            }else{
+                                MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.age_error_message));
                             }
 
-
-                            HashMap params1 = new HashMap();
-                            //params1.put("username", firstNameEditTextValue);
-                            params1.put("first_name", firstNameEditTextValue);
-                            params1.put("middle_name", "");
-                            params1.put("last_name", lastNameEditTextValue);
-                            params1.put("gender", strGender);
-                            params1.put("email", userObject.optString("email"));
-                            params1.put("phone", userObject.optString("phone"));
-                            params1.put("address1", userObject.optString("address1"));
-                            params1.put("address2", userObject.optString("address2"));
-                            params1.put("work_phone", "");
-                            params1.put("fax", "");
-                            params1.put("city", userObject.optString("city"));
-                            params1.put("state_id", userObject.optString("state"));
-                            params1.put("zip", userObject.optString("zipcode"));
-                            params1.put("birthdate", strDate);
-                            params1.put("answer", "");
-
-                            array.put("member", params1);
-
-                            PostLifeStyleServices();
                         } else {
                             MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
                         }
-                    }
-                });
+
 
 //                PostLifeStyleServices();
 //                finish();
@@ -220,7 +223,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
 //        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
-        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", confirm that i'm the legal parent / guardian of the minor above.");
+        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", confirm that I'm the legal parent / guardian of the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -246,6 +249,51 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
         ValidateModuleFields();
     }
+
+    public boolean checkPerdiatricAge(){
+        Log.e("strDate", strDate);
+        if(calculteAgeFromPrefs(strDate)<18){
+            return true;
+        }
+        return false;
+    }
+/*
+    public static int daysFromPrefs(String strDate){
+        try {
+            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = format.parse(strDate);
+            return MdliveUtils.calculateDays(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public static int calculteMonthFromPrefs(String strDate){
+        try {
+            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = format.parse(strDate);
+            return MdliveUtils.calculateMonth(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return 0;
+    }*/
+
+    public static int calculteAgeFromPrefs(String strDate){
+        try {
+            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = format.parse(strDate);
+            return MdliveUtils.calculateAge(date);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
     /**
      * Applying validation on form and enable/disable continue button for further steps over.
      */

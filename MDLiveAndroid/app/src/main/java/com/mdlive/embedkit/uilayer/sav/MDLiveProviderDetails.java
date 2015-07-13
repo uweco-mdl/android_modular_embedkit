@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -219,8 +218,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             }
             else if(str_Availability_Type.equals("With Patient"))
             {
-                withpatientTxt.setText(str_Availability_Type);
-                withpatientTxt.setTextColor(Color.parseColor("#F18032"));
+                withpatientTxt.setVisibility(View.GONE);
+//                withpatientTxt.setText(str_Availability_Type);
+//                withpatientTxt.setTextColor(Color.parseColor("#F18032"));
                 tapSeetheDoctorTxt.setClickable(false);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
