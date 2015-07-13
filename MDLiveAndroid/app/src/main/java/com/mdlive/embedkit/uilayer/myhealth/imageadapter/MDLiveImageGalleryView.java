@@ -48,7 +48,7 @@ public class MDLiveImageGalleryView extends Activity {
         ((TextView) findViewById(R.id.doneText)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         ((TextView) findViewById(R.id.deleteImageText)).setOnClickListener(new View.OnClickListener() {

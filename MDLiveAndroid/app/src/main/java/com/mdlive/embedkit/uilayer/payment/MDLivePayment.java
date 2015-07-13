@@ -131,7 +131,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
@@ -471,7 +471,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         // create alert dialog
        final AlertDialog alertDialog = alertDialogBuilder.create();
-
 
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override

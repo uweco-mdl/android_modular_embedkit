@@ -160,7 +160,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
-                finish();
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

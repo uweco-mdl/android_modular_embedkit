@@ -152,8 +152,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                MdliveUtils.closingActivityAnimation(MDLivePediatric.this);
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

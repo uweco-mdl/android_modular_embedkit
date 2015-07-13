@@ -75,7 +75,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveReasonForVisit.this);
-                finish();
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
@@ -196,12 +196,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
                 }
-                if(search_edit.getText().length() == 0){
-                    baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
-                    listView.setAdapter(baseadapter);
+                //if(search_edit.getText().length() == 0){
+                    //baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
+                    //listView.setAdapter(baseadapter);
                     baseadapter.notifyDataSetChanged();
                     baseadapter.getFilter().filter(s.toString());
-                }
+                //}
             }
         });
     }

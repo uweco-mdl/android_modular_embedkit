@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -318,7 +317,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

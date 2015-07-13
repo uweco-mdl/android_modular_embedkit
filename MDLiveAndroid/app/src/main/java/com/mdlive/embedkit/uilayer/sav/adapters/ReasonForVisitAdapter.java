@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 import java.util.ArrayList;
 
@@ -21,6 +18,7 @@ import java.util.ArrayList;
  * Created by sudha_s on 5/18/2015.
  */
 public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
+    private ArrayList<String> originalArray = new ArrayList<String>();
    private ArrayList<String> array = new ArrayList<String>();
     private Context context;
     private Filter filter;
@@ -30,6 +28,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     public ReasonForVisitAdapter(Context applicationContext,
                                  ArrayList<String> arraylist) {
         this.context = applicationContext;
+        this.originalArray = arraylist;
         this.array = arraylist;
         filter= new Filter() {
             @Override
@@ -42,8 +41,8 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
                 // we just set the `values` property to the
                 // original contacts list which contains all of them
                 if (constraint == null || constraint.length() == 0) {
-                    results.values = array;
-                    results.count = array.size();
+                    results.values = originalArray;
+                    results.count = originalArray.size();
                 } else {
                     // Some search copnstraint has been passed
                     // so let's filter accordingly
@@ -51,7 +50,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
 
                     // We'll go through all the contacts and see
                     // if they contain the supplied string
-                    for (String c : array) {
+                    for (String c : originalArray) {
                         if (c.toUpperCase().contains( constraint.toString().toUpperCase() )) {
                             // if `contains` == true then add it
                             // to our filtered list
