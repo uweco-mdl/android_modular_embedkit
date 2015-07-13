@@ -78,7 +78,7 @@
                         android:text="Expiration Date"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <EditText
                         android:id="@+id/edtExpiryDate"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:editable="false"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:hint="mm/yy"
                         android:maxLines="1"
                         android:textColor="@color/black"
@@ -108,14 +108,14 @@
                         android:layout_marginTop="5dp"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <EditText
                         android:id="@+id/edtZipCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:background="@null"
                         android:hint="12345-7890"
                         android:inputType="number"
@@ -134,7 +134,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-             <android.support.v7.widget.SwitchCompat
+           <android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
