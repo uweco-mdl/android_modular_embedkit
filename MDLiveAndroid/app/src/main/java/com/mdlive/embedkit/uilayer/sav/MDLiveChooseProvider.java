@@ -93,8 +93,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveChooseProvider.this);
-                MdliveUtils.closingActivityAnimation(MDLiveChooseProvider.this);
-                finish();
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

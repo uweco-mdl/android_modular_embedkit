@@ -130,7 +130,7 @@ public class MDLivePharmacy extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacy.this);
-                finish();
+                onBackPressed();
             }
         });
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

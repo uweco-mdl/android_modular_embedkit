@@ -229,7 +229,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
-                finish();
+                onBackPressed();
 
             }
         });

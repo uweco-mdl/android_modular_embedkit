@@ -97,7 +97,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
-                finish();
+                onBackPressed();
             }
         });
 //        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {

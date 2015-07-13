@@ -160,8 +160,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
-                finish();
+                //MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
+                onBackPressed();
             }
         });
 

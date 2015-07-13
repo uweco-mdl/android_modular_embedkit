@@ -174,7 +174,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                finish();
+                onBackPressed();
                 //MdliveUtils.closingActivityAnimation(MDLivePharmacyChange.this);
             }
         });

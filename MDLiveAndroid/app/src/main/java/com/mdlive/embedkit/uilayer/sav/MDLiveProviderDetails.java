@@ -111,7 +111,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveProviderDetails.this);
-                finish();
+                onBackPressed();
             }
         });
     }
