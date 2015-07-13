@@ -79,7 +79,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         setContentView(R.layout.mdlive_get_started);
         setRemoteUserId();
 
-//        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
+//          pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         setonClickListener();
@@ -293,12 +293,12 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
-
-        ArrayAdapter<String> dataAdapter; dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
+        Log.e("Spinner List", list.toString());
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        dataAdapter.notifyDataSetChanged();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 int item = spinner.getSelectedItemPosition();
@@ -318,9 +318,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                         Log.e("Test!!","Clicking CallNw Btn");
-
-
-
                                     }
                                 };
 
@@ -330,10 +327,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                         Log.e("Test!!","Clicking Close Btn");
                                         dialogInterface.dismiss();
+                                        patientSpinner.setSelection(0);
                                         //This method is called bcs primary name shld come first after tapping the Add child btn
-                                        loadUserInformationDetails();
-//
-
+                                        //loadUserInformationDetails();
+//                                        onResume();
+                                        //loadDependentInformationDetails(dependentName,position);
 
                                     }
                                 };
@@ -370,6 +368,16 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void loadDependentInformationDetails(String dependentName,int position) {
         try{
+            Log.e("Test depe--->", "-"+dependentName+"-");
+            if(dependentName.equalsIgnoreCase("Add Child")){
+                Log.e("Test--->","AM IN ADD CHILD DEPENDENT");
+                HashMap<String,String> tmpMap=PatientList.get(position-1);
+                String name=dependentList.get(0);
+                dependentList.clear();
+                dependentList.add(tmpMap.get("name"));
+                dependentList.add(name);
+                patientSpinner.setSelection(0);
+            }
             if(position!=0){
                 HashMap<String,String> tmpMap=PatientList.get(position-1);
                 if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
@@ -392,7 +400,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     };
 //
                     MdliveUtils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok", "", positiveOnClickListener, null);
-
                 }
             }
 
@@ -423,14 +430,12 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             public void onResponse(Object response) {
                 hideProgress();
                 handlePendingResponse(response.toString());
-                Log.e("Pending Response",response.toString());
             }
         };
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                Log.e("Pending Error Response",error.toString());
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -534,6 +539,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
+
             if (conditionsSearch.size()!=0) {
                 for(int i=0;i<conditionsSearch.size();i++) {
                     strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
@@ -585,7 +591,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 //                Utils.hideProgressDialog(pDialog);
                            hideProgress();
 
-    handleSuccessResponse(response);
+            handleSuccessResponse(response);
 
             }
         };
@@ -644,7 +650,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-                MdliveUtils.hideProgressDialog(pDialog);
+                hideProgress();
+                //MdliveUtils.hideProgressDialog(pDialog);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -731,8 +738,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                         Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     }
                 }
-
-
                 //locationTxt.setText(personalInfo.getString("state"));
                 genderText.setText(personalInfo.getString("gender"));
                 String numStr = personalInfo.getString("phone");
@@ -785,7 +790,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
 //            pDialog.dismiss();
-           hideProgress();
+            hideProgress();
             handleSuccessResponseFamilyMember(response);
 
         }catch(Exception e){
