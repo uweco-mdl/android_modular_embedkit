@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.WaitingRoom;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -18,11 +20,13 @@ import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,14 +77,41 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        if (errorObj.has("message") || errorObj.has("error")) {
+                            final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
+                            (MDLiveWaitingRoom.this).runOnUiThread(new Runnable() {
+                                public void run() {
+                                    MdliveUtils.showDialog(MDLiveWaitingRoom.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, "OK", null, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveGetStarted.class);
+                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(i);
+                                            dialog.dismiss();
+                                            MDLiveWaitingRoom.this.finish();
+                                        }
+                                    }, null);
+                                }
+                            });
+                        }
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+                    }
 
-                if(isReturning && !isStartedSummary){
-                    Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
-                    startActivity(i);
-                    MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
-                    isStartedSummary = true;
-                    finish();
+                    if (isReturning && !isStartedSummary) {
+                        Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveSummary.class);
+                        startActivity(i);
+                        MdliveUtils.hideSoftKeyboard(MDLiveWaitingRoom.this);
+                        isStartedSummary = true;
+                        finish();
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }
         };
