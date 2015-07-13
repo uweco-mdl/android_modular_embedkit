@@ -67,12 +67,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
 
-        if(getIntent()!=null){
-            Bundle extras=getIntent().getExtras();
-            finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
-            storePayableAmount(finalAmout);
-            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
-        }
+//        if(getIntent()!=null){
+//            Bundle extras=getIntent().getExtras();
+//            finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
+//            storePayableAmount(finalAmout);
+//            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
+//        }
 
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
@@ -470,7 +470,16 @@ public class MDLivePayment extends MDLiveBaseActivity {
         });
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+       final AlertDialog alertDialog = alertDialogBuilder.create();
+
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
         // show it
         alertDialog.show();
 
