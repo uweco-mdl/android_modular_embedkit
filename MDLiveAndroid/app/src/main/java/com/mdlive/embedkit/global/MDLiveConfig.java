@@ -88,6 +88,9 @@ public class MDLiveConfig {
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
+//                AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
+//                AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
+//                AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 break;
             case 4:
                 // Production environment
@@ -96,9 +99,9 @@ public class MDLiveConfig {
                 AppSpecificConfig.SECRET_KEY = "";
                 break;
             default:
-                AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "843f117b0bf7368ed5d";
-                AppSpecificConfig.SECRET_KEY = "a775f7e2ed1ce6cb313b";
+                AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
+                AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
+                AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
         }
 
         AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;

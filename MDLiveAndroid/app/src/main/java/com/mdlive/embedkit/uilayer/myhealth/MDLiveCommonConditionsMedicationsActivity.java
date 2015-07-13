@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -329,7 +328,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         });
         conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt,addConditionsLl, deleteView));
 
-        conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, deleteView));
+        conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, addConditionsLl, deleteView));
         if(position == 0){
             deleteView.setVisibility(View.GONE);
         }
@@ -389,7 +388,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      * @param deleteView :: The Delete Button View
      * @return The Focus Changed Listener
      */
-    private View.OnFocusChangeListener getEditTextFocusChangedListener(final EditText conditonEt, final ImageView deleteView) {
+    private View.OnFocusChangeListener getEditTextFocusChangedListener(final EditText conditonEt, final LinearLayout addConditionsLl, final ImageView deleteView) {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -398,7 +397,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 } else {
                     if (conditonEt.getText().toString().trim().equals("")) {
                         deleteView.setVisibility(View.GONE);
-                    }else {
+                    }else if(!((((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId())) {
                         deleteView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -434,7 +433,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 String text = conditonEt.getText().toString().trim();
                 if(text.equals("")){
                     deleteView.setVisibility(View.GONE);
-                } else {
+                } else if(!((((ViewGroup)(addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == conditonEt.getId())){
                     deleteView.setVisibility(View.VISIBLE);
                 }
 //                ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);

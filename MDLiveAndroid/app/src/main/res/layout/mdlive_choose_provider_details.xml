@@ -102,19 +102,19 @@
                     <TextView
                         style="@style/ProviderDetailsDoctorTxtStyle"
                         android:layout_marginStart="17dp"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="15dp"
                         android:ellipsize="end"
                         android:gravity="left|center"
                         android:singleLine="true"
                         android:text="Qualifications"
                         android:textColor="#35393d"
-                        android:textStyle="bold" />
+                         />
 
                     <LinearLayout
                         android:id="@+id/specialitiesLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="20dp">
+                        android:layout_marginTop="15dp">
 
                         <include layout="@layout/mdlive_provider_specialities" />
                     </LinearLayout>
@@ -141,7 +141,7 @@
                         android:id="@+id/languagesLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="20dp">
+                        android:layout_marginTop="10dp">
 
                         <include layout="@layout/mdlive_provider_languages" />
                     </LinearLayout>
@@ -167,7 +167,7 @@
                     <LinearLayout
                         style="@style/LinearLayoutStyle"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:visibility="gone">
 
                         <include layout="@layout/mdlive_provider_languages" />

@@ -539,16 +539,15 @@
                     android:gravity="center"
                     android:horizontalSpacing="10dp"
                     android:numColumns="4"
-                    android:padding="10dp"
+                    android:padding="5dp"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="10dp"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/SavContinueBtn"
-                    style="@style/ContinueButtonStyle"
+                    style="@style/MedicalContinueButtonStyle"
                     android:text="@string/next_btn"
-
                     />
 
 

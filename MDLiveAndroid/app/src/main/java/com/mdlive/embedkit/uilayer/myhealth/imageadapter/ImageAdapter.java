@@ -76,7 +76,7 @@ public class ImageAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.mdlive_custom_imageadapter_view, null);
             imageView = (ImageView)convertView.findViewById(R.id.thumpImage);
             progressBar = (ProgressBar)convertView.findViewById(R.id.thumpProgressBar);
-            imageView.setLayoutParams(new RelativeLayout.LayoutParams(size, size));
+            imageView.setLayoutParams(new RelativeLayout.LayoutParams(size, size-35));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY); //.CENTER_CROP
             imageView.setPadding(5, 0, 5, 0);
             convertView.setTag(convertView);

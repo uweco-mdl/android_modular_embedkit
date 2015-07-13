@@ -191,7 +191,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 if(text.length() == 0){
                     deleteTextBtn.setVisibility(View.GONE);
                 }else{
-                    deleteTextBtn.setVisibility(View.VISIBLE);
+                    deleteTextBtn.setVisibility(View.GONE);
                 }
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
