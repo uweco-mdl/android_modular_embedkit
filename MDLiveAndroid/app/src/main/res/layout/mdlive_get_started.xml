@@ -61,7 +61,7 @@
 
                     <Spinner
                         android:id="@+id/patientSpinner"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginRight="12dp"
                         android:layout_marginLeft="3dp"
                         style="@style/SpinnerButtonStyle"/>
                     <View style="@style/ViewStyle"
@@ -125,14 +125,16 @@
                                 android:id="@+id/locationTxt"
                                 android:layout_alignParentLeft="true"
                                 android:gravity="center_vertical"
-                                />
+
+                                android:layout_toLeftOf="@+id/imageView3"
+                                android:layout_toStartOf="@+id/imageView3" />
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:src="@drawable/right_arrow"
                                 android:layout_centerVertical="true"
-                                />
+                                android:id="@+id/imageView3" />
 
                         </RelativeLayout>
 

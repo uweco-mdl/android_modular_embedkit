@@ -251,7 +251,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
-        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "FLORIDA");
+        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "Florida");
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
         LocationTxtView.setText(SavedLocation);
     }

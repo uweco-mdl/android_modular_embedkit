@@ -30,6 +30,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -238,8 +239,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
-//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveReasonForVisit.class);
-                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveMedicalHistory.class);
+//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                     }
@@ -271,6 +272,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                     String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
                     SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+
+
                     if(longLocation != null && longLocation.length() != 0)
                         locationTxt.setText(longLocation);
                 }
@@ -293,7 +296,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
-        Log.e("Spinner List", list.toString());
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -503,6 +505,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             DateTxt.setText(personalInfo.getString("birthdate"));
             for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
                 if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                    SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
+                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    editor.commit();
                     locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                 }
@@ -734,6 +741,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                 DateTxt.setText(personalInfo.getString("birthdate"));
                 for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
                     if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
+                        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                        editor.commit();
                         locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                         Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     }
@@ -823,6 +835,19 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     }
                 }
             }
+
+            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
+                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                    SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
+                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    editor.commit();
+                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                }
+            }
+
             locationTxt.setText(state);
             genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
