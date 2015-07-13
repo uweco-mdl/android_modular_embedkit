@@ -38,6 +38,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -77,7 +78,7 @@
                         android:text="Expiration Date"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <EditText
                         android:id="@+id/edtExpiryDate"
@@ -103,11 +104,11 @@
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Zip Code"
+                        android:text="ZIP Code"
                         android:layout_marginTop="5dp"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <EditText
                         android:id="@+id/edtZipCode"
@@ -133,12 +134,13 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-                <android.support.v7.widget.SwitchCompat
+             <android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:checked="false"
+                        android:textSize="16sp"
                         android:gravity="left|center"
                         android:text="Is this an FSA/HSA card?" />
 -->
@@ -167,7 +169,7 @@
                             android:layout_alignParentLeft="true"
                             android:text="Apply Offer Code"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="#6EAEDB"
+                            android:textColor="@color/mdlivePrimaryBlueColor"
                             android:textSize="18sp" />
 
                         <TextView

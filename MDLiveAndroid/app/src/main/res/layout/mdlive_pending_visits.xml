@@ -30,6 +30,7 @@
                             android:layout_marginLeft="20dp"
                             android:onClick="cancelVisit"
                             android:text="Cancel"
+
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -60,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Please resume your saved consultation to speak to your doctor"
+                        android:text="Please resume your saved consultation to speak to your doctor."
                         android:textSize="18sp"
                         android:textColor="#000000" />
 
@@ -167,7 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="30dp"
                         android:text="CHOSEN PHARMACY"
                         android:textSize="18sp"
                         android:textColor="#555555" />
@@ -186,8 +187,8 @@
                         android:id="@+id/resumeConsultationBtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/btn_rounded_bg"
                         android:text="Resume Consultation"

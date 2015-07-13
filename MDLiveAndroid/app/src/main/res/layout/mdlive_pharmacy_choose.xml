@@ -68,7 +68,7 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:layout_marginTop="15dp"
                 android:hint="Pharmacy name"
-                android:textSize="18sp"
+                android:textSize="16sp"
 
                 android:tag="manual_txt"
                />
@@ -79,6 +79,7 @@
                 android:imeOptions="actionDone"
                 android:hint="@string/pharmacy_opn"
                 android:tag="enter_zip"
+                android:textColor="@color/black"
                 android:layout_marginTop="10dp"
                 android:id="@+id/pharmacy_search_name"
                 />
@@ -105,7 +106,7 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="Manual Search"
                 android:textColor="@color/black"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="18sp"
                 />
@@ -115,7 +116,7 @@
                 android:textColor="@color/grey_txt"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                  />
 
         <EditText
@@ -139,7 +140,7 @@
             style="@style/common_style_W_Match_M_Match"
             android:tag="or"
             android:text="Or"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="5dp"
             android:textSize="18sp"
             android:id="@+id/textView8" />
@@ -147,9 +148,9 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="City"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
         <EditText
             style="@style/location_edittext"
@@ -168,9 +169,9 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="State"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
         <TextView
             style="@style/location_edittext"
