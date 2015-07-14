@@ -200,56 +200,72 @@
 
     <!-- Waiting Room -->
 
+
     <!-- State Name List-->
     <string-array name="stateName">
-        <item>Albama</item>
+
+
+
+
+
+
+
+        <item>Alabama</item>
         <item>Alaska</item>
+        <item>American Samoa</item>
         <item>Arizona</item>
-        <item>Arkansas</item><item>
-California</item><item>
-Colorado</item><item>
-Connecticut</item><item>
-Delware</item><item>
-Florida</item><item>
-Georgia</item><item>
-Hawali</item><item>
-Idaho</item><item>
-Illinois</item><item>
-Indiana</item><item>
-Iowa</item><item>
-Kansas</item><item>
-Kentucky</item><item>
-Louisiana</item><item>
-Maine</item><item>
-Maryland</item><item>
-Massachusetts</item><item>
-Michigan</item><item>
-Minnesota</item><item>
-Mississippi</item><item>
-Missouri</item><item>
-Montana</item><item>
-Nebraska</item><item>
-Nevada</item><item>
-New Hampshire</item><item>
-New Jersey</item><item>
-New Mexico</item><item>
-New YorkK</item><item>
-North Carolina</item><item>
-North Darota</item><item>
-Ohio</item><item>
-Oklahoma</item><item>
-Oregon</item><item>
-Pennsylvania</item><item>
-Rhode Island</item><item>
-South Carlonia</item><item>
-South Dakota</item><item>
-Tennessee</item><item>
-Texas</item><item>
-Utah</item><item>
-Vermont</item><item>
-Virginia</item><item>
-Washington</item><item>
-West Virginia</item>
+        <item>Arkansas</item>
+        <item>District Of Columbia</item>
+        <item>
+            California</item><item>
+            Colorado</item><item>
+            Connecticut</item><item>
+            Delware</item><item>
+            Federated States Of Micronesia</item><item>
+            Florida</item><item>
+            Georgia</item><item>
+            Guam</item><item>
+            Hawaii</item><item>
+            Idaho</item><item>
+            Illinois</item><item>
+            Indiana</item><item>
+            Iowa</item><item>
+            Kansas</item><item>
+            Kentucky</item><item>
+            Louisiana</item><item>
+            Maine</item><item>
+            Maryland</item><item>
+            Marshall Islands</item><item>
+            Massachusetts</item><item>
+            Michigan</item><item>
+            Minnesota</item><item>
+            Mississippi</item><item>
+            Missouri</item><item>
+            Montana</item><item>
+            Nebraska</item><item>
+            Nevada</item><item>
+            New Hampshire</item><item>
+            New Jersey</item><item>
+            New Mexico</item><item>
+            New York</item><item>
+            North Carolina</item><item>
+            North Dakota</item><item>
+            Ohio</item><item>
+            Oklahoma</item><item>
+            Oregon</item><item>
+            Palau</item><item>
+            Pennsylvania</item><item>
+            Puerto Rico</item><item>
+            Rhode Island</item><item>
+            South Carlonia</item><item>
+            South Dakota</item><item>
+            Tennessee</item><item>
+            Texas</item><item>
+            Utah</item><item>
+            Vermont</item><item>
+            Virginia</item><item>
+            Washington</item><item>
+            West Virginia</item>
         <item>Wisconsin</item>
         <item>Wyoming</item>
     </string-array>
@@ -258,14 +274,18 @@ West Virginia</item>
     <string-array name="stateCode">
         <item>AL</item>
         <item>AK</item>
+        <item>AM</item>
         <item>AZ</item>
         <item>AR</item>
         <item>CA</item>
         <item>CO</item>
         <item>CT</item>
         <item>DE</item>
+        <item>DC</item>
+        <item>FM</item>
         <item>FL</item>
         <item>GA</item>
+        <item>GU</item>
         <item>HI</item>
         <item>ID</item>
         <item>IL</item>
@@ -277,6 +297,7 @@ West Virginia</item>
         <item>ME</item>
         <item>MD</item>
         <item>MA</item>
+        <item>MH</item>
         <item>MI</item>
         <item>MN</item>
         <item>MS</item>
@@ -293,7 +314,9 @@ West Virginia</item>
         <item>OH</item>
         <item>OK</item>
         <item>OR</item>
+        <item>PW</item>
         <item>PA</item>
+        <item>PR</item>
         <item>RI</item>
         <item>SC</item>
         <item>SD</item>
@@ -346,13 +369,11 @@ West Virginia</item>
     <string name="summary_thankyou_txt">Thank you for using [Doctor Consultation]!</string>
     <string name="next_steps_txt">NEXT STEPS</string>
     <string name="next_steps_content_txt">You will receive an email with your receipt, Dr. {0}\'s contact info, and prescription details if necessary.</string>
-    
+
     <!-- Used in SSO Screen -->
     <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
     <string name="home_dialog_text">Your progress will not be saved if you leave.</string>
     <string name="home_dialog_title">Leave [Doctor Consultation]?</string>
-
-
 
 
 </resources>
