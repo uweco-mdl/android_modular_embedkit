@@ -315,6 +315,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                         {
                             if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
                             {
+                                patientSpinner.setSelection(0);
                                 DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
