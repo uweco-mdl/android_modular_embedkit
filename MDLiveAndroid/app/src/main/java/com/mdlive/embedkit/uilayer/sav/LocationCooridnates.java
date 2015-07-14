@@ -5,7 +5,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -93,8 +95,9 @@ public class LocationCooridnates {
             lm.removeUpdates(locationListenerGps);
 
             Location gps_loc = null;
-            if (gps_enabled)
-                gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (gps_enabled) {
+                gps_loc = getLastKnownLocation();
+            }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
@@ -103,6 +106,22 @@ public class LocationCooridnates {
 
             locationResult.gotLocation(null);
         }
+    }
+
+    private Location getLastKnownLocation() {
+        List<String> providers = lm.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = lm.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 
     /**
