@@ -178,19 +178,20 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     }
 
     private void updateMedicalHistory(){
-
 //        pDialog.show();
         //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                hideProgress();
                 if (hasFemaleAttribute) {
                     updateFemaleAttributes();
                 } else {
-                    if (!isNewUser) {
+                    getUserPharmacyDetails();
+                    /*if (!isNewUser) {
                         getUserPharmacyDetails();
-                    }
+                    }*/
                 }
             }
         };
@@ -1474,9 +1475,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 //progressBar.setVisibility(View.GONE);
                 Log.d("Female Attributes Response - ", response.toString());
                 hideProgress();
-                if (!isNewUser) {
+                getUserPharmacyDetails();
+                /*if (!isNewUser) {
                     getUserPharmacyDetails();
-                }
+                }*/
 //                Intent i = new Intent(MDLiveMedicalHistory.this, MDLivePharmacy.class);
 //                startActivity(i);
             }
