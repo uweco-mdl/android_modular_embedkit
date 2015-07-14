@@ -106,6 +106,7 @@
                         android:ellipsize="end"
                         android:gravity="left|center"
                         android:singleLine="true"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Qualifications"
                         android:textColor="#35393d"
                          />
