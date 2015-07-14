@@ -114,11 +114,12 @@
                 android:text="@string/waiting_warn_text"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <include
+                style="@style/Footer_Style"
+                layout="@layout/mdlive_footer" />
         </LinearLayout>
     </ScrollView>
 
 
-    <include
-        style="@style/Footer_Style"
-        layout="@layout/mdlive_footer" />
 </LinearLayout>

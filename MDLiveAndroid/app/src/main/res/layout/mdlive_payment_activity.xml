@@ -198,11 +198,13 @@
                              />
                     </RelativeLayout>
                 </LinearLayout>
+
+                <include layout="@layout/mdlive_footer"
+                    style="@style/Footer_Style"/>
             </LinearLayout>
         </ScrollView>
 
-        <include layout="@layout/mdlive_footer"
-            style="@style/Footer_Style"/>
+
     </LinearLayout>
 
     <include layout="@layout/custom_progress_dialog" />

@@ -101,19 +101,21 @@
         android:text="@string/waiting_warn_complete"
         android:textSize="18sp"
         android:textStyle="bold" />
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include
-        style="@style/Footer_Style"
-        layout="@layout/mdlive_footer"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            style="@style/Footer_Style"
+            layout="@layout/mdlive_footer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

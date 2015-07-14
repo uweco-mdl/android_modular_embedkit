@@ -547,17 +547,16 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/MedicalContinueButtonStyle"
-                    android:text="@string/next_btn"
-                    />
+                    android:text="@string/next_btn" />
 
-
+                <include
+                    style="@style/Footer_Style"
+                    layout="@layout/mdlive_footer" />
             </LinearLayout>
 
         </ScrollView>
 
-        <include
-            style="@style/Footer_Style"
-            layout="@layout/mdlive_footer" />
+
     </LinearLayout>
 
     <include layout="@layout/custom_progress_dialog" />

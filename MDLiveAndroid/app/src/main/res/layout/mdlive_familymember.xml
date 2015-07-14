@@ -1,197 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"   >
-<LinearLayout
-    style="@style/ContainerStyle">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        style="@style/wagHeaderLinearLayoutStyle"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/backImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="17dp"
-            android:background="@drawable/back_arrow_hdpi" />
-
-        <TextView
-            android:id="@+id/headerTxt"
-            style="@style/HeaderTextViewStyle"
-            android:layout_marginLeft="20dp"
-            android:text="@string/add_child" />
-    </LinearLayout>
-
-    <ScrollView style="@style/ScrollViewStyle">
+    <LinearLayout style="@style/ContainerStyle">
 
         <LinearLayout
-            android:id="@+id/providerNameLl"
-            style="@style/LinearLayoutStyle"
-            android:orientation="vertical">
+            style="@style/wagHeaderLinearLayoutStyle"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/backImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="17dp"
+                android:background="@drawable/back_arrow_hdpi" />
 
             <TextView
-                style="@style/BaseSubHeaderTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_marginStart="19dp"
-                android:text="@string/child_must_be_younger_than"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:id="@+id/headerTxt"
+                style="@style/HeaderTextViewStyle"
+                android:layout_marginLeft="20dp"
+                android:text="@string/add_child" />
+        </LinearLayout>
+
+        <ScrollView style="@style/ScrollViewStyle">
 
             <LinearLayout
-                style="@style/WagParentLinearLayoutStyle"
+                android:id="@+id/providerNameLl"
+                style="@style/LinearLayoutStyle"
                 android:orientation="vertical">
 
+                <TextView
+                    style="@style/BaseSubHeaderTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="19dp"
+                    android:text="@string/child_must_be_younger_than"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
                 <LinearLayout
-                    style="@style/LinearLayoutStyle"
+                    style="@style/WagParentLinearLayoutStyle"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/patientLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:layout_marginStart="19dp"
+                        style="@style/LinearLayoutStyle"
                         android:orientation="vertical">
 
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/first_name" />
-
-                        <EditText
-
-                            style="@style/reasonSearch_edittext"
-                            android:hint="@string/first_name"
-                            android:textSize="18sp"
-                            android:id="@+id/patientEt"
-                            android:inputType="textPersonName"
-
-                           />
-
-
-                    </LinearLayout>
-
-                    <View style="@style/ViewStyle" />
-
-                    <LinearLayout
-                        android:id="@+id/patientL2"
-                        style="@style/WagLinearLayoutStyle"
-                        android:layout_marginStart="19dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/last_name" />
-
-                        <EditText
-                            style="@style/reasonSearch_edittext"
-                            android:hint="@string/last_name"
-                            android:textSize="18sp"
-                            android:id="@+id/patient2Et"
-                            android:inputType="textPersonName"
-                          />
-
-
-                        <!--    android:id="@+id/patient2Et"
-                            style="@style/GetStartedContentTxtStyle"
-                            android:background="@color/transparent_native"
-                            android:hint="@string/last_name"
-                            android:cursorVisible="true"
-                            android:ellipsize="start"
-                            android:textCursorDrawable="@null"
-                            android:textColor="@color/black"
-                            android:inputType="textPersonName"
-                            android:textSize="18sp"-->
-
-
-
-                    </LinearLayout>
-
-                    <View style="@style/ViewStyle" />
-
-                    <LinearLayout
-                        android:id="@+id/dobLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:layout_marginStart="19dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/date_of_birth" />
-
-                        <TextView
-                            android:id="@+id/dobTxt"
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:hint="@string/date_of_birth_hint"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-
-                    <View style="@style/ViewStyle" />
-
-                    <LinearLayout
-                        android:id="@+id/genderLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:layout_marginStart="19dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/gender" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        <LinearLayout
+                            android:id="@+id/patientLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:layout_marginStart="19dp"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/genderTxt"
-                                style="@style/GetStartedContentTxtStyle"
-                                android:hint=""
-                                android:textColor="@color/black"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/first_name" />
+
+                            <EditText
+
+                                android:id="@+id/patientEt"
+                                style="@style/reasonSearch_edittext"
+                                android:hint="@string/first_name"
+                                android:inputType="textPersonName"
+                                android:textSize="18sp"
+
+                                />
+
+
+                        </LinearLayout>
+
+                        <View style="@style/ViewStyle" />
+
+                        <LinearLayout
+                            android:id="@+id/patientL2"
+                            style="@style/WagLinearLayoutStyle"
+                            android:layout_marginStart="19dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/last_name" />
+
+                            <EditText
+                                android:id="@+id/patient2Et"
+                                style="@style/reasonSearch_edittext"
+                                android:hint="@string/last_name"
+                                android:inputType="textPersonName"
                                 android:textSize="18sp" />
 
-                            <ImageView
+
+                            <!--    android:id="@+id/patient2Et"
+                                style="@style/GetStartedContentTxtStyle"
+                                android:background="@color/transparent_native"
+                                android:hint="@string/last_name"
+                                android:cursorVisible="true"
+                                android:ellipsize="start"
+                                android:textCursorDrawable="@null"
+                                android:textColor="@color/black"
+                                android:inputType="textPersonName"
+                                android:textSize="18sp"-->
+
+
+                        </LinearLayout>
+
+                        <View style="@style/ViewStyle" />
+
+                        <LinearLayout
+                            android:id="@+id/dobLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:layout_marginStart="19dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/date_of_birth" />
+
+                            <TextView
+                                android:id="@+id/dobTxt"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:hint="@string/date_of_birth_hint"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <View style="@style/ViewStyle" />
+
+                        <LinearLayout
+                            android:id="@+id/genderLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:layout_marginStart="19dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/gender" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/genderTxt"
+                                    style="@style/GetStartedContentTxtStyle"
+                                    android:hint=""
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/dropdown_icon" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <View style="@style/ViewStyle" />
+
+                        <LinearLayout
+                            android:id="@+id/locationLl"
+                            style="@style/LinearLayoutStyle"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="30dp"
+                            android:orientation="horizontal">
+
+                            <android.support.v7.widget.SwitchCompat
+                                android:id="@+id/mySwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/dropdown_icon" />
-                        </RelativeLayout>
+                                android:checked="false"
+                                android:gravity="left|center"
+                                android:text="@string/i_michelle_text"
+                                android:textSize="16sp" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <View style="@style/ViewStyle" />
 
-                    <LinearLayout
-                        android:id="@+id/locationLl"
-                        style="@style/LinearLayoutStyle"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="30dp"
-                        android:orientation="horizontal">
-
-                      <android.support.v7.widget.SwitchCompat
-                            android:id="@+id/mySwitch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false"
-                            android:gravity="left|center"
-                            android:text="@string/i_michelle_text"
-                            android:textSize="16sp" />
-                    </LinearLayout>
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/addChildBtn"
+                    style="@style/ContinueButtonStyle"
+                    android:text="Add Child" />
 
+                <include
+                    style="@style/Footer_Style"
+                    layout="@layout/mdlive_footer" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/addChildBtn"
-                style="@style/ContinueButtonStyle"
-                android:text="Add Child" />
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
 
-    <include
-        layout="@layout/mdlive_footer"
-        style="@style/Footer_Style"/>
     </LinearLayout>
-    <include
-        layout="@layout/custom_progress_dialog"
-        />
-    </merge>
+
+    <include layout="@layout/custom_progress_dialog" />
+</merge>
