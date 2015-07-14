@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,6 +31,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -79,7 +81,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         setContentView(R.layout.mdlive_get_started);
         setRemoteUserId();
 
-//          pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         setonClickListener();
@@ -124,18 +125,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
-            loadUserInformationDetails();
-           /* patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dependentList);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            patientSpinner.setAdapter(dataAdapter);*/
-        }
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
-        Log.e("Getstarted page",longNameLocation);
-        locationTxt.setText(longNameLocation);
     }
     /**
      * Intialization of the views should be done here and the on click listener of the particular
@@ -222,7 +211,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                     Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                                     Log.e("TEST", "JSON :" + userInfoJSONString);
                                     intent.putExtra("user_info", userInfoJSONString);
-                                    startActivity(intent);
+                                    startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                                 } else {
                                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -284,6 +273,20 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("onactivity Result", "Yes called " + resultCode);
+        if(requestCode == IdConstants.REQUEST_ADD_CHILD && resultCode == Activity.RESULT_OK){
+            loadUserInformationDetails();
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
+            Log.e("Getstarted page",longNameLocation);
+            locationTxt.setText(longNameLocation);
+        }
+    }
+
     /**
      * @param list,spinner
      * The native Spinner will be shown on selecting the dependent name and bt selecting
@@ -340,16 +343,15 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                         negativeOnClickListener,positiveOnClickListener );
                             }else
                             {
-                                Log.d("Dep Name", dependentName);
                                 loadDependentInformationDetails(dependentName,position);
                             }
                         }else {
                             if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                                 Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
-                                Log.e("TEST", "JSON :" + userInfoJSONString);
                                 intent.putExtra("user_info", userInfoJSONString);
-                                startActivity(intent);
+                                startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+                                patientSpinner.setSelection(0);
                             }else {
                                 loadDependentInformationDetails(dependentName,position);
                             }
@@ -594,7 +596,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-//                Utils.hideProgressDialog(pDialog);
                            hideProgress();
 
             handleSuccessResponse(response);
@@ -606,23 +607,9 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-//                pDialog.dismiss();
-
-               hideProgress();
+                hideProgress();
 
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
-               /* if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        pDialog.dismiss();
-                        Utils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
-                    }
-                }*/
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
@@ -794,13 +781,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             dependentList.add(0, personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             parentName=personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
             JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-//            pDialog.dismiss();
             hideProgress();
             handleSuccessResponseFamilyMember(response);
 

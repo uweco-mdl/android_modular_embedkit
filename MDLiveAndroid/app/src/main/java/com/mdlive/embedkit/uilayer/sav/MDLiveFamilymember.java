@@ -1,10 +1,12 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +23,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -76,7 +77,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
             userInfoJSONString = getIntent().getExtras().getString("user_info");
         }
-//        pDialog = Utils.getProgressDialog("Please wait...",this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
         lastNameEditText = (EditText) findViewById(R.id.patient2Et);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
@@ -93,19 +93,13 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
          * The home button will pull you back to the Dashboard activity
          */
 
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
                 onBackPressed();
             }
         });
-//        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                movetohome();
-//            }
-//        });
 
         firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -142,19 +136,9 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
                                 try {
 
-                                    Log.d("TEST", "User : " +  userInfoJSONString);
-
                                     userObject = new JSONObject(userInfoJSONString);
-
-                                    Log.d("TEST", userObject.optString("email"));
-                                    Log.d("TEST", userObject.optString("phone"));
-                                    Log.d("TEST", userObject.optString("address1"));
-                                    Log.d("TEST", userObject.optString("address2"));
-                                    Log.d("TEST", userObject.optString("city"));
-                                    Log.d("TEST", userObject.optString("state"));
-                                    Log.d("TEST", userObject.optString("zipcode"));
                                 } catch (Exception e) {
-                                    Log.d("TEST", "Exception : " + e.getMessage());
+                                    Log.d("MDLivveFamilymember", "Exception : " + e.getMessage());
                                     return;
                                 }
 
@@ -179,7 +163,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
                                 array.put("member", params1);
 
-                                PostLifeStyleServices();
+                                PostDependentServices();
                             }else{
                                 MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.age_error_message));
                             }
@@ -187,10 +171,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
                         } else {
                             MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
                         }
-
-
-//                PostLifeStyleServices();
-//                finish();
 
             }
         });
@@ -222,7 +202,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         mySwitch.setChecked(false);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
-//        mySwitch.setText("I,"+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"") +" confirm that i'm the legal parent / guardian\nof the minor above.");
         mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", confirm that I'm the legal parent / guardian of the minor above.");
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -257,30 +236,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         }
         return false;
     }
-/*
-    public static int daysFromPrefs(String strDate){
-        try {
-            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = format.parse(strDate);
-            return MdliveUtils.calculateDays(date);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return 0;
-    }
-
-    public static int calculteMonthFromPrefs(String strDate){
-        try {
-            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = format.parse(strDate);
-            return MdliveUtils.calculateMonth(date);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return 0;
-    }*/
 
     public static int calculteAgeFromPrefs(String strDate){
         try {
@@ -307,9 +262,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         if(TextUtils.isEmpty(lastNameEditText.getText().toString())){
             isAllFieldsfilled = false;
         }
-//        if(TextUtils.isEmpty(dateTxt.getText())){
-//            isAllFieldsfilled = false;
-//        }
+
         if(TextUtils.isEmpty(genderTxt.getText().toString())){
             isAllFieldsfilled = false;
         }
@@ -341,29 +294,28 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
-    private void PostLifeStyleServices() {
-//        pDialog.show();
-        //progressBar.setVisibility(View.VISIBLE);
+    private void PostDependentServices() {
         showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("Respone AddChild", response.toString());
-                handlePostPediatricResponse(response);
+                Intent data = new Intent();
+                setResult(Activity.RESULT_OK, data);
+                finish();
+                MdliveUtils.closingActivityAnimation(MDLiveFamilymember.this);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error Response", error.toString());
-//                pDialog.dismiss();
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
                 try {
                     if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
-                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
@@ -383,31 +335,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
         AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, pDialog);
         addChildServices.getChildDependentsr(array, responseListener, errorListener);
-    }
-
-
-    /**
-     * Successful Response Handler for getting Current Location
-     *
-     * After child added successfully, redirect back to Get Stared Screen
-     */
-
-    private void handlePostPediatricResponse(JSONObject response) {
-        try {
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
-            hideProgress();
-            //Fetch Data From the Services
-            Log.e("MDlivePediatric->",response.toString());
-            MdliveUtils.showDialog(this, "Child Added", response.optString("message"), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    finish();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
