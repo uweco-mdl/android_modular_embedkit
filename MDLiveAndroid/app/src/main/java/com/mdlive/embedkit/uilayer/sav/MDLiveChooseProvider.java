@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -33,6 +33,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -81,6 +82,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         setProgressBar(findViewById(R.id.progressBar));
 
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
+        listView = (ListView) findViewById(R.id.chooseProviderList);
+        if (listView.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            listView.addFooterView(footerView, null, false);
+        }
 
         ChooseProviderResponseList();
         //Todo : This is reference for the Filter Button in Choose provider Adapter
@@ -156,27 +163,51 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 filterMainRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
-                    if (error.networkResponse == null) {
-                        if (error.getClass().equals(TimeoutError.class)) {
-                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
+//                    if (error.networkResponse == null) {
+//                        if (error.getClass().equals(TimeoutError.class)) {
+//                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                }
+//                            };
+//                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+//                        }
+//                    }
+//                    DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            MDLiveChooseProvider.this.finish();
+//
+//                        }
+//                    };
+//
+//                    JSONObject obj = new JSONObject(error.toString());
+//                    MdliveUtils.showDialog(MDLiveChooseProvider.this, MDLiveChooseProvider.this.getResources().getString(R.string.app_name), obj.getString("error"), MDLiveChooseProvider.this.getResources().getString(R.string.ok), null, positiveOnclickListener, null);
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        if (errorObj.has("message") || errorObj.has("error")) {
+                            final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
+                            (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {
+                                public void run() {
+                                    MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, "OK", null, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent i = new Intent(MDLiveChooseProvider.this, MDLiveGetStarted.class);
+                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(i);
+                                            dialog.dismiss();
+                                            MDLiveChooseProvider.this.finish();
+                                        }
+                                    }, null);
                                 }
-                            };
-                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                            });
                         }
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, null);
                     }
-                    DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            MDLiveChooseProvider.this.finish();
-
-                        }
-                    };
-
-                    JSONObject obj = new JSONObject(error.toString());
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this, MDLiveChooseProvider.this.getResources().getString(R.string.app_name), obj.getString("error"), MDLiveChooseProvider.this.getResources().getString(R.string.ok), null, positiveOnclickListener, null);
                 }catch(Exception e){
                     setInfoVisibilty();
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
@@ -259,7 +290,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void setListView() {
-        listView = (ListView) findViewById(R.id.chooseProviderList);
 
         if (listView.getFooterViewsCount() == 0) {
             final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
