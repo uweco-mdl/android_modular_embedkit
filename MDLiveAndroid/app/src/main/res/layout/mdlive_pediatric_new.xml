@@ -237,7 +237,8 @@
                         android:hint="@string/pediatric_edt_last_shot"
                         android:visibility="gone" />
 
-                    <View style="@style/viewstyle_behavioural" />
+                    <View style="@style/viewstyle_behavioural"
+                        android:id="@+id/edt_lastshot_view"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 

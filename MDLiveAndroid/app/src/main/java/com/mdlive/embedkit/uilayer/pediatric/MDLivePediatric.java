@@ -310,6 +310,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                     updateParams("Immunization up to date?","Yes");
                     lasShotLabel.setVisibility(View.GONE);
                     edtLastShot.setVisibility(View.GONE);
+                   View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
+                    edtLastShot_view.setVisibility(View.GONE);
                     updateExplanationParams("Last shot","");//If user clicks no update the post params as empty
                     enableSaveButton();
                 }else{
@@ -317,6 +319,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                     //If user clicks no update the post params.
                     lasShotLabel.setVisibility(View.VISIBLE);
                     edtLastShot.setVisibility(View.VISIBLE);
+                    View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
+                    edtLastShot_view.setVisibility(View.VISIBLE);
                     updateExplanationParams("Last shot",edtLastShot.getText().toString().trim());
                     enableSaveButton();
                 }
