@@ -66,15 +66,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
-
-//        if(getIntent()!=null){
-//            Bundle extras=getIntent().getExtras();
-//            finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
-//            storePayableAmount(finalAmout);
-//            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
-//        }
-
-
+        if(getIntent()!=null){
+            Bundle extras=getIntent().getExtras();
+            finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmout);
+            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
+        }
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
         //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
@@ -212,6 +209,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
+        d.findViewById(R.id.CancelBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
+
         d.show();
     }
 
@@ -303,7 +307,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     if(MdliveUtils.validateZipCode(edtZipCode.getText().toString())){
                         HostedPCI.loadUrl("javascript:tokenizeForm()");
                     }else{
-                        MdliveUtils.alert(pDialog, MDLivePayment.this, "Please enter a valid Zip Code");
+                        MdliveUtils.alert(pDialog, MDLivePayment.this, "Please enter a valid Zipcode.");
                     }
 
                 }else{
