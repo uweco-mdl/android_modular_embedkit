@@ -452,7 +452,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 acceptSize = false;
         }
         if(!acceptSize)
-            return "Please add a photo with a maximum size of 10 MB.";
+            return "Please add a photo with a maximum size of 10 MB";
         else
             return null;
     }

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
     private int keyDel=0;
-    private String errorMesssage = "No Pharmacies listed in your location.";
+    private String errorMesssage = "No Pharmacies listed in your location";
     protected boolean isPerformingAutoSuggestion;
     protected static String previousSearch = "";
 
@@ -205,35 +204,35 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                     errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                          +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state.";
                 }else{
-                    errorMesssage = "No Pharmacies listed in your location.";
+                    errorMesssage = "No Pharmacies listed in your location";
                 }
             }else{
-                return "Please enter a valid Zipcode.";
+                return "Please enter a valid Zip Code.";
             }
         }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("Select State") && !chooseState.getText().toString().trim().equals("")){
             if(cityText.getText() == null || cityText.getText().toString().trim().equals("")){
-                return "Please input City.";
+                return "Please input City";
             }
             if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
                 errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                         +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
             }else{
-                errorMesssage = "No Pharmacies listed in your location.";
+                errorMesssage = "No Pharmacies listed in your location";
             }
         }else if(cityText.getText()!=null && !cityText.getText().toString().trim().equals("")){
             if(chooseState.getText() == null || chooseState.getText().toString().equals("Select State") || chooseState.getText().toString().trim().equals("")){
-                return "Please select a state.";
+                return "Please select a State";
             }
             if(pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0){
                 errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
                         +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
             }else{
-                errorMesssage = "No Pharmacies listed in your location.";
+                errorMesssage = "No Pharmacies listed in your location";
             }
         }else if( (TextUtils.isEmpty(zipcodeText.getText().toString()))
                 && ((TextUtils.isEmpty(chooseState.getText().toString())
                 || chooseState.getText().toString().equals("Select State")))){
-            return "Please choose any state/zipcode to proceed search.";
+            return "Please enter a Zipcode or a City and a State.";
         }
         return null;
     }
@@ -287,7 +286,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
                                 MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -310,7 +309,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      * @param searchText - This text is enter by users
      */
     public void addSearchTextHistory(String searchText) {
-        Log.e("Hitting Service....", "********************");
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

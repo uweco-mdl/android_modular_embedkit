@@ -28,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="20sp"
         android:textColor="@color/black"
-        android:text="Please enter your offer Code"
+        android:text="Please enter your offer code"
         android:layout_marginLeft="20dp"
         android:id="@+id/textView"
         android:layout_gravity="center_vertical" />

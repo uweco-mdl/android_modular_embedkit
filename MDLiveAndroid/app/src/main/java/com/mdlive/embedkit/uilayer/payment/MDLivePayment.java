@@ -303,7 +303,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     if(MdliveUtils.validateZipCode(edtZipCode.getText().toString())){
                         HostedPCI.loadUrl("javascript:tokenizeForm()");
                     }else{
-                        MdliveUtils.alert(pDialog, MDLivePayment.this, "Please enter a valid Zipcode.");
+                        MdliveUtils.alert(pDialog, MDLivePayment.this, "Please enter a valid Zip Code");
                     }
 
                 }else{
