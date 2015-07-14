@@ -346,7 +346,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveMedicalHistory.this);
 
         alertDialogBuilder
-                .setMessage("Pick Image From")
+                .setMessage("Use image from")
                 .setPositiveButton("Camera", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

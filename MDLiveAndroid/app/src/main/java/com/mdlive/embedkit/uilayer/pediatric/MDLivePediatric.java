@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.pediatric;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,19 +9,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -615,26 +611,19 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     private void showListViewDialog(final List<String> list, final TextView selectedText, final String typeName) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePediatric.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
-        alertDialog.setView(convertView);
-        ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-        lv.setAdapter(adapter);
-        lv.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        final AlertDialog dialog = alertDialog.create();
-        dialog.show();
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        alertDialog.setTitle("Current Diet");
+        alertDialog.setItems(getResources().getStringArray(R.array.dietlist), new DialogInterface.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedType = list.get(position);
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedType = list.get(which);
                 selectedText.setText(selectedType);
                 updateDropDownParams(typeName, selectedType);
                 enableSaveButton();
                 dialog.dismiss();
             }
         });
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
     }
 
 
