@@ -112,7 +112,11 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-        HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        if(MdliveUtils.ssoInstance.getCurrentEnvironment() == 4) {
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
+        }else{
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        }
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
 //        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
         //pDialog.show();
