@@ -137,7 +137,7 @@
                         android:text="Located in"                 />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Florida"
+                        android:text="@string/select_stg"
                         android:textColor="@color/black"
                         android:drawableEnd="@drawable/dropdown_icon"
                         android:id="@+id/LocatioTxtView" />

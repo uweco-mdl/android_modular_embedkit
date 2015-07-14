@@ -137,8 +137,8 @@ public class MDLiveSummary extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        MdliveUtils.closingActivityAnimation(this);
+//        super.onBackPressed();
+//        MdliveUtils.closingActivityAnimation(this);
     }
     /**
      * This method will stop the service call if activity is closed during service call.

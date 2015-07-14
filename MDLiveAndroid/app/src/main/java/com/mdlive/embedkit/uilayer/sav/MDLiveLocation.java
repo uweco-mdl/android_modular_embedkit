@@ -132,7 +132,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                         if(MdliveUtils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
                         }else{
-                            MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a valid Zip Code");
+                            MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a valid Zip Code.");
                         }
                     }else{
                         SaveZipCodeCity(selectedCity);

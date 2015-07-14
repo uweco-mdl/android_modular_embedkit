@@ -125,7 +125,19 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-    }
+        if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
+            loadUserInformationDetails();
+           /* patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dependentList);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            patientSpinner.setAdapter(dataAdapter);*/
+        }
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
+        Log.e("Getstarted page",longNameLocation);
+        locationTxt.setText(longNameLocation);
+  }
     /**
      * Intialization of the views should be done here and the on click listener of the particular
      * views also displayed here.
@@ -227,7 +239,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
-//                                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveMedicalHistory.class);
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);

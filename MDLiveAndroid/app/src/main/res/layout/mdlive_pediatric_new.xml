@@ -143,6 +143,9 @@
                         android:drawableEnd="@drawable/dropdown_icon"
                         android:hint="Current Diet"
                         android:textSize="18sp" />
+                    <View style="@style/ViewStyle"
+                        />
+
 
 
                     <TextView
@@ -194,7 +197,8 @@
                         android:hint="@string/pediatric_birth_describe"
                         android:visibility="gone" />
 
-                    <View style="@style/viewstyle_behavioural" />
+                    <View style="@style/viewstyle_behavioural"
+                        android:id="@+id/edt_lastshot_view"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
@@ -238,7 +242,7 @@
                         android:visibility="gone" />
 
                     <View style="@style/viewstyle_behavioural"
-                        android:id="@+id/edt_lastshot_view"/>
+                       />
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 

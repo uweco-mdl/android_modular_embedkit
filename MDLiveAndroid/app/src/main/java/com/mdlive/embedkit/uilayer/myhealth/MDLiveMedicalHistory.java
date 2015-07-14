@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -166,14 +167,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         btnSaveContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNewUser) {
-                    //First Time User
-                    updateMedicalHistory();
-                } else {
-                    getUserPharmacyDetails();
-//                    Intent i = new Intent(MDLiveMedicalHistory.this, MDLivePharmacy.class);
-//                    startActivity(i);
-                }
+                updateMedicalHistory();
             }
         });
 
@@ -194,7 +188,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 if (hasFemaleAttribute) {
                     updateFemaleAttributes();
                 } else {
-                    getUserPharmacyDetails();
+                    if (!isNewUser) {
+                        getUserPharmacyDetails();
+                    }
                 }
             }
         };
@@ -1472,13 +1468,15 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
 //                pDialog.dismiss();
                 //progressBar.setVisibility(View.GONE);
+                Log.d("Female Attributes Response - ", response.toString());
                 hideProgress();
-                getUserPharmacyDetails();
+                if (!isNewUser) {
+                    getUserPharmacyDetails();
+                }
 //                Intent i = new Intent(MDLiveMedicalHistory.this, MDLivePharmacy.class);
 //                startActivity(i);
             }
@@ -1588,6 +1586,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -1615,6 +1615,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
                                 i.putExtra("longitude", location.getLongitude());
                                 i.putExtra("latitude", location.getLatitude());
+                                i.putExtra("errorMesssage", "No Pharmacies listed in your location");
                                 startActivity(i);
                                 MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                             }else{

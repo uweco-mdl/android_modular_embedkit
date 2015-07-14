@@ -282,8 +282,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                             hideProgress();
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
-                                startActivity(sendingIntent);
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                                startActivity(sendingIntent);
+                                finish();
                                 MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();

@@ -79,7 +79,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
 //    boolean isMarkerPointAdded = false;
-    private String errorMesssage ="No Pharmacies Found!";
+    private String errorMesssage ="No Pharmacies listed in your location";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

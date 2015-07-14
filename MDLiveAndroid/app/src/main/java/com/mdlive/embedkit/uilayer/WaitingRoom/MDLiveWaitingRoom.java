@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.WaitingRoom;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +43,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
     private String userName=null,password=null;
     private boolean isReturning,isStartedSummary;
+    private Handler handler;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +67,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
 
     public void getProviderStatus() {
+        handler  = new Handler();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
 
             @Override
@@ -211,7 +212,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.green));
-                final Handler handler = new Handler();
+
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -273,7 +274,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLiveWaitingRoom.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
+        MdliveUtils.moveToHomeWithHandler(MDLiveWaitingRoom.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text),handler);
     }
 
     @Override
@@ -291,6 +292,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onBackPressed() {
 
     }
+
     /**
      * This method will stop the service call if activity is closed during service call.
      */

@@ -167,11 +167,15 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
             edtBirthComplications.setVisibility(View.GONE);
             txtDietType.setVisibility(View.GONE);
+            View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
+            edtLastShot_view.setVisibility(View.GONE);
         }else{
             txtAge.setText("Patient under 2 years of age");
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
             //edtBirthComplications.setVisibility(View.VISIBLE);
             txtDietType.setVisibility(View.VISIBLE);
+            View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
+            edtLastShot_view.setVisibility(View.VISIBLE);
         }
         explanationListners();
         dietList=new ArrayList<>();
@@ -310,8 +314,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                     updateParams("Immunization up to date?","Yes");
                     lasShotLabel.setVisibility(View.GONE);
                     edtLastShot.setVisibility(View.GONE);
-                   View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
-                    edtLastShot_view.setVisibility(View.GONE);
+
                     updateExplanationParams("Last shot","");//If user clicks no update the post params as empty
                     enableSaveButton();
                 }else{
@@ -319,8 +322,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                     //If user clicks no update the post params.
                     lasShotLabel.setVisibility(View.VISIBLE);
                     edtLastShot.setVisibility(View.VISIBLE);
-                    View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
-                    edtLastShot_view.setVisibility(View.VISIBLE);
                     updateExplanationParams("Last shot",edtLastShot.getText().toString().trim());
                     enableSaveButton();
                 }
