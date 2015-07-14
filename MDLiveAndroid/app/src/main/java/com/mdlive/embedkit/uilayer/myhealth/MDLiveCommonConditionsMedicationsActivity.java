@@ -163,11 +163,11 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             } else {
                 String name = (type == TYPE_CONSTANT.CONDITION) ? "condition": (type == TYPE_CONSTANT.ALLERGY)?"allergy":"medication";
                 if (type == TYPE_CONSTANT.CONDITION) {
-                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Condition you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, getResources().getString(R.string.condition_already_exist));
                 } else if (type == TYPE_CONSTANT.MEDICATION) {
-                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Medication you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, getResources().getString(R.string.medication_already_exist));
                 } else if (type == TYPE_CONSTANT.ALLERGY) {
-                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, "Allergy you have entered already exists");
+                    MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, getResources().getString(R.string.allergy_already_exist));
                 }
             }
 //        }
