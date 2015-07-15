@@ -273,7 +273,7 @@ public class MDLivePharmacy extends FragmentActivity {
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
-        params.put("customer_call_in_number", "9068906789");
+        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
         Log.e("ConfirmAPPT Params",params.toString());
 

@@ -185,6 +185,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void setonClickListener() {
         try{
+
             ((Button)findViewById(R.id.SavContinueBtn)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
