@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
@@ -57,8 +55,18 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         ReasonList = new ArrayList<String>();
-//        pDialog = Utils.getProgressDialog("Please wait...", this);
+        pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
         ReasonForVisit();
+
+
+        listView = (ListView) findViewById(R.id.reasonList);
+        if (listView.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            listView.addFooterView(footerView, null, false);
+        }
+        baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
+        listView.setAdapter(baseadapter);
 
         /**
          * The back image will pull you back to the Previous activity
@@ -113,18 +121,14 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 //progressBar.setVisibility(View.GONE);
                 hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, pDialog);
 //                pDialog.dismiss();
-                if (error.networkResponse == null) {
+                /*if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(pDialog, MDLiveReasonForVisit.this);
                     }
-                }
+                }*/
             }};
         ReasonForVisitServices services = new ReasonForVisitServices(MDLiveReasonForVisit.this, pDialog);
         services.getReasonList(successCallBackListener, errorListener);

@@ -88,6 +88,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     .inflate(R.layout.mdlive_footer, null, false);
             listView.addFooterView(footerView, null, false);
         }
+        baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
+        listView.setAdapter(baseadapter);
 
         ChooseProviderResponseList();
         //Todo : This is reference for the Filter Button in Choose provider Adapter

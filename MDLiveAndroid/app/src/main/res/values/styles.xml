@@ -273,7 +273,7 @@
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
     <style name="reasonSearch_edittext">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
@@ -1364,10 +1364,10 @@
     </style>
 
     <style name="Pediatric_Weight_text_style">
-        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
-
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Pediatric_Weight_edittext_style">

@@ -135,18 +135,24 @@
                     </LinearLayout>
 
                     <View style="@style/ViewStyle" />
+                    <TextView
+                        android:id="@+id/txt_dietTypeHeader"
+                        android:background="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:text="Current Diet"
+                        style="@style/Pediatric_Weight_text_style" />
 
                     <TextView
                         android:id="@+id/txt_dietType"
                         style="@style/Pediatric_drop_text_style"
                         android:background="#ffffff"
                         android:drawableEnd="@drawable/dropdown_icon"
-                        android:hint="Current Diet"
+                        android:hint="Select"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="10dp"
                         android:textSize="18sp" />
                     <View style="@style/ViewStyle"
-                        />
-
-
+                        android:id="@+id/separator"/>
 
                     <TextView
                         style="@style/Pediatric_TextStyle"
@@ -197,8 +203,7 @@
                         android:hint="@string/pediatric_birth_describe"
                         android:visibility="gone" />
 
-                    <View style="@style/viewstyle_behavioural"
-                        android:id="@+id/edt_lastshot_view"/>
+                    <View style="@style/viewstyle_behavioural" />
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
@@ -242,7 +247,7 @@
                         android:visibility="gone" />
 
                     <View style="@style/viewstyle_behavioural"
-                       />
+                        android:id="@+id/edt_lastshot_view"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 

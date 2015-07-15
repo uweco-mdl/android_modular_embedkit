@@ -159,14 +159,14 @@
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="Telephone Number" />
+                            android:text="Phone Number" />
 
                         <EditText
                             android:id="@+id/telephoneTxt"
                             style="@style/GetStartedHeaderContentStyle"
                             android:background="@color/transparent_native"
                             android:inputType="number"
-                            android:maxLength="14"
+                            android:maxLength="12"
                             android:text=""
                             android:textColor="@color/black"
                             android:textSize="18sp" />

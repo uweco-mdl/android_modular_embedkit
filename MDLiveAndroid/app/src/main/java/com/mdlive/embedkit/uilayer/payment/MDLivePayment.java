@@ -385,7 +385,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 dismissDialog(pDialog);
                 //progressBar.setVisibility(View.GONE);
-                Log.e("Response Payment",response.toString());
+                Log.e("Response Confirm Appointment Success-- ",response.toString());
                 try {
                     isPaymentLoading = false;
                     String apptId = response.getString("appointment_id");
@@ -413,7 +413,11 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try{
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    Log.e("Response Confirm Appointment Failure-- ",responseBody);
+                    JSONObject errorObj = new JSONObject(responseBody);
 
+                    Log.e("Response Confirm Appointment Failure message-- ", errorObj.getString("message"));
                     dismissDialog(pDialog);
 //                    progressBar.setVisibility(View.GONE);
                     MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);

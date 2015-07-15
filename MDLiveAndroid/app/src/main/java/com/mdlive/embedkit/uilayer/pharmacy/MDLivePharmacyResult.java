@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -166,6 +167,12 @@ public class MDLivePharmacyResult extends FragmentActivity {
     public void initializeListView() {
 
         pharmList = (ListView) findViewById(R.id.pharmList);
+        if (pharmList.getFooterViewsCount() == 0) {
+            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.mdlive_footer, null, false);
+            pharmList.addFooterView(footerView, null, false);
+        }
+
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

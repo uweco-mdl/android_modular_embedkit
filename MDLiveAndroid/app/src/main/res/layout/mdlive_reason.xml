@@ -109,19 +109,13 @@
         layout="@layout/custom_progress_bar"
         />
 
-    <LinearLayout
+    <ListView
         android:layout_below="@id/header"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginTop="5dp"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.1dip"
-            android:id="@+id/reasonList" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.1dip"
+        android:id="@+id/reasonList" />
 </RelativeLayout>

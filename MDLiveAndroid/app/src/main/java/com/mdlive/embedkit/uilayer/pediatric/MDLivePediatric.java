@@ -51,7 +51,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             ,breathingPbmGroup,infectionsGroup,colicGroup,feedingGroup,smokingGroup,childOutGroup,siblingsGroup;
     public EditText edtBirthComplications,edtLastShot,edtCurrentWeight;
     private List<String> dietList;
-    private TextView txtDietType;
+    private TextView txtDietType, txtDietTypeHeader;
     private ProgressDialog pDialog;
     //private RelativeLayout progressDialog;
 
@@ -71,8 +71,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         cxt=this;
         initializeUI();
         touchHandlers();
-
-
     }
     /***
      * This method will handles on touch listers and hides the keyboard when user touches outside necessary UI
@@ -112,6 +110,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 //        pDialog = Utils.getProgressDialog(getResources().getString(R.string.please_wait), this);
         weightMap=new HashMap<>();
         txtDietType= (TextView) findViewById(R.id.txt_dietType);
+        txtDietTypeHeader = (TextView) findViewById(R.id.txt_dietTypeHeader);
         TextView txtAge= (TextView) findViewById(R.id.ageTxt);
         saveButton= (Button) findViewById(R.id.btn_continue_pediatric);
         edtCurrentWeight= (EditText) findViewById(R.id.edt_currentweight);
@@ -137,7 +136,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 if(s.length() != 0) {
                     weightMap.put("weight",s.toString());
                 }
-
             }
         });
         /**
@@ -167,6 +165,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
             edtBirthComplications.setVisibility(View.GONE);
             txtDietType.setVisibility(View.GONE);
+            txtDietTypeHeader.setVisibility(View.GONE);
+            findViewById(R.id.separator).setVisibility(View.GONE);
             View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
             edtLastShot_view.setVisibility(View.GONE);
         }else{
@@ -174,6 +174,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
             //edtBirthComplications.setVisibility(View.VISIBLE);
             txtDietType.setVisibility(View.VISIBLE);
+            txtDietTypeHeader.setVisibility(View.VISIBLE);
+            findViewById(R.id.separator).setVisibility(View.VISIBLE);
             View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
             edtLastShot_view.setVisibility(View.VISIBLE);
         }
@@ -616,7 +618,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     private void showListViewDialog(final List<String> list, final TextView selectedText, final String typeName) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePediatric.this);
-        alertDialog.setTitle("Current Diet");
+        //alertDialog.setTitle("Current Diet");
         alertDialog.setItems(getResources().getStringArray(R.array.dietlist), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
