@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -598,7 +599,16 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Intent startMyPharmacyIntent = new Intent(getApplicationContext(),
+                MDLivePharmacy.class);
+        startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if(getIntent().hasExtra("redirect_mypharmacy")){
+            if((getIntent().getBooleanExtra("redirect_mypharmacy", false))){
+                startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+        }
+        startActivity(startMyPharmacyIntent);
+        finish();
         MdliveUtils.closingActivityAnimation(this);
     }
     /**

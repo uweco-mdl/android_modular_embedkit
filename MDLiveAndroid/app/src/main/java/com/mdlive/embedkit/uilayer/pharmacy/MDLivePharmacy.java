@@ -167,6 +167,7 @@ public class MDLivePharmacy extends FragmentActivity {
                         if(Integer.parseInt(jobj.getString("final_amount"))>0){
                             Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
                             i.putExtra("final_amount",jobj.getString("final_amount"));
+                            //i.putExtra("redirect_mypharmacy",false);
                             startActivity(i);
                             MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                         }else{

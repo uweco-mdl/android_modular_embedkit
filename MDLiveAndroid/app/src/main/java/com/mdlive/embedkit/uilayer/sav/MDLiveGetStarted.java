@@ -231,6 +231,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                     editor.putString(PreferenceConstants.PATIENT_NAME, patientSpinner.getSelectedItem().toString());
                                     if(!dependentList.contains(patientSpinner.getSelectedItem().toString())){
                                         editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
+                                        Log.d("Dep","null");
                                     }
                                     editor.commit();
                                     if(phonrNmberEditTxt.getText().toString().length()<10)
@@ -239,6 +240,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
                                     }else
                                     {
+                                        editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
+                                                                .replace("-", ""));
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);

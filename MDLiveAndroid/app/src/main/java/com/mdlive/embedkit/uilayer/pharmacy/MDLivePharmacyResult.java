@@ -178,7 +178,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
+               setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
             }
         });
     }
@@ -546,7 +546,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
                         if(Integer.parseInt(jobj.getString("final_amount"))>0){
                             Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
                             i.putExtra("final_amount",jobj.getString("final_amount"));
+                            i.putExtra("redirect_mypharmacy", true);
                             startActivity(i);
+                            finish();
                             MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
                         }else{
                             doConfirmAppointment();
@@ -607,6 +609,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                         editor.commit();
                         Intent i = new Intent(MDLivePharmacyResult.this, MDLiveWaitingRoom.class);
                         startActivity(i);
+                        finish();
                         MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
                     } else {
                         Toast.makeText(MDLivePharmacyResult.this, response.getString("message"), Toast.LENGTH_SHORT).show();
@@ -649,7 +652,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
-        params.put("customer_call_in_number", "9068906789");
+        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
         Log.e("ConfirmAPPT Params",params.toString());
 

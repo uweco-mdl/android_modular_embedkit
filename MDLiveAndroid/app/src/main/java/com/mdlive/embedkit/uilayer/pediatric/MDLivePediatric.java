@@ -169,6 +169,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             findViewById(R.id.separator).setVisibility(View.GONE);
             View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
             edtLastShot_view.setVisibility(View.GONE);
+            findViewById(R.id.separator).setVisibility(View.GONE);
         }else{
             txtAge.setText("Patient under 2 years of age");
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
@@ -178,6 +179,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             findViewById(R.id.separator).setVisibility(View.VISIBLE);
             View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
             edtLastShot_view.setVisibility(View.VISIBLE);
+            findViewById(R.id.separator).setVisibility(View.VISIBLE);
         }
         explanationListners();
         dietList=new ArrayList<>();

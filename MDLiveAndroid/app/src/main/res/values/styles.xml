@@ -1364,10 +1364,10 @@
     </style>
 
     <style name="Pediatric_Weight_text_style">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:textSize">14sp</item>
+
     </style>
 
     <style name="Pediatric_Weight_edittext_style">
