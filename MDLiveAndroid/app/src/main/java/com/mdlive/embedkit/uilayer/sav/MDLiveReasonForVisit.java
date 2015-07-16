@@ -204,6 +204,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             }
         });
     }
+    
     /**
      *Item Click Listener for the ListView
      */
