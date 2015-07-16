@@ -51,7 +51,7 @@
         >
      <LinearLayout
         style="@style/WagLinearLayoutStyle"
-
+        android:layout_marginBottom="10dp"
          >
 
 

@@ -49,7 +49,7 @@
             />
     </RelativeLayout>
 
-    <com.mdlive.embedkit.uilayer.pharmacy.customui.CustomFlt
+    <FrameLayout
         android:id="@+id/mapContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -64,7 +64,7 @@
         android:layout_above="@+id/rl_footer"
         class="com.google.android.gms.maps.SupportMapFragment"/>
 
-    </com.mdlive.embedkit.uilayer.pharmacy.customui.CustomFlt>
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_footer"

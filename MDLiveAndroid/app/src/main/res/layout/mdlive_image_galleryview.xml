@@ -51,14 +51,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.mdlive.embedkit.uilayer.myhealth.MDLiveRotateZoomImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/galleryImageView"
             android:layout_centerInParent="true"
             android:scaleType="fitCenter"
+            android:layout_margin="10dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/doctor_icon"
+            android:src="@drawable/doctor_icon"
             />
 
     </RelativeLayout>
