@@ -260,6 +260,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                         filterMainRl.setVisibility(View.VISIBLE);
                         doctorOnCallButtonClick();
                     } else {
+                        MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.GONE);
                     }
@@ -439,22 +440,36 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(resultCode==1){
 //            dcotorOnCallHeader.setVisibility(View.VISIBLE);
 //            doctorOnCallButtonClick();
             String response=data.getStringExtra("Response");
             try{
+                // Clear the ListView
+                ProviderListMap.clear();
+                baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
+                listView.setAdapter(baseadapter);
+
                 JSONObject jobj=new JSONObject(response);
                 JSONArray jArray=jobj.getJSONArray("physicians");
-                if(jArray.get(0).toString().equals(StringConstants.NO_PROVIDERS)){
-                    baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
-                    listView.setAdapter(baseadapter);
-                    baseadapter.notifyDataSetChanged();
+
+                if(jArray.toString().contains(StringConstants.NO_PROVIDERS)){
+//                    baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
+//                    listView.setAdapter(baseadapter);
+//                    baseadapter.notifyDataSetChanged();
                     MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, jArray.get(0).toString());
 //                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
 //                    doctorOnCallButtonClick();
 
-                }else{
+
+                }
+                else if(jArray.length()==0)
+                {
+                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
+                }
+
+                else{
                     ProviderListMap.clear();
                     handleSuccessResponse(response);
                 }

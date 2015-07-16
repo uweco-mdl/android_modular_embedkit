@@ -20,7 +20,7 @@
             style="@style/LinearLayoutStyle"
             android:orientation="vertical"
             android:layout_width="230dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
 
             >
 

@@ -76,8 +76,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 ((EditText)findViewById(R.id.search_edit)).setText("");
+
             }
         });
+
 
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +189,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0 && s.subSequence(0, 1).toString().equalsIgnoreCase(" ")) {
                     search_edit.setText("");
+                    search_edit.setCursorVisible(true);
                 }
             }
             @Override

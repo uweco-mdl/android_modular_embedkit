@@ -12,6 +12,7 @@
 
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutReasonStyle"
+            android:background="@color/mdlivePrimaryBlueColor"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"
@@ -75,6 +76,7 @@
                 android:background="@drawable/search_icon"
                 android:id="@+id/search_img"
                 android:layout_centerVertical="true"
+                android:visibility="gone"
                 android:layout_marginLeft="20dp"
                 />
 
@@ -83,13 +85,16 @@
                 android:layout_toRightOf="@+id/search_img"
                 android:hint="@string/searchsymptom_txt"
                 android:padding="5dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12dp"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
                 android:id="@+id/search_edit"
+                android:cursorVisible="false"
+                android:drawableLeft="@drawable/search_icon"
+                android:drawablePadding="25dp"
                 android:layout_marginRight="5dp"
                 android:inputType="textPersonName"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal|left"
                 android:layout_toStartOf="@+id/deleteTextBtn"
                 android:layout_toLeftOf="@+id/deleteTextBtn" />
 

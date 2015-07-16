@@ -205,7 +205,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 //                    }
                     postParams.put("located_in",filter_SavedLocation);
 //                    postParams.put("located_in","FL");
-                    postParams.put("available_by","3");
+                    postParams.put("available_by","1");
                     postParams.put("appointment_date",AppointmentTxtView.getText().toString());
                     postParams.put("gender",genderTxtView.getText().toString());
                     if(edtSearch.getText().toString().length()!=0){

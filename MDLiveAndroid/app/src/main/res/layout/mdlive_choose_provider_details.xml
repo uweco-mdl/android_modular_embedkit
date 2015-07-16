@@ -3,7 +3,7 @@
 
     <LinearLayout
         style="@style/ContainerStyle"
-        android:background="@color/mdliveBackgroundColor">
+        android:background="@color/white">
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
@@ -81,7 +81,7 @@
 
                     <TextView
                         style="@style/ProviderDetailsDoctorTxtStyle"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="4dp"
                         android:gravity="left|center"
                         android:text="Capital Regional\nMedical Center"
                         android:textColor="#878f95" />
