@@ -81,7 +81,7 @@
                             android:id="@+id/dobTxt"
                             style="@style/GetStartedHeaderContentStyle"
                             android:text="mm/dd/yyyy"
-                            android:textColor="@color/black"
+                            android:textColor="@color/mdliveLoginUsernameColor"
                             android:textSize="18sp" />
 
                         <View
@@ -103,7 +103,7 @@
                             android:id="@+id/txt_gender"
                             style="@style/GetStartedHeaderContentStyle"
                             android:text=""
-                            android:textColor="@color/black"
+                            android:textColor="@color/mdliveLoginUsernameColor"
                             android:textSize="18sp" />
 
                         <View
