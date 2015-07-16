@@ -355,10 +355,10 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
             if(suggestionList.size() > 0 && mayIShowSuggestions){
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
                 pharmacy_search_name.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
             }
 
 /*
