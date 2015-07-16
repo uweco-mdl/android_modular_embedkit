@@ -58,16 +58,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
         ReasonForVisit();
 
-
-        listView = (ListView) findViewById(R.id.reasonList);
-        if (listView.getFooterViewsCount() == 0) {
-            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView, null, false);
-        }
-        baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
-        listView.setAdapter(baseadapter);
-
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -156,6 +146,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         } catch(Exception e){
             e.printStackTrace();
         }
+
+        findViewById(R.id.footer).setVisibility(View.GONE);
 
             listView = (ListView) findViewById(R.id.reasonList);
 

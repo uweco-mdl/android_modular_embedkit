@@ -126,4 +126,10 @@
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.1dip"
         android:id="@+id/reasonList" />
+
+    <include
+        android:id="@+id/footer"
+        style="@style/Footer_Style"
+        android:layout_alignParentBottom="true"
+        layout="@layout/mdlive_footer" />
 </RelativeLayout>

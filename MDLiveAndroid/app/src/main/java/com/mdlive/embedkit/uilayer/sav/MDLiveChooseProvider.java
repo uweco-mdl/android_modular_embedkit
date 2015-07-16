@@ -83,13 +83,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
-        if (listView.getFooterViewsCount() == 0) {
-            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView, null, false);
-        }
-        baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
-        listView.setAdapter(baseadapter);
 
         ChooseProviderResponseList();
         //Todo : This is reference for the Filter Button in Choose provider Adapter
@@ -293,6 +286,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void setListView() {
+        findViewById(R.id.footer).setVisibility(View.GONE);
 
         if (listView.getFooterViewsCount() == 0) {
             final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))

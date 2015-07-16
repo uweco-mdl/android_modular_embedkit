@@ -143,4 +143,9 @@
         android:id="@+id/chooseProviderList"
         />
 
+    <include
+        android:id="@+id/footer"
+        style="@style/Footer_Style"
+        android:layout_alignParentBottom="true"
+        layout="@layout/mdlive_footer" />
 </RelativeLayout>
