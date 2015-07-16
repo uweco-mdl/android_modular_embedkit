@@ -770,7 +770,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             String changeEditText = phonrNmberEditTxt.getText().toString();
-                            if(changeEditText.length()>=11){
+                            if(changeEditText.length()>=10){
                                 if(!changeEditText.contains("-")){
                                     try {
                                         String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(changeEditText));
