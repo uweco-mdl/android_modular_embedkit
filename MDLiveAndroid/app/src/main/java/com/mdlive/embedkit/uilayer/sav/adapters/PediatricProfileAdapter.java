@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ public class PediatricProfileAdapter extends BaseAdapter {
     private int lastFocussedPosition = -1;
     private Handler handler = new Handler();
     public HashMap<String, String> temp = new HashMap<>();
-    public CustomEt immunizationEt, birthCompleteEt, newBornEt,currentWeightEt;
+    public EditText immunizationEt, birthCompleteEt, newBornEt,currentWeightEt;
 
     public PediatricProfileAdapter(Activity applicationContext,
                                    ArrayList<HashMap<String, String>> arraylist) {
@@ -71,10 +70,10 @@ public class PediatricProfileAdapter extends BaseAdapter {
         if(pos == 0){
             LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertview = inflate.inflate(R.layout.mdlive_pediatric_header, parent,false);
-            currentWeightEt = (CustomEt)convertview.findViewById(R.id.currentWeightEt);
+            currentWeightEt = (EditText)convertview.findViewById(R.id.currentWeightEt);
         }else{
             TextView LifeStyleTxt, current_diet;
-            final CustomEt pediatricEtxt;
+            final EditText pediatricEtxt;
             final LinearLayout editLl;
             String str_condition,str_value;
             final Button selectedBtn, unselectedBtn;
@@ -86,13 +85,13 @@ public class PediatricProfileAdapter extends BaseAdapter {
             selectedBtn = (Button)convertview.findViewById(R.id.exercise_YesBtn);
             unselectedBtn = (Button) convertview.findViewById(R.id.exercise_NoBtn);
             editLl = (LinearLayout)convertview.findViewById(R.id.LinarLay);
-            pediatricEtxt = (CustomEt)convertview.findViewById(R.id.pediatricEtxt);
+            pediatricEtxt = (EditText)convertview.findViewById(R.id.pediatricEtxt);
             LifeStyleTxt.setText(array.get(pos).get("condition"));
             str_condition = array.get(pos).get("condition");
             str_value = array.get(pos).get("value");
             if(array.get(pos).get("value") != null && array.get(pos).get("value").equalsIgnoreCase("yes")){
                 if(str_condition != null && str_condition.equals("Immunization up to date?")){
-                    immunizationEt = (CustomEt)convertview.findViewById(R.id.pediatricEtxt);
+                    immunizationEt = (EditText)convertview.findViewById(R.id.pediatricEtxt);
                     editLl.setVisibility(View.VISIBLE);
                     pediatricEtxt.setText(getPediatricEditValues(PreferenceConstants.PEDIATRIC_IMMUNISATION_PREF));
                     setFocusListener(immunizationEt, pos, PreferenceConstants.PEDIATRIC_IMMUNISATION_PREF);
@@ -100,7 +99,7 @@ public class PediatricProfileAdapter extends BaseAdapter {
                          pediatricEtxt.setText(temp.get(PreferenceConstants.PEDIATRIC_IMMUNISATION_PREF));
                 }
                 if (str_condition != null && str_condition.equals("Birth complications")){
-                    birthCompleteEt = (CustomEt)convertview.findViewById(R.id.pediatricEtxt);
+                    birthCompleteEt = (EditText)convertview.findViewById(R.id.pediatricEtxt);
                     editLl.setVisibility(View.VISIBLE);
                     pediatricEtxt.setText(getPediatricEditValues(PreferenceConstants.PEDIATRIC_BIRTH_PREF));
                     setFocusListener(birthCompleteEt, pos, PreferenceConstants.PEDIATRIC_BIRTH_PREF);
@@ -109,7 +108,7 @@ public class PediatricProfileAdapter extends BaseAdapter {
                 }
                 if (str_condition != null && str_condition.equals("Newborn complications")){
                     editLl.setVisibility(View.VISIBLE);
-                    newBornEt = (CustomEt)convertview.findViewById(R.id.pediatricEtxt);
+                    newBornEt = (EditText)convertview.findViewById(R.id.pediatricEtxt);
                     pediatricEtxt.setText(getPediatricEditValues(PreferenceConstants.PEDIATRIC_CHILD_PREF));
                     setFocusListener(newBornEt, pos, PreferenceConstants.PEDIATRIC_CHILD_PREF);
                     if(temp.get(PreferenceConstants.PEDIATRIC_CHILD_PREF) != null)
