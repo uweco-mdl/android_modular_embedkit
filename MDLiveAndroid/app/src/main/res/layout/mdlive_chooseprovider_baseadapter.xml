@@ -20,7 +20,7 @@
             style="@style/LinearLayoutStyle"
             android:orientation="vertical"
             android:layout_width="230dp"
-            android:layout_marginLeft="5dp"
+
 
             >
 
@@ -28,7 +28,7 @@
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"
                 android:textColor="#35393d"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:singleLine="true"
                 />
 
