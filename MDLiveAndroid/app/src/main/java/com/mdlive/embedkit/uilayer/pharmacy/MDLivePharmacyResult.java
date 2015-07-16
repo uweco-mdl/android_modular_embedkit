@@ -347,7 +347,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "address2"))
                     address2 = responArray.get(i).getAsJsonObject().get("address2").getAsString();
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "zipcode"))
-                    zipcode = responArray.get(i).getAsJsonObject().get("zipcode").getAsString();
+                    zipcode = MdliveUtils.zipCodeFormat(responArray.get(i).getAsJsonObject().get("zipcode").getAsString());
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "fax"))
                     fax = responArray.get(i).getAsJsonObject().get("fax").getAsString();
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "city"))

@@ -43,7 +43,7 @@ public class MDLiveImageGalleryView extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_image_galleryview);
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-//        pDialog = Utils.getProgressDialog("Please wait...", this);
+//        pDialog = Utils.getProgressDialog("Please wait...", thi0s);
 
         ((TextView) findViewById(R.id.doneText)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,8 @@ public class MDLiveImageGalleryView extends MDLiveBaseActivity {
             }
         });
 
-        ((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
+        //((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
+        ((TextView) findViewById(R.id.imageNameText)).setText("");
 
             if(getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"") != null){
                 byte[] decodedString = getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"").data;

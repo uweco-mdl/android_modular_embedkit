@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -612,13 +611,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 atv.showDropDown();
                 MdliveUtils.showSoftKeyboard(this, atv);
             }
-            atv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-                }
-            });
+
+
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -649,6 +643,15 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                         atv.setText(text.getText().toString());
                         atv.dismissDropDown();
                         atv.setAdapter(null);
+                        LinearLayout addConditionsLl = (LinearLayout) findViewById(R.id.AddConditionsLl);
+                        if ((((ViewGroup) (addConditionsLl.getChildAt(0))).getChildAt(0)).getId() == atv.getId()) {
+                            addBlankConditionOrAllergy();
+                            EditText newEt = (EditText) ((ViewGroup) (addConditionsLl.getChildAt(0))).getChildAt(0);
+                            atv.setNextFocusDownId(newEt.getId());
+                            newEt.requestFocus();
+                            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.showSoftInput(newEt, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        }
                     }
                 });
                 return view;

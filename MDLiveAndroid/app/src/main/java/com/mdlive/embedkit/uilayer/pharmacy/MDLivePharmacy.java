@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -346,9 +347,11 @@ public class MDLivePharmacy extends FragmentActivity {
                             bundletoSend.get("address1") + "\n" +
                             bundletoSend.get("city") + ", "
                             + bundletoSend.get("state") + " "
-                            + bundletoSend.get("zipcode"));
+                            + (TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
                     return v;
                 }
+
+
 
                 @Override
                 public View getInfoContents(Marker arg0) {
@@ -373,7 +376,8 @@ public class MDLivePharmacy extends FragmentActivity {
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
-                    + pharmacyDatas.getString("zipcode"));
+                    +(TextUtils.isEmpty(pharmacyDatas.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode"))));
+                    //+ pharmacyDatas.getString("zipcode"));
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
@@ -409,7 +413,8 @@ public class MDLivePharmacy extends FragmentActivity {
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
-                    + pharmacyDatas.getString("zipcode"));
+                    + MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode")));
+
             //        addressline4.setText(pharmacyDatas.getString("phone"));
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
