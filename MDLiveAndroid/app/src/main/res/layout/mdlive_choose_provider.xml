@@ -102,9 +102,7 @@
         android:id="@+id/filterMainRl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@id/DocOnCalLinLay"
         android:background="#ECF5FA"
@@ -112,7 +110,7 @@
         >
 
         <TextView
-            android:text="Choose other doctor"
+            android:text="Choose Other Doctor"
             style="@style/BaseAvailableDoctorTxtStyle"
             android:gravity="left|center"
             android:textSize="18sp"

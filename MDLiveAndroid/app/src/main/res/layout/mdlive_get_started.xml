@@ -35,10 +35,12 @@
             </TextView>
         </RelativeLayout>
 
-        <ScrollView style="@style/ScrollViewStyle">
+        <ScrollView style="@style/ScrollViewStyle"
+            android:background="@color/mdliveBottomBlueColor">
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -187,6 +189,7 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/ContinueButtonStyle"
+                    android:layout_marginBottom="0dp"
                     android:text="Next" />
 
                 <include

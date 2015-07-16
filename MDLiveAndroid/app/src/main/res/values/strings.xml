@@ -57,7 +57,7 @@
 
     <string name="header_reason_txt">Reason for visit</string>
     <string name="subheader_reason_txt">What is the reason for your visit?</string>
-    <string name="searchsymptom_txt">Search symptoms</string>
+    <string name="searchsymptom_txt">Search Symptoms</string>
     <string name="searchProvidernmae_txt">Search provider name</string>
     <string name="acne_txt">Acne</string>
     <string name="alcohol_txt">Alcohol Dependencies</string>
@@ -350,7 +350,7 @@
     <!-- Strings for Add Family Screen -->
     <string name="age_error_message">Child must be younger than 18 years old</string>
     <string name="add_child">Add Child</string>
-    <string name="child_must_be_younger_than">Child must be younger than 18 years old</string>
+    <string name="child_must_be_younger_than">Child must be younger than 18 years old.</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="date_of_birth">Date of Birth</string>

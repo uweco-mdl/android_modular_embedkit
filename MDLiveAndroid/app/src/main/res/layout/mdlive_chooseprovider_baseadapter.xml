@@ -40,7 +40,8 @@
                     android:id="@+id/specalist"
                     style="@style/ProviderDetailsDoctorTxtStyle"
                     android:layout_width="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="left|center"
                     android:text="General Practise"
                     android:textColor="#878f95" />
@@ -49,6 +50,8 @@
                     android:id="@+id/callImg"
                     style="@style/ProviderDetailsDoctorTxtStyle"
                     android:gravity="end|right|center"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="20dp"
                     android:text=""
                     android:textColor="#F18032" />
             </LinearLayout>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
-    <LinearLayout style="@style/ContainerStyle">
+    <LinearLayout style="@style/ContainerStyle"
+        >
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
@@ -22,23 +24,26 @@
                 android:text="@string/add_child" />
         </LinearLayout>
 
-        <ScrollView style="@style/ScrollViewStyle">
+        <ScrollView style="@style/ScrollViewStyle"
+            android:background="@color/mdliveBottomBlueColor">
 
             <LinearLayout
                 android:id="@+id/providerNameLl"
+                android:background="@color/white"
                 style="@style/LinearLayoutStyle"
                 android:orientation="vertical">
 
                 <TextView
                     style="@style/BaseSubHeaderTextViewStyle"
                     android:layout_width="match_parent"
-                    android:layout_marginStart="19dp"
+                    android:layout_marginLeft="18dp"
                     android:text="@string/child_must_be_younger_than"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <LinearLayout
                     style="@style/WagParentLinearLayoutStyle"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -64,11 +69,12 @@
                                 android:textSize="18sp"
 
                                 />
-
+                            <View style="@style/ViewStyle"
+                                android:layout_marginTop="5dp"/>
 
                         </LinearLayout>
 
-                        <View style="@style/ViewStyle" />
+
 
                         <LinearLayout
                             android:id="@+id/patientL2"
@@ -99,10 +105,13 @@
                                 android:inputType="textPersonName"
                                 android:textSize="18sp"-->
 
+                            />
+                            <View style="@style/ViewStyle"
+                                android:layout_marginTop="5dp"/>
 
                         </LinearLayout>
 
-                        <View style="@style/ViewStyle" />
+
 
                         <LinearLayout
                             android:id="@+id/dobLl"
@@ -120,9 +129,12 @@
                                 android:hint="@string/date_of_birth_hint"
                                 android:textColor="@color/black"
                                 android:textSize="18sp" />
+                            />
+                            <View style="@style/ViewStyle"
+                                android:layout_marginTop="5dp"/>
                         </LinearLayout>
 
-                        <View style="@style/ViewStyle" />
+
 
                         <LinearLayout
                             android:id="@+id/genderLl"
@@ -152,9 +164,12 @@
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/dropdown_icon" />
                             </RelativeLayout>
+                            />
+                            <View style="@style/ViewStyle"
+                                android:layout_marginTop="5dp"/>
                         </LinearLayout>
 
-                        <View style="@style/ViewStyle" />
+
 
                         <LinearLayout
                             android:id="@+id/locationLl"
@@ -163,11 +178,12 @@
                             android:layout_marginTop="30dp"
                             android:orientation="horizontal">
 
-                            <android.support.v7.widget.SwitchCompat
+                 <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/mySwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:checked="false"
+                      android:layout_marginLeft="5dp"
                                 android:gravity="left|center"
                                 android:text="@string/i_michelle_text"
                                 android:textSize="16sp" />
@@ -184,12 +200,11 @@
 
                 <include
                     style="@style/Footer_Style"
+                    android:layout_marginBottom="0dp"
                     layout="@layout/mdlive_footer" />
             </LinearLayout>
 
         </ScrollView>
-
-
     </LinearLayout>
 
     <include layout="@layout/custom_progress_dialog" />

@@ -3,6 +3,7 @@
     <!--BasePrimaryColor-->
     <color name="mdliveBackgroundColor">#ecf5fa</color>
     <color name="mdlivePrimaryBlueColor">#3A89C9</color>
+    <color name="mdliveBottomBlueColor">#ECF5FA</color>
     <color name="mdliveHeaderPrimaryBlueColor">#489cd4</color>
     <!--BasePrimaryColor-->
     <color name="mdliveLoginUsernameColor">#878f95</color>
