@@ -148,6 +148,7 @@
                         android:text="@string/use_pharm_txt"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
+                        android:stateListAnimator="@null"
                         android:textSize="16sp" />
 
                     <Button
@@ -156,6 +157,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:stateListAnimator="@null"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/pharm_rounded_blue_btn"
                         android:tag="change_pharmacy"
