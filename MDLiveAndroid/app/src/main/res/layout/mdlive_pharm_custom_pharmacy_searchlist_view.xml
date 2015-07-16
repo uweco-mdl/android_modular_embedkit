@@ -76,7 +76,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="70"
+                android:layout_weight="80"
                 android:gravity="left"
                 android:textSize="13sp"
                 android:ellipsize="end"
@@ -89,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:layout_weight="30"
+                android:layout_weight="20"
                 android:id="@+id/twentyfourHrstxt"
                 android:text="24 hours"
                 android:textSize="13sp"

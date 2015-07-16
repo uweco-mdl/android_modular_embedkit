@@ -69,7 +69,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private Intent sendingIntent;
     private int keyDel=0;
     private String errorMesssage = "No Pharmacies listed in your location";
-    protected boolean isPerformingAutoSuggestion;
+    protected boolean isPerformingAutoSuggestion, mayIShowSuggestions = true;
     protected static String previousSearch = "";
 
     @Override
@@ -182,6 +182,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         getlocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+                mayIShowSuggestions = false;
                 getLocationBtnOnClickAction();
             }
         });
@@ -267,6 +269,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      * location is received, starts teh MDLivePharmacyResult activity.
      */
     private void getLocationBtnOnClickAction() {
+        mayIShowSuggestions = false;
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
 //            pDialog.show();
             //progressBar.setVisibility(View.VISIBLE);
@@ -280,6 +283,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 //                            pDialog.dismiss();
                             //progressBar.setVisibility(View.GONE);
                             hideProgress();
+                            mayIShowSuggestions = true;
                             if (location != null) {
                                 addExtrasForLocationInIntent(location);
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
@@ -327,6 +331,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(searchText)) {
             ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
             SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
+            mayIShowSuggestions = true;
             services.doSuggestionRequest(searchText, responseListener, errorListener);
             previousSearch = searchText;
             isPerformingAutoSuggestion = true;
@@ -348,7 +353,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 suggestionList.add(jarray.getString(i));
             }
 
-            if(suggestionList.size() > 0){
+            if(suggestionList.size() > 0 && mayIShowSuggestions){
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);

@@ -69,7 +69,6 @@
                 android:layout_marginTop="15dp"
                 android:hint="Pharmacy name"
                 android:textSize="16sp"
-
                 android:tag="manual_txt"
                />
 
@@ -79,6 +78,7 @@
                 android:imeOptions="actionDone"
                 android:hint="@string/pharmacy_opn"
                 android:tag="enter_zip"
+                android:dropDownVerticalOffset="12dp"
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"
                 android:id="@+id/pharmacy_search_name"

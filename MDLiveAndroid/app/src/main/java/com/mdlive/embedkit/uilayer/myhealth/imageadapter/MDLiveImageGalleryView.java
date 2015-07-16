@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myhealth.imageadapter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -16,6 +15,7 @@ import com.android.volley.Cache;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -33,12 +33,12 @@ import org.json.JSONObject;
  *
  */
 
-public class MDLiveImageGalleryView extends Activity {
+public class MDLiveImageGalleryView extends MDLiveBaseActivity {
 
     private ProgressDialog pDialog;
     private RelativeLayout progressBar;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Allergy
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_image_galleryview);
@@ -170,7 +170,7 @@ public class MDLiveImageGalleryView extends Activity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
