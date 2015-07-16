@@ -415,10 +415,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 try{
                     String responseBody = new String(error.networkResponse.data, "utf-8");
-                    Log.e("Response Confirm Appointment Failure-- ",responseBody);
                     JSONObject errorObj = new JSONObject(responseBody);
-
-                    Log.e("Response Confirm Appointment Failure message-- ", errorObj.getString("message"));
                     dismissDialog(pDialog);
 //                    progressBar.setVisibility(View.GONE);
                     MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
