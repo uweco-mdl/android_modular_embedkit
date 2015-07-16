@@ -438,7 +438,9 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     deleteView.setVisibility(View.VISIBLE);
                 }
 //                ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-                getAutoCompleteData((AutoCompleteTextView)conditonEt,text);
+                if(text.length()>=3) {
+                    getAutoCompleteData((AutoCompleteTextView) conditonEt, text);
+                }
             }
         };
     }
