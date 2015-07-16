@@ -93,7 +93,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
 
-        setContentView(R.layout.mdlive_pharmacy_resultnew);
+        setContentView(R.layout.mdlive_pharmacy_result);
         initializeViews();
         initializeListView();
         initializeMapView();

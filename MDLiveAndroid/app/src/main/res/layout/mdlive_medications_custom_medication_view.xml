@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             android:id="@+id/nameText"
             style="@style/common_style_W_Match_M_Wrap"
             android:ellipsize="end"
@@ -27,7 +27,7 @@
             android:text="testing"
             android:textStyle="bold" />
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             android:id="@+id/dosageText"
             style="@style/common_style_W_Match_M_Wrap"
             android:layout_marginTop="5dp"
@@ -47,7 +47,7 @@
         android:visibility="gone"
         android:padding="10dp">
 
-        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        <TextView
             android:id="@+id/doctorNameText"
             style="@style/common_style_W_Match_M_Wrap"
             android:singleLine="false"

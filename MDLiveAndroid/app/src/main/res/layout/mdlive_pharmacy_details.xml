@@ -7,7 +7,7 @@
 
         <LinearLayout style="@style/ContainerStyle">
 
-            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+            <TextView
                 android:id="@+id/textView6"
                 style="@style/titleHeaderBackgroundStyle"
                 android:tag="pharm_details"
@@ -27,43 +27,43 @@
                     android:layout_height="150dp" />
 
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/address"
                     style="@style/addressLineStyle"
                     android:text="@string/addr_text"
                     android:tag="addr_text" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/addressLine1"
                     style="@style/addressLineStyle" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/addressLine2"
                     style="@style/addressLineStyle" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/addressLine3"
                     style="@style/addressLineStyle" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/phone"
                     style="@style/addressLineStyle"
                     android:layout_marginTop="20dp"
                     android:text="@string/phone_txt"
                     android:tag="phone_txt" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/phoneText"
                     style="@style/addressLineStyle" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/distance"
                     style="@style/addressLineStyle"
                     android:layout_marginTop="20dp"
                     android:text="@string/distance_txt"
                     android:tag="distance_txt" />
 
-                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                <TextView
                     android:id="@+id/milesText"
                     style="@style/addressLineStyle" />
 

@@ -308,7 +308,7 @@
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
-                        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                        <TextView
                             style="@style/Pediatric_TextStyle"
                             android:layout_centerVertical="true"
                             android:text="@string/pediatric_siblings_text" />
