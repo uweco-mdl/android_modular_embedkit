@@ -54,6 +54,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
                         android:gravity="left|center"
+                        android:textSize="18sp"
                         android:text=""
                         android:textColor="#35393d" />
 
@@ -108,8 +109,9 @@
                         android:fontFamily="sans-serif-medium"
                         android:gravity="left|center"
                         android:singleLine="true"
+                        android:textSize="16sp"
                         android:text="Qualifications"
-                        android:textColor="#35393d" />
+                        android:textColor="@color/black" />
 
                     <LinearLayout
                         android:id="@+id/specialitiesLl"
@@ -124,7 +126,7 @@
                         android:id="@+id/hosaffiliationsLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="3dp">
 
                         <include layout="@layout/mdlive_provider_license" />
                     </LinearLayout>
@@ -142,7 +144,7 @@
                         android:id="@+id/languagesLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="3dp">
 
                         <include layout="@layout/mdlive_provider_languages" />
                     </LinearLayout>
@@ -151,7 +153,7 @@
                         android:id="@+id/boardCertificationsLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="3dp">
 
                         <include layout="@layout/mdlive_provider_location" />
                     </LinearLayout>
@@ -160,7 +162,7 @@
                         android:id="@+id/aboutmeLl"
                         style="@style/LinearLayoutStyle"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="3dp">
 
                         <include layout="@layout/mdlive_provider_aboutme" />
                     </LinearLayout>
@@ -168,7 +170,7 @@
                     <LinearLayout
                         style="@style/LinearLayoutStyle"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="3dp"
                         android:visibility="gone">
 
                         <include layout="@layout/mdlive_provider_languages" />
