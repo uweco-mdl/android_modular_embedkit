@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -602,12 +603,20 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             }
             if(conditionList.size()>0) {
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(atv, conditionList);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                /*InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);*/
                 atv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 atv.showDropDown();
+                MdliveUtils.showSoftKeyboard(this, atv);
             }
+            atv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -353,7 +353,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                         }else{
                                 captureImage();
                         }
-
                     }
                 })
                 .setNegativeButton("Gallery", new DialogInterface.OnClickListener(){
@@ -374,6 +373,15 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 });
 
         imagePickerDialog = alertDialogBuilder.create();
+
+        imagePickerDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                imagePickerDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                imagePickerDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                imagePickerDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
     }
 
     /*

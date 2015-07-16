@@ -12,6 +12,7 @@
         android:tag="add_condition"
         android:paddingRight="35dp"
         android:maxLength="100"
+        android:dropDownVerticalOffset="10dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/DeleteConditionBtn" />
