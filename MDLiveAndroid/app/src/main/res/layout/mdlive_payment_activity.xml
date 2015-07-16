@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
-                android:text="Billing information" />
+                android:text="Billing Information" />
         </LinearLayout>
 
         <ScrollView
@@ -135,7 +135,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-           <android.support.v7.widget.SwitchCompat
+             <android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                         android:textSize="16sp"
                         android:gravity="left|center"
                         android:text="Is this an FSA/HSA card?" />
--->
+
                 </LinearLayout>
 
                 <LinearLayout
