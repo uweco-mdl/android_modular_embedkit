@@ -212,20 +212,20 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.green));
-
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
-                        i.putExtra("username",userName);
-                        i.putExtra("password",password);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        finish();
-                        overridePendingTransition(0, 0);
-                        startActivity(i);
-                        overridePendingTransition(0, 0);
-                    }
-                }, 5000);
+                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
+                i.putExtra("username",userName);
+                i.putExtra("password",password);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(i);
+                overridePendingTransition(0, 0);
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }, 5000);
             }
         }catch (JSONException e){
             e.printStackTrace();
