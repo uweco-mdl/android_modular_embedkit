@@ -603,7 +603,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             for(int i = 0;i<conditionArray.length();i++){
                 conditionList.add(conditionArray.getJSONObject(i).getString("name"));
             }
-            if(conditionList.size()>0) {
+            if(conditionList.size()>0 && atv.hasFocus()) {
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(atv, conditionList);
                 /*InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);*/
