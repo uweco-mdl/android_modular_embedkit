@@ -688,6 +688,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
 
     public void medicalAggregationHandleSuccessResponse(JSONObject response){
         try {
+            hideProgress();
             JSONObject healthHistory = response.getJSONObject("health_history");
                 String conditonsNames = "";
                 if(type == TYPE_CONSTANT.CONDITION){
@@ -738,7 +739,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         }
 
         setResult(RESULT_OK, resultData);
-        hideProgress();
         finish();
         MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
         //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
