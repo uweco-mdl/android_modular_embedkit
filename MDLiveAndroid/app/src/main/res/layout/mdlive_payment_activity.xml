@@ -66,11 +66,7 @@
                 <WebView
                     android:id="@+id/HostedPCI"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginLeft="15px"
-                    android:layout_marginRight="15px"
-                    android:layout_marginTop="20px" />
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
@@ -159,9 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#ECF5FA"
-                    android:orientation="vertical"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp">
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/LinearLayout5"
