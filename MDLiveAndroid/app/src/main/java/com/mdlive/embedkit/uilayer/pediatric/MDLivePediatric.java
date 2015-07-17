@@ -176,10 +176,9 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             //edtBirthComplications.setVisibility(View.VISIBLE);
             txtDietType.setVisibility(View.VISIBLE);
             txtDietTypeHeader.setVisibility(View.VISIBLE);
-            findViewById(R.id.separator).setVisibility(View.VISIBLE);
+            findViewById(R.id.separator).setVisibility(View.GONE);
             View edtLastShot_view= (View) findViewById(R.id.edt_lastshot_view);
-            edtLastShot_view.setVisibility(View.VISIBLE);
-            findViewById(R.id.separator).setVisibility(View.VISIBLE);
+            edtLastShot_view.setVisibility(View.GONE);
         }
         explanationListners();
         dietList=new ArrayList<>();
