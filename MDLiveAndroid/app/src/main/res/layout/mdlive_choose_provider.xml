@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
-    android:background="@color/white"
+    android:background="@color/mdliveBottomBlueColor"
     >
 
     <RelativeLayout
@@ -16,7 +16,7 @@
             android:id="@+id/backImg"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp" />
+            android:layout_marginLeft="16dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
             android:id="@+id/homeImg"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
+            android:layout_toRightOf="@+id/backImg"
             />
 
         <TextView
@@ -43,6 +43,7 @@
         android:orientation="vertical"
         android:layout_below="@id/header"
         android:layout_width="match_parent"
+        android:background="@color/white"
         >
 
         <com.android.volley.toolbox.NetworkImageView
@@ -107,6 +108,7 @@
         android:layout_below="@id/DocOnCalLinLay"
         android:background="#ECF5FA"
         android:visibility="gone"
+
         >
 
         <TextView
@@ -115,7 +117,7 @@
             android:gravity="left|center"
             android:textSize="18sp"
             android:textColor="@color/search_bgd"
-            android:layout_marginStart="19dp"
+            android:layout_marginLeft="19dp"
             android:layout_centerVertical="true"
             android:id="@+id/txtFilter" />
 
@@ -124,7 +126,6 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="FILTER"
-            android:textStyle="bold"
             android:layout_marginRight="20dp"
             android:textSize="16sp"
             android:textColor="@color/mdlivePrimaryBlueColor"

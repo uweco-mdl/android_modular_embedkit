@@ -179,7 +179,7 @@
                             android:layout_marginTop="30dp"
                             android:orientation="horizontal">
 
-                 <android.support.v7.widget.SwitchCompat
+               <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/mySwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -199,10 +199,13 @@
                     style="@style/ContinueButtonStyle"
                     android:text="Add Child" />
 
+                <LinearLayout
+                    style="@style/Mdlive_footer_Style">
                 <include
                     style="@style/Footer_Style"
                     android:layout_marginBottom="0dp"
                     layout="@layout/mdlive_footer" />
+                </LinearLayout>
             </LinearLayout>
 
         </ScrollView>

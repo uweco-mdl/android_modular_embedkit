@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -28,7 +29,7 @@
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"
                 android:textColor="#35393d"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:singleLine="true"
                 />
 
@@ -70,7 +71,5 @@
 
     </LinearLayout>
     <View style="@style/ViewStyle"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
         />
 </LinearLayout>

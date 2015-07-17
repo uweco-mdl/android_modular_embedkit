@@ -37,7 +37,7 @@
         </RelativeLayout>
 
         <ScrollView style="@style/ScrollViewStyle"
-            android:background="@color/mdliveBottomBlueColor">
+           android:background="@color/mdliveBottomBlueColor">
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
@@ -194,10 +194,7 @@
                     android:text="Next" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@color/mdliveBottomBlueColor">
+                    style="@style/Mdlive_footer_Style">
                     <include
                         style="@style/Footer_Style"
                         layout="@layout/mdlive_footer" />
