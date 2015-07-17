@@ -95,6 +95,7 @@
 
                     <RelativeLayout
                         android:id="@+id/defaultPharmlayout"
+                        android:background="@color/white"
                         style="@style/common_style_W_Match_H_Wrap_O_Vertical">
 
                         <LinearLayout
