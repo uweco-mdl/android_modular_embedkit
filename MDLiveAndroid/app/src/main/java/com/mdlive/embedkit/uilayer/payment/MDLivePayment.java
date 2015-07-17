@@ -71,7 +71,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             Bundle extras=getIntent().getExtras();
             finalAmout=String.format( "%.2f",Double.parseDouble(extras.getString("final_amount")));
             storePayableAmount(finalAmout);
-            ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
+            ((TextView) findViewById(R.id.cost)).setText("$"+finalAmout);
         }
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
@@ -566,10 +566,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     finalAmout=String.format( "%.2f",payableAmount);
                     storePayableAmount(finalAmout);
                 }
-                Log.e("Payable AMOU","Discount Amount"+payableAmount);
-                ((TextView) findViewById(R.id.cost)).setText("Total :$"+finalAmout);
+                ((TextView) findViewById(R.id.cost)).setText("$"+finalAmout);
             } else{
-                Log.d("resObject.has(\"discount_amount\")","False");
+                Log.d("discount_amount","False");
             }
         }catch (Exception e){
             e.printStackTrace();

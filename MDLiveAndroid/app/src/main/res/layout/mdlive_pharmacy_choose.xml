@@ -67,7 +67,7 @@
             <TextView
                 style="@style/common_style_W_Match_M_Match"
                 android:layout_marginTop="15dp"
-                android:hint="Pharmacy name"
+                android:hint="Pharmacy Name"
                 android:textSize="16sp"
                 android:tag="manual_txt"
                />
@@ -104,7 +104,7 @@
             android:orientation="vertical">
             <TextView
                 style="@style/common_style_W_Match_M_Match"
-                android:text="Manual Search"
+                android:text="@string/ph_manual_search"
                 android:textColor="@color/black"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="15dp"
@@ -112,7 +112,7 @@
                 />
             <TextView
                 style="@style/common_style_W_Match_M_Match"
-                android:text="Zip Code"
+                android:text="@string/ph_zipcode"
                 android:textColor="@color/grey_txt"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -139,7 +139,8 @@
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:tag="or"
-            android:text="Or"
+            android:text="@string/ph_or_str"
+            android:textColor="@color/black"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="5dp"
             android:textSize="18sp"
@@ -164,6 +165,7 @@
             </LinearLayout>
         <LinearLayout
             style="@style/WagLocationLinearLayoutStyle"
+            android:layout_marginBottom="25dp"
             android:orientation="vertical">
             <TextView
                 style="@style/common_style_W_Match_M_Match"
@@ -183,6 +185,7 @@
             android:layout_marginTop="10dp"
             />
             <View style="@style/ViewStyle" />
+
             </LinearLayout>
 
 

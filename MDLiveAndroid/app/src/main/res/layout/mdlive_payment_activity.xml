@@ -5,6 +5,7 @@
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
+            android:elevation="0dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -32,6 +33,7 @@
 
         <ScrollView
             style="@style/WagLinearLayoutStylePediatricNew"
+            android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -39,22 +41,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:background="@color/white">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:background="@color/mdliveBackgroundColor"
+                    android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/ageTxt"
                     style="@style/Pediatric_TextStyle"
                     android:text="Credit Card"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:fontFamily="sans-serif-medium" />
 
                 <TextView
                     style="@style/Pediatric_TextStyle"
                     android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation."
                     android:textColor="@color/black"
                     android:textSize="16sp" />
+                </LinearLayout>
                 <WebView
                     android:id="@+id/HostedPCI"
                     android:layout_width="match_parent"
@@ -150,10 +158,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="25px"
-                    android:layout_marginRight="25px"
                     android:background="#ECF5FA"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp">
 
                     <RelativeLayout
                         android:id="@+id/LinearLayout5"
@@ -172,24 +180,35 @@
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/mdlivePrimaryBlueColor"
                             android:textSize="18sp" />
-
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total:"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         <TextView
                             android:id="@+id/cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="Total :$49.00"
+                            android:text="$49.00"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/black"
                             android:textSize="18sp"
+                            android:layout_marginLeft="15dp"
                             android:textStyle="bold" />
+                        </LinearLayout>
 
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:layout_marginBottom="20px"
                         android:background="#ECF5FA">
 
                         <Button
@@ -198,10 +217,9 @@
                             android:text="@string/next_btn"
                              />
                     </RelativeLayout>
+                    <include layout="@layout/mdlive_footer"
+                        style="@style/Footer_Style"/>
                 </LinearLayout>
-
-                <include layout="@layout/mdlive_footer"
-                    style="@style/Footer_Style"/>
             </LinearLayout>
         </ScrollView>
 

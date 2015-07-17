@@ -95,8 +95,10 @@
     <string name="choosen_pharmacy">CHOSEN PHARMACY</string>
     <string name="resume_consultation_txt">Resume Consultation</string>
 
-
-
+<!-- Pharmacy search strings -->
+    <string name="ph_manual_search">MANUAL SEARCH</string>
+    <string name="ph_zipcode">ZIP Code</string>
+    <string name="ph_or_str">OR</string>
     <!--choose provider-->
     <string name="doctor_on_call">Doctor On Call</string>
     <string name="average_wait">Average Wait: 6 min</string>
