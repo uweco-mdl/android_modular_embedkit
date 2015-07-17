@@ -28,7 +28,7 @@
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"
                 android:textColor="#35393d"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:singleLine="true"
                 />
 

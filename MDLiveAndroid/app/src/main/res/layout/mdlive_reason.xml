@@ -22,7 +22,7 @@
                 android:id="@+id/backImg"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp" />
+                android:layout_marginStart="16dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
                 android:id="@+id/homeImg"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@+id/backImg"
+                android:layout_toEndOf="@+id/backImg"
                 />
 
             <LinearLayout
@@ -104,7 +104,7 @@
                 android:layout_height="25dp"
                 android:layout_marginRight="10dp"
                 android:id="@+id/deleteTextBtn"
-                android:src="@drawable/icon_x"
+                android:src="@drawable/close_icon"
                 android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
@@ -123,6 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_marginTop="5dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.1dip"
         android:id="@+id/reasonList" />

@@ -4,7 +4,7 @@
     <LinearLayout
         android:id="@+id/pediatricContainer"
         style="@style/ContainerStyle"
-        android:background="@color/white">
+        android:background="@color/mdliveBottomBlueColor">
 
         <LinearLayout
             android:id="@+id/header"
@@ -49,11 +49,13 @@
         <ScrollView
             android:id="@+id/pediatricScroll"
             style="@style/ScrollViewStyle"
+            android:background="@color/mdliveBottomBlueColor"
             android:layout_below="@+id/header">
 
             <LinearLayout
                 style="@style/LinearLayoutStyle"
                 android:layout_marginBottom="10dp"
+                android:background="@color/white"
                 android:orientation="vertical"
 
                 >
@@ -123,7 +125,9 @@
                             android:inputType="number"
                             android:maxLength="3" />
 
-
+                        <View style="@style/ViewStyle"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -132,9 +136,9 @@
                             android:textColorHighlight="@color/black"
                             android:textSize="18sp"
                             android:visibility="gone" />
+
                     </LinearLayout>
 
-                    <View style="@style/ViewStyle" />
                     <TextView
                         android:id="@+id/txt_dietTypeHeader"
                         android:background="#ffffff"
@@ -152,6 +156,7 @@
                         android:layout_marginTop="10dp"
                         android:textSize="18sp" />
                     <View style="@style/ViewStyle"
+                        android:visibility="gone"
                         android:id="@+id/separator"/>
 
                     <TextView
@@ -168,6 +173,7 @@
 
                 <LinearLayout
                     style="@style/LinearLayoutStyle"
+
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -203,7 +209,8 @@
                         android:hint="@string/pediatric_birth_describe"
                         android:visibility="gone" />
 
-                    <View style="@style/viewstyle_behavioural" />
+                    <View style="@style/viewstyle_behavioural"
+                        android:visibility="gone"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
@@ -247,6 +254,7 @@
                         android:visibility="gone" />
 
                     <View style="@style/viewstyle_behavioural"
+                        android:visibility="gone"
                         android:id="@+id/edt_lastshot_view"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
@@ -276,7 +284,8 @@
 
                     </RelativeLayout>
 
-                    <View style="@style/viewstyle_behavioural" />
+                    <View style="@style/viewstyle_behavioural"
+                        android:visibility="gone"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
@@ -304,7 +313,8 @@
 
                     </RelativeLayout>
 
-                    <View style="@style/viewstyle_behavioural" />
+                    <View style="@style/viewstyle_behavioural"
+                        android:visibility="gone"/>
 
                     <RelativeLayout style="@style/Pediatric_relative_layout_style">
 
@@ -334,7 +344,8 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-                <View style="@style/viewstyle_behavioural" />
+                <View style="@style/viewstyle_behavioural"
+                    android:visibility="gone"/>
 
 
                 <TextView
@@ -349,12 +360,16 @@
                     android:clickable="false"
                     android:onClick="continueBtn"
                     android:text="Next"></Button>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/mdliveBottomBlueColor">
                 <include
                     style="@style/Footer_Style"
                     layout="@layout/mdlive_footer"
                     />
-
+</LinearLayout>
 
             </LinearLayout>
 

@@ -3,6 +3,7 @@
     >
 
     <LinearLayout style="@style/ContainerStyle"
+        android:background="@color/mdliveBottomBlueColor"
         >
 
         <LinearLayout

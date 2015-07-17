@@ -3,7 +3,7 @@
 
     <LinearLayout
         style="@style/ContainerStyle"
-        android:background="@color/mdliveBackgroundColor">
+        android:background="@color/mdliveBottomBlueColor">
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
@@ -49,6 +49,7 @@
             android:id="@+id/ContainerScrollView"
             style="@style/ScrollViewStyle"
             android:layout_marginBottom="12dp"
+            android:background="@color/mdliveBottomBlueColor"
             android:fillViewport="false">
 
             <LinearLayout
@@ -56,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
@@ -475,8 +477,9 @@
                 <LinearLayout
                     android:id="@+id/MyHealthAddPhotoLl"
                     style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical">
+
 
                     <TextView
                         android:layout_width="match_parent"
@@ -506,9 +509,8 @@
                     style="@style/LinearLayoutStyle"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/line_full_bg"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <ImageView
                         android:id="@+id/MyHealthCameraBtn"
@@ -516,6 +518,7 @@
                         android:layout_height="25dp"
                         android:layout_marginLeft="10dp"
                         android:src="@drawable/camera_icon" />
+
 
                     <TextView
                         android:id="@+id/takephotoTxt"
@@ -548,10 +551,15 @@
                     android:id="@+id/SavContinueBtn"
                     style="@style/MedicalContinueButtonStyle"
                     android:text="@string/next_btn" />
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/mdliveBottomBlueColor">
                 <include
                     style="@style/Footer_Style"
                     layout="@layout/mdlive_footer" />
+            </LinearLayout>
             </LinearLayout>
 
         </ScrollView>

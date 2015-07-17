@@ -3,13 +3,16 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBottomBlueColor"
     >
 
  <ScrollView
         style="@style/ScrollViewHolderStyle"
+     android:background="@color/mdliveBottomBlueColor"
         >
      <LinearLayout
         style="@style/ContainerStyle"
+         android:background="@color/white"
          >
 
          <RelativeLayout

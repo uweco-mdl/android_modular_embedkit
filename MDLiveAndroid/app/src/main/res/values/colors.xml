@@ -11,7 +11,7 @@
 
     <color name="black">#35393d</color>
     <color name="white">#ffffff</color>
-    <color name="grey_txt">#878f95</color>
+    <color name="grey_txt">#b4b9bd</color>
     <color name="parentView_color">#D2D5D7</color>
     <color name="childView_color">#E7E7E7</color>
     <color name="continueBtn_color">#5877AD</color>

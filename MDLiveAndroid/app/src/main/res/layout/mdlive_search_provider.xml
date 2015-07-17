@@ -2,6 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"   >
 <LinearLayout
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBottomBlueColor"
     >
     <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
@@ -45,9 +46,11 @@
             />
     </RelativeLayout>
     <ScrollView style="@style/ScrollViewStyle"
+        android:background="@color/white"
         >
         <LinearLayout
             style="@style/WagParentLinearLayoutStyle"
+            android:background="@color/white"
             android:orientation="vertical">
 
 
@@ -220,9 +223,7 @@
                         android:id="@+id/DateTxtView" />
                 </LinearLayout>
                 <View style="@style/ProviderSearchViewStyle" />
-
             </LinearLayout>
-
     </ScrollView>
     <Button
         android:id="@+id/SearchBtn"

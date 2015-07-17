@@ -190,7 +190,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 if(text.length() == 0){
                     deleteTextBtn.setVisibility(View.GONE);
                 }else{
-                    deleteTextBtn.setVisibility(View.GONE);
+                    deleteTextBtn.setVisibility(View.VISIBLE);
                 }
                 if(!text.startsWith(" ")){
                     baseadapter.getFilter().filter(s.toString());
@@ -204,7 +204,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             }
         });
     }
-    
+
     /**
      *Item Click Listener for the ListView
      */

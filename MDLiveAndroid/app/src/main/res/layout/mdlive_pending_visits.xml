@@ -4,16 +4,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/mdliveBottomBlueColor"
         android:orientation="vertical">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/mdliveBottomBlueColor"
             android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <LinearLayout style="@style/ContainerStyle">
 
@@ -197,10 +200,15 @@
                         android:textSize="18sp"
                         android:textColor="@color/white"
                         android:fontFamily="sans-serif-medium" />
-
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/mdliveBottomBlueColor">
                     <include
                         style="@style/Footer_Style"
                         layout="@layout/mdlive_footer" />
+                        </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
