@@ -452,6 +452,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 //                    baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
 //                    listView.setAdapter(baseadapter);
 //                    baseadapter.notifyDataSetChanged();
+
+                    DocOnCalLinLay.setVisibility(View.GONE);
+                    filterMainRl.setVisibility(View.GONE);
                     MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, jArray.get(0).toString());
 //                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
 //                    doctorOnCallButtonClick();
@@ -460,6 +463,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }
                 else if(jArray.length()==0)
                 {
+
+                    DocOnCalLinLay.setVisibility(View.GONE);
+                    filterMainRl.setVisibility(View.GONE);
                     MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
                 }
 
