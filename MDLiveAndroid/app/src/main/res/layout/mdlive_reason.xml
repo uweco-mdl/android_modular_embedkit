@@ -3,7 +3,9 @@
     style="@style/ContainerStyle"
     android:background="@color/mdliveBottomBlueColor"
     >
-
+    <LinearLayout
+        android:focusable="true" android:focusableInTouchMode="true"
+        android:layout_width="0px" android:layout_height="0px"/>
     <LinearLayout
         android:id="@+id/header"
         style="@style/LinearLayoutStyle"
@@ -88,6 +90,7 @@
                 android:padding="5dp"
                 android:layout_marginLeft="12dp"
                 android:textSize="16sp"
+                android:textCursorDrawable="@color/black"
                 android:layout_centerVertical="true"
                 android:id="@+id/search_edit"
                 android:cursorVisible="false"
