@@ -65,9 +65,8 @@
                 </LinearLayout>
                 <WebView
                     android:id="@+id/HostedPCI"
-                    android:minHeight="100dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="100dp" />
 
                 <LinearLayout
                     style="@style/WagLinearLayoutStyle"
@@ -91,11 +90,13 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:editable="false"
-                        android:layout_marginTop="10dp"
                         android:hint="mm/yy"
                         android:maxLines="1"
                         android:textColor="@color/black"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp" />
+                    <View style="@style/ViewStyle" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -120,7 +121,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginTop="10dp"
                         android:background="@null"
                         android:hint="12345-7890"
                         android:inputType="number"
@@ -129,6 +129,7 @@
                         android:textCursorDrawable="@color/black"
                         android:textColor="@color/black"
                         android:textSize="17sp" />
+                    <View style="@style/ViewStyle" />
                 </LinearLayout>
 
 
