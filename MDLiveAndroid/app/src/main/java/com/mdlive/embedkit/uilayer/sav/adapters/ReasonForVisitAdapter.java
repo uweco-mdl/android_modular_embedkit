@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -127,6 +128,12 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
                     false);
         ReasonForVisitTxt = (TextView) row.findViewById(R.id.reasonTxt);
+        if(pos == 0){
+            LinearLayout  parentLl = (LinearLayout) ReasonForVisitTxt.getParent();
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) parentLl.getLayoutParams();
+            params.setMargins(0, 45, 0, 0);
+            parentLl.setLayoutParams(params);
+        }
         if(notFound){
             ReasonForVisitTxt.setText("No results found for '"+array.get(pos)+"'\n"+"submit '"+array.get(pos)+"' as your symptom");
         }else {

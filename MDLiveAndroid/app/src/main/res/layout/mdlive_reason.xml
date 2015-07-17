@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBottomBlueColor"
     >
 
     <LinearLayout
@@ -21,7 +22,7 @@
                 android:id="@+id/backImg"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="16dp" />
+                android:layout_marginLeft="16dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
                 android:id="@+id/homeImg"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toEndOf="@+id/backImg"
+                android:layout_toRightOf="@+id/backImg"
                 />
 
             <LinearLayout
@@ -122,7 +123,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="5dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.1dip"
         android:id="@+id/reasonList" />
