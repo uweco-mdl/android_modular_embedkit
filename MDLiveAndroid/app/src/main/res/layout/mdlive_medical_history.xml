@@ -234,6 +234,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -314,6 +315,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -324,6 +326,7 @@
                 <LinearLayout
                     android:id="@+id/MyHealthAllergiesLl"
                     style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:background="@drawable/line_bottomline_bg"
                     android:orientation="horizontal">
 
                     <TextView
@@ -396,6 +399,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -477,7 +481,7 @@
                 <LinearLayout
                     android:id="@+id/MyHealthAddPhotoLl"
                     style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
 
@@ -485,15 +489,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:text="PHOTOS" />
+                        android:textSize="17sp"
+                        android:textColor="@color/darkblack"
+                        android:text="Photos" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:text="Helpful for rashes, cuts, etc."
-                        android:textSize="17sp" />
+                        android:textSize="13sp" />
 
                     <LinearLayout
                         style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"

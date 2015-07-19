@@ -49,6 +49,16 @@
             />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/mdliveBackgroundColor"
+        android:text="@string/default_pharm_text"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+
     <FrameLayout
         android:id="@+id/mapContainer"
         android:layout_width="match_parent"
@@ -96,6 +106,12 @@
             android:id="@+id/pharmList"
             android:layout_above="@+id/loadingIndicator"
             android:clickable="true" />
+
+        <include
+            android:id="@+id/footer"
+            style="@style/Footer_Style"
+            android:layout_alignParentBottom="true"
+            layout="@layout/mdlive_footer" />
 
         <ProgressBar
             android:id="@+id/loadingIndicator"

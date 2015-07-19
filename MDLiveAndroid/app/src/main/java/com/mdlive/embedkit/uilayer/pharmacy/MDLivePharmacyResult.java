@@ -167,11 +167,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
     public void initializeListView() {
 
         pharmList = (ListView) findViewById(R.id.pharmList);
-        if (pharmList.getFooterViewsCount() == 0) {
-            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.mdlive_footer, null, false);
-            pharmList.addFooterView(footerView, null, false);
-        }
 
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
@@ -193,6 +188,31 @@ public class MDLivePharmacyResult extends FragmentActivity {
         if (googleMap != null) {
             if (googleMap != null) {
                 googleMap.setInfoWindowAdapter(markerInfoAdapter);
+            }
+        }
+    }
+
+    /*
+    * shows or hide list footer/ bottom footer
+    * */
+    public void showOrHideFooter() {
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.mdlive_footer, null, false);
+
+        // If list size is greater than zero then show the bottom footer
+        if (list != null && list.size() > 0) {
+            findViewById(R.id.footer).setVisibility(View.GONE);
+
+            if (pharmList.getFooterViewsCount() == 0) {
+
+                pharmList.addFooterView(footerView, null, false);
+            }
+        }
+        // If list size is zero then remove the bootm footer & add the list footer
+        else {
+            findViewById(R.id.footer).setVisibility(View.VISIBLE);
+            if (pharmList.getFooterViewsCount() > 0) {
+                pharmList.removeFooterView(footerView);
             }
         }
     }
@@ -416,6 +436,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 list.add(map);
             }
             adaper.notifyDataSetChanged();
+            showOrHideFooter();
             //For Google map initialize view
             if (markerPoint != null)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));

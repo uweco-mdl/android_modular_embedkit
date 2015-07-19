@@ -10,6 +10,8 @@
 
 
     <color name="black">#35393d</color>
+    <color name="darkblack">#000000</color>
+
     <color name="white">#ffffff</color>
     <color name="grey_txt">#b4b9bd</color>
     <color name="parentView_color">#D2D5D7</color>

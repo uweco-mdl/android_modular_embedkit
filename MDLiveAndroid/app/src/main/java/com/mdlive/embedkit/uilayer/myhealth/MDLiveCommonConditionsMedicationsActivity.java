@@ -440,6 +440,12 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 if(text.length()>=3) {
                     getAutoCompleteData((AutoCompleteTextView) conditonEt, text);
                 }
+                else {
+                    // Need to clear the data or hide the auto compleete text dropdown
+                    if (((AutoCompleteTextView) conditonEt).getAdapter() != null) {
+                        ((ArrayAdapter<String>) ((AutoCompleteTextView) conditonEt).getAdapter()).clear();
+                    }
+                }
             }
         };
     }
@@ -603,6 +609,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 conditionList.add(conditionArray.getJSONObject(i).getString("name"));
             }
             if(conditionList.size()>0 && atv.hasFocus()) {
+                if (atv.getAdapter() != null) {
+                    ((ArrayAdapter<String>) atv.getAdapter()).clear();
+                }
+
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(atv, conditionList);
                 /*InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);*/

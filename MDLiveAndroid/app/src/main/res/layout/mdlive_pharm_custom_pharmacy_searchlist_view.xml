@@ -19,9 +19,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignBottom="@+id/textView3">
 
-
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -49,16 +46,40 @@
             android:text="Preferred Store"
             />
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/relative_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textSize="17sp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:id="@+id/pharmacyName"
-            android:textColor="@color/black"
-            />
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/text_view_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black"
+                android:gravity="left"
+                android:textSize="17sp"
+                android:ellipsize="end"
+                android:layout_marginRight="2dp"
+                android:singleLine="true"/>
+
+
+            <TextView
+                android:id="@+id/text_view_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:gravity="left"
+                android:textSize="17sp"
+                android:singleLine="true"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/text_view_a"
+                android:text="100 Miles"/>
+        </RelativeLayout>
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

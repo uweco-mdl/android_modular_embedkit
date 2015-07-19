@@ -72,7 +72,7 @@
                             android:id="@+id/textView18"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="8dp"
                             android:text="@string/default_pharm_text"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
@@ -97,6 +97,7 @@
                     <RelativeLayout
                         android:id="@+id/defaultPharmlayout"
                         android:background="@color/white"
+                        android:layout_marginTop="5dp"
                         style="@style/common_style_W_Match_H_Wrap_O_Vertical">
 
                         <LinearLayout
@@ -145,6 +146,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/pharm_rounded_green_btn"
                         android:tag="change_pharmacy"
                         android:text="@string/use_pharm_txt"

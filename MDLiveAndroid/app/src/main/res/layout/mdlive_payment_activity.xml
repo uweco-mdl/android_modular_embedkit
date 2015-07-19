@@ -122,7 +122,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="12345-7890"
                         android:inputType="number"
                         android:maxLength="10"
                         android:maxLines="1"
@@ -141,7 +140,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-             <android.support.v7.widget.SwitchCompat
+             <!--<android.support.v7.widget.SwitchCompat
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -149,7 +148,7 @@
                         android:checked="false"
                         android:textSize="16sp"
                         android:gravity="left|center"
-                        android:text="Is this an FSA/HSA card?" />
+                        android:text="Is this an FSA/HSA card?" />-->
 
                 </LinearLayout>
 

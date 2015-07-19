@@ -139,7 +139,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
            //Fetch Data From the Services
             JSONArray arr = response.getJSONArray("chief_complaint");
 
-            for(int i = 0;i< arr.length();i++){
+                for(int i = 0;i< arr.length();i++){
                 ReasonList.add(arr.getJSONObject(i).getString(arr.getJSONObject(i).keys().next()));
             }
 
@@ -149,21 +149,40 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         findViewById(R.id.footer).setVisibility(View.GONE);
 
-            listView = (ListView) findViewById(R.id.reasonList);
-
-
-        if (listView.getFooterViewsCount() == 0) {
-            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView, null, false);
-        }
+        listView = (ListView) findViewById(R.id.reasonList);
+        showOrHideFooter();
 
         baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList);
             listView.setAdapter(baseadapter);
             RefineSearch();
             ListItemClickListener();
-
         }
+
+    /*
+* shows or hide list footer/ bottom footer
+* */
+    public void showOrHideFooter() {
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.mdlive_footer, null, false);
+
+        // If list size is greater than zero then show the bottom footer
+        if (ReasonList != null && ReasonList.size() > 0) {
+            findViewById(R.id.footer).setVisibility(View.GONE);
+
+            if (listView.getFooterViewsCount() == 0) {
+
+                listView.addFooterView(footerView, null, false);
+            }
+        }
+        // If list size is zero then remove the bootm footer & add the list footer
+        else {
+            findViewById(R.id.footer).setVisibility(View.VISIBLE);
+            if (listView.getFooterViewsCount() > 0) {
+                listView.removeFooterView(footerView);
+            }
+        }
+    }
+
     /**
      *
      * Filter Search for the Listview. we can filter the list by giving the name and if the name

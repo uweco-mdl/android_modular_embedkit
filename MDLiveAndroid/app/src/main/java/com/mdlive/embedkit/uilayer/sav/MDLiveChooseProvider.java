@@ -286,19 +286,38 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void setListView() {
-        findViewById(R.id.footer).setVisibility(View.GONE);
-
-        if (listView.getFooterViewsCount() == 0) {
-            final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.mdlive_footer, null, false);
-            listView.addFooterView(footerView, null, false);
-        }
-
+        showOrHideFooter();
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
         ListItemClickListener();
     }
+
+    /*
+    * shows or hide list footer/ bottom footer
+    * */
+    public void showOrHideFooter() {
+        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.mdlive_footer, null, false);
+
+        // If list size is greater than zero then show the bottom footer
+        if (ProviderListMap != null && ProviderListMap.size() > 0) {
+            findViewById(R.id.footer).setVisibility(View.GONE);
+
+            if (listView.getFooterViewsCount() == 0) {
+
+                listView.addFooterView(footerView, null, false);
+            }
+        }
+        // If list size is zero then remove the bootm footer & add the list footer
+        else {
+            findViewById(R.id.footer).setVisibility(View.VISIBLE);
+            if (listView.getFooterViewsCount() > 0) {
+                listView.removeFooterView(footerView);
+            }
+        }
+    }
+
     /**
      *
      *  Set the Body content of the Listview.In this the Dependent Name and the

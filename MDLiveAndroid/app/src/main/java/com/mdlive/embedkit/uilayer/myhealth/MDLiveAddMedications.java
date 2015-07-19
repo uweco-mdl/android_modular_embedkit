@@ -247,7 +247,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(constraint)) {
+        if (!isPerformingAutoSuggestion /*&& !previousSearch.equalsIgnoreCase(constraint)*/) {
             SuggestMedicationService services = new SuggestMedicationService(MDLiveAddMedications.this, null);
             services.doLoginRequest(constraint, successCallBackListener, errorListener);
             previousSearch = constraint;
