@@ -664,7 +664,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         }
         if(txtDietType.getVisibility()==View.VISIBLE){
             Log.e("Diet","Coming");
-            if(txtDietType.getHint().toString().equals("Current Diet") && txtDietType.getText().toString().isEmpty()){
+            if(txtDietType.getHint().toString().equals("Select") && txtDietType.getText().toString().isEmpty()){
                 return false;
             }
         }
