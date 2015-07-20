@@ -189,7 +189,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
         try{
             VSeeVideoManager.instance().endVideoCalls();
             VSeeVideoManager.instance().finishVideoActivity();
-        } catch(Exception e){
+        } catch(Throwable e){
             e.printStackTrace();
         }
         VSeeServerConnection.instance().removeReceiver(simpleServerConnectionReceiver);
