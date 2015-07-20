@@ -75,8 +75,8 @@ public class MDLiveConfig {
             case 1:
                 // dev environment
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "843f117b0bf7368ed5d";
-                AppSpecificConfig.SECRET_KEY = "a775f7e2ed1ce6cb313b";
+                AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
+                AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
                 break;
             case 2:
                 // QA environment

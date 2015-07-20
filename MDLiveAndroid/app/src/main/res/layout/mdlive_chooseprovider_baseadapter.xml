@@ -53,7 +53,6 @@
                     android:gravity="end|right|center"
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="10dp"
-                    android:text="With Patient"
                     android:textColor="#F18032" />
             </LinearLayout>
 

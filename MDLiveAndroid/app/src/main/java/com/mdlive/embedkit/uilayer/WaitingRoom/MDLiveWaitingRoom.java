@@ -213,13 +213,15 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
                 ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.green));
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
+                Log.e("VeeSEE -->", "Final reached....");
                 i.putExtra("username",userName);
                 i.putExtra("password",password);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
                 finish();
                 overridePendingTransition(0, 0);
-                startActivity(i);
-                overridePendingTransition(0, 0);
+//                overridePendingTransition(0, 0);
+
 //                handler.postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
