@@ -197,7 +197,7 @@
                 function() {
                     jQuery('input').blur();
 						//Set hostedPCI URL. This will be use to refresh the HPCI iframe when user failed to input correct cc number or cvv
-						this.hpciCCFrameFullUrl = "https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobile&sid=527123&fullParentHost="
+						this.hpciCCFrameFullUrl = "https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobileandroid&sid=527123&fullParentHost="
 								+ this.parent_host_url
 								+ "&fullParentQStr="
 								+ this.parent_host_query_string;
@@ -223,7 +223,7 @@
 
 		<!--Production HPCI iFrame -->
 		<iframe id="mdliveframe" name="mdliveframe"
-				src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobile3&sid=527123&fullParentHost=file%3A%2F%2F%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex_prod.html"
+				src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobileandroid&sid=527123&fullParentHost=file%3A%2F%2F%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex_prod.html&cvvValidate=Y"
 				frameborder="0" scrolling="no" onload="mdliveSetData();"> If you can see
 			this, your browser doesn't understand IFRAME. </iframe>
 

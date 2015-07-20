@@ -121,7 +121,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         }
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-        setupWebView();
+
 //        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
 //        pDialog.show();
         TextView textview = (TextView) findViewById((R.id.ApplyOfferCode));
@@ -146,25 +146,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
     }
-    private void setupWebView() {
-        HostedPCI.getSettings().setJavaScriptEnabled(true);
-        HostedPCI.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                HostedPCI.loadUrl("javascript:billing.resize(document.body.getBoundingClientRect().height)");
-                super.onPageFinished(view, url);
-            }
-        });
-    }
-    @JavascriptInterface
-    public void resize(final float height) {
-        MDLivePayment.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                HostedPCI.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels, (int) (height * getResources().getDisplayMetrics().density)));
-            }
-        });
-    }
+
     EditText ed;
 
     final class IJavascriptHandler {
@@ -408,7 +390,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 dismissDialog(pDialog);
                 //progressBar.setVisibility(View.GONE);
-                Log.e("Response Confirm Appointment Success-- ",response.toString());
+                Log.e(" Appointment Success-- ",response.toString());
                 try {
                     isPaymentLoading = false;
                     String apptId = response.getString("appointment_id");
