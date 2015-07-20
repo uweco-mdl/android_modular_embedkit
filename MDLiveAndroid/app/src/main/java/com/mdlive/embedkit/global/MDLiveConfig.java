@@ -20,7 +20,7 @@ public class MDLiveConfig {
     public static final String URL_FILTER_SEARCH = "/providers/filter_providers";
     public static final String URL_REASON_FOR_VISIT = "/support/chief_complaint_reasons";
     public static final String URL_ZIPCODE = "/providers/search_providers";
-    public static final String URL_PROVIDER_DETAILS ="/providers/4?appointment_date=2015/1/20&appointment_type=3&located_in=FL";
+    public static final String URL_PROVIDER_DETAILS ="/providers/";
     public static final String URL_LIFE_STYLE = "/life_style_conditions ";
     public static final String URL_PEDIATRIC_PROFILE = "/medical_histories/pediatric_profile";
 
@@ -89,15 +89,19 @@ public class MDLiveConfig {
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
-//                AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
-//                AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
-//                AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
+
                 break;
             case 4:
                 // Production environment
-                AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com";
+                AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "";
                 AppSpecificConfig.SECRET_KEY = "";
+                break;
+            case 5:
+                // QA Pluto URL
+                AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
+                AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
+                AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 break;
             default:
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
