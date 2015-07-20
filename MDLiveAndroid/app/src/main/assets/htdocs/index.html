@@ -181,7 +181,7 @@
             return false;
         }else if(!/^[0-9]+$/.test(ccNumValueCheck) || ccNumValueCheck.length>16 || ccNumValueCheck.length<16){
         	this.billingData = {
-                "status" : "Invalid Card Number"
+                "status" : "Invalid Credit Card Information"
             }
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
