@@ -15,7 +15,6 @@
 
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutReasonStyle"
-            android:background="@color/mdlivePrimaryBlueColor"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"
@@ -46,7 +45,7 @@
                     android:id="@+id/headerTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="21sp"
                     android:textColor="@color/white"
                     android:text="Reason for Visit">
                 </TextView>
@@ -55,7 +54,7 @@
                     android:id="@+id/reason_patientTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="19sp"
                     android:textColor="@color/white"
                     android:text="Michelle Marino"
                     android:layout_below="@+id/headerTxt"

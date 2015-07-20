@@ -359,7 +359,8 @@
                     style="@style/ContinueButtonStyle"
                     android:clickable="false"
                     android:onClick="continueBtn"
-                    android:text="Next"></Button>
+                    android:text="Next"
+                    android:layout_marginBottom="4dp"></Button>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

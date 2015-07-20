@@ -99,6 +99,7 @@
     <string name="ph_manual_search">MANUAL SEARCH</string>
     <string name="ph_zipcode">ZIP Code</string>
     <string name="ph_or_str">OR</string>
+    <string name="ph_Or_str">Or</string>
     <!--choose provider-->
     <string name="doctor_on_call">Doctor On Call</string>
     <string name="average_wait">Average Wait: 6 min</string>

@@ -53,9 +53,8 @@
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="25dp"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/darkblack"
             android:text="SUMMARY"
             android:id="@+id/textView10" />
 
@@ -110,9 +109,8 @@
              <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="20dp"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/black"
+           android:textColor="@color/darkblack"
             android:text="RATE CONSULTATION"
             android:id="@+id/textView15" />
 
@@ -130,9 +128,8 @@
             <TextView
             style="@style/common_style_W_Match_M_Match"
             android:layout_marginTop="15dp"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/darkblack"
             android:text="@string/next_steps_txt"
             android:id="@+id/textView16" />
 

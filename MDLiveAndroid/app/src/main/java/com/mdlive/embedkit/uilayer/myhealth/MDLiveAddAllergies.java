@@ -219,7 +219,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 isPerformingAutoSuggestion = false;
                 medicalCommonErrorResponseHandler(error);
             }};
-        if( !isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(constraint) ) {
+        if( !isPerformingAutoSuggestion /*&& !previousSearch.equalsIgnoreCase(constraint)*/ ) {
             AllergyAutoSuggestionServices services = new AllergyAutoSuggestionServices(MDLiveAddAllergies.this, null);
             services.getAllergyAutoSuggestionRequest(successCallBackListener, errorListener, constraint);
             previousSearch = constraint;

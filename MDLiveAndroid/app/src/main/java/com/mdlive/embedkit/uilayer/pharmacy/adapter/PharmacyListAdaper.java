@@ -1,12 +1,18 @@
 package com.mdlive.embedkit.uilayer.pharmacy.adapter;
 
 import android.app.Activity;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.mdlive.embedkit.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,16 +47,24 @@ public class PharmacyListAdaper extends BaseAdapter{
             ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
         }
 
-        ((TextView) convertView.findViewById(R.id.pharmacyName)).setText(
-                (String)getItem(position).get("store_name")+" "+
-                        (((getItem(position).get("distance")!= null) &&
-                                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
+//        ((TextView) convertView.findViewById(R.id.pharmacyName)).setText(
+//                (String)getItem(position).get("store_name")+" "+
+//                        (((getItem(position).get("distance")!= null) &&
+//                                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddressline2)).setText(
                 ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
                     (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
+
+        setLeftAndRigthTextWidthProperWidth(convertView.findViewById(R.id.relative_layout),
+                (TextView) convertView.findViewById(R.id.text_view_a),
+                (TextView) convertView.findViewById(R.id.text_view_b),
+                (String)getItem(position).get("store_name"),
+                (((getItem(position).get("distance")!= null) &&
+                        ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):"")
+                );
 
         return convertView;
     }
@@ -69,5 +83,53 @@ public class PharmacyListAdaper extends BaseAdapter{
     @Override
     public long getItemId(int position) {
         return 0;
+    }
+
+    public void setLeftAndRigthTextWidthProperWidth(final View parentView, final TextView leftTextView, final TextView rightTextView, final String leftString, final String rightString) {
+        parentView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        int rWidth, aWidth, bWidth;
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            parentView.getViewTreeObserver()
+                                    .removeOnGlobalLayoutListener(this);
+
+                        } else {
+                            parentView.getViewTreeObserver()
+                                    .removeGlobalOnLayoutListener(this);
+                        }
+
+                        rWidth = parentView.getWidth();
+
+                        Log.d("Hello", "R Width :" + rWidth);
+
+                        leftTextView.setText(leftString);
+                        //a.setText("Hello how are you????");
+                        leftTextView.measure(0, 0);
+                        aWidth = leftTextView.getMeasuredWidth();
+                        Log.d("Hello", "A Width :" + aWidth);
+
+
+                        rightTextView.setText(rightString);
+                        rightTextView.measure(0, 0);
+                        bWidth = rightTextView.getMeasuredWidth();
+
+                        int aMarginEnd = 0, bMarginStart = 0;
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            aMarginEnd = (int) (((RelativeLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
+                            bMarginStart = (int) (((RelativeLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
+                        } else {
+                            aMarginEnd = 10;
+                            bMarginStart = 10;
+                        }
+
+                        Log.d("Hello", "B Width :" + rightTextView.getMeasuredWidth());
+
+                        leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
+                    }
+                });
     }
 }

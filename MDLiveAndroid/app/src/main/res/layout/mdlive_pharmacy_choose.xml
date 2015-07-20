@@ -2,6 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
     style="@style/ContainerStyle"
+    android:background="@color/mdliveBackgroundColor"
     >
     <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
@@ -47,8 +48,10 @@
     </RelativeLayout>
 
  <ScrollView
-        style="@style/ScrollViewHolderStyle"
-        >
+     style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+     android:fillViewport="false"
+     android:background="@color/white"
+     >
      <LinearLayout
         style="@style/WagLinearLayoutStyle"
         android:layout_marginBottom="10dp"
@@ -63,12 +66,14 @@
         <LinearLayout
             style="@style/LinearLayoutStyle"
             android:layout_marginLeft="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
             <TextView
                 style="@style/common_style_W_Match_M_Match"
                 android:layout_marginTop="15dp"
                 android:hint="Pharmacy Name"
                 android:textSize="16sp"
+                android:layout_marginBottom="7dp"
                 android:tag="manual_txt"
                />
 
@@ -80,10 +85,13 @@
                 android:tag="enter_zip"
                 android:dropDownVerticalOffset="10dp"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"
+                android:layout_margin="0dp"
                 android:id="@+id/pharmacy_search_name"
                 />
-            <View style="@style/ViewStyle" />
+
+            <View style="@style/ViewStyle"
+                android:layout_marginTop="7dp"
+                />
 
             </LinearLayout>
         <Button
@@ -94,6 +102,7 @@
             android:drawableLeft="@drawable/location_icon"
             style="@style/ContinueButtonStyle"
             android:id="@+id/getlocationButton"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:paddingLeft="70dip"
             android:paddingRight="60dip"
@@ -106,7 +115,7 @@
                 style="@style/common_style_W_Match_M_Match"
                 android:text="@string/ph_manual_search"
                 android:textColor="@color/black"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="18sp"
                 />
@@ -126,11 +135,12 @@
             android:hint=""
             android:tag="enter_zip"
             android:maxLength="10"
-            android:layout_marginTop="10dp"
+            android:layout_margin="0dp"
             android:inputType="number"
             android:id="@+id/zipcodeText"
             />
-            <View style="@style/ViewStyle" />
+            <View style="@style/ViewStyle"
+                android:layout_marginTop="7dp"/>
             </LinearLayout>
         <LinearLayout
             style="@style/WagLocationLinearLayoutStyle"
@@ -159,9 +169,11 @@
             android:imeOptions="actionDone"
             android:tag="enter_city"
             android:hint=""
+            android:layout_margin="0dp"
             android:id="@+id/cityText"
             />
-            <View style="@style/ViewStyle" />
+            <View style="@style/ViewStyle"
+                android:layout_marginTop="7dp"/>
             </LinearLayout>
         <LinearLayout
             style="@style/WagLocationLinearLayoutStyle"
@@ -172,7 +184,7 @@
                 android:text="State"
                 android:textColor="@color/grey_txt"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="7dp"
                 android:textSize="16sp"
                 />
         <TextView
@@ -182,9 +194,10 @@
             android:hint="Select State"
             android:drawableEnd="@drawable/dropdown_icon"
             android:id="@+id/chooseState"
-            android:layout_marginTop="10dp"
+            android:layout_margin="0dp"
             />
-            <View style="@style/ViewStyle" />
+            <View style="@style/ViewStyle"
+                android:layout_marginTop="7dp"/>
 
             </LinearLayout>
 

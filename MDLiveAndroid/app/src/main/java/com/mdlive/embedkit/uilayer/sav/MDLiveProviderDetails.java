@@ -30,6 +30,10 @@ import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * This class returns the Provider profile for the corresponding providers.
  */
@@ -66,11 +70,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
+        AppointmentType = "3";
         if(AppointmentDate!=null && AppointmentDate.length() != 0){
             AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
-
         }
-
     }
      /**
       * Initialization of the views are done here.
@@ -161,6 +164,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 }
             }};
         ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, pDialog);
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        AppointmentDate = format.format(new Date());
         services.getProviderDetails(SharedLocation,AppointmentDate,AppointmentType,DoctorId,successCallBackListener, errorListener);
     }
 

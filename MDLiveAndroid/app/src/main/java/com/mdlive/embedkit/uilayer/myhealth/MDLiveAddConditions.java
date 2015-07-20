@@ -236,7 +236,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(constraint)) {
+        if (!isPerformingAutoSuggestion /*&& !previousSearch.equalsIgnoreCase(constraint)*/) {
             MedicalConditionAutoSuggestionServices services = new MedicalConditionAutoSuggestionServices(MDLiveAddConditions.this, null);
             services.getMedicalConditionsAutoSuggestionRequest(successCallBackListener, errorListener, constraint);
             previousSearch = constraint;

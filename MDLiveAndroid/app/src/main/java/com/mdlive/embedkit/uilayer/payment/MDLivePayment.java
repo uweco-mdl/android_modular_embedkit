@@ -18,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,8 +121,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         }
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
+        setupWebView();
 //        pDialog = Utils.getProgressDialog("Please wait...", MDLivePayment.this);
-        //pDialog.show();
+//        pDialog.show();
         TextView textview = (TextView) findViewById((R.id.ApplyOfferCode));
         textview.setOnClickListener(new View.OnClickListener() {
 
@@ -140,6 +143,25 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                  MdliveUtils.movetohome(MDLivePayment.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
+            }
+        });
+    }
+    private void setupWebView() {
+        HostedPCI.getSettings().setJavaScriptEnabled(true);
+        HostedPCI.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                HostedPCI.loadUrl("javascript:billing.resize(document.body.getBoundingClientRect().height)");
+                super.onPageFinished(view, url);
+            }
+        });
+    }
+    @JavascriptInterface
+    public void resize(final float height) {
+        MDLivePayment.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                HostedPCI.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels, (int) (height * getResources().getDisplayMetrics().density)));
             }
         });
     }

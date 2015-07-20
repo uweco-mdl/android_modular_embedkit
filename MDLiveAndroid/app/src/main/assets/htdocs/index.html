@@ -181,7 +181,7 @@
             return false;
         }else if(!/^[0-9]+$/.test(ccNumValueCheck) || ccNumValueCheck.length>16 || ccNumValueCheck.length<16){
         	this.billingData = {
-                "status" : "Invalid Card Number"
+                "status" : "Invalid Credit Card Information"
             }
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
@@ -211,32 +211,6 @@
 			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 			innerDoc.getElementById('ccCVV').setAttribute("type","number");
 			innerDoc.getElementById('ccNum').setAttribute("type","number");
-
-
-			///////////////////////////////////////////////////// Style for iFrame document //////////////////////////////////////////////////////////
-
-			innerDoc.getElementsByTagName('div')[0].setAttribute("style","float: left;padding: 10px 0px 10px 0px; width: 94%");    //add-billing-card-number-content
-			innerDoc.getElementsByTagName('div')[1].setAttribute("style","float: left;font-size: 16px; width: 110px;");			    //add-billing-card-number
-			innerDoc.getElementsByTagName('div')[2].setAttribute("style","float: left;padding: 10px 0px 0px 0px; width: 94%");		 //add-billing-cc-security-code-content
-			innerDoc.getElementsByTagName('div')[3].setAttribute("style","float: left;font-size: 16px; width: 110px;");				 //add-billing-cc-security-code
-			innerDoc.getElementsByTagName('div')[4].setAttribute("style","float:left;width: 49%;");									 //ccv-container
-			innerDoc.getElementsByTagName('div')[5].setAttribute("style","color:red;");												 //ccv-input-content
-
-			innerDoc.getElementById('ccCVV').setAttribute("style","border: 1px solid rgb(220, 220, 220); border-radius: 5px;display: block;font-family: helvetica Neue;font-size: 16px !important;"
-								+"font-weight: lighter;height: 26px;line-height: 20px;margin: 0 !important;padding: 0 0 0 5px !important;width: 100%; border:0");
-			innerDoc.getElementById('ccNum').setAttribute("style","border: 1px solid rgb(220, 220, 220); border-radius: 5px;display: block;font-family: helvetica Neue;font-size: 16px !important;"
-								+"font-weight: lighter;height: 26px;line-height: 20px;margin: 0 !important;padding: 0 0 0 5px !important;width: 58%;border:0");
-
-			innerDoc.getElementById('ccNum').setAttribute("placeholder","Card Number");
-			innerDoc.getElementById('ccNum').setAttribute("maxlength","16");
-			innerDoc.getElementById('ccCVV').setAttribute("placeholder","Security Code");
-			innerDoc.getElementById('ccCVV').setAttribute("maxlength","4");
-
-			innerDoc.getElementsByTagName('div')[1].innerHTML = "Card Number";
-			innerDoc.getElementsByTagName('div')[3].innerHTML = "Security Code";
-
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 		};
 

@@ -396,10 +396,14 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
             Calendar currendDate = Calendar.getInstance();
             currendDate.setTime(new Date());
-            strDate = (new StringBuilder().append(month+1).append("/").append(day)
+            strDate = (new StringBuilder().append(((month+1) > 10) ? month+1:"0"+(month+1))
+                    .append("/").append((day > 9) ? day :"0"+(day))
                     .append("/").append(year)
                     .append(" ")+"");
             dateTxt.setText(strDate);
+            strDate = (new StringBuilder().append(month+1).append("/").append(day)
+                    .append("/").append(year)
+                    .append(" ")+"");
             ValidateModuleFields();
         }
     };
@@ -416,7 +420,9 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveFamilymember.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+
         alertDialog.setView(convertView);
+
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,GenderList);
@@ -426,7 +432,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
         final AlertDialog dialog = alertDialog.create();
         dialog.show();
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

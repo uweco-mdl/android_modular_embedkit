@@ -91,7 +91,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
-
     public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
@@ -110,7 +109,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     public static final int IMAGE_PREVIEW_CODE = 200;
     private static final int RELOAD_REQUEST_CODE = 111;
     private AlertDialog imagePickerDialog;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
