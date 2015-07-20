@@ -94,7 +94,7 @@ public class MDLiveConfig {
                 break;
             case 4:
                 // Production environment
-                AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com";
+                AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";        //  https://rtl.mdlive.com";
                 AppSpecificConfig.API_KEY = "";
                 AppSpecificConfig.SECRET_KEY = "";
                 break;
