@@ -138,7 +138,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 handleSuccessResponse(response);
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
