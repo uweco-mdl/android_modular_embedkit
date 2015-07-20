@@ -59,7 +59,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="20dp"
                     android:gravity="center_horizontal"
-                    android:text="@string/waiting_provider_text"
+                    android:text="@string/waiting_doctor"
                     android:textSize="18sp" />
 
 
