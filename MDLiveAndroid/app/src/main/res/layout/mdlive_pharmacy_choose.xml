@@ -43,7 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:gravity="end|right|center"
-            android:text="Apply"
+            android:text="APPLY"
             />
     </RelativeLayout>
 
@@ -149,7 +149,7 @@
         <TextView
             style="@style/common_style_W_Match_M_Match"
             android:tag="or"
-            android:text="@string/ph_Or_str"
+            android:text="@string/ph_or_str"
             android:textColor="@color/black"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="5dp"

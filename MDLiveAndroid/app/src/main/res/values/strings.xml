@@ -96,7 +96,7 @@
     <string name="resume_consultation_txt">Resume Consultation</string>
 
 <!-- Pharmacy search strings -->
-    <string name="ph_manual_search">Manual Search</string>
+    <string name="ph_manual_search">MANUAL SEARCH</string>
     <string name="ph_zipcode">ZIP Code</string>
     <string name="ph_or_str">OR</string>
     <string name="ph_Or_str">Or</string>
