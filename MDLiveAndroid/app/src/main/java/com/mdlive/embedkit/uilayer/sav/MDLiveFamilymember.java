@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -27,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
@@ -331,7 +329,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
                 Log.d("Error Response", error.toString());
                 hideProgress();
                 try {
-                    if (error.networkResponse == null) {
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilymember.this,error,pDialog);
+                   /* if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -344,7 +343,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
                     }else
                     {
                         MdliveUtils.alert(pDialog, MDLiveFamilymember.this, error.toString());
-                    }
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,8 +28,31 @@ public class PharmacyListAdaper extends BaseAdapter{
         this.list = list;
     }
 
+    public void addItem(HashMap<String, Object> item){
+        list.add(item);
+    }
+
+    public void notifywithDataSet(ArrayList<HashMap<String, Object>> newList){
+        if(list.isEmpty()){
+            list = newList;
+        }else{
+            list.addAll(newList);
+           /* for(HashMap<String, Object> item : newList){
+                list.add(item);
+            }*/
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+      /*  if(viewsCollection.get(position) == null){
+            convertView = LayoutInflater.from(context).inflate(R.layout.mdlive_pharm_custom_pharmacy_searchlist_view, null);
+            viewsCollection.put(position, convertView);
+            convertView = viewsCollection.get(position);
+        }else{
+            convertView = viewsCollection.get(position);
+        }*/
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.mdlive_pharm_custom_pharmacy_searchlist_view, null);
             convertView.setTag(convertView);
@@ -58,7 +80,12 @@ public class PharmacyListAdaper extends BaseAdapter{
                 ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
                     (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
 
-        setLeftAndRigthTextWidthProperWidth(convertView.findViewById(R.id.relative_layout),
+        /*((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
+
+        ((TextView) convertView.findViewById(R.id.text_view_b)).setText((((getItem(position).get("distance")!= null) &&
+                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));*/
+
+        setLeftAndRigthTextWidthProperWidthNew(convertView.findViewById(R.id.relative_layout),
                 (TextView) convertView.findViewById(R.id.text_view_a),
                 (TextView) convertView.findViewById(R.id.text_view_b),
                 (String)getItem(position).get("store_name"),
@@ -85,51 +112,42 @@ public class PharmacyListAdaper extends BaseAdapter{
         return 0;
     }
 
-    public void setLeftAndRigthTextWidthProperWidth(final View parentView, final TextView leftTextView, final TextView rightTextView, final String leftString, final String rightString) {
-        parentView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        int rWidth, aWidth, bWidth;
+    public void setLeftAndRigthTextWidthProperWidthNew(final View parentView, final TextView leftTextView, final TextView rightTextView, final String leftString, final String rightString) {
+        parentView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int rWidth, aWidth, bWidth;
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            parentView.getViewTreeObserver()
-                                    .removeOnGlobalLayoutListener(this);
+                rWidth = parentView.getWidth();
 
-                        } else {
-                            parentView.getViewTreeObserver()
-                                    .removeGlobalOnLayoutListener(this);
-                        }
+                Log.d("Hello", "R Width :" + rWidth);
 
-                        rWidth = parentView.getWidth();
+                leftTextView.setText(leftString);
+                //a.setText("Hello how are you????");
+                leftTextView.measure(0, 0);
+                aWidth = leftTextView.getMeasuredWidth();
+                Log.d("Hello", "A Width :" + aWidth);
 
-                        Log.d("Hello", "R Width :" + rWidth);
+                rightTextView.setText(rightString);
+                rightTextView.measure(0, 0);
+                bWidth = rightTextView.getMeasuredWidth();
 
-                        leftTextView.setText(leftString);
-                        //a.setText("Hello how are you????");
-                        leftTextView.measure(0, 0);
-                        aWidth = leftTextView.getMeasuredWidth();
-                        Log.d("Hello", "A Width :" + aWidth);
+                int aMarginEnd = 0, bMarginStart = 0;
 
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    aMarginEnd = (int) (((RelativeLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
+                    bMarginStart = (int) (((RelativeLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
+                } else {
+                    aMarginEnd = 10;
+                    bMarginStart = 10;
+                }
 
-                        rightTextView.setText(rightString);
-                        rightTextView.measure(0, 0);
-                        bWidth = rightTextView.getMeasuredWidth();
+                Log.d("Hello", "B Width :" + rightTextView.getMeasuredWidth());
 
-                        int aMarginEnd = 0, bMarginStart = 0;
+                leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            aMarginEnd = (int) (((RelativeLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
-                            bMarginStart = (int) (((RelativeLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
-                        } else {
-                            aMarginEnd = 10;
-                            bMarginStart = 10;
-                        }
-
-                        Log.d("Hello", "B Width :" + rightTextView.getMeasuredWidth());
-
-                        leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
-                    }
-                });
+                parentView.invalidate();
+            }
+        }, 10);
     }
 }
