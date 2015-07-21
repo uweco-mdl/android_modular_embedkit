@@ -346,24 +346,27 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
         try{
             if(position!=0){
                 HashMap<String,String> tmpMap=PatientList.get(position-1);
-                if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
-                    if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
-
-                        loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
-
-                    }
-                }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
-                    DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            setSpinnerValues(dependentList,patientSpinner);
-                        }
-                    };
-//
-                    MdliveUtils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok", "", positiveOnClickListener, null);
-                }else if(tmpMap.get("parent").equalsIgnoreCase("parent")){
+                if(!tmpMap.containsKey("authorized")){
                     loadUserInformationDetails();
+                }else{
+                    if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
+                        if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
+
+                            loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
+
+                        }
+                    }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
+                        DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setSpinnerValues(dependentList,patientSpinner);
+                            }
+                        };
+//
+                        MdliveUtils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok", "", positiveOnClickListener, null);
+                    }
                 }
+
             }
 
         }catch (Exception e){
@@ -704,7 +707,6 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-//            pDialog.dismiss();
             Log.e("Pending Appt", notiObj.getString("upcoming_appointments"));
             if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
@@ -712,14 +714,15 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
             for(int i=0;i<conditionsSearch.size();i++) {
                 strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
-                HashMap<String, String> test = new HashMap<String, String>();
-                test.put("name",strPatientName);
-                test.put("id","test");
+                HashMap<String, String> parentNameMap = new HashMap<String, String>();
+                parentNameMap.put("name",strPatientName);
+                /*test.put("id","test");
                 test.put("authorized","PARENT");
                 test.put("parent","parent");
                 Log.e("dependent list", strPatientName);
+              */
                 dependentList.add(strPatientName);
-                PatientList.add(test);
+                PatientList.add(parentNameMap);
             }
             setSpinnerValues(dependentList, patientSpinner);
             hideProgress();
@@ -736,7 +739,6 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.DATE_OF_BIRTH, DateTxt.getText().toString());
         editor.putString(PreferenceConstants.LOCATION, SavedLocation);
-
         editor.commit();
     }
 
