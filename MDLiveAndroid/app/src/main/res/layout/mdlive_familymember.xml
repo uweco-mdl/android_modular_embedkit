@@ -12,16 +12,14 @@
 
             <ImageView
                 android:id="@+id/backImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/HeaderBackImgStyle"
                 android:layout_gravity="center"
-                android:layout_marginStart="17dp"
-                android:background="@drawable/back_arrow_hdpi" />
+               />
 
             <TextView
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/headerAddChildTxt_leftmargin"
                 android:text="@string/add_child" />
         </LinearLayout>
 
@@ -37,14 +35,14 @@
                 <TextView
                     style="@style/BaseSubHeaderTextViewStyle"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="18dp"
+                    android:layout_marginLeft="@dimen/headerChildAgeTxt_leftmargin"
                     android:text="@string/child_must_be_younger_than"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/textsize_large"/>
 
                 <LinearLayout
                     style="@style/WagParentLinearLayoutStyle"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -54,7 +52,7 @@
                         <LinearLayout
                             android:id="@+id/patientLl"
                             style="@style/WagLinearLayoutStyle"
-                            android:layout_marginStart="19dp"
+                            android:layout_marginLeft="@dimen/AddChildText_leftmargin"
                             android:orientation="vertical">
 
                             <TextView
@@ -67,11 +65,11 @@
                                 style="@style/reasonSearch_edittext"
                                 android:hint="@string/first_name"
                                 android:inputType="textPersonName"
-                                android:textSize="18sp"
+                                android:textSize="@dimen/textsize_large"
 
                                 />
                             <View style="@style/ViewStyle"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_marginTop="@dimen/Linearlayoutt_leftmargin"/>
 
                         </LinearLayout>
 
@@ -80,7 +78,7 @@
                         <LinearLayout
                             android:id="@+id/patientL2"
                             style="@style/WagLinearLayoutStyle"
-                            android:layout_marginStart="19dp"
+                            android:layout_marginLeft="@dimen/AddChildText_leftmargin"
                             android:orientation="vertical">
 
                             <TextView
@@ -92,23 +90,10 @@
                                 style="@style/reasonSearch_edittext"
                                 android:hint="@string/last_name"
                                 android:inputType="textPersonName"
-                                android:textSize="18sp" />
+                                android:textSize="@dimen/textsize_large" />
 
-
-                            <!--    android:id="@+id/patient2Et"
-                                style="@style/GetStartedContentTxtStyle"
-                                android:background="@color/transparent_native"
-                                android:hint="@string/last_name"
-                                android:cursorVisible="true"
-                                android:ellipsize="start"
-                                android:textCursorDrawable="@null"
-                                android:textColor="@color/black"
-                                android:inputType="textPersonName"
-                                android:textSize="18sp"-->
-
-                            />
                             <View style="@style/ViewStyle"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_marginTop="@dimen/addChildView_margin"/>
 
                         </LinearLayout>
 
@@ -117,7 +102,7 @@
                         <LinearLayout
                             android:id="@+id/dobLl"
                             style="@style/WagLinearLayoutStyle"
-                            android:layout_marginStart="19dp"
+                            android:layout_marginLeft="@dimen/AddChildText_leftmargin"
                             android:orientation="vertical">
 
                             <TextView
@@ -129,10 +114,10 @@
                                 style="@style/GetStartedHeaderContentStyle"
                                 android:hint="@string/date_of_birth_hint"
                                 android:textColor="@color/black"
-                                android:textSize="18sp" />
+                                android:textSize="@dimen/textsize_large" />
                             />
                             <View style="@style/ViewStyle"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_marginTop="@dimen/addChildView_margin"/>
                         </LinearLayout>
 
 
@@ -140,7 +125,7 @@
                         <LinearLayout
                             android:id="@+id/genderLl"
                             style="@style/WagLinearLayoutStyle"
-                            android:layout_marginStart="19dp"
+                            android:layout_marginLeft="@dimen/AddChildText_leftmargin"
                             android:orientation="vertical">
 
                             <TextView
@@ -154,9 +139,8 @@
                                 <TextView
                                     android:id="@+id/genderTxt"
                                     style="@style/GetStartedContentTxtStyle"
-                                    android:hint=""
                                     android:textColor="@color/black"
-                                    android:textSize="18sp" />
+                                    android:textSize="@dimen/textsize_large" />
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -167,43 +151,41 @@
                             </RelativeLayout>
                             />
                             <View style="@style/ViewStyle"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_marginTop="@dimen/addChildView_margin"/>
                         </LinearLayout>
-
-
 
                         <LinearLayout
                             android:id="@+id/locationLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
+                            android:layout_marginTop="@dimen/toggleChildView_marginTop"
                             android:orientation="horizontal">
 
-               <android.support.v7.widget.SwitchCompat
+             <android.support.v7.widget.SwitchCompat
+                        style="@style/addChildSwitchStyle"
                                 android:id="@+id/mySwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:checked="false"
-                      android:layout_marginLeft="4dp"
+                                android:layout_marginLeft="4dp"
                                 android:gravity="left|center"
                                 android:text="@string/i_michelle_text"
                                 android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
 
-
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/addChildBtn"
                     style="@style/ContinueButtonStyle"
-                    android:text="Add Child" />
+                    android:text="@string/addChildBtn" />
 
                 <LinearLayout
                     style="@style/Mdlive_footer_Style">
                 <include
                     style="@style/Footer_Style"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginBottom="@dimen/footer_marginBottom"
                     layout="@layout/mdlive_footer" />
                 </LinearLayout>
             </LinearLayout>

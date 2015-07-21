@@ -146,6 +146,8 @@
     <string name="disclaimertxt">Your phone number will only be used if customer support is required.</string>
     <string name="nextBtn">Your phone number will only be used if customer support is required.</string>
     <string name="gender">Gender</string>
+    <!--Add Child-->
+    <string name="addChildBtn">Add Child</string>
     <string name="location">Current Location</string>
     <string name="next_btn">Next</string>
     <string name="arTxt">AR</string>
