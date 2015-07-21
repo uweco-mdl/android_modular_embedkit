@@ -53,25 +53,23 @@ import java.util.List;
 
 import static java.util.Calendar.MONTH;
 
-public class MDLiveGetStarted extends MDLiveBaseActivity {
-    private LinearLayout DobLl,LocationLl,patientInfo;
+public class   MDLiveGetStarted extends MDLiveBaseActivity {
+    private LinearLayout DobLl,LocationLl;
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
     private int month,day,year;
-    private String strPatientName,SavedLocation,dependentNmaeStr;
+    private String strPatientName,SavedLocation;
     private DatePickerDialog datePickerDialog;
-   // private RelativeLayout progressBar;
+    // private RelativeLayout progressBar;
     public static boolean isFemale;
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
-    private ArrayList<String> GenderList = new ArrayList<String>();
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
-    private int serviceCount;
+
     private EditText  phonrNmberEditTxt;
-    private boolean isUserInfo=false;
-    private HashMap<String,Object> userInfoObject;
     private String parentName,dependentName=null;//Variable to save the parent name.
     private String userInfoJSONString;
+    ArrayAdapter<String> dataAdapter;
 
 
 
@@ -79,8 +77,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
-        setRemoteUserId();
-
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         setonClickListener();
@@ -89,29 +85,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 //
     }
 
-    /**
-     * The gender should be populated in the arraylist.Male and Female should be pushed to the
-     * gender arraylist also it should be populated only when the gender list size is equal to
-     * zero and the gender arraylist should be passed to the spinner values
-     */
 
-    private void setGenderSpinnerValues() {
-        if(GenderList.size() == 0){
-            GenderList.add(StringConstants.GENDER_MALE);
-            GenderList.add(StringConstants.GENDER_FEMALE);
-        }
-    }
-    /**
-     * The Remote userid is hardcoded here for the Vsee and for configuring the .aar file
-     * here the remote user id is saved in the preference constant by using the USER_UNIQUE_ID key
-     * and this remote user id will be fetched through out the EmbedKit application.
-     */
-    private void setRemoteUserId() {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-//        editor.putString(PreferenceConstants.USER_UNIQUE_ID,"09198eb5-e350-4f58-a0dd-6e91f3993a70");
-        editor.commit();
-    }
 
     /**
      *
@@ -125,23 +99,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(dependentName!=null&&dependentName.equalsIgnoreCase("Add Child")){
-            loadUserInformationDetails();
-           /* patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dependentList);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            patientSpinner.setAdapter(dataAdapter);*/
-        }
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
-        String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
-        Log.e("Getstarted page",longNameLocation);
-        locationTxt.setText(longNameLocation);
-  }
-    /**
-     * Intialization of the views should be done here and the on click listener of the particular
-     * views also displayed here.
-     */
+    }
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
         DateTxt = (TextView) findViewById(R.id.dobTxt);
@@ -170,7 +128,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                 movetohome();
             }
         });
-        userInfoObject=new HashMap<>();
+
 
     }
     /**
@@ -242,7 +200,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                                     }else
                                     {
                                         editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
-                                                                .replace("-", ""));
+                                                .replace("-", ""));
                                         Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                         startActivity(intent);
                                         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
@@ -313,69 +271,67 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
+        Log.e("List of Spinner value ", list.toString());
+        dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        dataAdapter.notifyDataSetChanged();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
-                int item = spinner.getSelectedItemPosition();
                 dependentName = spinner.getSelectedItem().toString();
-                if(dependentName.equals(parentName)){
-                    userInfoChange((JSONObject)userInfoObject.get(dependentName));
-                }else{
-                    if(list!=null){
-                        if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
+                if(list!=null){
+                    if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
+                    {
+                        if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
                         {
-                            if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
-                            {
-                                patientSpinner.setSelection(0);
-                                DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
-                                        startActivity(intent);
-                                        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
-                                        Log.e("Test!!","Clicking CallNw Btn");
-                                    }
-                                };
+                            patientSpinner.setSelection(0);
+                            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
+                                    startActivity(intent);
+                                    MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
-                                DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            };
 
-                                        Log.e("Test!!","Clicking Close Btn");
-                                        dialogInterface.dismiss();
-                                        patientSpinner.setSelection(0);
-                                        //This method is called bcs primary name shld come first after tapping the Add child btn
-                                        //loadUserInformationDetails();
+                            DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                                    dialogInterface.dismiss();
+                                    patientSpinner.setSelection(0);
+                                    //This method is called bcs primary name shld come first after tapping the Add child btn
+                                    //loadUserInformationDetails();
 //                                        onResume();
-                                        //loadDependentInformationDetails(dependentName,position);
+                                    //loadDependentInformationDetails(dependentName,position);
 
-                                    }
-                                };
-                                MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
-                                        negativeOnClickListener,positiveOnClickListener );
-                            }else
-                            {
-                                loadDependentInformationDetails(dependentName,position);
-                            }
+                                }
+                            };
+                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                                    negativeOnClickListener,positiveOnClickListener );
+                        }else
+                        {
+                            loadDependentInformationDetails(dependentName,position);
+
+                        }
+                    }else {
+                        if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
+                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                            intent.putExtra("user_info", userInfoJSONString);
+                            startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
+                            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+                            patientSpinner.setSelection(0);
                         }else {
-                            if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
-                                Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
-                                intent.putExtra("user_info", userInfoJSONString);
-                                startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
-                                MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
-                                patientSpinner.setSelection(0);
-                            }else {
-                                loadDependentInformationDetails(dependentName,position);
-                            }
+                            loadDependentInformationDetails(dependentName, position);
+
                         }
                     }
                 }
-
             }
+
+            //}
             public void onNothingSelected(AdapterView<?> arg0) { }
         });
     }
@@ -387,28 +343,13 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void loadDependentInformationDetails(String dependentName,int position) {
         try{
-            Log.e("Test depe--->", "-"+dependentName+"-");
-            if(dependentName.equalsIgnoreCase("Add Child")){
-                Log.e("Test--->","AM IN ADD CHILD DEPENDENT");
-                HashMap<String,String> tmpMap=PatientList.get(position-1);
-                String name=dependentList.get(0);
-                dependentList.clear();
-                dependentList.add(tmpMap.get("name"));
-                dependentList.add(name);
-                patientSpinner.setSelection(0);
-            }
             if(position!=0){
                 HashMap<String,String> tmpMap=PatientList.get(position-1);
                 if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
                     if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
+
                         loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
 
-                        // Logic to clear the dependent list on selecting the child,It will show only the parent in the drop down.
-                        String name=dependentList.get(0);
-                        dependentList.clear();
-                        dependentList.add(tmpMap.get("name"));
-                        dependentList.add(name);
-                        patientSpinner.setSelection(0);
                     }
                 }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
                     DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -419,6 +360,8 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                     };
 //
                     MdliveUtils.showDialog(MDLiveGetStarted.this, "", "The adult dependent has opted not to share his account", "Ok", "", positiveOnClickListener, null);
+                }else if(tmpMap.get("parent").equalsIgnoreCase("parent")){
+                    loadUserInformationDetails();
                 }
             }
 
@@ -508,83 +451,10 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
 
 
-    /**
-     *
-     * The UserInfo change method is used for reloading the dependents.
-     * If the dependent is selected then the corresponding dependent's
-     * gender and the date of birth will be reloaded.
-     *
-     */
-    public void userInfoChange(JSONObject resObj){
-        try{
-            JSONObject personalInfo = resObj.getJSONObject("personal_info");
-            isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
-            DateTxt.setText(personalInfo.getString("birthdate"));
-            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
-                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
-                    SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
-                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
-                    editor.commit();
-                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
-                    Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
-                }
-            }
-            genderText.setText(personalInfo.getString("gender"));
-            JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject)parser.parse(resObj.toString());
-            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
-            editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
-            editor.commit();
-            dependentList.clear();//Clearing all previous data to avoid duplicates
-            PatientList.clear();
-            dependentList.add(0,personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));//Adding Parent name as first in the dependent List.
-            patientSpinner.setSelection(0);
-            handleChangeResponse(resObj);//Method call for handling Family members Response
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 
-    /**
-     * This method will parse the family member information and stored in the dependent list.
-     * @param response-Response object contains User family members information.
-     */
 
-    private void handleChangeResponse(JSONObject response) {
-        try {
-            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
-            JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
 
-            if (conditionsSearch.size()!=0) {
-                for(int i=0;i<conditionsSearch.size();i++) {
-                    strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
-                    HashMap<String, String> test = new HashMap<String, String>();
-                    test.put("name",strPatientName);
-                    test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
-                    test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
-                    dependentList.add(strPatientName);
-                    PatientList.add(test);
-                }
-            } else {
-//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
-
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        dependentList.add(StringConstants.ADD_CHILD);
-
-    }
 
     /**
      * Fetching the values from the native date picker and the picker listener was implemented
@@ -607,15 +477,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
     private void loadUserInformationDetails() {
         showProgress();
-
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
-                           hideProgress();
-
-            handleSuccessResponse(response);
-
+                hideProgress();
+                handleSuccessResponse(response);
             }
         };
 
@@ -624,7 +490,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
@@ -638,19 +503,13 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
      */
 
     private void loadDependentUserInformationDetails(String depenedentId) {
-//        if(!pDialog.isShowing()) {
-//            pDialog.show();
-//        }
-
         showProgress();
-
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("Dep Response", response.toString());
-//                Utils.hideProgressDialog(pDialog);
-               hideProgress();
+                hideProgress();
                 handleDependentSuccessResponse(response);
             }
         };
@@ -660,70 +519,13 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                //MdliveUtils.hideProgressDialog(pDialog);
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-//                        pDialog.dismiss();
-                       hideProgress();
-                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
-                    }
-                }
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest(depenedentId,successCallBackListener, errorListener);
     }
 
-    /**
-     *
-     * Successful Response Handler for Family Member.This response will return the patient name
-     * and the corresponding id's of the user.These two were populated to the Arraylist .
-     *
-     */
-    private void handleSuccessResponseFamilyMember(JSONObject response) {
-        try {
-            isUserInfo=false;
-            if(serviceCount == 2){
-//                pDialog.dismiss();
-               hideProgress();
-                serviceCount = 0;
-            }
-            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
-            JsonParser parser = new JsonParser();
-            JsonObject responObj = (JsonObject)parser.parse(response.toString());
-            Log.d("FmyMember response--->",responObj.toString());
-//            if (!responObj.isJsonNull()) {
-                JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
-                for(int i=0;i<conditionsSearch.size();i++) {
-                    strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
-                    HashMap<String, String> test = new HashMap<String, String>();
-                    test.put("name",strPatientName);
-                    test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
-                    test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
-                    Log.e("dependent list", strPatientName);
-                    dependentList.add(strPatientName);
-                    PatientList.add(test);
-                    //                patientName.setText(conditionsSearch.get(0).getAsJsonObject().get("name").getAsString());
-                }
-//            }
-//            else {
-//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
-//            }
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        dependentList.add(StringConstants.ADD_CHILD);
-        setSpinnerValues(dependentList, patientSpinner);
-
-    }
     /**
      *
      *  Successful Response Handler for Load Basic Info.The user basic info will provider the gender
@@ -733,12 +535,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            isUserInfo=true;
             JSONObject personalInfo = response.getJSONObject("personal_info");
             Log.d("Personal Info----->",personalInfo.toString());
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
-                userInfoObject.put(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name"),response);
+
                 isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
                 DateTxt.setText(personalInfo.getString("birthdate"));
                 for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
@@ -752,11 +553,9 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
                         Log.e("Location Service -->",Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     }
                 }
-                //locationTxt.setText(personalInfo.getString("state"));
                 genderText.setText(personalInfo.getString("gender"));
                 String numStr = personalInfo.getString("phone");
                 try {
-    //                numStr = "(" + numStr.substring(0,3) + ")" + "-"+numStr.substring(4,7)+"-"+numStr.substring(8);
                     String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
                     Log.e("formattedNumber---->",formattedString);
                     phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
@@ -794,8 +593,12 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 //                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
             }
 
-            dependentList.add(0, personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
-            parentName=personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
+            if(dependentList.size()>0){
+                dependentList.clear();
+                PatientList.clear();
+            }
+
+            dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JsonParser parser = new JsonParser();
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -810,6 +613,46 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         }
     }
 
+
+    /**
+     *
+     * Successful Response Handler for Family Member.This response will return the patient name
+     * and the corresponding id's of the user.These two were populated to the Arraylist .
+     *
+     */
+    private void handleSuccessResponseFamilyMember(JSONObject response) {
+        try {
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(PreferenceConstants.USER_PREFERENCES, response.toString());
+            JsonParser parser = new JsonParser();
+            JsonObject responObj = (JsonObject)parser.parse(response.toString());
+            Log.d("FmyMember response--->",responObj.toString());
+//            if (!responObj.isJsonNull()) {
+            JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
+            for(int i=0;i<conditionsSearch.size();i++) {
+                strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
+                HashMap<String, String> test = new HashMap<String, String>();
+                test.put("name",strPatientName);
+                test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
+                test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
+                Log.e("dependent list", strPatientName);
+                dependentList.add(strPatientName);
+                PatientList.add(test);
+            }
+//            }
+//            else {
+//                Utils.alert(pDialog,MDLiveGetStarted.this,"There is an issue loading your information. Please try again in a moment. If the problem persists please call the MDLIVE Helpdesk at 1-888-995-2183");
+//            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        dependentList.add(StringConstants.ADD_CHILD);
+        setSpinnerValues(dependentList, patientSpinner);
+
+    }
+
     /**
      *
      *  Successful Response Handler for Load Basic Info.The user basic info will provider the gender
@@ -819,8 +662,11 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
-            isUserInfo=true;
+            Log.d("Dependent----->", "Called Dependent");
+            dependentList.clear();
+            PatientList.clear();
             JSONObject personalInfo = response.getJSONObject("personal_info");
+            dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JSONObject notiObj=response.getJSONObject("notifications");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
@@ -862,8 +708,20 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
             }
-
-           hideProgress();
+            JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
+            for(int i=0;i<conditionsSearch.size();i++) {
+                strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
+                HashMap<String, String> test = new HashMap<String, String>();
+                test.put("name",strPatientName);
+                test.put("id","test");
+                test.put("authorized","PARENT");
+                test.put("parent","parent");
+                Log.e("dependent list", strPatientName);
+                dependentList.add(strPatientName);
+                PatientList.add(test);
+            }
+            setSpinnerValues(dependentList, patientSpinner);
+            hideProgress();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -895,11 +753,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         month = c.get(MONTH);
         day   = c.get(Calendar.DAY_OF_MONTH);
 
-        // Show current date
-//        selectedText.setText(new StringBuilder()
-//                // Month is 0 based, just add 1
-//                .append(month + 1).append("/").append(day).append("/")
-//                .append(year).append(" "));
     }
 
     /*Native date picker listener for the date picker on clicking this picker the current
@@ -921,9 +774,6 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
             Calendar currendDate = Calendar.getInstance();
             currendDate.setTime(new Date());
 
-//            DateTxt.setText(new StringBuilder().append(month + 1)
-//                    .append("/").append(day).append("/").append(year)
-//                    .append(" "));
 
         }
     };
@@ -939,21 +789,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         MdliveUtils.movetohome(MDLiveGetStarted.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
-    /*
-    * set visible for the progress bar
-    */
-    /*public void showProgress()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-    }*/
 
-    /*
-    * set visible for the details view layout
-    */
-    /*public voidhideProgress()
-    {
-        progressBar.setVisibility(View.GONE);
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -961,11 +797,7 @@ public class MDLiveGetStarted extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(MDLiveGetStarted.this);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-    }
+
 
 
 
