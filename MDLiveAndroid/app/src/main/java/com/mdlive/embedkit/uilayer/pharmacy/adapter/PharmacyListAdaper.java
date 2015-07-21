@@ -28,31 +28,8 @@ public class PharmacyListAdaper extends BaseAdapter{
         this.list = list;
     }
 
-    public void addItem(HashMap<String, Object> item){
-        list.add(item);
-    }
-
-    public void notifywithDataSet(ArrayList<HashMap<String, Object>> newList){
-        if(list.isEmpty()){
-            list = newList;
-        }else{
-            list.addAll(newList);
-           /* for(HashMap<String, Object> item : newList){
-                list.add(item);
-            }*/
-        }
-        notifyDataSetChanged();
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      /*  if(viewsCollection.get(position) == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.mdlive_pharm_custom_pharmacy_searchlist_view, null);
-            viewsCollection.put(position, convertView);
-            convertView = viewsCollection.get(position);
-        }else{
-            convertView = viewsCollection.get(position);
-        }*/
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.mdlive_pharm_custom_pharmacy_searchlist_view, null);
             convertView.setTag(convertView);
@@ -67,23 +44,15 @@ public class PharmacyListAdaper extends BaseAdapter{
 
         if((Boolean)getItem(position).get("twenty_four_hours")){
             ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
+        }else{
+            ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.GONE);
         }
-
-//        ((TextView) convertView.findViewById(R.id.pharmacyName)).setText(
-//                (String)getItem(position).get("store_name")+" "+
-//                        (((getItem(position).get("distance")!= null) &&
-//                                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddressline2)).setText(
                 ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
                     (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
-
-        /*((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
-
-        ((TextView) convertView.findViewById(R.id.text_view_b)).setText((((getItem(position).get("distance")!= null) &&
-                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));*/
 
         setLeftAndRigthTextWidthProperWidthNew(convertView.findViewById(R.id.relative_layout),
                 (TextView) convertView.findViewById(R.id.text_view_a),
@@ -117,23 +86,17 @@ public class PharmacyListAdaper extends BaseAdapter{
             @Override
             public void run() {
                 int rWidth, aWidth, bWidth;
-
                 rWidth = parentView.getWidth();
-
                 Log.d("Hello", "R Width :" + rWidth);
-
                 leftTextView.setText(leftString);
                 //a.setText("Hello how are you????");
                 leftTextView.measure(0, 0);
                 aWidth = leftTextView.getMeasuredWidth();
                 Log.d("Hello", "A Width :" + aWidth);
-
                 rightTextView.setText(rightString);
                 rightTextView.measure(0, 0);
                 bWidth = rightTextView.getMeasuredWidth();
-
                 int aMarginEnd = 0, bMarginStart = 0;
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     aMarginEnd = (int) (((RelativeLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
                     bMarginStart = (int) (((RelativeLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
@@ -141,11 +104,8 @@ public class PharmacyListAdaper extends BaseAdapter{
                     aMarginEnd = 10;
                     bMarginStart = 10;
                 }
-
                 Log.d("Hello", "B Width :" + rightTextView.getMeasuredWidth());
-
                 leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
-
                 parentView.invalidate();
             }
         }, 10);
