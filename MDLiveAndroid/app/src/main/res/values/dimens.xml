@@ -10,4 +10,15 @@
 
     <dimen name="toolbar_elevation">4dp</dimen>
 
+    <!-- Global Header values -->
+    <dimen name="headerbackimg_leftmargin">16dp</dimen>
+    <dimen name="headerhomeimg_leftmargin">20dp</dimen>
+    <dimen name="textsize_large">18sp</dimen>
+
+    <!-- Get Started  values -->
+    <dimen name="spinnerpatientname_leftmargin">3dp</dimen>
+    <dimen name="spinnerpatientname_rightmargin">12dp</dimen>
+    <dimen name="view_margin">7dp</dimen>
+    <dimen name="disclaimer_leftmargin">10dp</dimen>
+    <dimen name="disclaimer_rightmargin">5dp</dimen>
 </resources>

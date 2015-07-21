@@ -43,6 +43,26 @@
         <item name="android:gravity">left|center</item>
         <item name="android:layout_gravity">center</item>
     </style>
+    <!-- Header Image  Styles-->
+          <!-- The back Image for the Header Style-->
+    <style name="HeaderBackImgStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">@dimen/headerbackimg_leftmargin</item>
+        <item name="android:background">@drawable/back_arrow_hdpi</item>
+    </style>
+
+    <!-- The Home Image for the Header Style-->
+    <style name="HeaderHomeImgStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">@dimen/headerhomeimg_leftmargin</item>
+        <item name="android:background">@drawable/home_icon</item>
+    </style>
+
     <!--  Commom Linear Layout Styles-->
     <!-- Linear Layout-->
     <style name="LinearLayoutStyle">
@@ -61,7 +81,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">70dp</item>
         <item name="android:orientation">horizontal</item>
-
     </style>
 
     <!-- Linear Layout-->
@@ -127,7 +146,8 @@
         <item name="android:textSize">20sp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginLeft">40dp</item>
-        <item name="android:gravity">start|center</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:layout_centerInParent">true</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -224,40 +244,15 @@
         <item name="android:layout_gravity">right</item>
     </style>
 
-    <!-- <style name="GetStartedSubHeaderTextViewStyle">
-         <item name="android:layout_width">match_parent</item>
-         <item name="android:layout_height">30dp</item>
-         <item name="android:capitalize">characters</item>
-         <item name="android:textSize">18dp</item>
-         <item name="android:layout_margin">10dp</item>
-         <item name="android:textColor">@color/black</item>
-         <item name="android:textStyle">bold</item>
-         <item name="android:gravity">center</item>
-         <item name="android:layout_gravity">center_horizontal</item>
-     </style>-->
+    <style name="locationimgStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/right_arrow</item>/>
+    </style>
 
 
-    <!-- <style name="gettingstartedTextViewStyle">
-         <item name="android:layout_width">0dp</item>
-         <item name="android:layout_weight">30</item>/>
-         <item name="android:layout_height">wrap_content</item>
-         <item name="android:textSize">17sp</item>
-         <item name="android:gravity">start</item>/>
-         <item name="android:textColor">@color/black</item>
-         <item name="android:layout_gravity">center_vertical</item>/>
-         <item name="android:layout_margin">15dp</item>
-     </style>-->
-    <!-- <style name="gettingstartedContentStyle">
-         <item name="android:layout_width">match_parent</item>
-         <item name="android:layout_height">wrap_content</item>
-         <item name="android:textSize">17sp</item>
-         <item name="android:layout_marginLeft">15dp</item>/>
-         <item name="android:layout_marginRight">15dp</item>/>
-         <item name="android:layout_marginTop">10dp</item>/>
-         <item name="android:textColor">@color/black</item>/>
-         <item name="android:gravity">start</item>/>
-         <item name="android:layout_gravity">center_vertical</item>/>
-     </style>-->
     <style name="location_edittext">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -141,6 +141,10 @@
     <string name="get_started">Patient Information</string>
     <string name="patientTxt">Patient</string>
     <string name="dateOfBirth">Date of Birth</string>
+    <string name="dateformat">mm/dd/yyyy</string>
+    <string name="phonenumber">Phone Number</string>
+    <string name="disclaimertxt">Your phone number will only be used if customer support is required.</string>
+    <string name="nextBtn">Your phone number will only be used if customer support is required.</string>
     <string name="gender">Gender</string>
     <string name="location">Current Location</string>
     <string name="next_btn">Next</string>

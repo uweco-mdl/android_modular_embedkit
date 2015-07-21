@@ -10,27 +10,17 @@
 
             <ImageView
                 android:id="@+id/backImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:background="@drawable/back_arrow_hdpi" />
+              style="@style/HeaderBackImgStyle" />
 
             <ImageView
                 android:id="@+id/homeImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+              style="@style/HeaderHomeImgStyle"
                 android:layout_toRightOf="@+id/backImg"
-                android:background="@drawable/home_icon" />
+               />
 
             <TextView
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
-                android:layout_centerInParent="true"
-                android:gravity="left|center"
                 android:text="@string/get_started">
 
             </TextView>
@@ -62,14 +52,14 @@
                     <Spinner
                         android:id="@+id/patientSpinner"
                         style="@style/SpinnerButtonStyle"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="12dp" />
+                        android:layout_marginLeft="@dimen/spinnerpatientname_leftmargin"
+                        android:layout_marginRight="@dimen/spinnerpatientname_rightmargin"/>
 
                     <View
                         style="@style/ViewStyle"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
-                        android:layout_marginTop="7dp" />
+                        android:layout_marginLeft="@dimen/view_margin"
+                        android:layout_marginRight="@dimen/view_margin"
+                        android:layout_marginTop="@dimen/view_margin" />
 
                     <LinearLayout
                         android:id="@+id/dobLl"
@@ -78,18 +68,18 @@
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="Date of Birth" />
+                            android:text="@string/dateOfBirth" />
 
                         <TextView
                             android:id="@+id/dobTxt"
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="mm/dd/yyyy"
+                            android:text="@string/dateformat"
                             android:textColor="@color/mdliveLoginUsernameColor"
                             android:textSize="18sp" />
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="7dp" />
+                            android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
 
 
@@ -105,15 +95,13 @@
                         <TextView
                             android:id="@+id/txt_gender"
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text=""
                             android:textColor="@color/mdliveLoginUsernameColor"
-                            android:textSize="18sp" />
+                            android:textSize="@dimen/textsize_large" />
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="7dp" />
+                            android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:id="@+id/locationLl"
@@ -132,27 +120,21 @@
                                 android:id="@+id/locationTxt"
                                 style="@style/GetStartedContentTxtStyle"
                                 android:layout_alignParentLeft="true"
-                                android:layout_toLeftOf="@+id/imageView3"
-                                android:layout_toStartOf="@+id/imageView3"
+                                android:layout_toLeftOf="@+id/rightimg"
+                                android:layout_toStartOf="@+id/rightimg"
                                 android:gravity="center_vertical"
-                                android:text=""
-
                                 android:textColor="@color/location_color"
-                                android:textSize="18sp" />
+                                android:textSize="@dimen/textsize_large" />
 
                             <ImageView
-                                android:id="@+id/imageView3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/right_arrow" />
+                                android:id="@+id/rightimg"
+                               style="@style/locationimgStyle" />
 
                         </RelativeLayout>
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="7dp" />
+                            android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -162,7 +144,7 @@
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="Phone Number" />
+                            android:text="@string/phonenumber" />
 
                         <EditText
                             android:id="@+id/telephoneTxt"
@@ -170,20 +152,19 @@
                             android:background="@color/transparent_native"
                             android:inputType="number"
                             android:maxLength="12"
-                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="7dp" />
+                            android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
 
                     <TextView
                         style="@style/GetStartedHeaderContentStyle"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"
-                        android:text="Your phone number will only be used if customer support is required."
+                        android:layout_marginLeft="@dimen/disclaimer_leftmargin"
+                        android:layout_marginRight="@dimen/disclaimer_rightmargin"
+                        android:text="@string/disclaimertxt"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -191,7 +172,7 @@
                     android:id="@+id/SavContinueBtn"
                     style="@style/ContinueButtonStyle"
                     android:layout_marginBottom="0dp"
-                    android:text="Next" />
+                    android:text="@string/next_btn" />
 
                 <LinearLayout
                     style="@style/Mdlive_footer_Style">
