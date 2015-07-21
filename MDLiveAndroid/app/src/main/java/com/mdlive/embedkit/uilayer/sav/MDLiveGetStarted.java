@@ -228,7 +228,7 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
                 public void onClick(View v) {
                     Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
                     LocationIntent.putExtra("activitycaller", "getstarted");
-                    startActivityForResult(LocationIntent, 2222);
+                    startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                     SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                     String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
@@ -253,6 +253,7 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
         Log.d("onactivity Result", "Yes called " + resultCode);
         if(requestCode == IdConstants.REQUEST_ADD_CHILD && resultCode == Activity.RESULT_OK){
             loadUserInformationDetails();
+        }else if(requestCode == IdConstants.REQUEST_LOCATION_CHANGE && resultCode == Activity.RESULT_OK){
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
             Log.e("Getstarted page",longNameLocation);

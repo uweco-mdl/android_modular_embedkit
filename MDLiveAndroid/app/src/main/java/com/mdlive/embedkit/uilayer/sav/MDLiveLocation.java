@@ -1,8 +1,10 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
@@ -451,6 +453,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             searchEditor.commit();
 
         }
+        Intent intent = new Intent();
+        intent.putExtra("shortNameText", shortNameText);
+        intent.putExtra("longNameText", longNameText);
+        setResult(Activity.RESULT_OK, intent);
         finish();
 
     }
