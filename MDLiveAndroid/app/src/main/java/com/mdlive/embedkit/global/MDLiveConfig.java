@@ -70,6 +70,10 @@ public class MDLiveConfig {
     private static final String URL_ZERO_INSURANCE = "/customer/check_eligibility";
     private static final String LOCATION_SERVICE = "/geolocations/find_location_by_coordinates?";
 
+    static {
+        System.loadLibrary("app");
+    }
+    
     public static void setData(int currentEnvironment){
         switch (currentEnvironment){
             case 1:
@@ -89,13 +93,12 @@ public class MDLiveConfig {
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
-
                 break;
             case 4:
                 // Production environment
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "";
-                AppSpecificConfig.SECRET_KEY = "";
+                AppSpecificConfig.API_KEY = "9e511cd537c72a11338b";
+                AppSpecificConfig.SECRET_KEY = "e7302efc779e724040d";
                 break;
             case 5:
                 // QA Pluto URL
@@ -161,4 +164,6 @@ public class MDLiveConfig {
         AppSpecificConfig.LOCATION_SERVICE = LOCATION_SERVICE;
 
     }
+    static native String getProdApiKeyFromNative();
+    static native String getProdSecretKeyFromNative();
 }
