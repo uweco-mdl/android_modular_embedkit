@@ -73,7 +73,7 @@ public class MDLiveConfig {
     static {
         System.loadLibrary("app");
     }
-    
+
     public static void setData(int currentEnvironment){
         switch (currentEnvironment){
             case 1:
@@ -97,8 +97,8 @@ public class MDLiveConfig {
             case 4:
                 // Production environment
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "9e511cd537c72a11338b";
-                AppSpecificConfig.SECRET_KEY = "e7302efc779e724040d";
+                AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
+                AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
                 break;
             case 5:
                 // QA Pluto URL
@@ -162,8 +162,8 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_ZERO_INSURANCE = URL_ZERO_INSURANCE;
         AppSpecificConfig.SSO_SERVICE = SSO_SERVICE;
         AppSpecificConfig.LOCATION_SERVICE = LOCATION_SERVICE;
-
     }
+
     static native String getProdApiKeyFromNative();
     static native String getProdSecretKeyFromNative();
 }
