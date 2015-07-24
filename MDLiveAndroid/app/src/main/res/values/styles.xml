@@ -1482,11 +1482,10 @@
 
 
     <style name="VSeeKit_Video" parent="VSeeKit_Video_Base">
-        <item name="colorAccent">@color/mdlivePrimaryBlueColor</item>
-        <item name="colorPrimary">@color/mdliveHeaderPrimaryBlueColor</item>
-        <item name="colorPrimaryDark">@color/status_bar_color</item>
-
         <item name="android:actionBarStyle">@style/VSeeMDLIveActionBar</item>
+        <item name="android:colorAccent">@color/mdlivePrimaryBlueColor</item>
+        <item name="android:colorPrimary">@color/mdliveHeaderPrimaryBlueColor</item>
+        <item name="android:colorPrimaryDark">@color/status_bar_color</item>
     </style>
 
     <style name="VSeeMDLIveActionBar" parent="VSeeActionBar">
