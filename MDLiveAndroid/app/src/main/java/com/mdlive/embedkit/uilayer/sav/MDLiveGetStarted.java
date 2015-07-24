@@ -350,11 +350,9 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
                     loadUserInformationDetails();
                 }else{
                     if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
-                        if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
-
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
 
-                        }
+
                     }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
