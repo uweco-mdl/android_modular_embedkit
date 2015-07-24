@@ -1480,5 +1480,17 @@
         <item name="android:layout_marginTop">15dp</item>
     </style>
 
+
+    <style name="VSeeKit_Video" parent="VSeeKit_Video_Base">
+        <item name="android:actionBarStyle">@style/VSeeMDLIveActionBar</item>
+        <item name="android:colorAccent">@color/mdlivePrimaryBlueColor</item>
+        <item name="android:colorPrimary">@color/mdliveHeaderPrimaryBlueColor</item>
+        <item name="android:colorPrimaryDark">@color/status_bar_color</item>
+    </style>
+
+    <style name="VSeeMDLIveActionBar" parent="VSeeActionBar">
+        <item name="android:background">@color/mdliveHeaderPrimaryBlueColor</item>
+        <item name="android:displayOptions">useLogo</item>
+    </style>
 </resources>
 

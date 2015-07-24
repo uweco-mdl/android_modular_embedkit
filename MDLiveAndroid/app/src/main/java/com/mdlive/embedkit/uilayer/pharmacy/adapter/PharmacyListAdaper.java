@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.pharmacy.adapter;
 
 import android.app.Activity;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,14 +53,14 @@ public class PharmacyListAdaper extends BaseAdapter{
                 ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
                     (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
 
-        setLeftAndRigthTextWidthProperWidthNew(convertView.findViewById(R.id.relative_layout),
-                (TextView) convertView.findViewById(R.id.text_view_a),
-                (TextView) convertView.findViewById(R.id.text_view_b),
-                (String)getItem(position).get("store_name"),
-                (((getItem(position).get("distance")!= null) &&
-                        ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):"")
-                );
+        ((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
+        ((TextView) convertView.findViewById(R.id.text_view_b)).setText((((getItem(position).get("distance")!= null) &&
+                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
 
+        setMaxWidthForLeftText(convertView.findViewById(R.id.relative_layout),
+                (TextView) convertView.findViewById(R.id.text_view_a),
+                (TextView) convertView.findViewById(R.id.text_view_b)
+        );
         return convertView;
     }
 
@@ -81,19 +80,14 @@ public class PharmacyListAdaper extends BaseAdapter{
         return 0;
     }
 
-    public void setLeftAndRigthTextWidthProperWidthNew(final View parentView, final TextView leftTextView, final TextView rightTextView, final String leftString, final String rightString) {
+    public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView, final TextView rightTextView) {
         parentView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int rWidth, aWidth, bWidth;
                 rWidth = parentView.getWidth();
-                Log.d("Hello", "R Width :" + rWidth);
-                leftTextView.setText(leftString);
-                //a.setText("Hello how are you????");
                 leftTextView.measure(0, 0);
                 aWidth = leftTextView.getMeasuredWidth();
-                Log.d("Hello", "A Width :" + aWidth);
-                rightTextView.setText(rightString);
                 rightTextView.measure(0, 0);
                 bWidth = rightTextView.getMeasuredWidth();
                 int aMarginEnd = 0, bMarginStart = 0;
@@ -104,10 +98,11 @@ public class PharmacyListAdaper extends BaseAdapter{
                     aMarginEnd = 10;
                     bMarginStart = 10;
                 }
-                Log.d("Hello", "B Width :" + rightTextView.getMeasuredWidth());
                 leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
+                leftTextView.invalidate();
+                rightTextView.invalidate();
                 parentView.invalidate();
             }
-        }, 10);
+        }, 50);
     }
 }
