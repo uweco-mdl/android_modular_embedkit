@@ -44,7 +44,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
+        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new Object[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
         findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
