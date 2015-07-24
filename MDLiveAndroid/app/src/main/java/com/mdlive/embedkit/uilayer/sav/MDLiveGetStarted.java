@@ -193,7 +193,7 @@ public class   MDLiveGetStarted extends MDLiveBaseActivity {
                                         Log.d("Dep","null");
                                     }
                                     editor.commit();
-                                    if(phonrNmberEditTxt.getText().toString().length()<10)
+                                    if(phonrNmberEditTxt.getText().toString().length()<12)
                                     {
                                         MdliveUtils.alert(pDialog, MDLiveGetStarted.this, "Please enter a valid Phone number");
 
