@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
@@ -40,6 +41,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.location.ZipCodeServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -242,8 +244,14 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 Log.e("Response",error.toString());
                 //progressBar.setVisibility(View.GONE);
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
-
+                if(error.networkResponse != null ){
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(error.networkResponse.statusCode == HttpStatus.SC_NOT_FOUND){
+                        MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.unable_loc_txt));
+                    }else{
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
+                    }
+                }
             }
         };
 

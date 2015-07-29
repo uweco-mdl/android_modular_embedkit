@@ -211,6 +211,8 @@
     <string name="find_location_zipcode">Unable to find location by Zipcode.</string>
     <string name="unable_get_location">Unable to get your location!</string>
     <string name="administrative_area_level">administrative_area_level_1</string>
+    <string name="unable_loc_txt">Unable to find location.</string>
+
 
     <!--search provider-->
     <string name="doctor_filters">Doctor Filters</string>
