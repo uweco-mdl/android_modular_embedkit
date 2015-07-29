@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
     style="@style/ContainerStyle"
-    android:background="@color/mdliveBackgroundColor"
+    android:background="@color/white"
     >
     <RelativeLayout
         style="@style/wagHeaderLinearLayoutStyle"
