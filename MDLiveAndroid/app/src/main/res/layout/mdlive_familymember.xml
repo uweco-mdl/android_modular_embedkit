@@ -63,7 +63,6 @@
 
                                 android:id="@+id/patientEt"
                                 style="@style/reasonSearch_edittext"
-                                android:hint="@string/first_name"
                                 android:inputType="textPersonName"
                                 android:textSize="@dimen/textsize_large"
 
@@ -88,7 +87,6 @@
                             <EditText
                                 android:id="@+id/patient2Et"
                                 style="@style/reasonSearch_edittext"
-                                android:hint="@string/last_name"
                                 android:inputType="textPersonName"
                                 android:textSize="@dimen/textsize_large" />
 

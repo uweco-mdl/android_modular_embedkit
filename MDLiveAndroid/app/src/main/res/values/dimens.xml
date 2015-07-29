@@ -32,4 +32,9 @@
     <dimen name="toggleChildView_marginTop">30dp</dimen>
     <dimen name="switch_marginLeft">4dp</dimen>
     <dimen name="footer_marginBottom">0dp</dimen>
+
+    <!--Medical History -->
+    <dimen name="med_nextbtn_top">20dp</dimen>
+
+
 </resources>

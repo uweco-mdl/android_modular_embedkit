@@ -48,7 +48,6 @@
         <ScrollView
             android:id="@+id/ContainerScrollView"
             style="@style/ScrollViewStyle"
-            android:layout_marginBottom="12dp"
             android:background="@color/mdliveBottomBlueColor"
             android:fillViewport="false">
 
@@ -556,6 +555,7 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/MedicalContinueButtonStyle"
+                    android:layout_marginTop="@dimen/med_nextbtn_top"
                     android:text="@string/next_btn" />
             <LinearLayout
                 android:layout_width="match_parent"

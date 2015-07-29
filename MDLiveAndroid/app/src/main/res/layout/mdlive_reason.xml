@@ -10,7 +10,7 @@
         android:id="@+id/header"
         style="@style/LinearLayoutStyle"
         android:orientation="vertical"
-        android:background="@color/mdlivePrimaryBlueColor"
+        android:background="@color/mdliveHeaderPrimaryBlueColor"
        >
 
         <RelativeLayout
@@ -37,28 +37,24 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="3dp"
                 android:orientation="vertical"
                 android:layout_centerInParent="true">
 
                 <TextView
                     android:id="@+id/headerTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="21sp"
-                    android:textColor="@color/white"
+                    style="@style/ReasonHeaderTxtStyle"
                     android:text="Reason for Visit">
                 </TextView>
 
                 <TextView
                     android:id="@+id/reason_patientTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="19sp"
-                    android:textColor="@color/white"
+                    style="@style/ReasonsubHeaderTxtStyle"
+                    android:layout_marginTop="2dp"
                     android:text="Michelle Marino"
                     android:layout_below="@+id/headerTxt"
-
                     />
             </LinearLayout>
 
@@ -125,7 +121,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="5dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.1dip"
         android:id="@+id/reasonList" />

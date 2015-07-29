@@ -253,7 +253,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                         filterMainRl.setVisibility(View.VISIBLE);
                         doctorOnCallButtonClick();
                     } else {
-                        MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
+                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.GONE);
                     }
@@ -485,7 +490,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
                     DocOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
                 }
 
                 else{
