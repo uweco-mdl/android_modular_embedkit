@@ -69,12 +69,9 @@ public class SSOActivity extends MDLiveBaseActivity {
 
     /**
      * makes the customer_logins/embed_kit call to get the uniqueid.
-     *
      * Class : SSOService - Service class used to fetch the uniqueid
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
-     *
-     *
      * After getting the uniqueid save it to shared preference.
      */
     private void makeSSOCall(final SSOUser user) {
@@ -245,10 +242,9 @@ public class SSOActivity extends MDLiveBaseActivity {
 
     /**
      *
-     * THis function handles the pending visits if any. If there is any pending visits,
+     * This function handles the pending visits if any. If there is any pending visits,
      * the user will be taken to PEndingVisits screen, else the user will ber taken to
      * getstarted screen.
-     *
      * @param response
      */
     public void handlePendingResponse(String response){
@@ -274,7 +270,6 @@ public class SSOActivity extends MDLiveBaseActivity {
                 startActivity(i);
                 finish();
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -40,7 +40,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
                 android:orientation="vertical"
                 android:background="@color/white">
                 <LinearLayout
@@ -140,15 +139,15 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="20px">
 
-             <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/terms"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:checked="false"
-                        android:textSize="16sp"
-                        android:gravity="left|center"
-                        android:text="Is this an FSA/HSA card?" />
+             <!--<android.support.v7.widget.SwitchCompat-->
+                        <!--android:id="@+id/terms"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:checked="false"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:gravity="left|center"-->
+                        <!--android:text="Is this an FSA/HSA card?" />-->
 
                 </LinearLayout>
 

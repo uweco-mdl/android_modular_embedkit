@@ -22,7 +22,6 @@
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
                 android:text="@string/get_started">
-
             </TextView>
         </RelativeLayout>
 
@@ -128,6 +127,7 @@
 
                             <ImageView
                                 android:id="@+id/rightimg"
+                                android:background="@drawable/dropdown_icon"
                                style="@style/locationimgStyle" />
 
                         </RelativeLayout>
@@ -153,11 +153,11 @@
                             android:inputType="number"
                             android:maxLength="12"
                             android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"/>
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="@dimen/view_margin" />
+                            android:layout_marginTop="@dimen/view_margin"/>
                     </LinearLayout>
 
                     <TextView
@@ -183,9 +183,6 @@
 
             </LinearLayout>
         </ScrollView>
-
-
     </LinearLayout>
-
     <include layout="@layout/custom_progress_dialog" />
 </merge>
