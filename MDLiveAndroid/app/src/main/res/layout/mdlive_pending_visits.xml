@@ -32,7 +32,7 @@
                             android:layout_gravity="center"
                             android:layout_marginLeft="20dp"
                             android:onClick="cancelVisit"
-                            android:text="Cancel"
+                            android:text="@string/cancel"
                             android:fontFamily="sans-serif-medium"
                             android:textColor="@color/white"
                             android:textSize="18sp" />
@@ -42,7 +42,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginLeft="40dp"
-                            android:text="Your Consultation"
+                            android:text="@string/consultation_header"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-medium" />
@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Welcome back!"
+                        android:text="@string/welcome_back"
                         android:textSize="18sp"
                         android:textColor="#000" />
 
@@ -63,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Please resume your saved consultation to speak to your doctor."
+                        android:text="@string/resume_saved_consultation"
                         android:textSize="18sp"
                         android:textColor="#000000" />
 
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="30dp"
-                        android:text="CONSULTATION INFO "
+                        android:text="@string/consultation_info"
                         android:textSize="18sp"
                         android:textColor="#555555" />
 
@@ -88,7 +88,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
-                            android:text="Patient:"
+                            android:text="@string/patient"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-medium"
                             android:textColor="@color/black"  />
@@ -118,7 +118,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="5dp"
-                            android:text="Reason:"
+                            android:text="@string/reason"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-medium" />
@@ -150,7 +150,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="5dp"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Doctor:"
+                            android:text="@string/doctor"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
@@ -173,7 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="30dp"
-                        android:text="CHOSEN PHARMACY"
+                        android:text="@string/choosen_pharmacy"
                         android:textColor="#555555"
                         android:textSize="18sp" />
 
@@ -195,7 +195,7 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/btn_rounded_bg"
-                        android:text="Resume Consultation"
+                        android:text="@string/resume_consultation_txt"
                         android:textAllCaps="false"
                         android:textSize="18sp"
                         android:textColor="@color/white"

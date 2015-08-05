@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/black"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Security Question1"
+        android:layout_marginTop="20dp" />
+
+    <Spinner
+        android:id="@+id/question1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:id="@+id/answer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:background="@drawable/edittext_bg"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:hint="Answer 1"
+        android:textColorHint="@android:color/black"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Security Question2"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp" />
+
+    <Spinner
+        android:id="@+id/question2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:padding="5dp"
+        android:layout_marginTop="20dp"
+        android:spinnerMode="dropdown"/>
+
+    <EditText
+        android:id="@+id/answer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_bg"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:hint="Answer 2"
+        android:textColorHint="@android:color/black"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:background="@drawable/btn_dismiss"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+</LinearLayout>

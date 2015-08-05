@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,11 +15,13 @@ import com.mdlive.embedkit.R;
 import java.util.ArrayList;
 
 /**
- * Created by sudha_s on 5/18/2015.
+ * This Adapter class is mainly for setting up the symptom  and also can search for the
+ * new symptom.The selected symptonm is retrieved through the arraylist and
+ * the search function for the new symptom has been done here.
  */
 public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private ArrayList<String> originalArray = new ArrayList<String>();
-   private ArrayList<String> array = new ArrayList<String>();
+    private ArrayList<String> array = new ArrayList<String>();
     private Context context;
     private Filter filter;
     private LayoutInflater inflate;
@@ -36,21 +37,19 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             protected FilterResults performFiltering(CharSequence constraint) {
                 // Create a FilterResults object
                 FilterResults results = new FilterResults();
-
-                // If the constraint (search string/pattern) is null
-                // or its length is 0, i.e., its empty then
-                // we just set the `values` property to the
-                // original contacts list which contains all of them
+               /*  If the constraint (search string/pattern) is null
+                 or its length is 0, i.e., its empty then
+                 we just set the `values` property to the
+                 original contacts list which contains all of them*/
                 if (constraint == null || constraint.length() == 0) {
                     results.values = originalArray;
                     results.count = originalArray.size();
                 } else {
-                    // Some search copnstraint has been passed
-                    // so let's filter accordingly
+                  /*  Some search constraint has been passed so let's filter accordingly.*/
                     ArrayList<String> filteredContacts = new ArrayList<String>();
 
-                    // We'll go through all the contacts and see
-                    // if they contain the supplied string
+                  /* We'll go through all the contacts and see
+                     if they contain the supplied string.*/
                     for (String c : originalArray) {
                         if (c.toUpperCase().contains( constraint.toString().toUpperCase() )) {
                             // if `contains` == true then add it
@@ -63,7 +62,6 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
                     results.values = filteredContacts;
                     results.count = filteredContacts.size();
                 }
-
                 // Return our FilterResults object
                 return results;
             }
@@ -83,8 +81,6 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
                 notifyDataSetChanged();
             }
         };
-
-
     }
 
     @Override
@@ -109,20 +105,16 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         return filter;
     }
 
-
     /**
-     *     The getView Method displays the provider list items.
-     *     The datas are fetched from the Arraylist based on the position the dats will be placed
+     *     The getView Method displays the symptom list items.
+     *     The datas are fetched from the Arraylist based on the position the data will be placed
      *     in the listview.
      */
 
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
         TextView ReasonForVisitTxt;
-        ImageView callImg;
-
         View row;
-
             inflate = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
@@ -140,11 +132,6 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             ReasonForVisitTxt.setText(array.get(pos));
         }
 
-            /**
-             *    This is to Check the availability of the Doctor.if the next availabilty of doctor
-             *    is available then the time stamp should be  visible else it should be hidden.
-             *
-             */
         return row;
     }
 }

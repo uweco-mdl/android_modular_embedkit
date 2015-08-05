@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+   >
+    <LinearLayout
+        style="@style/wagHeaderLinearLayoutStyle"
+        android:elevation="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_arrow_hdpi"
+            android:id="@+id/backImg"
+           android:layout_gravity="center"
+            android:layout_marginStart="19dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_icon"
+            android:id="@+id/homeImg"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/backImg"
+             />
+        <TextView
+            android:id="@+id/headerTxt"
+            style = "@style/HeaderTextViewStyle"
+            android:text="@string/get_started"
+            />
+    </LinearLayout>
+        <LinearLayout
+            style="@style/WagParentLinearLayoutStyle"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/patientLl"
+                style="@style/WagLinearLayoutStyle">
+
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="Patient Name"
+                    />
+                <Spinner
+                    android:id="@+id/patientSpinner"
+                   style="@style/SpinnerButtonStyle"/>
+            </LinearLayout>
+
+            <View style="@style/ViewStyle" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/dobLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="Date of Birth"/>
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:id="@+id/dobTxt"
+                    android:textColor="#b4b9bd"
+                    android:text="mm/dd/yyyy"/>
+            </LinearLayout>
+            <View style="@style/ViewStyle" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/genderLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="@string/gender"
+                   />
+                <Spinner
+
+                   style="@style/SpinnerButtonStyle"
+                    android:id="@+id/genderSpinner" />
+
+            </LinearLayout>
+            <View style="@style/ViewStyle" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/locationLl"
+                style="@style/WagLinearLayoutStyle">
+                <TextView
+                    style = "@style/GetStartedHeaderContentStyle"
+                    android:text="@string/location"
+                    />
+                <TextView
+                    style = "@style/GetStartedContentTxtStyle"
+                    android:text="@string/location"
+                    android:textColor="#35393d"
+                    android:id="@+id/locationTxt" />
+
+            </LinearLayout>
+
+            <View style="@style/ViewStyle" />
+
+            <Button
+                android:id="@+id/SavContinueBtn"
+                style="@style/ContinueButtonStyle"
+                android:text="@string/next_btn"
+                />
+        </LinearLayout>
+
+</LinearLayout>

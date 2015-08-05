@@ -1,0 +1,9 @@
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/MDLiveMedicalHistory.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/MDLiveCommonConditionsMedicationsActivity.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/MDLiveAddMedications.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/MDLiveAddConditions.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/MDLiveBaseActivity.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/MDLiveAddAllergies.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/imageadapter/ImageAdapter.java
+MDLiveAndroid/app/src/main/java/com/mdlive/embedkit/uilayer/myhealth/imageadapter/MDLiveImageGalleryView.java
+MDLiveAndroid/app/libs/volley.jar

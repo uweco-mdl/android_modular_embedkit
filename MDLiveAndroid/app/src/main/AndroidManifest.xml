@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mdlive.embedkit"
-    android:hardwareAccelerated="true">
-
+    android:hardwareAccelerated="true" >
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -30,131 +27,223 @@
         android:required="false" />
 
     <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
         android:largeHeap="true"
-      >
+        android:theme="@style/CustomTheme" >
 
-        <activity
-            android:name=".uilayer.login.SSOActivity" android:theme="@style/MDLIVEactivityTheme"
+        <!-- Google Api Key -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyD10ySfhNEM1FYuoRuoxK9yWjcGWOPA6Js" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <!-- android:value="7327000"/> -->
+
+        <!--<activity
+            android:name=".uilayer.login.LoginActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:noHistory="true">
+            android:theme="@style/MDLIVEactivityTheme" />-->
+
+        <!-- ".uilayer.login.SplashScreenActivity" -->
+        <activity
+            android:name=".uilayer.login.SplashScreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
-        <!--Provider Details-->
+        <!-- Provider Details -->
 
         <activity
             android:name=".uilayer.sav.MDLiveGetStarted"
             android:label="@string/title_activity_home"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-           ></activity>
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name=".uilayer.sav.MDLiveFamilymember"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
-
+            android:name=".uilayer.sav.MDLiveChooseProvider"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
-
-
+            android:name=".uilayer.sav.MDLiveSearchProvider"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
-
+            android:name=".uilayer.sav.MDLiveProviderDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:name=".uilayer.sav.MDLiveReasonForVisit"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.sav.MDLiveLocation"
-            android:screenOrientation="portrait" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:name=".uilayer.sav.MDLiveLocation"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
 
-
-        <!-- Pharmacy Activities-->
+        <!-- Pharmacy Activities -->
         <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
+            android:name=".uilayer.pharmacy.MDLivePharmacy"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange" android:theme="@style/MDLIVEactivityTheme"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"></activity>
+            android:name=".uilayer.pharmacy.MDLivePharmacyChange"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
 
-       <!-- <activity
+        <!--
+             <activity
             android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyDetails"
-            android:screenOrientation="portrait"></activity>-->
-
-        <activity
-            android:name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult" android:theme="@style/MDLIVEactivityTheme"
             android:screenOrientation="portrait"></activity>
-
+        -->
 
         <activity
-            android:name=".uilayer.myhealth.MDLiveMedicalHistory" android:theme="@style/MDLIVEactivityTheme"
+            android:name=".uilayer.pharmacy.MDLivePharmacyResult"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
+        <activity
+            android:name=".uilayer.myhealth.MDLiveMedicalHistory"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
-            android:name=".uilayer.myhealth.imageadapter.MDLiveImageGalleryView" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
-
+            android:name=".uilayer.myhealth.imageadapter.MDLiveImageGalleryView"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
         <activity
-            android:name=".uilayer.myhealth.MDLiveAddAllergies" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
-
+            android:name=".uilayer.myhealth.MDLiveAddAllergies"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
         <activity
-            android:name=".uilayer.myhealth.MDLiveAddConditions" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
+            android:name=".uilayer.myhealth.MDLiveAddConditions"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
         <activity
-            android:name=".uilayer.myhealth.MDLiveAddMedications" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
-
+            android:name=".uilayer.myhealth.MDLiveAddMedications"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
 
         <!-- Payment Activity -->
 
         <activity
-            android:name="com.mdlive.embedkit.uilayer.payment.MDLivePayment" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name="com.mdlive.embedkit.uilayer.login.MDLiveSummary" android:theme="@style/MDLIVEactivityTheme" android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
-
-
-
-        <activity
-            android:name=".MDLiveVsee" android:theme="@style/MDLIVEactivityTheme"
+            android:name=".uilayer.payment.MDLivePayment"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:theme="@style/MDLIVEactivityTheme" />
         <activity
-            android:name="com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom"
-            android:label="@string/app_name" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
+            android:name=".uilayer.login.MDLiveSummary"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
+
+        <!-- Medical History Allergies -->
 
 
+        <!--
+            <activity
+            android:name=".uilayer.sav.VseeMainActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_home" >
+            </activity>
+        -->
 
+        <activity
+            android:name=".MDLiveVsee"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".uilayer.WaitingRoom.MDLiveWaitingRoom"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLIVEactivityTheme" />
+        <!--<activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="io.card.payment.DataEntryActivity"
+            android:screenOrientation="portrait" />-->
         <activity
             android:name=".uilayer.pediatric.MDLivePediatric"
-            android:windowSoftInputMode="stateHidden" android:theme="@style/MDLIVEactivityTheme"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".uilayer.messagecenter.MessageCenterActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Sprint 2 Application Activity starts here -->
 
         <activity
-            android:name=".uilayer.PendingVisits.MDLivePendingVisits" android:theme="@style/MDLIVEactivityTheme"
+            android:name=".uilayer.login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uilayer.login.DashboardActivity"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uilayer.myaccounts.MyAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
             android:screenOrientation="portrait"
-             >
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.familyhistory.MDLiveFamilyHistory"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.helpandsupport.MDLiveHelpAndSupportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.mdliveassist.MDLiveAssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.lifestyle.MDLiveLifestyleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.myhealth.activity.MDLiveMyHealthActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".uilayer.symptomchecker.MDLiveSymptomCheckerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <!--
+           &lt;!&ndash; From Unified Middle ware&ndash;&gt;
+           <application android:allowBackup="true" android:name="com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController">
+
+
+           </application>
+        -->
+<!--
+        <activity
+            android:name=".uilayer.spinnerdropdown.SpinnerDropDownActivity"
+            android:label="@string/title_activity_spinner_drop_down"
+            android:theme="@style/AppTheme">
         </activity>
-
-
-
+-->
     </application>
 
 </manifest>

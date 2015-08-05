@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,15 +21,13 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 
 public class MDLiveSummary extends MDLiveBaseActivity {
-
     private ProgressDialog pDialog;
-    //private RelativeLayout progressBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
 
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
@@ -39,22 +36,12 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String docName = docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,"");
         txtDocName.setText(docName);
-        payText.setText("$"+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
-        pDialog = MdliveUtils.getProgressDialog("Please wait", this);
+        payText.setText(getString(R.string.dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
+        pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new Object[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
-        findViewById(R.id.DoneRatingBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRating();
-            }
-        });
-//        pDialog = Utils.getProgressDialog("Please wait", this);
-
-
-
+        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
     }
 
     /**
@@ -75,33 +62,14 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         ApplicationController.getInstance().getRequestQueue(MDLiveSummary.this).getCache().clear();
         ApplicationController.getInstance().getBitmapLruCache().evictAll();
     }
-    private void redirectToParent(){
-        try{
-            Intent intent = new Intent();
-            ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
-                    MdliveUtils.ssoInstance.getparentClassname());
-            intent.setComponent(cn);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }catch (Exception e){
-            Log.e("Execption Occured", e.getLocalizedMessage()+"");
-        }
 
-    }
-    public void sendRating(){
-//        pDialog.show();
-        //progressBar.setVisibility(View.VISIBLE);
+    public void sendRating(View view){
         showProgress();
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
-
             @Override
             public void onResponse(Object response) {
-//                pDialog.dismiss();
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
-                Log.e("Response Summary", response.toString());
                 try {
                     clearPref();
                     clearCacheInVolley();
@@ -121,31 +89,11 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         NetworkErrorListener errorListner = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response Vsee", error.toString());
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
             }
         };
         SummaryService summaryService = new SummaryService(this, pDialog );
         summaryService.sendRating(rating,successListener,errorListner );
-    }
-
-    /**
-     * This method will close the activity with transition effect.
-     */
-
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-//        MdliveUtils.closingActivityAnimation(this);
-    }
-    /**
-     * This method will stop the service call if activity is closed during service call.
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

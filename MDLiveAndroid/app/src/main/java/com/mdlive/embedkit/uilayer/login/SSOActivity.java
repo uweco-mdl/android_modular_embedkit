@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -34,7 +33,7 @@ import org.json.JSONObject;
 public class SSOActivity extends MDLiveBaseActivity {
     private ProgressDialog mProgressDialog;
     private String mToken;
-    //private RelativeLayout progressBar;
+    private ProgressDialog pDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +41,7 @@ public class SSOActivity extends MDLiveBaseActivity {
         setContentView(R.layout.mdlive_sso);
         MdliveUtils.clearSharedPrefValues(this);
 
-        mProgressDialog = MdliveUtils.getProgressDialog("Please Wait.....", this);
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        mProgressDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         setProgressBar(findViewById(R.id.progressDialog));
         SSOUser ssoUser = getUser();
         MDLiveConfig.setData(ssoUser.getCurrentEnvironment());
@@ -69,15 +67,18 @@ public class SSOActivity extends MDLiveBaseActivity {
 
     /**
      * makes the customer_logins/embed_kit call to get the uniqueid.
+     *
      * Class : SSOService - Service class used to fetch the uniqueid
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     *
+     *
      * After getting the uniqueid save it to shared preference.
      */
     private void makeSSOCall(final SSOUser user) {
         MdliveUtils.ssoInstance = user;
         if (user == null) {
-            MdliveUtils.showDialog(this, "Error", getString(R.string.user_details_missing), new DialogInterface.OnClickListener() {
+            MdliveUtils.showDialog(this, getString(R.string.error), getString(R.string.user_details_missing), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
@@ -146,20 +147,12 @@ public class SSOActivity extends MDLiveBaseActivity {
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
                 hideProgress();
-                //Utils.handelVolleyErrorResponse(SSOActivity.this, error, mProgressDialog);
-               if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        mProgressDialog.dismiss();
-                        MdliveUtils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
-                    }
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);
                 }
             }};
 
@@ -213,24 +206,17 @@ public class SSOActivity extends MDLiveBaseActivity {
                 //Utils.hideProgressDialog(mProgressDialog);
                 hideProgress();
                 handlePendingResponse(response.toString());
-                Log.e("Pending Response",response.toString());
             }
         };
         NetworkErrorListener errorListner=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-               // Utils.hideProgressDialog(mProgressDialog);
                 hideProgress();
-                Log.e("Pending Error Response", error.toString());
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        MdliveUtils.connectionTimeoutError(mProgressDialog, SSOActivity.this);
-                    }
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);
                 }
 
             }
@@ -242,9 +228,10 @@ public class SSOActivity extends MDLiveBaseActivity {
 
     /**
      *
-     * This function handles the pending visits if any. If there is any pending visits,
+     * THis function handles the pending visits if any. If there is any pending visits,
      * the user will be taken to PEndingVisits screen, else the user will ber taken to
      * getstarted screen.
+     *
      * @param response
      */
     public void handlePendingResponse(String response){
@@ -270,26 +257,10 @@ public class SSOActivity extends MDLiveBaseActivity {
                 startActivity(i);
                 finish();
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
-    /*
-  * set visible for the progress bar
-  */
-    /*public void setProgressBarVisibility()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-
-    }*/
-
-    /*
-    * set visible for the details view layout
-    */
-    /*public void setInfoVisibilty()
-    {
-        progressBar.setVisibility(View.GONE);
-
-    }*/
 }

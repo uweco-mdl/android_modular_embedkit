@@ -10,104 +10,66 @@
         android:id="@+id/header"
         style="@style/LinearLayoutStyle"
         android:orientation="vertical"
-        android:background="@color/mdliveHeaderPrimaryBlueColor"
+        android:background="@color/mdlivePrimaryBlueColor"
        >
 
         <RelativeLayout
             style="@style/wagHeaderLinearLayoutReasonStyle"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/back_arrow_hdpi"
+              style="@style/HeaderBackImgStyle"
                 android:id="@+id/backImg"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp" />
+             />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/home_icon"
+               style="@style/HeaderHomeImgStyle"
                 android:id="@+id/homeImg"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toEndOf="@+id/backImg"
+                android:layout_marginLeft="@dimen/chooseproviderhomeheader_marginLeft"
+                android:layout_toRightOf="@+id/backImg"
+                android:onClick="movetohome"
                 />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerInParent="true">
 
                 <TextView
+                    style="@style/reasonheaderTextStyle"
+                    android:text="@string/header_reason_txt"
                     android:id="@+id/headerTxt"
-                    style="@style/ReasonHeaderTxtStyle"
-                    android:text="Reason for Visit">
+                   >
                 </TextView>
 
                 <TextView
+                    style="@style/reasonSubheaderUsernameTextStyle"
                     android:id="@+id/reason_patientTxt"
-                    style="@style/ReasonsubHeaderTxtStyle"
-                    android:layout_marginTop="2dp"
-                    android:text="Michelle Marino"
                     android:layout_below="@+id/headerTxt"
                     />
             </LinearLayout>
 
         </RelativeLayout>
         <RelativeLayout
-           android:layout_height="60dp"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/grey_rounded_bg"
-            android:orientation="horizontal">
+          style="@style/reasonSearchRLTextStyle">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/search_icon"
+                style="@style/reasonSearchImgStyle"
                 android:id="@+id/search_img"
-                android:layout_centerVertical="true"
-                android:visibility="gone"
-                android:layout_marginLeft="20dp"
                 />
 
             <EditText
                 style="@style/reasonSearch_edittext"
                 android:layout_toRightOf="@+id/search_img"
                 android:hint="@string/searchsymptom_txt"
-                android:padding="5dp"
-                android:layout_marginLeft="12dp"
-                android:textSize="16sp"
-                android:textCursorDrawable="@null"
-                android:layout_centerVertical="true"
+                android:textColor="@color/black"
                 android:id="@+id/search_edit"
-                android:cursorVisible="true"
-                android:drawableLeft="@drawable/search_icon"
-                android:drawablePadding="25dp"
-                android:layout_marginRight="5dp"
-                android:inputType="textPersonName"
-                android:layout_gravity="center_horizontal|left"
-                android:layout_toStartOf="@+id/deleteTextBtn"
-                android:layout_toLeftOf="@+id/deleteTextBtn" />
+                android:layout_toLeftOf="@+id/deleteTextBtn"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                style="@style/reasonDeleteImgStyle"
                 android:id="@+id/deleteTextBtn"
-                android:src="@drawable/close_icon"
-                android:visibility="gone"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
+                 />
         </RelativeLayout>
         </LinearLayout>
 
@@ -121,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_marginTop="@dimen/manualsearch_margintop"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.1dip"
         android:id="@+id/reasonList" />

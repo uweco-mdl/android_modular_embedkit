@@ -7,9 +7,9 @@
 
     <LinearLayout
         style="@style/DoctorLinearLayoutStyle"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginBottom="@dimen/margin_top"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_marginLeft="@dimen/chooseotherdoctor_marginleft"
         android:orientation="horizontal"
         >
         <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
@@ -20,16 +20,14 @@
         <LinearLayout
             style="@style/LinearLayoutStyle"
             android:orientation="vertical"
-            android:layout_width="230dp"
-
-
-            >
+            android:layout_width="@dimen/chooseproviderlist_width"
+  >
 
             <TextView
                 style="@style/DoctorTxtStyle"
                 android:id="@+id/PatientName"
-                android:textColor="#35393d"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize_large"
                 android:singleLine="true"
                 />
 
@@ -41,11 +39,11 @@
                     android:id="@+id/specalist"
                     style="@style/ProviderDetailsDoctorTxtStyle"
                     android:layout_width="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="@dimen/generalpractise_marginleft"
+                    android:layout_marginTop="@dimen/generalpractise_margintop"
                     android:gravity="left|center"
-                    android:text="General Practise"
-                    android:textColor="#878f95" />
+                    android:text="@string/general_practise"
+                    android:textColor="@color/mdliveLoginUsernameColor" />
 
                 <TextView
                     android:id="@+id/callImg"
@@ -53,15 +51,15 @@
                     android:gravity="end|right|center"
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="10dp"
-                    android:textColor="#F18032" />
+                    android:textColor="@color/withPatient" />
             </LinearLayout>
 
 
             <TextView
                 style="@style/DoctorTxtStyle"
                 android:visibility="visible"
-                android:textColor="#878f95"
-                android:layout_marginTop="2dp"
+                android:textColor="@color/mdliveLoginUsernameColor"
+                android:layout_marginTop="@dimen/generalpractise_margintop"
                 android:text="Capital Regional\nMedical Center"
                 android:id="@+id/Time"/>
 

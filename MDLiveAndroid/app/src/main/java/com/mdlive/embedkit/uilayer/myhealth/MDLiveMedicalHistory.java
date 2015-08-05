@@ -315,12 +315,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 onBackPressed();
             }
         });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                movetohome();
-            }
-        });
 
         imageAdapter = new ImageAdapter(MDLiveMedicalHistory.this, myPhotosList);
         gridview = (GridView) findViewById(R.id.gridview);
@@ -1479,7 +1473,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
 //                pDialog.dismiss();
                 //progressBar.setVisibility(View.GONE);
-                Log.d("Female Attributes Response - ", response.toString());
                 hideProgress();
                 getUserPharmacyDetails();
                 /*if (!isNewUser) {
@@ -1531,16 +1524,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 //                pDialog.dismiss();
                 //progressBar.setVisibility(View.GONE);
                 hideProgress();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveMedicalHistory.this);
-                    }
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveMedicalHistory.this, error, null);
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveMedicalHistory.this);
                 }
             }
         };
@@ -1643,16 +1631,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
             //Utils.showGPSSettingsAlert(MDLiveMedicalHistory.this);
         }
-    }
-
-
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        MdliveUtils.movetohome(MDLiveMedicalHistory.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
 

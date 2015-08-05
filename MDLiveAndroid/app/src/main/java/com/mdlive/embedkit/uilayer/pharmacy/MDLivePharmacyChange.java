@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,9 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,7 +27,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -58,17 +55,13 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private TextView chooseState;
     private ListView stageListView;
     private AlertDialog stateDialog;
-    private Button getlocationButton;
-    private ProgressDialog pDialog;
-    //private RelativeLayout progressBar;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> suggestionList = new ArrayList<String>();
     private LocationCooridnates locationService;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
-    private int keyDel=0;
-    private String errorMesssage = "No Pharmacies listed in your location";
+    private String errorMesssage;
     protected boolean isPerformingAutoSuggestion, mayIShowSuggestions = true;
     protected static String previousSearch = "";
 
@@ -87,55 +80,53 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      * and feed results in drop down box.
      */
     private void initializeViews() {
-        ViewGroup view = (ViewGroup) getWindow().getDecorView();
-        LocalisationHelper.localiseLayout(this, view);
         chooseState = ((TextView) findViewById(R.id.chooseState));
         pharmacy_search_name = ((AutoCompleteTextView) findViewById(R.id.pharmacy_search_name));
         zipcodeText = ((EditText) findViewById(R.id.zipcodeText));
         cityText = ((EditText) findViewById(R.id.cityText));
-        getlocationButton = ((Button) findViewById(R.id.getlocationButton));
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
-//        pDialog = Utils.getProgressDialog("Loading...", this);
+        errorMesssage = getString(R.string.no_pharmacies_listed);
+
+        //This function is used to initialized State Dialog.
+        initializeStateDialog();
+
         //Initialize Intent for Pharmacy Results
         sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
         adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
         pharmacy_search_name.setThreshold(3);
         pharmacy_search_name.setAdapter(adapter);
-
         zipcodeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    cityText.setText("");
+                    cityText.setText(StringConstants.EMPTY_STRING);
                     stageListView.setItemChecked(0, true);
-                    chooseState.setText("Select State");
+                    chooseState.setText(getString(R.string.select_stg));
                 }
             }
         });
+
         //validation for Zip code
         zipcodeText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(zipcodeText.getText().toString().length()>=9){
-                    if(!zipcodeText.getText().toString().contains("-")){
-                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
+                if (zipcodeText.getText().toString().length() >= 9) {
+                    if (!zipcodeText.getText().toString().contains("-")) {
+                        String formattedString = MdliveUtils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
                         zipcodeText.setText(formattedString);
                     }
-
                 }
             }
         });
@@ -143,102 +134,108 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    zipcodeText.setText("");
+                    zipcodeText.setText(StringConstants.EMPTY_STRING);
                 }
             }
         });
-
-        ((TextView) findViewById(R.id.doneTxt)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String hasErrorMessage = hasValidationMessage();
-                if(hasErrorMessage == null){
-                    addExtrasInIntent();
-                    startActivity(sendingIntent);
-                    MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                    finish();
-                    //MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
-                }else{
-                    MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
-                }
-            }
-        });
-
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
-
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                onBackPressed();
-                //MdliveUtils.closingActivityAnimation(MDLivePharmacyChange.this);
-            }
-        });
-
         locationService = new LocationCooridnates();
-        getlocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-                mayIShowSuggestions = false;
-                getLocationBtnOnClickAction();
-            }
-        });
-        initializeStateDialog();
-        chooseState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zipcodeText.setText("");
-                zipcodeText.clearFocus();
-                cityText.requestFocus();
-                stateDialog.show();
-            }
-        });
     }
 
-    public String hasValidationMessage(){
-        if(zipcodeText.getText()!=null && !zipcodeText.getText().toString().trim().equals("")){
-            if(MdliveUtils.validateZipCode(zipcodeText.getText().toString())){
-                if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
-                    errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
-                         +" in the "+zipcodeText.getText().toString()+" ZIP Code. Please check the pharmacy ZIP Code or search by city and state.";
-                }else{
-                    errorMesssage = "No Pharmacies listed in your location";
+    /**
+     * This function handles click listener of chooseState
+     *
+     * @param view - view of button which is called.
+     */
+    public void chooseStateOnClick(View view) {
+        zipcodeText.setText(StringConstants.EMPTY_STRING);
+        zipcodeText.clearFocus();
+        cityText.requestFocus();
+        stateDialog.show();
+    }
+
+    /**
+     * This function handles click listener of getlocationButton
+     *
+     * @param view - view of button which is called.
+     */
+    public void getlocationButtonOnClick(View view) {
+        mayIShowSuggestions = false;
+        getLocationBtnOnClickAction();
+    }
+
+    //The back image will pull you back to the Previous activity
+    //The home button will pull you back to the Dashboard activity
+    public void backImgOnClick(View view) {
+        MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+        onBackPressed();
+    }
+
+    /**
+     * This function handles click listener of doneTxt
+     *
+     * @param view - view of button which is called.
+     */
+    public void doneTxtOnClick(View view) {
+        String hasErrorMessage = hasValidationMessage();
+        if (hasErrorMessage == null) {
+            addExtrasInIntent();
+            startActivity(sendingIntent);
+            MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+            finish();
+        } else {
+            MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
+        }
+    }
+
+    /**
+     * This fucntion is used to generate error message which will be used in MDLivePharmacyResult
+     * According to options which is selected by user, error message will be differs.
+     * returning error message will be attached to intent and send over to MDLivePharmacyResult page.
+     */
+    public String hasValidationMessage() {
+        if (zipcodeText.getText() != null && !zipcodeText.getText().toString().trim().equals("")) {
+            if (MdliveUtils.validateZipCode(zipcodeText.getText().toString())) {
+                if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().length() != 0) {
+                    errorMesssage = getString(R.string.not_find_pharmacy_zip,
+                            pharmacy_search_name.getText().toString(),
+                            zipcodeText.getText().toString());
+                } else {
+                    errorMesssage = getString(R.string.no_pharmacies_listed);
                 }
-            }else{
-                return "Please enter a valid Zip Code.";
+            } else {
+                return getString(R.string.valid_zip);
             }
-        }else if(chooseState.getText()!=null && !chooseState.getText().toString().equals("Select State") && !chooseState.getText().toString().trim().equals("")){
-            if(cityText.getText() == null || cityText.getText().toString().trim().equals("")){
-                return "Please input City";
+        } else if (chooseState.getText() != null && !chooseState.getText().toString().equals(getString(R.string.select_stg)) && !chooseState.getText().toString().trim().equals("")) {
+            if (cityText.getText() == null || cityText.getText().toString().trim().equals("")) {
+                return getString(R.string.input_city);
             }
-            if(pharmacy_search_name.getText() !=null && pharmacy_search_name.getText().toString().length() != 0){
-                errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
-                        +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
-            }else{
-                errorMesssage = "No Pharmacies listed in your location";
+            if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().length() != 0) {
+                errorMesssage = getString(R.string.not_find_pharmacy_state,
+                        cityText.getText().toString(),
+                        pharmacy_search_name.getText().toString(),
+                        chooseState.getText().toString());
+            } else {
+                errorMesssage = getString(R.string.no_pharmacies_listed);
             }
-        }else if(cityText.getText()!=null && !cityText.getText().toString().trim().equals("")){
-            if(chooseState.getText() == null || chooseState.getText().toString().equals("Select State") || chooseState.getText().toString().trim().equals("")){
-                return "Please select a State";
+        } else if (cityText.getText() != null && !cityText.getText().toString().trim().equals("")) {
+            if (chooseState.getText() == null || chooseState.getText().toString().equals(getString(R.string.select_stg)) || chooseState.getText().toString().trim().equals("")) {
+                return getString(R.string.input_state);
             }
-            if(pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0){
-                errorMesssage = "Sorry, we could not find "+pharmacy_search_name.getText().toString()
-                        +" near "+cityText.getText().toString()+", "+chooseState.getText().toString();
-            }else{
-                errorMesssage = "No Pharmacies listed in your location";
+            if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0) {
+                errorMesssage = getString(R.string.not_find_pharmacy_state,
+                        cityText.getText().toString(),
+                        pharmacy_search_name.getText().toString(),
+                        chooseState.getText().toString());
+            } else {
+                errorMesssage = getString(R.string.no_pharmacies_listed);
             }
-        }else if( (TextUtils.isEmpty(zipcodeText.getText().toString()))
+        } else if ((TextUtils.isEmpty(zipcodeText.getText().toString()))
                 && ((TextUtils.isEmpty(chooseState.getText().toString())
-                || chooseState.getText().toString().equals("Select State")))){
-            return "Please enter a Zipcode or a City and a State.";
+                || chooseState.getText().toString().equals(getString(R.string.select_stg))))) {
+            return getString(R.string.input_state_city);
         }
         return null;
     }
-
 
 
     /**
@@ -252,9 +249,11 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() >= 3 && !s.toString().startsWith(" ") && !previousSearch.trim().equalsIgnoreCase(s.toString().trim())) {
@@ -271,8 +270,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void getLocationBtnOnClickAction() {
         mayIShowSuggestions = false;
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-//            pDialog.show();
-            //progressBar.setVisibility(View.VISIBLE);
             showProgress();
             locationService.getLocation(this, new LocationCooridnates.LocationResult() {
                 @Override
@@ -280,8 +277,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            pDialog.dismiss();
-                            //progressBar.setVisibility(View.GONE);
                             hideProgress();
                             mayIShowSuggestions = true;
                             if (location != null) {
@@ -298,17 +293,16 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 }
             });
         } else {
-            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this,(RelativeLayout)findViewById(R.id.progressDialog));
-            //progressBar.setVisibility(View.GONE);
+            MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this, (RelativeLayout) findViewById(R.id.progressDialog));
             hideProgress();
         }
     }
 
     /**
      * This function is used to get suggestion results from webservice
-     * <p/>
+     *
      * responseListener - handleSuggestionSuccessResponse handles the reponse results
-     * <p/>
+     *
      * SuggestPharmayService class handling webservice integration for suggestions
      *
      * @param searchText - This text is enter by users
@@ -325,12 +319,12 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 isPerformingAutoSuggestion = false;
-                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, null);
             }
         };
         if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(searchText)) {
             ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-            SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), pDialog);
+            SuggestPharmayService services = new SuggestPharmayService(getApplicationContext(), null);
             mayIShowSuggestions = true;
             services.doSuggestionRequest(searchText, responseListener, errorListener);
             previousSearch = searchText;
@@ -340,7 +334,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     /**
      * This function is used to handle the response of suggestion results.
-     * <p/>
+     *
      * Once response text is parsed, then it will be added in pharmacy_search_name suggestion box.
      *
      * @param response - Response recevied from addSearchTextHistory - onResponseReceiver.
@@ -352,45 +346,31 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             for (int i = 0; i < jarray.length(); i++) {
                 suggestionList.add(jarray.getString(i));
             }
-
-            if(suggestionList.size() > 0 && mayIShowSuggestions){
+            if (suggestionList.size() > 0 && mayIShowSuggestions) {
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
                 pharmacy_search_name.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
             }
-
-/*
-            adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
-            pharmacy_search_name.setThreshold(3);
-            pharmacy_search_name.setAdapter(adapter);
-            if(!selectedFromAutoComplete)
-                 pharmacy_search_name.showDropDown();
-*/
-
-
-            //    pharmacy_search_name.showDropDown();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     *
-     *This function creates an array adapter for the AutoCompletionTextView. Once the list item is
+     * This function creates an array adapter for the AutoCompletionTextView. Once the list item is
      * clicked, the text is set to the edit text and the autocompletion list is dismissed.
      *
-     *
-     * @param atv :: The AutoCompletionTextView
+     * @param atv           :: The AutoCompletionTextView
      * @param conditionList :: The conditions array list
      * @return The array adapter
      */
     private ArrayAdapter<String> getAutoCompletionArrayAdapter(final AutoCompleteTextView atv, final ArrayList<String> conditionList) {
         return new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, conditionList) {
             @Override
-            public View getView(int position,View convertView, ViewGroup parent) {
-                View view = super.getView(position,convertView, parent);
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
                 parent.setBackgroundColor(Color.WHITE);
                 final TextView text = (TextView) view.findViewById(android.R.id.text1);
                 text.setTextColor(Color.BLACK);
@@ -417,7 +397,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void addExtrasForLocationInIntent(Location location) {
         sendingIntent.putExtra("longitude", location.getLongitude());
         sendingIntent.putExtra("latitude", location.getLatitude());
-        errorMesssage = "No Pharmacies listed in your location";
+        errorMesssage = getString(R.string.no_pharmacies_listed);
     }
 
     /**
@@ -445,7 +425,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     /**
      * This function is for initialize Dialogs used in MDLivePharmacyChange Page.
-     * <p/>
+     *
      * Statelist will be displayed using this function.
      */
     private void initializeStateDialog() {
@@ -469,14 +449,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
         });
     }
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        MdliveUtils.movetohome(MDLivePharmacyChange.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
-    }
 
 
     /**
@@ -488,12 +460,12 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(this);
     }
+
     /**
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
     public void onStop() {
         super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

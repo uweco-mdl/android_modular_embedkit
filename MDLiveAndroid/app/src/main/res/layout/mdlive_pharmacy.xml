@@ -16,6 +16,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
+                android:onClick="backImgOnClick"
                 android:background="@drawable/back_arrow_hdpi" />
 
             <ImageView
@@ -24,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
+                android:onClick="homeImgOnClick"
                 android:layout_toRightOf="@+id/backImg"
                 android:background="@drawable/home_icon" />
 
@@ -149,6 +151,7 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/pharm_rounded_green_btn"
                         android:tag="change_pharmacy"
+                        android:onClick="SavContinueBtnOnClick"
                         android:text="@string/use_pharm_txt"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
@@ -162,6 +165,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:stateListAnimator="@null"
+                        android:onClick="changePharmacyButtonOnClick"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/pharm_rounded_blue_btn"
                         android:tag="change_pharmacy"

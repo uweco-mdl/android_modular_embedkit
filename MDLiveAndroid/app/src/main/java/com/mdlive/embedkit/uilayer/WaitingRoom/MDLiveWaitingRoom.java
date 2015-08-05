@@ -1,11 +1,13 @@
 package com.mdlive.embedkit.uilayer.WaitingRoom;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -276,7 +279,52 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
     public void movetohome()
     {
-        MdliveUtils.moveToHomeWithHandler(MDLiveWaitingRoom.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text),handler);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.home_dialog_title));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.home_dialog_text));
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    if(handler!=null){
+                        handler.removeCallbacksAndMessages(null);
+                    }
+                    ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+                    Intent intent = new Intent();
+                    ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                            MdliveUtils.ssoInstance.getparentClassname());
+                    intent.setComponent(cn);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(intent);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alert = alertDialog.create();
+
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
+        alert.show();
     }
 
     @Override

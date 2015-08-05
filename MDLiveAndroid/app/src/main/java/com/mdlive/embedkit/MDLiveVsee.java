@@ -5,15 +5,15 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -39,17 +39,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_vsee);
 
-        /**
-         * This function will handles home button click listener
-         */
-        ImageView homeImage= (ImageView) findViewById(R.id.homeImg);
-        homeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.movetohome(MDLiveVsee.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
-            }
-        });
-
         CONSULTED = false;
         CALL_ENDED = false;
 
@@ -69,6 +58,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
                 @Override
                 public void onNewStatusMessage(String message) {
                     if (message.toLowerCase().contains("password")) {
+                        Log.e("VseeMainActivity", "onNewStatusMessage() called. Invalid/Bad password received !! This should never happen !!");
                         stopUpdatingStatus = true;
                     }
                 }
@@ -89,12 +79,14 @@ public class MDLiveVsee extends MDLiveBaseActivity
             simpleVidManagerReceiver = new VSeeVideoManager.SimpleVSeeVideoManagerReceiver() {
                 @Override
                 public void onRemoveRemoteVideoView(String username, boolean isLast) {
+
+                    Log.e("VSeeMainActivity", "onRemoveRemoteVideoView() got called.");
+
                     if (isLast && !RETURNED && !CALL_ENDED && !isFinishing()) {
                         // video call is over... end the call activity if it is open
                         VSeeServerConnection.instance().logout();
                         VSeeVideoManager.instance().finishVideoActivity();
                         Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         RETURNED = false;
                         i.putExtra("isReturning", true);
                         startActivity(i);
@@ -105,6 +97,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
                 @Override
                 public void onDeclinedCall(String username) {
                     super.onDeclinedCall(username);
+                    Log.d("VSEE","Declined Call");
                     CALL_ENDED = true;
                     Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -136,6 +129,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
         if (!MDLiveVseeApplication.loginCredentialsValid())
         {
+            Toast.makeText(this, "ERROR!\n\n INVALID VSEE CREDENTIALS", Toast.LENGTH_LONG).show();
             return;
         }
         updateLoginState(VSeeServerConnection.instance().getLoginState());
@@ -170,7 +164,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
 			simpleServerConnectionReceiver = null;
 			simpleVidManagerReceiver = null;
             Intent i = new Intent(MDLiveVsee.this, MDLiveSummary.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("isReturning", true);
             startActivity(i);
             finish();

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please create a 6 digit pin."
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode1"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_1"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:onClick="onClickPinBox1" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode2"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_2"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                     />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode3"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_3"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                  />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode4"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_4"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                   />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode5"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_5"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cover_passcode_field_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passCode6"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                    android:textColor="@color/black"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:id="@+id/dumy_passcode_field_6"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="2dp"
+                     />
+            </FrameLayout>
+        </LinearLayout>
+    <EditText
+        android:id="@+id/dumy_field_passcode"
+        android:layout_width="0.1dp"
+        android:layout_height="0dp"
+        android:inputType="numberPassword"
+        android:maxLength="6" />
+</LinearLayout>

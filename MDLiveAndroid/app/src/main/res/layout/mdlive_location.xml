@@ -7,66 +7,33 @@
         style="@style/wagHeaderLinearLayoutStyle"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+           style="@style/HeaderBackImgStyle"
             android:background="@drawable/exit_icon"
-            android:id="@+id/backImg"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/home_icon"
-            android:id="@+id/homeImg"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
-            />
+            android:id="@+id/backImg"/>
+
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/backImg"
-            android:text="Update Location"
+            android:text="@string/updatelocation"
             />
         <TextView
             android:id="@+id/txtApply"
             style = "@style/endHeaderTextViewStyle"
-            android:textColor="@color/white"
-            android:layout_marginLeft="50dp"
-            android:textSize="18sp"
-            android:visibility="visible"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="end|right|center"
-            android:text="APPLY"
+            android:textSize="@dimen/textsize_large"
+            android:text="@string/apply"
             />
     </RelativeLayout>
 
-
-
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/current_loc_txt"
-            android:tag="current_loc_txt"
-            android:drawableLeft="@drawable/location_icon"
-            android:layout_margin="10dp"
-            style="@style/ContinueButtonStyle"
+            style="@style/useCurrentLocationBtnStyle"
             android:id="@+id/currentLocation"
-            android:layout_gravity="center_horizontal"
-            android:paddingLeft="70dip"
-            android:paddingRight="60dip"
         />
-
-
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/scrollview_height"
         android:layout_weight="1"
         >
         <LinearLayout
@@ -75,33 +42,25 @@
 
         <LinearLayout
             style="@style/WagLinearLayoutStyle"
-
-            android:layout_marginStart="19dp"
             android:orientation="vertical">
             <TextView
-                style="@style/common_style_W_Match_M_Match"
-                android:text="Manual Search"
-                android:textColor="@color/black"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:textSize="18sp"
+                style="@style/locationManualSearchStyle"
+                android:text="@string/manual_txt_small"
                 />
             <TextView
-                style="@style/common_style_W_Match_M_Match"
-                android:text="Zip Code"
+                style="@style/locationManualSearchStyle"
+                android:text="@string/zip_code"
                 android:textColor="@color/grey_txt"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="15dp"
-                android:textSize="18sp"
+                android:layout_marginTop="@dimen/manualsearch_margintop"
+                android:layout_marginBottom="@dimen/manualsearch_marginbottom"
+                android:textSize="@dimen/textsize_large"
                 />
             <EditText
                 style="@style/location_edittext"
                 android:singleLine="true"
                 android:imeOptions="actionDone"
-                android:hint=""
                 android:maxLength="10"
-                android:tag="enter_zip"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/manualsearch_margintop"
                 android:inputType="number"
                 android:id="@+id/ZipEditTxt"
                 />
@@ -109,29 +68,24 @@
             </LinearLayout>
         <LinearLayout
             style="@style/WagLinearLayoutStyle"
-            android:layout_marginStart="19dp"
             android:orientation="vertical">
             <TextView
                 style="@style/LocationPlainTxtViewStyle"
-                android:text="Or"
-                android:tag="or"
-
+                android:text="@string/Or"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/textsize_large"
                 />
             <TextView
                 style="@style/LocationBgdTxtViewStyle"
                 android:hint="@string/state_txt"
-                android:tag="state"
                 android:textColor="@color/grey_txt"
-                android:textSize="18sp"
+                android:textSize="@dimen/textsize_large"
                 />
             <TextView
                 style="@style/LocationBgdTxtViewStyle"
-                android:tag="state"
-                android:textSize="18sp"
+                android:textSize="@dimen/textsize_large"
                 android:id="@+id/StateTxt"
-                android:hint="Select State"
+                android:hint="@string/select_stg"
                 android:drawableEnd="@drawable/dropdown_icon"
                 />
             <View style="@style/ViewStyle" />
@@ -141,11 +95,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!--<Button
-        style="@style/ContinueButtonStyle"
-        android:tag="save_btn"
-        android:textAllCaps="false"
-        android:id="@+id/SavContinueBtn" />-->
 </LinearLayout>
     <include
         layout="@layout/custom_progress_dialog"

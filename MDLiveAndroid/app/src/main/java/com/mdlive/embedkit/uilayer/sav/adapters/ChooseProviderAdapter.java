@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -16,19 +15,20 @@ import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
 import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
 import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by sudha_s on 5/15/2015.
+ * This class is used to get the provider count and the provider list.
+ * The view for the provider list has been set over here.
  */
 public class ChooseProviderAdapter extends BaseAdapter {
     ArrayList<HashMap<String, String>> array = new ArrayList<HashMap<String, String>>();
     Context context;
     LayoutInflater inflate;
-    LinearLayout DocOnCalLinLay;
 
     public ChooseProviderAdapter(Context applicationContext,
                                  ArrayList<HashMap<String, String>> arraylist) {
@@ -56,18 +56,19 @@ public class ChooseProviderAdapter extends BaseAdapter {
     /**
      *     The getView Method displays the provider list items.
      *     The datas are fetched from the Arraylist based on the position the dates will be placed
-     *     in the listview.
-     *
+     *     in the listview.If the header response is true the doctor on call will be displayed
+     *     and if the header response returns false then the doctor on call will be
+     *     false.
      *
      */
 
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
-        TextView PatientNmaeTxt,SPecialistTxt,DateTxt;
+        TextView PatientNmaeTxt,SPecialistTxt;
         TextView withPatientTxt;
         final CircularNetworkImageView ProfileImg;
         View row = null;
-        if(array.get(pos).get("isheader").equals("1"))
+        if(array.get(pos).get("isheader").equals(StringConstants.ISHEADER_TRUE))
         {
             if(row==null)
 
@@ -104,34 +105,19 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
 
-             //    This is to Check the availability of the Doctor. If the next availability of doctor
-             //   is available then the time stamp should be  visible else it should be hidden.
-            DateTxt = (TextView) row.findViewById(R.id.Time);
-            try {
-//                if (array.get(pos).get("next_availability") == null || array.get(pos).get("next_availability").equals("0") || array.get(pos).get("next_availability").equalsIgnoreCase("null")) {
-//                    DateTxt.setVisibility(View.GONE);
-//                } else {
-//                    DateTxt.setVisibility(View.VISIBLE);
-//                    DateTxt.setText(array.get(pos).get("next_availability"));
-//                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-             //   This is to Check the availability of the Doctor is through either by phone or video
-             //   if it is through phone calling icon should be visible or if it is either through
-             //   video then the video icon should be visible .
+             /*This is to Check the availability of the Doctor. If the next availability of doctor
+                is available then the time stamp should be  visible else it should be hidden.
+               This is to Check the availability of the Doctor is through either by phone or video
+               if it is through phone calling icon should be visible or if it is either through
+               video then the video icon should be visible .*/
 
             withPatientTxt = (TextView) row.findViewById(R.id.callImg);
 
-            if (array.get(pos).get("availability_type").equalsIgnoreCase("With Patient")) {
+            if (array.get(pos).get("availability_type").equalsIgnoreCase(StringConstants.WITH_PATIENT)) {
                 withPatientTxt.setVisibility(View.VISIBLE);
-                withPatientTxt.setText("With Patient");
-
+                withPatientTxt.setText(StringConstants.WITH_PATIENT);
             }
         }
-
-
 
         return row;
     }

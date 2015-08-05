@@ -35,6 +35,7 @@
     <string name="dollar_Amount49">$49.00</string>
     <string name="rate_consulatation">RATE CONSULTATION</string>
     <string name="done">Done</string>
+    <string name="dollar">$</string>
 
     <!-- sso activity-->
     <string name="dollar_symbol">$</string>
@@ -82,10 +83,11 @@
     <string name="exception_in_thread">Exception in thread</string>
     <string name="CANCEL">CANCEL</string>
     <string name="pharmacy_details_updated">Pharmacy details updated</string>
+    <string name="credit_header">Credit Card</string>
 
 
     <!--pending visits-->
-    <string name="cancel">Cancel</string>
+    <string name="consultation_header">Your Consultation</string>
     <string name="welcome_back">Welcome back!</string>
     <string name="resume_saved_consultation">Please resume your saved consultation to speak to your doctor</string>
     <string name="consultation_info">CONSULTATION INFO</string>
@@ -100,6 +102,8 @@
     <string name="ph_zipcode">ZIP Code</string>
     <string name="ph_or_str">OR</string>
     <string name="ph_Or_str">Or</string>
+    <string name="emptyString"></string>
+
     <!--choose provider-->
     <string name="doctor_on_call">Doctor On Call</string>
     <string name="average_wait">Average Wait: 6 min</string>
@@ -211,8 +215,6 @@
     <string name="find_location_zipcode">Unable to find location by Zipcode.</string>
     <string name="unable_get_location">Unable to get your location!</string>
     <string name="administrative_area_level">administrative_area_level_1</string>
-    <string name="unable_loc_txt">Unable to find location.</string>
-
 
     <!--search provider-->
     <string name="doctor_filters">Doctor Filters</string>
@@ -240,6 +242,7 @@
     <!--Family member-->
     <string name="child_added">Child Added</string>
     <string name="legalparent_guardian">I,{0}, confirm that i\'m the legal parent / guardian of the minor above.</string>
+    <string name="legalparent_guardian_formated">I, %1$s, confirm that I\'m the legal parent / guardian of the minor above.</string>
 
     <!-- VSee video consult -->
     <string name="waiting_room_title">Waiting Room</string>
@@ -299,6 +302,7 @@
     <string name="input_state_zip">Please choose any state/zipcode to proceed search.</string>
     <string name="not_find_pharmacy_zip">Sorry, we could not find {0} in the {1} ZIP Code. Please check the pharmacy ZIP Code or search by city and state.</string>
     <string name="not_find_pharmacy_state">"Sorry, we could not find {0} near {1}, {2}</string>
+    <string name="input_state_city">Please enter a Zipcode or a City and a State.</string>
 
     <!-- My Health -->
     <string name="my_health_txt">Medical History</string>
@@ -318,6 +322,7 @@
     <string name="allergy_already_exist">The allergy you entered is already in your Health History.</string>
     <string name="add_medications_hint">Add Medications</string>
     <string name="add_medication">Add Medications</string>
+    <string name="last_update_txt">Last Updated : </string>
 
     <string name="age_check1">Are you currently or could you possibly be pregnant?</string>
     <string name="age_check2">Are you currently breastfeeding?</string>
@@ -378,6 +383,8 @@
     <string name="immunization_upto_date">Immunization up to date?</string>
     <string name="siblings">Siblings</string>
     <string name="Coming">Coming</string>
+    <string name="AgeUnder2">Patient under 2 years of age</string>
+    <string name="AgeUnder13">Patient under 13 years of age</string>
 
     <!-- Waiting Room -->
 
@@ -563,4 +570,155 @@
     <string name="user_details_missing">Sorry, we are unable to process your information, please try again.</string>
     <string name="home_dialog_text">Your progress will not be saved if you leave.</string>
     <string name="home_dialog_title">Leave [Doctor Consultation]?</string>
+
+    <!--Choose Provider-->
+    <string name="choose_doctor">Choose Doctor</string>
+    <string name="averagewait">Average Wait: ...</string>
+    <string name="seedoctoroncall_btn">See Doctor on Call</string>
+    <string name="chooseotherdoctor">Choose Other Doctor</string>
+    <string name="filter_txt">FILTER</string>
+
+    <string name="email_confirmation_text">E-mail Confirmation Required</string>
+    <string name="email_confirmation_detail_text">
+    MDLIVE requires that users confirm their E-mail addresss before they can use E-mail features.This helps to prevent problems with bad addresses or spam.
+   </string>
+    <string name="dismiss">Dismiss</string>
+    <string name="email_unconfirmed"><u>Your E-mail is currently unconfirmed</u></string>
+    <string name="username_email">Username or Email</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="pin_creation">Pin Creation</string>
+    <string name="talk_to_doctor">Talk to a Doctor</string>
+
+    <string name="fragmentone">This is fragment No.1</string>
+    <string name="fragmenttwo">This is fragment No.2</string>
+    <string name="fragmentthree">This is fragment No.3</string>
+    <string name="title_activity_mdlive_family_history">MDLiveFamilyHistory</string>
+
+    <string name="family_history_back">Back</string>
+    <string name="family_history_title">MDLIVE</string>
+    <string name="family_history_save">Save</string>
+    <string name="my_family_history">MY FAMILY HISTORY</string>
+    <string name="my_family_history_question">Does anyone in your family have a history of the following? (Check all that apply)</string>
+    <string name="my_family_history_checkbox_text">Diabetes</string>
+    <string name="my_family_history_other">Other:</string>
+    <string name="my_family_history_other_add">Add</string>
+
+    <string name="my_family_history_relationship">Select</string>
+    <string-array name="my_family_history_relationship_arrays">
+        <item>Relationship</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_mdlive_lifestyle">MDLiveLifestyleActivity</string>
+
+    <string name="life_style_save">Save</string>
+    <string name="life_style_title">MDLIVE</string>
+    <string name="mylifestyle">MY LIFESTYLE</string>
+    <string name="life_style_height_text">Height</string>
+    <string name="life_style_ft_text">ft</string>
+    <string name="life_style_in_text">in</string>
+    <string name="life_style_weight_text">Weight</string>
+    <string name="life_style_lbs_text">lbs</string>
+    <string name="life_style_bmi_text">BMI</string>
+    <string name="life_style_bmi_value_text">4</string>
+    <string name="life_style_question_text">Do you get at least 7 hours of sleep daily?</string>
+    <string name="title_activity_mdlive_main_two">MDLiveMainTwoActivity</string>
+    <string name="title_activity_mdlive_main_three">MDLiveMainThreeActivity</string>
+
+    <string name="behaviouralhealthhistory">BEHAVIOURAL HEALTH HISTORY</string>
+    <string name="behaviouralhealth_question_one">Have you ever been diagnosed with any of the following conditions?\n (Check all that apply)</string>
+    <string name="behaviouralhealth_question_options_one">Alcohol Dependence</string>
+    <string name="behaviouralhealth_question_two">Have you ever been hospitalized for mental health or substance abuse treatment?</string>
+    <string name="behaviouralhealth_question_three">When?</string>
+    <string name="behaviouralhealth_question_four">For how long?</string>
+    <string name="behaviouralhealth_question_five">Have anyone in your family been diagnosed with any of the following?\n (Check all that appply)</string>
+    <string name="behaviouralhealth_question_six">Has any family member ever been hospitalized for mental health or substance abuse treatment?</string>
+    <string name="behaviouralhealth_question_seven">What is your preference for a counselor?</string>
+    <string name="behaviouralhealthhistory_dummy_date">2015/05/05</string>
+    <string name="behaviouralhealthhistory_dummy_duration">2 months</string>
+
+    <string name="helpandsupport">HELP &amp; SUPPORT</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="help_and_support_title">HELP &amp; SUPPORT</string>
+    <string name="enter_your_question">Enter your question...</string>
+    <string name="symptomchecker_url">https://symptomchecker.mdlive.com/sc/html/index.html?vendorid=sutter</string>
+
+    <string name="imgdesc">imgdesc</string>
+
+    <string-array name="titles">
+        <item>Home</item>
+        <item>Tutorials</item>
+        <item>My Apps</item>
+        <item>OS Versions</item>
+        <item>Tools</item>
+        <item>About Us</item>
+    </string-array>
+
+    <array name="icons">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+    </array>
+    <string name="title_activity_mdlive_behavioural_health">MDLiveBehaviouralHealthActivity</string>
+    <string name="title_activity_help_and_support">HelpAndSupportActivity</string>
+    <string name="title_activity_mdlive_assist">MDLiveAssistActivity</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="title_activity_common">CommonActivity</string>
+    <string name="LifeStyle">LifeStyle</string>
+    <string name="BehaviouralHealth">BehaviouralHealth</string>
+    <string name="FamilyHistory">FamilyHistory</string>
+    <string name="MDLiveAssist">MDLiveAssist</string>
+    <string name="HelpAndSupport">HelpAndSupport</string>
+    <string name="callnumber">18004006354</string>
+    <string name="call_text">"Connect With an MDLIVE Health Service Specialist"</string>
+    <string name="title_activity_sample_list">SampleListActivity</string>
+    <string name="samplelist">SampleList</string>
+    <string name="toolbar">Toolbar</string>
+    <string name="title_activity_toolbar"></string>
+    <string name="toolbarback">Back</string>
+    <string name="call">Call</string>
+    <string name="logodesc">logodesc</string>
+    <string name="navigationdrawer">NavDrawer</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+    <string name="title_activity_navigation_second">NavigationSecondActivity</string>
+    <string name="family_history_spinner_promt">Relationship</string>
+
+    <string-array name="Relationship">
+        <item>Parent</item>
+        <item>Grandparent</item>
+        <item>Sibling</item>
+        <item>Child</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="counseling_preference">
+        <item>Male</item>
+        <item>Female</item>
+        <item>No Preference</item>
+    </string-array>
+
+    <string name="family_history">Family History</string>
+
+    <string name="doneUpperCase">DONE</string>
+    <string name="family_member">Family Members</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_security_questions">Change Security Questions</string>
+    <string name="profile_info">My Profile</string>
+    <string name="change_pin">Change Pin</string>
+    <string name="billing_title">Billing Information</string>
+    <string name="email_confirmation">E-mail Confirmation</string>
+    <string name="join_now">Join Now</string>
+    <string name="sign_up">Login</string>
+    <string name="my_account">My Account</string>
+    <string name="title_activity_spinner_drop_down">SpinnerDropDownActivity</string>
+
+    <string name="spinnerdisplay">SpinnerDisplay</string>
+    <string name="spinnertext">spinnertext</string>
+
+    <string name="create_free_account">Create Free Account</string>
 </resources>

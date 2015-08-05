@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout style="@style/ContainerStyle"
-        android:background="@color/mdliveBottomBlueColor"
-        >
+    <LinearLayout
+        style="@style/ContainerStyle"
+        android:background="@color/mdliveBottomBlueColor">
 
         <LinearLayout
             style="@style/wagHeaderLinearLayoutStyle"
@@ -14,7 +13,7 @@
                 android:id="@+id/backImg"
                 style="@style/HeaderBackImgStyle"
                 android:layout_gravity="center"
-               />
+                android:onClick="onBackClicked" />
 
             <TextView
                 android:id="@+id/headerTxt"
@@ -23,13 +22,14 @@
                 android:text="@string/add_child" />
         </LinearLayout>
 
-        <ScrollView style="@style/ScrollViewStyle"
+        <ScrollView
+            style="@style/ScrollViewStyle"
             android:background="@color/mdliveBottomBlueColor">
 
             <LinearLayout
                 android:id="@+id/providerNameLl"
-                android:background="@color/white"
                 style="@style/LinearLayoutStyle"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <TextView
@@ -38,7 +38,7 @@
                     android:layout_marginLeft="@dimen/headerChildAgeTxt_leftmargin"
                     android:text="@string/child_must_be_younger_than"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/textsize_large"/>
+                    android:textSize="@dimen/textsize_large" />
 
                 <LinearLayout
                     style="@style/WagParentLinearLayoutStyle"
@@ -63,15 +63,17 @@
 
                                 android:id="@+id/patientEt"
                                 style="@style/reasonSearch_edittext"
+                                android:hint="@string/first_name"
                                 android:inputType="textPersonName"
                                 android:textSize="@dimen/textsize_large"
 
                                 />
-                            <View style="@style/ViewStyle"
-                                android:layout_marginTop="@dimen/Linearlayoutt_leftmargin"/>
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/Linearlayoutt_leftmargin" />
 
                         </LinearLayout>
-
 
 
                         <LinearLayout
@@ -87,20 +89,22 @@
                             <EditText
                                 android:id="@+id/patient2Et"
                                 style="@style/reasonSearch_edittext"
+                                android:hint="@string/last_name"
                                 android:inputType="textPersonName"
                                 android:textSize="@dimen/textsize_large" />
 
-                            <View style="@style/ViewStyle"
-                                android:layout_marginTop="@dimen/addChildView_margin"/>
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/addChildView_margin" />
 
                         </LinearLayout>
-
 
 
                         <LinearLayout
                             android:id="@+id/dobLl"
                             style="@style/WagLinearLayoutStyle"
                             android:layout_marginLeft="@dimen/AddChildText_leftmargin"
+                            android:onClick="onDateOfBirthClicked"
                             android:orientation="vertical">
 
                             <TextView
@@ -114,21 +118,23 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/textsize_large" />
                             />
-                            <View style="@style/ViewStyle"
-                                android:layout_marginTop="@dimen/addChildView_margin"/>
-                        </LinearLayout>
 
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/addChildView_margin" />
+                        </LinearLayout>
 
 
                         <LinearLayout
                             android:id="@+id/genderLl"
                             style="@style/WagLinearLayoutStyle"
                             android:layout_marginLeft="@dimen/AddChildText_leftmargin"
+                            android:onClick="onGenderClicked"
                             android:orientation="vertical">
 
                             <TextView
                                 style="@style/GetStartedHeaderContentStyle"
-                                android:text="@string/gender" />
+                                android:text="@string/Gender" />
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -148,8 +154,10 @@
                                     android:src="@drawable/dropdown_icon" />
                             </RelativeLayout>
                             />
-                            <View style="@style/ViewStyle"
-                                android:layout_marginTop="@dimen/addChildView_margin"/>
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/addChildView_margin" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -159,13 +167,13 @@
                             android:layout_marginTop="@dimen/toggleChildView_marginTop"
                             android:orientation="horizontal">
 
-             <android.support.v7.widget.SwitchCompat
-                        style="@style/addChildSwitchStyle"
+                            <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/mySwitch"
+                                style="@style/addChildSwitchStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="4dp"
+                                android:checked="false"
                                 android:gravity="left|center"
                                 android:text="@string/i_michelle_text"
                                 android:textSize="16sp" />
@@ -177,14 +185,15 @@
                 <Button
                     android:id="@+id/addChildBtn"
                     style="@style/ContinueButtonStyle"
-                    android:text="@string/addChildBtn" />
+                    android:onClick="onAddChildButtonClicked"
+                    android:text="@string/add_child" />
 
-                <LinearLayout
-                    style="@style/Mdlive_footer_Style">
-                <include
-                    style="@style/Footer_Style"
-                    android:layout_marginBottom="@dimen/footer_marginBottom"
-                    layout="@layout/mdlive_footer" />
+                <LinearLayout style="@style/Mdlive_footer_Style">
+
+                    <include
+                        style="@style/Footer_Style"
+                        layout="@layout/mdlive_footer"
+                        android:layout_marginBottom="@dimen/footer_marginBottom" />
                 </LinearLayout>
             </LinearLayout>
 

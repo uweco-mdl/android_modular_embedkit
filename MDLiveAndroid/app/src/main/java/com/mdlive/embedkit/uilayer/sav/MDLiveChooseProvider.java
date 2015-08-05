@@ -46,21 +46,20 @@ import java.util.TimeZone;
 
 
 /**
- * Created by sudha_s on 5/12/2015.
+ * This class basically returns the provider list and the doctor on call.The Doctor on call
+ * will be visible only when the response from the service for the Doctor on call is true
+ * and Doctor on call will be hidden when the response is false.
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     private ListView listView;
     private ProgressDialog pDialog;
-    //private ProgressBar progressBar;
-
-
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
     private long StrDate;
     private ArrayList<HashMap<String, String>> ProviderListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
-    private LinearLayout dcotorOnCallHeader,DocOnCalLinLay;
+    private LinearLayout DocOnCalLinLay;
     private RelativeLayout filterMainRl;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
@@ -69,27 +68,27 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider);
-        ProviderListMap = new ArrayList<HashMap<String, String>>();
+        Initailization();
+        ChooseProviderResponseList();
+    }
+    /**
+     *
+     * The initialization of the views was done here.All the labels was defined here and
+     * the click event for the back button and the home button was done here.
+     * On clicking the back button image will be finishing the current Activity
+     * and on clicking the Home button you will be navigated to the SSo Screen with
+     * an alert.     *
+     * **/
+
+    private void Initailization() {
         pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
-//        dcotorOnCallHeader = (LinearLayout)findViewById(R.id.headerLl);
+        ProviderListMap = new  ArrayList<HashMap<String, String>>();
         DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
         filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
-//        filterRl = (RelativeLayout)findViewById(R.id.filterRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
-
-
-        //progressBar = (ProgressBar)findViewById(R.id.progressBar);
         setProgressBar(findViewById(R.id.progressBar));
-
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
-
-        ChooseProviderResponseList();
-        //Todo : This is reference for the Filter Button in Choose provider Adapter
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
 
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +97,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 onBackPressed();
             }
         });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                movetohome();
-            }
-        });
     }
-
+    /**
+     * This function is invoked when the doctor on call returns true from the service.
+     * if the list returns the providers in that case the filter will be added.if there
+     * is no providers then the filter icon will be hidden.
+     *
+     */
     private void doctorOnCallButtonClick() {
         seenextAvailableBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,21 +120,18 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
                     startActivityForResult(intent,1);
                     MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
-
                 }
             });
     }
-
     /**
      *
      * Choose Provider List Details.
-     * Class : UserBasicInfoServices - Service class used to fetch the user basic information
+     * Class : ChooseProviderServices - Service class used to fetch the provider list information.
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
-     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     * Based on the server response the corresponding action will be triggered.
      *
      */
     private void ChooseProviderResponseList() {
-//        pDialog.show();
         setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -149,36 +144,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Log.d("Error Response", error.toString());
-
-//                pDialog.dismiss();
+                Log.d("Error Response", error.toString());
                 setInfoVisibilty();
                 DocOnCalLinLay.setVisibility(View.VISIBLE);
-//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
-//                    if (error.networkResponse == null) {
-//                        if (error.getClass().equals(TimeoutError.class)) {
-//                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    dialog.dismiss();
-//                                }
-//                            };
-//                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
-//                        }
-//                    }
-//                    DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                            MDLiveChooseProvider.this.finish();
-//
-//                        }
-//                    };
-//
-//                    JSONObject obj = new JSONObject(error.toString());
-//                    MdliveUtils.showDialog(MDLiveChooseProvider.this, MDLiveChooseProvider.this.getResources().getString(R.string.app_name), obj.getString("error"), MDLiveChooseProvider.this.getResources().getString(R.string.ok), null, positiveOnclickListener, null);
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
@@ -211,7 +182,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }};
         ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"), "3", successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
     }
     /**
      *
@@ -223,15 +194,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private void handleSuccessResponse(String response) {
         try {
             setInfoVisibilty();
-//            pDialog.dismiss();
             DocOnCalLinLay.setVisibility(View.GONE);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
-            Log.e("Provider Response", response);
             String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
             if(StrDoctorOnCall.equals("false"))
             {
-                Log.e("StrDoctorOnCall-->", StrDoctorOnCall);
                 JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                 if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
                     // Here the Array has "No Providers listed with given criteria" string in response
@@ -248,29 +216,19 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }else {
                     // Here the Array has blank string in response
                     if (responArray.size() > 0) {
-
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.VISIBLE);
                         doctorOnCallButtonClick();
                     } else {
-                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
+                        MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
                         DocOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.GONE);
                     }
-//
                 }
             }
-
             //Setting the Doctor On Call Header
             JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
             if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-//                dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//                filterRl.setVisibility(View.GONE);
                 doctorOnCallButtonClick();
             }else{
                 setHeaderContent(StrDoctorOnCall);
@@ -279,13 +237,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
-
           setListView();
     }
     /**
      *
      *  Set the ListView values.Here the Listview is populated with two list values
-     *   the flag value for the header will ba added for displaying the DoctorOnCall
+     *  the flag value for the header will ba added for displaying the DoctorOnCall
      *  and the doctor's list will be added in the other list.The doctor name and
      *  the speciality will be displayed here
      *
@@ -299,7 +256,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     }
 
     /*
-    * shows or hide list footer/ bottom footer
+    * shows or hide list footer/ bottom footer. This is for the static and the dynamic footer
+    * implementation. If there is no list that is the response is null then the static footer
+    * has been implemented.In case if the list has items then the footer in the listview
+    * has been implemented.
     * */
     public void showOrHideFooter() {
         final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
@@ -314,7 +274,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 listView.addFooterView(footerView, null, false);
             }
         }
-        // If list size is zero then remove the bootm footer & add the list footer
+        // If list size is zero then remove the bottom footer & add the list footer
         else {
             findViewById(R.id.footer).setVisibility(View.VISIBLE);
             if (listView.getFooterViewsCount() > 0) {
@@ -389,7 +349,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     /**
      *
      *  The on Item Click listener for the listview will be displayed .The action for the
-     *  corresponding list item will be triggered.
+     *  corresponding list item will be triggered.The provider id will be saved in the
+     *  preferences for the Further references.
      *
      */
     public void ListItemClickListener()
@@ -397,16 +358,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if(!(position == 0)){
                     Log.e("Provider Id",ProviderListMap.get(position).get("id"));
                     saveDoctorId(ProviderListMap.get(position).get("id"), ProviderListMap.get(position).get("next_availability"),
                             ProviderListMap.get(position).get("name"));
                     Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                     startActivity(Reasonintent);
-                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
-//                }
-
-}
+                    MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
+            }
         });
     }
 
@@ -414,7 +372,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * getDateCurrentTimeZone method will convert the Timestamp to the current
      * Simple Date Format.
      * @param timestamp the timestamp in milli seconds will be passed.
-     * @return
      */
     public  String getDateCurrentTimeZone(long timestamp) {
         try{
@@ -460,8 +417,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode==1){
-//            dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//            doctorOnCallButtonClick();
             String response=data.getStringExtra("Response");
             try{
                 // Clear the ListView
@@ -473,29 +428,17 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 JSONArray jArray=jobj.getJSONArray("physicians");
 
                 if(jArray.toString().contains(StringConstants.NO_PROVIDERS)){
-//                    baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
-//                    listView.setAdapter(baseadapter);
-//                    baseadapter.notifyDataSetChanged();
 
                     DocOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
                     MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, jArray.get(0).toString());
-//                    dcotorOnCallHeader.setVisibility(View.VISIBLE);
-//                    doctorOnCallButtonClick();
-
 
                 }
                 else if(jArray.length()==0)
                 {
-
                     DocOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
+                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
                 }
 
                 else{
@@ -509,14 +452,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         }
     }
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        MdliveUtils.movetohome(MDLiveChooseProvider.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
-    }
 
     /*
     * set visible for the progress bar
@@ -527,7 +462,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         showProgress();
         loadingTxt.setVisibility(View.VISIBLE);
     }
-
     /*
     * set visible for the details view layout
     */
@@ -546,6 +480,5 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

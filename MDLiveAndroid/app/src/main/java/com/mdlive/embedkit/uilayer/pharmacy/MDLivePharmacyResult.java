@@ -1,6 +1,6 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
-import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,10 +8,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -37,7 +38,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -69,30 +70,24 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private RelativeLayout rl_footer;
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
     private HashMap<Marker, Integer> markerIdCollection = new HashMap<Marker, Integer>();
-    private ProgressDialog pDialog;
     private RelativeLayout progressBar;
-    private Bundle bundleToSend = new Bundle();
     private SupportMapFragment mapView;
     private GoogleMap googleMap;
     private ListView pharmList;
     private PharmacyListAdaper adaper;
-//    private ProgressBar loadingIndicator;
     private HashMap<String, Object> keyParams;
     private boolean isPageLimitReached = false, isLoading = false;
-//    boolean isMarkerPointAdded = false;
-    private String errorMesssage ="No Pharmacies listed in your location";
+    private String errorMesssage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
-
         setContentView(R.layout.mdlive_pharmacy_result);
         initializeViews();
         initializeListView();
@@ -108,13 +103,12 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 progressBar.setVisibility(View.GONE);
             }
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == 4000){
+        if(resultCode == RESULT_OK && requestCode == IntegerConstants.PHAMRACY_RESULT_CODE){
             if(data != null){
                 getPharmacySearchResults(getPostBody(data));
             }
@@ -125,26 +119,21 @@ public class MDLivePharmacyResult extends FragmentActivity {
      * This funciton initialize views of activity
      */
     public void initializeViews() {
-        ViewGroup view = (ViewGroup) getWindow().getDecorView();
-        LocalisationHelper.localiseLayout(this, view);
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
         keyParams = new HashMap<String, Object>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-
-
+        errorMesssage = getString(R.string.no_pharmacies_listed);
         ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-                startActivityForResult(i, 4000);
+                startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
         });
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
 
+        // The back image will pull you back to the Previous activity
+        // The home button will pull you back to the Dashboard activity
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,14 +149,11 @@ public class MDLivePharmacyResult extends FragmentActivity {
         });
     }
 
-
    /*
     * This function is mainly focused on initializing view in layout.
     */
     public void initializeListView() {
-
         pharmList = (ListView) findViewById(R.id.pharmList);
-
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -198,7 +184,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
     public void showOrHideFooter() {
         final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.mdlive_footer, null, false);
-
         // If list size is greater than zero then show the bottom footer
         if (list != null && list.size() > 0) {
             findViewById(R.id.footer).setVisibility(View.GONE);
@@ -229,11 +214,9 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
 
     public void getPharmacySearchResults(String postBody) {
-//        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //handleSuccessResponse(response);
                 handleListSuccessResponse(response);
                 resetLoadingViews();
             }
@@ -241,16 +224,12 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-//                infoView.setVisibility(View.VISIBLE);
                 resetLoadingViews();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
             }
         };
-//        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
-//        infoView.setVisibility(View.GONE);
         ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
         services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
     }
@@ -262,32 +241,28 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private void resetLoadingViews() {
         isLoading = false;
         pharmList.setEnabled(true);
-//        loadingIndicator.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
-//        infoView.setVisibility(View.VISIBLE);
     }
 
     /**
      * This adapter is used to display info window when users click on the marker on google map
-     * <p/>
+     *
      * It has a layout to show user when click on marker.
      */
 
     GoogleMap.InfoWindowAdapter markerInfoAdapter = new GoogleMap.InfoWindowAdapter() {
-        // Use default InfoWindow frame
         @Override
         public View getInfoWindow(Marker arg0) {
             View v = getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
-            TextView addressText = (TextView) v.findViewById(R.id.addressText);
             HashMap<String, Object> info = list.get(markerIdCollection.get(arg0));
-            addressText.setText(info.get("store_name") + "\n" +
-                    info.get("address1") + "\n" +
-                    info.get("city") + ", "
-                    + info.get("state") + " "
-                    + info.get("zipcode"));
+            TextView addressline1 = (TextView) v.findViewById(R.id.addressText);
+            TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
+            TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
+            addressline1.setText(info.get("store_name")+"");
+            addressline2.setText(info.get("address1")+"");
+            addressline3.setText(info.get("city")+"  "+(TextUtils.isEmpty(info.get("zipcode")+"") ? "" : MdliveUtils.zipCodeFormat(info.get("zipcode").toString())));
             return v;
         }
-
         @Override
         public View getInfoContents(Marker arg0) {
             return null;
@@ -324,7 +299,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
 
     /**
      * This function is used to handle response which was thrown from getPharmacySearchResults function
-     * <p/>
+     *
      * Parsing json content and updating UI works done here.
      *
      * @param response - response is catched response from getPharmacySearchResults network response
@@ -333,10 +308,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private void handleListSuccessResponse(JSONObject response) {
         JsonObject responObj = null;
         try {
-//            pDialog.dismiss();
             progressBar.setVisibility(View.GONE);
-//            infoView.setVisibility(View.VISIBLE);
-            Log.e("response", response.toString());
             JsonParser parser = new JsonParser();
             responObj = (JsonObject) parser.parse(response.toString());
             int total_pages = responObj.get("total_pages").getAsInt();
@@ -346,8 +318,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
             int pharmacy_id=0;
             double longitude=0, latitude=0;
             boolean twenty_four_hours=false, active=false, is_preferred =false;
-            String store_name="", phone="", address1="", address2="", zipcode="", fax="", city="",
-                    distance="", state="";
+            String store_name="", phone="", address1="", address2="", zipcode="", fax="", city="", distance="", state="";
             // For google map
             googleMap = mapView.getMap();
             LatLng markerPoint = null;
@@ -376,7 +347,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
                     twenty_four_hours = responArray.get(i).getAsJsonObject().get("twenty_four_hours").getAsBoolean();
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "distance"))
                     distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
-
                 try {
                     if(responArray.get(i).getAsJsonObject().has("is_preferred")){
                         if(responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean())
@@ -389,73 +359,50 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
                 try {
                     if (responArray.get(i).getAsJsonObject().get("coordinates").isJsonNull()) {
                         longitude = 0;
                         latitude = 0;
                     } else {
-                        longitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject()
-                                .get("longitude").getAsDouble();
-                        latitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject()
-                                .get("latitude").getAsDouble();
+                        longitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject().get("longitude").getAsDouble();
+                        latitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject().get("latitude").getAsDouble();
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     longitude = 0;
                     latitude = 0;
                 }
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("state", state);
-                map.put("is_preferred", is_preferred);
-                map.put("pharmacy_id", pharmacy_id);
-                map.put("store_name", store_name);
-                map.put("phone", phone);
-                map.put("address1", address1);
-                map.put("active", active);
-                map.put("address2", address2);
-                map.put("zipcode", zipcode);
-                map.put("fax", fax);
-                map.put("longitude", longitude);
-                map.put("latitude", latitude);
-                map.put("city", city);
-                map.put("twenty_four_hours", twenty_four_hours);
-                map.put("distance", distance);
-                map.put("active", active);
-                if (googleMap != null) {
-                    if(store_name.contains("Walgreen")){
-                        markerPoint = new LatLng(latitude, longitude);
-                        Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                                        markerPoint)
-                                        .title(store_name)
-                        );
-                        markerIdCollection.put(marker, i);
-                    }
-                }
-                list.add(map);
+                markerPoint = new LatLng(latitude, longitude);
+                addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
             }
+
             adaper.notifyDataSetChanged();
             showOrHideFooter();
             //For Google map initialize view
-            if (markerPoint != null)
+            if (markerPoint != null && googleMap != null)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        handleJsonDatas(responObj);
+    }
+
+    /**
+     * This function is used to check whether result reached end point or not results found from service
+     * @param responObj - returned JSONObject from service
+     */
+    private void handleJsonDatas(JsonObject responObj) {
         if(responObj.get("total_pages").isJsonNull()){
-//            MdliveUtils.showDialog(MDLivePharmacyResult.this, "", errorMesssage);
             MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
-                    new DialogInterface.OnClickListener(){
+                    new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-                            startActivityForResult(i, 4000);
+                            startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
                             finish();
                             MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
-                            //MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
                         }
                     });
         }
@@ -473,9 +420,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                         if (!isLoading) {
                             pharmList.setEnabled(false);
                             isLoading = true;
-//                            loadingIndicator.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
-//                            infoView.setVisibility(View.GONE);
                             keyParams.put("page", ((int) keyParams.get("page")) + 1);
                             keyParams.put("per_page", 10);
                             Gson gson = new Gson();
@@ -490,14 +435,54 @@ public class MDLivePharmacyResult extends FragmentActivity {
     }
 
     /**
+     * This function is used to add Results content to Hashmap
+     * @param active - describes active pharmacy or not
+     * @param address1 - address line 1 of pharmacy
+     * @param address2 - address line 2 of pharmacy
+     * @param city - city of pharmacy
+     * @param distance - distance of pharmacy
+     * @param fax - fax of pharmacy
+     * @param i - count number of pharmacy
+     * @param is_preferred - is pharmacy preferred
+     * @param latitude - latitude of pharmacy
+     * @param longitude - longitude of pharmacy
+     * @param markerPoint - markerPoint of pharmacy
+     * @param pharmacy_id - pharmacy_id of pharmacy
+     * @param phone - phone of pharmacy
+     * @param state - state of pharmacy
+     * @param store_name - store_name of pharmacy
+     * @param twenty_four_hours - twenty_four_hours of pharmacy
+     * @param zipcode - zipcode of pharmacy
+     */
+    private void addResultsDatasInMap(int pharmacy_id, double longitude, double latitude, boolean twenty_four_hours, boolean active, boolean is_preferred, String store_name, String phone, String address1, String address2, String zipcode, String fax, String city, String distance, String state, LatLng markerPoint, int i) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("state", state);
+        map.put("is_preferred", is_preferred);
+        map.put("pharmacy_id", pharmacy_id);
+        map.put("store_name", store_name);
+        map.put("phone", phone);
+        map.put("address1", address1);
+        map.put("active", active);
+        map.put("address2", address2);
+        map.put("zipcode", zipcode);
+        map.put("fax", fax);
+        map.put("longitude", longitude);
+        map.put("latitude", latitude);
+        map.put("city", city);
+        map.put("twenty_four_hours", twenty_four_hours);
+        map.put("distance", distance);
+        map.put("active", active);
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
+        markerIdCollection.put(marker, i);
+        list.add(map);
+    }
+
+    /**
      * This function has a webservice call of SetPharmacyService
      * While user clicks on the usePharmacy button which will set pharmacy as a user's default.
      */
     public void setPharmacyAsADefault(int pharmacyId) {
-//        pDialog = Utils.getProgressDialog("Please Wait...", MDLivePharmacyResult.this);
-//        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
-//        infoView.setVisibility(View.GONE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -507,37 +492,26 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                /*pDialog.dismiss();*/
                 progressBar.setVisibility(View.GONE);
-//                infoView.setVisibility(View.VISIBLE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
             }
         };
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
         gsonMap.put("pharmacy_id", pharmacyId);
         SetPharmacyService services = new SetPharmacyService(MDLivePharmacyResult.this, null);
         services.doPharmacyResultsRequest(new Gson().toJson(gsonMap), String.valueOf(pharmacyId), responseListener, errorListener);
-               // responseListener, errorListener);
     }
 
     /**
      * This function is handling response of SetPharmacyService which was thrown from
-     * <p/>
+     *
      * function setPharmacyAsADefault()
      */
     private void handleSuccessResponse(JSONObject response) {
         try {
-//            pDialog.dismiss();
             progressBar.setVisibility(View.GONE);
-//            infoView.setVisibility(View.VISIBLE);
-            Log.d("Response", response.toString());
             if (response.getString("message").equals("Pharmacy details updated")) {
                 checkInsuranceEligibility();
-                /*Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -553,14 +527,11 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
 
     public void checkInsuranceEligibility(){
-//        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                Log.e("Zero Dollar Insurance", response.toString());
                 try{
                     JSONObject jobj=new JSONObject(response.toString());
                     if(jobj.has("final_amount")){
@@ -586,23 +557,26 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
             }
         };
-        PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,pDialog);
+        PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,null);
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(),successListener,errorListener);
     }
 
+    /**
+     * This function is used to get post body content for Check Insurance Eligibility
+     * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
+     */
     public String formPostInsuranceParams(){
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String,String> insuranceMap=new HashMap<>();
         insuranceMap.put("appointment_method","1");
-        insuranceMap.put("provider_id",settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot","Now");
         insuranceMap.put("provider_type_id","3");
-        insuranceMap.put("state_id",settings.getString(PreferenceConstants.LOCATION,"FL"));
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
     }
 
@@ -614,13 +588,11 @@ public class MDLivePharmacyResult extends FragmentActivity {
      *
      */
     private void doConfirmAppointment() {
-//        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-//                    pDialog.dismiss();
                     progressBar.setVisibility(View.GONE);
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
@@ -640,56 +612,26 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 }
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, pDialog);
-                /*if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        Utils.connectionTimeoutError(pDialog, MDLivePharmacyResult.this);
-                    }
-                }*/
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
             }
         };
-
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-
         HashMap<String, Object> params = new HashMap<String, Object>();
-
         params.put("appointment_method", "1");
         params.put("do_you_have_primary_care_physician","No");
-        // params.put("phys_availability_id", null);
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
-        Log.e("ConfirmAPPT Params",params.toString());
-
-
-      /*  params.put("appointment_method", "1");
-        params.put("phys_availability_id", null);
-        params.put("timeslot", "Now");
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", "Not Sure");
-        params.put("state_id", "FL");
-        params.put("customer_call_in_number", "9068906789");
-        params.put("chief_complaint_reasons", null);
-        params.put("alternate_visit_option", "alternate_visit_option");
-        params.put("do_you_have_primary_care_physician", "No");*/
+        Log.e("ConfirmAPPT Params", params.toString());
         Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, pDialog);
+        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
@@ -700,7 +642,49 @@ public class MDLivePharmacyResult extends FragmentActivity {
      */
     public void movetohome()
     {
-        MdliveUtils.movetohome(MDLivePharmacyResult.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.home_dialog_title));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.home_dialog_text));
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    Intent intent = new Intent();
+                    ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                            MdliveUtils.ssoInstance.getparentClassname());
+                    intent.setComponent(cn);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(intent);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alert = alertDialog.create();
+
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
+        alert.show();
     }
 
     /**
@@ -718,6 +702,5 @@ public class MDLivePharmacyResult extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

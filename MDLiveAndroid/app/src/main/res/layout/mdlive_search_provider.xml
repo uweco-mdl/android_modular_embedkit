@@ -8,41 +8,22 @@
         style="@style/wagHeaderLinearLayoutStyle"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+         style="@style/HeaderBackImgStyle"
             android:background="@drawable/exit_icon"
             android:id="@+id/backImg"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="19dp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/home_icon"
-            android:id="@+id/homeImg"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/backImg"
             />
+
         <TextView
             android:id="@+id/headerTxt"
             style = "@style/HeaderTextViewStyle"
-            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/backImg"
-            android:text="Doctor Filters"
+            android:text="@string/doctor_filters"
             />
         <TextView
-            android:id="@+id/doneTxt"
+           android:onClick="doneAction"
             style = "@style/endHeaderTextViewStyle"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:layout_gravity="center"
-            android:gravity="end|right"
-            android:text="DONE"
+            android:textSize="@dimen/textsize_large"
+            android:text="@string/doneUpperCase"
             />
     </RelativeLayout>
     <ScrollView style="@style/ScrollViewStyle"
@@ -53,137 +34,135 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-
                <LinearLayout
                 android:orientation="vertical"
                 style="@style/WagProviderProfileLinearLayoutStyle"
                 android:id="@+id/providerNameLl">
                 <TextView
                     style = "@style/ProviderSearchAvailableTxtStyle"
-                    android:text="Provider Name"
+                    android:text="@string/provider_name"
                     android:textColor="@color/grey_txt"/>
                     />
                    <EditText
                        style = "@style/ProviderSearchAvailableTxtStyle"
-                       android:textColor="@color/black"
                        android:maxLength="50"
-                       android:background="@null"
                        android:id="@+id/edt_searchProvider" />
                    <View style="@style/ProviderSearchViewStyle"
-                       android:layout_marginTop="5dp"
+                       android:layout_marginTop="@dimen/manualsearch_margintop"
                   />
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:id="@+id/providertypeLl">
+                    android:onClick="providerTypeAction"
+                    >
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Provider type"                 />
+                        android:text="@string/providerTypeTxt"/>
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:text="@string/any"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:textColor="@color/black"
                         android:id="@+id/ProviderTypeTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/manualsearch_margintop"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
                     android:visibility="gone"
-                    android:id="@+id/sortbyLl">
+                  android:onClick="sortByAction">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Sort by"                 />
+                        android:text="@string/sort_by" />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
+                        android:text="@string/any"
                         android:textColor="@color/black"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:id="@+id/SortbyTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/manualsearch_margintop"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:id="@+id/specialityLl">
+                   android:onClick="specialityAction">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Speciality"                 />
+                        android:text="@string/speciality"/>
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
+                        android:text="@string/any"
                         android:textColor="@color/black"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:id="@+id/SpecialityTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/manualsearch_margintop"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:id="@+id/locLl">
+                  android:onClick="locationAction">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Located in"                 />
+                        android:text="@string/located_in" />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:text="@string/select_stg"
                         android:textColor="@color/black"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:id="@+id/LocatioTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/manualsearch_margintop"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:id="@+id/speaksLl">
+                    android:onClick="speaksAction">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Speaks"
+                        android:text="@string/Speaks"
                         android:textColor="@color/grey_txt"/>
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
+                        android:text="@string/any"
                         android:textColor="@color/black"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:id="@+id/SpeaksTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/manualsearch_margintop"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
-                    android:paddingBottom="15dp"
-                    android:id="@+id/genderLl"
+                    android:paddingBottom="@dimen/manualsearch_marginbottom"
+                    android:onClick="genderAction"
                     >
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Gender"
+                        android:text="@string/gender"
                         android:textColor="@color/grey_txt"/>
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
+                        android:text="@string/any"
                         android:textColor="@color/black"
-                        android:drawableEnd="@drawable/dropdown_icon"
+                        android:drawableRight="@drawable/dropdown_icon"
                         android:id="@+id/GenderTxtView" />
                     <View style="@style/ProviderSearchViewStyle"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/manualsearch_margintop"
                         android:visibility="gone"
                        />
                 </LinearLayout>
@@ -193,14 +172,15 @@
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
                     android:id="@+id/availableLl"
+                    android:onClick="availbleAction"
                     android:visibility="gone">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Available by"                 />
+                        android:text="@string/available_by"                 />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="Any"
+                        android:text="@string/any"
                         android:textColor="@color/black"
                         android:id="@+id/AvailableTxtView" />
                     <View style="@style/ProviderSearchViewStyle" />
@@ -211,26 +191,21 @@
                     android:orientation="vertical"
                     style="@style/WagProviderProfileLinearLayoutStyle"
                     android:visibility="gone"
+                    android:onClick="appointmentAction"
                     android:id="@+id/appointmentLl">
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
                         android:textColor="@color/grey_txt"
-                        android:text="Appointment date"                 />
+                        android:text="@string/txt_appointment_date" />
                     <TextView
                         style = "@style/ProviderSearchAvailableTxtStyle"
-                        android:text="May 13, 2015"
+                        android:text="@string/appointment_date"
                         android:textColor="@color/black"
                         android:id="@+id/DateTxtView" />
                 </LinearLayout>
                 <View style="@style/ProviderSearchViewStyle" />
             </LinearLayout>
     </ScrollView>
-    <Button
-        android:id="@+id/SearchBtn"
-        style="@style/ContinueButtonStyle"
-        android:text="Search"
-        android:visibility="gone"
-        android:textAllCaps="false" />
 
 </LinearLayout>    <include
         layout="@layout/custom_progress_dialog"

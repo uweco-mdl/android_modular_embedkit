@@ -1,11 +1,13 @@
 package com.mdlive.embedkit.uilayer;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 import com.mdlive.embedkit.R;
@@ -20,32 +22,11 @@ public class MDLiveBaseActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            setTranslucentStatus(true);
-//
-//            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//            tintManager.setStatusBarTintEnabled(true);
-//            tintManager.setStatusBarTintResource(R.color.status_bar_color);
-//        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     @Override
@@ -73,8 +54,53 @@ public class MDLiveBaseActivity extends Activity {
         }
     }
 
-    public void movetohome() {
+    /*
+    * Method which clears the task & starts launcher activity
+    * */
+    public void movetohome(View view) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.home_dialog_title));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.home_dialog_text));
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    Intent intent = new Intent();
+                    ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
+                            MdliveUtils.ssoInstance.getparentClassname());
+                    intent.setComponent(cn);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(intent);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alert = alertDialog.create();
+
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
+        alert.show();
     }
 
     @Override

@@ -13,7 +13,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="19dp"
+                android:layout_marginLeft="19dp"
                 android:background="@drawable/back_arrow_hdpi" />
 
             <ImageView
@@ -22,13 +22,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
-                android:layout_toEndOf="@+id/backImg"
+                android:layout_toRightOf="@+id/backImg"
+                android:onClick="movetohome"
                 android:background="@drawable/home_icon" />
 
             <TextView
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
-                android:text="Billing Information" />
+                android:text="@string/billing_info" />
         </LinearLayout>
 
         <ScrollView
@@ -40,6 +41,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:orientation="vertical"
                 android:background="@color/white">
                 <LinearLayout
@@ -51,14 +53,14 @@
                 <TextView
                     android:id="@+id/ageTxt"
                     style="@style/Pediatric_TextStyle"
-                    android:text="Credit Card"
+                    android:text="@string/credit_header"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium" />
 
                 <TextView
                     style="@style/Pediatric_TextStyle"
-                    android:text="Your credit card will only be used for the\nconsultation cost and will be charged after your consultation."
+                    android:text="@string/payment_credit_card"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 </LinearLayout>
@@ -78,7 +80,7 @@
                         android:id="@+id/txtexpDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Expiration Date"
+                        android:text="@string/expiration_date"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
                         android:textSize="16sp" />
@@ -89,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:editable="false"
-                        android:hint="mm/yy"
+                        android:hint="@string/mm_yy"
                         android:maxLines="1"
                         android:textColor="@color/black"
                         android:textSize="17sp"
@@ -109,7 +111,7 @@
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ZIP Code"
+                        android:text="@string/zip_code"
                         android:layout_marginTop="5dp"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/grey_txt"
@@ -166,11 +168,11 @@
                         >
 
                         <TextView
-                            android:id="@+id/ApplyOfferCode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:text="Apply Offer Code"
+                            android:text="@string/apply_offer_code"
+                            android:onClick="applyOfferCode"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/mdlivePrimaryBlueColor"
                             android:textSize="18sp" />
@@ -208,6 +210,7 @@
                         <Button
                             android:id="@+id/paynow"
                             style="@style/ContinueButtonStyle"
+                            android:onClick="payNow"
                             android:text="@string/next_btn"
                              />
                     </RelativeLayout>

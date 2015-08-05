@@ -11,6 +11,7 @@
 
     <color name="black">#35393d</color>
     <color name="darkblack">#000000</color>
+    <color name="withPatient">#F18032</color>
 
     <color name="white">#ffffff</color>
     <color name="grey_txt">#b4b9bd</color>
@@ -51,4 +52,7 @@
 
     <!-- STATUS BAR COLOR -->
     <color name="status_bar_color">#224D70</color>
+
+    <color name="lightgray">#D3D3D3</color>
+    <color name="steelblue">#4682B4</color>
 </resources>

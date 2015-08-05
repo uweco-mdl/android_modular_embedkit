@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
+                android:onClick="movetohome"
                 android:layout_toEndOf="@+id/backImg"
                 android:background="@drawable/home_icon" />
 
@@ -48,6 +49,7 @@
         <ScrollView
             android:id="@+id/ContainerScrollView"
             style="@style/ScrollViewStyle"
+            android:layout_marginBottom="12dp"
             android:background="@color/mdliveBottomBlueColor"
             android:fillViewport="false">
 
@@ -233,6 +235,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -313,6 +316,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -396,6 +400,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="EDIT"
                         android:textColor="@color/green" />
 
@@ -552,7 +557,6 @@
                 <Button
                     android:id="@+id/SavContinueBtn"
                     style="@style/MedicalContinueButtonStyle"
-                    android:layout_marginTop="@dimen/med_nextbtn_top"
                     android:text="@string/next_btn" />
             <LinearLayout
                 android:layout_width="match_parent"

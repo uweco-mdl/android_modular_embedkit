@@ -13,7 +13,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,7 +56,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
-    //private RelativeLayout progressBar;
     private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
     private LinearLayout genderll,dobLl;
     private DatePickerDialog datePickerDialog;
@@ -75,6 +73,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
             userInfoJSONString = getIntent().getExtras().getString("user_info");
         }
+
+        pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
         lastNameEditText = (EditText) findViewById(R.id.patient2Et);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
@@ -82,22 +82,9 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         genderll = (LinearLayout) findViewById(R.id.genderLl);
         dobLl = (LinearLayout) findViewById(R.id.dobLl);
         addChildBtn = (Button)findViewById(R.id.addChildBtn);
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
         getDateOfBirth();
         GetCurrentDate((TextView) findViewById(R.id.dobTxt));
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
-
-        (findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
-                onBackPressed();
-            }
-        });
 
         firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,95 +120,15 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             }
         });
 
-
-        //Add child btn
-        addChildBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                        firstNameEditTextValue = firstNameEditText.getText().toString().trim();
-                        lastNameEditTextValue = lastNameEditText.getText().toString().trim();
-                        if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
-                                && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
-                            if(checkPerdiatricAge()){
-                                HashMap<String, HashMap<String, String>> map = new HashMap<>();
-                                HashMap params = new HashMap();
-                                params.put("computer", "Mac");
-                                array.put("camera", params);
-
-                                JSONObject userObject = null;
-
-                                try {
-
-                                    userObject = new JSONObject(userInfoJSONString);
-                                } catch (Exception e) {
-                                    Log.d("MDLivveFamilymember", "Exception : " + e.getMessage());
-                                    return;
-                                }
-
-
-                                HashMap params1 = new HashMap();
-                                //params1.put("username", firstNameEditTextValue);
-                                params1.put("first_name", firstNameEditTextValue);
-                                params1.put("middle_name", "");
-                                params1.put("last_name", lastNameEditTextValue);
-                                params1.put("gender", strGender);
-                                params1.put("email", userObject.optString("email"));
-                                params1.put("phone", userObject.optString("phone"));
-                                params1.put("address1", userObject.optString("address1"));
-                                params1.put("address2", userObject.optString("address2"));
-                                params1.put("work_phone", "");
-                                params1.put("fax", "");
-                                params1.put("city", userObject.optString("city"));
-                                params1.put("state_id", userObject.optString("state"));
-                                params1.put("zip", userObject.optString("zipcode"));
-                                params1.put("birthdate", strDate);
-                                params1.put("answer", "");
-
-                                array.put("member", params1);
-
-                                PostDependentServices();
-                            }else{
-                                MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.age_error_message));
-                            }
-
-                        } else {
-                            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
-                        }
-
-            }
-        });
-
-
-
-        //Gender
-        genderll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(GenderList.size() == 0){
-                    GenderList.add("Male");
-                    GenderList.add("Female");
-                }
-                showListViewDialog(GenderList,(TextView)findViewById(R.id.genderTxt));
-            }
-        });
-
-        //Date of Birth
-        dobLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
-
         mySwitch = (SwitchCompat) findViewById(R.id.mySwitch);
-        //set the switch to ON
+        //set the switch to OFF
         mySwitch.setChecked(false);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        Log.e("Patient Name",sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
-        mySwitch.setText("I, "+sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")+", confirm that I'm the legal parent / guardian of the minor above.");
+
+        mySwitch.setText(getString(R.string.legalparent_guardian_formated, sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")));
+
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
@@ -234,7 +141,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             }
         });
 
-//        //check the current state before we display the screen
+        //check the current state before we display the screen
         if(mySwitch.isChecked()) {
             isAllFieldsfilled = true;
         }
@@ -245,8 +152,87 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         ValidateModuleFields();
     }
 
+    /*
+    * Event for Add Child button click
+    * */
+    public void onAddChildButtonClicked(View view) {
+        firstNameEditTextValue = firstNameEditText.getText().toString().trim();
+        lastNameEditTextValue = lastNameEditText.getText().toString().trim();
+        if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
+                && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
+            if(checkPerdiatricAge()){
+                HashMap<String, HashMap<String, String>> map = new HashMap<>();
+                HashMap params = new HashMap();
+                params.put("computer", "Mac");
+                array.put("camera", params);
+
+                JSONObject userObject = null;
+
+                try {
+
+                    userObject = new JSONObject(userInfoJSONString);
+                } catch (Exception e) {
+                    return;
+                }
+
+
+                HashMap params1 = new HashMap();
+                //params1.put("username", firstNameEditTextValue);
+                params1.put("first_name", firstNameEditTextValue);
+                params1.put("middle_name", "");
+                params1.put("last_name", lastNameEditTextValue);
+                params1.put("gender", strGender);
+                params1.put("email", userObject.optString("email"));
+                params1.put("phone", userObject.optString("phone"));
+                params1.put("address1", userObject.optString("address1"));
+                params1.put("address2", userObject.optString("address2"));
+                params1.put("work_phone", "");
+                params1.put("fax", "");
+                params1.put("city", userObject.optString("city"));
+                params1.put("state_id", userObject.optString("state"));
+                params1.put("zip", userObject.optString("zipcode"));
+                params1.put("birthdate", strDate);
+                params1.put("answer", "");
+
+                array.put("member", params1);
+
+                PostDependentServices();
+            }else{
+                MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.age_error_message));
+            }
+
+        } else {
+            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
+        }
+    }
+
+    /*
+    * Event for on screen back button click
+    * */
+    public void onBackClicked(View view) {
+        MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
+        onBackPressed();
+    }
+
+    /*
+    * Event for gender click
+    * */
+    public void onGenderClicked(View view) {
+        if(GenderList.size() == 0){
+            GenderList.add("Male");
+            GenderList.add("Female");
+        }
+        showListViewDialog(GenderList, (TextView) findViewById(R.id.genderTxt));
+    }
+
+    /*
+    * Event for Date of Birth click
+    * */
+    public void onDateOfBirthClicked(View view) {
+        datePickerDialog.show();
+    }
+
     public boolean checkPerdiatricAge(){
-        Log.e("strDate", strDate);
         if(calculteAgeFromPrefs(strDate)<18){
             return true;
         }
@@ -316,7 +302,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Respone AddChild", response.toString());
                 Intent data = new Intent();
                 setResult(Activity.RESULT_OK, data);
                 finish();
@@ -326,24 +311,9 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Error Response", error.toString());
                 hideProgress();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(MDLiveFamilymember.this,error,pDialog);
-                   /* if (error.networkResponse == null) {
-                        if (error.getClass().equals(TimeoutError.class)) {
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            };
-                            // Show timeout error message
-                            MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilymember.this);
-                        }
-                    }else
-                    {
-                        MdliveUtils.alert(pDialog, MDLiveFamilymember.this, error.toString());
-                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -443,14 +413,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
                 ValidateModuleFields();
             }
         });
-    }
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        MdliveUtils.movetohome(MDLiveFamilymember.this, getString(R.string.home_dialog_title), getString(R.string.home_dialog_text));
     }
 
     /**

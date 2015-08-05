@@ -16,12 +16,14 @@
                 android:id="@+id/homeImg"
               style="@style/HeaderHomeImgStyle"
                 android:layout_toRightOf="@+id/backImg"
+                android:onClick="movetohome"
                />
 
             <TextView
                 android:id="@+id/headerTxt"
                 style="@style/HeaderTextViewStyle"
                 android:text="@string/get_started">
+
             </TextView>
         </RelativeLayout>
 
@@ -35,16 +37,18 @@
 
                 <LinearLayout
                     style="@style/WagParentLinearLayoutStyle"
+                    android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/patientLl"
                         style="@style/WagLinearLayoutStyle"
+
                         android:orientation="vertical">
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="Patient Name" />
+                            android:text="@string/patient_name" />
 
                     </LinearLayout>
 
@@ -67,12 +71,12 @@
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/dateOfBirth" />
+                            android:text="@string/date_of_birth" />
 
                         <TextView
                             android:id="@+id/dobTxt"
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/dateformat"
+                            android:text="@string/date_of_birth_hint"
                             android:textColor="@color/mdliveLoginUsernameColor"
                             android:textSize="18sp" />
 
@@ -81,7 +85,6 @@
                             android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
 
-
                     <LinearLayout
                         android:id="@+id/genderLl"
                         style="@style/WagLinearLayoutStyle"
@@ -89,7 +92,7 @@
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/gender" />
+                            android:text="@string/Gender" />
 
                         <TextView
                             android:id="@+id/txt_gender"
@@ -103,8 +106,8 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/locationLl"
                         style="@style/WagLinearLayoutStyle"
+                        android:onClick="goToLocation"
                         android:orientation="vertical">
 
                         <TextView
@@ -127,7 +130,6 @@
 
                             <ImageView
                                 android:id="@+id/rightimg"
-                                android:background="@drawable/dropdown_icon"
                                style="@style/locationimgStyle" />
 
                         </RelativeLayout>
@@ -153,11 +155,11 @@
                             android:inputType="number"
                             android:maxLength="12"
                             android:textColor="@color/black"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <View
                             style="@style/ViewStyle"
-                            android:layout_marginTop="@dimen/view_margin"/>
+                            android:layout_marginTop="@dimen/view_margin" />
                     </LinearLayout>
 
                     <TextView
@@ -169,9 +171,9 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/SavContinueBtn"
                     style="@style/ContinueButtonStyle"
                     android:layout_marginBottom="0dp"
+                    android:onClick="nextBtnAction"
                     android:text="@string/next_btn" />
 
                 <LinearLayout
@@ -183,6 +185,9 @@
 
             </LinearLayout>
         </ScrollView>
+
+
     </LinearLayout>
+
     <include layout="@layout/custom_progress_dialog" />
 </merge>

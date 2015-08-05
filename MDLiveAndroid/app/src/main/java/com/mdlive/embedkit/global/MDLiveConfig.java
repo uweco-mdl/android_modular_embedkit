@@ -21,7 +21,6 @@ public class MDLiveConfig {
     public static final String URL_REASON_FOR_VISIT = "/support/chief_complaint_reasons";
     public static final String URL_ZIPCODE = "/providers/search_providers";
     public static final String URL_PROVIDER_DETAILS ="/providers/";
-    public static final String URL_LIFE_STYLE = "/life_style_conditions ";
     public static final String URL_PEDIATRIC_PROFILE = "/medical_histories/pediatric_profile";
 
     private static final String UPLOAD_MEDICALREPORT = "/customer/upload_document";
@@ -69,10 +68,43 @@ public class MDLiveConfig {
     private static final String URL_RATINGS = "/ratings";
     private static final String URL_ZERO_INSURANCE = "/customer/check_eligibility";
     private static final String LOCATION_SERVICE = "/geolocations/find_location_by_coordinates?";
+    private static final String ADD_CHILD = "/customer/1/add_family_member";
 
-    static {
-        System.loadLibrary("app");
-    }
+    private static final String URL_CHANGE_PASSWORD = "/customer/change_password";
+    private static final String URL_CHANGE_PIN = "/pass_codes/update";
+    public static final String URL_CREATE_PIN = "/pass_codes";
+    private static final String URL_SECURITY_QUESTION = "/support/security_questions";
+    private static final String URL_UPDATE_SECURITY_QUESTIONS = "/customer/update_security_questions";
+    private static final String URL_PROFILE_INFO = "/customer/:id";
+    private static final String URL_ADD_CREDIT_CARD_INFO = "/billing_informations";
+    private static final String URL_GET_CREDIT_CARD_INFO = "/billing_informations/1";
+    private static final String URL_ADD_FAMILY_INFO = "/customer/1/add_family_member";
+    private static final String URL_GET_FAMILY_MEMBER_INFO = "/customer/family_members";
+    private static final String URL_EDIT_PROFILE_INFO = "/customer/3";
+
+    // URLS for MESSAGE CENTER section
+    private static final String URL_GET_RECEIVED_MESSAGES = "/messages/received_messages";
+    private static final String URL_GET_SENT_MESSAGES = "/messages/sent_messages";
+    private static final String URL_PROVIDER = "/providers";
+    private static final String URL_COMPOSE_MESSAGE = "/messages";
+    private static final String URL_MY_RECORDS = "/customer/records";
+    private static final String URL_UPLOAD_DOCUMENT = "/customer/upload_document";
+
+    // URLS for BEHAVIOURAL section
+    public static final String URL_BEHAVIOURAL_HISTORY = "/behavioral_histories";
+    public static final String URL_UPDATE_BEHAVIOURAL_HISTORY = "/behavioral_histories/update_behavioral_history ";
+
+    // URLS for LIFE STYLE section
+    public static final String URL_LIFE_STYLE = "/life_style_conditions ";
+    public static final String URL_UPDATE_LIFE_STYLE = "/life_style_conditions/update_life_style_conditions ";
+
+    // URLS for HELP SUPPORT section
+    public static final String URL_HELP_AND_SUPPORT = "/support/faqs";
+    public static final String URL_ASK_A_QUESTION = "/messages/send_support_message";
+
+    // URLS for FAMILY HISTORY section
+    public static final String URL_FAMILY_HISTORY = "/family_histories";
+    public static final String URL_UPDATE_FAMILY_HISTORY = "/family_histories/update_family_histories";
 
     public static void setData(int currentEnvironment){
         switch (currentEnvironment){
@@ -93,12 +125,13 @@ public class MDLiveConfig {
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
+
                 break;
             case 4:
                 // Production environment
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
-                AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
+                AppSpecificConfig.API_KEY = "";
+                AppSpecificConfig.SECRET_KEY = "";
                 break;
             case 5:
                 // QA Pluto URL
@@ -162,8 +195,59 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_ZERO_INSURANCE = URL_ZERO_INSURANCE;
         AppSpecificConfig.SSO_SERVICE = SSO_SERVICE;
         AppSpecificConfig.LOCATION_SERVICE = LOCATION_SERVICE;
-    }
+        AppSpecificConfig.ADD_CHILD = ADD_CHILD;
 
-    static native String getProdApiKeyFromNative();
-    static native String getProdSecretKeyFromNative();
+        AppSpecificConfig.URL_CHANGE_PASSWORD=URL_CHANGE_PASSWORD;
+        AppSpecificConfig.URL_CHANGE_PIN=URL_CHANGE_PIN;
+        AppSpecificConfig.URL_CREATE_PIN = URL_CREATE_PIN;
+        AppSpecificConfig.URL_SECURITY_QUESTION=URL_SECURITY_QUESTION;
+        AppSpecificConfig.URL_UPDATE_SECURITY_QUESTIONS=URL_UPDATE_SECURITY_QUESTIONS;
+        AppSpecificConfig.URL_PROFILE_INFO=URL_PROFILE_INFO;
+
+        AppSpecificConfig.URL_GET_RECEIVED_MESSAGES = URL_GET_RECEIVED_MESSAGES;
+        AppSpecificConfig.URL_GET_SENT_MESSAGES = URL_GET_SENT_MESSAGES;
+        AppSpecificConfig.URL_PROVIDER = URL_PROVIDER;
+        AppSpecificConfig.URL_COMPOSE_MESSAGE = URL_COMPOSE_MESSAGE;
+        AppSpecificConfig.URL_MY_RECORDS = URL_MY_RECORDS;
+        AppSpecificConfig.URL_UPLOAD_DOCUMENT = URL_UPLOAD_DOCUMENT;
+        AppSpecificConfig.URL_ADD_CREDIT_CARD_INFO=URL_ADD_CREDIT_CARD_INFO;
+        AppSpecificConfig.URL_GET_CREDIT_CARD_INFO=URL_GET_CREDIT_CARD_INFO;
+        AppSpecificConfig.URL_ADD_FAMILY_INFO=URL_ADD_FAMILY_INFO;
+        AppSpecificConfig.URL_GET_FAMILY_MEMBER_INFO=URL_GET_FAMILY_MEMBER_INFO;
+        AppSpecificConfig.URL_EDIT_PROFILE_INFO=URL_EDIT_PROFILE_INFO;
+
+
+        AppSpecificConfig.URL_LIFE_STYLE = URL_LIFE_STYLE;
+        AppSpecificConfig.URL_UPDATE_LIFE_STYLE = URL_UPDATE_LIFE_STYLE;
+
+        AppSpecificConfig.URL_HELP_AND_SUPPORT = URL_HELP_AND_SUPPORT;
+        AppSpecificConfig.URL_ASK_A_QUESTION = URL_ASK_A_QUESTION;
+
+        AppSpecificConfig.URL_FAMILY_HISTORY = URL_FAMILY_HISTORY;
+        AppSpecificConfig.URL_UPDATE_FAMILY_HISTORY = URL_UPDATE_FAMILY_HISTORY;
+
+        AppSpecificConfig.URL_BEHAVIOURAL_HISTORY = URL_BEHAVIOURAL_HISTORY;
+        AppSpecificConfig.URL_UPDATE_BEHAVIOURAL_HISTORY = URL_UPDATE_BEHAVIOURAL_HISTORY;
+    }
+    /*
+    private static final String BASE_URL = "https://stage-members.mdlive.com/services";
+    private static final String LOGIN_SERVICES = "/customer_logins";
+    public static final String URL_USER_INFORMATION = "/customer/:id";
+    public static final String URL_PROVIDER_TYPE = "/providers/provider_type_list";
+    public static final String URL_FAMILY_MEMBER = "/customer/family_members";
+    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
+    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
+    private static final String DEFAULT_USER_ID = "MobileUser";
+
+    public static void setData(){
+
+        AppSpecificConfig.BASE_URL = BASE_URL;
+        AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;
+        AppSpecificConfig.API_KEY = MDLIVE_API_KEY;
+        AppSpecificConfig.SECRET_KEY = MDLIVE_SECRET_KEY;
+        AppSpecificConfig.DEFAULT_USER_ID = DEFAULT_USER_ID;
+        AppSpecificConfig.URL_USER_INFORMATION = URL_USER_INFORMATION;
+        AppSpecificConfig.URL_FAMILY_MEMBER = URL_FAMILY_MEMBER;
+        AppSpecificConfig.URL_PROVIDER_TYPE = URL_PROVIDER_TYPE;
+    }*/
 }

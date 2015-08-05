@@ -26,6 +26,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/backImg"
+                android:onClick="movetohome"
                 android:background="@drawable/home_icon" />
 
             <LinearLayout
@@ -143,7 +144,7 @@
                         android:id="@+id/txt_dietTypeHeader"
                         android:background="#ffffff"
                         android:layout_marginTop="5dp"
-                        android:text="Current Diet"
+                        android:text="@string/pediatric_diet_text"
                         style="@style/Pediatric_Weight_text_style" />
 
                     <TextView

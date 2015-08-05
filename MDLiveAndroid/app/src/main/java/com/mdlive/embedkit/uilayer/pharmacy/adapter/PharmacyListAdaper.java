@@ -15,18 +15,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by srinivasan_ka on 5/6/2015.
+ * This adapter is used to display pharmacy search results contents.
+ *
+ * Every list item is inflating layout mdlive_pharm_custom_pharmacy_searchlist_view.
+ *
+ * Custom layout initialization will be take part at getView() method
+ *
  */
 public class PharmacyListAdaper extends BaseAdapter{
 
     private ArrayList<HashMap<String, Object>>  list = new ArrayList<HashMap<String, Object>>();
     private Activity context;
 
+    /**
+     * Constructor to create PharmacyListAdaper Instance.
+     * @param context - Activity context which will be passed from activity class.
+     * @param list - list of searched items to be displayed in listview.
+     */
     public PharmacyListAdaper(Activity context, ArrayList<HashMap<String, Object>> list){
         this.context = context;
         this.list = list;
     }
 
+    /**
+     * This override method is used to return initialized and updated view to listview.
+     *
+     * @param convertView - view is going to be return
+     * @param position - position of view in listview
+     * @param parent - inflated layout group
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
@@ -65,21 +82,36 @@ public class PharmacyListAdaper extends BaseAdapter{
     }
 
 
+    /**
+     * returns size of items in list
+     */
     @Override
     public int getCount() {
         return list.size();
     }
 
+    /**
+     * returns object according to position which is occpy.
+     * @param position - position of item in list
+     */
     @Override
     public HashMap<String, Object> getItem(int position) {
         return list.get(position);
     }
 
+    /**
+     * returns id of Item
+     */
     @Override
     public long getItemId(int position) {
         return 0;
     }
 
+    /**
+     *  This method is used to shrink pharmacy store name if exceeds screen display
+     *
+     *  While pharmacy name is shrinking, then there will not be any changes on distance text.
+     */
     public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView, final TextView rightTextView) {
         parentView.postDelayed(new Runnable() {
             @Override

@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +22,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -35,16 +35,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This class returns the Provider profile for the corresponding providers.
+ * This class returns the Provider profile for the corresponding providers.Along with that
+ * the provider profile the details of the provider has also be defined.The Qualification of
+ * the provider like Specalties, about the provider,languages has been defined.
  */
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
-    private ProgressDialog pDialog;
-    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,specialist_txt,withpatientTxt;
+    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv;
     private CircularNetworkImageView ProfileImg;
-    private NetworkImageView AffilitationProviderImg;
     public String DoctorId;
     private Button tapSeetheDoctorTxt;
-    //private RelativeLayout progressBar;
     private String SharedLocation,AppointmentDate,AppointmentType;
     private LinearLayout providerImageHolder,detailsLl;
 
@@ -52,7 +51,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
-//        pDialog = Utils.getProgressDialog("Please wait...", this);
         getPreferenceDetails();
         Initialization();
         //Service call Method
@@ -61,7 +59,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     /**
      * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
      * the Location can be fetched from the GetStarted screen and the provider's Id and the
-     * Provider's Appointment date will be fetched from the Choose Provider Screen.
+     * Provider's Appointment date will be fetched from the Choose Provider Screen.Here the Appointment
+     * type will be 3 because we will be using only the video type so the appointment type will
+     * be video by default.
      *
      */
 
@@ -70,15 +70,21 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
-        AppointmentType = "3";
+        AppointmentType = StringConstants.APPOINTMENT_TYPE;
         if(AppointmentDate!=null && AppointmentDate.length() != 0){
             AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
         }
     }
-     /**
-      * Initialization of the views are done here.
-      * The click event of the particular view also are done here.
-      **/
+
+    /**
+     *
+     * The initialization of the views was done here.All the labels was defined here and
+     * the click event for the back button and the home button was done here.
+     * On clicking the back button image will be finishing the current Activity
+     * and on clicking the Home button you will be navigated to the SSo Screen with
+     * an alert.
+     *
+     * **/
 
     public void Initialization()
     {
@@ -89,27 +95,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-        setProgressBar(findViewById(R.id.progressDialog));
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
-        specialist_txt = (TextView)findViewById(R.id.specalist);
-        withpatientTxt = (TextView)findViewById(R.id.withpatientTxt);
-        Button SearchBtn = (Button) findViewById(R.id.reqappointmentBtn);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
         detailsLl = (LinearLayout) findViewById(R.id.detailsLl);
+        setProgressBar(findViewById(R.id.progressDialog));
     /**
      * The back image will pull you back to the Previous activity
      * The tap button will pull you  to the Reason for visit Screen.
      */
-        ((Button) findViewById(R.id.tapBtn)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
-                startActivity(Reasonintent);
-                MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-            }
-        });
+
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +115,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     }
     /**
      * LProviderDetailServices
+      to user or Get started screen will shown to user).
+     */
+    public void detailsTapBtnAction(View view)
+    {
+        Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
+        startActivity(Reasonintent);
+        MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+    }
+    /**
+     * LProviderDetailServices
      * Class : ProviderDetailServices - Service class used to fetch the Provider's information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to
      * the service class to handle the service response calls.
@@ -127,8 +132,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      * message to user or Get started screen will shown to user).
      */
     private void loadProviderDetails() {
-//        pDialog.show();
-        //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -142,8 +145,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-//                pDialog.dismiss();
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
                 tapSeetheDoctorTxt.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
@@ -158,11 +159,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         tapSeetheDoctorTxt.setClickable(false);
                         tapSeetheDoctorTxt.setVisibility(View.GONE);
                         // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveProviderDetails.this);
+                        MdliveUtils.connectionTimeoutError(null, MDLiveProviderDetails.this);
                     }
                 }
             }};
-        ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, pDialog);
+        ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, null);
         DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         AppointmentDate = format.format(new Date());
         services.getProviderDetails(SharedLocation,AppointmentDate,AppointmentType,DoctorId,successCallBackListener, errorListener);
@@ -178,11 +179,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
             hideProgress();
             //Fetch Data From the Services
-            Log.e("details-->",response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -213,33 +211,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "education")) {
                 str_education = providerdetObj.get("education").getAsString();
             }
-            if(str_Availability_Type.equals("Available now"))
+            if(str_Availability_Type.equals(getString(R.string.with_patient)))
             {
-//                withpatientTxt.setText(str_Availability_Type);
-//                withpatientTxt.setTextColor(Color.parseColor("#31B404"));
-                withpatientTxt.setVisibility(View.GONE);
-
-            }
-            else if(str_Availability_Type.equals("With Patient"))
-            {
-                withpatientTxt.setVisibility(View.GONE);
-//                withpatientTxt.setText(str_Availability_Type);
-//                withpatientTxt.setTextColor(Color.parseColor("#F18032"));
                 tapSeetheDoctorTxt.setClickable(false);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
                 } else {
                     tapSeetheDoctorTxt.setBackgroundResource(R.drawable.btn_rounded_grey);
                 }
-                tapSeetheDoctorTxt.setText("Currently with patient");
+                tapSeetheDoctorTxt.setText(getString(R.string.currently_with_patient));
             }
-            else if(str_Availability_Type.equals("not available"))
-            {
-                if(!str_Availability_Type.equals("With Patient"))
-                    withpatientTxt.setVisibility(View.GONE);
-            }
-
-            Log.e("str_Availability_type",str_Availability_Type);
 
             ProfileImg.setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
             ProfileImg.setDefaultImageResId(R.drawable.doctor_icon);
@@ -253,17 +234,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             }else
             {
-                if(!str_Availability_Type.equals("With Patient"))
+                if(!str_Availability_Type.equals(getString(R.string.with_patient)))
                    tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
             }
-            Log.e("About me",str_AboutMe.length()+"");
            if(str_AboutMe.length()!=0)
            {
                aboutme_txt.setText(str_AboutMe);
            }else
            {
-              Log.e("str_AboutMe-->",str_AboutMe);
-
                ((LinearLayout)findViewById(R.id.aboutmeLl)).setVisibility(View.GONE);
            }
             if(!str_education.equals("")||str_education != null && !str_education.isEmpty()||str_education.length()!=0)
@@ -283,7 +261,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 location_txt.setVisibility(View.GONE);
                 ((LinearLayout)findViewById(R.id.boardCertificationsLl)).setVisibility(View.GONE);
             }
-
             String license_state = "";
             //License Array
             getLicenseArrayResponse(providerdetObj, license_state);
@@ -305,6 +282,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     /**
      *  Successful Response Handler for getting the Affillitations and the provider image.
      *  This method will give the successful response of the Provider's affilitations.
+     *  This response is for the Affilations Purpose.The image can be placed one below the other
      *
      */
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
@@ -396,7 +374,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 ((LinearLayout)findViewById(R.id.hosaffiliationsLl)).setVisibility(View.GONE);
             }
 
-//            String license_number = licenseObject.get("license_number").getAsString();
         }
     }
 
@@ -406,9 +383,5 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         MdliveUtils.closingActivityAnimation(MDLiveProviderDetails.this);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
-    }
+
 }

@@ -1,0 +1,42 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mdlive.embedkit.uilayer.helpandsupport.AskQuestionFragment">
+
+    <RelativeLayout android:id="@+id/rootrelativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/ask_a_question_header_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            layout="@layout/askquestion_header" />
+
+        <RelativeLayout android:id="@+id/secondrootrelativelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_relativelayout">
+
+           <EditText
+               android:id="@+id/questionId"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:paddingLeft="10dp"
+               android:hint="@string/enter_your_question"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
