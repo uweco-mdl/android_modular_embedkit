@@ -721,4 +721,8 @@
     <string name="spinnertext">spinnertext</string>
 
     <string name="create_free_account">Create Free Account</string>
+
+    <string name="please_confirm_pin">Please Confirm Pin</string>
+    <string name="pin_mismatch">Create pin and confirm pin must be same</string>
+    <string name="pin_creation_failed">Pin creation failed</string>
 </resources>

@@ -1,10 +1,9 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -17,10 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.ConfirmPinFragment;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -32,7 +30,7 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 6/24/2015.
  */
-public class ChangePinFragment extends Fragment implements TextWatcher,View.OnClickListener{
+public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher,View.OnClickListener{
 
     private EditText mPassCode1 = null;
     private EditText mPassCode2 = null;
@@ -50,7 +48,6 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
     private View dummyEditText5 = null;
     private View dummyEditText6 = null;
 
-    private ProgressDialog pDialog;
 
     public static ChangePinFragment newInstance(String newPin,String oldPin) {
 
@@ -93,7 +90,6 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
         mTitle.setText("Please Confirm Pin");
 
         mPassCode7.addTextChangedListener(this);
@@ -146,14 +142,14 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
                         String oldPin = getArguments().getString("OldPin");
                         String newPin = getArguments().getString("NewPin");
                         String confirmPin = mPassCode7.getText().toString();
-//                        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
                         if(confirmPin.equals(newPin)){
                             try {
                                 JSONObject jsonObject = new JSONObject();
                                 jsonObject.put("passcode", oldPin);
                                 jsonObject.put("new_passcode", confirmPin);
-                                jsonObject.put("device_token", ConfirmPinFragment.sharedPref.getString("Device_Token", "0") );
+                                jsonObject.put("device_token", sharedPref.getString("Device_Token", "0") );
                                 Log.i("params",jsonObject.toString());
                                 loadPinService(jsonObject.toString());
                             } catch (JSONException e) {
@@ -236,8 +232,7 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
     }
 
     private void loadPinService(String params) {
-
-        pDialog.show();
+showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -251,13 +246,12 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getPreogressDialog(), getActivity());
                 }
 
             }
@@ -270,9 +264,9 @@ public class ChangePinFragment extends Fragment implements TextWatcher,View.OnCl
     private void handleCreatePinSuccessResponse(JSONObject response) {
 
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
-                Toast.makeText(getActivity(),response.getString("message"),Toast.LENGTH_SHORT).show();
+
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.tabcontent, new MyProfileFragment()).commit();

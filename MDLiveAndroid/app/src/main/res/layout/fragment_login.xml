@@ -37,6 +37,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/gray_6"
                 android:background="@color/transparent"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
                 android:hint="@string/username" />
 
             <TextView
@@ -65,6 +67,8 @@
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
                 android:textSize="16sp"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:textColor="@color/gray_6"
                 android:background="@color/transparent"
                 android:hint="@string/password" />

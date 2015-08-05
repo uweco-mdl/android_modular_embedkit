@@ -1,13 +1,9 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,13 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 /**
  * Created by venkataraman_r on 7/23/2015.
  */
 
-public class CreatePinFragment extends Fragment implements TextWatcher, View.OnClickListener {
+public class CreatePinFragment extends MDLiveBaseFragment implements TextWatcher, View.OnClickListener {
+    private OnCreatePinCompleted mOnCreatePinCompleted;
 
     private EditText mPassCode1 = null;
     private EditText mPassCode2 = null;
@@ -42,26 +39,42 @@ public class CreatePinFragment extends Fragment implements TextWatcher, View.OnC
     private View dummyEditText5 = null;
     private View dummyEditText6 = null;
 
-    private ProgressDialog pDialog;
-    Toolbar toolbar;
-    private TextView toolbarTitle;
-
     public static CreatePinFragment newInstance() {
-
         final CreatePinFragment createPinFragment = new CreatePinFragment();
         return createPinFragment;
     }
+
     public CreatePinFragment(){ super(); }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mOnCreatePinCompleted = (OnCreatePinCompleted) activity;
+        } catch (ClassCastException cce) {
+            logE("Error", cce.getMessage());
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragments_change_pin, container, false);
+    }
 
-        View changePin = inflater.inflate(R.layout.fragments_change_pin, null);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        init(changePin);
+        init(view);
+    }
 
-        return changePin;
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mOnCreatePinCompleted = null;
     }
 
     public void init(View changePin) {
@@ -82,11 +95,6 @@ public class CreatePinFragment extends Fragment implements TextWatcher, View.OnC
         dummyEditText6 = (View) changePin.findViewById(R.id.dumy_passcode_field_6);
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-
-        toolbarTitle.setText(getResources().getString(R.string.pin_creation));
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         mPassCode7.addTextChangedListener(this);
         setFocus(mPassCode1, dummyEditText1);
@@ -103,7 +111,6 @@ public class CreatePinFragment extends Fragment implements TextWatcher, View.OnC
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
         if (s.length() <= 6) {
             if (count != 0) {
                 String text = s.charAt(s.length() - 1) + "";
@@ -132,9 +139,9 @@ public class CreatePinFragment extends Fragment implements TextWatcher, View.OnC
                     case 6:
                         mPassCode6.setText(text);
 
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container, ConfirmPinFragment.newInstance(mPassCode7.getText().toString())).commit();
+                        if (mOnCreatePinCompleted != null) {
+                            mOnCreatePinCompleted.onCreatePinCompleted(mPassCode7.getText().toString());
+                        }
                         break;
                 }
             } else {
@@ -205,5 +212,9 @@ public class CreatePinFragment extends Fragment implements TextWatcher, View.OnC
         v.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mPassCode7, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public interface  OnCreatePinCompleted {
+        void onCreatePinCompleted(final String pin);
     }
 }

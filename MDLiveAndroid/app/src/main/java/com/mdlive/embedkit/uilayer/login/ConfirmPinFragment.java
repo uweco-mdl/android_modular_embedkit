@@ -1,16 +1,10 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -34,8 +27,12 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 7/23/2015.
  */
-public class ConfirmPinFragment extends Fragment implements TextWatcher, View.OnClickListener {
+public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatcher, View.OnClickListener {
+    private static final String PIN_TAG = "PIN";
 
+    private OnCreatePinSucessful mOnCreatePinSucessful;
+
+    public SharedPreferences sharedPref;
     private EditText mPassCode1 = null;
     private EditText mPassCode2 = null;
     private EditText mPassCode3 = null;
@@ -44,7 +41,6 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
     private EditText mPassCode6 = null;
     private EditText mPassCode7 = null;
     private TextView mTitle = null;
-
     private View dummyEditText1 = null;
     private View dummyEditText2 = null;
     private View dummyEditText3 = null;
@@ -52,30 +48,48 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
     private View dummyEditText5 = null;
     private View dummyEditText6 = null;
 
-    private ProgressDialog pDialog;
-    public static SharedPreferences sharedPref;
-    Toolbar toolbar;
-    private TextView toolbarTitle;
-
     public static ConfirmPinFragment newInstance(String createPin) {
+        final Bundle bundle = new Bundle();
+        bundle.putString(PIN_TAG, createPin);
 
         final ConfirmPinFragment confirmPinFragment = new ConfirmPinFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("CreatePin",createPin);
         confirmPinFragment.setArguments(bundle);
         return confirmPinFragment;
     }
-    public ConfirmPinFragment(){ super(); }
+
+    public ConfirmPinFragment() {
+        super();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mOnCreatePinSucessful = (OnCreatePinSucessful) activity;
+        } catch (ClassCastException cce) {
+            logE("Error", cce.getMessage());
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragments_change_pin, container, false);
+    }
 
-        View changePin = inflater.inflate(R.layout.fragments_change_pin, null);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        init(changePin);
+        init(view);
+    }
 
-        return changePin;
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mOnCreatePinSucessful = null;
     }
 
     public void init(View changePin) {
@@ -97,8 +111,7 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-        mTitle.setText("Please Confirm Pin");
+        mTitle.setText(changePin.getContext().getString(R.string.please_confirm_pin));
 
         mPassCode7.addTextChangedListener(this);
         mPassCode7.requestFocus();
@@ -110,10 +123,6 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
         dummyEditText4.setOnClickListener(this);
         dummyEditText5.setOnClickListener(this);
         dummyEditText6.setOnClickListener(this);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
     }
 
     @Override
@@ -147,22 +156,21 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
                     case 6:
                         mPassCode6.setText(text);
 
-                        String createPin = getArguments().getString("CreatePin");
+                        String createPin = getArguments().getString(PIN_TAG);
                         String confirmPin = mPassCode7.getText().toString();
                         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-                        if(createPin.equals(confirmPin)){
+                        if (createPin.equals(confirmPin)) {
                             try {
                                 JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("device_token",sharedPref.getString("Device_Token", "0") );
+                                jsonObject.put("device_token", sharedPref.getString("Device_Token", "0"));
                                 jsonObject.put("passcode", confirmPin);
                                 loadPinService(jsonObject.toString());
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                logE("Error", e.getMessage());
                             }
-                        }
-                        else {
-                            Toast.makeText(getActivity(), "create pin and confirm pin must be same", Toast.LENGTH_SHORT).show();
+                        } else {
+                            showToast(R.string.pin_mismatch);
                         }
 
                         break;
@@ -237,8 +245,7 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
     }
 
     private void loadPinService(String params) {
-
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -252,13 +259,11 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getPreogressDialog(), getActivity());
                 }
             }
         };
@@ -266,24 +271,26 @@ public class ConfirmPinFragment extends Fragment implements TextWatcher, View.On
         PinCreation service = new PinCreation(getActivity(), null);
         service.createPin(successCallBackListener, errorListener, params);
     }
+
     private void handleCreatePinSuccessResponse(JSONObject response) {
 
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
-            if(response.getString("message").equalsIgnoreCase("Success")) {
-
-                Intent dashboard = new Intent(getActivity(),DashboardActivity.class);
-                startActivity(dashboard);
-                getActivity().finish();
-            }
-
-            else {
-                Toast.makeText(getActivity(),"failed",Toast.LENGTH_SHORT).show();
+            if (response.getString("message").equalsIgnoreCase("Success")) {
+                if (mOnCreatePinSucessful != null) {
+                    mOnCreatePinSucessful.onCreatPinSucessful();
+                }
+            } else {
+                showToast(R.string.pin_creation_failed);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logE("Error", e.getMessage());
         }
+    }
+
+    public interface OnCreatePinSucessful {
+        void onCreatPinSucessful();
     }
 }

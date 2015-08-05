@@ -1,13 +1,10 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -31,15 +29,11 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 7/15/2015.
  */
 
-public class LoginFragment extends Fragment{
-    public static final String LOGIN_FRAGMENT_TAG = "LOGIN_FRAGMENT";
+public class LoginFragment extends MDLiveBaseFragment{
+    private OnLoginResponse mOnLoginResponse;
 
-    private EditText edt_UserName = null;
-    private EditText edt_Password = null;
-    //private RadioButton radb_RememberMe = null;
-    //Toolbar toolbar;
-    //private TextView toolbarTitle;
-    private ProgressDialog pDialog;
+    private EditText mUserNameEditText = null;
+    private EditText mPasswordEditText = null;
 
     public static LoginFragment newInstance() {
         final LoginFragment loginFragment = new LoginFragment();
@@ -50,28 +44,41 @@ public class LoginFragment extends Fragment{
         super();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mOnLoginResponse = (OnLoginResponse) activity;
+        } catch (ClassCastException cce) {
+            logE("Login Fragment", "Exception : " + cce.getMessage());
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        View login = inflater.inflate(R.layout.fragment_login,null);
+        mUserNameEditText = (EditText)view.findViewById(R.id.userName);
+        mPasswordEditText = (EditText)view.findViewById(R.id.password);
+    }
 
-        edt_UserName = (EditText)login.findViewById(R.id.userName);
-        edt_Password = (EditText)login.findViewById(R.id.password);
-        //radb_RememberMe = (RadioButton)login.findViewById(R.id.rememberMe);
-        //toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        //toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-        //toolbarTitle.setText(getResources().getString(R.string.sign_up));
-
-        return login;
+        mOnLoginResponse = null;
     }
 
     public void loginService() {
-        String userName = edt_UserName.getText().toString();
-        String password = edt_Password.getText().toString();
+        final String userName = mUserNameEditText.getText().toString();
+        final String password = mPasswordEditText.getText().toString();
         if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
             try {
                 JSONObject parent = new JSONObject();
@@ -81,18 +88,18 @@ public class LoginFragment extends Fragment{
                 parent.put("login", jsonObject);
                 loadLoginService(parent.toString());
             } catch (JSONException e) {
-                e.printStackTrace();
-                Log.d("Error", e.getMessage());
+                logE("Error", e.getMessage());
             }
 
         } else {
-            Toast.makeText(getActivity(), "Fields are empty", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), getActivity().getString(R.string.please_enter_mandetory_fileds), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private void loadLoginService(String params) {
-
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -107,13 +114,12 @@ public class LoginFragment extends Fragment{
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getPreogressDialog(), getActivity());
                 }
             }
         };
@@ -125,9 +131,8 @@ public class LoginFragment extends Fragment{
     }
 
     private void handleChangePasswordSuccessResponse(JSONObject response) {
-
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             if(response.getString("msg").equalsIgnoreCase("Success")) {
 
@@ -143,9 +148,9 @@ public class LoginFragment extends Fragment{
                 editor.putString(PreferenceConstants.USER_UNIQUE_ID, response.getString("uniqueid"));
                 editor.commit();
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container, CreatePinFragment.newInstance()).commit();
+                if (mOnLoginResponse != null) {
+                    mOnLoginResponse.onLoginSucess();
+                }
             }
 
             else {
@@ -153,7 +158,11 @@ public class LoginFragment extends Fragment{
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logE("Error", e.getMessage());
         }
+    }
+
+    public interface OnLoginResponse {
+        void onLoginSucess();
     }
 }
