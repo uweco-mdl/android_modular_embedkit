@@ -77,10 +77,9 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
                 commit();
     }
 
-
     @Override
-    public void onCreatPinSucessful() {
-        Intent dashboard = new Intent(getBaseContext(), DashboardActivity.class);
+    public void startDashboard() {
+        Intent dashboard = new Intent(getBaseContext(), MDliveDashboardActivity.class);
         startActivity(dashboard);
         finish();
     }

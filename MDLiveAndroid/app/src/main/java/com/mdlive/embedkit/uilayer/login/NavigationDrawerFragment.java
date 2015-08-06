@@ -29,6 +29,11 @@ public class NavigationDrawerFragment extends Fragment {
     public NavigationDrawerFragment() {
     }
 
+    public static NavigationDrawerFragment newInstance() {
+        final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

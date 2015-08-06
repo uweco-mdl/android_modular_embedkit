@@ -195,7 +195,7 @@
             android:name=".uilayer.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".uilayer.login.DashboardActivity"
+            android:name=".uilayer.login.MDliveDashboardActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait" />
         <activity
