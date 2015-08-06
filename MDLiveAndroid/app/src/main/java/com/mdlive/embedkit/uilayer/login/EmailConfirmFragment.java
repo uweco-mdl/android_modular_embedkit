@@ -1,21 +1,17 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -26,38 +22,32 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 7/25/2015.
  */
-public class EmailConfirmFragment extends Fragment
-{
-    Toolbar toolbar;
-    private TextView toolbarTitle;
-    private ProgressDialog pDialog;
+public class EmailConfirmFragment extends MDLiveBaseFragment {
+    private Button resendEmail = null;
+    private Button dismiss = null;
+
+
+    public EmailConfirmFragment() {
+        super();
+    }
 
     public static EmailConfirmFragment newInstance() {
         final EmailConfirmFragment emailConfirmFragment = new EmailConfirmFragment();
         return emailConfirmFragment;
     }
 
-    public EmailConfirmFragment() {
-        super();
-    }
-
-
-    private Button resendEmail = null;
-    private Button dismiss = null;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_email_confirmation, container, false);
+    }
 
-        View emailConfirmation = inflater.inflate(R.layout.fragment_email_confirmation,null);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        resendEmail = (Button)emailConfirmation.findViewById(R.id.resend_email);
-        dismiss= (Button)emailConfirmation.findViewById(R.id.dismiss);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-        toolbarTitle.setText(getResources().getString(R.string.email_confirmation));
+        resendEmail = (Button) view.findViewById(R.id.resend_email);
+        dismiss = (Button) view.findViewById(R.id.dismiss);
 
         resendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +63,10 @@ public class EmailConfirmFragment extends Fragment
                 getActivity().onBackPressed();
             }
         });
-
-        return emailConfirmation;
     }
 
     private void loadEmailConfirmationService() {
-
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -94,12 +81,11 @@ public class EmailConfirmFragment extends Fragment
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -111,14 +97,14 @@ public class EmailConfirmFragment extends Fragment
     private void handleSuccessResponse(JSONObject response) {
 
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle("MDLive");
+            builder.setTitle(getActivity().getString(R.string.app_name));
             builder.setMessage(response.getString("message"));
 
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getActivity().getString(R.string.ok), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
 

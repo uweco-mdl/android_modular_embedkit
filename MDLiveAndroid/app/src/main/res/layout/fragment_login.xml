@@ -71,7 +71,8 @@
                 android:imeOptions="actionDone"
                 android:textColor="@color/gray_6"
                 android:background="@color/transparent"
-                android:hint="@string/password" />
+                android:hint="@string/password"
+                android:password="true"/>
 
             <TextView
                 android:layout_width="0dp"

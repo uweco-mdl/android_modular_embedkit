@@ -264,7 +264,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getPreogressDialog(), getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -321,7 +321,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getPreogressDialog(), getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
@@ -336,6 +336,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
      */
     public void handleSuccessResponse(JSONObject response){
         if (mOnCreatePinSucessful != null) {
+            logD("User Info", response.toString());
             mOnCreatePinSucessful.startDashboard();
         }
     }

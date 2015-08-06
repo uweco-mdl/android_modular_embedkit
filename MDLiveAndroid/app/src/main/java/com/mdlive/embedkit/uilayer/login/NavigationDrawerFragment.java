@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.login;
 import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * Created by venkataraman_r on 7/16/2015.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
     private NavigationDrawerCallbacks mCallbacks;
 
@@ -32,6 +32,16 @@ public class NavigationDrawerFragment extends Fragment {
     public static NavigationDrawerFragment newInstance() {
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallbacks = (NavigationDrawerCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+        }
     }
 
     @Override
@@ -56,7 +66,7 @@ public class NavigationDrawerFragment extends Fragment {
         ArrayList<String> drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
         TypedArray imgs = getResources().obtainTypedArray(R.array.left_navigation_items_image);
 
-        mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(),drawerItems,imgs));
+        mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(), drawerItems, imgs));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
         return mDrawerListView;
@@ -69,16 +79,6 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
-        }
-    }
 
     @Override
     public void onDetach() {

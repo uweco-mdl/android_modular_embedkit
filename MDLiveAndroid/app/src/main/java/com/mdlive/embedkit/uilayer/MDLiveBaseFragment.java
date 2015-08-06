@@ -64,7 +64,7 @@ public class MDLiveBaseFragment extends Fragment {
         }
     }
 
-    public ProgressDialog getPreogressDialog() {
+    public ProgressDialog getProgressDialog() {
         return mProgressDialog;
     }
 
