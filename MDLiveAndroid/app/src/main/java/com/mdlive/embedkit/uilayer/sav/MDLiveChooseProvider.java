@@ -24,7 +24,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
+import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
 import com.mdlive.embedkit.uilayer.sav.adapters.ChooseProviderAdapter;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -50,7 +58,7 @@ import java.util.TimeZone;
  * will be visible only when the response from the service for the Doctor on call is true
  * and Doctor on call will be hidden when the response is false.
  */
-public class MDLiveChooseProvider extends MDLiveBaseActivity {
+public class MDLiveChooseProvider extends MDLiveBaseActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private ListView listView;
     private ProgressDialog pDialog;
@@ -68,6 +76,20 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider);
+
+        getSupportActionBar().hide();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, MDLiveDashBoardFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
         Initailization();
         ChooseProviderResponseList();
     }
@@ -118,7 +140,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
-                    startActivityForResult(intent,1);
+                    startActivityForResult(intent, 1);
                     MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
                 }
             });
@@ -480,5 +502,75 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        switch (position) {
+            // Home
+            case 0:
+                startActivityWithClassName(MDliveDashboardActivity.class);
+                break;
+
+            // Talk to a Doctor
+            case 1:
+
+                break;
+
+            // Schedule a Visit
+            case 2:
+
+                break;
+
+            // My Health
+            case 3:
+                startActivityWithClassName(MDLiveMyHealthActivity.class);
+                break;
+
+            // Message Center
+            case 4:
+                startActivityWithClassName(MessageCenterActivity.class);
+                break;
+
+            // MDLIVE Assist
+            case 5:
+                showMDLiveAssistDialog();
+                break;
+
+            // Symptom Checker
+            case 6:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 7:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 8:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share this App
+            case 9:
+
+                break;
+
+            // Sign Out
+            case 10:
+
+                break;
+        }
     }
 }

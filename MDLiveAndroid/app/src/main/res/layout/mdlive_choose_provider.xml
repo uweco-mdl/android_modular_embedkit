@@ -1,139 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContainerStyle"
-    android:background="@color/mdliveBottomBlueColor"
-    >
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/header"
-        style="@style/wagHeaderLinearLayoutStyle"
-        android:orientation="horizontal">
+        style="@style/ContainerStyle"
+        android:background="@color/mdliveBottomBlueColor">
 
-        <ImageView
-            style="@style/HeaderBackImgStyle"
-            android:id="@+id/backImg"
-            />
+        <RelativeLayout
+            android:id="@+id/header"
+            style="@style/wagHeaderLinearLayoutStyle"
+            android:orientation="horizontal">
 
-        <ImageView
-            style="@style/HeaderHomeImgStyle"
-            android:id="@+id/homeImg"
-            android:layout_marginLeft="@dimen/chooseproviderhomeheader_marginLeft"
-            android:layout_toRightOf="@+id/backImg"
-            android:onClick="movetohome"
-            />
+            <ImageView
+                android:id="@+id/backImg"
+                style="@style/HeaderBackImgStyle" />
 
-        <TextView
-            android:id="@+id/headerTxt"
-            style = "@style/HeaderTextViewStyle"
-            android:text="@string/choose_doctor"/>
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/homeImg"
+                style="@style/HeaderHomeImgStyle"
+                android:layout_marginLeft="@dimen/chooseproviderhomeheader_marginLeft"
+                android:layout_toRightOf="@+id/backImg"
+                android:onClick="movetohome" />
 
-    <LinearLayout
-        style="@style/providerBgdLinearLayoutStyle"
-        android:id="@+id/DocOnCalLinLay"
-        android:orientation="vertical"
-        android:layout_below="@id/header"
-        android:background="@color/white"
-        >
-        <com.android.volley.toolbox.NetworkImageView
-            style="@style/DoctorOnCallImgViewStyle"
-            android:id="@+id/ProfileImg"
-            android:layout_height="@dimen/chooseproviderdoctoroncallImg_height"
-            android:layout_width="@dimen/chooseproviderdoctoroncallImg_width"
-            android:layout_marginTop="@dimen/margin_top"
-            android:background="@drawable/doctor_icon"
-            />
+            <TextView
+                android:id="@+id/headerTxt"
+                style="@style/HeaderTextViewStyle"
+                android:text="@string/choose_doctor" />
+        </RelativeLayout>
 
-        <TextView
-            style="@style/HeaderAvailableDoctorTxtStyle"
-            android:id="@+id/PatientName"
-            android:textColor="@color/black"
-            android:textSize="@dimen/textsize_large"
-            android:text="@string/doctor_on_call"
-            />
+        <LinearLayout
+            android:id="@+id/DocOnCalLinLay"
+            style="@style/providerBgdLinearLayoutStyle"
+            android:layout_below="@id/header"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/DoctorTxtStyle"
-            android:text="@string/averagewait"
-            android:textSize="@dimen/textsize_large"
-            android:gravity="center"
-            android:textColor="@color/search_bgd"
-            android:id="@+id/Time"/>
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/ProfileImg"
+                style="@style/DoctorOnCallImgViewStyle"
+                android:layout_width="@dimen/chooseproviderdoctoroncallImg_width"
+                android:layout_height="@dimen/chooseproviderdoctoroncallImg_height"
+                android:layout_marginTop="@dimen/margin_top"
+                android:background="@drawable/doctor_icon" />
 
-        <Button
-            android:id="@+id/seenextAvailableBtn"
-            style="@style/ContinueButtonStyle"
-            android:text="@string/seedoctoroncall_btn"
-            android:layout_marginTop="@dimen/addChildView_margin"
-            android:textAllCaps="false" />
+            <TextView
+                android:id="@+id/PatientName"
+                style="@style/HeaderAvailableDoctorTxtStyle"
+                android:text="@string/doctor_on_call"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize_large" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/Time"
+                style="@style/DoctorTxtStyle"
+                android:gravity="center"
+                android:text="@string/averagewait"
+                android:textColor="@color/search_bgd"
+                android:textSize="@dimen/textsize_large" />
 
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/DocOnCalLinLay"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/progressBar"
-        layout="@layout/custom_progress_bar"
-        />
+            <Button
+                android:id="@+id/seenextAvailableBtn"
+                style="@style/ContinueButtonStyle"
+                android:layout_marginTop="@dimen/addChildView_margin"
+                android:text="@string/seedoctoroncall_btn"
+                android:textAllCaps="false" />
 
-    <TextView
-        android:id="@+id/loadingTxt"
-        style="@style/common_style_W_Wrap_H_Wrap"
-        android:text="@string/locating_available_doctors"
-        android:layout_below="@id/progressBar"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        />
+        </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/filterMainRl"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/chooseproviderfilterll_height"
-        android:layout_marginBottom="@dimen/margin_top"
-        android:layout_marginTop="@dimen/margin_top"
-        android:layout_below="@id/DocOnCalLinLay"
-        android:background="@color/mdliveBottomBlueColor"
-        android:visibility="gone"
-        >
-
-        <TextView
-            android:text="@string/chooseotherdoctor"
-            style="@style/BaseAvailableDoctorTxtStyle"
-            android:gravity="left|center"
-            android:textSize="@dimen/textsize_large"
-            android:textColor="@color/search_bgd"
-            android:layout_marginLeft="@dimen/chooseotherdoctor_marginleft"
-            android:layout_centerVertical="true"
-            android:id="@+id/txtFilter" />
-
-        <TextView
-            style="@style/BaseAvailableDoctorTxtStyle"
-            android:layout_width="@dimen/chooseproviderfilterll_height"
+        <include
+            android:id="@+id/progressBar"
+            layout="@layout/custom_progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/filter_txt"
-            android:layout_marginRight="@dimen/choosefilterlayout_marginbottom"
-            android:textSize="@dimen/textsize_large"
-            android:textColor="@color/mdlivePrimaryBlueColor"
-            android:id="@+id/filterTxt"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@id/DocOnCalLinLay"
+            android:layout_centerHorizontal="true" />
 
+        <TextView
+            android:id="@+id/loadingTxt"
+            style="@style/common_style_W_Wrap_H_Wrap"
+            android:layout_below="@id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:text="@string/locating_available_doctors"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/filterMainRl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chooseproviderfilterll_height"
+            android:layout_below="@id/DocOnCalLinLay"
+            android:layout_marginBottom="@dimen/margin_top"
+            android:layout_marginTop="@dimen/margin_top"
+            android:background="@color/mdliveBottomBlueColor"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/txtFilter"
+                style="@style/BaseAvailableDoctorTxtStyle"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/chooseotherdoctor_marginleft"
+                android:gravity="left|center"
+                android:text="@string/chooseotherdoctor"
+                android:textColor="@color/search_bgd"
+                android:textSize="@dimen/textsize_large" />
+
+            <TextView
+                android:id="@+id/filterTxt"
+                style="@style/BaseAvailableDoctorTxtStyle"
+                android:layout_width="@dimen/chooseproviderfilterll_height"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/choosefilterlayout_marginbottom"
+                android:text="@string/filter_txt"
+                android:textColor="@color/mdlivePrimaryBlueColor"
+                android:textSize="@dimen/textsize_large" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/chooseProviderList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/filterMainRl"
+            android:divider="@null" />
+
+        <include
+            android:id="@+id/footer"
+            style="@style/Footer_Style"
+            layout="@layout/mdlive_footer"
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
-    <ListView
-        android:layout_below="@id/filterMainRl"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/dash_board__left_container"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:id="@+id/chooseProviderList"
-        />
+        android:layout_gravity="left|start"/>
 
-    <include
-        android:id="@+id/footer"
-        style="@style/Footer_Style"
-        android:layout_alignParentBottom="true"
-        layout="@layout/mdlive_footer" />
-</RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/dash_board__right_container"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|end"/>
+</android.support.v4.widget.DrawerLayout>

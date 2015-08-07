@@ -1,14 +1,18 @@
 package com.mdlive.embedkit.uilayer;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -16,8 +20,12 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 /**
  * Created by srinivasan_ka on 7/8/2015.
  */
-public class MDLiveBaseActivity extends Activity {
+public class MDLiveBaseActivity extends AppCompatActivity {
+    public static final String LEFT_MENU = "left_menu";
+    public static final String RIGHT_MENU = "right_menu";
+
     public View progressBarLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,16 +38,18 @@ public class MDLiveBaseActivity extends Activity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
     public void showProgress() {
@@ -115,5 +125,48 @@ public class MDLiveBaseActivity extends Activity {
         this.progressBarLayout=progressBarLayout;
     }
 
+    public void startActivityWithClassName(final Class clazz) {
+        startActivity(new Intent(getBaseContext(), clazz));
+    }
 
+    public void showMDLiveAssistDialog() {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            final View view = layoutInflater.inflate(R.layout.alertdialogmessage, null);
+            ImageView alertImage = (ImageView) view.findViewById(R.id.alertdialogimageview);
+            alertImage.setImageResource(R.drawable.ic_launcher);
+            TextView alertText = (TextView) view.findViewById(R.id.alertdialogtextview);
+            alertText.setText(getText(R.string.call_text));
+
+            builder.setView(view);
+            builder.setPositiveButton(getText(R.string.call),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" + getText(R.string.callnumber)));
+                                startActivity(intent);
+                            } catch (Exception e) {
+                            }
+
+                        }
+                    });
+            builder.setNegativeButton(getText(R.string.cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+            builder.create().show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,193 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout style="@style/ContainerStyle"
-        android:background="@color/mdliveBottomBlueColor">
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            style="@style/wagHeaderLinearLayoutStyle"
-            android:orientation="horizontal">
+        <LinearLayout style="@style/ContainerStyle"
+            android:background="@color/mdliveBottomBlueColor">
 
-            <ImageView
-                android:id="@+id/backImg"
-              style="@style/HeaderBackImgStyle" />
+            <RelativeLayout
+                style="@style/wagHeaderLinearLayoutStyle"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/homeImg"
-              style="@style/HeaderHomeImgStyle"
-                android:layout_toRightOf="@+id/backImg"
-                android:onClick="movetohome"
-               />
+                <ImageView
+                    android:id="@+id/backImg"
+                    style="@style/HeaderBackImgStyle" />
 
-            <TextView
-                android:id="@+id/headerTxt"
-                style="@style/HeaderTextViewStyle"
-                android:text="@string/get_started">
+                <ImageView
+                    android:id="@+id/homeImg"
+                    style="@style/HeaderHomeImgStyle"
+                    android:layout_toRightOf="@+id/backImg"
+                    android:onClick="movetohome"
+                    />
 
-            </TextView>
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/headerTxt"
+                    style="@style/HeaderTextViewStyle"
+                    android:text="@string/get_started">
 
-        <ScrollView style="@style/ScrollViewStyle"
-           android:background="@color/mdliveBottomBlueColor">
+                </TextView>
+            </RelativeLayout>
 
-            <LinearLayout
-                style="@style/LinearLayoutStyle"
-                android:background="@color/white"
-                android:orientation="vertical">
+            <ScrollView style="@style/ScrollViewStyle"
+                android:background="@color/mdliveBottomBlueColor">
 
                 <LinearLayout
-                    style="@style/WagParentLinearLayoutStyle"
-                    android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
+                    style="@style/LinearLayoutStyle"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/patientLl"
-                        style="@style/WagLinearLayoutStyle"
-
+                        style="@style/WagParentLinearLayoutStyle"
+                        android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
                         android:orientation="vertical">
 
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/patient_name" />
+                        <LinearLayout
+                            android:id="@+id/patientLl"
+                            style="@style/WagLinearLayoutStyle"
 
-                    </LinearLayout>
-
-                    <Spinner
-                        android:id="@+id/patientSpinner"
-                        style="@style/SpinnerButtonStyle"
-                        android:layout_marginLeft="@dimen/spinnerpatientname_leftmargin"
-                        android:layout_marginRight="@dimen/spinnerpatientname_rightmargin"/>
-
-                    <View
-                        style="@style/ViewStyle"
-                        android:layout_marginLeft="@dimen/view_margin"
-                        android:layout_marginRight="@dimen/view_margin"
-                        android:layout_marginTop="@dimen/view_margin" />
-
-                    <LinearLayout
-                        android:id="@+id/dobLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/date_of_birth" />
-
-                        <TextView
-                            android:id="@+id/dobTxt"
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/date_of_birth_hint"
-                            android:textColor="@color/mdliveLoginUsernameColor"
-                            android:textSize="18sp" />
-
-                        <View
-                            style="@style/ViewStyle"
-                            android:layout_marginTop="@dimen/view_margin" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/genderLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/Gender" />
-
-                        <TextView
-                            android:id="@+id/txt_gender"
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:textColor="@color/mdliveLoginUsernameColor"
-                            android:textSize="@dimen/textsize_large" />
-
-                        <View
-                            style="@style/ViewStyle"
-                            android:layout_marginTop="@dimen/view_margin" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/WagLinearLayoutStyle"
-                        android:onClick="goToLocation"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/location" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/locationTxt"
-                                style="@style/GetStartedContentTxtStyle"
-                                android:layout_alignParentLeft="true"
-                                android:layout_toLeftOf="@+id/rightimg"
-                                android:layout_toStartOf="@+id/rightimg"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/location_color"
-                                android:textSize="@dimen/textsize_large" />
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/patient_name" />
 
-                            <ImageView
-                                android:id="@+id/rightimg"
-                               style="@style/locationimgStyle" />
+                        </LinearLayout>
 
-                        </RelativeLayout>
+                        <Spinner
+                            android:id="@+id/patientSpinner"
+                            style="@style/SpinnerButtonStyle"
+                            android:layout_marginLeft="@dimen/spinnerpatientname_leftmargin"
+                            android:layout_marginRight="@dimen/spinnerpatientname_rightmargin"/>
 
                         <View
                             style="@style/ViewStyle"
+                            android:layout_marginLeft="@dimen/view_margin"
+                            android:layout_marginRight="@dimen/view_margin"
                             android:layout_marginTop="@dimen/view_margin" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/telephoneLl"
-                        style="@style/WagLinearLayoutStyle"
-                        android:orientation="vertical">
+                        <LinearLayout
+                            android:id="@+id/dobLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/date_of_birth" />
+
+                            <TextView
+                                android:id="@+id/dobTxt"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/date_of_birth_hint"
+                                android:textColor="@color/mdliveLoginUsernameColor"
+                                android:textSize="18sp" />
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/genderLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/Gender" />
+
+                            <TextView
+                                android:id="@+id/txt_gender"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:textColor="@color/mdliveLoginUsernameColor"
+                                android:textSize="@dimen/textsize_large" />
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/WagLinearLayoutStyle"
+                            android:onClick="goToLocation"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/location" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/locationTxt"
+                                    style="@style/GetStartedContentTxtStyle"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_toLeftOf="@+id/rightimg"
+                                    android:layout_toStartOf="@+id/rightimg"
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/location_color"
+                                    android:textSize="@dimen/textsize_large" />
+
+                                <ImageView
+                                    android:id="@+id/rightimg"
+                                    style="@style/locationimgStyle" />
+
+                            </RelativeLayout>
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/telephoneLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/phonenumber" />
+
+                            <EditText
+                                android:id="@+id/telephoneTxt"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:background="@color/transparent_native"
+                                android:inputType="number"
+                                android:maxLength="12"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
 
                         <TextView
                             style="@style/GetStartedHeaderContentStyle"
-                            android:text="@string/phonenumber" />
-
-                        <EditText
-                            android:id="@+id/telephoneTxt"
-                            style="@style/GetStartedHeaderContentStyle"
-                            android:background="@color/transparent_native"
-                            android:inputType="number"
-                            android:maxLength="12"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                        <View
-                            style="@style/ViewStyle"
-                            android:layout_marginTop="@dimen/view_margin" />
+                            android:layout_marginLeft="@dimen/disclaimer_leftmargin"
+                            android:layout_marginRight="@dimen/disclaimer_rightmargin"
+                            android:text="@string/disclaimertxt"
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
-                    <TextView
-                        style="@style/GetStartedHeaderContentStyle"
-                        android:layout_marginLeft="@dimen/disclaimer_leftmargin"
-                        android:layout_marginRight="@dimen/disclaimer_rightmargin"
-                        android:text="@string/disclaimertxt"
-                        android:textColor="@color/black" />
+                    <Button
+                        style="@style/ContinueButtonStyle"
+                        android:layout_marginBottom="0dp"
+                        android:onClick="nextBtnAction"
+                        android:text="@string/next_btn" />
+
+                    <LinearLayout
+                        style="@style/Mdlive_footer_Style">
+                        <include
+                            style="@style/Footer_Style"
+                            layout="@layout/mdlive_footer" />
+                    </LinearLayout>
+
                 </LinearLayout>
-
-                <Button
-                    style="@style/ContinueButtonStyle"
-                    android:layout_marginBottom="0dp"
-                    android:onClick="nextBtnAction"
-                    android:text="@string/next_btn" />
-
-                <LinearLayout
-                    style="@style/Mdlive_footer_Style">
-                    <include
-                        style="@style/Footer_Style"
-                        layout="@layout/mdlive_footer" />
-                    </LinearLayout>
-
-            </LinearLayout>
-        </ScrollView>
+            </ScrollView>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/dash_board__left_container"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|start"/>
+
+
+        <FrameLayout
+            android:id="@+id/dash_board__right_container"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|end"/>
+    </android.support.v4.widget.DrawerLayout>
 
     <include layout="@layout/custom_progress_dialog" />
 </merge>

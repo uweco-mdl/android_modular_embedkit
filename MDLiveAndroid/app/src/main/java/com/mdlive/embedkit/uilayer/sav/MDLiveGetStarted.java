@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.android.volley.TimeoutError;
+
 import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,6 +25,14 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
+import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -48,7 +56,7 @@ import java.util.List;
  * The phone number field alone can be editable.
  */
 
-public class  MDLiveGetStarted extends MDLiveBaseActivity {
+public class  MDLiveGetStarted extends MDLiveBaseActivity  implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
     private String strPatientName,SavedLocation;
@@ -65,6 +73,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
+
+        //getSupportActionBar().hide();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, MDLiveDashBoardFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
          /*  Load Services*/
@@ -234,11 +256,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 dependentName = spinner.getSelectedItem().toString();
-                if(list!=null){
-                    if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
-                    {
-                        if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
-                        {
+                if (list != null) {
+                    if (list.size() >= IntegerConstants.ADD_CHILD_SIZE) {
+                        if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                 @Override
@@ -260,21 +280,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
                                 }
                             };
-                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.",  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
-                                    negativeOnClickListener,positiveOnClickListener );
-                        }else
-                        {
-                            loadDependentInformationDetails(dependentName,position);
+                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
+                                    negativeOnClickListener, positiveOnClickListener);
+                        } else {
+                            loadDependentInformationDetails(dependentName, position);
 
                         }
-                    }else {
+                    } else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
-                        }else {
+                        } else {
                             loadDependentInformationDetails(dependentName, position);
 
                         }
@@ -282,7 +301,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                 }
             }
 
-            public void onNothingSelected(AdapterView<?> arg0) { }
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
         });
     }
     /**
@@ -664,6 +684,75 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(MDLiveGetStarted.this);
     }
 
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        switch (position) {
+            // Home
+            case 0:
+                startActivityWithClassName(MDliveDashboardActivity.class);
+                break;
+
+            // Talk to a Doctor
+            case 1:
+
+                break;
+
+            // Schedule a Visit
+            case 2:
+
+                break;
+
+            // My Health
+            case 3:
+                startActivityWithClassName(MDLiveMyHealthActivity.class);
+                break;
+
+            // Message Center
+            case 4:
+                startActivityWithClassName(MessageCenterActivity.class);
+                break;
+
+            // MDLIVE Assist
+            case 5:
+                showMDLiveAssistDialog();
+                break;
+
+            // Symptom Checker
+            case 6:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 7:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 8:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share this App
+            case 9:
+
+                break;
+
+            // Sign Out
+            case 10:
+
+                break;
+        }
+    }
 }
 
 
