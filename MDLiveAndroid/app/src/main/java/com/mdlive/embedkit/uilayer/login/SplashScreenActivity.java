@@ -29,8 +29,7 @@ public class SplashScreenActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_splashscreen);
 
-        // Pass 1 for Dev env
-        // Pass 2 for Dev env
+        /* Pass 1 for Dev env,Pass 2 for QA env, Pass 3 for Stage env, Pass 4 for Prod env, 5 for Pluto*/
         MDLiveConfig.setData(3);
 
         mHandler = new Handler();

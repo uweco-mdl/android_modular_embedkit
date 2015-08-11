@@ -1643,5 +1643,31 @@
         <item name="android:layout_weight">1</item>
         <item name="android:weightSum">2</item>
     </style>
+
+    <!-- Start of Style for NotificationService -->
+    <style name="Notification_Text_Default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/emptyString</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">@dimen/dimen_8_dp</item>
+        <item name="android:paddingRight">@dimen/dimen_8_dp</item>
+        <item name="android:paddingTop">@dimen/dimen_8_dp</item>
+        <item name="android:paddingBottom">@dimen/dimen_8_dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Notification_Text_Upcoming">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/emptyString</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">@dimen/dimen_8_dp</item>
+        <item name="android:paddingRight">@dimen/dimen_8_dp</item>
+        <item name="android:paddingTop">@dimen/dimen_8_dp</item>
+        <item name="android:paddingBottom">@dimen/dimen_8_dp</item>
+        <item name="android:textColor">@color/selected_bg</item>
+    </style>
+    <!-- End of Style for NotificationService -->
 </resources>
 

@@ -20,7 +20,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.login.PinCreation;
-import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -280,7 +279,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
 
             if (response.getString("message").equalsIgnoreCase("Success")) {
                 if (mOnCreatePinSucessful != null) {
-                    loadUserInformationDetails();
+                    mOnCreatePinSucessful.startDashboard();
                 }
             } else {
                 showToast(R.string.pin_creation_failed);
@@ -288,56 +287,6 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
 
         } catch (Exception e) {
             logE("Error", e.getMessage());
-        }
-    }
-
-    /**
-     * makes the customer/user_information call to get the User information.
-     *
-     * Class : UserBasicInfoServices - Service class used to fetch the user basic information
-     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
-     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
-     *
-     *
-     * After getting the uniqueid save it to shared preference.
-     */
-    private void loadUserInformationDetails() {
-        showProgressDialog();
-
-        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                hideProgressDialog();
-                handleSuccessResponse(response);
-            }
-        };
-
-        final NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
-                }
-            }};
-
-        final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
-        services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
-    }
-
-    /**
-     * Checks the upcoming appoinment count, depending on that
-     * starts new screens either Pending Visit or Get Started
-     * @param response
-     */
-    public void handleSuccessResponse(JSONObject response){
-        if (mOnCreatePinSucessful != null) {
-            logD("User Info", response.toString());
-            mOnCreatePinSucessful.startDashboard();
         }
     }
 

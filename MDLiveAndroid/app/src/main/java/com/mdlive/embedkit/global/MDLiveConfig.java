@@ -106,6 +106,9 @@ public class MDLiveConfig {
     public static final String URL_FAMILY_HISTORY = "/family_histories";
     public static final String URL_UPDATE_FAMILY_HISTORY = "/family_histories/update_family_histories";
 
+    // URL for NotificationService
+    public static final String URL_NOTIFICATION = "/notifications";
+
     public static void setData(int currentEnvironment){
         switch (currentEnvironment){
             case 1:
@@ -228,6 +231,8 @@ public class MDLiveConfig {
 
         AppSpecificConfig.URL_BEHAVIOURAL_HISTORY = URL_BEHAVIOURAL_HISTORY;
         AppSpecificConfig.URL_UPDATE_BEHAVIOURAL_HISTORY = URL_UPDATE_BEHAVIOURAL_HISTORY;
+
+        AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
     }
     /*
     private static final String BASE_URL = "https://stage-members.mdlive.com/services";

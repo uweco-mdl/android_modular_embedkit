@@ -725,4 +725,15 @@
     <string name="please_confirm_pin">Please Confirm Pin</string>
     <string name="pin_mismatch">Create pin and confirm pin must be same</string>
     <string name="pin_creation_failed">Pin creation failed</string>
+
+    <plurals name="messages">
+        <item quantity="zero">No message</item>
+        <item quantity="one">%d new message</item>
+        <item quantity="other">%d new messages</item>
+    </plurals>
+
+    <string name="no_upcoming_appoinments">No Upcoming Appointments</string>
+    <string name="personal_record_updated_today">Your Personal Health Record was updated today</string>
+    <string name="personal_record_updated_yesterday">Your Personal Health Record was updated yesterday</string>
+    <string name="personal_record_updated_days_ago">Your Personal Health Record was updated %d days ago</string>
 </resources>

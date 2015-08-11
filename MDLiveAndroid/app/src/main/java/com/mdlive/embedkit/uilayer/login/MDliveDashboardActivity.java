@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
@@ -22,11 +24,14 @@ import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Notifications;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
  * Created by dhiman_da on 8/6/2015.
  */
-public class MDliveDashboardActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MDliveDashboardActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        MDLiveDashBoardFragment.SendNotification {
     private static final String DASH_BOARD = "dash_board";
     private static final String LEFT_MENU = "left_menu";
     private static final String RIGHT_MENU = "right_menu";
@@ -60,7 +65,7 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.dash_board__right_container, MDLiveDashBoardFragment.newInstance(), RIGHT_MENU).
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
     }
@@ -234,6 +239,14 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
             builder.create().show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendNotification(UserBasicInfo userBasicInfo) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(RIGHT_MENU);
+        if (fragment != null && fragment instanceof  NotificationFragment) {
+            ((NotificationFragment) fragment).setNotification(userBasicInfo);
         }
     }
 }

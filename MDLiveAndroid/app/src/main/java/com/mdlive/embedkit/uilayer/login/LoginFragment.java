@@ -116,7 +116,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -124,7 +124,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             }
         };
 
-        Log.d("Login", params.toString());
+        logD("Login", params.toString());
 
         LoginService service = new LoginService(getActivity(), null);
         service.login(successCallBackListener, errorListener, params);
@@ -135,6 +135,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             hideProgressDialog();
 
             if(response.getString("msg").equalsIgnoreCase("Success")) {
+                logD("Login", "Login Sucessful : " + response.toString().trim());
 
                 // For saving the device token
                 SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
