@@ -10,12 +10,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
@@ -24,7 +22,6 @@ import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Notifications;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
@@ -83,13 +80,13 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
     }
 
     public void onRightDrawerClicked(View view) {
-        if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-            mDrawerLayout.closeDrawer(Gravity.START);
-            mDrawerLayout.openDrawer(Gravity.END);
-        } else if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
-            mDrawerLayout.closeDrawer(Gravity.END);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            mDrawerLayout.openDrawer(GravityCompat.END);
+        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
-            mDrawerLayout.openDrawer(Gravity.END);
+            mDrawerLayout.openDrawer(GravityCompat.END);
         }
     }
     /* End of Drawer click listeners */
@@ -101,8 +98,8 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
      */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
-        mDrawerLayout.closeDrawer(Gravity.RIGHT);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.END);
 
         switch (position) {
             // Home
