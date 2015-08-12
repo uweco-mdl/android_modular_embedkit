@@ -362,7 +362,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     };
 
     /* This function is used to initialize map view for MDLivePharmacy activity */
-
     public void initializeMapView() {
         HttpsURLConnection.setDefaultSSLSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
