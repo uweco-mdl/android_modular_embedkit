@@ -1,99 +1,78 @@
 package com.mdlive.embedkit.uilayer.myhealth.imageadapter;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.Cache;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicalServices;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Allergies.
- *
- * This class extends with MDLiveCommonConditionsMedicationsActivity
- *  which has all functions that is helped to achieve CRUD functions.
- *
+ * This class is used to display Medical history image in large view
+ * Zoom In/Out features added to Medical history image
+ * Delete photo feature is added with this class.
  */
 
 public class MDLiveImageGalleryView extends MDLiveBaseActivity {
 
-    private ProgressDialog pDialog;
     private RelativeLayout progressBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Allergy
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_image_galleryview);
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
-//        pDialog = Utils.getProgressDialog("Please wait...", thi0s);
-
-        ((TextView) findViewById(R.id.doneText)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        ((TextView) findViewById(R.id.deleteImageText)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteMedicalRecordService();
-            }
-        });
-
-        ((TextView) findViewById(R.id.uploadText)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
-        //((TextView) findViewById(R.id.imageNameText)).setText(getIntent().getStringExtra("doc_name"));
-        ((TextView) findViewById(R.id.imageNameText)).setText("");
-
-            if(getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"") != null){
-                byte[] decodedString = getDatasInVolleyCache(getIntent().getIntExtra("id", 0)+"").data;
-                // First decode with inJustDecodeBounds=true to check dimensions
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-
-                options.inJustDecodeBounds = false;
-                //        options.inSampleSize = 8;
-                options.inSampleSize = 2;
-
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
-
-                if(decodedByte != null)
-                    //imageView.setImageBitmap(decodedByte);
-                    ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(decodedByte);
-            }
-
-//        decodedByte.recycle();
+        progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
+        ((TextView) findViewById(R.id.imageNameText)).setText(StringConstants.EMPTY_STRING);
+        if (getDatasInVolleyCache(getIntent().getIntExtra("id", 0) + "") != null) {
+            byte[] decodedString = getDatasInVolleyCache(getIntent().getIntExtra("id", 0) + "").data;
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = 2;
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
+            if (decodedByte != null)
+                ((ImageView) findViewById(R.id.galleryImageView)).setImageBitmap(decodedByte);
+        }
     }
 
-    public Cache.Entry getDatasInVolleyCache(String photoId){
+    /**
+     * Handling doneButton onclick event.
+     */
+    public void doneTxtClick(View view){
+        onBackPressed();
+    }
+    /**
+     * This method is belongs to deleteImage button Onclick event
+     * while user clicks on deleteImage it will call to deleteMedicalRecordService.
+     */
+    public void deleteImageTextClick(View view){
+        deleteMedicalRecordService();
+    }
+
+    /**
+     * This function is used to get Cache Entry data from Volley Cache.
+     * Each entry has byte data of image to be displayed in Gallery View.
+     */
+    public Cache.Entry getDatasInVolleyCache(String photoId) {
         Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveImageGalleryView.this).getCache();
         Cache.Entry entry = new Cache.Entry();
-        entry = cache.get(photoId+"");
+        entry = cache.get(photoId + "");
         return entry;
     }
-
-
 
     /**
      * Checks user medical history aggregation details.
@@ -103,20 +82,17 @@ public class MDLiveImageGalleryView extends MDLiveBaseActivity {
      */
 
     private void deleteMedicalRecordService() {
-//        pDialog.show();
         progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-//                pDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
                 try {
-                    if(response != null){
-                        Log.e("Response", response.toString());
-                        if(response.has("message")){
-                            if(response.getString("message").equals("Customer document deleted successfully")){
-                                ApplicationController.getInstance().getBitmapLruCache().remove(getIntent().getIntExtra("id", 0)+"");
-                                ApplicationController.getInstance().getRequestQueue(MDLiveImageGalleryView.this).getCache().remove(getIntent().getIntExtra("id", 0)+"");
+                    if (response != null) {
+                        if (response.has("message")) {
+                            if (response.getString("message").equals("Customer document deleted successfully")) {
+                                ApplicationController.getInstance().getBitmapLruCache().remove(getIntent().getIntExtra("id", 0) + "");
+                                ApplicationController.getInstance().getRequestQueue(MDLiveImageGalleryView.this).getCache().remove(getIntent().getIntExtra("id", 0) + "");
                                 setResult(RESULT_OK);
                                 finish();
                             }
@@ -142,37 +118,25 @@ public class MDLiveImageGalleryView extends MDLiveBaseActivity {
      * Error Response Handler for Medical History Completion.
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
-//        pDialog.dismiss();
         progressBar.setVisibility(View.GONE);
-        if (error.networkResponse == null) {
-            if (error.getClass().equals(TimeoutError.class)) {
-                DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                };
-                // Show timeout error message
-                MdliveUtils.connectionTimeoutError(pDialog, MDLiveImageGalleryView.this);
-            }
-        }
+        MdliveUtils.handelVolleyErrorResponse(MDLiveImageGalleryView.this, error, null);
     }
 
 
     /**
      * This method will close the activity with transition effect.
      */
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(this);
     }
+
     /**
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
     public void onStop() {
         super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

@@ -3,18 +3,19 @@ package com.mdlive.embedkit.uilayer.sav;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,8 +33,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocalisationHelper;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -47,30 +49,28 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by sudha_s on 5/14/2015.
+ * This Class defines the location.That is the user can select the location
+ * either by using Current location or the user can select the location by
+ * using the Zip code or either by selecting the state or by selecting
+ * the City.
  */
 public class MDLiveLocation extends MDLiveBaseActivity {
     private ProgressDialog pDialog;
     private EditText ZipcodeEditTxt;
     private TextView CurrentLocationTxt,StateTxt;
     private String SelectedZipCodeCity;
-    //private RelativeLayout progressBar;
     private ArrayList<String> StateName = new ArrayList<String>();
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
     private String ZipCodeCity,selectedCity,longNameText,shortNameText,zipcode_longNameText;
-    private int keyDel=0;
     boolean isCityFound=false;
-
+    private LocationCooridnates locationService;
+    private IntentFilter intentFilter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_location);
-        ViewGroup view = (ViewGroup) getWindow().getDecorView();
-        LocalisationHelper.localiseLayout(this, view);
-//        pDialog = Utils.getProgressDialog("Please Wait...", this);
         StateTxt = (TextView) findViewById(R.id.StateTxt);
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
         StateTxt.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -79,6 +79,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 showListViewDialog(LongNameList, (TextView) v);
             }
         });
+
+        locationService = new LocationCooridnates(getApplicationContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
@@ -89,36 +93,16 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-               /* ZipcodeEditTxt.setOnKeyListener(new View.OnKeyListener() {
-                    @Override
-                    public boolean onKey(View v, int keyCode, KeyEvent event) {
-                        if (keyCode == KeyEvent.KEYCODE_DEL)
-                            keyDel = 1;
-                        return false;
-                    }
-                });
-
-                if (keyDel == 0) {
-                    int len = ZipcodeEditTxt.getText().length();
-                    if(len == 5) {
-                        ZipcodeEditTxt.setText(ZipcodeEditTxt.getText() + "-");
-                        ZipcodeEditTxt.setSelection(ZipcodeEditTxt.getText().length());
-                    }
-                } else {
-                    keyDel = 0;
-                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(ZipcodeEditTxt.getText().toString().length()>=9){
+                if(ZipcodeEditTxt.getText().toString().length()>= IntegerConstants.ZIPCODE_LENGTH){
                     if(!ZipcodeEditTxt.getText().toString().contains("-")){
                         String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
                         ZipcodeEditTxt.setText(formattedString);
                     }
-
                 }
-
             }
         });
         TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
@@ -126,13 +110,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                if(ZipcodeEditTxt.getText().toString().length()!=0||StateTxt.getText().toString().length()!=0){
-                    if(ZipcodeEditTxt.getText().length()!=0){
+                if(ZipcodeEditTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO||StateTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO){
+                    if(ZipcodeEditTxt.getText().length()!=IntegerConstants.NUMBER_ZERO){
                         String getEditTextValue = ZipcodeEditTxt.getText().toString();
                         if(MdliveUtils.validateZipCode(getEditTextValue)){
                             loadZipCode(getEditTextValue);
                         }else{
-                            MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a valid Zip Code.");
+                            MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip));
                         }
                     }else{
                         SaveZipCodeCity(selectedCity);
@@ -140,27 +124,15 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                     }
 
                 }else{
-                    MdliveUtils.alert(pDialog, MDLiveLocation.this, "Please enter a Zipcode or select a State");
+                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip_state));
                 }
 
-
-
-
-               /* if(StateTxt.getText().length()==0){
-                    String getEditTextValue = ZipcodeEditTxt.getText().toString();
-                    String zipcodePattern="^\\d{5}([\\-]?\\d{4})?$";
-                    validateZipCode(getEditTextValue,zipcodePattern);
-
-                }else{
-                    finish();
-                }*/
             }
         });
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                //MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
                 onBackPressed();
             }
         });
@@ -169,67 +141,58 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                pDialog.show();
-                //progressBar.setVisibility(View.VISIBLE);
                 showProgress();
                 getLocationCoordinates();
             }
         });
-//        String localisedJSON = LocalisationHelper.getJsonObjectForLanguage(this,"en.json");
+
         /**
          *
          * This is to Parse the location that is to get long name and short name
          * of the state from the localisation
          */
 
-
-
         LongNameList = Arrays.asList(getResources().getStringArray(R.array.stateName));
         ShortNameList = Arrays.asList(getResources().getStringArray(R.array.stateCode));
     }
 
-
-
-    /*public void validateZipCode(String zipCode){
-        String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-        Pattern zipcodePattern = Pattern.compile(regex);
-        Matcher matcher = zipcodePattern.matcher(zipCode);
-        if(matcher.matches()){
-            loadZipCode(zipCode);
-        }else{
-            Utils.alert(pDialog,MDLiveLocation.this,"Please enter a Zipcode or select a State");
-            //Toast.makeText(MDLiveLocation.this,"Please Enter Valid Zip code",Toast.LENGTH_SHORT).show();
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            registerReceiver(locationReceiver, intentFilter);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }*/
+    }
 
-  /*  public void validateZipCode(String editValue,String zipcodePattern ){
-        if(editValue.matches(zipcodePattern)){
-            loadZipCode(editValue);
-            finish();
-        }else{
-            Utils.alert(pDialog, MDLiveLocation.this, "Please enter valid zip code or select state from the list below");
-            //Toast.makeText(MDLiveLocation.this,"Please Enter Valid Zip code",Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(locationReceiver);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            if(locationService != null && locationService.isTrackingLocation()){
+                locationService.stopListners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }*/
+    }
 
     /**
      * Load Current location.
      * Class : CurrentLocationServices - Service class used to fetch the current latitude and longitude
-     * <p/>
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
-     * <p/>
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
     private void loadCurrentLocation(String latitude, String longitude) {
-//        pDialog.show();
-        //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Response",response.toString());
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
                 CurrentLocationResponse(response);
             }
@@ -238,9 +201,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                pDialog.dismiss();
                 Log.e("Response",error.toString());
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
 
@@ -254,22 +215,16 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     /**
      * Load ZipCode.
      * Class : zipcodeservices - Service class used to fetch the Zip Code information
-     * <p/>
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
-     * <p/>
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
 
-
     private void loadZipCode(String EditTextValue) {
-//        pDialog.show();
-        //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-
                 ZipCodeResponse(response);
             }
         };
@@ -278,14 +233,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
-//                pDialog.dismiss();
-                //progressBar.setVisibility(View.GONE);
                 hideProgress();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this, error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveLocation.this);
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveLocation.this);
+                    }
                 }
             }
         };
@@ -299,17 +257,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
      */
     private void ZipCodeResponse(JSONObject response) {
         try {
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
             hideProgress();
             //Fetch Data From the Services
-
-            Log.e("Response Zip ,ciode",response.toString());
-
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
-
-
             JsonArray responArray = responObj.get("results").getAsJsonArray();
             if(!response.toString().contains("ZERO_RESULTS"))
             {
@@ -327,29 +278,20 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                                 SelectedZipCodeCity = localZip.get("short_name").getAsString();
                                 Log.e("Results", SelectedZipCodeCity);
                                 //This is for long name like Florida.
-
                                 zipcode_longNameText = localZip.get("long_name").getAsString();
-                                //This is for Short name like FL
-
+                             //This is for Short name like FL
                                 for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
                                     if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
                                         longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
                                         SaveZipCodeCity(longNameText);
                                         isCityFound=true;
-                                        Log.e("Location Service -->", Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l));
                                         break;
-
                                     }
                                 }
                                 if(!isCityFound){
-                                    MdliveUtils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+                                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.find_location_zipcode));
                                 }
 
-
-//                            SaveZipCodeCity(SelectedZipCodeCity);
-//                            Intent resultIntent = new Intent();
-//                            resultIntent.putExtra("ZipCodeCity", ZipCodeCity);
-//                            setResult(RESULT_OK, resultIntent);
                             }
                         }
 
@@ -358,69 +300,54 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }else{
 
           MdliveUtils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
-
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
     /**
      * Successful Response Handler for getting Current Location
      */
 
     private void CurrentLocationResponse(JSONObject response) {
         try {
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
             hideProgress();
             //Fetch Data From the Services
             selectedCity = response.getString("state");
-//            SaveZipCodeCity(response.getString("state"));
             finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     /**
      * getLocationCoordinates method is to get the Current latitude and longitude of the location
      */
     public void getLocationCoordinates() {
-        LocationCooridnates locationService = new LocationCooridnates();
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-            locationService.getLocation(this, new LocationCooridnates.LocationResult() {
-                @Override
-                public void gotLocation(final Location location) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (location != null) {
-                                loadCurrentLocation(location.getLatitude() + "", location.getLongitude() + "");
-                            }
-                            else{
-//                                pDialog.dismiss();
-                                //progressBar.setVisibility(View.GONE);
-                                hideProgress();
-                                Toast.makeText(getApplicationContext(), "Unable to get your location!", Toast.LENGTH_SHORT).show();
-                                /*MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this);*/
-                            }
-
-                        }
-                    });
-
-                }
-            });
+            locationService.setBroadCastData(getClass().getSimpleName());
+            locationService.startTrackingLocation(getApplicationContext());
         } else {
-            //progressBar.setVisibility(View.GONE);
             hideProgress();
             MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,(RelativeLayout)findViewById(R.id.progressDialog));
-//            Toast.makeText(getApplicationContext(), "Please enable location service...", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgress();
+            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                loadCurrentLocation(lat + "", lon + "");
+            }else{
+                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     /**
      * @param ZipCodeCity : Pass the selected zipcode String
@@ -453,7 +380,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         intent.putExtra("longNameText", longNameText);
         setResult(Activity.RESULT_OK, intent);
         finish();
-
     }
 
     /**

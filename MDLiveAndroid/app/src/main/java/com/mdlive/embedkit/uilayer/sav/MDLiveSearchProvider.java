@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.sav;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,19 +17,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +56,7 @@ import static java.util.Calendar.MONTH;
 public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private TextView AppointmentTxtView, LocationTxtView, genderTxtView, edtSearch;
     private int month, day, year;
-    private static final int DATE_PICKER_ID = 1111;
+    private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> SearchArrayListProvider = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayListSpeciality = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayListSpeaks = new ArrayList<HashMap<String, String>>();
@@ -67,8 +71,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String, String> postParams = new HashMap<>();
     public String filter_SavedLocation, SavedLocation;
-
-    private ProgressDialog pDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,7 +166,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void locationAction(View v) {
         Intent intent = new Intent(MDLiveSearchProvider.this, MDLiveLocation.class);
-        intent.putExtra("activitycaller", "searchprovider");
+        intent.putExtra("activitycaller", getString(R.string.searchprovider));
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveSearchProvider.this);
     }
@@ -194,14 +196,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void doneAction(View v) {
         postParams.put("located_in", filter_SavedLocation);
-        postParams.put("available_by", "1");
+        postParams.put("available_by", StringConstants.AVAILABLE_BY);
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
-        if (edtSearch.getText().toString().length() != 0) {
+        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
             postParams.put("provider_name", edtSearch.getText().toString());
         }
         if (postParams.get("provider_type") == null) {
-            postParams.put("provider_type", "3");
+            postParams.put("provider_type", StringConstants.APPOINTMENT_TYPE);
         }
         LoadFilterSearchServices();
     }
@@ -211,8 +213,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
-        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, "Florida");
-        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
+        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -240,11 +242,16 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 //                pDialog.dismiss();
                 //progressDialog.setVisibility(View.GONE);
                 hideProgress();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        MdliveUtils.connectionTimeoutError(null, MDLiveSearchProvider.this);
+                    }
                 }
             }
         };
@@ -333,7 +340,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             SearchArrayList.add(map);
 
             SortByArrayList.add(Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
-            Log.e("SortByArrayList----->", Sort_array.getJSONObject(i).getString(Sort_array.getJSONObject(i).keys().next()));
         }
     }
 
@@ -365,8 +371,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void getGenderData(JSONObject response) throws JSONException {
-//        JSONArray Gender_array=null;
-//        Gender_array.put("Any");
         JSONArray Gender_array = response.getJSONArray("gender");
 
         for (int i = 0; i < Gender_array.length(); i++) {
@@ -390,8 +394,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void getAvailableData(JSONObject response) throws JSONException {
-//        JSONArray Available_array=null;
-//        Available_array.put("Any");
         JSONArray Available_array = response.getJSONArray("available_by");
         for (int i = 0; i < Available_array.length(); i++) {
 
@@ -408,12 +410,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             AvailableByArrayList.add(Available_array.getJSONObject(i).getString(Available_array.getJSONObject(i).keys().next()));
         }
     }
-    /**
-     * Click Listener for the Corresponding views . Datas will be pushed in the corresponding arraylist
-     * based on the ArrayList custom view will be populated with the datas.
-     *
-     */
-
 
     /**
      * Load Filter Search Details.
@@ -439,15 +435,33 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
-//                pDialog.dismiss();
-                //progressDialog.setVisibility(View.GONE);
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveSearchProvider.this);
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    Log.e("Response Body", errorObj.toString());
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        if (errorObj.has("error") || errorObj.has("message")) {
+                            final String errorMsg = errorObj.has("error") ? errorObj.getString("error") : (errorObj.has("message") ? errorObj.getString("message") : "");
+                            if(errorMsg != null && errorMsg.length() != 0){
+                                (MDLiveSearchProvider.this).runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        MdliveUtils.showDialog(MDLiveSearchProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        }, null);
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }
         };
@@ -469,7 +483,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             setResult(1, intent);
             MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
             finish();
-            Log.e("Filter Response----->", responObj.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -547,13 +560,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String SelectedText = list.get(position);
-                Log.e("SelectedText", SelectedText);
                 HashMap<String, String> localMap = typeList.get(position);
                 for (Map.Entry entry : localMap.entrySet()) {
-                    Log.e("Values", entry.getValue().toString());
                     if (SelectedText.equals(entry.getValue().toString())) {
                         postParams.put(key, entry.getKey().toString());
-                        Log.e("Key Value", postParams.get(key));
                         break; //breaking because its one to one map
                     }
                 }
@@ -575,15 +585,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         if ("provider_type".equalsIgnoreCase(key)) {
             SpecialityArrayList.clear();
             Map<String, String> speciality = tempmap.get(selectedText);
-            Log.e("Size", "" + speciality.size());
 
             for (Map.Entry<String, String> entry : speciality.entrySet()) {
                 SpecialityArrayList.add(entry.getKey());
-                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
             }
 
         }
     }
+
     /**
      * This method will close the activity with transition effect.
      */

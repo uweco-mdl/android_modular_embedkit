@@ -85,6 +85,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
+                    Log.e("WaitingRoom 1 REsponse", errorObj.toString());
                     if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("message") || errorObj.has("error")) {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
@@ -252,27 +253,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         return new Gson().toJson(postBody);
     }
 
-
-    public void updateUiForProviderStatus(int stageId){
-        switch (stageId){
-            case 1:
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Waiting for Doctor...");
-                ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.green));
-                ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
-            case 2:
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
-                ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
-                ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
-            case 3:
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Starting consultation...");
-                ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.green));
-        }
-
-    }
     /**
      * The back image will pull you back to the Previous activity
      * The home button will pull you back to the Dashboard activity

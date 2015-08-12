@@ -60,7 +60,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      */
     @Override
     protected void saveNewConditionsOrAllergies() {
-//        pDialog.show();
         showProgress();
         if (newConditions.size() == 0) {
             updateConditionsOrAllergies();
@@ -90,7 +89,13 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         }
     }
 
-    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+
+    /**
+     * This asyntask class is used to update medication data sequentially
+     * This function will be called in MDLiveCommonConditionsMedicationsActivity
+     * which has already extends with MDLiveAddConditions
+     */
+    public class UpdateMedicationDatas extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
             showProgress();
@@ -124,24 +129,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
             return null;
         }
     }
-
- /*   public void setDatas(){
-        for(int i = 0; i < newConditions.size(); i++){
-            conditionsText += newConditions.get(i)+", ";
-        }
-        for(int i = 0; i < existingConditions.size(); i++){
-            HashMap<String, String> data = existingConditions.get(i);
-            conditionsText += data.get("name")+", ";
-        }
-        Intent resultData = new Intent();
-        if(conditionsText == null || conditionsText.trim().length() == 0)
-            conditionsText = "No medications reported";
-        else
-            conditionsText += "...";
-        resultData.putExtra("medicationData", conditionsText);
-        setResult(RESULT_OK, resultData);
-    }*/
-
     /**
      * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
      *
@@ -152,7 +139,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     protected void updateConditionsOrAllergies() {
         try {
            IsThisPageEdited = true;
-           new UpdateExistingConditionsService().execute();
+           new UpdateMedicationDatas().execute();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -166,7 +153,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
 
     @Override
     protected void getConditionsOrAllergiesData() {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -195,7 +181,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      */
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -205,7 +190,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                     addBlankConditionOrAllergy();
                 }
                 hideProgress();
-//                pDialog.dismiss();
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -214,7 +198,6 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-
         HashMap<String, String> postBody = new HashMap<String, String>();
         postBody.put("id", (String) ((ViewGroup) (deleteView.getParent())).getTag());
         DeleteMedicationService services = new DeleteMedicationService(MDLiveAddMedications.this, null);
@@ -271,15 +254,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
      * FLAG_ACTIVITY_CLEAR_TOP, FLAG_ACTIVITY_NEW_TASK will flags to start a MedicalHistory Page with clear
      * all activities on stack
      */
-
     public void callMedicalHistoryIntent() {
         finish();
-        /*Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
-        medicalHistory.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        medicalHistory.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(medicalHistory);*/
     }
-
-   
-
 }

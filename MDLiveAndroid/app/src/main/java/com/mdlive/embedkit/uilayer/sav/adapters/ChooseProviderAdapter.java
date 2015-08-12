@@ -64,10 +64,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
-        TextView PatientNmaeTxt,SPecialistTxt;
+        TextView PatientNmaeTxt,SPecialistTxt,group_affiliations;
         TextView withPatientTxt;
         final CircularNetworkImageView ProfileImg;
-        View row = null;
+        View row = null; 
         if(array.get(pos).get("isheader").equals(StringConstants.ISHEADER_TRUE))
         {
             if(row==null)
@@ -98,7 +98,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
             inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseprovider_baseadapter, parent,false);
             PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
+
             PatientNmaeTxt.setText(array.get(pos).get("name"));
+            group_affiliations = (TextView) row.findViewById(R.id.group_affiliations);
+            group_affiliations.setText(array.get(pos).get("group_name"));
             SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
             SPecialistTxt.setText(array.get(pos).get("speciality"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);

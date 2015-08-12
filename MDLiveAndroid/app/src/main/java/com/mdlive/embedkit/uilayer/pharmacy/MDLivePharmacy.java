@@ -1,13 +1,14 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,8 +28,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -48,13 +51,15 @@ import javax.net.ssl.HttpsURLConnection;
  * Google map will indicate location of pharmacy. Click on change pharmacy will redirect to MDLivePharmacyChange page
  */
 
-public class MDLivePharmacy extends FragmentActivity {
+public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private TextView addressline1, addressline2, addressline3;
     private SupportMapFragment mapView;
     private RelativeLayout progressBar;
     private GoogleMap map;
     private Bundle bundletoSend = new Bundle();
+    private IntentFilter intentFilter;
+    private LocationCooridnates locationService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,11 @@ public class MDLivePharmacy extends FragmentActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
         }
         setContentView(R.layout.mdlive_pharmacy);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+        locationService = new LocationCooridnates(getApplicationContext());
+
         //This function is for initialize views in layout
         initializeViews();
         //This function is for initialize google map that was used in layout
@@ -123,17 +133,37 @@ public class MDLivePharmacy extends FragmentActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!MdliveUtils.isNetworkAvailable(MDLivePharmacy.this)) {
-            if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
-                progressBar.setVisibility(View.GONE);
+        try {
+            registerReceiver(locationReceiver, intentFilter);
+            //locationService.setBroadCastData(StringConstants.DEFAULT);
+            if (!MdliveUtils.isNetworkAvailable(MDLivePharmacy.this)) {
+                if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(locationReceiver);
+            //locationService.setBroadCastData(StringConstants.DEFAULT);
+            if(locationService != null && locationService.isTrackingLocation()){
+                locationService.stopListners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     /*
-        * This function is mainly focused on initializing view in layout.
-        * LocalisationHelper will be initialized over here to update tag details of view declared in xml
-        */
+            * This function is mainly focused on initializing view in layout.
+            * LocalisationHelper will be initialized over here to update tag details of view declared in xml
+            */
     public void initializeViews() {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
@@ -281,9 +311,55 @@ public class MDLivePharmacy extends FragmentActivity {
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
             }
         };
-        PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
-        services.doMyPharmacyRequest(responseListener, errorListener);
+        callPharmacyService(responseListener, errorListener);
     }
+
+    /**
+     *  This method is used to call pharmacy service
+     *  In pharmacy service, it requires GPS location details to get distance details.
+     *
+     *  @param errorListener - Pharmacy error response listener
+     *  @param responseListener - Pharmacy detail Success response listener
+     */
+    public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
+                                    final NetworkErrorListener errorListener){
+        if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
+            showProgress();
+            locationService.setBroadCastData(getClass().getSimpleName());
+            locationService.startTrackingLocation(getApplicationContext());
+        }else{
+            PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+            services.doMyPharmacyRequest("", "", responseListener, errorListener);
+        }
+    }
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    handleSuccessResponse(response);
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.setVisibility(View.GONE);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
+                }
+            };
+            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+                services.doMyPharmacyRequest(lat+"", lon+"",responseListener, errorListener);
+            }else{
+                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+                services.doMyPharmacyRequest("","",responseListener, errorListener);
+            }
+        }
+    };
 
     /* This function is used to initialize map view for MDLivePharmacy activity */
 
@@ -303,7 +379,7 @@ public class MDLivePharmacy extends FragmentActivity {
                 @Override
                 public View getInfoWindow(Marker arg0) {
                     View v = getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
-                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText);
+                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
                     TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
                     TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
                     addressline1.setText(bundletoSend.get("store_name")+"");
@@ -311,13 +387,13 @@ public class MDLivePharmacy extends FragmentActivity {
                     addressline3.setText(bundletoSend.get("city")+"  "+(TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
                     return v;
                 }
-
-
                 @Override
                 public View getInfoContents(Marker arg0) {
                     return null;
                 }
             });
+
+            map.getUiSettings().setScrollGesturesEnabled(false);
         }
     }
 
@@ -330,7 +406,9 @@ public class MDLivePharmacy extends FragmentActivity {
         try {
             progressBar.setVisibility(View.GONE);
             JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-            addressline1.setText(pharmacyDatas.getString("store_name") + " " + pharmacyDatas.getString("distance"));
+            addressline1.setText(pharmacyDatas.getString("store_name") + " "+
+                    ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
+                    pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
@@ -371,7 +449,9 @@ public class MDLivePharmacy extends FragmentActivity {
         try {
             JSONObject jobj = new JSONObject(response);
             JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
-            addressline1.setText(pharmacyDatas.getString("store_name"));
+            addressline1.setText(pharmacyDatas.getString("store_name")+" "+
+                    ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
+                            pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
@@ -468,7 +548,7 @@ public class MDLivePharmacy extends FragmentActivity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
     }
 

@@ -523,7 +523,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         } else if ("Birth complications explanation".equals(name)) {
             edtBirthComplications.setText(value);
         } else if ("Current Diet".equals(name)) {
-            txtDietType.setText(value);
+            txtDietType.setText(StringConstants.DIET_TYPE);
         }
     }
 

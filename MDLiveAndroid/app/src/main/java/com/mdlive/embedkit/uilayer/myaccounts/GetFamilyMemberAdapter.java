@@ -10,10 +10,11 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+//import com.squareup.picasso.Picasso;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
@@ -64,7 +65,7 @@ public class GetFamilyMemberAdapter extends BaseAdapter {
         ArrayList<String>url = values.get("URL");
 
         holder.tv.setText(name.get(position));
-        Picasso.with(context).load(url.get(position)).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(holder.img);
+        //Picasso.with(context).load(url.get(position)).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(holder.img);
 
         return rowView;
     }

@@ -1,8 +1,10 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -64,11 +66,14 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private String errorMesssage;
     protected boolean isPerformingAutoSuggestion, mayIShowSuggestions = true;
     protected static String previousSearch = "";
+    private IntentFilter intentFilter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
         //initialize views of activity
         initializeViews();
     }
@@ -138,7 +143,32 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 }
             }
         });
-        locationService = new LocationCooridnates();
+        locationService = new LocationCooridnates(getApplicationContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            registerReceiver(locationReceiver, intentFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            unregisterReceiver(locationReceiver);
+            if(locationService != null && locationService.isTrackingLocation()){
+                locationService.stopListners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -211,8 +241,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
             if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().length() != 0) {
                 errorMesssage = getString(R.string.not_find_pharmacy_state,
-                        cityText.getText().toString(),
                         pharmacy_search_name.getText().toString(),
+                        cityText.getText().toString(),
                         chooseState.getText().toString());
             } else {
                 errorMesssage = getString(R.string.no_pharmacies_listed);
@@ -223,8 +253,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
             if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0) {
                 errorMesssage = getString(R.string.not_find_pharmacy_state,
-                        cityText.getText().toString(),
                         pharmacy_search_name.getText().toString(),
+                        cityText.getText().toString(),
                         chooseState.getText().toString());
             } else {
                 errorMesssage = getString(R.string.no_pharmacies_listed);
@@ -236,6 +266,29 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
         return null;
     }
+
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgress();
+            mayIShowSuggestions = true;
+            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                Location loc = new Location("dummyprovider");
+                loc.setLatitude(lat);
+                loc.setLongitude(lon);
+                addExtrasForLocationInIntent(loc);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                startActivity(sendingIntent);
+                finish();
+                MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+            }else{
+                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
 
     /**
@@ -271,27 +324,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         mayIShowSuggestions = false;
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
             showProgress();
-            locationService.getLocation(this, new LocationCooridnates.LocationResult() {
-                @Override
-                public void gotLocation(final Location location) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideProgress();
-                            mayIShowSuggestions = true;
-                            if (location != null) {
-                                addExtrasForLocationInIntent(location);
-                                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                                startActivity(sendingIntent);
-                                finish();
-                                MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            });
+            locationService.setBroadCastData(getClass().getSimpleName());
+            locationService.startTrackingLocation(getApplicationContext());
         } else {
             MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this, (RelativeLayout) findViewById(R.id.progressDialog));
             hideProgress();

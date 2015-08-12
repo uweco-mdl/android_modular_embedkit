@@ -24,15 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
-import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
-import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
 import com.mdlive.embedkit.uilayer.sav.adapters.ChooseProviderAdapter;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -58,16 +50,16 @@ import java.util.TimeZone;
  * will be visible only when the response from the service for the Doctor on call is true
  * and Doctor on call will be hidden when the response is false.
  */
-public class MDLiveChooseProvider extends MDLiveBaseActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     private ListView listView;
     private ProgressDialog pDialog;
-    private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate;
-    private long StrDate;
-    private ArrayList<HashMap<String, String>> ProviderListMap;
+    private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
+    private long strDate;
+    private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false;
-    private LinearLayout DocOnCalLinLay;
+    private LinearLayout docOnCalLinLay;
     private RelativeLayout filterMainRl;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
@@ -76,20 +68,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider);
-
-        getSupportActionBar().hide();
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
-                    commit();
-
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__right_container, MDLiveDashBoardFragment.newInstance(), RIGHT_MENU).
-                    commit();
-        }
-
         Initailization();
         ChooseProviderResponseList();
     }
@@ -104,11 +82,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
 
     private void Initailization() {
         pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
-        ProviderListMap = new  ArrayList<HashMap<String, String>>();
-        DocOnCalLinLay = (LinearLayout)findViewById(R.id.DocOnCalLinLay);
+        providerListMap = new  ArrayList<HashMap<String, String>>();
+        docOnCalLinLay = (LinearLayout)findViewById(R.id.docOnCalLinLay);
         filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
-        setProgressBar(findViewById(R.id.progressBar));
+        setProgressBar(findViewById(R.id.progressDialog));
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
@@ -137,13 +115,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             }
         });
         ((TextView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
-                    startActivityForResult(intent, 1);
-                    MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
-                }
-            });
+            @Override
+            public void onClick(View v) {
+                Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
+                startActivityForResult(intent,1);
+                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
+            }
+        });
     }
     /**
      *
@@ -166,10 +144,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Error Response", error.toString());
+                Log.e("Error Response", error.toString());
                 setInfoVisibilty();
-                DocOnCalLinLay.setVisibility(View.VISIBLE);
+                docOnCalLinLay.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
+                ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
@@ -180,7 +159,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {
                                 public void run() {
-                                    MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, "OK", null, new DialogInterface.OnClickListener() {
+                                    MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             Intent i = new Intent(MDLiveChooseProvider.this, MDLiveGetStarted.class);
@@ -204,7 +183,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             }};
         ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
     }
     /**
      *
@@ -215,15 +194,88 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
      */
     private void handleSuccessResponse(String response) {
         try {
+            Log.e("REsponse--->", response.toString());
             setInfoVisibilty();
-            DocOnCalLinLay.setVisibility(View.GONE);
+            docOnCalLinLay.setVisibility(View.GONE);
+            filterMainRl.setVisibility(View.VISIBLE);
+            ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
-            String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
-            if(StrDoctorOnCall.equals("false"))
+            boolean StrDoctorOnCall = false;
+            if(responObj.get("doctor_on_call").isJsonNull())
+            {   docOnCalLinLay.setVisibility(View.GONE);
+                filterMainRl.setVisibility(View.GONE);
+            }else{
+                StrDoctorOnCall =  responObj.get("doctor_on_call").getAsBoolean();
+                setHeaderContent(StrDoctorOnCall);
+                if (responObj.has("physicians")){
+                    if(!responObj.get("physicians").isJsonNull() && responObj.get("physicians").isJsonArray()){
+                        if(!responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS_FILTERS)
+                                && !responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS)){
+                            JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
+                            setBodyContent(responArray);
+                        }
+                    }else
+                    {
+                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                    }
+                }
+            }
+
+            if(!responObj.get("physicians").isJsonNull())
             {
-                JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
-                if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
+                if(responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS)){
+                    docOnCalLinLay.setVisibility(View.GONE);
+                    filterMainRl.setVisibility(View.GONE);
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                }else if(responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS_FILTERS)){
+                    docOnCalLinLay.setVisibility(View.GONE);
+                    filterMainRl.setVisibility(View.GONE);
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                }
+                else{
+                    JsonArray responArray = responObj.get("physicians").getAsJsonArray();
+                    // Here the Array has blank string in response
+                    if (responArray.size() > IntegerConstants.NUMBER_ZERO) {
+                        docOnCalLinLay.setVisibility(View.GONE);
+                        if(!StrDoctorOnCall){
+                            filterMainRl.setVisibility(View.VISIBLE);
+                        }
+                        doctorOnCallButtonClick();
+                    } else
+                    {
+                        docOnCalLinLay.setVisibility(View.GONE);
+                        filterMainRl.setVisibility(View.GONE);
+                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                        docOnCalLinLay.setVisibility(View.GONE);
+                        filterMainRl.setVisibility(View.GONE);
+                    }
+                }
+            }
+            /*//String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
+            if(responObj.get("doctor_on_call").isJsonNull())
+            {
+                if(responObj.get("doctor_on_call").toString().contains(StringConstants.NO_PROVIDERS)){
                     // Here the Array has "No Providers listed with given criteria" string in response
                     MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
                         @Override
@@ -231,35 +283,38 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
                             finish();
                         }
                     });
-                    DocOnCalLinLay.setVisibility(View.GONE);
+                    docOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
 
                     return;
                 }else {
+                    JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                     // Here the Array has blank string in response
-                    if (responArray.size() > 0) {
-                        DocOnCalLinLay.setVisibility(View.GONE);
-                        filterMainRl.setVisibility(View.VISIBLE);
+                    if (responArray.size() > IntegerConstants.NUMBER_ZERO) {
+                        docOnCalLinLay.setVisibility(View.GONE);
+                        filterMainRl.setVisibility(View.GONE);
                         doctorOnCallButtonClick();
                     } else {
                         MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
-                        DocOnCalLinLay.setVisibility(View.GONE);
+                        docOnCalLinLay.setVisibility(View.GONE);
                         filterMainRl.setVisibility(View.GONE);
                     }
                 }
-            }
-            //Setting the Doctor On Call Header
-            JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
-            if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-                doctorOnCallButtonClick();
             }else{
-                setHeaderContent(StrDoctorOnCall);
-                setBodyContent(responArray);
-            }
+                //Setting the Doctor On Call Header
+                JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
+                if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
+                    doctorOnCallButtonClick();
+                }else{
+                    String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
+                    setHeaderContent(StrDoctorOnCall);
+                    setBodyContent(responArray);
+                }
+            }*/
         }catch(Exception e){
             e.printStackTrace();
         }
-          setListView();
+        setListView();
     }
     /**
      *
@@ -271,7 +326,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
      */
     private void setListView() {
         showOrHideFooter();
-        baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
+        baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
         ListItemClickListener();
@@ -288,7 +343,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
                 .inflate(R.layout.mdlive_footer, null, false);
 
         // If list size is greater than zero then show the bottom footer
-        if (ProviderListMap != null && ProviderListMap.size() > 0) {
+        if (providerListMap != null && providerListMap.size() > 0) {
             findViewById(R.id.footer).setVisibility(View.GONE);
 
             if (listView.getFooterViewsCount() == 0) {
@@ -319,19 +374,24 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             speciality =  responArray.get(i).getAsJsonObject().get("speciality").getAsString();
             doctorId =  responArray.get(i).getAsJsonObject().get("id").getAsString();
             imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+            JsonArray  affiliationsArray = responArray.get(i).getAsJsonObject().get("provider_groups").getAsJsonArray();
+            for(int j=0;j<affiliationsArray.size();j++) {
+                groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
+                Log.e("affiliationsArray-->", groupAffiliations);
+            }
             try {
 
                 if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
-                    StrDate = IntegerConstants.DATE_FLAG;
+                    strDate = IntegerConstants.DATE_FLAG;
                 else
-                    StrDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                StrDate = IntegerConstants.DATE_FLAG;
+                strDate = IntegerConstants.DATE_FLAG;
             }
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
-            appointmentDate = getDateCurrentTimeZone(StrDate);
+            appointmentDate = getDateCurrentTimeZone(strDate);
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
@@ -339,8 +399,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
-            //map.put("next_availability",getDateCurrentTimeZone(StrDate));
-            ProviderListMap.add(map);
+            map.put("group_name", groupAffiliations);
+            map.put("next_availability",getDateCurrentTimeZone(strDate));
+            providerListMap.add(map);
         }
     }
     /**
@@ -352,8 +413,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
      *
      */
 
-    private void setHeaderContent(String strDoctorOnCall) {
-        if(StringConstants.TRUE.equalsIgnoreCase(strDoctorOnCall))
+    private void setHeaderContent(boolean strDoctorOnCall) {
+        if(StringConstants.TRUE == strDoctorOnCall)
         {
             isDoctorOnCallReady = true;
             HashMap<String, String> map = new HashMap<String, String>();
@@ -363,8 +424,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
-            //map.put("next_availability",getDateCurrentTimeZone(StrDate));
-            ProviderListMap.add(map);
+            //map.put("next_availability",getDateCurrentTimeZone(strDate));
+            providerListMap.add(map);
+            filterMainRl.setVisibility(View.GONE);
         }
     }
 
@@ -380,12 +442,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.e("Provider Id",ProviderListMap.get(position).get("id"));
-                    saveDoctorId(ProviderListMap.get(position).get("id"), ProviderListMap.get(position).get("next_availability"),
-                            ProviderListMap.get(position).get("name"));
-                    Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
-                    startActivity(Reasonintent);
-                    MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
+                Log.e("Provider Id",providerListMap.get(position).get("id"));
+                saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("next_availability"),
+                        providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"));
+                Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
+                startActivity(Reasonintent);
+                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
             }
         });
     }
@@ -419,13 +481,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
      *      triggerred in the Requird places.
      *
      */
-    public void saveDoctorId(String DocorId, String AppointmentDate, String docName)
+    public void saveDoctorId(String DocorId, String AppointmentDate, String docName ,String groupAffiliations)
     {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES,DocorId);
         editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, docName);
         editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, AppointmentDate);
+        editor.putString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, groupAffiliations);
         editor.commit();
     }
     /**
@@ -442,29 +505,37 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
             String response=data.getStringExtra("Response");
             try{
                 // Clear the ListView
-                ProviderListMap.clear();
-                baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, ProviderListMap);
+                providerListMap.clear();
+                baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
                 listView.setAdapter(baseadapter);
-
                 JSONObject jobj=new JSONObject(response);
                 JSONArray jArray=jobj.getJSONArray("physicians");
-
-                if(jArray.toString().contains(StringConstants.NO_PROVIDERS)){
-
-                    DocOnCalLinLay.setVisibility(View.GONE);
+                Log.e("jArray.toString()",jArray.toString());
+                if(jArray.toString().contains(StringConstants.NO_PROVIDERS_FILTERS)){
+                    docOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, jArray.get(0).toString());
-
+                    Log.e("jArray.toString()I'm in if","I'm in if");
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
                 }
                 else if(jArray.length()==0)
                 {
-                    DocOnCalLinLay.setVisibility(View.GONE);
+                    Log.e("jArray.toString()I'm in else","I'm in else");
+                    docOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
+                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
                 }
-
                 else{
-                    ProviderListMap.clear();
+                    providerListMap.clear();
                     handleSuccessResponse(response);
                 }
 
@@ -482,7 +553,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
     {
         //progressBar.setVisibility(View.VISIBLE);
         showProgress();
-        loadingTxt.setVisibility(View.VISIBLE);
+        loadingTxt.setVisibility(View.GONE);
     }
     /*
     * set visible for the details view layout
@@ -502,75 +573,5 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity implements Navigati
     @Override
     public void onStop() {
         super.onStop();
-    }
-
-    /**
-     * Called when an item in the navigation drawer is selected.
-     *
-     * @param position
-     */
-    /**
-     * Called when an item in the navigation drawer is selected.
-     *
-     * @param position
-     */
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        switch (position) {
-            // Home
-            case 0:
-                startActivityWithClassName(MDliveDashboardActivity.class);
-                break;
-
-            // Talk to a Doctor
-            case 1:
-
-                break;
-
-            // Schedule a Visit
-            case 2:
-
-                break;
-
-            // My Health
-            case 3:
-                startActivityWithClassName(MDLiveMyHealthActivity.class);
-                break;
-
-            // Message Center
-            case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
-                break;
-
-            // MDLIVE Assist
-            case 5:
-                showMDLiveAssistDialog();
-                break;
-
-            // Symptom Checker
-            case 6:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 7:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 8:
-                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
-                break;
-
-            // Share this App
-            case 9:
-
-                break;
-
-            // Sign Out
-            case 10:
-
-                break;
-        }
     }
 }

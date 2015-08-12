@@ -31,7 +31,7 @@ import java.util.HashMap;
  * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Allergies.
  *
  * This class extends with MDLiveCommonConditionsMedicationsActivity
- *  which has all functions that is helped to achieve CRUD functions.
+ * which has all functions that is helped to achieve CRUD functions.
  *
  */
 
@@ -50,16 +50,18 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
     }
 
+    /**
+     * This override function is used to save new allergies data in server
+     * This function will be called in MDLiveCommonConditionsMedicationsActivity
+     * which has already extends with MDLiveAddAllergies
+     */
 
     @Override
     protected void saveNewConditionsOrAllergies() {
-//        pDialog.show();
         showProgress();
-        //showProgress();
         setResult(RESULT_OK);
         IsThisPageEdited = true;
         if(newConditions.size() == 0){
-//            pDialog.dismiss();
             hideProgress();
             updateConditionsOrAllergies();
         } else {
@@ -67,52 +69,53 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
                 @Override
                 public void onResponse(JSONObject response) {
-//                    pDialog.dismiss();
                     hideProgress();
                     updateConditionsOrAllergies();
-                  /*  if (newConditions.size() == ++addConditionsCount) {
-                    }*/
                 }
             };
-
             NetworkErrorListener errorListener = new NetworkErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     medicalCommonErrorResponseHandler(error);
                 }
             };
-
             AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
             services.addAllergyRequest(successCallBackListener, errorListener, newConditions);
-
         }
     }
 
+    /**
+     * This override function is used to update allergies data in server
+     * This function will be called in MDLiveCommonConditionsMedicationsActivity
+     * which has already extends with MDLiveAddAllergies
+     */
     @Override
     protected void updateConditionsOrAllergies() {
         try {
             IsThisPageEdited = true;
-            new UpdateExistingConditionsService().execute();
+            new UpdateAllegyDatas().execute();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
+    /**
+     * This asyntask class is used to update allergies data sequentially
+     * This function will be called in MDLiveCommonConditionsMedicationsActivity
+     * which has already extends with MDLiveAddAllergies
+     */
+    public class UpdateAllegyDatas extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
-           // pDialog.show();
             showProgress();
             super.onPreExecute();
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //pDialog.dismiss();
             hideProgress();
             checkMedicalAggregation();
         }
-
     @Override
         protected Void doInBackground(Void... params) {
             if (existingConditions.size() == 0) {
@@ -144,7 +147,6 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     @Override
     protected void getConditionsOrAllergiesData() {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -152,20 +154,27 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 medicalConditionOrAllergyListHandleSuccessResponse(response);
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 medicalCommonErrorResponseHandler(error);
             }};
-
         AllergyListServices services = new AllergyListServices(MDLiveAddAllergies.this, null);
         services.getAllergyListRequest(successCallBackListener, errorListener);
     }
 
+    /**
+     * This function is used to delete allegies datas from server
+     *
+     * DeleteAllergyServices - This class has function to delete allergy data from server.
+     * This over ride function is called by MDLiveCommonConditionsMedicationsActivity which
+     * has already extends with MDLiveAddAllergies.
+     *
+     * @param addConditionsLl - layout of allergy to be deleted.
+     * @param deleteView - delete button of allergy.
+     */
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -174,18 +183,15 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
-//                pDialog.dismiss();
                 hideProgress();
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 medicalCommonErrorResponseHandler(error);
             }
         };
-
         DeleteAllergyServices services = new DeleteAllergyServices(MDLiveAddAllergies.this, null);
         services.deleteAllergyRequest(successCallBackListener, errorListener, (String)((ViewGroup)(deleteView.getParent())).getTag());
     }
@@ -212,7 +218,6 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                 autoCompletionHandleSuccessResponse(atv, response);
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -225,7 +230,6 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             previousSearch = constraint;
             isPerformingAutoSuggestion = true;
         }
-
     }
 
     @Override
@@ -240,24 +244,10 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     }
 
     /**
-     * This function is for calling Medical History Page after done update on Add Medications Page.
-     *
-     * FLAG_ACTIVITY_CLEAR_TOP, FLAG_ACTIVITY_NEW_TASK will flags to start a MedicalHistory Page with clear
-     *  all activities on stack
-     */
-
-    public void callMedicalHistoryIntent(){
-        finish();
-    }
-
-
-
-    /**
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
     public void onStop() {
         super.onStop();
-//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

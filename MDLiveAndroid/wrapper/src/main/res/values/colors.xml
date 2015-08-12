@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--BasePrimaryColor-->
+    <color name="mdliveBackgroundColor">#ecf5fa</color>
+    <color name="mdlivePrimaryBlueColor">#3A89C9</color>
+    <color name="mdliveBottomBlueColor">#ECF5FA</color>
+    <color name="mdliveHeaderPrimaryBlueColor">#489cd4</color>
+    <!--BasePrimaryColor-->
+    <color name="mdliveLoginUsernameColor">#878f95</color>
+
+
+    <color name="black">#35393d</color>
+    <color name="darkblack">#000000</color>
+    <color name="withPatient">#F18032</color>
+
+    <color name="white">#ffffff</color>
+    <color name="grey_txt">#b4b9bd</color>
+    <color name="parentView_color">#D2D5D7</color>
+    <color name="childView_color">#E7E7E7</color>
+    <color name="continueBtn_color">#5877AD</color>
+    <color name="headerStyle_color">#F7F6F5</color>
+    <color name="green">#2A7DB6</color>
+    <color name="red">#FA5858</color>
+    <color name="location_color">#35393d</color>
+
+//Reason Activity
+    <item name="view" type="color">#E0D8D8</item>
+    <item name="search_bgd" type="color">#878f95</item>
+
+    //drawer
+
+    <color name="myPrimaryColor">#2196F3</color>
+
+    <color name="myPrimaryDarkColor">#1976D2</color>
+
+    <color name="myAccentColor">#FF4081</color>
+
+    <color name="myDrawerBackground">#FFF</color>
+
+    <color name="myWindowBackground">#FFF</color>
+
+    <color name="myTextPrimaryColor">#212121</color>
+
+    <color name="myNavigationColor">#000</color>
+
+    <color name="transparent_native">#0FFF</color>
+    <color name="link_blue_native">#0645AD</color>
+
+    <drawable name="pressed_gray">#0c000000</drawable>
+
+    <drawable name="selected_gray">#2c000000</drawable>
+
+    <!-- STATUS BAR COLOR -->
+    <color name="status_bar_color">#224D70</color>
+
+    <color name="lightgray">#D3D3D3</color>
+    <color name="steelblue">#4682B4</color>
+
+
+    <color name="gray_6">#666666</color>
+    <color name="gray_a">#AAAAAA</color>
+    <color name="gray_c">#CCCCCC</color>
+    <color name="transparent">#0FFF</color>
+    <color name="link_blue">#0645AD</color>
+    <color name="selected_bg">#0645AD</color>
+    <color name="white_trans">@color/white</color>
+
+</resources>

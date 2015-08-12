@@ -1,11 +1,13 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
+
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 
 import java.util.List;
 import java.util.Timer;
@@ -25,9 +27,18 @@ public class LocationCooridnates {
     private Context context;
     private Timer trackingTimer;
     private LocationManager lm;
-    private LocationResult locationResult;
     private boolean gps_enabled = false;
+    private boolean isTrackingLocation = false;
+    public static String broadCastData = StringConstants.DEFAULT;
 
+    public LocationCooridnates(Context context){
+        this.context = context;
+        broadCastData = StringConstants.DEFAULT;
+    }
+
+    public void setBroadCastData(String broadCastData){
+        this.broadCastData = broadCastData;
+    }
 
     //Check whether GPS or PROVIDER enabled or not.
     public boolean checkLocationServiceSettingsEnabled(Context context) {
@@ -38,7 +49,8 @@ public class LocationCooridnates {
 
         //exceptions will be thrown if provider is not permitted.
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if(lm != null)
+                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
         }
 
@@ -50,13 +62,17 @@ public class LocationCooridnates {
             return true;
     }
 
+    /**
+     * This function is used to get status of this class tracking location or not.
+     */
+    public boolean isTrackingLocation(){
+        return  isTrackingLocation;
+    }
+
     //Starting location listener and initializing result receiver.
-    public boolean getLocation(Context context, LocationResult result) {
-
-        //LocationResult callback class to pass location value from location service to user code.
-        locationResult = result;
-
-        if (gps_enabled)
+    public boolean startTrackingLocation(Context context) {
+        isTrackingLocation = true;
+        if (gps_enabled && lm != null)
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
 
         trackingTimer = new Timer();
@@ -65,11 +81,16 @@ public class LocationCooridnates {
         return true;
     }
 
+
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
             trackingTimer.cancel();
-            locationResult.gotLocation(location);
-            stopListners();
+            if(isTrackingLocation){
+                //locationResult.gotLocation(location);
+                sendLocationInfo(location);
+                isTrackingLocation = false;
+                stopListners();
+            }
         }
 
         public void onProviderDisabled(String provider) {
@@ -84,44 +105,64 @@ public class LocationCooridnates {
 
     public void stopListners() {
         if (lm != null) {
-            lm.removeUpdates(locationListenerGps);
-            lm = null;
+            if(locationListenerGps != null){
+                if(lm != null){
+                    lm.removeUpdates(locationListenerGps);
+                    lm = null;
+                }
+            }
         }
     }
 
     class GetLastLocation extends TimerTask {
         @Override
         public void run() {
-            lm.removeUpdates(locationListenerGps);
-
+            if(lm != null) {
+                lm.removeUpdates(locationListenerGps);
+            }
             Location gps_loc = null;
             if (gps_enabled) {
                 gps_loc = getLastKnownLocation();
             }
 
             if (gps_loc != null) {
-                locationResult.gotLocation(gps_loc);
+                //locationResult.gotLocation(gps_loc);
+                sendLocationInfo(gps_loc);
                 return;
             }
-
-            locationResult.gotLocation(null);
+            sendLocationInfo(null);
+            //locationResult.gotLocation(null);
         }
     }
 
     private Location getLastKnownLocation() {
-        List<String> providers = lm.getProviders(true);
-        Location bestLocation = null;
-        for (String provider : providers) {
-            Location l = lm.getLastKnownLocation(provider);
-            if (l == null) {
-                continue;
+        if(lm != null){
+            List<String> providers = lm.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = lm.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
             }
-            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                // Found best last known location: %s", l);
-                bestLocation = l;
-            }
+            return bestLocation;
         }
-        return bestLocation;
+        return null;
+    }
+
+    public void sendLocationInfo(Location location){
+        isTrackingLocation = false;
+        Intent locationIntent = new Intent();
+        if(location != null){
+            locationIntent.putExtra("Latitude", location.getLatitude());
+            locationIntent.putExtra("Longitude", location.getLongitude());
+        }
+        locationIntent.setAction(broadCastData);
+        context.sendBroadcast(locationIntent);
     }
 
     /**

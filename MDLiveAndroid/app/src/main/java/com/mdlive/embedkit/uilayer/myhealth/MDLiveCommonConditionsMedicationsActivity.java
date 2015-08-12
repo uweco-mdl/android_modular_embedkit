@@ -27,7 +27,9 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -61,19 +63,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBaseActivity {
 
-//    public static ProgressDialog pDialog;
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
     protected ArrayList<String> newConditions;
     protected ArrayList<HashMap<String,String>> existingConditions;
-    protected int addConditionsCount = 0;
-    protected int existingConditionsCount = 0;
     public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION};
     protected TYPE_CONSTANT type;
-    //public RelativeLayout progressBar;
-    public String conditionsText = "";
-    public static boolean isNewAdded = false;
     public Intent resultData = new Intent();
     public static boolean IsThisPageEdited = false;
 
@@ -84,36 +80,33 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditionsList = new ArrayList<HashMap<String,String>>();
         newConditions = new ArrayList<String>();
         existingConditions = new ArrayList<HashMap<String, String>>();
-        //progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         setProgressBar(findViewById(R.id.progressDialog));
-
-        //pDialog = MdliveUtils.getProgressDialog("Loading...", this);
         getConditionsOrAllergiesData();
-        findViewById(R.id.doneTxt).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    saveBtnAction();
-            }
-        });
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(IsThisPageEdited)
-                    checkMedicalAggregation();
-                else{
-                    finish();
-                    MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
-                }
-
-            }
-        });
-        /*((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.movetohome(MDLiveCommonConditionsMedicationsActivity.this, MDLiveLogin.class);
-            }
-        });*/
     }
+
+    /**
+     * This function handles onClick event of done text in layout
+     * saveBtnAction - is used to add new condition/allergy/medication
+     */
+    public void doneTxtClick(View view){
+        ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+        saveBtnAction();
+    }
+
+    /**
+     * This function handles backImage button onClick Action
+     * IsThisPageEdited :: when user edited this page then it will call medical aggregation service to get current
+     * condition/allergy/medication data.
+     */
+    public void backImgClick(View view){
+        if(IsThisPageEdited)
+            checkMedicalAggregation();
+        else{
+            finish();
+            MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
+        }
+    }
+
     /**
      *
      * This function handles the saving of data when the user presses the save button. Only the newly
@@ -125,7 +118,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         LinearLayout addConditionsLl = (LinearLayout) findViewById(R.id.AddConditionsLl);
         existingConditions.clear();
         newConditions.clear();
-
         for (int i = 0; i < addConditionsLl.getChildCount(); i++) {
             RelativeLayout conditionRl = (RelativeLayout) addConditionsLl.getChildAt(i);
             if (conditionRl.getTag() == null && (((EditText) conditionRl.getChildAt(0)).getText() != null) &&
@@ -140,24 +132,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 existingConditions.add(items);
             }
         }
-
-
-
-     /*     for(String name : newConditions){
-            if(tmpExistingCond.contains(name)){
-                Utils.alert(pDialog, MDLiveCommonConditionsMedicationsActivity.this, "The "+type.name().toLowerCase()+" already exists in your medical history.");
-                return;
-            }
-        }*/
-
         //Converting ArrayList to HashSet to remove duplicates
         LinkedHashSet<String> listToSet = new LinkedHashSet<String>();
         listToSet.addAll(newConditions);
         listToSet.addAll(tmpExistingCond);
-
-//        if (emptyFieldCount > 1) {
-//            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "", "Please fill up empty fields!");
-//        } else {
             if (((newConditions.size() + existingConditions.size()) == listToSet.size())) {
                 saveNewConditionsOrAllergies();
             } else {
@@ -170,10 +148,15 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     MdliveUtils.alert(null, MDLiveCommonConditionsMedicationsActivity.this, getResources().getString(R.string.allergy_already_exist));
                 }
             }
-//        }
     }
 
-    /* For Testing Purpose Get Method Call*/
+    /**
+     * This function is used to make a http call which will be used in MDLiveAddConditions/Allergies/medications pages.
+     *
+     * @param postUrl :: url to be called for update medication/allergy/condition
+     * @param postBody :: required post body to get response from server.
+     *
+     */
     public String updateConditionDetails(String postUrl,String postBody) throws Exception {
         //Url link for choose provider details
         URL url = new URL(postUrl);
@@ -189,6 +172,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
         urlConnection.setRequestProperty("Authorization", auth);
         urlConnection.setRequestProperty("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+//        urlConnection.setRequestProperty("RemoteUserId", MDLiveConfig.USR_UNIQ_ID);  // for SSO2 we no longer persist sensitive data in sharedprefs
+
         String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         if(dependentId != null) {
             urlConnection.setRequestProperty("DependantId", dependentId);
@@ -255,7 +240,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             LayoutInflater viewInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             conditionsList.clear();
             addConditionsLl.removeAllViews();
-
             for (int i = 0; i < conditionsListJSONArray.length(); i++) {
                 View singleConditionView = viewInflater.inflate(R.layout.mdlive_add_condition, null);
                 String conditionName = (type == TYPE_CONSTANT.CONDITION) ? ((JSONObject) conditionsListJSONArray.get(i)).getString("condition") :
@@ -268,22 +252,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 initialiseSingleConditionView(singleConditionView, addConditionsLl, i, tmpCondition);
                 addConditionsLl.addView(singleConditionView);
             }
-            /*if(addConditionsLl.getChildCount() < 3){
-                while(addConditionsLl.getChildCount()<3){
-                    addBlankConditionOrAllergy();
-                }
-            }else{*/
-                addBlankConditionOrAllergy();
-//            }
-//            addBlankConditionOrAllergy();
-
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
+            addBlankConditionOrAllergy();
             hideProgress();
         }catch (Exception e){
             e.printStackTrace();
-//            pDialog.dismiss();
-            //progressBar.setVisibility(View.GONE);
             hideProgress();
         }
     }
@@ -317,9 +289,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     private void initialiseSingleConditionView(final View singleConditionView, final LinearLayout addConditionsLl, int position, HashMap<String, String> conditionDetails) {
         final EditText conditonEt = (EditText) singleConditionView.findViewById(R.id.ConditionEt);
         final ImageView deleteView = (ImageView) singleConditionView.findViewById(R.id.DeleteConditionBtn);
-
         createSingleConditionAllergiesViews(position, conditonEt, deleteView, conditionDetails);
-
         conditonEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -327,7 +297,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             }
         });
         conditonEt.addTextChangedListener(getEditTextWatcher(conditonEt,addConditionsLl, deleteView));
-
         conditonEt.setOnFocusChangeListener(getEditTextFocusChangedListener(conditonEt, addConditionsLl, deleteView));
         if(position == 0){
             deleteView.setVisibility(View.GONE);
@@ -340,9 +309,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 if(isTagNull) {
                     deleteMedicalConditionsOrAllergyAction(deleteView, addConditionsLl);
                 }
-//                } else {
-//                    addBlankConditionOrAllergy();
-//                }
                 addConditionsLl.removeView(singleConditionView);
                 if (addConditionsLl.getChildCount() == 0 && !isTagNull) {
                     addBlankConditionOrAllergy();
@@ -465,21 +431,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditonEt.setId(MdliveUtils.generateViewId());
         deleteView.setId(MdliveUtils.generateViewId());
         String hint = (type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_medications_hint) : getResources().getString(R.string.add_medications_hint));
-//        String hint = (type == TYPE_CONSTANT.CONDITION)?((position == 0)?getResources().getString(R.string.add_condition_with_eg_hint) : getResources().getString(R.string.add_condition_hint)) : (type == TYPE_CONSTANT.ALLERGY)?((position == 0)?getResources().getString(R.string.add_allergies_with_eg_hint) : getResources().getString(R.string.add_allergies_hint)) : ((position == 0)?getResources().getString(R.string.add_meidations_with_eg_hint) : getResources().getString(R.string.add_medications_hint));
         conditonEt.setHint(hint);
         conditonEt.setHintTextColor(getResources().getColor(R.color.grey_txt));
         conditonEt.setTextColor(Color.BLACK);
         conditonEt.setSingleLine(true);
-
-        /*conditonEt.setBackgroundResource(R.drawable.line_bottomline_medicalhistory_bg);*/
-        /*
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)deleteView.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_TOP,conditonEt.getId());
-        params.addRule(RelativeLayout.ALIGN_BOTTOM, conditonEt.getId());
-        params.addRule(RelativeLayout.ALIGN_RIGHT, conditonEt.getId());
-        deleteView.setLayoutParams(params);
-        */
-
         deleteView.setVisibility(View.GONE);
         conditonEt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         if(type == TYPE_CONSTANT.CONDITION) {
@@ -534,19 +489,9 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      *
      */
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
-        previousSearch = "";
-//        pDialog.dismiss();
-        //progressBar.setVisibility(View.GONE);
+        previousSearch = StringConstants.EMPTY_STRING;
         hideProgress();
         NetworkResponse networkResponse = error.networkResponse;
-/*
-        try {
-            String responseBody = new String(error.networkResponse.data, "utf-8" );
-            Log.e("Error Message", responseBody)
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-*/
         if (networkResponse != null) {
             String message = "No Internet Connection";
             if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
@@ -612,17 +557,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 if (atv.getAdapter() != null) {
                     ((ArrayAdapter<String>) atv.getAdapter()).clear();
                 }
-
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(atv, conditionList);
-                /*InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);*/
                 atv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 atv.showDropDown();
+                atv.setDropDownVerticalOffset(0);
                 MdliveUtils.showSoftKeyboard(this, atv);
             }
-
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -751,7 +692,5 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         setResult(RESULT_OK, resultData);
         finish();
         MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
-        //Utils.hideSoftKeyboard(MDLiveCommonConditionsMedicationsActivity.this);
-
     }
 }

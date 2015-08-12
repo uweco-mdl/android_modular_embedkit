@@ -233,8 +233,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(MDLiveReasonForVisit.this);
     }
-
-
 }
 
 

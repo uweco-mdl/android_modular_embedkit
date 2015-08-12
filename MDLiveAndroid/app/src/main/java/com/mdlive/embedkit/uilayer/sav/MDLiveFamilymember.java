@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -76,7 +77,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
         pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
-        lastNameEditText = (EditText) findViewById(R.id.patient2Et);
+        lastNameEditText = (EditText) findViewById(R.id.lastNamePatientEt);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
         dateTxt = (TextView) findViewById(R.id.dobTxt);
         genderll = (LinearLayout) findViewById(R.id.genderLl);
@@ -218,7 +219,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     * Event for gender click
     * */
     public void onGenderClicked(View view) {
-        if(GenderList.size() == 0){
+        if(GenderList.size() == IntegerConstants.NUMBER_ZERO){
             GenderList.add("Male");
             GenderList.add("Female");
         }
@@ -233,7 +234,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     public boolean checkPerdiatricAge(){
-        if(calculteAgeFromPrefs(strDate)<18){
+        if(calculteAgeFromPrefs(strDate)<IntegerConstants.ADD_CHILD_AGELIMIT){
             return true;
         }
         return false;
@@ -332,7 +333,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
-        datePickerDialog.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(18));
+        datePickerDialog.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
         datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
     }
     /**

@@ -59,12 +59,10 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
      */
     @Override
     protected void saveNewConditionsOrAllergies() {
-//        pDialog.show();
         showProgress();
         setResult(RESULT_OK);
         IsThisPageEdited = true;
         if (newConditions.size() == 0) {
-//            pDialog.dismiss();
             hideProgress();
             updateConditionsOrAllergies();
         } else {
@@ -72,12 +70,8 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
                 @Override
                 public void onResponse(JSONObject response) {
-//                    pDialog.dismiss();
                     hideProgress();
                     updateConditionsOrAllergies();
-              /*      if (newConditions.size() == ++addConditionsCount) {
-
-                    }*/
                 }
             };
             NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -89,7 +83,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
 
             AddMedicalConditionServices services = new AddMedicalConditionServices(MDLiveAddConditions.this, null);
             services.addMedicalConditionsRequest(successCallBackListener, errorListener, newConditions);
-
         }
     }
 
@@ -110,23 +103,24 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         }
     }
 
-
+    /**
+     * This asyntask class is used to update preexisting condition data sequentially
+     * This function will be called in MDLiveCommonConditionsMedicationsActivity
+     * which has already extends with MDLiveAddConditions
+     */
     public class UpdateExistingConditionsService extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
-//             pDialog.dismiss();
-            hideProgress();
+            showProgress();
             super.onPreExecute();
 
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //pDialog.dismiss();
             hideProgress();
             checkMedicalAggregation();
         }
-
         @Override
         protected Void doInBackground(Void... params) {
             if (existingConditions.size() == 0) {
@@ -137,7 +131,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                     condition.put("condition", condition.get("name"));
                     condition.remove("name");
                     postBody.put("medical_condition", condition);
-
                     try{
                         updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICAL_CONDITIONS_LIST + "/" +condition.get("id"),
                                 new Gson().toJson(postBody));
@@ -156,10 +149,8 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
      * MedicalConditionListServices - This service class will make the service calls to get the
      * conditions list.
      */
-
     @Override
     protected void getConditionsOrAllergiesData() {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -188,7 +179,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
      */
     @Override
     protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
-//        pDialog.show();
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -197,7 +187,6 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                 if (addConditionsLl.getChildCount() == 0) {
                     addBlankConditionOrAllergy();
                 }
-//                pDialog.dismiss();
                 hideProgress();
             }
         };
@@ -256,26 +245,10 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
     }
 
     /**
-     * This function is for calling Medical History Page after done update on Add Medications Page.
-     * FLAG_ACTIVITY_CLEAR_TOP, FLAG_ACTIVITY_NEW_TASK will flags to start a MedicalHistory Page with clear
-     * all activities on stack
-     */
-
-    public void callMedicalHistoryIntent() {
-        finish();
-        /*Intent medicalHistory = new Intent(getApplicationContext(), MDLiveMedicalHistory.class);
-        medicalHistory.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        medicalHistory.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(medicalHistory);*/
-    }
-
-
-    /**
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
     public void onStop() {
         super.onStop();
-//        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }

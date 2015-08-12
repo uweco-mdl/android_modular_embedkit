@@ -1,4 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,14 +28,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
-import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
-import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -41,8 +37,10 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,7 +54,7 @@ import java.util.List;
  * The phone number field alone can be editable.
  */
 
-public class  MDLiveGetStarted extends MDLiveBaseActivity  implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
     private String strPatientName,SavedLocation;
@@ -73,23 +71,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
-
-        //getSupportActionBar().hide();
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
-                    commit();
-
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__right_container, MDLiveDashBoardFragment.newInstance(), RIGHT_MENU).
-                    commit();
-        }
-
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
-         /*  Load Services*/
+        clearCacheInVolley();
         loadUserInformationDetails();
     }
     /**
@@ -106,60 +90,65 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
     public void nextBtnAction(View v){
         saveDateOfBirth();
         try{
-            if(patientSpinner!=null) {
-                if ((dependentList.size() >= IntegerConstants.ADD_CHILD_SIZE) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
-                    DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-","")));
-                            startActivity(intent);
-                            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+            Log.e("Arkansas",locationTxt.getText().toString());
+            if(locationTxt.getText().toString().equals("Arkansas"))
+            {
+                Log.e("Arkansas",locationTxt.getText().toString());
+                ChooseProviderResponseList();
+            }else {
 
-                        }
-                    };
+                if (patientSpinner != null) {
+                    if ((dependentList.size() >= IntegerConstants.ADD_CHILD_SIZE) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                        DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-", "")));
+                                startActivity(intent);
+                                MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
-                    DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        };
 
-                            dialogInterface.dismiss();
-                        }
-                    };
+                        DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                    MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name),getResources().getString(R.string.call_to_add_another_child),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
-                            negativeOnClickListener,  positiveOnClickListener);
+                                dialogInterface.dismiss();
+                            }
+                        };
+
+                        MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), getResources().getString(R.string.call_to_add_another_child), StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
+                                negativeOnClickListener, positiveOnClickListener);
 
 
-                } else {
-                    if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
-                        Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
-                        intent.putExtra("user_info", userInfoJSONString);
-                        startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
-                        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                     } else {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.PATIENT_NAME, patientSpinner.getSelectedItem().toString());
-                        if(!dependentList.contains(patientSpinner.getSelectedItem().toString())){
-                            editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
-                            Log.d("Dep","null");
-                        }
-                        editor.commit();
-                        if(phonrNmberEditTxt.getText().toString().length()<IntegerConstants.PHONENUMBER_LENGTH)
-                        {
-                            MdliveUtils.alert(pDialog, MDLiveGetStarted.this, "Please enter a valid Phone number");
-
-                        }else
-                        {
-                            editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
-                                    .replace("-", ""));
-                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
-                            startActivity(intent);
+                        if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                            intent.putExtra("user_info", userInfoJSONString);
+                            startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+                        } else {
+                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(PreferenceConstants.PATIENT_NAME, patientSpinner.getSelectedItem().toString());
+                            if (!dependentList.contains(patientSpinner.getSelectedItem().toString())) {
+                                editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
+                            }
+                            editor.commit();
+                            if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
+                                editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
+                                        .replace("-", ""));
+                                clearCacheInVolley();
+                                Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+                                startActivity(intent);
+                                MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+                            } else {
+                                MdliveUtils.alert(pDialog, MDLiveGetStarted.this, getString(R.string.valid_phone_number));
+                            }
+
                         }
 
                     }
-
                 }
             }
         }catch (Exception e){
@@ -207,15 +196,17 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
 
     public void goToLocation(View v){
         Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
-        LocationIntent.putExtra("activitycaller", "getstarted");
+        LocationIntent.putExtra("activitycaller", getString(R.string.getstarted));
         startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
-        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL");
+        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
+        Log.e("Long Location Nmae-->",longLocation);
+        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
 
-        if(longLocation != null && longLocation.length() != 0)
+        if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
             locationTxt.setText(longLocation);
+
     }
 
     /**
@@ -232,8 +223,15 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
             loadUserInformationDetails();
         }else if(requestCode == IdConstants.REQUEST_LOCATION_CHANGE && resultCode == Activity.RESULT_OK){
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, "Florida");
+            String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
+            SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
+            Log.e("Result Location Nmae-->",longNameLocation);
             locationTxt.setText(longNameLocation);
+            SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+            SharedPreferences.Editor searchEditor = searchPref.edit();
+            searchEditor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, SavedLocation);
+            searchEditor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, longNameLocation);
+            searchEditor.commit();
         }
     }
 
@@ -256,14 +254,16 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 dependentName = spinner.getSelectedItem().toString();
-                if (list != null) {
-                    if (list.size() >= IntegerConstants.ADD_CHILD_SIZE) {
-                        if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
+                if(list!=null){
+                    if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
+                    {
+                        if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
+                        {
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));// TODO : Change it one number is confirmed
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));
                                     startActivity(intent);
                                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
@@ -280,20 +280,21 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
 
                                 }
                             };
-                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), "Please call 1-888-818-0978 to \nadd another child.", StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
-                                    negativeOnClickListener, positiveOnClickListener);
-                        } else {
-                            loadDependentInformationDetails(dependentName, position);
+                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), getString(R.string.plscalAlert_txt),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                                    negativeOnClickListener,positiveOnClickListener );
+                        }else
+                        {
+                            loadDependentInformationDetails(dependentName,position);
 
                         }
-                    } else {
+                    }else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
-                        } else {
+                        }else {
                             loadDependentInformationDetails(dependentName, position);
 
                         }
@@ -301,10 +302,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
                 }
             }
 
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
+            public void onNothingSelected(AdapterView<?> arg0) { }
         });
     }
+
+    /**
+     * This function is used to clear cache from volley.This is mainly for clearing
+     * the images in the medical history.It will just clear all the pictures that
+     * has been loaded already in the cache.
+     */
+    public void clearCacheInVolley(){
+        ApplicationController.getInstance().getRequestQueue(MDLiveGetStarted.this).getCache().clear();
+        ApplicationController.getInstance().getBitmapLruCache().evictAll();
+    }
+
     /**
      * This method is for loading the dependent information details.The dependent's
      * date of birth and the dependents gender will be varied for each dependent.
@@ -322,7 +333,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
                     loadUserInformationDetails();
                 }else{
                     if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
-                        if(!dependentList.get(0).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
+                        if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
 
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
 
@@ -368,11 +379,15 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                    }
                 }
 
             }
@@ -455,7 +470,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Dep Response", response.toString());
                 hideProgress();
                 handleDependentSuccessResponse(response);
             }
@@ -507,34 +521,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
                 try {
                     String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
                     phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
-
+                    phonrNmberEditTxt.addTextChangedListener(watcher);
                     phonrNmberEditTxt.setText(formattedString);
-                    phonrNmberEditTxt.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            String changeEditText = phonrNmberEditTxt.getText().toString();
-                            if(changeEditText.length()>=IntegerConstants.PHONENUMBER_LENGTH){
-                                if(!changeEditText.contains("-")){
-                                    try {
-                                        String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(changeEditText));
-                                        phonrNmberEditTxt.setText(formattedString);
-                                    }catch(Exception e){
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                        }
-                    });
                 } catch (Exception e) {
                 }
             }
@@ -559,6 +547,47 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
         }
     }
 
+    int lastIndex = 12;
+    boolean mayIallowtoParse = true;
+
+    TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(mayIallowtoParse){
+                mayIallowtoParse = true;
+                if(s.length() > lastIndex){
+                    if(s.length() == 3 || s.length() == 7){
+                        phonrNmberEditTxt.setText(phonrNmberEditTxt.getText().toString() + "-");
+                    }
+                    lastIndex = s.length();
+                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
+
+                }else if(s.length() < lastIndex){
+                    if(s.length() == 4 || s.length() == 8){
+                        phonrNmberEditTxt.setText(phonrNmberEditTxt.getText().toString().substring
+                                (0, phonrNmberEditTxt.getText().toString().length() - 1));
+                    }
+                    lastIndex = s.length();
+                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
+                }else if(s.length() != 12 && (s.length() == lastIndex) && lastIndex == 4){
+                    mayIallowtoParse = false;
+                    String temp = phonrNmberEditTxt.getText().toString().substring(0, s.length()-1) + "-"+s.charAt(s.length()-1);
+                    phonrNmberEditTxt.setText(temp);
+                    lastIndex = temp.length() - 1;
+                    mayIallowtoParse = true;
+                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
+                }
+            }
+        }
+    };
+
+
 
     /**
      *
@@ -582,7 +611,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
                 test.put("name",strPatientName);
                 test.put("id",conditionsSearch.get(i).getAsJsonObject().get("id").getAsString());
                 test.put("authorized",conditionsSearch.get(i).getAsJsonObject().get("primary_authorized").getAsString());
-                Log.e("dependent list", strPatientName);
                 dependentList.add(strPatientName);
                 PatientList.add(test);
             }
@@ -662,6 +690,78 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     * Choose Provider List Details.
+     * Class : ChooseProviderServices - Service class used to fetch the provider list information.
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered.
+     *
+     */
+    private void ChooseProviderResponseList() {
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgress();
+                providerSuccessResponse(response.toString());
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                Log.d("Error Response", error.toString());
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        if (errorObj.has("message") || errorObj.has("error")) {
+                            final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
+                            (MDLiveGetStarted.this).runOnUiThread(new Runnable() {
+                                public void run() {
+                                    MdliveUtils.showDialog(MDLiveGetStarted.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }, null);
+                                }
+                            });
+                        }
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, null);
+                    }
+                }catch(Exception e){
+                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                    e.printStackTrace();
+                }
+            }};
+        ChooseProviderServices services = new ChooseProviderServices(MDLiveGetStarted.this, pDialog);
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        showProgress();
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
+    }
+    /**
+     *
+     *  Successful Response Handler for Load Basic Info.
+     *   Here if the doctor on call String returns true then the Doctor On Call should
+     *   be available else the doctor on call should be hidden.
+     *
+     */
+    private void providerSuccessResponse(String response) {
+        try {
+            Log.e("REsponse--->", response.toString());
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
     /**
      * The date Of Birth text will be saved in the preferences
      * The location will also be saved to the preferences.
@@ -684,75 +784,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity  implements Navigation
         MdliveUtils.closingActivityAnimation(MDLiveGetStarted.this);
     }
 
-    /**
-     * Called when an item in the navigation drawer is selected.
-     *
-     * @param position
-     */
-    /**
-     * Called when an item in the navigation drawer is selected.
-     *
-     * @param position
-     */
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        switch (position) {
-            // Home
-            case 0:
-                startActivityWithClassName(MDliveDashboardActivity.class);
-                break;
-
-            // Talk to a Doctor
-            case 1:
-
-                break;
-
-            // Schedule a Visit
-            case 2:
-
-                break;
-
-            // My Health
-            case 3:
-                startActivityWithClassName(MDLiveMyHealthActivity.class);
-                break;
-
-            // Message Center
-            case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
-                break;
-
-            // MDLIVE Assist
-            case 5:
-                showMDLiveAssistDialog();
-                break;
-
-            // Symptom Checker
-            case 6:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 7:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 8:
-                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
-                break;
-
-            // Share this App
-            case 9:
-
-                break;
-
-            // Sign Out
-            case 10:
-
-                break;
-        }
-    }
 }
 
 

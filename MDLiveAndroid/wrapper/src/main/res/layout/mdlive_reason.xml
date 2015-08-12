@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle"
+    android:background="@color/mdliveBottomBlueColor"
+    >
+    <LinearLayout
+        android:focusable="true" android:focusableInTouchMode="true"
+        android:layout_width="0px" android:layout_height="0px"/>
+    <LinearLayout
+        android:id="@+id/header"
+        style="@style/LinearLayoutStyle"
+        android:orientation="vertical"
+        android:background="@color/mdliveHeaderPrimaryBlueColor"
+       >
+        <LinearLayout
+            style="@style/wagHeaderLinearLayoutReasonStyle"
+            android:orientation="horizontal">
+            <ImageView
+              style="@style/HeaderBackImgStyle"
+                android:layout_gravity="center"
+                android:id="@+id/backImg"
+             />
+            <ImageView
+               style="@style/HeaderHomeImgStyle"
+                android:id="@+id/homeImg"
+                android:layout_marginLeft="@dimen/chooseproviderhomeheader_marginLeft"
+                android:layout_gravity="center"
+                android:layout_toRightOf="@+id/backImg"
+                android:onClick="movetohome"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="3dp"
+                android:orientation="vertical"
+                android:layout_centerInParent="true">
+
+                <TextView
+                    style="@style/ReasonHeaderTxtStyle"
+                    android:text="@string/header_reason_txt"
+                    android:id="@+id/headerTxt" />
+
+                <TextView
+                    android:id="@+id/reason_patientTxt"
+                    style="@style/ReasonsubHeaderTxtStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="Michelle Marino" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <RelativeLayout
+          style="@style/reasonSearchRLTextStyle">
+
+            <ImageView
+                style="@style/reasonSearchImgStyle"
+                android:id="@+id/search_img"
+                />
+
+            <EditText
+                style="@style/reasonSearch_edittext"
+                android:layout_toRightOf="@+id/search_img"
+                android:hint="@string/searchsymptom_txt"
+                android:textColor="@color/black"
+                android:id="@+id/search_edit"
+                android:layout_toLeftOf="@+id/deleteTextBtn"/>
+
+            <ImageView
+                style="@style/reasonDeleteImgStyle"
+                android:id="@+id/deleteTextBtn"
+                 />
+        </RelativeLayout>
+        </LinearLayout>
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/custom_progress_bar"
+        />
+
+    <ListView
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.1dip"
+        android:id="@+id/reasonList" />
+
+    <include
+        android:id="@+id/footer"
+        style="@style/Footer_Style"
+        android:layout_alignParentBottom="true"
+        layout="@layout/mdlive_footer" />
+</RelativeLayout>

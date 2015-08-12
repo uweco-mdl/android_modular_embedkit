@@ -127,7 +127,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             parentLl.setLayoutParams(params);
         }
         if(notFound){
-            ReasonForVisitTxt.setText("No results found for '"+array.get(pos)+"'\n"+"submit '"+array.get(pos)+"' as your symptom");
+            ReasonForVisitTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
         }else {
             ReasonForVisitTxt.setText(array.get(pos));
         }

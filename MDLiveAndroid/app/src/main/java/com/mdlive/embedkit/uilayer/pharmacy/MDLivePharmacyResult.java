@@ -7,18 +7,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
@@ -48,8 +53,10 @@ import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -65,7 +72,7 @@ import javax.net.ssl.HttpsURLConnection;
  * On clicking on Marker Info window or on the list item on result will redirect
  * to MDLivePharmacyResult Page
  */
-public class MDLivePharmacyResult extends FragmentActivity {
+public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
     private RelativeLayout rl_footer;
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -76,8 +83,10 @@ public class MDLivePharmacyResult extends FragmentActivity {
     private ListView pharmList;
     private PharmacyListAdaper adaper;
     private HashMap<String, Object> keyParams;
-    private boolean isPageLimitReached = false, isLoading = false;
+    private boolean isPageLimitReached = false, isLoading = false, isFirstItemDisplaying = true;
     private String errorMesssage;
+    private ProgressBar bottomLoder;
+    private ScrollView mapscrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +131,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
         keyParams = new HashMap<String, Object>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
+        bottomLoder = (ProgressBar)findViewById(R.id.bottomLoader);
         errorMesssage = getString(R.string.no_pharmacies_listed);
         ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +147,6 @@ public class MDLivePharmacyResult extends FragmentActivity {
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
                 onBackPressed();
             }
         });
@@ -149,17 +158,18 @@ public class MDLivePharmacyResult extends FragmentActivity {
         });
     }
 
-   /*
-    * This function is mainly focused on initializing view in layout.
-    */
+    /*
+     * This function is mainly focused on initializing view in layout.
+     */
     public void initializeListView() {
         pharmList = (ListView) findViewById(R.id.pharmList);
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
+        showOrHideFooter();
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
+                setPharmacyAsADefault((int) list.get(position).get("pharmacy_id"));
             }
         });
     }
@@ -176,6 +186,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 googleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
         }
+        googleMap.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     /*
@@ -217,6 +228,14 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                if(bottomLoder.getVisibility()==View.VISIBLE){
+                    bottomLoder.setVisibility(View.GONE);
+                }
+                try {
+                    Log.e("Pharmacy Response Sucess ---> ", response.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 handleListSuccessResponse(response);
                 resetLoadingViews();
             }
@@ -224,12 +243,29 @@ public class MDLivePharmacyResult extends FragmentActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    Log.e("Pharmacy Response ", errorObj.toString());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(bottomLoder.getVisibility()==View.VISIBLE){
+                    bottomLoder.setVisibility(View.GONE);
+                }
                 progressBar.setVisibility(View.GONE);
                 resetLoadingViews();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
             }
         };
-        progressBar.setVisibility(View.VISIBLE);
+        if(bottomLoder.getVisibility()==View.VISIBLE){
+            progressBar.setVisibility(View.GONE);
+        }else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
         ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
         services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
     }
@@ -255,7 +291,7 @@ public class MDLivePharmacyResult extends FragmentActivity {
         public View getInfoWindow(Marker arg0) {
             View v = getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
             HashMap<String, Object> info = list.get(markerIdCollection.get(arg0));
-            TextView addressline1 = (TextView) v.findViewById(R.id.addressText);
+            TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
             TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
             TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
             addressline1.setText(info.get("store_name")+"");
@@ -375,9 +411,8 @@ public class MDLivePharmacyResult extends FragmentActivity {
                 markerPoint = new LatLng(latitude, longitude);
                 addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
             }
-
             adaper.notifyDataSetChanged();
-            showOrHideFooter();
+            setListViewHeightBasedOnChildren(pharmList);
             //For Google map initialize view
             if (markerPoint != null && googleMap != null)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
@@ -393,44 +428,53 @@ public class MDLivePharmacyResult extends FragmentActivity {
      * @param responObj - returned JSONObject from service
      */
     private void handleJsonDatas(JsonObject responObj) {
-        if(responObj.get("total_pages").isJsonNull()){
-            MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-                            startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
-                            finish();
-                            MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+        try{
+            if(responObj.get("total_pages").isJsonNull()){
+                MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                                startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
+                                finish();
+                                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+                            }
+                        });
+            }
+            if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
+                mapscrollView= (ScrollView) findViewById(R.id.mapscrollView);
+                mapscrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        View view = (View) mapscrollView.getChildAt(mapscrollView.getChildCount() - 1);
+                        int diff = (view.getBottom() - (mapscrollView.getHeight() + mapscrollView.getScrollY()));
+                        if(((int) keyParams.get("page")) == 1 && isFirstItemDisplaying){
+                            mapscrollView.scrollTo(0, 0);
+                            isFirstItemDisplaying = false;
                         }
-                    });
-        }
-        if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
-            pharmList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                }
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if ((firstVisibleItem + visibleItemCount) == totalItemCount &&
-                            rl_footer.getVisibility() == View.VISIBLE &&
-                            !isPageLimitReached
-                            ) {
-                        if (!isLoading) {
-                            pharmList.setEnabled(false);
-                            isLoading = true;
-                            progressBar.setVisibility(View.VISIBLE);
-                            keyParams.put("page", ((int) keyParams.get("page")) + 1);
-                            keyParams.put("per_page", 10);
-                            Gson gson = new Gson();
-                            String postBody = gson.toJson(keyParams);
-                            Log.e("Post Body", postBody);
-                            getPharmacySearchResults(postBody);
+                        // if diff is zero, then the bottom has been reached
+                        if (diff == 0 &&
+                                rl_footer.getVisibility() == View.VISIBLE &&
+                                !isPageLimitReached) {
+                            if (!isLoading) {
+                                pharmList.setEnabled(false);
+                                isLoading = true;
+                                bottomLoder.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                                keyParams.put("page", ((int) keyParams.get("page")) + 1);
+                                keyParams.put("per_page", 10);
+                                Gson gson = new Gson();
+                                String postBody = gson.toJson(keyParams);
+                                Log.e("Post Body", postBody);
+                                getPharmacySearchResults(postBody);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
+        }catch (Exception e){
+             e.printStackTrace();
         }
     }
 
@@ -700,7 +744,32 @@ public class MDLivePharmacyResult extends FragmentActivity {
      * This method will stop the service call if activity is closed during service call.
      */
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
+    }
+
+    public  void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        if(list.size() != 0){
+            listView.setLayoutParams(params);
+        }
+        listView.requestLayout();
     }
 }

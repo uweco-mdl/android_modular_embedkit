@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+import com.embedkit.wrapper.R;
 
-import com.mdlive.embedkit.R;
 
 public class MDLiveBehaviouralHealthActivity extends AppCompatActivity {
     private static final String TAG = "CONTAINER";

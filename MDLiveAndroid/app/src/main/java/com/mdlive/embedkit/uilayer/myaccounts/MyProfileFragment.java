@@ -24,7 +24,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -211,7 +211,7 @@ public class MyProfileFragment extends Fragment{
             emergencyContactPhone = myProfile.getString("emergency_contact_number");
             timeZone = myProfile.getString("timezone");
 
-            Picasso.with(getActivity()).load(profileImageURL).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(mProfileImage);
+            //Picasso.with(getActivity()).load(profileImageURL).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(mProfileImage);
 
 //            final ImageRequest imageRequest = new ImageRequest(profileImageURL, new Response.Listener<Bitmap>() {
 //                @Override

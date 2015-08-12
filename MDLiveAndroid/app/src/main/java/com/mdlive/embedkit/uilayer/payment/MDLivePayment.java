@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -61,7 +62,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
-        if (getIntent() != null) {
+      if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             finalAmout = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
             storePayableAmount(finalAmout);
@@ -156,20 +157,38 @@ public class MDLivePayment extends MDLiveBaseActivity {
         Button buttonDone = (Button) d.findViewById(R.id.set_button);
         final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
         final NumberPicker yearPicker = (NumberPicker) d.findViewById(R.id.year_picker);
-        monthPicker.setMaxValue(12);
-        monthPicker.setMinValue(01);
+        yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                Log.e("Values",""+newVal);
+                Log.e("OldValues",""+oldVal);
+                Calendar c = Calendar.getInstance();
+                int minimumYear = c.get(Calendar.YEAR);
+                if(newVal!=minimumYear){
+                    monthPicker.setMaxValue(12);
+                    monthPicker.setMinValue(1);
+                    monthPicker.setValue(c.get(Calendar.MONTH) + 1);
+                }else{
+                    monthPicker.setMaxValue(12);
+                    monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
+                    monthPicker.setValue(1);
+                }
+            }
+        });
+
         monthPicker.setWrapSelectorWheel(true);
         try {
             Calendar c = Calendar.getInstance();
             Date mDate = new Date();
             c.setTime(mDate);
+            monthPicker.setMaxValue(12);
+            monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
             monthPicker.setValue(c.get(Calendar.MONTH) + 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
         Calendar c = Calendar.getInstance();
         int minimumYear = c.get(Calendar.YEAR);
-
         yearPicker.setMaxValue(9999);
         yearPicker.setMinValue(minimumYear);
         yearPicker.setWrapSelectorWheel(false);
@@ -490,10 +509,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onBackPressed() {
         Intent startMyPharmacyIntent = new Intent(getApplicationContext(), MDLivePharmacy.class);
         startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if (getIntent().hasExtra("redirect_mypharmacy")) {
-            if ((getIntent().getBooleanExtra("redirect_mypharmacy", false))) {
-                startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            if (getIntent() != null && getIntent().hasExtra("redirect_mypharmacy")) {
+                if ((getIntent().getBooleanExtra("redirect_mypharmacy", false))) {
+                    startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         startActivity(startMyPharmacyIntent);
         finish();

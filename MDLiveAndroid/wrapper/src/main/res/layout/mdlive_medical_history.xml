@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        style="@style/ContainerStyle"
+        android:background="@color/mdliveBottomBlueColor">
+
+        <LinearLayout
+            style="@style/wagHeaderLinearLayoutStyle"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/backImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="backImgOnClick"
+                android:layout_marginLeft="19dp"
+                android:background="@drawable/back_arrow_hdpi" />
+
+            <ImageView
+                android:id="@+id/homeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:onClick="movetohome"
+                android:layout_toRightOf="@+id/backImg"
+                android:background="@drawable/home_icon" />
+
+            <LinearLayout
+                style="@style/LinearLayoutStyle"
+                android:layout_height="70dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="3dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ReasonHeaderTxtStyle"
+                    android:text="Medical History" />
+
+                <TextView
+                    android:id="@+id/reason_patientTxt"
+                    style="@style/ReasonsubHeaderTxtStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="Michelle Marino" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/ContainerScrollView"
+            style="@style/ScrollViewStyle"
+            android:layout_marginBottom="12dp"
+            android:background="@color/mdliveBottomBlueColor"
+            android:fillViewport="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <!--<com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv-->
+
+
+                <!--style="@style/SubHeaderTextViewStyle"-->
+
+
+                <!--android:text="@string/getStarted">-->
+
+
+                <!--</com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv>-->
+                <LinearLayout
+                    android:id="@+id/UpdateInfoWindow"
+                    style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/updateInfoText"
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="Last Updated " />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/PediatricAgeCheck1"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/PediatricChecks"
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/age_check1" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/pediatricAgeGroup1"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/perdiatric1YesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/perdiatric1NoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--<View style="@style/MyhealthViewStyle"
+                    android:id="@+id/age_chk_line2"
+                    android:visibility="gone"/>-->
+
+
+                <LinearLayout
+                    android:id="@+id/PediatricAgeCheck2"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/PediatricCheck"
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/age_check2" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/pediatricAgeGroup2"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/perdiatric2YesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/perdiatric2NoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/MyHealthConditionChoiceLl"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/my_health_preexisting" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/conditionsGroup"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/conditionYesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/conditionNoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/MyHealthConditionsLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line_topline_bg"
+                    android:orientation="horizontal"
+                    android:onClick="MyHealthConditionsLlOnClick"
+                    android:visibility="gone">
+
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:layout_toLeftOf="@+id/editConditionsTxt"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:text="Pre-Existing Conditions"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/MyHealthConditionsNameTv"
+                            style="@style/MyhealthListLayoutSubSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="No conditions reported" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/editConditionsTxt"
+                        style="@style/common_style_W_Wrap_H_Wrap"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="10dp"
+                        android:text="EDIT"
+                        android:textColor="@color/green" />
+
+                </RelativeLayout>
+
+                <!--<View style="@style/MyhealthViewStyle" />-->
+
+
+                <LinearLayout
+                    android:id="@+id/MyHealthMedicationsLl"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/my_health_medications" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/medicationsGroup"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/medicationsYesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:checked="false"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/medicationsNoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/MedicationsLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line_topline_bg"
+                    android:orientation="horizontal"
+                    android:onClick="MedicationsLlOnClick"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout1"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:layout_toLeftOf="@+id/editMedicationsTxt"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:text="Medications"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/MedicationsNameTv"
+                            style="@style/MyhealthListLayoutSubSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="No conditions reported" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/editMedicationsTxt"
+                        style="@style/common_style_W_Wrap_H_Wrap"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="10dp"
+                        android:text="EDIT"
+                        android:textColor="@color/green" />
+
+                </RelativeLayout>
+
+                <!--<View style="@style/MyhealthViewStyle" />-->
+
+                <LinearLayout
+                    android:id="@+id/MyHealthAllergiesLl"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:background="@drawable/line_bottomline_bg"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Primary_txt"
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/my_health_allergies" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/allergiesGroup"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/allergiesYesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/allergiesNoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/AllergiesLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line_full_bg"
+                    android:orientation="horizontal"
+                    android:onClick="AllergiesLlOnClick"
+                    android:visibility="gone">
+
+
+                    <!--android:visibility="gone"-->
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:layout_toLeftOf="@+id/editAllergiesTxt"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:text="Allergies"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/AlergiesNameTv"
+                            style="@style/MyhealthListLayoutSubSubTextStyle"
+                            android:layout_width="match_parent"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="No conditions reported" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/editAllergiesTxt"
+                        style="@style/common_style_W_Wrap_H_Wrap"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="10dp"
+                        android:text="EDIT"
+                        android:textColor="@color/green" />
+
+                </RelativeLayout>
+                <!--<View style="@style/MyhealthViewStyle"
+                    android:visibility="gone"/>-->
+
+
+                <LinearLayout
+                    android:id="@+id/MyHealthProceduresLl"
+                    style="@style/titleHeaderBackgroundStyle"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/Procedure_primary_txt"
+                        style="@style/BaseTextViewStyle.MyhealthContentStyle"
+                        android:text="@string/my_health_allergies" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/proceduresGroup"
+                            style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/proceduresYesButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/proceduresNoButton"
+                                style="@style/YesNoRadioButtonStyle"
+                                android:layout_marginLeft="10dp"
+                                android:text="No" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <!--            <LinearLayout
+                                style="@style/titleHeaderBackgroundStyle"
+                                android:id="@+id/ProceduresLl"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    style="@style/MyHealthListImageViewStyle"
+                                    android:src="@drawable/my_procedure" />
+
+
+                                <LinearLayout
+                                    style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        style="@style/BaseTextViewStyle.MyhealthListLayoutSubTextStyle"
+                                        android:text="Procedures" />
+
+                                    <TextView
+                                        style="@style/MyhealthListLayoutSubSubTextStyle"
+                                        android:id="@+id/ProcedureNameTv"
+                                        android:maxLines="2"
+                                        android:text="Panic, blink, Blink" />
+                                </LinearLayout>
+                                <ImageView style="@style/RightArrowStyle" />
+                            </LinearLayout>-->
+
+                <!--<View style="@style/MyhealthViewStyle" />-->
+
+
+                <LinearLayout
+                    android:id="@+id/MyHealthAddPhotoLl"
+                    style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:textSize="17sp"
+                        android:textColor="@color/darkblack"
+                        android:text="Photos" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Helpful for rashes, cuts, etc."
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        style="@style/BaseTextViewStyle.MyhealthChoiceBtnStyle"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/MyHealthAddPhotoL2"
+                    style="@style/LinearLayoutStyle"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:onClick="MyHealthAddPhotoL2OnClick"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/MyHealthCameraBtn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/camera_icon" />
+
+
+                    <TextView
+                        android:id="@+id/takephotoTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="center_vertical"
+                        android:text="Take a photo"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/photosContainer"
+                style="@style/LinearLayoutStyle"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:onClick="MyHealthAddPhotoL2OnClick"
+                android:padding="5dp">
+                <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="4"
+                    android:padding="5dp"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10dp"
+                    android:visibility="gone" />
+                <ProgressBar
+                    android:id="@+id/thumpProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="7dip"
+                    android:indeterminate="true"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminateDrawable="@drawable/mdlive_progressbar"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+                <Button
+                    android:id="@+id/SavContinueBtn"
+                    android:onClick="SavContinueBtnOnClick"
+                    style="@style/MedicalContinueButtonStyle"
+                    android:text="@string/next_btn" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/mdliveBottomBlueColor">
+                <include
+                    style="@style/Footer_Style"
+                    layout="@layout/mdlive_footer" />
+            </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <include layout="@layout/custom_progress_dialog" />
+</merge>

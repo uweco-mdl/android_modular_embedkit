@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -40,19 +41,19 @@ import java.util.Date;
  * the provider like Specalties, about the provider,languages has been defined.
  */
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
-    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv;
+    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private CircularNetworkImageView ProfileImg;
     public String DoctorId;
     private Button tapSeetheDoctorTxt;
-    private String SharedLocation,AppointmentDate,AppointmentType;
+    private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations;
     private LinearLayout providerImageHolder,detailsLl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
-        getPreferenceDetails();
         Initialization();
+        getPreferenceDetails();
         //Service call Method
         loadProviderDetails();
     }
@@ -70,6 +71,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
+        groupAffiliations = settings.getString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, null);
+        detailsGroupAffiliations.setText(groupAffiliations);
         AppointmentType = StringConstants.APPOINTMENT_TYPE;
         if(AppointmentDate!=null && AppointmentDate.length() != 0){
             AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
@@ -98,8 +101,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
+        detailsGroupAffiliations = (TextView) findViewById(R.id.detailsGroupAffiliations);
         detailsLl = (LinearLayout) findViewById(R.id.detailsLl);
         setProgressBar(findViewById(R.id.progressDialog));
+
     /**
      * The back image will pull you back to the Previous activity
      * The tap button will pull you  to the Reason for visit Screen.
@@ -181,6 +186,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         try {
             hideProgress();
             //Fetch Data From the Services
+            Log.e("Response pdetails",response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -235,16 +241,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             }else
             {
                 if(!str_Availability_Type.equals(getString(R.string.with_patient)))
-                   tapSeetheDoctorTxt.setText("Choose "+str_DoctorName);
+                   tapSeetheDoctorTxt.setText(getString(R.string.providerDeatils_choose_doctor,str_DoctorName));
             }
-           if(str_AboutMe.length()!=0)
+           if(str_AboutMe.length()!= IntegerConstants.NUMBER_ZERO)
            {
                aboutme_txt.setText(str_AboutMe);
            }else
            {
                ((LinearLayout)findViewById(R.id.aboutmeLl)).setVisibility(View.GONE);
            }
-            if(!str_education.equals("")||str_education != null && !str_education.isEmpty()||str_education.length()!=0)
+            if(!str_education.equals("") && !str_education.isEmpty()||str_education.length()!=0)
             {
                 education_txt.setText(str_education);
             }else
@@ -253,7 +259,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 ((LinearLayout)findViewById(R.id.educationLl)).setVisibility(View.GONE);
             }
 
-            if(!str_BoardCertifications.equals("")||str_BoardCertifications != null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
+            if(!str_BoardCertifications.equals("")||str_BoardCertifications == null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
             {
                 location_txt.setText(str_BoardCertifications);
             }else
@@ -339,7 +345,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         for(int i=0;i<langArray.size();i++)
         {
             lang+=langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
-            if(!lang.equals("")||lang != null && !lang.isEmpty()||lang.length()!=0)
+            if(!lang.equals("")&& !lang.isEmpty()||lang.length()!=IntegerConstants.NUMBER_ZERO)
             {
                 lang_txt.setText(lang);
             }else
@@ -359,13 +365,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     private void getLicenseArrayResponse(JsonObject providerdetObj, String license_state) {
         JsonArray responArray = providerdetObj.get("provider_affiliations").getAsJsonArray();
+        String hospitalAffilations = "";
         for(int i=0;i<responArray.size();i++)
         {
 //            JsonObject licenseObject = responArray.get(i).getAsJsonObject();
 //            license_state +=licenseObject.get("state").getAsString()+"\n";
-            String hospitalAffilations = "";
+
             hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1)+"\n";
-            if(!hospitalAffilations.equals("")||hospitalAffilations != null || !hospitalAffilations.isEmpty()||hospitalAffilations.length()!=0)
+            if(!hospitalAffilations.equals("")|| !hospitalAffilations.isEmpty()||hospitalAffilations.length()!=0)
             {
                 hospitalAffilations_txt.setText(hospitalAffilations);
             }else
