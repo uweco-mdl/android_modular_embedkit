@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -93,7 +92,7 @@ public class LoginFragment extends MDLiveBaseFragment{
 
         } else {
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), getActivity().getString(R.string.please_enter_mandetory_fileds), Toast.LENGTH_SHORT).show();
+                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.app_name), getActivity().getString(R.string.please_enter_mandetory_fileds));
             }
         }
     }
@@ -155,7 +154,8 @@ public class LoginFragment extends MDLiveBaseFragment{
             }
 
             else {
-                Toast.makeText(getActivity(),"Login Failed",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Login Failed",Toast.LENGTH_SHORT).show();
+                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.app_name), getActivity().getString(R.string.please_enter_mandetory_fileds));
             }
 
         } catch (Exception e) {

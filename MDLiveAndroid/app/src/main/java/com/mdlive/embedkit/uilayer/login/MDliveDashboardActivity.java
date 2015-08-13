@@ -1,27 +1,21 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.activity.MDLiveMyHealthActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
@@ -107,29 +101,29 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
 
                 break;
 
-            // Talk to a Doctor
+            // See a Doctor
             case 1:
 
                 break;
 
-            // Schedule a Visit
+            // MDLIVE Assist
             case 2:
-
-                break;
-
-            // My Health
-            case 3:
-                startActivityWithClassName(MDLiveMyHealthActivity.class);
+                MdliveUtils.showMDLiveAssistDialog(this);
                 break;
 
             // Message Center
-            case 4:
+            case 3:
                 startActivityWithClassName(MessageCenterActivity.class);
                 break;
 
-            // MDLIVE Assist
+            // Symptom Checker
+            case 4:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
             case 5:
-                showMDLiveAssistDialog();
+                startActivityWithClassName(MyAccountActivity.class);
                 break;
 
             // Symptom Checker
@@ -149,11 +143,6 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
 
             // Share this App
             case 9:
-
-                break;
-
-            // Sign Out
-            case 10:
 
                 break;
         }
@@ -177,7 +166,7 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
     }
 
     public void onMdliveAssistClicked(View view) {
-        showMDLiveAssistDialog();
+        MdliveUtils.showMDLiveAssistDialog(this);
     }
 
     public void onSymptomCheckerClicked(View view) {
@@ -204,47 +193,6 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
 
     private void startActivityWithClassName(final Class clazz) {
         startActivity(new Intent(getBaseContext(), clazz));
-    }
-
-    private void showMDLiveAssistDialog() {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            final View view = layoutInflater.inflate(R.layout.alertdialogmessage, null);
-            ImageView alertImage = (ImageView) view.findViewById(R.id.alertdialogimageview);
-            alertImage.setImageResource(R.drawable.ic_launcher);
-            TextView alertText = (TextView) view.findViewById(R.id.alertdialogtextview);
-            alertText.setText(getText(R.string.call_text));
-
-            builder.setView(view);
-            builder.setPositiveButton(getText(R.string.call),
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                Intent intent = new Intent(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + getText(R.string.callnumber)));
-                                startActivity(intent);
-                            } catch (Exception e) {
-                            }
-
-                        }
-                    });
-            builder.setNegativeButton(getText(R.string.cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-
-                    }
-                }
-            });
-            builder.create().show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

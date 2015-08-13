@@ -48,11 +48,7 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
         }
 
         viewHolder.mTextView.setText(getItem(position).mName);
-        if (User.MODE_ADD_CHILD == getItem(position).mMode) {
-            viewHolder.mImageView.setImageResource(R.drawable.doctor_icon);
-        } else {
-            viewHolder.mImageView.setImageUrl(getItem(position).mImageUrl, ApplicationController.getInstance().getImageLoader(convertView.getContext()));
-        }
+        viewHolder.mImageView.setImageUrl(getItem(position).mImageUrl, ApplicationController.getInstance().getImageLoader(convertView.getContext()));
 
         return convertView;
     }
@@ -76,7 +72,7 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
 
         viewHolder.mTextView.setText(getItem(position).mName);
         if (User.MODE_ADD_CHILD == getItem(position).mMode) {
-            viewHolder.mImageView.setImageResource(R.drawable.doctor_icon);
+            viewHolder.mImageView.setImageResource(R.drawable.add_child);
         } else {
             viewHolder.mImageView.setImageUrl(getItem(position).mImageUrl, ApplicationController.getInstance().getImageLoader(convertView.getContext()));
         }
