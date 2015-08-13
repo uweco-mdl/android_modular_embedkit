@@ -245,6 +245,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
     }
 
     private void loadPinService(String params) {
+        MdliveUtils.hideKeyboard(getActivity(), (View) mPassCode7);
         showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {

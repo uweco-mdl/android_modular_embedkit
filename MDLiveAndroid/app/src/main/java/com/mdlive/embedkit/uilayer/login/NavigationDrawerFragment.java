@@ -52,9 +52,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.navigation_drawer, container, false);
+    }
 
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.navigation_drawer, container, false);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mDrawerListView = (ListView) view.findViewById(R.id.navigation_drawer_list_view);
 
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,8 +73,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
         mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(), drawerItems, imgs));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+    }
 
-        return mDrawerListView;
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     private void selectItem(int position) {
@@ -77,13 +86,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
     }
 
     /**

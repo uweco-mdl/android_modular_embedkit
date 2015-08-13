@@ -6,11 +6,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -24,6 +26,10 @@ import org.json.JSONObject;
  */
 public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private SendNotification mSendNotification;
+
+    //private CircularNetworkImageView mCircularNetworkImageView;
+    private Spinner mSpinner;
+    private DashBoardSpinnerAdapter mAdapter;
 
     private UserBasicInfo mUserBasicInfo;
 
@@ -56,6 +62,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //mCircularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.dash_board_circular_image_view);
+        mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
     }
 
     @Override
@@ -92,11 +101,19 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 final Gson gson = new Gson();
                 mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
-                logD("User Basic Info", "User Basic Info : " + response.toString().trim());
-                logD("User Basic Info", "User Basic Info : " + mUserBasicInfo.toString());
+                mUserBasicInfo.saveToSharedPreference(getActivity());
 
                 if (mSendNotification != null) {
                     mSendNotification.sendNotification(mUserBasicInfo);
+                }
+
+//                if (mCircularNetworkImageView != null) {
+//                    mCircularNetworkImageView.setImageUrl(mUserBasicInfo.getPersonalInfo().getImageUrl(), ApplicationController.getInstance().getImageLoader(getActivity()));
+//                }
+
+                if (mSpinner != null) {
+                    mAdapter = new DashBoardSpinnerAdapter(getActivity(), android.R.layout.simple_list_item_1, UserBasicInfo.getAllUsers(getActivity()));
+                    mSpinner.setAdapter(mAdapter);
                 }
             }
         };

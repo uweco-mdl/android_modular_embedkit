@@ -160,7 +160,7 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
     }
 
     /* Start of Dashboard icons click listener */
-    public void onTalkToDoctorClicked(View view) {
+    public void onSeeADoctorNowClicked(View view) {
 
     }
 
@@ -180,8 +180,16 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
         showMDLiveAssistDialog();
     }
 
-    public void onSymptomChecker(View view) {
+    public void onSymptomCheckerClicked(View view) {
         startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+    }
+
+    public void onMyAccountClicked(View view) {
+        startActivityWithClassName(MyAccountActivity.class);
+    }
+
+    public void onSignoutClicked(View view) {
+
     }
     /* End of Dashboard icons click listener */
 
