@@ -320,7 +320,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         JsonArray specialityArray = providerdetObj.get("speciality_qualifications").getAsJsonArray();
         for(int i=0;i<specialityArray.size();i++)
         {
-            specialities+= specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
+            specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
             if(!specialities.equals("")||specialities.length()!=0)
             {
                 specialities_txt.setText(specialities);
@@ -344,7 +344,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         JsonArray langArray = providerdetObj.get("Language").getAsJsonArray();
         for(int i=0;i<langArray.size();i++)
         {
-            lang+=langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
+            lang+="\u2022"+" "+langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
             if(!lang.equals("")&& !lang.isEmpty()||lang.length()!=IntegerConstants.NUMBER_ZERO)
             {
                 lang_txt.setText(lang);

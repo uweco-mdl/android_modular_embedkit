@@ -1,18 +1,15 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.TimeZone;
 
 
@@ -58,16 +56,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private long strDate;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
-    private boolean isDoctorOnCallReady = false;
-    private LinearLayout docOnCalLinLay;
-    private RelativeLayout filterMainRl;
+    private boolean isDoctorOnCallReady = false,available_now_status;
+    private FrameLayout filterMainRl;
+    private RelativeLayout docOnCalLinLay;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_choose_provider);
+        setContentView(R.layout.fragment_chooseprovider);
         Initailization();
         ChooseProviderResponseList();
     }
@@ -83,20 +81,20 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private void Initailization() {
         pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
         providerListMap = new  ArrayList<HashMap<String, String>>();
-        docOnCalLinLay = (LinearLayout)findViewById(R.id.docOnCalLinLay);
-        filterMainRl = (RelativeLayout)findViewById(R.id.filterMainRl);
+        docOnCalLinLay = (RelativeLayout)findViewById(R.id.docOnCalLinLay);
+        filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
         setProgressBar(findViewById(R.id.progressDialog));
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveChooseProvider.this);
-                onBackPressed();
-            }
-        });
+//        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                MdliveUtils.hideSoftKeyboard(MDLiveChooseProvider.this);
+//                onBackPressed();
+//            }
+//        });
     }
     /**
      * This function is invoked when the doctor on call returns true from the service.
@@ -105,15 +103,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void doctorOnCallButtonClick() {
-        seenextAvailableBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MDLiveChooseProvider.this,MDLiveReasonForVisit.class);
-                startActivity(intent);
-                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
-
-            }
-        });
+//        seenextAvailableBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MDLiveChooseProvider.this,MDLiveReasonForVisit.class);
+//                startActivity(intent);
+//                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
+//
+//            }
+//        });
         ((TextView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +192,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     private void handleSuccessResponse(String response) {
         try {
-            Log.e("REsponse--->", response.toString());
+            Log.e("Response--->", response.toString());
             setInfoVisibilty();
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
@@ -272,45 +270,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     }
                 }
             }
-            /*//String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
-            if(responObj.get("doctor_on_call").isJsonNull())
-            {
-                if(responObj.get("doctor_on_call").toString().contains(StringConstants.NO_PROVIDERS)){
-                    // Here the Array has "No Providers listed with given criteria" string in response
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                    docOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.GONE);
 
-                    return;
-                }else {
-                    JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
-                    // Here the Array has blank string in response
-                    if (responArray.size() > IntegerConstants.NUMBER_ZERO) {
-                        docOnCalLinLay.setVisibility(View.GONE);
-                        filterMainRl.setVisibility(View.GONE);
-                        doctorOnCallButtonClick();
-                    } else {
-                        MdliveUtils.alert(pDialog, MDLiveChooseProvider.this, StringConstants.NO_PROVIDERS);
-                        docOnCalLinLay.setVisibility(View.GONE);
-                        filterMainRl.setVisibility(View.GONE);
-                    }
-                }
-            }else{
-                //Setting the Doctor On Call Header
-                JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
-                if(responArray.toString().contains(StringConstants.NO_PROVIDERS)){
-                    doctorOnCallButtonClick();
-                }else{
-                    String StrDoctorOnCall =  responObj.get("doctor_on_call").getAsString();
-                    setHeaderContent(StrDoctorOnCall);
-                    setBodyContent(responArray);
-                }
-            }*/
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -326,6 +286,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     private void setListView() {
         showOrHideFooter();
+        Log.e("List","Am in SetListview");
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
@@ -339,25 +300,25 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     * has been implemented.
     * */
     public void showOrHideFooter() {
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
-
-        // If list size is greater than zero then show the bottom footer
-        if (providerListMap != null && providerListMap.size() > 0) {
-            findViewById(R.id.footer).setVisibility(View.GONE);
-
-            if (listView.getFooterViewsCount() == 0) {
-
-                listView.addFooterView(footerView, null, false);
-            }
-        }
-        // If list size is zero then remove the bottom footer & add the list footer
-        else {
-            findViewById(R.id.footer).setVisibility(View.VISIBLE);
-            if (listView.getFooterViewsCount() > 0) {
-                listView.removeFooterView(footerView);
-            }
-        }
+//        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+//                .inflate(R.layout.mdlive_footer, null, false);
+//
+//        // If list size is greater than zero then show the bottom footer
+//        if (providerListMap != null && providerListMap.size() > 0) {
+//            findViewById(R.id.footer).setVisibility(View.GONE);
+//
+//            if (listView.getFooterViewsCount() == 0) {
+//
+//                listView.addFooterView(footerView, null, false);
+//            }
+//        }
+//        // If list size is zero then remove the bottom footer & add the list footer
+//        else {
+//            findViewById(R.id.footer).setVisibility(View.VISIBLE);
+//            if (listView.getFooterViewsCount() > 0) {
+//                listView.removeFooterView(footerView);
+//            }
+//        }
     }
 
     /**
@@ -369,6 +330,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void setBodyContent(JsonArray responArray) {
+        doctorOnCallButtonClick();
         for(int i=0;i<responArray.size();i++) {
             providerName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
             speciality =  responArray.get(i).getAsJsonObject().get("speciality").getAsString();
@@ -391,6 +353,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 strDate = IntegerConstants.DATE_FLAG;
             }
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
+             available_now_status =  responArray.get(i).getAsJsonObject().get("available_now_status").getAsBoolean();
             appointmentDate = getDateCurrentTimeZone(strDate);
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
@@ -399,6 +362,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
+            map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
             map.put("next_availability",getDateCurrentTimeZone(strDate));
             providerListMap.add(map);
@@ -424,7 +388,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
-            //map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("available_now_status", available_now_status+"");
+            map.put("next_availability",getDateCurrentTimeZone(strDate));
             providerListMap.add(map);
             filterMainRl.setVisibility(View.GONE);
         }
@@ -439,9 +404,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     public void ListItemClickListener()
     {
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("List","Am in ListItem Click Listener");
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("next_availability"),
                         providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"));
@@ -450,6 +417,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
             }
         });
+
     }
 
     /**
@@ -464,9 +432,46 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 TimeZone tz = TimeZone.getDefault();
                 calendar.setTimeInMillis(timestamp * 1000);
                 calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date currenTimeZone = (Date) calendar.getTime();
-                return sdf.format(currenTimeZone);
+//                SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMM dd HH:mm a");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//                Calendar calendar = Calendar.getInstance();
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+//                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//                calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(timestamp+""));
+
+
+                Calendar today = Calendar.getInstance();
+                today.set(Calendar.getInstance().get(Calendar.YEAR),
+                        Calendar.getInstance().get(Calendar.MONTH),
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+
+                Calendar tomorrow = Calendar.getInstance();
+                tomorrow.add(Calendar.DATE, 1);  // number of days to add
+                tomorrow.set(tomorrow.get(Calendar.YEAR), tomorrow.get(Calendar.MONTH), tomorrow.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+                Date currenTimeZone1 = (Date) calendar.getTime();
+                Log.e("general Timezone-->",calendar.getTimeInMillis()+"");
+                Log.e("today Timezone-->",today.getTimeInMillis()+"");
+                Log.e("tomrw Timezone-->",tomorrow.getTimeInMillis()+"");
+
+                String sendData="";
+                if(timestamp <= today.getTimeInMillis()){
+                    sendData = "Today "+calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE);
+                    Log.e("Kobe Timezone-->","Kobe today");
+                }else if(timestamp > today.getTimeInMillis() && timestamp <= tomorrow.getTimeInMillis()){
+                    sendData = "Tomorrow "+calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE);
+                    Log.e("Kobe Timezone-->","Kobe tmr");
+                }else{
+                    Date currenTimeZone = (Date) calendar.getTime();
+                    sendData = sdf.format(currenTimeZone);
+                    Log.e("Kobe Timezone-->","Kobe future");
+                }
+
+                //Date currenTimeZone = (Date) calendar.getTime();
+
+                //return sdf.format(currenTimeZone);
+//                return dateFormat.format(calendar.getTime());
+                return sendData;
             }
 
         }catch (Exception e) {

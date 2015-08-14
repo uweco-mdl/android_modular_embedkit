@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,16 +40,19 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 /**
  * The GetStarted class has the dependents name,Date of Birth ,gender and the Phone number
@@ -60,6 +66,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private String strPatientName,SavedLocation;
     public static boolean isFemale;
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<String> providerTypeArrayList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
     private EditText  phonrNmberEditTxt;
@@ -75,6 +82,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         initialiseData();
         clearCacheInVolley();
         loadUserInformationDetails();
+        loadProviderType();
+
     }
     /**
      *
@@ -171,6 +180,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         DateTxt = (TextView) findViewById(R.id.dobTxt);
         genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
+        providerTypeArrayList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
 
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
@@ -201,11 +211,25 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
-        Log.e("Long Location Nmae-->",longLocation);
+        Log.e("Long Location Nmae-->", longLocation);
         SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
 
         if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
             locationTxt.setText(longLocation);
+
+    }
+    /**
+     *
+     * The Click event for the Provider Type will be showing the dialog which
+     * contains the provider type like Family Physician or Pediatrician or
+     * Therapist.For switching over to the dependent we will be having the
+     * change for provider type .This will be based on the corresponding
+     * dependents.
+     *
+     */
+    public void goToProviderType(View v) {
+
+        showListViewDialog(providerTypeArrayList,(TextView)findViewById(R.id.providertypeTxt));
 
     }
 
@@ -336,7 +360,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                         if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
 
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
-
+                            loadDependentProviderTypeDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
                         }
                     }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -458,6 +482,34 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
     /**
+     *
+     * Load loadProviderType Details.
+     * Class : ProviderTypeList - Service class used to fetch the Provider Detail information
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     *
+     */
+    private void loadProviderType() {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgress();
+                handleproviderTypeSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Response", error.toString());
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
+            }};
+        ProviderTypeList services = new ProviderTypeList(MDLiveGetStarted.this, null);
+        services.getProviderType("",successCallBackListener, errorListener);
+    }
+    /**
      * Load Family Member Type Details.
      * Class : FamilyMembersList - Service class used to fetch the Family Member List information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
@@ -483,8 +535,31 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
-        services.getUserBasicInfoRequest(depenedentId,successCallBackListener, errorListener);
+        services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
     }
+
+                                private void loadDependentProviderTypeDetails(String depenedentId) {
+                                showProgress();
+                                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                    Log.e("ptype Response", response.toString());
+                                    hideProgress();
+                                    handleproviderTypeSuccessResponse(response);
+                                    }
+                                    };
+
+                                    NetworkErrorListener errorListener = new NetworkErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                    Log.d("Response", error.toString());
+                                    hideProgress();
+                                    MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+                                    }};
+                                    ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
+                                    ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
+                                    }
 
 
     /**
@@ -586,8 +661,38 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             }
         }
     };
+    /**
+     *
+     *  Successful Response Handler for Provider Type Info.The Provider type info will provider the gender
+     *  of the user and the date of birth of the corresponding user.The dependent id will be
+     *  passed for the the each provider while switching over the dependent so that the
+     *  corresponding provider type will be changed to the selected dependents.
+     *
+     */
+
+    private void handleproviderTypeSuccessResponse(JSONObject response) {
+        try {
+            JSONObject providertype = response.getJSONObject("provider_types");
+            providerTypeArrayList.clear();
+            Iterator<String> iter = providertype.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                try {
+                    Object value = providertype.get(key);
+                    providerTypeArrayList.add(value.toString());
 
 
+                    Log.e("ptype keys",value.toString());
+                } catch (JSONException e) {
+                    // Something went wrong!
+                }
+                ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+            }
+
+        } catch (Exception e) {
+
+        }
+    }
 
     /**
      *
@@ -641,6 +746,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             JSONObject notiObj=response.getJSONObject("notifications");
             isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
             DateTxt.setText(personalInfo.getString("birthdate"));
+            locationTxt.setText(personalInfo.getString("city")+" ,"+personalInfo.getString("state"));
             String state = personalInfo.getString("state");
             if(state.length()<3) {
                 List<String> stateArr = Arrays.asList(getResources().getStringArray(R.array.stateName));
@@ -744,6 +850,36 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         showProgress();
         services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
+    }
+
+    /**
+     * Instantiating array adapter to populate the listView
+     * The layout android.R.layout.simple_list_item_single_choice creates radio button for each listview item
+     * The dialog will be showing the provider type in the inflated listview and the
+     * user can select either one among the list so it can be set to the Provider Type Text.
+     * @param list : Dependent users array list
+     */
+    private void showListViewDialog(final ArrayList<String> list, final TextView selectedText) {
+
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(convertView);
+        ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        lv.setAdapter(adapter);
+        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String SelectedText = list.get(position);
+                selectedText.setText(SelectedText);
+                dialog.dismiss();
+            }
+        });
     }
     /**
      *
