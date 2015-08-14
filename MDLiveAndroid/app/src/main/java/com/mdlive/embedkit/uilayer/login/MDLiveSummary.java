@@ -48,7 +48,6 @@ public class MDLiveSummary extends MDLiveBaseActivity {
      * This function is for clear preference datas from app.
      * This is will reduce size of memory of app.
      */
-
     public void clearPref(){
         MdliveUtils.clearSharedPrefValues(this);
     }
