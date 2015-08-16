@@ -2,8 +2,10 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -35,27 +38,25 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_activity_myaccounts);
+        setContentView(R.layout.mdlive_tab_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setTitle("");
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        TextView toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(getResources().getString(R.string.my_account));
-
-        final FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-        if (tabHost != null) {
-            tabHost.setup(this, getSupportFragmentManager(), R.id.tabcontent);
-
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(MY_ACCOUNT_TAG), MY_ACCOUNT_TAG, R.drawable.icon_i), MyProfileFragment.class, null);
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(BILLING_TAG), BILLING_TAG, R.drawable.icon_i), ViewCreditCard.class, null);
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(FAMILY_TAG), FAMILY_TAG, R.drawable.icon_i), GetFamilyMemberFragment.class, null);
-
-            tabHost.setOnTabChangedListener(this);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_account));
         }
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+        }
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
@@ -68,6 +69,14 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.my_account));
+        adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.billing));
+        adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.family_history));
+        viewPager.setAdapter(adapter);
     }
 
     /**

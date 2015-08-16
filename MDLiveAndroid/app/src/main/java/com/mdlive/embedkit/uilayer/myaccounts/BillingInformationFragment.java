@@ -1,12 +1,9 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -31,8 +28,9 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 6/22/2015.
  */
-public class BillingInformationFragment extends Fragment implements  View.OnClickListener{
+public class BillingInformationFragment extends MDLiveBaseFragment implements View.OnClickListener {
 
+    SharedPreferences sharedpreferences;
     private Button mAddCreditCard = null;
     private TextView mViewCreditCard = null;
     private Button mReplaceCreditCard = null;
@@ -49,9 +47,6 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
     private EditText mCountry = null;
     private Button mSave = null;
     private View mBillingInfoView = null;
-    SharedPreferences sharedpreferences;
-    private ProgressDialog pDialog;
-
     private String cardNumber = null;
     private String securityCode = null;
     private String cardExpirationMonth = null;
@@ -64,43 +59,39 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
     private String country = null;
     private String zip = null;
 
+    public static BillingInformationFragment newInstance() {
+        final BillingInformationFragment fragment = new BillingInformationFragment();
+        return fragment;
+    }
+
+    public BillingInformationFragment() {
+        super();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View billingInformation = inflater.inflate(R.layout.fragment_view_creditcard,null);
-
-        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
-
-        init(billingInformation);
-
-        getCreditCardInfoService();
-//        mReplaceCreditCard.setVisibility(View.VISIBLE);
-//        mBillingInfoView.setVisibility(View.GONE);
-//        mViewCreditCard.setVisibility(View.VISIBLE);
-//        mAddCreditCard.setVisibility(View.GONE);
-
-//        if(sharedpreferences.getBoolean("Add_CREDIT_CARD",false))
-//        {
-//            getCreditCardInfoService();
-//            mReplaceCreditCard.setVisibility(View.VISIBLE);
-//            mBillingInfoView.setVisibility(View.GONE);
-//            mViewCreditCard.setVisibility(View.VISIBLE);
-//            mAddCreditCard.setVisibility(View.GONE);
-//        }
-//        else
-//        {
-//            mReplaceCreditCard.setVisibility(View.GONE);
-//            mBillingInfoView.setVisibility(View.GONE);
-//            mViewCreditCard.setVisibility(View.GONE);
-//            mAddCreditCard.setVisibility(View.VISIBLE);
-//        }
-        return billingInformation;
+        return inflater.inflate(R.layout.fragment_view_creditcard, container, false);
     }
 
-    public void getCreditCardInfoService()
-    {
-        pDialog.show();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mViewCreditCard = (TextView) view.findViewById(R.id.txt_viewCreditCard);
+
+        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getCreditCardInfoService();
+    }
+
+    public void getCreditCardInfoService() {
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -116,12 +107,11 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -130,9 +120,8 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
         service.getCreditCardInfo(successCallBackListener, errorListener, null);
     }
 
-    public void handlegetCreditCardInfoSuccessResponse(JSONObject response)
-    {
-        pDialog.dismiss();
+    public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
+        hideProgressDialog();
         try {
             JSONObject myProfile = response.getJSONObject("billing_information");
             country = myProfile.getString("billing_country");
@@ -149,46 +138,16 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
             cardExpirationMonth = myProfile.getString("cc_expmonth");
 
             mViewCreditCard.setText("Visa ending in " + cardExpirationMonth + "/" + cardExpirationYear + "\n" + "Billing Address : " + nameOnCard + "\n" + address1 + address2 + "\n" +
-            city + ", " + state + "\n" + country);
-        }
-        catch(JSONException e)
-        {
+                    city + ", " + state + "\n" + country);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void init(View billingInformation)
-    {
-//        mAddCreditCard = (Button)billingInformation.findViewById(R.id.btn_addCreditCard);
-        mViewCreditCard = (TextView)billingInformation.findViewById(R.id.txt_viewCreditCard);
-//        mReplaceCreditCard = (Button)billingInformation.findViewById(R.id.btn_replaceCreditCard);
-//        mCardNumber = (EditText)billingInformation.findViewById(R.id.edt_cardNumber);
-//        mSecurityCode = (EditText)billingInformation.findViewById(R.id.edt_securityCode);
-//        mCardExpirationMonth = (EditText)billingInformation.findViewById(R.id.edt_cardExpirationMonth);
-////        mCardExpirationYear = (EditText)billingInformation.findViewById(R.id.edt_cardExpirationYear);
-//        mNameOnCard = (EditText)billingInformation.findViewById(R.id.edt_nameOnCard);
-//        mAddress1 = (EditText)billingInformation.findViewById(R.id.edt_address1);
-//        mAddress2 = (EditText)billingInformation.findViewById(R.id.edt_address2);
-//        mCity = (EditText)billingInformation.findViewById(R.id.edt_city);
-//        mState = (EditText)billingInformation.findViewById(R.id.edt_state);
-////        mCountry = (EditText)billingInformation.findViewById(R.id.edt_country);
-//        mZip = (EditText)billingInformation.findViewById(R.id.edt_zipCode);
-//        mSave = (Button)billingInformation.findViewById(R.id.btn_save);
-
-//        mBillingInfoView = (View)billingInformation.findViewById(R.id.billing_info);
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
-//        mAddCreditCard.setOnClickListener(this);
-//        mReplaceCreditCard.setOnClickListener(this);
-//        mSave.setOnClickListener(this);
-//        sharedpreferences = getActivity().getSharedPreferences("MDLIVE", Context.MODE_PRIVATE);
     }
 
     @Override
     public void onClick(View v) {
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
 //            case R.id.btn_addCreditCard:
 //                mBillingInfoView.setVisibility(View.VISIBLE);
 //                mAddCreditCard.setVisibility(View.GONE);
@@ -207,22 +166,20 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
         }
     }
 
-    public void addCreditCardInfo()
-    {
-         cardNumber = mCardNumber.getText().toString();
-         securityCode = mSecurityCode.getText().toString();
-         cardExpirationMonth = mCardExpirationMonth.getText().toString();
-         cardExpirationYear = mCardExpirationYear.getText().toString();
-         nameOnCard = mNameOnCard.getText().toString();
-         address1 = mAddress1.getText().toString();
-         address2 = mAddress2.getText().toString();
-         city = mCity.getText().toString();
-         state = mState.getText().toString();
-         country = mCountry.getText().toString();
-         zip = mZip.getText().toString();
+    public void addCreditCardInfo() {
+        cardNumber = mCardNumber.getText().toString();
+        securityCode = mSecurityCode.getText().toString();
+        cardExpirationMonth = mCardExpirationMonth.getText().toString();
+        cardExpirationYear = mCardExpirationYear.getText().toString();
+        nameOnCard = mNameOnCard.getText().toString();
+        address1 = mAddress1.getText().toString();
+        address2 = mAddress2.getText().toString();
+        city = mCity.getText().toString();
+        state = mState.getText().toString();
+        country = mCountry.getText().toString();
+        zip = mZip.getText().toString();
 
-        if(isEmpty(cardNumber)&& isEmpty(securityCode)&& isEmpty(cardExpirationMonth)&& isEmpty(nameOnCard)&& isEmpty(address1)&& isEmpty(address2)&& isEmpty(city)&& isEmpty(state)&& isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country))
-        {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -242,26 +199,22 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
 
                 parent.put("billing_information", jsonObject);
                 loadBillingInfo(parent.toString());
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
-            Toast.makeText(getActivity(),"All fields are required",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public Boolean isEmpty(String cardInfo)
-    {
-        if(!TextUtils.isEmpty(cardInfo))
+    public Boolean isEmpty(String cardInfo) {
+        if (!TextUtils.isEmpty(cardInfo))
             return true;
         return false;
     }
 
     private void loadBillingInfo(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -276,12 +229,11 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -292,9 +244,9 @@ public class BillingInformationFragment extends Fragment implements  View.OnClic
 
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
             //Fetch Data From the Services
-            Toast.makeText(getActivity(),response.getString("message"),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putBoolean("Add_CREDIT_CARD", true);
             editor.commit();

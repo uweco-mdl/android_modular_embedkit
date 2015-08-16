@@ -49,24 +49,24 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     /* Start of Drawer click listeners */
     public void onLeftDrawerClicked(View view) {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
-            mDrawerLayout.openDrawer(GravityCompat.START);
-        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (getDrawerLayout().isDrawerOpen(GravityCompat.END)) {
+            getDrawerLayout().closeDrawer(GravityCompat.END);
+            getDrawerLayout().openDrawer(GravityCompat.START);
+        } else if (getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            getDrawerLayout().closeDrawer(GravityCompat.START);
         } else {
-            mDrawerLayout.openDrawer(GravityCompat.START);
+            getDrawerLayout().openDrawer(GravityCompat.START);
         }
     }
 
     public void onRightDrawerClicked(View view) {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            mDrawerLayout.openDrawer(GravityCompat.END);
-        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
+        if (getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            getDrawerLayout().closeDrawer(GravityCompat.START);
+            getDrawerLayout().openDrawer(GravityCompat.END);
+        } else if (getDrawerLayout().isDrawerOpen(GravityCompat.END)) {
+            getDrawerLayout().closeDrawer(GravityCompat.END);
         } else {
-            mDrawerLayout.openDrawer(GravityCompat.END);
+            getDrawerLayout().openDrawer(GravityCompat.END);
         }
     }
     /* End of Drawer click listeners */

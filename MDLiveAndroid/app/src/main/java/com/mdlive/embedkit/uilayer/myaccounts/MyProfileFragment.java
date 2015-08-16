@@ -1,11 +1,8 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +14,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.RoundedImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -24,15 +22,16 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
-//import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//import com.squareup.picasso.Picasso;
+
 /**
  * Created by venkataraman_r on 6/18/2015.
  */
-public class MyProfileFragment extends Fragment{
+public class MyProfileFragment extends MDLiveBaseFragment{
 
     private RoundedImageView mProfileImage = null;
     private CircularNetworkImageView mCircularNetworkImageView;
@@ -51,42 +50,44 @@ public class MyProfileFragment extends Fragment{
     private TextView mChangePin = null;
     private TextView mChangeSecurityQuestions = null;
     private Button mSave = null;
-    private ProgressDialog pDialog;
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null;
 
+    public static MyProfileFragment newInstance() {
+        final MyProfileFragment myProfileFragment = new MyProfileFragment();
+        return myProfileFragment;
+    }
+
+    public MyProfileFragment() {
+        super();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragments_myprofile, container, false);
+    }
 
-        View myProfileView = inflater.inflate(R.layout.fragments_myprofile,null);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mProfileImage = (RoundedImageView)myProfileView.findViewById(R.id.profileImg);
-        mProfileName = (TextView)myProfileView.findViewById(R.id.profileName);
-        mUserDOB = (TextView)myProfileView.findViewById(R.id.userDOB);
-        mGender = (TextView)myProfileView.findViewById(R.id.gender);
-        mUserName = (TextView)myProfileView.findViewById(R.id.txt_userName);
-        mPreferredSignIn = (TextView)myProfileView.findViewById(R.id.txt_preferred_signin);
-        mEmail = (TextView)myProfileView.findViewById(R.id.txt_language);
-        mAddress = (TextView)myProfileView.findViewById(R.id.txt_address);
-        mPrefferdPhone = (TextView)myProfileView.findViewById(R.id.txt_preferred_phone);
-        mMobile = (TextView)myProfileView.findViewById(R.id.txt_mobile);
-        mEmergencyContactPhone = (TextView)myProfileView.findViewById(R.id.txt_emergencyContanctPhone);
-        mTimeZone = (TextView)myProfileView.findViewById(R.id.txt_timeZone);
-        mChangePassword = (TextView)myProfileView.findViewById(R.id.btn_changePassword);
-        mChangePin = (TextView)myProfileView.findViewById(R.id.btn_changePin);
-        mChangeSecurityQuestions = (TextView)myProfileView.findViewById(R.id.btn_changeSecurityQuestion);
-        mSave = (Button)myProfileView.findViewById(R.id.btn_save);
-
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-
-        toolbarTitle.setText(getResources().getString(R.string.profile_info));
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
-        getProfileInfoService();
+        mProfileImage = (RoundedImageView)view.findViewById(R.id.profileImg);
+        mProfileName = (TextView)view.findViewById(R.id.profileName);
+        mUserDOB = (TextView)view.findViewById(R.id.userDOB);
+        mGender = (TextView)view.findViewById(R.id.gender);
+        mUserName = (TextView)view.findViewById(R.id.txt_userName);
+        mPreferredSignIn = (TextView)view.findViewById(R.id.txt_preferred_signin);
+        mEmail = (TextView)view.findViewById(R.id.txt_language);
+        mAddress = (TextView)view.findViewById(R.id.txt_address);
+        mPrefferdPhone = (TextView)view.findViewById(R.id.txt_preferred_phone);
+        mMobile = (TextView)view.findViewById(R.id.txt_mobile);
+        mEmergencyContactPhone = (TextView)view.findViewById(R.id.txt_emergencyContanctPhone);
+        mTimeZone = (TextView)view.findViewById(R.id.txt_timeZone);
+        mChangePassword = (TextView)view.findViewById(R.id.btn_changePassword);
+        mChangePin = (TextView)view.findViewById(R.id.btn_changePin);
+        mChangeSecurityQuestions = (TextView)view.findViewById(R.id.btn_changeSecurityQuestion);
+        mSave = (Button)view.findViewById(R.id.btn_save);
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,13 +142,13 @@ public class MyProfileFragment extends Fragment{
 
             }
         });
-
-        return myProfileView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getProfileInfoService();
     }
 
     public void setProfileInfo()
@@ -165,7 +166,7 @@ public class MyProfileFragment extends Fragment{
     }
 
     private void getProfileInfoService() {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -179,13 +180,12 @@ public class MyProfileFragment extends Fragment{
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -195,8 +195,7 @@ public class MyProfileFragment extends Fragment{
     }
 
     public void handlegetProfileInfoSuccessResponse(JSONObject response) {
-
-        pDialog.dismiss();
+        hideProgressDialog();
 
         try {
             JSONObject myProfile = response.getJSONObject("personal_info");
@@ -259,7 +258,7 @@ public class MyProfileFragment extends Fragment{
     }
     public void loadProfileInfo(String params)
     {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -274,7 +273,7 @@ public class MyProfileFragment extends Fragment{
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -283,7 +282,7 @@ public class MyProfileFragment extends Fragment{
                             }
                         };
                         // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -295,7 +294,7 @@ public class MyProfileFragment extends Fragment{
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             handlegetProfileInfoSuccessResponse(response);
 

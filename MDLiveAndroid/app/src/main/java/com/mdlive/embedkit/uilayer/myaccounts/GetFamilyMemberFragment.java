@@ -1,13 +1,9 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -33,36 +29,39 @@ import java.util.HashMap;
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
-public class GetFamilyMemberFragment extends Fragment {
+public class GetFamilyMemberFragment extends MDLiveBaseFragment {
+    private ListView lv;
+    private HashMap<String, ArrayList<String>> values;
+    private ArrayList<String> nameList;
+    private ArrayList<String> urlList;
 
-    Toolbar toolbar;
-    private TextView toolbarTitle;
-    ListView lv;
-    private ProgressDialog pDialog;
-    HashMap<String,ArrayList<String>> values;
-    ArrayList<String> nameList;
-    ArrayList<String> urlList;
+    public static GetFamilyMemberFragment newInstance() {
+        final GetFamilyMemberFragment fragment = new GetFamilyMemberFragment();
+        return fragment;
+    }
+
+    public GetFamilyMemberFragment() {
+        super();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_get_familymember, container, false);
+    }
 
-        View addCreditCard = inflater.inflate(R.layout.fragment_get_familymember,null);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(getResources().getString(R.string.family_member));
+        values = new HashMap<String, ArrayList<String>>();
+        nameList = new ArrayList<String>();
+        urlList = new ArrayList<String>();
 
-         values =new HashMap<String,ArrayList<String>>();
-         nameList = new ArrayList<String>();
-         urlList = new ArrayList<String>();
-
-        lv=(ListView) addCreditCard.findViewById(R.id.listView);
+        lv = (ListView) view.findViewById(R.id.listView);
 
 
-        TextView addFamilyMember = (TextView)addCreditCard.findViewById(R.id.txt_add_FamilyMember);
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
-        getFamilyMemberInfoService();
+        TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
         addFamilyMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,14 +74,17 @@ public class GetFamilyMemberFragment extends Fragment {
 
             }
         });
-
-        return addCreditCard;
-
     }
 
-    public void getFamilyMemberInfoService()
-    {
-        pDialog.show();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getFamilyMemberInfoService();
+    }
+
+    public void getFamilyMemberInfoService() {
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -97,12 +99,11 @@ public class GetFamilyMemberFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -110,26 +111,23 @@ public class GetFamilyMemberFragment extends Fragment {
         service.getFamilyMemberInfo(successCallBackListener, errorListener, null);
     }
 
-    public void handlegetCreditCardInfoSuccessResponse(JSONObject response)
-    {
-        pDialog.dismiss();
+    public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
+        hideProgressDialog();
         try {
-            Log.i("response",response.toString());
+            Log.i("response", response.toString());
             JSONArray jsonarray = (JSONArray) response.get("dependant_users");
 
-            for(int i=0; i<jsonarray.length(); i++) {
+            for (int i = 0; i < jsonarray.length(); i++) {
                 JSONObject obj = jsonarray.getJSONObject(i);
                 String url = obj.getString("image_url");
                 String name = obj.getString("name");
                 nameList.add(name);
                 urlList.add(url);
             }
-            values.put("NAME",nameList);
-            values.put("URL",urlList);
+            values.put("NAME", nameList);
+            values.put("URL", urlList);
             lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), values));
-        }
-        catch(JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
