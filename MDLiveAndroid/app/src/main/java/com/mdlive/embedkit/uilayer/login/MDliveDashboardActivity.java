@@ -138,23 +138,13 @@ public class MDliveDashboardActivity extends AppCompatActivity implements Naviga
                 startActivityWithClassName(MyAccountActivity.class);
                 break;
 
-            // Symptom Checker
+            // Help & Support
             case 7:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 8:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 9:
                 startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
                 break;
 
             // Share this App
-            case 10:
+            case 8:
 
                 break;
         }
