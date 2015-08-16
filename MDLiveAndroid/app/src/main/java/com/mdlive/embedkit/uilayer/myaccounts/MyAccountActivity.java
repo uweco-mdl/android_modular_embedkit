@@ -3,7 +3,8 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,19 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by sanjibkumar_p on 7/27/2015.
  */
-public class MyAccountActivity extends AppCompatActivity implements FragmentTabHost.OnTabChangeListener {
+public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements FragmentTabHost.OnTabChangeListener {
 
     private static final String MY_ACCOUNT_TAG = "Account";
     private static final String BILLING_TAG = "Billing";
@@ -24,7 +33,7 @@ public class MyAccountActivity extends AppCompatActivity implements FragmentTabH
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_activity_myaccounts);
 
@@ -32,6 +41,7 @@ public class MyAccountActivity extends AppCompatActivity implements FragmentTabH
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         TextView toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.my_account));
@@ -45,6 +55,86 @@ public class MyAccountActivity extends AppCompatActivity implements FragmentTabH
             tabHost.addTab(createTabSpec(tabHost.newTabSpec(FAMILY_TAG), FAMILY_TAG, R.drawable.icon_i), GetFamilyMemberFragment.class, null);
 
             tabHost.setOnTabChangedListener(this);
+        }
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+
+        switch (position) {
+            // Home
+            case 0:
+                startActivityWithClassName(MDliveDashboardActivity.class);
+                break;
+
+            // See a Doctor
+            case 1:
+
+                break;
+
+            // MDLive My Health
+            case 2:
+
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                startActivityWithClassName(MessageCenterActivity.class);
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Symptom Checker
+            case 7:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 8:
+                //startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 9:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share this App
+            case 10:
+
+                break;
         }
     }
 

@@ -119,7 +119,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        loadUserInformationDetails();
+        if (getActivity() != null && getActivity() instanceof MDliveDashboardActivity) {
+            loadUserInformationDetails();
+        } else {
+            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+            updateList();
+        }
     }
 
     @Override
@@ -157,10 +162,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
                 mUserBasicInfo = UserBasicInfo.fromJsonString(response.toString().trim());
                 mUserBasicInfo.saveToSharedPreference(getActivity());
-
-                if (mOnUserInformationLoaded != null) {
-                    mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
-                }
 
                 updateList();
             }
@@ -204,10 +205,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
                 mUserBasicInfo.saveToSharedPreference(getActivity());
 
-                if (mOnUserInformationLoaded != null) {
-                    mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
-                }
-
                 updateList();
             }
         };
@@ -229,6 +226,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     }
 
     private void updateList() {
+        if (mOnUserInformationLoaded != null) {
+            mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
+        }
+
         if (mSelectedUserLinearLayout != null) {
             List<User> users = null;
 
