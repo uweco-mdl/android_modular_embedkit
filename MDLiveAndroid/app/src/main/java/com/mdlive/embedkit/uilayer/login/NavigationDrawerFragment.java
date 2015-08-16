@@ -154,8 +154,8 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                final Gson gson = new Gson();
-                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+
+                mUserBasicInfo = UserBasicInfo.fromJsonString(response.toString().trim());
                 mUserBasicInfo.saveToSharedPreference(getActivity());
 
                 if (mOnUserInformationLoaded != null) {

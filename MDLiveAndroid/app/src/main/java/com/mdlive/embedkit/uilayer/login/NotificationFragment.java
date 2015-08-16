@@ -9,11 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Notifications;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+
+import org.json.JSONObject;
 
 /**
  * Created by dhiman_da on 8/10/2015.
@@ -21,6 +28,8 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 public class NotificationFragment extends MDLiveBaseFragment {
     private static final long MILIS_IN_SECOND = 1000;
     private static final long DURATION = 30 * MILIS_IN_SECOND;
+
+    private PendingAppointment mPendingAppointment;
 
     private TextView mMessagesTextView;
     private TextView mPersonalInfoTextView;
@@ -31,6 +40,8 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
+            loadPendingAppoinments();
+
             mHandler.postDelayed(mRunnable, DURATION);
         }
     };
@@ -119,5 +130,27 @@ public class NotificationFragment extends MDLiveBaseFragment {
         } else {
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.no_upcoming_appoinments));
         }
+    }
+
+    private void loadPendingAppoinments() {
+        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                logD("PendingAppoinments", response.toString().trim());
+                mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                mPendingAppointment.saveToSharedPreference(getActivity());
+
+            }
+        };
+
+        final NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        };
+
+        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+        service.getUserPendingHistory(successCallBackListener, errorListener);
     }
 }

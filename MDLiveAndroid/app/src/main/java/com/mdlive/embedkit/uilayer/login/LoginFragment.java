@@ -105,7 +105,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Login Response", response.toString());
-                handleChangePasswordSuccessResponse(response);
+                handleLoginSuccessResponse(response);
             }
         };
 
@@ -129,7 +129,7 @@ public class LoginFragment extends MDLiveBaseFragment{
         service.login(successCallBackListener, errorListener, params);
     }
 
-    private void handleChangePasswordSuccessResponse(JSONObject response) {
+    private void handleLoginSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
 
