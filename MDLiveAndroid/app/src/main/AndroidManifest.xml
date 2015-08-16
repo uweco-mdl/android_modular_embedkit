@@ -187,7 +187,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".uilayer.messagecenter.MessageCenterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
 
         <!-- Sprint 2 Application Activity starts here -->
 
@@ -199,7 +200,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".uilayer.myaccounts.MyAccountActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
             android:screenOrientation="portrait"
@@ -211,7 +213,7 @@
         <activity
             android:name=".uilayer.helpandsupport.MDLiveHelpAndSupportActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.mdliveassist.MDLiveAssistActivity"
             android:screenOrientation="portrait"
