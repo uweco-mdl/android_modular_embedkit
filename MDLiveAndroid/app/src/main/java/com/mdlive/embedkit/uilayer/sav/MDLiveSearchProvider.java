@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -75,7 +74,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_search_provider);
+        setContentView(R.layout.search_provider);
         initialiseData();
         //Load Services
         loadSearchproviderDetails();
@@ -109,14 +108,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
          * The home button will pull you back to the Dashboard activity
          */
 
-        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
-                onBackPressed();
-
-            }
-        });
+//        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
+//                onBackPressed();
+//
+//            }
+//        });
     }
 
     public void availbleAction(View v) {
@@ -195,6 +194,19 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * or the appointment date or the gender or the provider name.
      */
     public void doneAction(View v) {
+//        postParams.put("located_in", filter_SavedLocation);
+//        postParams.put("available_by", StringConstants.AVAILABLE_BY);
+//        postParams.put("appointment_date", AppointmentTxtView.getText().toString());
+//        postParams.put("gender", genderTxtView.getText().toString());
+//        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+//            postParams.put("provider_name", edtSearch.getText().toString());
+//        }
+//        if (postParams.get("provider_type") == null) {
+//            postParams.put("provider_type", StringConstants.APPOINTMENT_TYPE);
+//        }
+
+        //MDLive Embed Kit Implementtaions
+
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("available_by", StringConstants.AVAILABLE_BY);
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
@@ -398,8 +410,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         for (int i = 0; i < Available_array.length(); i++) {
 
             HashMap<String, String> map = new HashMap<String, String>();
-            JSONObject itemObj = Available_array.getJSONObject(i);
 
+            JSONObject itemObj = Available_array.getJSONObject(i);
             Iterator<String> iter = itemObj.keys();//Logic to get the keys form Json Object
             while (iter.hasNext()) {
                 String key = iter.next();

@@ -1,13 +1,18 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +26,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -33,7 +39,10 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
+import static java.util.Calendar.MONTH;
 
 /**
  * This class returns the Provider profile for the corresponding providers.Along with that
@@ -47,6 +56,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private Button tapSeetheDoctorTxt;
     private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations;
     private LinearLayout providerImageHolder,detailsLl;
+    private HorizontalScrollView horizontalscrollview;
+    private int month, day, year;
+    private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +115,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
         detailsGroupAffiliations = (TextView) findViewById(R.id.detailsGroupAffiliations);
         detailsLl = (LinearLayout) findViewById(R.id.detailsLl);
+         horizontalscrollview = (HorizontalScrollView) findViewById(R.id.horizontalscrollview);
         setProgressBar(findViewById(R.id.progressDialog));
+
 
     /**
      * The back image will pull you back to the Previous activity
@@ -191,6 +205,49 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
             JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
+
+
+
+
+            JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
+            JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
+          for(int i=0;i<available_hour.size();i++)
+          {
+              JsonObject availabilityStatus = available_hour.get(i).getAsJsonObject();
+             String str_availabilityStatus = "";
+              TextView myText = new TextView(this);
+              if(MdliveUtils.checkJSONResponseHasString(availabilityStatus, "status")) {
+                  str_availabilityStatus = availabilityStatus.get("status").getAsString();
+                  if(!str_availabilityStatus.equals("Not available"))
+                  {
+                      JsonArray timeSlotArray = availabilityStatus.get("time_slot").getAsJsonArray();
+                      for(int j=0;j<timeSlotArray.size();j++) {
+                          JsonObject timeSlotObj = timeSlotArray.get(j).getAsJsonObject();
+                          String str_appointmenttype="",str_timeslot="",str_phys_avail_id="";
+                          if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type")&&MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
+                              str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
+                              str_timeslot = timeSlotObj.get("timeslot").getAsString();
+                              str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+                              Log.e("Str_appointmenttype",str_appointmenttype);
+                              Log.e("timeslot",str_timeslot);
+                              View line = new View(this);
+                              LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                              line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
+                              line.setBackgroundColor(0xAA345556);
+                              myText = new TextView(this);
+                              myText.setTextColor(Color.BLACK);
+                              myText.setTextSize(12);
+                              myText.setText(str_timeslot);
+                              layout.addView(myText, 0);
+                              layout.addView(line, 1);
+
+
+                          }
+                      }
+//                      horizontalscrollview.addView(myText);
+                  }
+              }
+          }
             //Doctor Name
             String str_DoctorName ="";
             if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "name")) {
@@ -383,6 +440,72 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         }
     }
+
+
+    // new code MDLIVE Embed Lit Implementation for Date Picker
+
+    /**
+     * This method is to fetch the apoointment date and the native date picker is called for selecting
+     * the required date.
+     */
+    public void appointmentAction(View v) {
+        GetCurrentDate((TextView) findViewById(R.id.dateTxt));
+        // On button click show datepicker dialog
+        showDialog(DATE_PICKER_ID);
+
+    }
+    public void GetCurrentDate(TextView selectedText) {
+        final Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Show current date
+
+        selectedText.setText(new StringBuilder()
+                // Month is 0 based, just add 1
+                .append(month + 1).append("/").append(day).append("/")
+                .append(year).append(" "));
+    }
+
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DATE_PICKER_ID:
+                // open datepicker dialog.
+                // set date picker for current date
+                // add pickerListener listner to date picker
+                Calendar calendar = Calendar.getInstance();
+                DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMinDate(new Date().getTime());
+                return dialog;
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
+
+        // when dialog box is closed, below method will be called.
+        @Override
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+
+            year = selectedYear;
+            month = selectedMonth;
+            day = selectedDay;
+
+            // Show selected date
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, selectedYear);
+            cal.set(Calendar.DAY_OF_MONTH, selectedDay);
+            cal.set(Calendar.MONTH, selectedMonth);
+            String format = new SimpleDateFormat("E, MMM d, yyyy").format(cal.getTime());
+            ((TextView)findViewById(R.id.dateTxt)).setText(format);
+
+        }
+    };
+
 
     @Override
     public void onBackPressed() {
