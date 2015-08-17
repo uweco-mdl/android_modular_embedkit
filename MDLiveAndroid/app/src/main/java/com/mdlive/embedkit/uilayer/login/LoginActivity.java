@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
 
     @Override
     public void startDashboard() {
-        Intent dashboard = new Intent(getBaseContext(), MDliveDashboardActivity.class);
+        Intent dashboard = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
         startActivity(dashboard);
         finish();
     }

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.MDliveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
@@ -92,7 +92,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         switch (position) {
             // Home
             case 0:
-                startActivityWithClassName(MDliveDashboardActivity.class);
+                startActivityWithClassName(MDLiveDashboardActivity.class);
                 break;
 
             // See a Doctor

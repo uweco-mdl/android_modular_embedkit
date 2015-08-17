@@ -14,11 +14,12 @@ import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 /**
  * Created by dhiman_da on 8/6/2015.
  */
-public class MDliveDashboardActivity extends MDLiveBaseAppcompatActivity {
+public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,11 @@ public class MDliveDashboardActivity extends MDLiveBaseAppcompatActivity {
             setSupportActionBar(toolbar);
         }
 
+        User user = null;
+        if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
+            user = getIntent().getExtras().getParcelable(User.USER_TAG);
+        }
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
@@ -40,7 +46,7 @@ public class MDliveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(user), LEFT_MENU).
                     commit();
 
             getSupportFragmentManager().

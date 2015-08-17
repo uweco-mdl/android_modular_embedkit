@@ -86,6 +86,11 @@ public class NotificationFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+        if (userBasicInfo != null) {
+            setNotification(userBasicInfo);
+        }
     }
 
     @Override

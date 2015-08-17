@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserInformationLoaded;
@@ -71,6 +72,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
     /* End of Drawer click listeners */
 
+
+    public void startActivityWithClassName(final Class clazz) {
+        startActivity(new Intent(getBaseContext(), clazz));
+    }
+
+
     /**
      * Called when an item in the navigation drawer is selected.
      *
@@ -78,10 +85,6 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
      */
     @Override
     public abstract void onNavigationDrawerItemSelected(int position);
-
-    public void startActivityWithClassName(final Class clazz) {
-        startActivity(new Intent(getBaseContext(), clazz));
-    }
 
     @Override
     public void sendUserInformation(UserBasicInfo userBasicInfo) {
@@ -94,6 +97,19 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).onUserInformationLoaded(userBasicInfo);
         }
+    }
+
+    @Override
+    public void onAddChildSelectedFromDrawer(User user, final int dependentUserSize) {
+        onAddChildSelcted(user, dependentUserSize);
+    }
+
+    @Override
+    public void reloadApplicationForUser(User user) {
+        final Intent intent = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(User.USER_TAG, user);
+        startActivity(intent);
     }
 
     @Override
@@ -124,11 +140,6 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     @Override
     public void onAddChildSelectedFromDashboard(User user, final int dependentUserSize) {
-        onAddChildSelcted(user, dependentUserSize);
-    }
-
-    @Override
-    public void onAddChildSelectedFromDrawer(User user, final int dependentUserSize) {
         onAddChildSelcted(user, dependentUserSize);
     }
 

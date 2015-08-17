@@ -39,6 +39,8 @@ import java.util.List;
  * Created by venkataraman_r on 7/16/2015.
  */
 public class NavigationDrawerFragment extends MDLiveBaseFragment {
+    private static final String USER_PASSED_FROM_ACTIVITY = "user_passed";
+
     private NavigationDrawerCallbacks mCallbacks;
     private OnUserInformationLoaded mOnUserInformationLoaded;
 
@@ -59,6 +61,16 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
     public static NavigationDrawerFragment newInstance() {
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        return fragment;
+    }
+
+    public static NavigationDrawerFragment newInstance(final User user) {
+        final Bundle args = new Bundle();
+        args.putParcelable(USER_PASSED_FROM_ACTIVITY, user);
+
+        final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -119,8 +131,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getActivity() != null && getActivity() instanceof MDliveDashboardActivity) {
-            loadUserInformationDetails();
+        if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
+            final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
+
+            if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                loadDependendUserDetails(user);
+            } else {
+                loadUserInformationDetails();
+            }
         } else {
             mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
             updateList();
@@ -344,10 +362,16 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 mSelectedUserLinearLayout.setTag(user);
 
                 if (load) {
-                    if (user.mMode == User.MODE_PRIMARY) {
-                        loadUserInformationDetails();
+                    if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
+                        if (user.mMode == User.MODE_PRIMARY) {
+                            loadUserInformationDetails();
+                        } else {
+                            loadDependendUserDetails(user);
+                        }
                     } else {
-                        loadDependendUserDetails(user);
+                        if (mOnUserInformationLoaded != null) {
+                            mOnUserInformationLoaded.reloadApplicationForUser(user);
+                        }
                     }
                 } else {
                     // No need to load new data
@@ -380,5 +404,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public interface OnUserInformationLoaded {
         void sendUserInformation(UserBasicInfo userBasicInfo);
         void onAddChildSelectedFromDrawer(final User user, final int dependentUserSize);
+        void reloadApplicationForUser(final User user);
     }
 }
