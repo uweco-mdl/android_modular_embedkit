@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,12 +28,15 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private Filter filter;
     private LayoutInflater inflate;
     private Boolean notFound = false;
-
+    private int checkedItemPosition = -1;
+    private String checkedItemReaston = "";
+    private Button btnContinue;
     public ReasonForVisitAdapter(Context applicationContext,
-                                 ArrayList<String> arraylist) {
+                                 ArrayList<String> arraylist, Button btnContinue) {
         this.context = applicationContext;
         this.originalArray = arraylist;
         this.array = arraylist;
+        this.btnContinue = btnContinue;
         filter= new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
@@ -83,6 +88,9 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         };
     }
 
+    public int getSelectedPosition(){
+        return checkedItemPosition;
+    }
     @Override
     public int getCount() {
         return array.size();
@@ -101,7 +109,6 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
 
     @Override
     public Filter getFilter() {
-
         return filter;
     }
 
@@ -112,24 +119,40 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
      */
 
     @Override
-    public View getView(int pos, View convertview, ViewGroup parent) {
-        TextView ReasonForVisitTxt;
+    public View getView(final int pos, View convertview, ViewGroup parent) {
+        ImageView reasonCheckbox;
+        TextView reasonTxt;
+        LinearLayout reasonListItem;
         View row;
-            inflate = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
-                    false);
-        ReasonForVisitTxt = (TextView) row.findViewById(R.id.reasonTxt);
-        if(pos == 0){
-            LinearLayout  parentLl = (LinearLayout) ReasonForVisitTxt.getParent();
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) parentLl.getLayoutParams();
-            params.setMargins(0, 45, 0, 0);
-            parentLl.setLayoutParams(params);
-        }
+        inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
+                false);
+        reasonCheckbox = (ImageView) row.findViewById(R.id.reasonCheckbox);
+        reasonTxt = (TextView) row.findViewById(R.id.reasonTxt);
+        reasonListItem = (LinearLayout) row.findViewById(R.id.reasonListItem);
+
         if(notFound){
-            ReasonForVisitTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
+            reasonListItem.setVisibility(View.GONE);
+            reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
         }else {
-            ReasonForVisitTxt.setText(array.get(pos));
+            reasonTxt.setText(array.get(pos));
+        }
+
+        reasonListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkedItemPosition = pos;
+                checkedItemReaston = array.get(pos);
+                notifyDataSetChanged();
+            }
+        });
+
+        if(checkedItemPosition >= 0 && (checkedItemPosition == pos || checkedItemReaston.equals(array.get(pos)))){
+            reasonCheckbox.setImageResource(R.drawable.tick_icon);
+            btnContinue.setClickable(true);
+            btnContinue.setBackgroundResource(R.drawable.btn_rounded_bg);
+        }else{
+            reasonCheckbox.setImageResource(R.drawable.radio_default);
         }
 
         return row;

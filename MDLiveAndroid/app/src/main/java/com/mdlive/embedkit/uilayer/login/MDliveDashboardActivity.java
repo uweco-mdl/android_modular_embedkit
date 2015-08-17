@@ -77,7 +77,7 @@ public class MDliveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
             // See a Doctor
             case 1:
-
+                startActivityWithClassName(MDLiveGetStarted.class);
                 break;
 
             // MDLive My Health
@@ -129,7 +129,7 @@ public class MDliveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
     /* Start of Dashboard icons click listener */
     public void onSeeADoctorNowClicked(View view) {
-
+        startActivityWithClassName(MDLiveGetStarted.class);
     }
 
     public void onScheduleAVisitClicked(View view) {

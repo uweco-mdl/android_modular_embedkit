@@ -20,6 +20,9 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
  *   hideProgress() - hide progress bar used in activity
  */
 public class MDLiveBaseActivity extends FragmentActivity {
+    public static final String LEFT_MENU = "left_menu";
+    public static final String RIGHT_MENU = "right_menu";
+
     public View progressBarLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
