@@ -1,14 +1,15 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -30,9 +31,10 @@ import org.json.JSONObject;
 public class MessageReceivedFragment extends MDLiveBaseFragment {
     private static final int NUMBER_OF_ITEMS_PER_PAGE = 10;
 
-    private ProgressDialog pDialog;
     private ListView mListView;
     private MessageReceivedAdapter mMessageReceivedAdapter;
+
+    private View mBlankLayout;
 
     private int mPageCount = 1;
 
@@ -87,6 +89,23 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
                 }
             });
         }
+
+        mBlankLayout = view.findViewById(R.id.blank_layout);
+
+        final ImageView image = (ImageView) view.findViewById(R.id.message_center_empty_image_view);
+        if (image != null) {
+            image.setImageResource(R.drawable.empty_inbox_sent);
+        }
+
+        final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
+        if (header != null) {
+            header.setText(R.string.no_messages_inbox_header);
+        }
+
+        final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
+        if (details != null) {
+            details.setText(R.string.no_messages_inbox_details);
+        }
     }
 
     @Override
@@ -102,8 +121,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
@@ -139,35 +156,58 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     }
 
     private void fetchReceivedMessages(final int from, final int numberOfItems) {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                hideProgressDialog();
 
-                final Gson gson = new Gson();
-                final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
-                if (mMessageReceivedAdapter != null) {
-                    mMessageReceivedAdapter.addAll(newReceivedMessages.receivedMessages);
-                    mMessageReceivedAdapter.notifyDataSetChanged();
-                    mPageCount += 1;
-                }
+                handleSucess(response);
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
+                handleError();
+
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.getReceivedMessages(successListener, errorListener, from, numberOfItems);
+    }
+
+    private void handleSucess(final JSONObject response) {
+        final Gson gson = new Gson();
+        final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
+        if (newReceivedMessages.receivedMessages != null && newReceivedMessages.receivedMessages.size() > 0) {
+            if (mMessageReceivedAdapter != null) {
+                mMessageReceivedAdapter.addAll(newReceivedMessages.receivedMessages);
+                mMessageReceivedAdapter.notifyDataSetChanged();
+                mPageCount += 1;
+            }
+
+            mListView.setVisibility(View.VISIBLE);
+            mBlankLayout.setVisibility(View.GONE);
+        } else {
+            mListView.setVisibility(View.GONE);
+            mBlankLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void handleError() {
+        if (mMessageReceivedAdapter != null && mMessageReceivedAdapter.getCount() > 0) {
+            // Do nothing in this case
+        } else {
+            mListView.setVisibility(View.GONE);
+            mBlankLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

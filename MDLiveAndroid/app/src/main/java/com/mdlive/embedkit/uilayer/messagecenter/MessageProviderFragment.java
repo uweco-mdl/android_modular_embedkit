@@ -1,36 +1,41 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Provider;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by dhiman_da on 6/24/2015.
  */
 public class MessageProviderFragment extends MDLiveBaseFragment {
-    private ProgressDialog pDialog;
-
     private ListView mListView;
     private ProviderAdapter mProviderAdapter;
+
+    private View mListLayout;
+    private View mBlankLayout;
 
     public static MessageProviderFragment newInstance() {
         final MessageProviderFragment messageProviderFragment = new MessageProviderFragment();
@@ -74,6 +79,24 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
                 }
             });
         }
+
+        mListLayout = view.findViewById(R.id.list_layout);
+        mBlankLayout = view.findViewById(R.id.blank_layout);
+
+        final ImageView image = (ImageView) view.findViewById(R.id.message_center_empty_image_view);
+        if (image != null) {
+            image.setImageResource(R.drawable.empty_provider);
+        }
+
+        final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
+        if (header != null) {
+            header.setVisibility(View.GONE);
+        }
+
+        final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
+        if (details != null) {
+            details.setText(R.string.no_messages_compose_details);
+        }
     }
 
     @Override
@@ -89,8 +112,6 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         fetchMessageprovider();
     }
@@ -126,35 +147,85 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     }
 
     private void fetchMessageprovider() {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
-
-                final Gson gson = new Gson();
-                final Provider provider =  gson.fromJson(response.toString(), Provider.class);
-
-                if (mProviderAdapter != null) {
-                    mProviderAdapter.addAll(provider.myProviders);
-                    mProviderAdapter.notifyDataSetChanged();
-                }
+                hideProgressDialog();
+                handleSucess(response);
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
+                handleError();
+
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.getProvider(successListener, errorListener);
+    }
+
+    private void handleSucess(final JSONObject response) {
+        logD("Provider Response", response.toString().trim());
+
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        final Provider provider =  gson.fromJson(response.toString(), Provider.class);
+        /*
+        * This is a work around, as for new user rather sending on blank Json object
+        * It sends a empty JSON Array
+        * */
+        try {
+            JSONObject primaryPhysicianJSONObject = response.getJSONObject("primary_care_physician");
+            final PrimaryCarePhysician primaryCarePhysician = new PrimaryCarePhysician();
+            primaryCarePhysician.zip = primaryPhysicianJSONObject.getString("zip");
+            primaryCarePhysician.phone = primaryPhysicianJSONObject.getString("phone");
+            primaryCarePhysician.fax = primaryPhysicianJSONObject.getString("fax");
+            primaryCarePhysician.middleName = primaryPhysicianJSONObject.getString("middle_name");
+            primaryCarePhysician.cell = primaryPhysicianJSONObject.getString("cell");
+            primaryCarePhysician.state = primaryPhysicianJSONObject.getString("state");
+            primaryCarePhysician.address1 = primaryPhysicianJSONObject.getString("address1");
+            primaryCarePhysician.address2 = primaryPhysicianJSONObject.getString("address2");
+            primaryCarePhysician.suffix = primaryPhysicianJSONObject.getString("suffix");
+            primaryCarePhysician.city = primaryPhysicianJSONObject.getString("city");
+            primaryCarePhysician.stateprov = primaryPhysicianJSONObject.getString("stateprov");
+            primaryCarePhysician.country = primaryPhysicianJSONObject.getString("country");
+            primaryCarePhysician.firstName = primaryPhysicianJSONObject.getString("first_name");
+            primaryCarePhysician.email = primaryPhysicianJSONObject.getString("email");
+            primaryCarePhysician.practice = primaryPhysicianJSONObject.getString("practice");
+            primaryCarePhysician.prefix = primaryPhysicianJSONObject.getString("prefix");
+            primaryCarePhysician.lastName = primaryPhysicianJSONObject.getString("last_name");
+        } catch (JSONException e) {
+            provider.primaryCarePhysician = null;
+        }
+        if (provider.myProviders != null && provider.myProviders.size() > 0) {
+            if (mProviderAdapter != null) {
+                mProviderAdapter.addAll(provider.myProviders);
+                mProviderAdapter.notifyDataSetChanged();
+            }
+
+            mListLayout.setVisibility(View.VISIBLE);
+            mBlankLayout.setVisibility(View.GONE);
+        } else {
+            mListLayout.setVisibility(View.GONE);
+            mBlankLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void handleError() {
+        if (mProviderAdapter != null && mProviderAdapter.getCount() > 0) {
+            // Do nothing in this case
+        } else {
+            mListLayout.setVisibility(View.GONE);
+            mBlankLayout.setVisibility(View.VISIBLE);
+        }
     }
 }
