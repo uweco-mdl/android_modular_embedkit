@@ -3,19 +3,19 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 import static com.mdlive.embedkit.R.layout;
 
 /**
  * Created by dhiman_da on 6/27/2015.
  */
-public class ComposeMessageTabFragment extends Fragment {
+public class ComposeMessageTabFragment extends MDLiveBaseFragment {
     private static final String MESSAGE_PROVIDER_TAG = "Message_Provider";
 
     public static ComposeMessageTabFragment newInstance() {

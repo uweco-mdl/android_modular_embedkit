@@ -3,19 +3,19 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 
 /**
  * Created by dhiman_da on 6/27/2015.
  */
-public class MessageSentDetailsFragment extends Fragment {
+public class MessageSentDetailsFragment extends MDLiveBaseFragment {
     private static final String SENT_MESSAGE_TAG = "sent_message";
 
     public static MessageSentDetailsFragment newInstance(final SentMessage sentMessage) {

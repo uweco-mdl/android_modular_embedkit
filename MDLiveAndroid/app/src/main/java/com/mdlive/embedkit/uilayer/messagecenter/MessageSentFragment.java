@@ -2,21 +2,18 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageSentAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.listeners.InfiniteScrollListener;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -30,7 +27,7 @@ import org.json.JSONObject;
 /**
  * Created by dhiman_da on 6/24/2015.
  */
-public class MessageSentFragment extends Fragment {
+public class MessageSentFragment extends MDLiveBaseFragment {
     private static final int NUMBER_OF_ITEMS_PER_PAGE = 10;
 
     private ProgressDialog pDialog;
@@ -157,8 +154,6 @@ public class MessageSentFragment extends Fragment {
                     mMessageSentAdapter.notifyDataSetChanged();
                     mPageCount += 1;
                 }
-
-                Toast.makeText(getActivity(), newSentMessages.toString(), Toast.LENGTH_SHORT).show();
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {

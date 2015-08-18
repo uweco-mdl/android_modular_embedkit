@@ -17,18 +17,22 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PharmacyDetails;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Security;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -178,7 +182,20 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
 
-                mUserBasicInfo = UserBasicInfo.fromJsonString(response.toString().trim());
+                /* Security JSON we need to read again, because of the web service issue..
+                * We are excluding the security tag to be parsed by GSON,
+                * then we are manually adding the Security JSON again
+                * */
+                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+                try {
+                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+                } catch (JSONException e) {
+                    mUserBasicInfo.setHealthLastUpdate(-1l);
+                }
+
                 mUserBasicInfo.saveToSharedPreference(getActivity());
 
                 updateList();
@@ -219,8 +236,21 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                final Gson gson = new Gson();
+
+                /* Security JSON we need to read again, because of the web service issue..
+                * We are excluding the security tag to be parsed by GSON,
+                * then we are manually adding the Security JSON again
+                * */
+                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+                try {
+                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+                } catch (JSONException e) {
+                    mUserBasicInfo.setHealthLastUpdate(-1l);
+                }
+
                 mUserBasicInfo.saveToSharedPreference(getActivity());
 
                 updateList();
