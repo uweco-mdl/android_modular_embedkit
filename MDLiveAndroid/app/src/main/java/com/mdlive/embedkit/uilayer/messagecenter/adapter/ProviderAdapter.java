@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 
 /**
@@ -40,7 +41,7 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
-        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.last_visit) + getItem(position).lastAppointment);
+        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.last_visit) + MdliveUtils.getLastVisit(getItem(position).lastAppointment));
 
         return convertView;
     }

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -84,14 +83,6 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
             mRecordAdapter = new RecordAdapter(view.getContext(), R.layout.adapter_record, android.R.id.text1);
 
             mListView.setAdapter(mRecordAdapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (getActivity() != null && getActivity() instanceof MessageCenterActivity) {
-                        ((MessageCenterActivity) getActivity()).onRecordClicked(mRecordAdapter.getItem(i));
-                    }
-                }
-            });
         }
 
         final Button button = (Button) view.findViewById(R.id.fragment_message_my_records_button_add_photo);
