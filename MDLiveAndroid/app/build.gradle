@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 // VSee integration:
 //
@@ -27,7 +27,6 @@ android {
     compileSdkVersion 22
     buildToolsVersion "20.0.0"
     defaultConfig {
-        applicationId "com.mdlive.embedkit"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
