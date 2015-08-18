@@ -39,8 +39,10 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static java.util.Calendar.MONTH;
 
@@ -53,12 +55,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private CircularNetworkImageView ProfileImg;
     public String DoctorId;
-    private Button tapSeetheDoctorTxt;
-    private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations;
+    private Button tapSeetheDoctorTxt,byvideoBtn,byphoneBtn,reqfutureapptBtn;
+    private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations,updatedAppointmentDate;
     private LinearLayout providerImageHolder,detailsLl;
     private HorizontalScrollView horizontalscrollview;
     private int month, day, year;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
+    private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
+    private ArrayList<String> timeSlotList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         Initialization();
         getPreferenceDetails();
         //Service call Method
-        loadProviderDetails();
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        AppointmentDate = format.format(new Date());
+        loadProviderDetails(AppointmentDate);
     }
     /**
      * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
@@ -110,6 +116,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
         tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
+        byvideoBtn = (Button)findViewById(R.id.byvideoBtn);
+        byphoneBtn = (Button)findViewById(R.id.byphoneBtn);
+        reqfutureapptBtn = (Button)findViewById(R.id.reqfutureapptBtn);
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
@@ -150,7 +159,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      * Based on the server response the corresponding action will be triggered(Either error
      * message to user or Get started screen will shown to user).
      */
-    private void loadProviderDetails() {
+    private void loadProviderDetails(String AppointmentDate) {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -183,8 +192,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 }
             }};
         ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, null);
-        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        AppointmentDate = format.format(new Date());
+
         services.getProviderDetails(SharedLocation,AppointmentDate,AppointmentType,DoctorId,successCallBackListener, errorListener);
     }
 
@@ -206,48 +214,174 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
             JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
 
-
-
-
             JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
             JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
+
+            boolean isDoctorAvailableNow = false, isDoctorWithPatient = false;
+            LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+            String str_appointmenttype="",str_timeslot="",str_phys_avail_id="",str_Availability_Type="";
+            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
+                str_Availability_Type = providerdetObj.get("availability_type").getAsString();
+            }
           for(int i=0;i<available_hour.size();i++)
           {
               JsonObject availabilityStatus = available_hour.get(i).getAsJsonObject();
              String str_availabilityStatus = "";
-              TextView myText = new TextView(this);
+
               if(MdliveUtils.checkJSONResponseHasString(availabilityStatus, "status")) {
                   str_availabilityStatus = availabilityStatus.get("status").getAsString();
-                  if(!str_availabilityStatus.equals("Not available"))
+                  if(str_availabilityStatus.equals("Available"))
                   {
                       JsonArray timeSlotArray = availabilityStatus.get("time_slot").getAsJsonArray();
                       for(int j=0;j<timeSlotArray.size();j++) {
                           JsonObject timeSlotObj = timeSlotArray.get(j).getAsJsonObject();
-                          String str_appointmenttype="",str_timeslot="",str_phys_avail_id="";
+
+
                           if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type")&&MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
                               str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                               str_timeslot = timeSlotObj.get("timeslot").getAsString();
-                              str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
-                              Log.e("Str_appointmenttype",str_appointmenttype);
+                              if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
+                                  str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
+                              }
+                              HashMap<String, String> map = new HashMap<String, String>();
+                              map.put("timeslot",str_timeslot);
+                              map.put("phys_id", str_phys_avail_id);
+
+                              timeSlotListMap.add(map);
+                                if(str_timeslot.equals("0")){
+                                    isDoctorAvailableNow = true;
+                                    View line = new View(MDLiveProviderDetails.this);
+                                    line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
+                                    line.setBackgroundColor(0xAA345556);
+                                    TextView myText = new TextView(MDLiveProviderDetails.this);
+                                    myText.setTextColor(Color.BLACK);
+                                    myText.setTextSize(12);
+                                    myText.setPadding(10,5,10,5);
+                                    myText.setBackgroundResource(R.drawable.edittext_bg);
+                                    myText.setText("Now");
+                                    layout.addView(myText, 0);
+                                    layout.addView(line, 1);
+                                }else {
+                                    setHorizontalScrollviewTimeslots(layout, str_timeslot);
+                                }
+
+//                              str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
                               Log.e("timeslot",str_timeslot);
-                              View line = new View(this);
-                              LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-                              line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
-                              line.setBackgroundColor(0xAA345556);
-                              myText = new TextView(this);
-                              myText.setTextColor(Color.BLACK);
-                              myText.setTextSize(12);
-                              myText.setText(str_timeslot);
-                              layout.addView(myText, 0);
-                              layout.addView(line, 1);
-
-
+                              //Setting horizontal scroll view for the timeslots
+                              //
                           }
                       }
 //                      horizontalscrollview.addView(myText);
+                  }else if(str_availabilityStatus.equalsIgnoreCase("With patient")){
+                      isDoctorWithPatient = true;
                   }
               }
           }
+
+            Log.e("layout.getChildCount()",layout.getChildCount()+"");
+            //with patient
+            if(isDoctorWithPatient){
+                if(layout.getChildCount() > 1)
+                {
+                    // Req Future Appmt
+
+                    enableOrdisableProviderDetails(str_Availability_Type);
+                }
+
+                else if(layout.getChildCount()<1)
+                {
+                    //Make future appointment
+
+                }
+
+            }
+
+            /*This is for Status is available and the timeslot is Zero..Remaining all
+                    the status were not available.*/
+            else if(isDoctorAvailableNow && layout.getChildCount() == 1){
+
+            horizontalscrollview.setVisibility(View.GONE);
+                Log.e("Am in availble now","Am in availble now");
+            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+                if(str_Availability_Type.equalsIgnoreCase("video"))
+                {
+                    Log.e("Am in availble now","Am in video");
+                     tapSeetheDoctorTxt.setText("See Doctor");
+                     reqfutureapptBtn.setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.VISIBLE);
+                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+                     byphoneBtn.setVisibility(View.INVISIBLE);
+
+                }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
+                {
+                    Log.e("Am in availble now","Am in phone");
+                    tapSeetheDoctorTxt.setText("See Doctor");
+                    reqfutureapptBtn.setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.VISIBLE);
+                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+                    byphoneBtn.setVisibility(View.VISIBLE);
+                    byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+                }
+                else  if(str_Availability_Type.equalsIgnoreCase("phone")){
+                    Log.e("Am in availble now","Am in video or phone");
+
+                    tapSeetheDoctorTxt.setText("Talk to Doctor");
+                    reqfutureapptBtn.setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.INVISIBLE);
+                    byphoneBtn.setVisibility(View.VISIBLE);
+                    byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            }
+
+
+            }
+            //not available
+
+            else if(layout.getChildCount() == 0&&str_Availability_Type.equals("not available")){
+                if(str_appointmenttype.equals("1"))
+                {
+                    tapSeetheDoctorTxt.setText("Currently not available");
+                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.GONE);
+                    byphoneBtn.setVisibility(View.GONE);
+                     horizontalscrollview.setVisibility(View.GONE);
+                }else  if(str_appointmenttype.equals("2"))
+                {
+                    tapSeetheDoctorTxt.setText("Currently not available");
+                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    reqfutureapptBtn.setText("Make an appointment request");
+                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.GONE);
+                    byphoneBtn.setVisibility(View.GONE);
+                    horizontalscrollview.setVisibility(View.GONE);
+                }else{
+                    tapSeetheDoctorTxt.setText("Currently not available");
+                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    reqfutureapptBtn.setText("Make an appointment request");
+                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+                    byvideoBtn.setVisibility(View.GONE);
+                    byphoneBtn.setVisibility(View.GONE);
+                    horizontalscrollview.setVisibility(View.GONE);
+                }
+
+
+
+            }
+
+            //Available now and later
+            //Part1 ----> timeslot zero followed by many timeslots
+            else if(isDoctorAvailableNow && layout.getChildCount() > 1){
+                enableOrdisableProviderDetails(str_Availability_Type);
+
+
+            }
+            //part 2 available now nd later
+            //Part2 ----> timeslot not zero followed by many timeslots
+            else if(!isDoctorAvailableNow && layout.getChildCount() > 1){
+                enableOrdisableProviderDetails(str_Availability_Type);
+
+            }
+
             //Doctor Name
             String str_DoctorName ="";
             if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "name")) {
@@ -266,10 +400,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "provider_image_url")) {
                  str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
             }
-            String str_Availability_Type="";
-            if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
-                 str_Availability_Type = providerdetObj.get("availability_type").getAsString();
-            }
+
             String str_education="";
             if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "education")) {
                 str_education = providerdetObj.get("education").getAsString();
@@ -282,7 +413,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 } else {
                     tapSeetheDoctorTxt.setBackgroundResource(R.drawable.btn_rounded_grey);
                 }
-                tapSeetheDoctorTxt.setText(getString(R.string.currently_with_patient));
+//                tapSeetheDoctorTxt.setText(getString(R.string.currently_with_patient));
             }
 
             ProfileImg.setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
@@ -297,8 +428,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             }else
             {
-                if(!str_Availability_Type.equals(getString(R.string.with_patient)))
-                   tapSeetheDoctorTxt.setText(getString(R.string.providerDeatils_choose_doctor,str_DoctorName));
+                if(!str_Availability_Type.equals(getString(R.string.with_patient))) {
+//                   tapSeetheDoctorTxt.setText(getString(R.string.providerDeatils_choose_doctor,str_DoctorName));
+                }
             }
            if(str_AboutMe.length()!= IntegerConstants.NUMBER_ZERO)
            {
@@ -342,6 +474,109 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             e.printStackTrace();
         }
     }
+
+    private void enableOrdisableProviderDetails(String str_Availability_Type) {
+        if(str_Availability_Type.equalsIgnoreCase("video"))
+        {
+            horizontalscrollview.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setText("See Doctor");
+            reqfutureapptBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            byphoneBtn.setVisibility(View.INVISIBLE);
+            tapReqFutureBtnAction();
+
+        }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
+        {
+            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setText("See Doctor");
+            reqfutureapptBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            byphoneBtn.setVisibility(View.VISIBLE);
+            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            tapReqFutureBtnAction();
+        }
+        else  if(str_Availability_Type.equalsIgnoreCase("phone")){
+            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setText("Talk to Doctor");
+            reqfutureapptBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setVisibility(View.INVISIBLE);
+            byphoneBtn.setVisibility(View.VISIBLE);
+            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            tapReqFutureBtnAction();
+        }
+        else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
+            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setText("Currently with patient");
+            tapSeetheDoctorTxt.setBackgroundColor(Color.parseColor("#FF6600"));
+            reqfutureapptBtn.setVisibility(View.VISIBLE);
+            byvideoBtn.setVisibility(View.GONE);
+            byphoneBtn.setVisibility(View.GONE);
+            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            tapReqFutureBtnAction();
+        }
+    }
+
+    private void tapReqFutureBtnAction() {
+        reqfutureapptBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (reqfutureapptBtn.getText().toString().equals("Make an appointment request")) {
+
+                } else {
+                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.VISIBLE);
+                    tapSeetheDoctorTxt.setVisibility(View.GONE);
+                    reqfutureapptBtn.setVisibility(View.GONE);
+                    horizontalscrollview.setVisibility(View.VISIBLE);
+                    //calling service for each date selection on clicking request appmt btn
+                    ((TextView) findViewById(R.id.dateTxt)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadProviderDetails(updatedAppointmentDate);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void setHorizontalScrollviewTimeslots(LinearLayout layout, String str_timeslot) {
+        TextView myText;View line = new View(this);
+
+        line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
+        line.setBackgroundColor(0xAA345556);
+        myText = new TextView(this);
+        myText.setTextColor(Color.BLACK);
+        myText.setTextSize(12);
+        myText.setPadding(10,5,10,5);
+        myText.setBackgroundResource(R.drawable.edittext_bg);
+        myText.setText(MdliveUtils.getTimeFromTimestamp(str_timeslot));
+        layout.addView(myText, 0);
+        layout.addView(line, 1);
+        horizontalscrollview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                saveIdForConfirmAppmt();
+                for(int i=0;i<timeSlotListMap.size();i++)
+                {
+                    SharedPreferences settings = MDLiveProviderDetails.this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(PreferenceConstants.SAVE_TIMESLOT_PREFERENCES, timeSlotListMap.get(i).get("timeslot"));
+                    editor.putString(PreferenceConstants.SAVE_PHYS_ID_PREFERENCES, timeSlotListMap.get(i).get("phys_id"));
+                    Log.e("savedTime",timeSlotListMap.get(i).get("timeslot")+"saved physid-->"+timeSlotListMap.get(i).get("phys_id"));
+                    editor.commit();
+                }
+
+
+            }
+        });
+    }
+
     /**
      *  Successful Response Handler for getting the Affillitations and the provider image.
      *  This method will give the successful response of the Provider's affilitations.
@@ -352,7 +587,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         String ProviderImage = "";
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
         Log.e("Size", ProviderImageArray.size() + "");
-        providerImageHolder.removeAllViews();
+//        providerImageHolder.removeAllViews();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(5,5,5,5);
         for(int i=0;i<ProviderImageArray.size();i++)
@@ -502,6 +737,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             cal.set(Calendar.MONTH, selectedMonth);
             String format = new SimpleDateFormat("E, MMM d, yyyy").format(cal.getTime());
             ((TextView)findViewById(R.id.dateTxt)).setText(format);
+
+            DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+            updatedAppointmentDate = format1.format(new Date());
 
         }
     };

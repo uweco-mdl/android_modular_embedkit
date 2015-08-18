@@ -395,6 +395,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
+        params.put("alternate_visit_option", "No Answer");
+        params.put("phys_availability_id", "");
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));

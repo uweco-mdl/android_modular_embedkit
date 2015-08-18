@@ -360,7 +360,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                         if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
 
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
-                            loadDependentProviderTypeDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
+                            loadDependentProviderTypeDetails(tmpMap.get("id"));
+                            //Method call to load the selected dependent details.
+                            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("dependent_id",tmpMap.get("id"));
+                            editor.commit();
+
+
                         }
                     }else if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("false")){
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {

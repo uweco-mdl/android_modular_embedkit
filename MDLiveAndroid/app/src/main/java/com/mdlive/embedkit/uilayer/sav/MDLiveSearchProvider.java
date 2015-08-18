@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,10 +27,10 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 
@@ -53,14 +54,18 @@ import static java.util.Calendar.MONTH;
  * the provider type, speciality, location, Speaks and the gender.
  */
 public class MDLiveSearchProvider extends MDLiveBaseActivity {
-    private TextView AppointmentTxtView, LocationTxtView, genderTxtView, edtSearch;
+    private TextView AppointmentTxtView, LocationTxtView, genderTxtView;
+    private EditText edtSearch;
     private int month, day, year;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> SearchArrayListProvider = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayListSpeciality = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayListSpeaks = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> searchArrayListProviderId = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayListAvailableBy = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> SearchArrayList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<String> providerTypeArrayList = new ArrayList<>();
+    private ArrayList<String> providerIdArrayList = new ArrayList<>();
     private ArrayList<String> AvailableByArrayList = new ArrayList<String>();
     private ArrayList<String> ProviderTypeArrayList = new ArrayList<String>();
     private Map<String, Map<String, String>> tempmap = new HashMap<>();
@@ -69,7 +74,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String, String> postParams = new HashMap<>();
-    public String filter_SavedLocation, SavedLocation;
+    public String filter_SavedLocation, SavedLocation,postProviderId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         AppointmentTxtView.setText(currentDate);
         LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
-        edtSearch = (TextView) findViewById(R.id.edt_searchProvider);
+        edtSearch = (EditText) findViewById(R.id.edt_searchProvider);
         setProgressBar(findViewById(R.id.progressDialog));
         /**
          * The back image will pull you back to the Previous activity
@@ -138,7 +143,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * Family Physician or Pediatrician.These things will be populated in the arraylist.
      */
     public void providerTypeAction(View v) {
-        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", SearchArrayListProvider);
+
+        showListViewDialog(ProviderTypeArrayList,(TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
     }
 
     /**
@@ -208,14 +214,18 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         //MDLive Embed Kit Implementtaions
 
         postParams.put("located_in", filter_SavedLocation);
-        postParams.put("available_by", StringConstants.AVAILABLE_BY);
+        if (postParams.get("available_by") != null) {
+            postParams.put("available_by", postParams.get("available_by"));
+            Log.e("postParams.get-->",postParams.get("available_by"));
+        }
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
         if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
             postParams.put("provider_name", edtSearch.getText().toString());
         }
-        if (postParams.get("provider_type") == null) {
-            postParams.put("provider_type", StringConstants.APPOINTMENT_TYPE);
+        if (postParams.get("provider_type") != null) {
+            postParams.put("provider_type", postParams.get("provider_type"));
+            Log.e("postParams.get-->",postParams.get("provider_type"));
         }
         LoadFilterSearchServices();
     }
@@ -270,6 +280,67 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
         services.getsearchdetails(successCallBackListener, errorListener);
     }
+    /**
+     *
+     * Load loadProviderType Details.
+     * Class : ProviderTypeList - Service class used to fetch the Provider Detail information
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     *
+     */
+    private void loadProviderType() {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgress();
+                handleproviderTypeSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Response", error.toString());
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
+            }};
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        String dependent_id=  settings.getString("dependent_id","");
+        ProviderTypeList services = new ProviderTypeList(MDLiveSearchProvider.this, null);
+        services.getProviderType(dependent_id, successCallBackListener, errorListener);
+    }
+    /**
+     *
+     *  Successful Response Handler for Provider Type Info.The Provider type info will provider the gender
+     *  of the user and the date of birth of the corresponding user.The dependent id will be
+     *  passed for the the each provider while switching over the dependent so that the
+     *  corresponding provider type will be changed to the selected dependents.
+     *
+     */
+
+    private void handleproviderTypeSuccessResponse(JSONObject response) {
+        try {
+            JSONObject providertype = response.getJSONObject("provider_types");
+            providerTypeArrayList.clear();
+            searchArrayListProviderId.clear();
+            Iterator<String> iter = providertype.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                try {
+                    Object value = providertype.get(key);
+                    providerTypeArrayList.add(value.toString());
+                    providerIdArrayList.add(key.toString());
+                } catch (JSONException e) {
+                    // Something went wrong!
+                }
+                ((TextView)findViewById(R.id.ProviderTypeTxtView)).setText(providerTypeArrayList.get(0));
+            }
+
+        } catch (Exception e) {
+
+        }
+    }
 
     /**
      * Successful Response Handler for Search Provider's details.
@@ -293,6 +364,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             //Speakstype response
             getSpeaksData(response);
 
+            //provider type response
+            getproviderType(response);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,7 +388,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             String str_provider_type_id = licenseObject.getString("id");
             HashMap<String, String> map = new HashMap<String, String>();
             map.put(str_provider_type_id, str_provider_type);
-            SearchArrayListProvider.add(map);
+            searchArrayListProviderId.add(map);
             ProviderTypeArrayList.add(str_provider_type);
             HashMap<String, String> specialitymap = null;
             JSONArray speciality_array = licenseObject.getJSONArray("speciality");
@@ -378,6 +453,30 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             SpeaksArrayList.add(Speaks_array.getJSONObject(i).getString(Speaks_array.getJSONObject(i).keys().next()));
         }
     }
+
+    /**
+     * This method will return the Sort types based on the  Availibility
+     * of the Provider.
+     */
+
+    private void getproviderType(JSONObject response) throws JSONException {
+        JSONArray provider_array = response.getJSONArray("provider_type");
+        ArrayList<String> keysList = new ArrayList<String>();
+        for (int i = 0; i < provider_array.length(); i++) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            JSONObject itemObj = provider_array.getJSONObject(i);
+
+//            Iterator<String> iter = itemObj.keys();//Logic to get the keys form Json Object
+//            while (iter.hasNext()) {
+//                String key = iter.next();
+//                map.put(key, (String) itemObj.get(key));
+//                System.out.println(key);
+//            }
+
+            searchArrayListProviderId.add(map);
+            providerTypeArrayList.add(provider_array.getJSONObject(i).getString(provider_array.getJSONObject(i).keys().next()));
+        }
+    }
     /**
      * This method will return the Gender  of the Provider.
      */
@@ -418,6 +517,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 map.put(key, (String) itemObj.get(key));
                 System.out.println(key);
             }
+
             SearchArrayListAvailableBy.add(map);
             AvailableByArrayList.add(Available_array.getJSONObject(i).getString(Available_array.getJSONObject(i).keys().next()));
         }

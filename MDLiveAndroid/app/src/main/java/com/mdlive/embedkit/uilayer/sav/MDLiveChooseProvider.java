@@ -53,7 +53,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private ListView listView;
     private ProgressDialog pDialog;
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
-    private long strDate;
+    private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false,available_now_status;
@@ -298,6 +298,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     * implementation. If there is no list that is the response is null then the static footer
     * has been implemented.In case if the list has items then the footer in the listview
     * has been implemented.
+    * Also here a new field called shared_timestamp is added this is because we have next
+    * availability for timestamp that cannot be saved in preferences it might result like
+    * todat and tommorrow which may cause datye parse exception , so i have used seperate
+    * key for saving the timestamp that is shared_timestamp.
     * */
     public void showOrHideFooter() {
 //        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
@@ -347,6 +351,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     strDate = IntegerConstants.DATE_FLAG;
                 else
                     strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                 shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -365,6 +370,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
             map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
         }
     }
@@ -410,7 +416,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e("List","Am in ListItem Click Listener");
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
-                saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("next_availability"),
+                saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
                         providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"));
                 Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                 startActivity(Reasonintent);
@@ -432,13 +438,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 TimeZone tz = TimeZone.getDefault();
                 calendar.setTimeInMillis(timestamp * 1000);
                 calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-//                SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMM dd HH:mm a");
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-//                Calendar calendar = Calendar.getInstance();
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-//                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-//                calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(timestamp+""));
 
 
                 Calendar today = Calendar.getInstance();
