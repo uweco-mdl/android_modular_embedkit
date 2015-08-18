@@ -9,8 +9,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -77,6 +80,16 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_medical_history);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history));
+
         btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
         btnSaveContinue.setClickable(false);
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
@@ -96,6 +109,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
         initializeYesNoButtonActions();
         checkMedicalDateHistory();
+    }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveMedicalHistory.this);
+        onBackPressed();
     }
 
     /**

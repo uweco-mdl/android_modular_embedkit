@@ -3,12 +3,10 @@ package com.mdlive.embedkit.uilayer;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.WindowManager;
+
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -19,7 +17,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
  *   showProgress() - show progress bar used in activity
  *   hideProgress() - hide progress bar used in activity
  */
-public class MDLiveBaseActivity extends FragmentActivity {
+public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
     public static final String LEFT_MENU = "left_menu";
     public static final String RIGHT_MENU = "right_menu";
 
@@ -28,11 +26,16 @@ public class MDLiveBaseActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
+//        }
+    }
+
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+
     }
 
     @Override

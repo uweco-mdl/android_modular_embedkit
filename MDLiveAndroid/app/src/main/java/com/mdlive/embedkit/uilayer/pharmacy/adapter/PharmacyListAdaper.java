@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -53,15 +53,15 @@ public class PharmacyListAdaper extends BaseAdapter{
             convertView = (View) convertView.getTag();
         }
         if((Boolean)getItem(position).get("is_preferred")){
-            ((TextView) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.VISIBLE);
+            ((LinearLayout) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.VISIBLE);
         }else{
-            ((TextView) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.GONE);
+            ((LinearLayout) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.GONE);
         }
 
         if((Boolean)getItem(position).get("twenty_four_hours")){
-            ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
+            ((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
         }else{
-            ((TextView) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.GONE);
+            ((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.GONE);
         }
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
@@ -71,13 +71,16 @@ public class PharmacyListAdaper extends BaseAdapter{
                     (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
 
         ((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
-        ((TextView) convertView.findViewById(R.id.text_view_b)).setText((((getItem(position).get("distance")!= null) &&
-                ((String)getItem(position).get("distance")).length() != 0) ? (String)((String) getItem(position).get("distance")).trim().replace(" miles", "mi"):""));
 
-        setMaxWidthForLeftText(convertView.findViewById(R.id.relative_layout),
-                (TextView) convertView.findViewById(R.id.text_view_a),
-                (TextView) convertView.findViewById(R.id.text_view_b)
-        );
+        ((TextView) convertView.findViewById(R.id.milesText)).setText((((getItem(position).get("distance") != null) &&
+                ((String) getItem(position).get("distance")).length() != 0) ? (String) ((String) getItem(position).get("distance")).trim().replace(" miles", "mi") : ""));
+
+        if(((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).getVisibility() == View.VISIBLE){
+            setMaxWidthForLeftText(convertView.findViewById(R.id.relative_layout),
+                    (TextView) convertView.findViewById(R.id.text_view_a),
+                    (LinearLayout) convertView.findViewById(R.id.preferStoretxt)
+            );
+        }
         return convertView;
     }
 
@@ -112,7 +115,8 @@ public class PharmacyListAdaper extends BaseAdapter{
      *
      *  While pharmacy name is shrinking, then there will not be any changes on distance text.
      */
-    public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView, final TextView rightTextView) {
+    public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView,
+                                       final LinearLayout rightTextView) {
         parentView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -124,8 +128,8 @@ public class PharmacyListAdaper extends BaseAdapter{
                 bWidth = rightTextView.getMeasuredWidth();
                 int aMarginEnd = 0, bMarginStart = 0;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    aMarginEnd = (int) (((RelativeLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
-                    bMarginStart = (int) (((RelativeLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
+                    aMarginEnd = (int) (((LinearLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * context.getResources().getDisplayMetrics().density);
+                    bMarginStart = (int) (((LinearLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * context.getResources().getDisplayMetrics().density);
                 } else {
                     aMarginEnd = 10;
                     bMarginStart = 10;

@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
@@ -68,12 +72,40 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details));
+
+
         Initialization();
         getPreferenceDetails();
         //Service call Method
         DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         AppointmentDate = format.format(new Date());
         loadProviderDetails(AppointmentDate);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+    }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveProviderDetails.this);
+        onBackPressed();
     }
     /**
      * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
@@ -128,18 +160,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         setProgressBar(findViewById(R.id.progressDialog));
 
 
-    /**
-     * The back image will pull you back to the Previous activity
-     * The tap button will pull you  to the Reason for visit Screen.
-     */
 
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveProviderDetails.this);
-                onBackPressed();
-            }
-        });
+    }
+
+    public void onBackBtnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveProviderDetails.this);
+        onBackPressed();
     }
     /**
      * LProviderDetailServices

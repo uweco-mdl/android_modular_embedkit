@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -80,6 +83,18 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_provider);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_provicer));
+
+
         initialiseData();
         //Load Services
         loadSearchproviderDetails();
@@ -87,6 +102,11 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
+    }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
+        onBackPressed();
     }
 
     /**
@@ -144,7 +164,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void providerTypeAction(View v) {
 
-        showListViewDialog(ProviderTypeArrayList,(TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
+        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
     }
 
     /**
@@ -199,7 +219,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * Along with that we can also filter the provider by using either thelocation
      * or the appointment date or the gender or the provider name.
      */
-    public void doneAction(View v) {
+    public void rightBtnOnClick(View v) {
 //        postParams.put("located_in", filter_SavedLocation);
 //        postParams.put("available_by", StringConstants.AVAILABLE_BY);
 //        postParams.put("appointment_date", AppointmentTxtView.getText().toString());

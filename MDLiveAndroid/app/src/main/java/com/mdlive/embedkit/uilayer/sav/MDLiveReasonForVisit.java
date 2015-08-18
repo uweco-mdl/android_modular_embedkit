@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -25,12 +27,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
@@ -85,6 +90,17 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.mdlive_reason);
 
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+
+            ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.header_reason_txt));
+
+
             setProgressBar(findViewById(R.id.progressDialog));
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
@@ -92,6 +108,17 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             initializeViews();
             ReasonForVisit();
 
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                        commit();
+
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                        commit();
+            }
 
      /*   ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +141,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 }
             });
         }
+
+        public void leftBtnOnClick(View v){
+            MdliveUtils.hideSoftKeyboard(MDLiveReasonForVisit.this);
+            onBackPressed();
+        }
+
 
 
         @Override

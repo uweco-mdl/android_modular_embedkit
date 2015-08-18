@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,6 +33,8 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
@@ -64,7 +68,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt,genderText;
     private String strPatientName,SavedLocation;
-    public static boolean isFemale;
+
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
@@ -79,12 +83,39 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         MdliveUtils.hideSoftKeyboard(this);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.get_started));
+
         initialiseData();
         clearCacheInVolley();
         loadUserInformationDetails();
         loadProviderType();
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
     }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
+        onBackPressed();
+    }
+
     /**
      *
      * This button action is for navigating to the Provider screen.Here we will be checking
@@ -96,7 +127,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
      *
      */
 
-    public void nextBtnAction(View v){
+    public void rightBtnOnClick(View v){
         saveDateOfBirth();
         try{
             Log.e("Arkansas",locationTxt.getText().toString());
@@ -586,7 +617,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
 
-                isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
+
                 DateTxt.setText(personalInfo.getString("birthdate"));
                 for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
                     if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
@@ -751,7 +782,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             JSONObject personalInfo = response.getJSONObject("personal_info");
             dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JSONObject notiObj=response.getJSONObject("notifications");
-            isFemale = personalInfo.getString("gender").equalsIgnoreCase("female");
+
             DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("city")+" ,"+personalInfo.getString("state"));
             String state = personalInfo.getString("state");
