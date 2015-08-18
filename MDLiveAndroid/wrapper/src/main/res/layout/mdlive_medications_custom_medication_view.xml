@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyleOrientationHorizontal"
+    android:gravity="center_vertical">
+
+    <Button
+        android:id="@+id/deleteIndicator"
+        style="@style/common_style_W_Wrap_H_Wrap"
+        android:visibility="gone"
+        android:layout_marginLeft="5dp"
+        android:text=" - "
+        android:src="@drawable/icon"/>
+
+    <LinearLayout
+        style="@style/common_style_W_Zero_H_Match"
+        android:layout_weight="60"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/nameText"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:orientation="vertical"
+            android:textSize="15dp"
+            android:text="testing"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dosageText"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="testing"
+            />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/importLayout"
+        style="@style/common_style_W_Zero_H_Match"
+        android:layout_weight="40"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/doctorNameText"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:singleLine="false"
+            android:gravity="left"
+            android:text="testing"
+            />
+        <Button
+            android:id="@+id/deleteButton"
+            style="@style/common_style_W_Match_M_Match"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:text="delete"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+</LinearLayout>

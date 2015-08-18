@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:orientation="horizontal" >
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.RoundedImageView
+        android:id="@+id/memberImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/memberUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:textSize="16dp"
+        android:textColor="@android:color/black"
+        android:drawableRight="@drawable/ic_action_next_item"
+        android:text="TextView" />
+
+</LinearLayout>

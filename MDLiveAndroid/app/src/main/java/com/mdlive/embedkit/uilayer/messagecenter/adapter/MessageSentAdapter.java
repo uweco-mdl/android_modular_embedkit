@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.messagecenter.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +40,20 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        if (getItem(position).readStatus) {
+            viewHolder.mTextViewTop.setTextColor(Color.GRAY);
+            viewHolder.mTextViewBottom.setTextColor(Color.GRAY);
+            viewHolder.mTextViewTime.setTextColor(Color.GRAY);
+        } else {
+            viewHolder.mTextViewTop.setTextColor(Color.BLACK);
+            viewHolder.mTextViewBottom.setTextColor(Color.BLACK);
+            viewHolder.mTextViewTime.setTextColor(Color.BLACK);
+        }
+
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).from);
         viewHolder.mTextViewBottom.setText(getItem(position).subject);
-
         viewHolder.mTextViewTime.setText(getItem(position).date);
-        if (getItem(position).readStatus) {
-            viewHolder.mTextViewTime.setCompoundDrawables(null, null, null, parent.getContext().getResources().getDrawable(R.drawable.icon_checklist));
-        } else {
-            viewHolder.mTextViewTime.setCompoundDrawables(null, null, null, null);
-        }
 
         return convertView;
     }

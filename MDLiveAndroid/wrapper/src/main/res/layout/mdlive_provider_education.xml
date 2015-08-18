@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/LinearLayoutStyle"
+    >
+    <LinearLayout
+        style="@style/DoctorLinearLayoutStyle"
+        android:background="@drawable/edittext_bg"
+        android:orientation="vertical">
+        <TextView
+            style="@style/ProviderDetailHeaderStyle"
+            android:text="@string/education"
+            />
+        <TextView
+            style="@style/ProviderDetailContentStyle"
+            android:id="@+id/education_txt"
+            android:textColor="@color/mdliveLoginUsernameColor"
+            android:text=""
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

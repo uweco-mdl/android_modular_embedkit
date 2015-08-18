@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/common_style_W_Match_M_Match"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        style="@style/common_style_W_Match_M_Match"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/txtAdvancedSearchOptions"
+            style="@style/common_style_W_Wrap_H_Wrap"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/advanced_search_options"
+            android:textColor="@color/darkgrey_background"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtxtSearchProviderName"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@id/txtAdvancedSearchOptions"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="19dp"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/edtxt_rectangle_border"
+            android:hint="@string/search_provider_name"
+            android:paddingBottom="11dp"
+            android:paddingLeft="11dp"
+            android:paddingTop="14dp"
+            android:textColor="@color/grey_txt"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/AvailableByR1"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/edtxtSearchProviderName"
+            android:onClick="availbleAction">
+
+            <TextView
+                android:id="@+id/txtAvailableBy"
+                style="@style/searchProviderTxtViewStyle"
+                android:text="@string/available_by_caps" />
+
+            <TextView
+                android:id="@+id/AvailableTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtAvailableBy"
+                android:drawableRight="@drawable/dropdown_icon"
+                android:gravity="center_vertical"
+                android:text="Any" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerAvailableBy"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/AvailableByR1" />
+
+        <RelativeLayout
+            android:id="@+id/AppointmentDateR2"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerAvailableBy"
+            android:onClick="appointmentAction">
+
+            <TextView
+                android:id="@+id/txtAppointmentDate"
+                style="@style/searchProviderTxtViewStyle"
+                android:text="@string/appointment_date_caps" />
+
+            <TextView
+                android:id="@+id/DateTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtAppointmentDate"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerAppointmentDate"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/AppointmentDateR2" />
+
+        <RelativeLayout
+            android:id="@+id/ProviderTypeTxtViewR3"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerAppointmentDate"
+            android:onClick="providerTypeAction">
+
+            <TextView
+                android:id="@+id/txtProviderType"
+                style="@style/searchProviderTxtViewStyle"
+                android:text="@string/provider_type_caps" />
+
+            <TextView
+                android:id="@+id/ProviderTypeTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtProviderType"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerProviderType"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/ProviderTypeTxtViewR3" />
+
+        <RelativeLayout
+            android:id="@+id/sorttByR4"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerProviderType"
+            android:onClick="sortByAction">
+
+            <TextView
+                android:id="@+id/txtSortType"
+                style="@style/searchProviderTxtViewStyle"
+                android:text="@string/sort_by_caps" />
+
+            <TextView
+                android:id="@+id/SortbyTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtSortType"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerSorttBy"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/sorttByR4" />
+
+        <RelativeLayout
+            android:id="@+id/SpecialityTxtViewR5"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerSorttBy"
+            android:onClick="specialityAction">
+
+            <TextView
+                android:id="@+id/txtSpecialty"
+                style="@style/searchProviderTxtViewStyle"
+
+                android:text="@string/specialty_caps" />
+
+            <TextView
+                android:id="@+id/SpecialityTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtSpecialty"
+                android:text="Any" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerSpecialty"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/SpecialityTxtViewR5" />
+
+        <RelativeLayout
+            android:id="@+id/LocatioTxtViewR6"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerSpecialty"
+            android:onClick="locationAction">
+
+            <TextView
+                android:id="@+id/txtLocatedIn"
+                style="@style/searchProviderTxtViewStyle"
+                android:text="@string/located_in_caps" />
+
+            <TextView
+                android:id="@+id/LocatioTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtLocatedIn"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerLocatedIn"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/LocatioTxtViewR6" />
+
+        <RelativeLayout
+            android:id="@+id/SpeaksTxtViewR7"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerLocatedIn"
+            android:onClick="speaksAction">
+
+            <TextView
+                android:id="@+id/txtSpeaks"
+                style="@style/searchProviderTxtViewStyle"
+
+                android:text="@string/speaks_caps" />
+
+            <TextView
+                android:id="@+id/SpeaksTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtSpeaks"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerSpeaks"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/SpeaksTxtViewR7" />
+
+        <RelativeLayout
+            android:id="@+id/GenderTxtViewR8"
+            style="@style/common_style_W_Match_M_Wrap"
+            android:layout_below="@+id/dividerSpeaks"
+            android:onClick="genderAction">
+
+            <TextView
+                android:id="@+id/txtGender"
+                style="@style/searchProviderTxtViewStyle"
+
+                android:text="@string/gender_caps" />
+
+            <TextView
+                android:id="@+id/GenderTxtView"
+                style="@style/searchProviderValueStyle"
+                android:layout_below="@+id/txtGender"
+                android:text="Any" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerGender"
+            style="@style/advanceSearchProviderDivider"
+            android:layout_below="@id/GenderTxtViewR8" />
+
+    </RelativeLayout>
+</ScrollView>

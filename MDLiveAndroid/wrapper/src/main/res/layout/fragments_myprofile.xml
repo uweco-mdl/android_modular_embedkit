@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_height="match_parent">
+
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.RoundedImageView
+            android:id="@+id/profileImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/profileImg"
+            android:layout_below="@id/profileImg"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/profileImg"
+            android:textColor="@android:color/black"
+            android:text="venkataraman"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/userDOB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profileName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/profileImg"
+            android:textColor="@android:color/black"
+            android:text="20/11/1988"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userDOB"
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/profileImg"
+            android:text="male"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <include
+            layout="@layout/myaccounts_user_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gender"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+</ScrollView>

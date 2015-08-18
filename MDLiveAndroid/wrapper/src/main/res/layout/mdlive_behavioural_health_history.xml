@@ -1,0 +1,243 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ContainerStyle">
+
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+        style="@style/Behaviuor_headerStyle"
+        android:text="BEHAVIOURAL HEALTH HISTORY" />
+
+    <ScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/content_layout"
+            style="@style/ContainerStyle">
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/QuestionTextStyle"
+                android:text="Have you ever been diagnosed with any of the following conditions?\n(Check all that apply)" />
+
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_alcohol_parent"
+                    android:text=" Alcohol Dependence"
+                    android:fontFamily="h"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+                <CheckBox
+                    android:id="@+id/check_obsessive_parent"
+                    android:text=" Obsessive Compulsive Disorder (OCD)"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+                <CheckBox
+                    android:id="@+id/check_anxiety_parent"
+                    android:text=" Anxiety"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_panic_parent"
+                    android:text=" Panic Attacks"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_bipolar_parent"
+                    android:text=" Bipolar Disorders"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+                <CheckBox
+                    android:id="@+id/check_schiz_parent"
+                    android:text=" Schizophrenia"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+                <CheckBox
+                    android:id="@+id/check_depression_parent"
+                    android:text=" Depression"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_substance_parent"
+                    android:text=" Substance Abuse"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+            <View style="@style/viewstyle_behavioural" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/QuestionStyle"
+                android:text="Have you ever been hospitalized for mental health or substance abuse treatment?" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/QuestionContentStyle">
+
+                <Button
+                    android:id="@+id/btn_yes_parent"
+                    style="@style/YesCustomButtonStyle" />
+
+                <Button
+                    android:id="@+id/btn_no_parent"
+                    style="@style/NoCustomButtonStyle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    style="@style/QuestionStyle"
+                    android:text="When?" />
+
+                <TextView
+                    android:id="@+id/txt_date"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edittext_bg"
+                    android:drawableRight="@drawable/icon_arrow_down"
+                    android:hint="Mar 28,2015"
+                    android:padding="10dp" />
+
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                    style="@style/QuestionStyle"
+                    android:text="For How long?" />
+
+                <EditText
+                    android:id="@+id/edt_howLong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edittext_bg"
+                    android:hint="e.g 1 week/month/year"
+                    android:padding="10dp" />
+
+            </LinearLayout>
+
+            <View style="@style/viewstyle_behavioural" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/QuestionStyle"
+                android:text="Has any one in your family been diagnosed with any of the following conditions?\n(Check all that apply)" />
+
+
+
+                <CheckBox
+                    android:id="@+id/check_alcohol_child"
+                    android:text=" Alcohol Dependencies"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_obsessive_child"
+                    android:text=" Obsessive Compulsive Disorder (OCD)"
+                    style="@style/QuestionCheckStyle" />
+
+
+                <CheckBox
+                    android:id="@+id/check_bipolar_child"
+                    android:text=" Bipolar Disorders"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_schiz_child"
+                    android:text=" Schizophrenia"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_depression_child"
+                    android:text=" Depression"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+
+                <CheckBox
+                    android:id="@+id/check_substance_child"
+                    android:text=" Substance Abuse"
+                    style="@style/QuestionCheckStyle" />
+
+
+
+            <View style="@style/viewstyle_behavioural" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/QuestionStyle"
+                android:text="Has any family members ever been hospitalized for mental health or substance abuse treatment? " />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/QuestionContentStyle">
+
+                <Button
+                    android:id="@+id/btn_yes_child"
+                    style="@style/YesCustomButtonStyle" />
+
+                <Button
+                    android:id="@+id/btn_no_child"
+                    style="@style/NoCustomButtonStyle" />
+
+            </LinearLayout>
+
+            <View style="@style/viewstyle_behavioural" />
+
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomTv
+                style="@style/QuestionStyle"
+                android:text="what is your preference for a counselor? " />
+
+            <TextView
+                android:id="@+id/txt_counselor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittext_bg"
+                android:drawableRight="@drawable/icon_arrow_down"
+                android:layout_marginRight="10dp"
+                android:hint="Male"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/btn_save_behavioral"
+                android:text="Save"
+                android:layout_marginTop="10dp"
+                style="@style/ContinueButtonStyle">
+            </Button>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

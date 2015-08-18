@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            style="@style/ContainerStyle"
+            android:background="@color/white">
+
+            <RelativeLayout
+                style="@style/wagHeaderLinearLayoutStyle"
+                android:layout_height="52dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/backImg"
+                    style="@style/HeaderBackImgStyle"
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="18dp"
+                    android:background="@drawable/icon_arrow_left" />
+
+                <ImageView
+                    android:id="@+id/homeImg"
+                    style="@style/HeaderHomeImgStyle"
+                    android:layout_toRightOf="@+id/backImg"
+                    android:onClick="movetohome"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/headerTxt"
+                    style="@style/HeaderTextViewStyle"
+                    android:text="GET STARTED"
+                    android:textColor="#626262"
+                    android:textSize="14sp">
+
+                </TextView>
+
+                <Button
+                    android:id="@+id/txtApply"
+                    style="@style/endHeaderTextViewStyle"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="22dp"
+                    android:background="@null"
+                    android:text="Close"
+                    android:textColor="#636363"
+                    android:textSize="14sp"
+
+                    />
+            </RelativeLayout>
+
+            <ScrollView
+                style="@style/ScrollViewStyle"
+                android:background="@color/white">
+
+                <LinearLayout
+                    style="@style/LinearLayoutStyle"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/WagParentLinearLayoutStyle"
+                        android:layout_marginLeft="@dimen/Linearlayoutt_leftmargin"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:gravity="center"
+                            android:layout_marginTop="28dp"
+                            android:text="Who is this visit for?"
+                            android:textColor="#100c0c"
+                            android:textSize="18sp" />
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cv"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:layout_marginTop="28dp">
+
+                            <LinearLayout
+                                android:id="@+id/patientLl"
+                                style="@style/WagLinearLayoutStyle"
+                                android:layout_gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/GetStartedHeaderContentStyle"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="50"
+                                    android:text="@string/patient_name"
+                                    android:textSize="14sp" />
+
+
+                                <Spinner
+                                    android:id="@+id/patientSpinner"
+                                    style="@style/SpinnerButtonStyle"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="60"
+                                    android:layout_marginLeft="@dimen/spinnerpatientname_leftmargin"
+                                    android:layout_marginRight="@dimen/spinnerpatientname_rightmargin"
+                                    android:textSize="14sp" />
+
+
+                            </LinearLayout>
+                            <!--<View-->
+                            <!--style="@style/ViewStyle"-->
+                            <!--android:layout_marginLeft="@dimen/view_margin"-->
+                            <!--android:layout_marginRight="@dimen/view_margin"-->
+                            <!--android:layout_marginTop="@dimen/view_margin" />-->
+                        </android.support.v7.widget.CardView>
+
+                        <LinearLayout
+                            android:id="@+id/dobLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/date_of_birth" />
+
+                            <TextView
+                                android:id="@+id/dobTxt"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/date_of_birth_hint"
+                                android:textColor="@color/mdliveLoginUsernameColor"
+                                android:textSize="18sp" />
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/genderLl"
+                            style="@style/WagLinearLayoutStyle"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:text="@string/Gender" />
+
+                            <TextView
+                                android:id="@+id/txt_gender"
+                                style="@style/GetStartedHeaderContentStyle"
+                                android:textColor="@color/mdliveLoginUsernameColor"
+                                android:textSize="@dimen/textsize_large" />
+
+                            <View
+                                style="@style/ViewStyle"
+                                android:layout_marginTop="@dimen/view_margin" />
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardLocation"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:layout_marginTop="28dp">
+
+                            <LinearLayout
+                                style="@style/WagLinearLayoutStyle"
+                                android:layout_width="match_parent"
+                                android:layout_gravity="center"
+                                android:onClick="goToLocation"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/GetStartedHeaderContentStyle"
+                                    android:text="@string/location"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="50"
+                                    android:textSize="14sp" />
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="60"
+                                    android:orientation="horizontal"
+                                    android:layout_gravity="center_vertical">
+
+                                    <TextView
+                                        android:id="@+id/locationTxt"
+                                        style="@style/GetStartedHeaderContentStyle"
+                                        android:gravity="center_vertical"
+                                        android:text="Ranto Santa Margarita,CA"
+                                        android:layout_width="wrap_content"
+                                        android:textColor="@color/location_color"
+                                        android:singleLine="true"
+                                        android:ellipsize="end"
+                                        android:layout_centerVertical="true"
+                                        android:textSize="14sp" />
+
+                                    <ImageView
+                                        android:id="@+id/rightimg"
+                                        style="@style/locationimgStyle"
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:layout_centerVertical="true"
+                                        android:background="@drawable/icon_arrow_right"
+                                        android:gravity="center_vertical" />
+
+                                </RelativeLayout>
+
+                                <!--<View-->
+                                <!--style="@style/ViewStyle"-->
+                                <!--android:layout_marginTop="@dimen/view_margin" />-->
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardProviderType"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:layout_marginTop="28dp">
+
+                            <LinearLayout
+                                style="@style/WagLinearLayoutStyle"
+                                android:layout_width="match_parent"
+                                android:layout_gravity="center"
+                                android:onClick="goToProviderType"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/GetStartedHeaderContentStyle"
+                                    android:text="Provider Type:"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="50"
+                                    android:textSize="14sp" />
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="60"
+                                    android:layout_gravity="center_vertical"
+
+                                    >
+
+                                    <TextView
+                                        android:id="@+id/providertypeTxt"
+                                        style="@style/GetStartedHeaderContentStyle"
+                                        android:layout_width="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:text="Family physician"
+                                        android:textColor="@color/location_color"
+                                        android:textSize="14sp" />
+
+                                    <ImageView
+                                        android:id="@+id/providerrightimg"
+                                        style="@style/locationimgStyle"
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:background="@drawable/icon_arrow_right"
+                                        android:gravity="center_vertical" />
+
+                                </RelativeLayout>
+
+                                <!--<View-->
+                                <!--style="@style/ViewStyle"-->
+                                <!--android:layout_marginTop="@dimen/view_margin" />-->
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cv1"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:layout_marginTop="28dp">
+
+                            <LinearLayout
+                                android:id="@+id/telephoneLl"
+                                style="@style/WagLinearLayoutStyle"
+                                android:layout_gravity="center"
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/GetStartedHeaderContentStyle"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="50"
+                                    android:text="@string/phonenumber" />
+
+                                <EditText
+                                    android:id="@+id/telephoneTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="60"
+                                    style="@style/GetStartedHeaderContentStyle"
+                                    android:background="@color/transparent_native"
+                                    android:inputType="number"
+                                    android:maxLength="12"
+                                    android:text="8870940080"
+                                    android:textColor="@color/black"
+                                    android:textSize="14sp" />
+
+                                <!--<View-->
+                                <!--style="@style/ViewStyle"-->
+                                <!--android:layout_marginTop="@dimen/view_margin" />-->
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+                        <TextView
+                            style="@style/GetStartedHeaderContentStyle"
+                            android:layout_marginLeft="@dimen/disclaimer_leftmargin"
+                            android:layout_marginRight="@dimen/disclaimer_rightmargin"
+                            android:layout_marginTop="13dp"
+                            android:text="@string/disclaimertxt"
+                            android:textColor="#6d6d6d"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        style="@style/Mdlive_footer_Style"
+                        android:visibility="gone">
+
+                        <include
+                            style="@style/Footer_Style"
+                            layout="@layout/mdlive_footer" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                style="@style/ContinueButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="#00bd48"
+                android:onClick="nextBtnAction"
+                android:text="Continue" />
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/dash_board__left_container"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|start" />
+
+
+        <FrameLayout
+            android:id="@+id/dash_board__right_container"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|end" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+
+    <include layout="@layout/custom_progress_dialog" />
+</merge>

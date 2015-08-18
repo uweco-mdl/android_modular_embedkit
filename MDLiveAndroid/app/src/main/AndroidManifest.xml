@@ -59,6 +59,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".uilayer.login.MDLiveDashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
         <!-- Provider Details -->
 
         <activity
@@ -194,9 +199,6 @@
 
         <activity
             android:name=".uilayer.login.LoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".uilayer.login.MDLiveDashboardActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".uilayer.myaccounts.MyAccountActivity"

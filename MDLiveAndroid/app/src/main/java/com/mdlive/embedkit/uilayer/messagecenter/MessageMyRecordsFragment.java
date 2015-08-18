@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +18,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.RecordAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.CustomerDocument;
@@ -43,7 +41,7 @@ import java.io.InputStream;
 /**
  * Created by dhiman_da on 6/24/2015.
  */
-public class MessageMyRecordsFragment extends Fragment {
+public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     private static final int PICK_PHOTO_INTENT = 0;
     private static final int TAKE_PHOTO_INTENT = 1;
 
@@ -205,7 +203,6 @@ public class MessageMyRecordsFragment extends Fragment {
                     mRecordAdapter.addAll(records.records);
                     mRecordAdapter.notifyDataSetChanged();
                 }
-                Toast.makeText(getActivity(), records.toString(), Toast.LENGTH_SHORT).show();
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -234,7 +231,6 @@ public class MessageMyRecordsFragment extends Fragment {
 
                 final Gson gson = new Gson();
                 final Message message =  gson.fromJson(response.toString(), Message.class);
-                Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -250,7 +246,6 @@ public class MessageMyRecordsFragment extends Fragment {
                 }
 
                 final String errorResponse  = new String(error.networkResponse.data);
-                Toast.makeText(getActivity(), "Error : " + errorResponse, Toast.LENGTH_SHORT).show();
                 Log.e("MDLIVE ERROR", "Error : " + errorResponse);
             }
         };

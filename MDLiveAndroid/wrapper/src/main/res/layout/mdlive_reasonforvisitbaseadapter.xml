@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:gravity="center_vertical"
+    android:id="@+id/reasonListItem"
+    android:padding="10dp"
+    >
+<ImageView
+    style = "@style/common_style_W_Wrap_H_Wrap"
+    android:text="@string/acne_txt"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="5dp"
+    android:src="@drawable/radio_default"
+    android:id="@+id/reasonCheckbox" />
+
+<TextView
+    style = "@style/common_style_W_Match_M_Wrap"
+    android:text="@string/acne_txt"
+    android:layout_height="wrap_content"
+    android:singleLine="true"
+    android:ellipsize="end"
+    android:textSize="15dp"
+    android:paddingTop="2dp"
+    android:paddingLeft="10dp"
+    android:paddingBottom="2dp"
+    android:id="@+id/reasonTxt" />
+</LinearLayout>

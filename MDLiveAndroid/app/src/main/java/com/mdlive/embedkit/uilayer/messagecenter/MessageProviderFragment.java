@@ -2,21 +2,18 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Provider;
@@ -29,7 +26,7 @@ import org.json.JSONObject;
 /**
  * Created by dhiman_da on 6/24/2015.
  */
-public class MessageProviderFragment extends Fragment {
+public class MessageProviderFragment extends MDLiveBaseFragment {
     private ProgressDialog pDialog;
 
     private ListView mListView;
@@ -143,8 +140,6 @@ public class MessageProviderFragment extends Fragment {
                     mProviderAdapter.addAll(provider.myProviders);
                     mProviderAdapter.notifyDataSetChanged();
                 }
-
-                Toast.makeText(getActivity(), provider.toString(), Toast.LENGTH_SHORT).show();
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {

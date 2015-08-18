@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        style="@style/ContainerStyle"
+        android:background="@color/choose_pharmacy_background"
+        android:layout_above="@+id/relativeLayout">
+
+        <ScrollView
+            style="@style/common_style_W_Match_H_Wrap_O_Vertical"
+            android:fillViewport="false"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                style="@style/WagLinearLayoutStyle"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout style="@style/common_style_W_Match_H_Wrap_O_Vertical">
+                    <RelativeLayout
+                        style="@style/pharmacySearchFieldStyle">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:id="@+id/pharmacy_search_icon"
+                            android:src="@drawable/search_icon"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/pharmacy_search_name"
+                            style="@style/location_edittext"
+                            android:dropDownVerticalOffset="10dp"
+                            android:hint="@string/pharmacy_opn"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
+                            android:tag="enter_zip"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/pharmacy_search_icon"
+                            android:layout_toEndOf="@+id/pharmacy_search_icon"
+                            android:layout_marginLeft="13dp"
+                            android:layout_marginBottom="0dp"
+                            android:textColorHint="@color/pharmacy_search_hint_color"/>
+
+                    </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/getlocationButton"
+                        style="@style/pharmacySearchFieldStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/location_icon_blue"
+                        android:onClick="getlocationButtonOnClick"
+                        android:tag="current_loc_txt"
+                        android:text="@string/current_loc_txt"
+                        android:textColor="@color/blue_text_color"
+                        android:gravity="left|center"
+                        android:drawablePadding="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/common_style_W_Match_M_Match"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/manual_txt_small"
+                            android:textColor="@color/black"
+                            android:textSize="17sp"
+                            />
+
+                        <LinearLayout
+                            style="@style/Choose_Pharmacy_Search_Field"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/searchPharmacyLabelStyle"
+                                android:text="@string/zip_code"/>
+
+                            <EditText
+                                style="@style/EditFieldCommonStyle"
+                                android:id="@+id/zipcodeText"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:tag="enter_zip"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            style="@style/common_style_W_Match_M_Match"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:tag="or"
+                            android:text="@string/ph_Or_str"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            style="@style/Choose_Pharmacy_Search_Field"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/searchPharmacyLabelStyle"
+                                android:text="@string/city"/>
+
+                            <EditText
+                                style="@style/EditFieldCommonStyle"
+                                android:id="@+id/cityText"
+                                android:tag="enter_city"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            style="@style/Choose_Pharmacy_Search_Field"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/searchPharmacyLabelStyle"
+                                android:text="@string/state"/>
+
+                            <TextView
+                                style="@style/SelectStateCommonStyle"
+                                android:id="@+id/chooseState"
+                                android:drawableRight="@drawable/dropdown_icon"
+                                android:onClick="chooseStateOnClick"
+                                android:tag="select_stg"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relativeLayout">
+        <Button
+            style="@style/btnContinueStyle"
+            android:text="@string/search"
+            android:onClick="doneTxtOnClick"
+            />
+    </RelativeLayout>
+</RelativeLayout>
+    <include layout="@layout/custom_progress_dialog" />
+</merge>

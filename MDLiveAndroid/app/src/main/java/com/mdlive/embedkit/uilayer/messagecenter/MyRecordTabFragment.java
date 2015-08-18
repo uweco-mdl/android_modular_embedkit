@@ -3,17 +3,17 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 /**
  * Created by dhiman_da on 6/27/2015.
  */
-public class MyRecordTabFragment extends Fragment {
+public class MyRecordTabFragment extends MDLiveBaseFragment {
     private static final String MESSAGE_MY_RECORDS_FRAGMENT_TAG = "message_my_records_fragment";
 
     public static MyRecordTabFragment newInstance() {

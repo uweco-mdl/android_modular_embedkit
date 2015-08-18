@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="left_navigation_items">
+        <item>Home</item>
+        <item>@string/see_a_doctor_now</item>
+        <item>@string/my_health</item>
+        <item>@string/mdlive_assist</item>
+        <item>@string/message_center</item>
+        <item>@string/symptom_checker</item>
+        <item>@string/my_account</item>
+        <item>@string/support</item>
+        <item>@string/share_app</item>
+    </string-array>
+
+    <string-array name="left_navigation_items_image">
+        <item>@drawable/drawer_home_icon</item>
+        <item>@drawable/drawer_talk_doctor_icon</item>
+        <item>@drawable/drawer_myhealth_icon</item>
+        <item>@drawable/drawer_assit_icon</item>
+        <item>@drawable/drawer_message_center</item>
+        <item>@drawable/drawer_symptom_check_icon</item>
+        <item>@drawable/drawer_my_accounts_icon</item>
+        <item>@drawable/drawer_help_icon</item>
+        <item>@drawable/drawer_share_icon</item>
+    </string-array>
+
+</resources>

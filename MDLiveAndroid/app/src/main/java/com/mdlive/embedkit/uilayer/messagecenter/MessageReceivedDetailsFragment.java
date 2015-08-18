@@ -3,20 +3,19 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
 
 /**
  * Created by dhiman_da on 6/27/2015.
  */
-public class MessageReceivedDetailsFragment extends Fragment {
+public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     private static final String RECEIVED_MESSAGE_TAG = "received_message";
 
     public static MessageReceivedDetailsFragment newInstance(final ReceivedMessage receivedMessage) {
@@ -72,8 +71,6 @@ public class MessageReceivedDetailsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Toast.makeText(getActivity(), getArguments().getParcelable(RECEIVED_MESSAGE_TAG).toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
