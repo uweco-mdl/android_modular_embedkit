@@ -66,7 +66,7 @@ import java.util.List;
 
 public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
-    private TextView locationTxt,DateTxt,genderText;
+    private TextView locationTxt,DateTxt;/*,genderText*/
     private String strPatientName,SavedLocation;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
@@ -209,7 +209,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
         DateTxt = (TextView) findViewById(R.id.dobTxt);
-        genderText= (TextView) findViewById(R.id.txt_gender);
+//        genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         providerTypeArrayList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
@@ -629,7 +629,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                         locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     }
                 }
-                genderText.setText(personalInfo.getString("gender"));
+//                genderText.setText(personalInfo.getString("gender"));
                 String numStr = personalInfo.getString("phone");
                 try {
                     String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
@@ -809,7 +809,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             }
 
             locationTxt.setText(state);
-            genderText.setText(personalInfo.getString("gender"));
+            //genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
