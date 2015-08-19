@@ -512,9 +512,13 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     if (recordsArray.length() >= 8) {
                         takePhoto.setClickable(false);
                         takeGallery.setClickable(false);
+                        takePhoto.setImageResource(R.drawable.camera_icon_deselect);
+                        takeGallery.setImageResource(R.drawable.gallery_icon_deselect);
                     } else {
                         takePhoto.setClickable(true);
                         takeGallery.setClickable(true);
+                        takePhoto.setImageResource(R.drawable.camera_icon);
+                        takeGallery.setImageResource(R.drawable.gallery_icon);
                     }
 
                     if (recordsArray != null) {

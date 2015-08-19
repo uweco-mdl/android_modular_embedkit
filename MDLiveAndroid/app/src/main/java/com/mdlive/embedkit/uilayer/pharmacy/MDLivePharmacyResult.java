@@ -5,16 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -92,16 +92,34 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+     /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-        }
+        }*/
+
         setContentView(R.layout.mdlive_pharmacy_result);
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_phr_txt));
+
         initializeViews();
         initializeListView();
         initializeMapView();
         getPharmacySearchResults(getPostBody(getIntent()));
+    }
+
+
+    public void rightBtnOnClick(View view){
+        Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+        startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
+        MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
     }
 
     @Override
@@ -133,16 +151,16 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         bottomLoder = (ProgressBar)findViewById(R.id.bottomLoader);
         errorMesssage = getString(R.string.no_pharmacies_listed);
-        ((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
+        /*((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
                 startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
-        });
+        });*/
 
-        // The back image will pull you back to the Previous activity
+       /* // The back image will pull you back to the Previous activity
         // The home button will pull you back to the Dashboard activity
         ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,8 +173,14 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             public void onClick(View v) {
                 movetohome();
             }
-        });
+        });*/
     }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+        onBackPressed();
+    }
+
 
     /*
      * This function is mainly focused on initializing view in layout.

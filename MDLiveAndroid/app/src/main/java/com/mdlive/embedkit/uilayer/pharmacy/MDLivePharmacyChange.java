@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +30,8 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -72,11 +77,54 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.search_pharm_txt));
+
+
+
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
         //initialize views of activity
         initializeViews();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
     }
+
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+        onBackPressed();
+    }
+
+    public void rightBtnOnClick(View v){
+        String hasErrorMessage = hasValidationMessage();
+        if (hasErrorMessage == null) {
+            addExtrasInIntent();
+            startActivity(sendingIntent);
+            MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+            finish();
+        } else {
+            MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
+        }
+    }
+
 
     /*
      *This function is used to initialized views defined in layout.

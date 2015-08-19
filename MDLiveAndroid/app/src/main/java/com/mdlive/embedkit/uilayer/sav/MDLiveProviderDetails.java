@@ -336,7 +336,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                      reqfutureapptBtn.setVisibility(View.GONE);
                     byvideoBtn.setVisibility(View.VISIBLE);
                     byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
-                     byphoneBtn.setVisibility(View.INVISIBLE);
+                     byphoneBtn.setClickable(false);
+                     byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_grey);
 
                 }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
                 {
@@ -353,7 +354,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
                     tapSeetheDoctorTxt.setText("Talk to Doctor");
                     reqfutureapptBtn.setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.INVISIBLE);
+                    byvideoBtn.setClickable(false);
+                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_grey);
                     byphoneBtn.setVisibility(View.VISIBLE);
                     byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
             }

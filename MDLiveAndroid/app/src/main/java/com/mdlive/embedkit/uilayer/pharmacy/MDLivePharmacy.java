@@ -7,13 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -65,12 +68,22 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-        }
+        }*/
         setContentView(R.layout.mdlive_pharmacy);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_phr_txt));
+
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
@@ -81,12 +94,29 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         //This function is for initialize google map that was used in layout
         initializeMapView();
         //This function is for get user pharmacy details
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
+
         if (getIntent() != null && getIntent().hasExtra("Response"))
             loadDatas(getIntent().getStringExtra("Response"));
         else
             getUserPharmacyDetails();
     }
 
+    public void rightBtnOnClick(View view){
+        checkInsuranceEligibility();
+    }
     /**
      * This function handles click listener of SavContinueBtn
      *
@@ -124,6 +154,12 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         MdliveUtils.hideSoftKeyboard(MDLivePharmacy.this);
         onBackPressed();
     }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLivePharmacy.this);
+        onBackPressed();
+    }
+
 
     /**
      * This override function will be called on every time with this page loading.

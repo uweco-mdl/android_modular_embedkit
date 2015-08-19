@@ -11,6 +11,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -70,6 +72,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_location);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.updatelocation));
+
+
         StateTxt = (TextView) findViewById(R.id.StateTxt);
         setProgressBar(findViewById(R.id.progressDialog));
         StateTxt.setOnClickListener( new View.OnClickListener() {
@@ -105,8 +118,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 }
             }
         });
-        TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
-        SavContinueBtn.setOnClickListener(new View.OnClickListener() {
+        //TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
+        /*SavContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
@@ -129,14 +142,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             }
         });
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                onBackPressed();
-            }
-        });
-
+*/
         CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +160,33 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
         LongNameList = Arrays.asList(getResources().getStringArray(R.array.stateName));
         ShortNameList = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+
+
+    }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
+        onBackPressed();
+    }
+
+    public void rightBtnOnClick(View view){
+        MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
+        if(ZipcodeEditTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO||StateTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO){
+            if(ZipcodeEditTxt.getText().length()!=IntegerConstants.NUMBER_ZERO){
+                String getEditTextValue = ZipcodeEditTxt.getText().toString();
+                if(MdliveUtils.validateZipCode(getEditTextValue)){
+                    loadZipCode(getEditTextValue);
+                }else{
+                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip));
+                }
+            }else{
+                SaveZipCodeCity(selectedCity);
+                finish();
+            }
+
+        }else{
+            MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip_state));
+        }
     }
 
     @Override

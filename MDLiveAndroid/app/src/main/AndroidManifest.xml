@@ -70,6 +70,7 @@
             android:name=".uilayer.sav.MDLiveGetStarted"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name=".uilayer.sav.MDLiveFamilymember"
@@ -189,6 +190,7 @@
         <activity
             android:name=".uilayer.pediatric.MDLivePediatric"
             android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".uilayer.messagecenter.MessageCenterActivity"

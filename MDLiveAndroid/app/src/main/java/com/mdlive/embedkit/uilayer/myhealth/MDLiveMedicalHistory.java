@@ -87,7 +87,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             setSupportActionBar(toolbar);
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history));
 
         btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
@@ -187,6 +187,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         onBackPressed();
     }
 
+    public void rightBtnOnClick(View view){
+        updateMedicalHistory();
+    }
     public void SavContinueBtnOnClick(View view){
         updateMedicalHistory();
     }
