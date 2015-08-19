@@ -1,14 +1,13 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -16,10 +15,14 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SendMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Message;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
@@ -30,16 +33,14 @@ import org.json.JSONObject;
  * Created by dhiman_da on 6/24/2015.
  */
 public class MessageComposeFragment extends MDLiveBaseFragment {
-    private static final String MY_PROVIDER_TAG = "MY_PROVIDER";
-
-    private ProgressDialog pDialog;
+    private static final String TAG = "data";
 
     private EditText mSubjectEditText;
     private EditText mBodyEditText;
 
-    public static MessageComposeFragment newInstance(final MyProvider myProvider) {
+    public static MessageComposeFragment newInstance(final Parcelable parcelable) {
         final Bundle args = new Bundle();
-        args.putParcelable(MY_PROVIDER_TAG, myProvider);
+        args.putParcelable(TAG, parcelable);
 
         final MessageComposeFragment messageComposeFragment = new MessageComposeFragment();
         messageComposeFragment.setArguments(args);
@@ -71,27 +72,33 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String url = null;
+        String to = null;
+
+        final Parcelable parcelable = getArguments().getParcelable(TAG);
+        if (parcelable instanceof ReceivedMessage) {
+            url = ((ReceivedMessage) parcelable).providerImageUrl;
+            to = ((ReceivedMessage) parcelable).from;
+        } else if (parcelable instanceof SentMessage) {
+            url = ((SentMessage) parcelable).providerImageUrl;
+            to = ((SentMessage) parcelable).from;
+        } else {
+            url = ((MyProvider) parcelable).providerImageUrl;
+            to = ((MyProvider) parcelable).name;
+        }
+
+        final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.image_view);
+        if (circularNetworkImageView != null) {
+            circularNetworkImageView.setImageUrl(url, ApplicationController.getInstance().getImageLoader(view.getContext()));
+        }
+
         final TextView toTextView = (TextView) view.findViewById(R.id.fragment_message_compose_to_text_view);
         if (toTextView != null) {
-            toTextView.setText(((MyProvider) getArguments().getParcelable(MY_PROVIDER_TAG)).name);
+            toTextView.setText(to);
         }
 
         mSubjectEditText = (EditText) view.findViewById(R.id.fragment_message_compose_subject_edit_text);
         mBodyEditText = (EditText) view.findViewById(R.id.fragment_message_compose_body_edit_text);
-        if (mBodyEditText != null) {
-            mBodyEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    if (i == EditorInfo.IME_ACTION_SEND) {
-                        sendComposedMessage();
-
-                        return true;
-                    }
-
-                    return false;
-                }
-            });
-        }
     }
 
     @Override
@@ -107,8 +114,6 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
     }
 
     @Override
@@ -141,42 +146,71 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
         super.onDetach();
     }
 
-    private void sendComposedMessage() {
-        pDialog.show();
+    public void sendComposedMessage() {
+        MdliveUtils.hideKeyboard(getActivity(), (View)mSubjectEditText);
+
+        if (mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() < 1) {
+            MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+            return;
+        }
+
+        if (mBodyEditText != null && mBodyEditText.getText().toString().trim().length() < 0) {
+            MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+            return;
+        }
+
+        showProgressDialog();
+
+        int destinationUserId = -1;
+
+        final Parcelable parcelable = getArguments().getParcelable(TAG);
+        if (parcelable instanceof ReceivedMessage) {
+            destinationUserId = ((ReceivedMessage) parcelable).providerId;
+        } else if (parcelable instanceof SentMessage) {
+            destinationUserId =((SentMessage) parcelable).providerId;
+        } else {
+            destinationUserId = ((MyProvider) parcelable).providerId;
+        }
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                hideProgressDialog();
 
                 final Gson gson = new Gson();
                 final Message message =  gson.fromJson(response.toString(), Message.class);
+
+                MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
             }
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
 
         final SendMessage sendMessage = new SendMessage();
-        sendMessage.destinationUserId = ((MyProvider) getArguments().getParcelable(MY_PROVIDER_TAG)).providerId;
-        sendMessage.repliedToMessageId = null;
+        sendMessage.destinationUserId = String.valueOf(destinationUserId);
         sendMessage.subject = mSubjectEditText == null ? "" : mSubjectEditText.getText().toString().trim();
         sendMessage.message = mBodyEditText == null ? "" : mBodyEditText.getText().toString().trim();
 
         final Gson gson = new Gson();
         final String params = gson.toJson(sendMessage);
 
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.postMessage(successListener, errorListener, params);
     }
 }

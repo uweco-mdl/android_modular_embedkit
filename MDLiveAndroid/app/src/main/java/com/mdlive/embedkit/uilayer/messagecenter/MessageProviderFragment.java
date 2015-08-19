@@ -97,6 +97,8 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
         if (details != null) {
             details.setText(R.string.no_messages_compose_details);
         }
+
+        mListLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override

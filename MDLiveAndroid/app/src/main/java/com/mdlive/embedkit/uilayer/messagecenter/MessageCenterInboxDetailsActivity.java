@@ -1,11 +1,13 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.os.Parcelable;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -14,43 +16,57 @@ import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 
 /**
- * Created by dhiman_da on 6/27/2015.
+ * Created by dhiman_da on 8/19/2015.
  */
-public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
+public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivity {
+    public static final String DATA_TAG = "data";
+
+    public static Intent getMessageDetailsIntent(final Context context, final Parcelable parcelable) {
+        final Intent intent = new Intent(context, MessageCenterInboxDetailsActivity.class);
+        intent.putExtra(DATA_TAG, parcelable);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_tab_activity);
-        setTitle("");
+        setContentView(R.layout.activity_message_center_inbox_details);
+
+        final Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setTitle("");
+            setSupportActionBar(toolbar);
+        }
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.message_center));
-        }
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
-
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
         if (savedInstanceState == null) {
+            if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(DATA_TAG) != null) {
+                Parcelable parcelable = getIntent().getExtras().getParcelable(DATA_TAG);
+
+                if (parcelable instanceof ReceivedMessage) {
+                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.inbox).toUpperCase());
+                    getSupportFragmentManager().
+                            beginTransaction().
+                            add(R.id.container, MessageReceivedDetailsFragment.newInstance((ReceivedMessage) parcelable)).
+                            commit();
+                } else if (parcelable instanceof SentMessage) {
+                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.sent).toUpperCase());
+                    getSupportFragmentManager().
+                            beginTransaction().
+                            add(R.id.container, MessageSentDetailsFragment.newInstance((SentMessage) parcelable)).
+                            commit();
+                }
+            }
+
             getSupportFragmentManager().
                     beginTransaction().
                     add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
@@ -61,14 +77,6 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MessageReceivedFragment.newInstance(), getString(R.string.inbox));
-        adapter.addFragment(MessageSentFragment.newInstance(), getString(R.string.sent));
-        adapter.addFragment(MessageProviderFragment.newInstance(), getString(R.string.compose));
-        viewPager.setAdapter(adapter);
     }
 
     /**
@@ -129,16 +137,12 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         }
     }
 
-    public void onReceivedMessageClicked(final ReceivedMessage receivedMessage) {
-        startActivity(MessageCenterInboxDetailsActivity.getMessageDetailsIntent(getBaseContext(), receivedMessage));
+    public void onBackClicked(View view) {
+        finish();
     }
 
-    public void onSentMessageClicked(final SentMessage sentMessage) {
-        startActivity(MessageCenterInboxDetailsActivity.getMessageDetailsIntent(getBaseContext(), sentMessage));
+    public void onReplyClicked(final Parcelable parcelable) {
+        startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(getBaseContext(), parcelable));
+        finish();
     }
-
-    public void onMyProviderClicked(final MyProvider myProvider) {
-        startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(getBaseContext(), myProvider));
-    }
-
 }
