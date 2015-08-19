@@ -16,6 +16,7 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
@@ -88,7 +89,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
 
             // See a Doctor
             case 1:
-
+                startActivityWithClassName(MDLiveGetStarted.class);
                 break;
 
             // MDLive My Health
@@ -103,7 +104,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
 
             // Message Center
             case 4:
-                //startActivityWithClassName(MessageCenterActivity.class);
+
                 break;
 
             // Symptom Checker
@@ -116,23 +117,13 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
                 startActivityWithClassName(MyAccountActivity.class);
                 break;
 
-            // Symptom Checker
-            case 7:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 8:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
             // Support
-            case 9:
+            case 7:
                 startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
                 break;
 
-            // Share this App
-            case 10:
+            // Share
+            case 8:
 
                 break;
         }

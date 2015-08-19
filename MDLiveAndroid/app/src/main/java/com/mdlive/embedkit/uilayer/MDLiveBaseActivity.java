@@ -4,10 +4,16 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -35,7 +41,55 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
 
+        switch (position) {
+            // Home
+            case 0:
+                startActivityWithClassName(MDLiveDashboardActivity.class);
+                break;
+
+            // See a Doctor
+            case 1:
+
+                break;
+
+            // MDLive My Health
+            case 2:
+
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                startActivityWithClassName(MessageCenterActivity.class);
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 7:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share
+            case 8:
+
+                break;
+        }
     }
 
     @Override

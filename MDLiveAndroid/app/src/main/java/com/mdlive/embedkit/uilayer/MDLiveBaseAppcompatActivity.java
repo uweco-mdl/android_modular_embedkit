@@ -74,7 +74,9 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
 
     public void startActivityWithClassName(final Class clazz) {
-        startActivity(new Intent(getBaseContext(), clazz));
+        final Intent intent = new Intent(getBaseContext(), clazz);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
