@@ -2,12 +2,12 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -129,7 +129,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View v = inflater.inflate(R.layout.add_family_footer, null);
-            RelativeLayout addFamilyMember = (RelativeLayout) v.findViewById(R.id.addFamilyMember);
+            CardView addFamilyMember = (CardView) v.findViewById(R.id.addFamilyMember);
             lv.addFooterView(v);
 
         } catch (JSONException e) {

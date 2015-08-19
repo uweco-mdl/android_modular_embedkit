@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -57,9 +58,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private TextView mAddress = null;
     private TextView mMobile = null;
     private TextView mTimeZone = null;
-    private TextView mChangePassword = null;
-    private TextView mChangePin = null;
-    private TextView mChangeSecurityQuestions = null;
+    private CardView mChangePassword = null;
+    private CardView mChangePin = null;
+    private CardView mChangeSecurityQuestions = null;
     private Button mSave = null;
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null;
@@ -93,9 +94,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mAddress = (TextView)view.findViewById(R.id.address);
         mMobile = (TextView)view.findViewById(R.id.phoneNumber);
         mTimeZone = (TextView)view.findViewById(R.id.timeZone);
-        mChangePassword = (TextView)view.findViewById(R.id.changePassword);
-        mChangePin = (TextView)view.findViewById(R.id.changePin);
-        mChangeSecurityQuestions = (TextView)view.findViewById(R.id.changeSecurityQuestion);
+        mChangePassword = (CardView)view.findViewById(R.id.changePassword);
+        mChangePin = (CardView)view.findViewById(R.id.changePin);
+        mChangeSecurityQuestions = (CardView)view.findViewById(R.id.changeSecurityQuestion);
 
 
         mChangePassword.setOnClickListener(new View.OnClickListener() {
