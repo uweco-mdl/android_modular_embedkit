@@ -2,13 +2,12 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -63,17 +62,17 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
         TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
-        addFamilyMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.tabcontent, AddFamilyMemberFragment.newInstance()).commit();
-
-            }
-        });
+//        addFamilyMember.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.replace(R.id.tabcontent, AddFamilyMemberFragment.newInstance()).commit();
+//
+//            }
+//        });
     }
 
     @Override
@@ -127,6 +126,12 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
             values.put("NAME", nameList);
             values.put("URL", urlList);
             lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), values));
+
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View v = inflater.inflate(R.layout.add_family_footer, null);
+            RelativeLayout addFamilyMember = (RelativeLayout) v.findViewById(R.id.addFamilyMember);
+            lv.addFooterView(v);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

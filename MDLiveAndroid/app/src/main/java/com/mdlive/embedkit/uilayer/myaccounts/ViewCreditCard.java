@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -53,8 +51,8 @@ public class ViewCreditCard extends Fragment{
 
         View viewCreditCard = inflater.inflate(R.layout.fragment_view_creditcard,null);
 
-        viewCreditCardInfo = (TextView)viewCreditCard.findViewById(R.id.txt_viewCreditCard);
-        replaceCard = (Button)viewCreditCard.findViewById(R.id.replaceCard);
+//        viewCreditCardInfo = (TextView)viewCreditCard.findViewById(R.id.txt_viewCreditCard);
+//        replaceCard = (Button)viewCreditCard.findViewById(R.id.replaceCard);
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -64,6 +62,12 @@ public class ViewCreditCard extends Fragment{
         getCreditCardInfoService();
 
         replaceCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editCreditcard();
+            }
+        });
+        viewCreditCardInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editCreditcard();

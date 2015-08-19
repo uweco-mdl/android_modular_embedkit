@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,7 +31,8 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 
     SharedPreferences sharedpreferences;
     private Button mAddCreditCard = null;
-    private TextView mViewCreditCard = null;
+    private TextView mCreditCardDate = null;
+    private TextView mCreditCardAddress = null;
     private Button mReplaceCreditCard = null;
     private EditText mCardNumber = null;
     private EditText mSecurityCode = null;
@@ -78,9 +78,10 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewCreditCard = (TextView) view.findViewById(R.id.txt_viewCreditCard);
+        mCreditCardDate = (TextView) view.findViewById(R.id.cardEndDate);
+        mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
 
-        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
+//        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -137,8 +138,13 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
             address1 = myProfile.getString("billing_address1");
             cardExpirationMonth = myProfile.getString("cc_expmonth");
 
-            mViewCreditCard.setText("Visa ending in " + cardExpirationMonth + "/" + cardExpirationYear + "\n" + "Billing Address : " + nameOnCard + "\n" + address1 + address2 + "\n" +
+//            mViewCreditCard.setText("Visa ending in " + cardExpirationMonth + "/" + cardExpirationYear + "\n" + "Billing Address : " + nameOnCard + "\n" + address1 + address2 + "\n" +
+//                    city + ", " + state + "\n" + country);
+
+            mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear );
+            mCreditCardAddress.setText("Billing Address:" + "\n" +address1 + address2 + "\n" +
                     city + ", " + state + "\n" + country);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

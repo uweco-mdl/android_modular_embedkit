@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.customUi.RoundedImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,20 +51,31 @@ public class GetFamilyMemberAdapter extends BaseAdapter {
     public class Holder
     {
         TextView tv;
-        ImageView img;
+        TextView type;
+        CircularNetworkImageView img;
     }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Holder holder=new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.myaccounts_family_list, null);
-        holder.tv=(TextView) rowView.findViewById(R.id.memberUsername);
-        holder.img=(RoundedImageView) rowView.findViewById(R.id.memberImage);
+        holder.tv=(TextView) rowView.findViewById(R.id.txtMemberName);
+        holder.type=(TextView) rowView.findViewById(R.id.txtMemberType);
+        holder.img=(CircularNetworkImageView) rowView.findViewById(R.id.imgMemberPic);
 
         ArrayList<String>name = values.get("NAME");
         ArrayList<String>url = values.get("URL");
 
-        holder.tv.setText(name.get(position));
+        if(position == 0) {
+            holder.tv.setText(name.get(position));
+            holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
+            holder.type.setText("Primary");
+        }
+        else
+        {
+            holder.tv.setText(name.get(position));
+            holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
+        }
         //Picasso.with(context).load(url.get(position)).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(holder.img);
 
         return rowView;

@@ -1,17 +1,12 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -33,7 +28,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
     private static final String MY_ACCOUNT_TAG = "Account";
     private static final String BILLING_TAG = "Billing";
     private static final String FAMILY_TAG = "Family";
-
+//    MyAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +36,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         setContentView(R.layout.mdlive_tab_activity);
 
         setTitle("");
-
+//        adapter= new MyAdapter(getSupportFragmentManager());
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,6 +48,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
+//            viewPager.setAdapter(adapter);
         }
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -156,30 +152,14 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         }
     }
 
-    private TabHost.TabSpec createTabSpec(final TabHost.TabSpec spec, final String text, @DrawableRes final int imageResourceId) {
-        final View v = LayoutInflater.from(getBaseContext()).inflate(R.layout.myaccounts_tab_indicator, null);
-
-        final TextView tv = (TextView) v.findViewById(R.id.TabTextView);
-        final ImageView img = (ImageView) v.findViewById(R.id.TabImageView);
-
-        tv.setText(text);
-        img.setBackgroundResource(imageResourceId);
-
-        return spec.setIndicator(v);
-    }
-
-    public void onChangePasswordClicked() {
-        getSupportFragmentManager().
-                beginTransaction().
-                replace(R.id.tabcontent, new ChangePasswordFragment(), MY_ACCOUNT_TAG).
-                addToBackStack(MY_ACCOUNT_TAG).
-                commit();
-    }
+//    public void onChangePasswordClicked() {
+//        setFirstTabLayerLevel(1);
+//    }
 
     public void onChangePinClicked() {
         getSupportFragmentManager().
                 beginTransaction().
-                replace(R.id.tabcontent, OldPinFragment.newInstance(), MY_ACCOUNT_TAG).
+                replace(R.id.main_content, OldPinFragment.newInstance(), MY_ACCOUNT_TAG).
                 addToBackStack(MY_ACCOUNT_TAG).
                 commit();
     }
@@ -187,8 +167,15 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
     public void onSecurityQuestionClicked() {
         getSupportFragmentManager().
                 beginTransaction().
-                replace(R.id.tabcontent, new SecurityQuestionsFragment(), MY_ACCOUNT_TAG).
+                replace(R.id.main_content, new SecurityQuestionsFragment(), MY_ACCOUNT_TAG).
                 addToBackStack(MY_ACCOUNT_TAG).
                 commit();
     }
+
+//    public void setFirstTabLayerLevel(final int level) {
+//        adapter.setFirstTabLayerLevel(level);
+//        adapter.notifyDataSetChanged();
+//
+//        Toast.makeText(getBaseContext(), "Coming here", Toast.LENGTH_SHORT).show();
+//    }
 }
