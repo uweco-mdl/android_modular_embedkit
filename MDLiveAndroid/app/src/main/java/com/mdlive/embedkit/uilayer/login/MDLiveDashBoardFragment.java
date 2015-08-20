@@ -10,12 +10,20 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -156,6 +164,38 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 }
             }, 100);
         }
+    }
+
+    public void loadEmailConfirmationService() {
+        showProgressDialog();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgressDialog();
+                try {
+                    MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.app_name), response.getString("message"));
+                } catch (JSONException e) {
+                    logE("Email Confirmation", "Email Confirmation : " + response.toString());
+                    logE("Email Confirmation", "Email Confirmation : " + e.getMessage());
+                }
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        EmailConfirmationService service = new EmailConfirmationService(getActivity(), null);
+        service.emailConfirmation(successCallBackListener, errorListener, null);
     }
 
     public interface OnUserSelectionChanged {

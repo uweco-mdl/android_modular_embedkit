@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.login;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +20,8 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 /**
  * Created by dhiman_da on 8/6/2015.
  */
-public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity {
+public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements EmailConfirmationDialogFragment.OnEmailConfirmationClicked {
+    private static final String DIALOG_FRAGMENT = "dialog_fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,11 +60,8 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
     /* On Email Unconfirmed Click listener */
     public void onEmailUnconfirmClicked(View view) {
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(MAIN_CONTENT).
-                replace(R.id.dash_board__main_container, EmailConfirmFragment.newInstance()).
-                commit();
+        final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), DIALOG_FRAGMENT);
     }
 
     /**
@@ -156,4 +155,12 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity {
 
     }
     /* End of Dashboard icons click listener */
+
+    @Override
+    public void onEmailConfirmationClicked() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).loadEmailConfirmationService();
+        }
+    }
 }
