@@ -2,26 +2,16 @@ package com.mdlive.embedkit.uilayer.helpandsupport;
 
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -36,14 +26,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HelpAndSupportFragment extends Fragment {
-
-    private View view;
-    private ProgressBar progressBar;
-
+public class HelpAndSupportFragment extends MDLiveBaseFragment {
     private ListView mListView;
-    private ProgressDialog pDialog = null;
-    ListAdapter adapter;
 
     public static HelpAndSupportFragment newInstance() {
         final HelpAndSupportFragment fragment = new HelpAndSupportFragment();
@@ -58,20 +42,14 @@ public class HelpAndSupportFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.mdlive_help_and_support_fragment, container, false);
-
-        findWidgetId();
-        getHelpAndSupportServiceData();
-
-        return view;
+        return inflater.inflate(R.layout.mdlive_help_and_support_fragment, container, false);
     }
 
-    private void findWidgetId() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
         mListView = (ListView)view.findViewById(R.id.helpandsupport_listview);
-
     }
 
     @Override
@@ -80,13 +58,19 @@ public class HelpAndSupportFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getHelpAndSupportServiceData();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
     }
 
     private void getHelpAndSupportServiceData() {
-
-        setProgressBarVisibility();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONArray> responseListener = new NetworkSuccessListener<JSONArray>() {
 
@@ -105,64 +89,51 @@ public class HelpAndSupportFragment extends Fragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
-        HelpAndSupportServices helpAndSupportServices = new HelpAndSupportServices(getActivity(), pDialog);
+        HelpAndSupportServices helpAndSupportServices = new HelpAndSupportServices(getActivity(), getProgressDialog());
         helpAndSupportServices.getHelpAndSupportServices(responseListener, errorListener);
 
     }
 
     private void handleSuccessResponse(JSONArray response) {
         try {
-            String question = null;
-            String answer = null;
-            setInfoVisibilty();
+            hideProgressDialog();
 
             Log.d("HelpandSupport Response", response.toString());
             List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
             for(int faqIndex = 0; faqIndex < response.length(); faqIndex++){
-                question = response.getJSONObject(faqIndex).getString("question");
-                answer = response.getJSONObject(faqIndex).getString("answer");
                 HashMap<String, String> hm = new HashMap<String,String>();
-                hm.put("question", question);
-                hm.put("answer", answer);
+                hm.put("question", response.getJSONObject(faqIndex).getString("question"));
+                hm.put("answer", response.getJSONObject(faqIndex).getString("answer"));
                 aList.add(hm);
 
             }
 
-            // Instantiating an adapter to store each items
-            // R.layout.listview_layout defines the layout of each item
-            adapter = new HelpAndSupportAdapter(getActivity(), aList);
-
-            mListView.setAdapter(adapter);
-
+            if (mListView != null) {
+                addFooter(mListView);
+                final HelpAndSupportAdapter adapter = new HelpAndSupportAdapter(getActivity(), aList);
+                mListView.setAdapter(adapter);
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
-    /*
-     * set visible for the progress bar
-     */
-    public void setProgressBarVisibility()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-    }
+    private void addFooter(final ListView listView) {
+        if (listView.getFooterViewsCount() == 0) {
+            final LayoutInflater inflater = LayoutInflater.from(listView.getContext());
+            final View view = inflater.inflate(R.layout.include_help_support, null, false);
 
-    /*
-     * set visible for the details view layout
-     */
-    public void setInfoVisibilty()
-    {
-        progressBar.setVisibility(View.GONE);
+            listView.addFooterView(view);
+        }
     }
 }

@@ -1,168 +1,174 @@
 package com.mdlive.embedkit.uilayer.helpandsupport;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
-import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.helpandsupport.HelpandSupportAskQuestionPostService;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-public class MDLiveHelpAndSupportActivity extends AppCompatActivity {
-    private static final String TAG = "HELP_SUPPORT";
-
-//    Tracker mTracker;
-//    GoogleAnalytics analytics;
-
-    private ProgressBar progressBar;
-    private ProgressDialog pDialog = null;
-    JSONObject outerJsonObject;
-
+public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity implements FragmentManager.OnBackStackChangedListener {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_help_and_support_activity);
+        setTitle("");
 
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        if (savedInstanceState == null) {
-            getFragmentManager().
-                    beginTransaction().
-                    add(R.id.mdlive_help_support_activity_container, HelpAndSupportFragment.newInstance(), TAG).
-                    commit();
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            showHamburgerBell();
         }
 
-//        analytics = GoogleAnalytics.getInstance(MDLiveHelpAndSupportActivity.this);
-//        mTracker = analytics.newTracker(R.string.ga_trackingId);
-//        mTracker.enableExceptionReporting(true);
-//        mTracker.setScreenName("MDLiveHelpAndSupportActivity");
-//        mTracker.send(new HitBuilders.AppViewBuilder().build());
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.main_container, HelpAndSupportFragment.newInstance(), MAIN_CONTENT).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
     }
 
+    /**
+     * Called whenever the contents of the back stack change.
+     */
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onBackStackChanged() {
+        final int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
 
-//        mTracker.set("MDLiveHelpAndSupportActivity", "MDLiveHelpAndSupportActivity");
-//        mTracker.send(new HitBuilders.AppViewBuilder().build());
-//        analytics.reportActivityStart(this);
-//        GoogleAnalytics.getInstance(MDLiveHelpAndSupportActivity.this).reportActivityStart(this);
+        if (backStackCount == 1) {
+            showTickCross();
+        } else {
+            showHamburgerBell();
+        }
     }
 
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+        switch (position) {
+            // Home
+            case 0:
+                startActivityWithClassName(MDLiveDashboardActivity.class);
+                break;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        GoogleAnalytics.getInstance(MDLiveHelpAndSupportActivity.this).reportActivityStop(this);
+            // See a Doctor
+            case 1:
+                startActivityWithClassName(MDLiveGetStarted.class);
+                break;
+
+            // MDLive My Health
+            case 2:
+
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                startActivityWithClassName(MessageCenterActivity.class);
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 7:
+
+                break;
+
+            // Share
+            case 8:
+
+                break;
+        }
     }
 
     public void callAction(View view) {
-        callButtonEvent();
+        MdliveUtils.showMDLiveHelpAndSupportDialog(this);
     }
 
     public void askQuestion(View view) {
-        getFragmentManager().
+        getSupportFragmentManager().
                 beginTransaction().
-                addToBackStack(TAG).
-                replace(R.id.mdlive_help_support_activity_container, AskQuestionFragment.newInstance(), TAG).
+                addToBackStack(MAIN_CONTENT).
+                add(R.id.main_container, AskQuestionFragment.newInstance(), MAIN_CONTENT).
                 commit();
+
+        showTickCross();
     }
 
-    private void callButtonEvent() {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            final View view = layoutInflater.inflate(R.layout.alertdialogmessage, null);
-            ImageView alertImage = (ImageView)view.findViewById(R.id.alertdialogimageview);
-            alertImage.setImageResource(R.drawable.ic_launcher);
-            TextView alertText = (TextView)view.findViewById(R.id.alertdialogtextview);
-            alertText.setText(getText(R.string.call_text));
-
-            builder.setView(view);
-            builder.setPositiveButton(getText(R.string.call),
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-
-                                Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:" + getText(R.string.callnumber)));
-                                startActivity(intent);
-
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    });
-            builder.setNegativeButton(getText(R.string.cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    try {
-                        dialog.dismiss();
-
-                    } catch (Exception e) {
-
-                    }
-
-                }
-            });
-
-            builder.create().show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void submitAction(View view) {
-        Fragment fragment = getFragmentManager().findFragmentByTag(TAG);
+    public void onTickClicked(View view) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof  AskQuestionFragment) {
-            ((AskQuestionFragment) fragment).submitTexViewEvent();
+            ((AskQuestionFragment) fragment).onTickClicked();
         }
     }
 
-    public void cancelAction(View view) {
-        Fragment fragment = getFragmentManager().findFragmentByTag(TAG);
-        if (fragment != null && fragment instanceof  AskQuestionFragment) {
-            ((AskQuestionFragment) fragment).cancelTextViewEvent();
-        }
+    public void onCrossClicked(View view) {
+        getSupportFragmentManager().popBackStack();
     }
 
+    public void showHamburgerBell() {
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.help_and_support_title).toUpperCase());
+
+        findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
+        findViewById(R.id.toolbar_tick).setVisibility(View.GONE);
+
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_bell).setVisibility(View.VISIBLE);
+    }
+
+    public void showTickCross() {
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.new_question).toUpperCase());
+
+        findViewById(R.id.toolbar_cross).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.GONE);
+        findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
+    }
 }
