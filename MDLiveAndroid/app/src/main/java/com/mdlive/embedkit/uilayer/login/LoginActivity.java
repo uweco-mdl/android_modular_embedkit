@@ -8,9 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 
 /**
  * Created by venkataraman_r on 7/22/2015.
@@ -26,7 +28,8 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        LocalizationSingleton.localiseLayout(this,(ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
