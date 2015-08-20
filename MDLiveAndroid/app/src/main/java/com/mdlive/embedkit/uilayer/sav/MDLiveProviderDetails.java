@@ -12,11 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.TimeoutError;
@@ -59,7 +59,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private CircularNetworkImageView ProfileImg;
     public String DoctorId;
-    private Button tapSeetheDoctorTxt,byvideoBtn,byphoneBtn,reqfutureapptBtn;
+    private TextView byvideoBtn,byphoneBtn,reqfutureapptBtn, tapSeetheDoctorTxt;
+    private LinearLayout byvideoBtnLayout, byphoneBtnLayout, tapBtnLayout;
+    private RelativeLayout reqfutureapptBtnLayout;
     private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations,updatedAppointmentDate;
     private LinearLayout providerImageHolder,detailsLl;
     private HorizontalScrollView horizontalscrollview;
@@ -73,10 +75,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
 
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
@@ -147,10 +153,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         hospitalAffilations_txt = (TextView)findViewById(R.id.license_txt);
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
-        tapSeetheDoctorTxt = (Button)findViewById(R.id.tapBtn);
-        byvideoBtn = (Button)findViewById(R.id.byvideoBtn);
-        byphoneBtn = (Button)findViewById(R.id.byphoneBtn);
-        reqfutureapptBtn = (Button)findViewById(R.id.reqfutureapptBtn);
+        tapSeetheDoctorTxt = (TextView)findViewById(R.id.tapBtn);
+        tapBtnLayout = (LinearLayout) findViewById(R.id.tapBtnLayout);
+        byvideoBtn = (TextView)findViewById(R.id.byvideoBtn);
+        byvideoBtnLayout = (LinearLayout) findViewById(R.id.byvideoBtnLayout);
+        byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
+        byphoneBtnLayout = (LinearLayout) findViewById(R.id.byphoneBtnLayout);
+        reqfutureapptBtn = (TextView)findViewById(R.id.reqfutureapptBtn);
+        reqfutureapptBtnLayout = (RelativeLayout)findViewById(R.id.reqfutureapptBtnLayout);
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
@@ -191,7 +201,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             @Override
             public void onResponse(JSONObject response) {
-                tapSeetheDoctorTxt.setClickable(true);
+                tapBtnLayout.setClickable(true);
                 handleSuccessResponse(response);
             }
         };
@@ -200,9 +210,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                tapSeetheDoctorTxt.setClickable(false);
+                tapBtnLayout.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
-                tapSeetheDoctorTxt.setVisibility(View.GONE);
+                tapBtnLayout.setVisibility(View.GONE);
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -210,8 +220,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 dialog.dismiss();
                             }
                         };
-                        tapSeetheDoctorTxt.setClickable(false);
-                        tapSeetheDoctorTxt.setVisibility(View.GONE);
+                        tapBtnLayout.setClickable(false);
+                        tapBtnLayout.setVisibility(View.GONE);
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(null, MDLiveProviderDetails.this);
                     }
@@ -328,36 +338,36 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             horizontalscrollview.setVisibility(View.GONE);
                 Log.e("Am in availble now","Am in availble now");
-            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
                 if(str_Availability_Type.equalsIgnoreCase("video"))
                 {
                     Log.e("Am in availble now","Am in video");
                      tapSeetheDoctorTxt.setText("See Doctor");
-                     reqfutureapptBtn.setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.VISIBLE);
-                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
-                     byphoneBtn.setClickable(false);
-                     byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_grey);
+                     reqfutureapptBtnLayout.setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.VISIBLE);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+                     byphoneBtnLayout.setClickable(false);
+                     byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
 
                 }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
                 {
                     Log.e("Am in availble now","Am in phone");
                     tapSeetheDoctorTxt.setText("See Doctor");
-                    reqfutureapptBtn.setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.VISIBLE);
-                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
-                    byphoneBtn.setVisibility(View.VISIBLE);
-                    byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+                    reqfutureapptBtnLayout.setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.VISIBLE);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+                    byphoneBtnLayout.setVisibility(View.VISIBLE);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
                 }
                 else  if(str_Availability_Type.equalsIgnoreCase("phone")){
                     Log.e("Am in availble now","Am in video or phone");
 
                     tapSeetheDoctorTxt.setText("Talk to Doctor");
-                    reqfutureapptBtn.setVisibility(View.GONE);
-                    byvideoBtn.setClickable(false);
-                    byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_grey);
-                    byphoneBtn.setVisibility(View.VISIBLE);
-                    byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+                    reqfutureapptBtnLayout.setVisibility(View.GONE);
+                    byvideoBtnLayout.setClickable(false);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
+                    byphoneBtnLayout.setVisibility(View.VISIBLE);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
             }
 
 
@@ -368,27 +378,27 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 if(str_appointmenttype.equals("1"))
                 {
                     tapSeetheDoctorTxt.setText("Currently not available");
-                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
-                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.GONE);
-                    byphoneBtn.setVisibility(View.GONE);
+                    tapBtnLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.GONE);
+                    byphoneBtnLayout.setVisibility(View.GONE);
                      horizontalscrollview.setVisibility(View.GONE);
                 }else  if(str_appointmenttype.equals("2"))
                 {
                     tapSeetheDoctorTxt.setText("Currently not available");
-                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    tapBtnLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
                     reqfutureapptBtn.setText("Make an appointment request");
-                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.GONE);
-                    byphoneBtn.setVisibility(View.GONE);
+                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.GONE);
+                    byphoneBtnLayout.setVisibility(View.GONE);
                     horizontalscrollview.setVisibility(View.GONE);
                 }else{
                     tapSeetheDoctorTxt.setText("Currently not available");
-                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    tapBtnLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
                     reqfutureapptBtn.setText("Make an appointment request");
-                    ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
-                    byvideoBtn.setVisibility(View.GONE);
-                    byphoneBtn.setVisibility(View.GONE);
+                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.GONE);
+                    byphoneBtnLayout.setVisibility(View.GONE);
                     horizontalscrollview.setVisibility(View.GONE);
                 }
 
@@ -435,11 +445,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             }
             if(str_Availability_Type.equals(getString(R.string.with_patient)))
             {
-                tapSeetheDoctorTxt.setClickable(false);
+                tapBtnLayout.setClickable(false);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    tapSeetheDoctorTxt.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                    tapBtnLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
                 } else {
-                    tapSeetheDoctorTxt.setBackgroundResource(R.drawable.btn_rounded_grey);
+                    tapBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
                 }
 //                tapSeetheDoctorTxt.setText(getString(R.string.currently_with_patient));
             }
@@ -450,8 +460,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             doctorNameTv.setText(str_DoctorName);
             if(str_DoctorName.equals(""))
             {
-                tapSeetheDoctorTxt.setClickable(false);
-                tapSeetheDoctorTxt.setVisibility(View.GONE);
+                tapBtnLayout.setClickable(false);
+                tapBtnLayout.setVisibility(View.GONE);
                 detailsLl.setVisibility(View.GONE);
 
             }else
@@ -507,59 +517,59 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         if(str_Availability_Type.equalsIgnoreCase("video"))
         {
             horizontalscrollview.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("See Doctor");
-            reqfutureapptBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
-            byphoneBtn.setVisibility(View.INVISIBLE);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+            byphoneBtnLayout.setVisibility(View.INVISIBLE);
             tapReqFutureBtnAction();
 
         }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
         {
-            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("See Doctor");
-            reqfutureapptBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
-            byphoneBtn.setVisibility(View.VISIBLE);
-            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+            byphoneBtnLayout.setVisibility(View.VISIBLE);
+            byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
             tapReqFutureBtnAction();
         }
         else  if(str_Availability_Type.equalsIgnoreCase("phone")){
-            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("Talk to Doctor");
-            reqfutureapptBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setVisibility(View.INVISIBLE);
-            byphoneBtn.setVisibility(View.VISIBLE);
-            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setVisibility(View.INVISIBLE);
+            byphoneBtnLayout.setVisibility(View.VISIBLE);
+            byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
             tapReqFutureBtnAction();
         }
         else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
-            ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("Currently with patient");
-            tapSeetheDoctorTxt.setBackgroundColor(Color.parseColor("#FF6600"));
-            reqfutureapptBtn.setVisibility(View.VISIBLE);
-            byvideoBtn.setVisibility(View.GONE);
-            byphoneBtn.setVisibility(View.GONE);
-            byphoneBtn.setBackgroundResource(R.drawable.btn_rounded_bg);
+            tapBtnLayout.setBackgroundColor(Color.parseColor("#FF6600"));
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
             tapReqFutureBtnAction();
         }
     }
 
     private void tapReqFutureBtnAction() {
-        reqfutureapptBtn.setOnClickListener(new View.OnClickListener() {
+        reqfutureapptBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (reqfutureapptBtn.getText().toString().equals("Make an appointment request")) {
 
                 } else {
                     ((TextView) findViewById(R.id.dateTxt)).setVisibility(View.VISIBLE);
-                    tapSeetheDoctorTxt.setVisibility(View.GONE);
-                    reqfutureapptBtn.setVisibility(View.GONE);
+                    tapBtnLayout.setVisibility(View.GONE);
+                    reqfutureapptBtnLayout.setVisibility(View.GONE);
                     horizontalscrollview.setVisibility(View.VISIBLE);
                     //calling service for each date selection on clicking request appmt btn
                     ((TextView) findViewById(R.id.dateTxt)).setOnClickListener(new View.OnClickListener() {
