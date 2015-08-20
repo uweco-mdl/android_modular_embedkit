@@ -108,7 +108,17 @@ public class ChooseProviderAdapter extends BaseAdapter {
             Log.e("AvailableNowStatus", array.get(pos).get("available_now_status"));
             if (array.get(pos).get("available_now_status").equals("true")) {
                 Log.e("AvailableNowStatus", "Am in True");
-                ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
+                if(array.get(pos).get("availability_type").equalsIgnoreCase("with patient")) {
+                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
+                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
+                }else if(array.get(pos).get("availability_type").equalsIgnoreCase("Available"))
+                {
+                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
+                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_green_color));
+                }else
+                {
+                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
+                }
             }
             else {
 
@@ -117,6 +127,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
                     ((TextView) row.findViewById(R.id.specalist)).setText("");
                 }else {
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("next_availability"));
+                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
                 }
             }
 

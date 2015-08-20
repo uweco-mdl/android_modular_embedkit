@@ -72,11 +72,14 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_location);
-
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);

@@ -67,13 +67,14 @@ import java.util.List;
 public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
     private TextView locationTxt,DateTxt;/*,genderText*/
+    private String birthDate;
     private String strPatientName,SavedLocation;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
-    private EditText  phonrNmberEditTxt;
+    private EditText phonrNmberEditTxt;
     private String dependentName=null;
     private String userInfoJSONString;
     ArrayAdapter<String> dataAdapter;
@@ -84,10 +85,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         setContentView(R.layout.mdlive_get_started);
         MdliveUtils.hideSoftKeyboard(this);
 
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
@@ -208,7 +213,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
-        DateTxt = (TextView) findViewById(R.id.dobTxt);
+        //DateTxt = (TextView) findViewById(R.id.dobTxt);
 //        genderText= (TextView) findViewById(R.id.txt_gender);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         providerTypeArrayList = new ArrayList<String>();
@@ -617,8 +622,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
 
-
-                DateTxt.setText(personalInfo.getString("birthdate"));
+                birthDate = personalInfo.getString("birthdate");
+                //DateTxt.setText(personalInfo.getString("birthdate"));
                 for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
                     if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
                         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -782,8 +787,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             JSONObject personalInfo = response.getJSONObject("personal_info");
             dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JSONObject notiObj=response.getJSONObject("notifications");
-
-            DateTxt.setText(personalInfo.getString("birthdate"));
+            birthDate = personalInfo.getString("birthdate");
+            //DateTxt.setText(personalInfo.getString("birthdate"));
             locationTxt.setText(personalInfo.getString("city")+" ,"+personalInfo.getString("state"));
             String state = personalInfo.getString("state");
             if(state.length()<3) {
@@ -944,7 +949,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private void saveDateOfBirth() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(PreferenceConstants.DATE_OF_BIRTH, DateTxt.getText().toString());
+        editor.putString(PreferenceConstants.DATE_OF_BIRTH, birthDate);
         editor.putString(PreferenceConstants.LOCATION, SavedLocation);
         editor.commit();
     }
