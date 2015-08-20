@@ -72,10 +72,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chooseprovider);
 
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
@@ -553,7 +557,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 if(jArray.toString().contains(StringConstants.NO_PROVIDERS_FILTERS)){
                     docOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
-                    Log.e("jArray.toString()I'm in if","I'm in if");
                     MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -563,7 +566,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }
                 else if(jArray.length()==0)
                 {
-                    Log.e("jArray.toString()I'm in else","I'm in else");
                     docOnCalLinLay.setVisibility(View.GONE);
                     filterMainRl.setVisibility(View.GONE);
                     MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
