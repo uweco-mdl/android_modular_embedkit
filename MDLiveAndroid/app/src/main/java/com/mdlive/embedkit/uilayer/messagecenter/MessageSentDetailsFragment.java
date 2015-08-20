@@ -8,12 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
+
+import org.json.JSONObject;
 
 /**
  * Created by dhiman_da on 6/27/2015.
@@ -55,7 +61,7 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final SentMessage sentMessage = (SentMessage) getArguments().getParcelable(SENT_MESSAGE_TAG);
+        final SentMessage sentMessage = getArguments().getParcelable(SENT_MESSAGE_TAG);
 
         final TextView subjectTextView = (TextView) view.findViewById(R.id.fragment_message_received_subject_text_view);
         if (subjectTextView != null) {
@@ -108,6 +114,11 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final SentMessage sentMessage = getArguments().getParcelable(SENT_MESSAGE_TAG);
+        if (sentMessage != null) {
+            callSentMessageRead(String.valueOf(sentMessage.messageId));
+        }
     }
 
     @Override
@@ -138,5 +149,31 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void callSentMessageRead(final String id) {
+        showProgressDialog();
+
+        final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgressDialog();
+            }
+        };
+        final NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
+        messageCenter.getMessaseSentRead(id, successListener, errorListener, null);
     }
 }

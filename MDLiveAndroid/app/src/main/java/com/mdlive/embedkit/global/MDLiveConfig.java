@@ -86,7 +86,9 @@ public class MDLiveConfig {
     private static final String URL_GET_RECEIVED_MESSAGES = "/messages/received_messages";
     private static final String URL_GET_SENT_MESSAGES = "/messages/sent_messages";
     private static final String URL_PROVIDER = "/providers";
-    private static final String URL_COMPOSE_MESSAGE = "/messages";
+    private static final String URL_COMPOSE_MESSAGE = "/messages/:";
+    private static final String URL_MESSAGES_READ = "/messages/";
+    private static final String URL_MESSAGES_READ_TYPE = "?msg_type=";
     private static final String URL_MY_RECORDS = "/customer/records";
     private static final String URL_UPLOAD_DOCUMENT = "/customer/upload_document";
 
@@ -228,6 +230,8 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_GET_SENT_MESSAGES = URL_GET_SENT_MESSAGES;
         AppSpecificConfig.URL_PROVIDER = URL_PROVIDER;
         AppSpecificConfig.URL_COMPOSE_MESSAGE = URL_COMPOSE_MESSAGE;
+        AppSpecificConfig.URL_MESSAGES_READ = URL_MESSAGES_READ;
+        AppSpecificConfig.URL_MESSAGES_READ_TYPE = URL_MESSAGES_READ_TYPE;
         AppSpecificConfig.URL_MY_RECORDS = URL_MY_RECORDS;
         AppSpecificConfig.URL_UPLOAD_DOCUMENT = URL_UPLOAD_DOCUMENT;
         AppSpecificConfig.URL_ADD_CREDIT_CARD_INFO=URL_ADD_CREDIT_CARD_INFO;

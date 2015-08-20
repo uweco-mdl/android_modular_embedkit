@@ -39,7 +39,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.message_center));
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.message_center).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
