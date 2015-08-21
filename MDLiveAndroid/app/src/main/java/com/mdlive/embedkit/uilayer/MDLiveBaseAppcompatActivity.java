@@ -1,14 +1,17 @@
 package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
@@ -151,5 +154,13 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         } else {
             Toast.makeText(getBaseContext(), "Navigate to Add Child screen", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void shareApplication() {
+        final ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(this);
+        builder.setChooserTitle(R.string.share_app);
+        builder.setStream(Uri.parse("https://www.mdlive.com/"));
+        builder.setType("text/html");
+        builder.startChooser();
     }
 }

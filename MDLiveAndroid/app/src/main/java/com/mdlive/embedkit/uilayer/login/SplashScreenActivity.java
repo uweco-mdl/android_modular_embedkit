@@ -12,8 +12,7 @@ import com.mdlive.embedkit.global.MDLiveConfig;
  * Created by venkataraman_r on 7/7/2015.
  */
 
-public class SplashScreenActivity extends Activity
-{
+public class SplashScreenActivity extends Activity {
     private Handler mHandler;
     private Runnable mRunnable;
     private static final int SPLASH_TIME_OUT = 5000;
@@ -25,7 +24,7 @@ public class SplashScreenActivity extends Activity
      */
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_splashscreen);
 
@@ -42,6 +41,28 @@ public class SplashScreenActivity extends Activity
             }
         };
         mHandler.postDelayed(mRunnable, SPLASH_TIME_OUT);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mHandler.postDelayed(mRunnable, SPLASH_TIME_OUT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mHandler = null;
+        mRunnable = null;
     }
 }
 

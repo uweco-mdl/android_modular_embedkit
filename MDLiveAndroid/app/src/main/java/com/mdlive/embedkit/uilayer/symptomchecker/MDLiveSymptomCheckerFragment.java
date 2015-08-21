@@ -2,31 +2,30 @@ package com.mdlive.embedkit.uilayer.symptomchecker;
 
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * This class provides the symptom checker display
  */
-public class MDLiveSymptomCheckerFragment extends Fragment {
+public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
+    private WebView mWebView;
 
-    private WebView iFrameWebview;
-
-    // initialize the class fragment object
     public static MDLiveSymptomCheckerFragment newInstance() {
-        final MDLiveSymptomCheckerFragment iframeFragment = new MDLiveSymptomCheckerFragment();
-        return iframeFragment;
+        final MDLiveSymptomCheckerFragment fragment = new MDLiveSymptomCheckerFragment();
+        return fragment;
     }
 
-    // constructor
     public MDLiveSymptomCheckerFragment() {
-        // Required empty public constructor
         super();
     }
 
@@ -34,7 +33,6 @@ public class MDLiveSymptomCheckerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.mdlive_symptom_checker_fragment, container, false);
     }
 
@@ -42,8 +40,7 @@ public class MDLiveSymptomCheckerFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // initialize variable
-        iFrameWebview = (WebView)view.findViewById(R.id.iframewebview);
+        mWebView = (WebView)view.findViewById(R.id.iframewebview);
 
     }
 
@@ -51,10 +48,27 @@ public class MDLiveSymptomCheckerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // set the javscript enabled true
-        iFrameWebview.getSettings().setJavaScriptEnabled(true);
-        // load the symptom checker url
-        iFrameWebview.loadUrl(getString(R.string.symptomchecker_url));
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                hideProgressDialog();
+                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                showProgressDialog();
+                super.onPageStarted(view, url, favicon);
+            }
+        });
+        mWebView.loadUrl(getString(R.string.symptomchecker_url));
 
     }
 }

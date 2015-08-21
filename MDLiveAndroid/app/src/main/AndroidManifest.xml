@@ -243,7 +243,7 @@
         <activity
             android:name=".uilayer.symptomchecker.MDLiveSymptomCheckerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
 
         <!--
            &lt;!&ndash; From Unified Middle ware&ndash;&gt;
