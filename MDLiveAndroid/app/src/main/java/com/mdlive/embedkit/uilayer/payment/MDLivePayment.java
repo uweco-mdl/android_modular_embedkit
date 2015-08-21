@@ -48,7 +48,7 @@ import java.util.HashMap;
 
 public class MDLivePayment extends MDLiveBaseActivity {
 
-    private EditText dateView, edtZipCode;
+    private EditText dateView;/*edtZipCode*/
     private int year, month;
     private String promoCode = null;
     private WebView HostedPCI;
@@ -78,7 +78,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
         billingParams = new HashMap<>();
-        edtZipCode = (EditText) findViewById(R.id.edtZipCode);
+      /*  //edtZipCode = (EditText) findViewById(R.id.edtZipCode);
         edtZipCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,7 +98,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
                 }
             }
-        });
+        });*/
 
 
         HostedPCI.getSettings().setJavaScriptEnabled(true);
@@ -286,7 +286,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             cardInfo.put("cc_expyear", new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth", String.valueOf(month + 1));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            cardInfo.put("billing_zip5", edtZipCode.getText().toString());
+            //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
         } catch (Exception e) {
@@ -536,7 +536,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (finalAmout.equals("0.00")) {
             doConfirmAppointment();
         } else {
-            if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+            /*if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                 if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
                     HostedPCI.loadUrl("javascript:tokenizeForm()");
                 } else {
@@ -546,7 +546,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             } else {
                 MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_fill_required_fields));
 
-            }
+            }*/
         }
     }
 
