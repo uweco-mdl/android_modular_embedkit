@@ -20,7 +20,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -50,10 +50,12 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalService;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
+
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
 import javax.net.ssl.HttpsURLConnection;
   
 
@@ -80,10 +83,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public JSONArray recordsArray;
         private ListView listView;
         private ArrayList<String> ReasonList;
-        ReasonForVisitAdapter baseadapter;
+        private ReasonForVisitAdapter baseadapter;
         public static Uri fileUri;
         public ImageView takePhoto, takeGallery;
-        public Button btnContinue;
         public RelativeLayout photosContainer;
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
             ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
             ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+            ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.header_reason_txt));
 
 
@@ -138,9 +141,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     if(findViewById(R.id.childHeader).getVisibility() == View.VISIBLE){
                         findViewById(R.id.childHeader).setVisibility(View.GONE);
                         findViewById(R.id.photoLayout).setVisibility(View.VISIBLE);
+                        ((ImageView)findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.down_arrow_icon_white);
                     }else{
                         findViewById(R.id.childHeader).setVisibility(View.VISIBLE);
                         findViewById(R.id.photoLayout).setVisibility(View.GONE);
+                        ((ImageView)findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.arrow_up);
                     }
                 }
             });
@@ -151,7 +156,29 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             onBackPressed();
         }
 
+        public void rightBtnOnClick(View v){
+            try {
+                if(baseadapter.getSelectedPosition() >= 0){
+                    SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
+                    editor.commit();
+                    //MDLivePharmacy
+                    if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+                        Intent Reasonintent = new Intent(MDLiveReasonForVisit.this, MDLivePediatric.class);
+                        startActivity(Reasonintent);
+                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
 
+                    } else {
+                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override
         public void onResume() {
@@ -214,9 +241,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 }
             });
             photosContainer = (RelativeLayout) findViewById(R.id.photosContainer);
-            btnContinue = (Button) findViewById(R.id.btnContinue);
-            btnContinue.setClickable(false);
-            btnContinue.setBackgroundResource(R.drawable.btn_rounded_grey);
         }
 
 
@@ -269,34 +293,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             listView = (ListView) findViewById(R.id.reasonList);
             //showOrHideFooter();
 
-            baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList, btnContinue);
+            baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,
+                    ((ImageView)findViewById(R.id.txtApply)));
             listView.setAdapter(baseadapter);
-            btnContinue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        if(baseadapter.getSelectedPosition() >= 0){
-                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
-                            editor.commit();
-                            //MDLivePharmacy
-                            if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-                                Intent Reasonintent = new Intent(MDLiveReasonForVisit.this, MDLivePediatric.class);
-                                startActivity(Reasonintent);
-                                MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-
-                            } else {
-                                Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
-                                startActivity(medicalIntent);
-                                MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
             RefineSearch();
             downloadMedicalRecordService();
         }

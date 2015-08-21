@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -30,9 +29,9 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private Boolean notFound = false;
     private int checkedItemPosition = -1;
     private String checkedItemReaston = "";
-    private Button btnContinue;
+    private ImageView btnContinue;
     public ReasonForVisitAdapter(Context applicationContext,
-                                 ArrayList<String> arraylist, Button btnContinue) {
+                                 ArrayList<String> arraylist, ImageView btnContinue) {
         this.context = applicationContext;
         this.originalArray = arraylist;
         this.array = arraylist;
@@ -148,11 +147,10 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         });
 
         if(checkedItemPosition >= 0 && (checkedItemPosition == pos || checkedItemReaston.equals(array.get(pos)))){
-            reasonCheckbox.setImageResource(R.drawable.tick_icon);
-            btnContinue.setClickable(true);
-            btnContinue.setBackgroundResource(R.drawable.btn_rounded_bg);
+            reasonCheckbox.setImageResource(R.drawable.check_box_tick);
+            btnContinue.setVisibility(View.VISIBLE);
         }else{
-            reasonCheckbox.setImageResource(R.drawable.radio_default);
+            reasonCheckbox.setImageResource(R.drawable.check_box_untick);
         }
 
         return row;
