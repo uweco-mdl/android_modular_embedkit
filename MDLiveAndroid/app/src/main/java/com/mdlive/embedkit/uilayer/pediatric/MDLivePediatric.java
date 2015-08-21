@@ -8,13 +8,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,7 +58,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     public HashMap<String, Object> postParams;
     private TextView lasShotLabel;
     private RelativeLayout birthComplicationLayout;
-    private Button saveButton;
+
     Activity cxt;
 
     @Override
@@ -91,15 +92,38 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     }
 
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLivePediatric.this);
+        onBackPressed();
+    }
+
+    public void rightBtnOnClick(View v){
+        callUpdateService();
+    }
+
     /**
      * This method will initialize all necessary UI
      */
-
-
     public void initializeUI() {
         setContentView(R.layout.mdlive_pediatric);
+
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.pediatric_profile));
+
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
+//        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
         questionList = new ArrayList<>();
         questionsMap = new HashMap<>();
         postParams = new HashMap<>();
@@ -107,7 +131,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         txtDietType = (TextView) findViewById(R.id.txt_dietType);
         txtDietTypeHeader = (TextView) findViewById(R.id.txt_dietTypeHeader);
         TextView txtAge = (TextView) findViewById(R.id.ageTxt);
-        saveButton = (Button) findViewById(R.id.btn_continue_pediatric);
         edtCurrentWeight = (EditText) findViewById(R.id.edt_currentweight);
         setProgressBar(findViewById(R.id.progressDialog));
 
@@ -131,17 +154,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 }
             }
         });
-        /**
-         * The back image will pull you back to the Previous activity
-         * The home button will pull you back to the Dashboard activity
-         */
 
-        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         radioGroupInitialization();
         edtBirthComplications = (EditText) findViewById(R.id.edt_pleaseDescribe);
         edtLastShot = (EditText) findViewById(R.id.edt_lastshot);
@@ -600,20 +613,16 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     public void enableSaveButton() {
         if (isFieldsNotEmpty()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
             } else {
-                saveButton.setBackgroundResource(R.drawable.btn_rounded_bg);
-
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
             }
-            saveButton.setClickable(true);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                saveButton.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             } else {
-                saveButton.setBackgroundResource(R.drawable.btn_rounded_grey);
-
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             }
-            saveButton.setClickable(false);
         }
     }
 
@@ -663,7 +672,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
        */
     public void setProgressBarVisibility() {
         showProgress();
-        saveButton.setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
     }
 
     /*
@@ -671,7 +680,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     */
     public void setInfoVisibilty() {
         hideProgress();
-        saveButton.setVisibility(View.VISIBLE);
     }
 
 

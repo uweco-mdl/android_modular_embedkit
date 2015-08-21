@@ -81,10 +81,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_medical_history);
 
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);

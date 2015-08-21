@@ -826,10 +826,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
-            urlConnection.setUseCaches(false);
+            urlConnection.setUseCaches(true);
             urlConnection.setConnectTimeout(30000);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
-            urlConnection.setChunkedStreamingMode(0);
+//            urlConnection.setChunkedStreamingMode(0);
 
             String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
             String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
