@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -32,12 +33,13 @@ import org.json.JSONObject;
  */
 public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher,View.OnClickListener{
 
-    private EditText mPassCode1 = null;
-    private EditText mPassCode2 = null;
-    private EditText mPassCode3 = null;
-    private EditText mPassCode4 = null;
-    private EditText mPassCode5 = null;
-    private EditText mPassCode6 = null;
+    private ToggleButton mPassCode1 = null;
+    private ToggleButton mPassCode2 = null;
+    private ToggleButton mPassCode3 = null;
+    private ToggleButton mPassCode4 = null;
+    private ToggleButton mPassCode5 = null;
+    private ToggleButton mPassCode6 = null;
+
     private EditText mPassCode7 = null;
     private TextView mTitle = null;
 
@@ -73,28 +75,21 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
 
     public void init(View changePin) {
 
-        mPassCode1 = (EditText) changePin.findViewById(R.id.passCode1);
-        mPassCode2 = (EditText) changePin.findViewById(R.id.passCode2);
-        mPassCode3 = (EditText) changePin.findViewById(R.id.passCode3);
-        mPassCode4 = (EditText) changePin.findViewById(R.id.passCode4);
-        mPassCode5 = (EditText) changePin.findViewById(R.id.passCode5);
-        mPassCode6 = (EditText) changePin.findViewById(R.id.passCode6);
-        mPassCode7 = (EditText) changePin.findViewById(R.id.dumy_field_passcode);
+        mPassCode1 = (ToggleButton) changePin.findViewById(R.id.passCode1);
+        mPassCode2 = (ToggleButton) changePin.findViewById(R.id.passCode2);
+        mPassCode3 = (ToggleButton) changePin.findViewById(R.id.passCode3);
+        mPassCode4 = (ToggleButton) changePin.findViewById(R.id.passCode4);
+        mPassCode5 = (ToggleButton) changePin.findViewById(R.id.passCode5);
+        mPassCode6 = (ToggleButton) changePin.findViewById(R.id.passCode6);
 
-        dummyEditText1 = (View) changePin.findViewById(R.id.dumy_passcode_field_1);
-        dummyEditText2 = (View) changePin.findViewById(R.id.dumy_passcode_field_2);
-        dummyEditText3 = (View) changePin.findViewById(R.id.dumy_passcode_field_3);
-        dummyEditText4 = (View) changePin.findViewById(R.id.dumy_passcode_field_4);
-        dummyEditText5 = (View) changePin.findViewById(R.id.dumy_passcode_field_5);
-        dummyEditText6 = (View) changePin.findViewById(R.id.dumy_passcode_field_6);
+        mPassCode7 = (EditText) changePin.findViewById(R.id.etPasscode);
+
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
 
         mTitle.setText("Please Confirm Pin");
 
         mPassCode7.addTextChangedListener(this);
-        mPassCode7.requestFocus();
-        setFocus(mPassCode1, dummyEditText1);
 
         dummyEditText1.setOnClickListener(this);
         dummyEditText2.setOnClickListener(this);
@@ -110,86 +105,87 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        int iLength = mPassCode7.getText().length();
+        switch (iLength) {
+            case 0:
+                mPassCode1.setChecked(false);
+                mPassCode2.setChecked(false);
+                mPassCode3.setChecked(false);
+                mPassCode4.setChecked(false);
+                mPassCode5.setChecked(false);
+                mPassCode6.setChecked(false);
+                break;
+            case 1:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(false);
+                mPassCode3.setChecked(false);
+                mPassCode4.setChecked(false);
+                mPassCode5.setChecked(false);
+                mPassCode6.setChecked(false);
+                break;
+            case 2:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(true);
+                mPassCode3.setChecked(false);
+                mPassCode4.setChecked(false);
+                mPassCode5.setChecked(false);
+                mPassCode6.setChecked(false);
+                break;
+            case 3:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(true);
+                mPassCode3.setChecked(true);
+                mPassCode4.setChecked(false);
+                mPassCode5.setChecked(false);
+                mPassCode6.setChecked(false);
+                break;
+            case 4:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(true);
+                mPassCode3.setChecked(true);
+                mPassCode4.setChecked(true);
+                mPassCode5.setChecked(false);
+                mPassCode6.setChecked(false);
+                break;
+            case 5:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(true);
+                mPassCode3.setChecked(true);
+                mPassCode4.setChecked(true);
+                mPassCode5.setChecked(true);
+                mPassCode6.setChecked(false);
+                break;
+            case 6:
+                mPassCode1.setChecked(true);
+                mPassCode2.setChecked(true);
+                mPassCode3.setChecked(true);
+                mPassCode4.setChecked(true);
+                mPassCode5.setChecked(true);
+                mPassCode6.setChecked(true);
+                break;
+        }
+        if (iLength == 6) {
+            MdliveUtils.hideKeyboard(getActivity(), (View) mPassCode7);
+            FragmentManager fragmentManager = getFragmentManager();
+            String oldPin = getArguments().getString("OldPin");
+            String newPin = getArguments().getString("NewPin");
+            String confirmPin = mPassCode7.getText().toString();
+            final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-        if (s.length() <= 6) {
-            if (count != 0) {
-                String text = s.charAt(s.length() - 1) + "";
-                switch (s.length()) {
-
-                    case 1:
-                        mPassCode1.setText(text);
-                        setFocus(mPassCode2, dummyEditText2);
-                        break;
-                    case 2:
-                        mPassCode2.setText(text);
-                        setFocus(mPassCode3, dummyEditText3);
-                        break;
-                    case 3:
-                        mPassCode3.setText(text);
-                        setFocus(mPassCode4, dummyEditText4);
-                        break;
-                    case 4:
-                        mPassCode4.setText(text);
-                        setFocus(mPassCode5, dummyEditText5);
-                        break;
-                    case 5:
-                        mPassCode5.setText(text);
-                        setFocus(mPassCode6, dummyEditText6);
-                        break;
-                    case 6:
-                        mPassCode6.setText(text);
-
-                        String oldPin = getArguments().getString("OldPin");
-                        String newPin = getArguments().getString("NewPin");
-                        String confirmPin = mPassCode7.getText().toString();
-                        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-                        if(confirmPin.equals(newPin)){
-                            try {
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("passcode", oldPin);
-                                jsonObject.put("new_passcode", confirmPin);
-                                jsonObject.put("device_token", sharedPref.getString("Device_Token", "0") );
-                                Log.i("params",jsonObject.toString());
-                                loadPinService(jsonObject.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        else {
-                            Toast.makeText(getActivity(), "create pin and confirm pin must be same", Toast.LENGTH_SHORT).show();
-                        }
-
-                        break;
+            if(confirmPin.equals(newPin)){
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("passcode", oldPin);
+                    jsonObject.put("new_passcode", confirmPin);
+                    jsonObject.put("device_token", sharedPref.getString("Device_Token", "0") );
+                    Log.i("params",jsonObject.toString());
+                    loadPinService(jsonObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } else {
-                switch (s.length() + 1) {
-                    case 1:
-                        mPassCode1.setText("");
-                        setFocus(mPassCode1, dummyEditText1);
-                        break;
-                    case 2:
-                        mPassCode2.setText("");
-                        setFocus(mPassCode2, dummyEditText2);
-                        break;
-                    case 3:
-                        mPassCode3.setText("");
-                        setFocus(mPassCode3, dummyEditText3);
-                        break;
-                    case 4:
-                        mPassCode4.setText("");
-                        setFocus(mPassCode4, dummyEditText4);
-                        break;
-                    case 5:
-                        mPassCode5.setText("");
-                        setFocus(mPassCode5, dummyEditText5);
-                        break;
-                    case 6:
-                        mPassCode6.setText("");
-                        break;
-                    default:
-                        break;
-                }
+            }
+            else {
+                Toast.makeText(getActivity(), "create pin and confirm pin must be same", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -202,28 +198,6 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
     @Override
     public void afterTextChanged(Editable editable) {
 
-    }
-
-    public void setFocus(EditText editText, View dummyEditText) {
-
-        dummyEditText1.setClickable(false);
-        mPassCode1.setBackgroundResource(R.drawable.edittext_lostfocus);
-        dummyEditText2.setClickable(false);
-        mPassCode2.setBackgroundResource(R.drawable.edittext_lostfocus);
-        dummyEditText3.setClickable(false);
-        mPassCode3.setBackgroundResource(R.drawable.edittext_lostfocus);
-        dummyEditText4.setClickable(false);
-        mPassCode4.setBackgroundResource(R.drawable.edittext_lostfocus);
-        dummyEditText5.setClickable(false);
-        mPassCode5.setBackgroundResource(R.drawable.edittext_lostfocus);
-        dummyEditText6.setClickable(false);
-        mPassCode6.setBackgroundResource(R.drawable.edittext_lostfocus);
-
-        if (editText != null) {
-            editText.setBackgroundResource(R.drawable.edittext_focus);
-            dummyEditText.setClickable(true);
-            dummyEditText.requestFocus();
-        }
     }
 
     @Override

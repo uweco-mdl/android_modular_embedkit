@@ -19,8 +19,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
  */
 
 public class LoginActivity extends AppCompatActivity implements LoginFragment.OnLoginResponse,
-        CreatePinFragment.OnCreatePinCompleted,
-        ConfirmPinFragment.OnCreatePinSucessful,
         CreateAccountFragment.OnSignupSuccess, FragmentManager.OnBackStackChangedListener {
     public static final String TAG = "LOGIN";
 
@@ -83,25 +81,8 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
 
     @Override
     public void onLoginSucess() {
-        getSupportFragmentManager().
-                beginTransaction().
-                add(R.id.container, CreatePinFragment.newInstance(), TAG).
-                commit();
-    }
-
-    @Override
-    public void onCreatePinCompleted(String pin) {
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(TAG).
-                add(R.id.container, ConfirmPinFragment.newInstance(pin), TAG).
-                commit();
-    }
-
-    @Override
-    public void startDashboard() {
-        Intent dashboard = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
-        startActivity(dashboard);
+        final Intent intent = new Intent(getBaseContext(), PinActivity.class);
+        startActivity(intent);
         finish();
     }
 
