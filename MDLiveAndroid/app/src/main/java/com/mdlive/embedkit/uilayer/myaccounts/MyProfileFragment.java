@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -379,7 +378,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private void handleChangeProfilePicSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -144,13 +143,10 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
         try {
-            Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
              myProfile = response.getJSONObject("billing_information");
-            Toast.makeText(getActivity(),myProfile.toString(),Toast.LENGTH_SHORT).show();
             country = myProfile.getString("billing_country");
             cardExpirationYear = myProfile.getString("cc_expyear");
             nameOnCard = myProfile.getString("billing_name");
-            Toast.makeText(getActivity(),myProfile.getString("billing_name"),Toast.LENGTH_SHORT).show();
             zip = myProfile.getString("billing_zip5");
             securityCode = myProfile.getString("cc_cvv2");
             cardNumber = myProfile.getString("cc_number");

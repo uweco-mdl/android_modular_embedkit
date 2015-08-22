@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClick
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
@@ -45,8 +47,23 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        clearMinimizedTime();
         setTitle("");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (showPinScreen()) {
+            startActivity(new Intent(getBaseContext(), UnlockActivity.class));
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveLastMinimizedTime();
     }
 
     public void setDrawerLayout(final DrawerLayout drawerLayout) {
@@ -98,6 +115,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
      */
     @Override
     public abstract void onNavigationDrawerItemSelected(int position);
+
+    public void onSignoutClicked(View view) {
+
+    }
 
     @Override
     public void sendUserInformation(UserBasicInfo userBasicInfo) {
@@ -189,5 +210,31 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         builder.setStream(Uri.parse("https://www.mdlive.com/"));
         builder.setType("text/html");
         builder.startChooser();
+    }
+
+    private void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    private boolean showPinScreen() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final long lastTime = preferences.getLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
+
+        final long difference = System.currentTimeMillis() - lastTime;
+        if (difference > 60 * 1000) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void saveLastMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
+        editor.commit();
     }
 }
