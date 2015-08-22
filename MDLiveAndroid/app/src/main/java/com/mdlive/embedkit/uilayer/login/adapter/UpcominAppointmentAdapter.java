@@ -102,6 +102,21 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
 
         viewHolder.mTextView.setText(builder.toString());
 
+        final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), appointment.getTimeZone());
+
+        switch (type) {
+            case 0 :
+                viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));
+                viewHolder.mTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.notification_icon4_upcoming_white, R.color.transparent, R.color.transparent, R.color.transparent);
+                break;
+
+            case 1 :
+            case 2 :
+                viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));
+                viewHolder.mTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.notification_icon4_upcoming, R.color.transparent, R.color.transparent, R.color.transparent);
+                break;
+        }
+
         return convertView;
     }
 

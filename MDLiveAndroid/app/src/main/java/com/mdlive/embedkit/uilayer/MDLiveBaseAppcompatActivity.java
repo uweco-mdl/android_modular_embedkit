@@ -21,6 +21,8 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDraw
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserInformationLoaded;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -152,8 +154,22 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         onAddChildSelcted(user, dependentUserSize);
     }
 
+    public void onMessageClicked(View view) {
+        startActivityWithClassName(MessageCenterActivity.class);
+    }
+
+    public void onPersonalInfoClicked(View view) {
+        startActivityWithClassName(MDLivePharmacy.class);
+    }
+
+    public void onPreferedStoreClicked(View view) {
+
+    }
+
     @Override
     public void onAppointmentClicked(Appointment appointment) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
         startActivity(AppointmentActivity.getAppointmentIntent(getBaseContext(), appointment));
     }
 

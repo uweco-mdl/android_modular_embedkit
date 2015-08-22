@@ -195,6 +195,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             mUpcomingAppoinmantListView.setVisibility(View.VISIBLE);
 
             if (mUpcomingAppoinmantListView != null) {
+                mUpcomingAppoinmantListView.setOnItemClickListener(null);
                 mUpcomingAppoinmantListView.setAdapter(null);
                 final UpcominAppointmentAdapter adapter = new UpcominAppointmentAdapter(mPendingAppointment.getAppointments());
                 mUpcomingAppoinmantListView.setAdapter(adapter);

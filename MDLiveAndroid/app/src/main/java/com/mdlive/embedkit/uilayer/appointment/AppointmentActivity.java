@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.appointment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -126,5 +128,20 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
 
     public void onBackClicked(View view) {
         finish();
+    }
+
+    public void onCallClicked(View view) {
+        MdliveUtils.showMDLiveHelpAndSupportDialog(this);
+    }
+
+    public void onStartAppointmentClicked(View view) {
+        startActivityWithClassName(MDLiveWaitingRoom.class);
+    }
+
+    public void onCancelAppointmentClicked(View view) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof  AppointmentFragment) {
+            ((AppointmentFragment) fragment).onCancelAppointmentClicked();
+        }
     }
 }
