@@ -55,6 +55,10 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         return position;
     }
 
+    public Appointment getAppointment(int position) {
+        return mAppointments == null ? null : mAppointments.get(position);
+    }
+
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
      * create a View manually or inflate it from an XML layout file. When the View is inflated, the

@@ -58,6 +58,11 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     /* On Email Unconfirmed Click listener */
     public void onEmailUnconfirmClicked(View view) {
         final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();

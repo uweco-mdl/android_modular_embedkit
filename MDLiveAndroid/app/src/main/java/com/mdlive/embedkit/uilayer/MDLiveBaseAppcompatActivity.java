@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
@@ -19,8 +20,10 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserInformationLoaded;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
@@ -29,7 +32,8 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
  */
 public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity implements NavigationDrawerCallbacks,
         OnUserInformationLoaded,
-        OnUserSelectionChanged {
+        OnUserSelectionChanged,
+        OnAppointmentClicked {
     public static final String MAIN_CONTENT = "main_content";
     public static final String LEFT_MENU = "left_menu";
     public static final String RIGHT_MENU = "right_menu";
@@ -146,6 +150,11 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onAddChildSelectedFromDashboard(User user, final int dependentUserSize) {
         onAddChildSelcted(user, dependentUserSize);
+    }
+
+    @Override
+    public void onAppointmentClicked(Appointment appointment) {
+        startActivity(AppointmentActivity.getAppointmentIntent(getBaseContext(), appointment));
     }
 
     private void onAddChildSelcted(final User user, final int dependentUserSize) {

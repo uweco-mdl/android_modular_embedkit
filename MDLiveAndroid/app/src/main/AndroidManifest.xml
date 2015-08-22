@@ -253,6 +253,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
 
+        <activity
+            android:name=".uilayer.appointment.AppointmentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
         <!--
            &lt;!&ndash; From Unified Middle ware&ndash;&gt;
            <application android:allowBackup="true" android:name="com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController">

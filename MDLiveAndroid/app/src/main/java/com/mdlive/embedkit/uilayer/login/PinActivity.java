@@ -40,6 +40,8 @@ public class PinActivity extends AppCompatActivity implements CreatePinFragment.
 
     @Override
     public void onCreatePinCompleted(String pin) {
+        showConfirmPinToolbar();
+
         getSupportFragmentManager().
                 beginTransaction().
                 addToBackStack(TAG).
