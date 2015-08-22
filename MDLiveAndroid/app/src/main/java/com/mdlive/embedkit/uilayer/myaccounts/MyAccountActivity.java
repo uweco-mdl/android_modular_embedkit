@@ -43,7 +43,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_account));
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_account).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -66,6 +66,11 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 
     private void setupViewPager(ViewPager viewPager) {

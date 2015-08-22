@@ -154,8 +154,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             }
 
             else {
-                //Toast.makeText(getActivity(),"Login Failed",Toast.LENGTH_SHORT).show();
-                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.app_name), getActivity().getString(R.string.please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.app_name), getActivity().getString(R.string.please_enter_valid_fileds));
             }
 
         } catch (Exception e) {

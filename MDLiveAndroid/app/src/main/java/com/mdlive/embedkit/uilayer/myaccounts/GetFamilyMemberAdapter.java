@@ -19,22 +19,26 @@ import java.util.HashMap;
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
+
 public class GetFamilyMemberAdapter extends BaseAdapter {
 
     Context context;
     private static LayoutInflater inflater=null;
     HashMap<String,ArrayList<String>> values ;
-
-    public GetFamilyMemberAdapter(Context context, HashMap<String,ArrayList<String>> values ) {
+    ArrayList<String>name =new ArrayList<>();
+    ArrayList<String>url =new ArrayList<>();
+    public GetFamilyMemberAdapter(Context context, ArrayList<String> nameList,ArrayList<String> urlList ) {
         this.context = context;
-        this.values = values;
+        name = nameList;
+        url = urlList;
+
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return values.size();
+        return name.size();
     }
 
     @Override
@@ -56,27 +60,25 @@ public class GetFamilyMemberAdapter extends BaseAdapter {
     }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Holder holder=new Holder();
-        View rowView;
-        rowView = inflater.inflate(R.layout.myaccounts_family_list, null);
-        holder.tv=(TextView) rowView.findViewById(R.id.txtMemberName);
-        holder.type=(TextView) rowView.findViewById(R.id.txtMemberType);
-        holder.img=(CircularNetworkImageView) rowView.findViewById(R.id.imgMemberPic);
+        Holder holder;
+        View rowView = convertView;
 
-        ArrayList<String>name = values.get("NAME");
-        ArrayList<String>url = values.get("URL");
+        if(convertView == null) {
 
-        if(position == 0) {
+            holder=new Holder();
+
+            rowView = inflater.inflate(R.layout.myaccounts_family_list, null);
+            holder.tv = (TextView) rowView.findViewById(R.id.txtMemberName);
+            holder.type = (TextView) rowView.findViewById(R.id.txtMemberType);
+            holder.img = (CircularNetworkImageView) rowView.findViewById(R.id.imgMemberPic);
+
+            rowView.setTag(holder);
+        }
+        else{
+            holder=(Holder)rowView.getTag();}
+
             holder.tv.setText(name.get(position));
             holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
-            holder.type.setText("Primary");
-        }
-        else
-        {
-            holder.tv.setText(name.get(position));
-            holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
-        }
-        //Picasso.with(context).load(url.get(position)).placeholder(R.drawable.profilepic).error(R.drawable.profilepic).into(holder.img);
 
         return rowView;
     }

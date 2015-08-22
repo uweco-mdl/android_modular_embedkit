@@ -3,15 +3,15 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -27,10 +27,9 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 /**
- * Created by venkataraman_r on 7/27/2015.
+ * Created by venkataraman_r on 8/22/2015.
  */
-public class AddFamilyMemberFragment extends Fragment {
-
+public class AddFamilyMemberActivity extends AppCompatActivity{
 
     private EditText mUsername = null;
     private EditText mEmail = null;
@@ -63,33 +62,49 @@ public class AddFamilyMemberFragment extends Fragment {
 
     private ProgressDialog pDialog;
 
-    public static AddFamilyMemberFragment newInstance() {
 
-        final AddFamilyMemberFragment addFamilyMember = new AddFamilyMemberFragment();
-        return addFamilyMember;
-    }
-    public AddFamilyMemberFragment(){ super(); }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_familymember);
 
-        View addFamilyMember = inflater.inflate(R.layout.fragment_add_familymember,null);
+        init();
 
-        init(addFamilyMember);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
+        ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
+        TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
+        ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addFamilyMemberInfo();
+            }
+        });
 
         mDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
 
-                int y = c.get(Calendar.YEAR)+4;
-                int m = c.get(Calendar.MONTH)-2;
+                int y = c.get(Calendar.YEAR) + 4;
+                int m = c.get(Calendar.MONTH) - 2;
                 int d = c.get(Calendar.DAY_OF_MONTH);
                 final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-                DatePickerDialog dp = new DatePickerDialog(getActivity(),
+                DatePickerDialog dp = new DatePickerDialog(getBaseContext(),
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -97,7 +112,7 @@ public class AddFamilyMemberFragment extends Fragment {
                                                   int monthOfYear, int dayOfMonth) {
                                 String erg = "";
                                 erg += dayOfMonth;
-                                erg += "/"+String.valueOf(monthOfYear + 1);
+                                erg += "/" + String.valueOf(monthOfYear + 1);
                                 erg += "/" + year;
 
                                 mDOB.setText(erg);
@@ -115,29 +130,27 @@ public class AddFamilyMemberFragment extends Fragment {
 
             }
         });
-
-        return addFamilyMember;
-
     }
-    public void init(View addFamilyMember)
+
+    public void init()
     {
-        mUsername = (EditText)addFamilyMember.findViewById(R.id.userName);
-        mEmail = (EditText)addFamilyMember.findViewById(R.id.email);
+        mUsername = (EditText)findViewById(R.id.userName);
+        mEmail = (EditText)findViewById(R.id.email);
 
-        mFirstName = (EditText)addFamilyMember.findViewById(R.id.firstName);
+        mFirstName = (EditText)findViewById(R.id.firstName);
 
-        mLastName = (EditText)addFamilyMember.findViewById(R.id.lastName);
-        mAddress1 = (EditText)addFamilyMember.findViewById(R.id.streetAddress);
+        mLastName = (EditText)findViewById(R.id.lastName);
+        mAddress1 = (EditText)findViewById(R.id.streetAddress);
 
-        mCity = (EditText)addFamilyMember.findViewById(R.id.city);
-        mState = (EditText)addFamilyMember.findViewById(R.id.state);
-        mPhone = (EditText)addFamilyMember.findViewById(R.id.phone);
+        mCity = (EditText)findViewById(R.id.city);
+        mState = (EditText)findViewById(R.id.state);
+        mPhone = (EditText)findViewById(R.id.phone);
 
-        mDOB = (EditText)addFamilyMember.findViewById(R.id.DOB);
-        mGender = (EditText)addFamilyMember.findViewById(R.id.gender);
+        mDOB = (EditText)findViewById(R.id.DOB);
+        mGender = (EditText)findViewById(R.id.gender);
 
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
+        pDialog = MdliveUtils.getProgressDialog("Please wait...", AddFamilyMemberActivity.this);
     }
 
     public void addFamilyMemberInfo()
@@ -197,7 +210,7 @@ public class AddFamilyMemberFragment extends Fragment {
         }
         else
         {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -226,15 +239,15 @@ public class AddFamilyMemberFragment extends Fragment {
 
                 pDialog.dismiss();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(pDialog, getBaseContext());
                 }
             }
         };
 
-        AddFamilyMemberInfoService service = new AddFamilyMemberInfoService(getActivity(), null);
+        AddFamilyMemberInfoService service = new AddFamilyMemberInfoService(getBaseContext(), null);
         service.addFamilyMemberInfo(successCallBackListener, errorListener, params);
     }
 
@@ -243,10 +256,11 @@ public class AddFamilyMemberFragment extends Fragment {
 
             pDialog.dismiss();
 
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+            Toast.makeText(getBaseContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+

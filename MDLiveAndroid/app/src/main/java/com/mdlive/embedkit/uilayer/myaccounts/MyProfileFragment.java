@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +41,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//import com.squareup.picasso.Picasso;
-
 /**
  * Created by venkataraman_r on 6/18/2015.
  */
@@ -50,6 +49,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private CircularNetworkImageView mProfileImage = null;
     private CircularNetworkImageView mCircularNetworkImageView;
     private TextView mProfileName = null;
+    private LinearLayout mAddressClickListener = null;
+    private LinearLayout mPhoneNumberClickListener = null;
     private TextView mUserDOB = null;
     private TextView mGender = null;
     private TextView mUserName = null;
@@ -64,6 +65,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private Button mSave = null;
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null;
+    private JSONObject myProfile;
 
     public static MyProfileFragment newInstance() {
         final MyProfileFragment myProfileFragment = new MyProfileFragment();
@@ -97,33 +99,55 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mChangePassword = (CardView)view.findViewById(R.id.changePassword);
         mChangePin = (CardView)view.findViewById(R.id.changePin);
         mChangeSecurityQuestions = (CardView)view.findViewById(R.id.changeSecurityQuestion);
+        mAddressClickListener = (LinearLayout)view.findViewById(R.id.addressView);
+        mPhoneNumberClickListener = (LinearLayout)view.findViewById(R.id.phoneNumberView);
 
+        mAddressClickListener.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent changeAddress = new Intent(getActivity(),MyAccountsHome.class);
+                changeAddress.putExtra("Fragment_Name","CHANGE ADDRESS");
+                changeAddress.putExtra("Address_Response",myProfile.toString());
+                startActivityForResult(changeAddress, 3);
+            }
+        });
+
+        mPhoneNumberClickListener.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name","CHANGE PHONE NUMBER");
+                changePhone.putExtra("Address_Response",myProfile.toString());
+                startActivityForResult(changePhone, 3);
+
+            }
+        });
 
         mChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (getActivity() != null && getActivity() instanceof MyAccountActivity) {
-//                    ((MyAccountActivity)getActivity()).onChangePasswordClicked();
-//                }
+                Intent changePassword = new Intent(getActivity(),MyAccountsHome.class);
+                changePassword.putExtra("Fragment_Name","CHANGE PASSWORD");
+                startActivity(changePassword);
             }
         });
 
         mChangePin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (getActivity() != null && getActivity() instanceof MyAccountActivity) {
-//                    ((MyAccountActivity)getActivity()).onChangePinClicked();
-//                }
-
+                Intent changePin = new Intent(getActivity(),MyAccountsHome.class);
+                changePin.putExtra("Fragment_Name","Old Pin");
+                startActivity(changePin);
             }
         });
 
         mChangeSecurityQuestions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (getActivity() != null && getActivity() instanceof MyAccountActivity) {
-//                    ((MyAccountActivity)getActivity()).onSecurityQuestionClicked();
-//                }
+                Intent changePassword = new Intent(getActivity(),MyAccountsHome.class);
+                changePassword.putExtra("Fragment_Name","SECURITY QUESTION");
+                startActivity(changePassword);
             }
         });
 
@@ -138,7 +162,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 builder.setTitle("Make your selection");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        // Do something with the selection
                         mPreferredSignIn.setText(items[item]);
                     }
                 });
@@ -148,12 +171,12 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             }
         });
 
-//        mProfileImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectImage();
-//            }
-//        });
+        mProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
     }
 
     @Override
@@ -196,7 +219,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         hideProgressDialog();
 
         try {
-            JSONObject myProfile = response.getJSONObject("personal_info");
+            myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
             profileName = myProfile.getString("first_name"); /*+" "+ myProfile.getString("last_name")*/;
             email = myProfile.getString("email");
@@ -278,6 +301,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                     }
                     mProfileImage.setImageBitmap(bitmap);
                     convertToBase64(bitmap);
+
                 }
                 break;
 
@@ -288,6 +312,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                     convertToBase64(bitmap);
                 }
 
+            case 3:
+                getProfileInfoService();
                 break;
         }
     }
@@ -340,7 +366,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                                 fragmentTransaction.replace(R.id.tabcontent, new MyProfileFragment()).commit();
                             }
                         };
-                        // Show timeout error message
                         MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
@@ -355,9 +380,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         try {
             hideProgressDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
+    }

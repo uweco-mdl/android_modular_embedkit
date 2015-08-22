@@ -3,24 +3,20 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -41,14 +37,14 @@ public class CreditCardInfoFragment extends Fragment{
 
     private EditText mCardNumber = null;
     private EditText mSecurityCode = null;
-    private EditText mCardExpirationMonth = null;
+    private TextView mCardExpirationMonth = null;
     private EditText mNameOnCard = null;
     private EditText mAddress1 = null;
     private EditText mAddress2 = null;
     private EditText mCity = null;
     private EditText mState = null;
     private EditText mZip = null;
-    private Button mSave = null;
+
     SharedPreferences sharedpreferences;
     private ProgressDialog pDialog;
 
@@ -91,17 +87,16 @@ public class CreditCardInfoFragment extends Fragment{
 
     public void init(View billingInformation)
     {
-        mCardNumber = (EditText)billingInformation.findViewById(R.id.edt_cardNumber);
-        mSecurityCode = (EditText)billingInformation.findViewById(R.id.edt_securityCode);
-        mCardExpirationMonth = (EditText)billingInformation.findViewById(R.id.edt_cardExpirationMonth);
-        mCardExpirationMonth.setCursorVisible(false);
-        mNameOnCard = (EditText)billingInformation.findViewById(R.id.edt_nameOnCard);
-        mAddress1 = (EditText)billingInformation.findViewById(R.id.edt_address1);
-        mAddress2 = (EditText)billingInformation.findViewById(R.id.edt_address2);
-        mCity = (EditText)billingInformation.findViewById(R.id.edt_city);
-        mState = (EditText)billingInformation.findViewById(R.id.edt_state);
-        mZip = (EditText)billingInformation.findViewById(R.id.edt_zipCode);
-        mSave = (Button)billingInformation.findViewById(R.id.btn_save);
+        mCardNumber = (EditText)billingInformation.findViewById(R.id.cardNumber);
+        mSecurityCode = (EditText)billingInformation.findViewById(R.id.securityCode);
+        mCardExpirationMonth = (TextView)billingInformation.findViewById(R.id.expirationDate);
+
+        mNameOnCard = (EditText)billingInformation.findViewById(R.id.nameOnCard);
+        mAddress1 = (EditText)billingInformation.findViewById(R.id.addressLine1);
+        mAddress2 = (EditText)billingInformation.findViewById(R.id.addressLine2);
+        mCity = (EditText)billingInformation.findViewById(R.id.city);
+        mState = (EditText)billingInformation.findViewById(R.id.state);
+        mZip = (EditText)billingInformation.findViewById(R.id.zip);
 
         sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
@@ -112,6 +107,7 @@ public class CreditCardInfoFragment extends Fragment{
             try {
                 Log.i("response",response);
                 JSONObject myProfile = new JSONObject(response);
+                Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
 //                Log.i("response",jsonObject.toString());
 //                JSONObject myProfile = jsonObject.getJSONObject("billing_information");
                 country = myProfile.getString("billing_country");
@@ -137,20 +133,12 @@ public class CreditCardInfoFragment extends Fragment{
                 mState.setText(state);
                 mZip.setText(zip);
 
-                mSave.setText("Replace");
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
 
-
-        mSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCreditCardInfo();
-            }
-        });
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,7 +205,7 @@ public class CreditCardInfoFragment extends Fragment{
 
                 parent.put("billing_information", jsonObject);
                 loadBillingInfo(parent.toString());
-                Log.i("ADD Credit Card",jsonObject.toString());
+                Log.i("ADD Credit Card",parent.toString());
             }
             catch (JSONException e) {
                 e.printStackTrace();
@@ -278,15 +266,10 @@ public class CreditCardInfoFragment extends Fragment{
             pDialog.dismiss();
 
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean("Add_CREDIT_CARD", true);
-            editor.commit();
-
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.replace(R.id.tabcontent, new ViewCreditCard()).commit();
-
+            getActivity().finish();
+//            SharedPreferences.Editor editor = sharedpreferences.edit();
+//            editor.putBoolean("Add_CREDIT_CARD", true);
+//            editor.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

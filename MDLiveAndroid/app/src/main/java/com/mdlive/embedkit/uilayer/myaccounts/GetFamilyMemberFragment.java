@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -33,7 +34,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     private HashMap<String, ArrayList<String>> values;
     private ArrayList<String> nameList;
     private ArrayList<String> urlList;
-
+    View v;
     public static GetFamilyMemberFragment newInstance() {
         final GetFamilyMemberFragment fragment = new GetFamilyMemberFragment();
         return fragment;
@@ -54,36 +55,40 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         values = new HashMap<String, ArrayList<String>>();
-        nameList = new ArrayList<String>();
-        urlList = new ArrayList<String>();
 
         lv = (ListView) view.findViewById(R.id.listView);
 
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        v = inflater.inflate(R.layout.add_family_footer, null);
+        CardView addFamilyMember1 = (CardView) v.findViewById(R.id.addFamilyMember);
 
         TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
-//        addFamilyMember.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                FragmentManager fragmentManager = getFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.replace(R.id.tabcontent, AddFamilyMemberFragment.newInstance()).commit();
-//
-//            }
-//        });
+        addFamilyMember1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name","Add FAMILY MEMBER");
+                startActivityForResult(changePhone, 3);
+
+            }
+        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
         getFamilyMemberInfoService();
     }
 
     public void getFamilyMemberInfoService() {
         showProgressDialog();
+
+        nameList = new ArrayList<String>();
+        urlList = new ArrayList<String>();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -123,17 +128,28 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 nameList.add(name);
                 urlList.add(url);
             }
-            values.put("NAME", nameList);
-            values.put("URL", urlList);
-            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), values));
+//            values.put("NAME", nameList);
+//            values.put("URL", urlList);
 
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View v = inflater.inflate(R.layout.add_family_footer, null);
-            CardView addFamilyMember = (CardView) v.findViewById(R.id.addFamilyMember);
+            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList));
+
+
             lv.addFooterView(v);
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+
+        switch (requestCode) {
+
+            case 3:
+
+                getFamilyMemberInfoService();
+                break;
         }
     }
 }

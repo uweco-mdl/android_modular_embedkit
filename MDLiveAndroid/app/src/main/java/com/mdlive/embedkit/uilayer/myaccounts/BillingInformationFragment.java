@@ -1,9 +1,9 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.myaccounts.AddCreditCardInfoService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
 
 import org.json.JSONException;
@@ -33,7 +32,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     private Button mAddCreditCard = null;
     private TextView mCreditCardDate = null;
     private TextView mCreditCardAddress = null;
-    private Button mReplaceCreditCard = null;
+    private TextView mReplaceCreditCard = null;
     private EditText mCardNumber = null;
     private EditText mSecurityCode = null;
     private EditText mCardExpirationMonth = null;
@@ -58,7 +57,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     private String state = null;
     private String country = null;
     private String zip = null;
-
+    JSONObject myProfile;
     public static BillingInformationFragment newInstance() {
         final BillingInformationFragment fragment = new BillingInformationFragment();
         return fragment;
@@ -80,8 +79,20 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 
         mCreditCardDate = (TextView) view.findViewById(R.id.cardEndDate);
         mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
+        mReplaceCreditCard =(TextView)view.findViewById(R.id.addCreditCard);
 
 //        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
+
+        mReplaceCreditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
+                changePhone.putExtra("Credit_Card_Response",myProfile.toString());
+                startActivityForResult(changePhone, 1);
+            }
+        });
     }
 
     @Override
@@ -91,6 +102,15 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
         getCreditCardInfoService();
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch (requestCode) {
+
+            case 1:
+                getCreditCardInfoService();
+                break;
+        }
+    }
     public void getCreditCardInfoService() {
         showProgressDialog();
 
@@ -124,10 +144,13 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
         try {
-            JSONObject myProfile = response.getJSONObject("billing_information");
+            Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
+             myProfile = response.getJSONObject("billing_information");
+            Toast.makeText(getActivity(),myProfile.toString(),Toast.LENGTH_SHORT).show();
             country = myProfile.getString("billing_country");
             cardExpirationYear = myProfile.getString("cc_expyear");
             nameOnCard = myProfile.getString("billing_name");
+            Toast.makeText(getActivity(),myProfile.getString("billing_name"),Toast.LENGTH_SHORT).show();
             zip = myProfile.getString("billing_zip5");
             securityCode = myProfile.getString("cc_cvv2");
             cardNumber = myProfile.getString("cc_number");
@@ -172,93 +195,93 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
         }
     }
 
-    public void addCreditCardInfo() {
-        cardNumber = mCardNumber.getText().toString();
-        securityCode = mSecurityCode.getText().toString();
-        cardExpirationMonth = mCardExpirationMonth.getText().toString();
-        cardExpirationYear = mCardExpirationYear.getText().toString();
-        nameOnCard = mNameOnCard.getText().toString();
-        address1 = mAddress1.getText().toString();
-        address2 = mAddress2.getText().toString();
-        city = mCity.getText().toString();
-        state = mState.getText().toString();
-        country = mCountry.getText().toString();
-        zip = mZip.getText().toString();
+//    public void addCreditCardInfo() {
+//        cardNumber = mCardNumber.getText().toString();
+//        securityCode = mSecurityCode.getText().toString();
+//        cardExpirationMonth = mCardExpirationMonth.getText().toString();
+//        cardExpirationYear = mCardExpirationYear.getText().toString();
+//        nameOnCard = mNameOnCard.getText().toString();
+//        address1 = mAddress1.getText().toString();
+//        address2 = mAddress2.getText().toString();
+//        city = mCity.getText().toString();
+//        state = mState.getText().toString();
+//        country = mCountry.getText().toString();
+//        zip = mZip.getText().toString();
+//
+//        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
+//            try {
+//                JSONObject parent = new JSONObject();
+//                JSONObject jsonObject = new JSONObject();
+//                jsonObject.put("cc_type_id", "1");
+//                jsonObject.put("billing_address1", address1);
+//                jsonObject.put("billing_zip5", zip);
+//                jsonObject.put("billing_address2", address2);
+//                jsonObject.put("cc_hsa", "true");
+//                jsonObject.put("cc_expyear", cardExpirationYear);
+//                jsonObject.put("billing_name", nameOnCard);
+//                jsonObject.put("billing_city", city);
+//                jsonObject.put("billing_state_id", state);
+//                jsonObject.put("cc_expmonth", cardExpirationMonth);
+//                jsonObject.put("cc_cvv2", securityCode);
+//                jsonObject.put("cc_num", cardNumber);
+//                jsonObject.put("billing_country_id", country);
+//
+//                parent.put("billing_information", jsonObject);
+//                loadBillingInfo(parent.toString());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
+//    public Boolean isEmpty(String cardInfo) {
+//        if (!TextUtils.isEmpty(cardInfo))
+//            return true;
+//        return false;
+//    }
+//
+//    private void loadBillingInfo(String params) {
+//        showProgressDialog();
+//
+//        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                handleAddBillingInfoSuccessResponse(response);
+//            }
+//        };
+//
+//        NetworkErrorListener errorListener = new NetworkErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                hideProgressDialog();
+//                try {
+//                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+//                } catch (Exception e) {
+//                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+//                }
+//            }
+//        };
+//
+//        AddCreditCardInfoService service = new AddCreditCardInfoService(getActivity(), null);
+//        service.addCreditCardInfo(successCallBackListener, errorListener, params);
+//    }
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
-            try {
-                JSONObject parent = new JSONObject();
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("cc_type_id", "1");
-                jsonObject.put("billing_address1", address1);
-                jsonObject.put("billing_zip5", zip);
-                jsonObject.put("billing_address2", address2);
-                jsonObject.put("cc_hsa", "true");
-                jsonObject.put("cc_expyear", cardExpirationYear);
-                jsonObject.put("billing_name", nameOnCard);
-                jsonObject.put("billing_city", city);
-                jsonObject.put("billing_state_id", state);
-                jsonObject.put("cc_expmonth", cardExpirationMonth);
-                jsonObject.put("cc_cvv2", securityCode);
-                jsonObject.put("cc_num", cardNumber);
-                jsonObject.put("billing_country_id", country);
-
-                parent.put("billing_information", jsonObject);
-                loadBillingInfo(parent.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
-    }
-
-    private void loadBillingInfo(String params) {
-        showProgressDialog();
-
-        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                handleAddBillingInfoSuccessResponse(response);
-            }
-        };
-
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                hideProgressDialog();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
-                }
-            }
-        };
-
-        AddCreditCardInfoService service = new AddCreditCardInfoService(getActivity(), null);
-        service.addCreditCardInfo(successCallBackListener, errorListener, params);
-    }
-
-    private void handleAddBillingInfoSuccessResponse(JSONObject response) {
-        try {
-            hideProgressDialog();
-            //Fetch Data From the Services
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean("Add_CREDIT_CARD", true);
-            editor.commit();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void handleAddBillingInfoSuccessResponse(JSONObject response) {
+//        try {
+//            hideProgressDialog();
+//            //Fetch Data From the Services
+//            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+////            SharedPreferences.Editor editor = sharedpreferences.edit();
+////            editor.putBoolean("Add_CREDIT_CARD", true);
+////            editor.commit();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

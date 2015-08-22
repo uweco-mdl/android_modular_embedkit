@@ -1,13 +1,11 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,24 +14,20 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.login.NewPinFragment;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
 public class OldPinFragment extends Fragment implements TextWatcher, View.OnClickListener {
 
-    private ToggleButton mPassCode1 = null;
-    private ToggleButton mPassCode2 = null;
-    private ToggleButton mPassCode3 = null;
-    private ToggleButton mPassCode4 = null;
-    private ToggleButton mPassCode5 = null;
-    private ToggleButton mPassCode6 = null;
-
+    private EditText mPassCode1 = null;
+    private EditText mPassCode2 = null;
+    private EditText mPassCode3 = null;
+    private EditText mPassCode4 = null;
+    private EditText mPassCode5 = null;
+    private EditText mPassCode6 = null;
     private EditText mPassCode7 = null;
     private TextView mTitle = null;
 
@@ -44,9 +38,6 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
     private View dummyEditText5 = null;
     private View dummyEditText6 = null;
 
-    private ProgressDialog pDialog;
-    Toolbar toolbar;
-    private TextView toolbarTitle;
 
     public static OldPinFragment newInstance() {
 
@@ -59,12 +50,7 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View changePin = inflater.inflate(R.layout.fragments_change_pin, null);
-
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-
-        toolbarTitle.setText(getResources().getString(R.string.change_pin));
+        View changePin = inflater.inflate(R.layout.fragments_pin_change, null);
 
         init(changePin);
 
@@ -73,27 +59,26 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
 
     public void init(View changePin) {
 
-        mPassCode1 = (ToggleButton) changePin.findViewById(R.id.passCode1);
-        mPassCode2 = (ToggleButton) changePin.findViewById(R.id.passCode2);
-        mPassCode3 = (ToggleButton) changePin.findViewById(R.id.passCode3);
-        mPassCode4 = (ToggleButton) changePin.findViewById(R.id.passCode4);
-        mPassCode5 = (ToggleButton) changePin.findViewById(R.id.passCode5);
-        mPassCode6 = (ToggleButton) changePin.findViewById(R.id.passCode6);
+        mPassCode1 = (EditText) changePin.findViewById(R.id.passCode1);
+        mPassCode2 = (EditText) changePin.findViewById(R.id.passCode2);
+        mPassCode3 = (EditText) changePin.findViewById(R.id.passCode3);
+        mPassCode4 = (EditText) changePin.findViewById(R.id.passCode4);
+        mPassCode5 = (EditText) changePin.findViewById(R.id.passCode5);
+        mPassCode6 = (EditText) changePin.findViewById(R.id.passCode6);
+        mPassCode7 = (EditText) changePin.findViewById(R.id.dumy_field_passcode);
 
-        mPassCode7 = (EditText) changePin.findViewById(R.id.etPasscode);
-
-
+        dummyEditText1 = (View) changePin.findViewById(R.id.dumy_passcode_field_1);
+        dummyEditText2 = (View) changePin.findViewById(R.id.dumy_passcode_field_2);
+        dummyEditText3 = (View) changePin.findViewById(R.id.dumy_passcode_field_3);
+        dummyEditText4 = (View) changePin.findViewById(R.id.dumy_passcode_field_4);
+        dummyEditText5 = (View) changePin.findViewById(R.id.dumy_passcode_field_5);
+        dummyEditText6 = (View) changePin.findViewById(R.id.dumy_passcode_field_6);
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
-        mTitle.setText("Please Enter Old Pin");
-
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-
-        toolbarTitle.setText(getResources().getString(R.string.change_pin));
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
+        mTitle.setText("Please enter your old PIN");
 
         mPassCode7.addTextChangedListener(this);
+        mPassCode7.requestFocus();
 
         dummyEditText1.setOnClickListener(this);
         dummyEditText2.setOnClickListener(this);
@@ -102,75 +87,85 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
         dummyEditText5.setOnClickListener(this);
         dummyEditText6.setOnClickListener(this);
 
+        dummyEditText1.setClickable(true);
+        mPassCode1.setBackgroundResource(R.drawable.gray_circle);
+        dummyEditText2.setClickable(false);
+        mPassCode2.setBackgroundResource(R.drawable.gray_circle);
+        dummyEditText3.setClickable(false);
+        mPassCode3.setBackgroundResource(R.drawable.gray_circle);
+        dummyEditText4.setClickable(false);
+        mPassCode4.setBackgroundResource(R.drawable.gray_circle);
+        dummyEditText5.setClickable(false);
+        mPassCode5.setBackgroundResource(R.drawable.gray_circle);
+        dummyEditText6.setClickable(false);
+        mPassCode6.setBackgroundResource(R.drawable.gray_circle);
+
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        int iLength = mPassCode7.getText().length();
-        switch (iLength) {
-            case 0:
-                mPassCode1.setChecked(false);
-                mPassCode2.setChecked(false);
-                mPassCode3.setChecked(false);
-                mPassCode4.setChecked(false);
-                mPassCode5.setChecked(false);
-                mPassCode6.setChecked(false);
-                break;
-            case 1:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(false);
-                mPassCode3.setChecked(false);
-                mPassCode4.setChecked(false);
-                mPassCode5.setChecked(false);
-                mPassCode6.setChecked(false);
-                break;
-            case 2:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(true);
-                mPassCode3.setChecked(false);
-                mPassCode4.setChecked(false);
-                mPassCode5.setChecked(false);
-                mPassCode6.setChecked(false);
-                break;
-            case 3:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(true);
-                mPassCode3.setChecked(true);
-                mPassCode4.setChecked(false);
-                mPassCode5.setChecked(false);
-                mPassCode6.setChecked(false);
-                break;
-            case 4:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(true);
-                mPassCode3.setChecked(true);
-                mPassCode4.setChecked(true);
-                mPassCode5.setChecked(false);
-                mPassCode6.setChecked(false);
-                break;
-            case 5:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(true);
-                mPassCode3.setChecked(true);
-                mPassCode4.setChecked(true);
-                mPassCode5.setChecked(true);
-                mPassCode6.setChecked(false);
-                break;
-            case 6:
-                mPassCode1.setChecked(true);
-                mPassCode2.setChecked(true);
-                mPassCode3.setChecked(true);
-                mPassCode4.setChecked(true);
-                mPassCode5.setChecked(true);
-                mPassCode6.setChecked(true);
-                break;
-        }
-        if (iLength == 6) {
-            MdliveUtils.hideKeyboard(getActivity(), (View) mPassCode7);
 
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.tabcontent, NewPinFragment.newInstance(mPassCode7.getText().toString())).commit();
+        if (s.length() <= 6) {
+            if (count != 0) {
+                String text = s.charAt(s.length() - 1) + "";
+                switch (s.length()) {
+
+                    case 1:
+                        mPassCode1.setText(text);
+                        setFocus(mPassCode1, dummyEditText2);
+                        break;
+                    case 2:
+                        mPassCode2.setText(text);
+                        setFocus(mPassCode2, dummyEditText3);
+                        break;
+                    case 3:
+                        mPassCode3.setText(text);
+                        setFocus(mPassCode3, dummyEditText4);
+                        break;
+                    case 4:
+                        mPassCode4.setText(text);
+                        setFocus(mPassCode4, dummyEditText5);
+                        break;
+                    case 5:
+                        mPassCode5.setText(text);
+                        setFocus(mPassCode5, dummyEditText6);
+                        break;
+                    case 6:
+                        mPassCode6.setText(text);
+                        mPassCode6.setBackgroundResource(R.drawable.red_circle);
+
+                        break;
+                }
+            } else {
+                switch (s.length() + 1) {
+                    case 1:
+                        mPassCode1.setText("");
+                        setFocus1(mPassCode1, dummyEditText1);
+                        break;
+                    case 2:
+                        mPassCode2.setText("");
+                        setFocus1(mPassCode2, dummyEditText2);
+                        break;
+                    case 3:
+                        mPassCode3.setText("");
+                        setFocus1(mPassCode3, dummyEditText3);
+                        break;
+                    case 4:
+                        mPassCode4.setText("");
+                        setFocus1(mPassCode4, dummyEditText4);
+                        break;
+                    case 5:
+                        mPassCode5.setText("");
+                        setFocus1(mPassCode5, dummyEditText5);
+                        break;
+                    case 6:
+                        mPassCode6.setText("");
+                        setFocus1(mPassCode6, dummyEditText6);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -187,20 +182,29 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
     public void setFocus(EditText editText, View dummyEditText) {
 
         dummyEditText1.setClickable(false);
-        mPassCode1.setBackgroundResource(R.drawable.edittext_lostfocus);
         dummyEditText2.setClickable(false);
-        mPassCode2.setBackgroundResource(R.drawable.edittext_lostfocus);
         dummyEditText3.setClickable(false);
-        mPassCode3.setBackgroundResource(R.drawable.edittext_lostfocus);
         dummyEditText4.setClickable(false);
-        mPassCode4.setBackgroundResource(R.drawable.edittext_lostfocus);
         dummyEditText5.setClickable(false);
-        mPassCode5.setBackgroundResource(R.drawable.edittext_lostfocus);
         dummyEditText6.setClickable(false);
-        mPassCode6.setBackgroundResource(R.drawable.edittext_lostfocus);
 
         if (editText != null) {
-            editText.setBackgroundResource(R.drawable.edittext_focus);
+            editText.setBackgroundResource(R.drawable.red_circle);
+            dummyEditText.setClickable(true);
+        }
+    }
+
+    public void setFocus1(EditText editText, View dummyEditText) {
+
+        dummyEditText1.setClickable(false);
+        dummyEditText2.setClickable(false);
+        dummyEditText3.setClickable(false);
+        dummyEditText4.setClickable(false);
+        dummyEditText5.setClickable(false);
+        dummyEditText6.setClickable(false);
+
+        if (editText != null) {
+            editText.setBackgroundResource(R.drawable.gray_circle);
             dummyEditText.setClickable(true);
         }
     }
@@ -210,5 +214,12 @@ public class OldPinFragment extends Fragment implements TextWatcher, View.OnClic
         v.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mPassCode7, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public void oldPin()
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, MyAccountNewPinFragment.newInstance(mPassCode7.getText().toString()),"Old Pin").commit();
     }
 }
