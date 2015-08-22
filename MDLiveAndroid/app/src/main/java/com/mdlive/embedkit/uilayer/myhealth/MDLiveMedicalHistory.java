@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -69,7 +68,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
     private boolean isFemaleQuestionsDone = false, isConditionsDone = false,
             isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser = false;
-    private Button btnSaveContinue;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup, ProceduresGroup;
     private LocationCooridnates locationService;
@@ -92,10 +90,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history));
 
-        btnSaveContinue = (Button) findViewById(R.id.SavContinueBtn);
-        btnSaveContinue.setClickable(false);
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -458,18 +455,16 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
         if (isAllFieldsfilled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
             } else {
-                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_bg);
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
             }
-            btnSaveContinue.setClickable(true);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             } else {
-                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_grey);
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             }
-            btnSaveContinue.setClickable(false);
         }
     }
 

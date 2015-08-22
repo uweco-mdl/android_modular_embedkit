@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -45,9 +47,21 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         type = TYPE_CONSTANT.ALLERGY;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
-        ((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_allergy));
+        //((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_allergy));
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
+        //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_allergy));
     }
 
     /**
@@ -116,7 +130,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             hideProgress();
             checkMedicalAggregation();
         }
-    @Override
+        @Override
         protected Void doInBackground(Void... params) {
             if (existingConditions.size() == 0) {
             } else {

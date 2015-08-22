@@ -185,6 +185,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             try {
                 if(loadImageService != null && loadImageService.getStatus().equals(AsyncTask.Status.RUNNING)){
                     ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.VISIBLE);
+                }else{
+                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -545,6 +547,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         loadImageService = new loadDownloadedImages();
                         loadImageService.execute();
                     } else {
+                        ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
                         photosContainer.setVisibility(View.GONE);
                     }
                /* boolean hasPendingDownloads = false;

@@ -67,19 +67,17 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-        }*/
         setContentView(R.layout.mdlive_pharmacy);
-
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_phr_txt));
@@ -125,6 +123,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     public void SavContinueBtnOnClick(View view) {
         checkInsuranceEligibility();
     }
+
 
     /**
      * This function handles click listener of changePharmacyButton

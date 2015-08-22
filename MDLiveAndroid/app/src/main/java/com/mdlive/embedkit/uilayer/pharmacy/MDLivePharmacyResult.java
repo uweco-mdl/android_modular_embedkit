@@ -78,8 +78,8 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
     private HashMap<Marker, Integer> markerIdCollection = new HashMap<Marker, Integer>();
     private RelativeLayout progressBar;
-    private SupportMapFragment mapView;
-    private GoogleMap googleMap;
+    private SupportMapFragment mapView, expandmapView;
+    private GoogleMap googleMap, expandgoogleMap;
     private ListView pharmList;
     private PharmacyListAdaper adaper;
     private HashMap<String, Object> keyParams;
@@ -87,6 +87,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private String errorMesssage;
     private ProgressBar bottomLoder;
     private ScrollView mapscrollView;
+    private RelativeLayout expandableMapViewContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,10 +100,15 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         }*/
 
         setContentView(R.layout.mdlive_pharmacy_result);
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
@@ -120,6 +126,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
         startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
+        finish();
     }
 
     @Override
@@ -147,33 +154,11 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
     public void initializeViews() {
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
+        expandableMapViewContainer = (RelativeLayout) findViewById(R.id.expandableMapViewContainer);
         keyParams = new HashMap<String, Object>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         bottomLoder = (ProgressBar)findViewById(R.id.bottomLoader);
         errorMesssage = getString(R.string.no_pharmacies_listed);
-        /*((ImageView) findViewById(R.id.filterImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-                startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
-            }
-        });*/
-
-       /* // The back image will pull you back to the Previous activity
-        // The home button will pull you back to the Dashboard activity
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                movetohome();
-            }
-        });*/
     }
 
     public void leftBtnOnClick(View v){
@@ -181,6 +166,12 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         onBackPressed();
     }
 
+
+    public void listResultBtnOnClick(View v){
+        expandableMapViewContainer.setVisibility(View.GONE);
+        if(mapscrollView != null)
+            mapscrollView.scrollTo(0, 0);
+    }
 
     /*
      * This function is mainly focused on initializing view in layout.
@@ -204,13 +195,30 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void initializeMapView() {
         HttpsURLConnection.setDefaultSSLSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
+        expandmapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.expandmapView));
         googleMap = mapView.getMap();
+        expandgoogleMap = mapView.getMap();
         if (googleMap != null) {
             if (googleMap != null) {
                 googleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
         }
-        googleMap.getUiSettings().setScrollGesturesEnabled(false);
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng arg0) {
+                Log.d("arg0", arg0.latitude + "-" + arg0.longitude);
+                expandableMapViewContainer.setVisibility(View.VISIBLE);
+            }
+        });
+
+        if (expandgoogleMap != null) {
+            if (expandgoogleMap != null) {
+                expandgoogleMap.setInfoWindowAdapter(markerInfoAdapter);
+            }
+        }
+        /*expandgoogleMap.getUiSettings().setScrollGesturesEnabled(false);
+        googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
     /*
@@ -221,7 +229,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 .inflate(R.layout.mdlive_footer, null, false);
         // If list size is greater than zero then show the bottom footer
         if (list != null && list.size() > 0) {
-            findViewById(R.id.footer).setVisibility(View.GONE);
+            //findViewById(R.id.footer).setVisibility(View.GONE);
 
             if (pharmList.getFooterViewsCount() == 0) {
 
@@ -230,7 +238,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         }
         // If list size is zero then remove the bootm footer & add the list footer
         else {
-            findViewById(R.id.footer).setVisibility(View.VISIBLE);
+            //findViewById(R.id.footer).setVisibility(View.VISIBLE);
             if (pharmList.getFooterViewsCount() > 0) {
                 pharmList.removeFooterView(footerView);
             }
@@ -256,7 +264,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     bottomLoder.setVisibility(View.GONE);
                 }
                 try {
-                    Log.e("Pharmacy Response Sucess ---> ", response.toString());
+                    Log.e("Pharmacy Response --> ", response.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -381,6 +389,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             String store_name="", phone="", address1="", address2="", zipcode="", fax="", city="", distance="", state="";
             // For google map
             googleMap = mapView.getMap();
+            expandgoogleMap = expandmapView.getMap();
             LatLng markerPoint = null;
             for (int i = 0; i < responArray.size(); i++) {
                 if(MdliveUtils.checkJSONResponseHasString(responArray.get(i).getAsJsonObject(), "state"))
@@ -440,6 +449,8 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             //For Google map initialize view
             if (markerPoint != null && googleMap != null)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+            if (markerPoint != null && expandgoogleMap != null)
+                expandgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -541,6 +552,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         map.put("distance", distance);
         map.put("active", active);
         Marker marker = googleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
+        expandgoogleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
         markerIdCollection.put(marker, i);
         list.add(map);
     }

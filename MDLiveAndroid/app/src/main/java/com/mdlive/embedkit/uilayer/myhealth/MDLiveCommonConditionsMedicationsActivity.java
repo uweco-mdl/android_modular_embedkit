@@ -88,10 +88,20 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      * This function handles onClick event of done text in layout
      * saveBtnAction - is used to add new condition/allergy/medication
      */
-    public void doneTxtClick(View view){
+    public void rightBtnOnClick(View view){
         ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
         saveBtnAction();
     }
+
+    public void leftBtnOnClick(View v){
+        if(IsThisPageEdited)
+            checkMedicalAggregation();
+        else{
+            finish();
+            MdliveUtils.closingActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
+        }
+    }
+
 
     /**
      * This function handles backImage button onClick Action
