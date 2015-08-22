@@ -55,6 +55,10 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         return position;
     }
 
+    public Appointment getAppointment(int position) {
+        return mAppointments == null ? null : mAppointments.get(position);
+    }
+
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
      * create a View manually or inflate it from an XML layout file. When the View is inflated, the
@@ -97,6 +101,21 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         builder.append(appointment.getApptType());
 
         viewHolder.mTextView.setText(builder.toString());
+
+        final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), appointment.getTimeZone());
+
+        switch (type) {
+            case 0 :
+                viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));
+                viewHolder.mTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.notification_icon4_upcoming_white, R.color.transparent, R.color.transparent, R.color.transparent);
+                break;
+
+            case 1 :
+            case 2 :
+                viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));
+                viewHolder.mTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.notification_icon4_upcoming, R.color.transparent, R.color.transparent, R.color.transparent);
+                break;
+        }
 
         return convertView;
     }

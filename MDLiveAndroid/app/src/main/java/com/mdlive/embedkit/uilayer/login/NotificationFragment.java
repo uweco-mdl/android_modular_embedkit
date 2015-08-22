@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Notifications;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -28,6 +31,8 @@ import org.json.JSONObject;
  * Created by dhiman_da on 8/10/2015.
  */
 public class NotificationFragment extends MDLiveBaseFragment {
+    private OnAppointmentClicked mOnAppointmentClicked;
+
     private static final long MILIS_IN_SECOND = 1000;
     private static final long DURATION = 30 * MILIS_IN_SECOND;
 
@@ -58,6 +63,17 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     public NotificationFragment() {
         super();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mOnAppointmentClicked = (OnAppointmentClicked) activity;
+        } catch (ClassCastException cce) {
+
+        }
     }
 
     @Override
@@ -121,6 +137,13 @@ public class NotificationFragment extends MDLiveBaseFragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mOnAppointmentClicked = null;
+    }
+
     public void setNotification(final UserBasicInfo userBasicInfo) {
         final Notifications notification = userBasicInfo.getNotifications();
 
@@ -172,13 +195,26 @@ public class NotificationFragment extends MDLiveBaseFragment {
             mUpcomingAppoinmantListView.setVisibility(View.VISIBLE);
 
             if (mUpcomingAppoinmantListView != null) {
+                mUpcomingAppoinmantListView.setOnItemClickListener(null);
                 mUpcomingAppoinmantListView.setAdapter(null);
                 final UpcominAppointmentAdapter adapter = new UpcominAppointmentAdapter(mPendingAppointment.getAppointments());
                 mUpcomingAppoinmantListView.setAdapter(adapter);
+                mUpcomingAppoinmantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (mOnAppointmentClicked != null) {
+                            mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
+                        }
+                    }
+                });
             }
         } else {
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
         }
+    }
+
+    public interface OnAppointmentClicked {
+        void onAppointmentClicked(final Appointment appointment);
     }
 }
