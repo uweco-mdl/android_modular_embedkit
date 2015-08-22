@@ -54,6 +54,11 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     /**
      * Called when an item in the navigation drawer is selected.
      *

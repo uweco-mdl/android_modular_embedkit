@@ -86,6 +86,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         final Intent intent = new Intent(getBaseContext(), clazz);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+
+        finish();
     }
 
 

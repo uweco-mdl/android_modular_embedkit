@@ -55,6 +55,11 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     /**
      * Called whenever the contents of the back stack change.
      */

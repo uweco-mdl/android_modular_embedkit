@@ -47,12 +47,12 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
             viewHolder.mTextViewTop.setTextColor(Color.GRAY);
             viewHolder.mTextViewBottom.setTextColor(Color.GRAY);
             viewHolder.mTextViewTime.setTextColor(Color.GRAY);
-            viewHolder.mReadImageView.setVisibility(View.INVISIBLE);
+            viewHolder.mReadImageView.setVisibility(View.GONE);
         } else {
             viewHolder.mTextViewTop.setTextColor(Color.BLACK);
             viewHolder.mTextViewBottom.setTextColor(Color.BLACK);
             viewHolder.mTextViewTime.setTextColor(Color.BLACK);
-            viewHolder.mReadImageView.setVisibility(View.VISIBLE);
+            viewHolder.mReadImageView.setVisibility(View.GONE);
         }
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));

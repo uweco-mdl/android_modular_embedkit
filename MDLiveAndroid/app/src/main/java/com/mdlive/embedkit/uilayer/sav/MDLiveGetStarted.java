@@ -116,6 +116,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
         onBackPressed();
@@ -952,15 +957,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.DATE_OF_BIRTH, birthDate);
         editor.putString(PreferenceConstants.LOCATION, SavedLocation);
         editor.commit();
-    }
-
-    /**
-     * This function is for calling the Closing Activity Animation
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        MdliveUtils.closingActivityAnimation(MDLiveGetStarted.this);
     }
 
 }

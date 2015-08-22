@@ -63,6 +63,11 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(MessageReceivedFragment.newInstance(), getString(R.string.inbox));
