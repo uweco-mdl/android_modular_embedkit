@@ -661,6 +661,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
+            editor.putString(PreferenceConstants.PROVIDER_TYPE, ((TextView)findViewById(R.id.providertypeTxt)).getText().toString());
             editor.commit();
             hideProgress();
             handleSuccessResponseFamilyMember(response);
