@@ -18,6 +18,7 @@ import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -93,7 +94,7 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
 
             // MDLive My Health
             case 2:
-
+                startActivityWithClassName(MedicalHistoryActivity.class);
                 break;
 
             // MDLIVE Assist

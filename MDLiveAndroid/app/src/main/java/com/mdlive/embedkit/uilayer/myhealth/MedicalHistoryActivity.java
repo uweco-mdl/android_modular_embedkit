@@ -18,7 +18,6 @@ package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,30 +25,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageProviderFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageReceivedFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageSentFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -67,9 +58,6 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
-/* Pass 1 for Dev env,Pass 2 for QA env, Pass 3 for Stage env, Pass 4 for Prod env, 5 for Pluto*/
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
@@ -85,6 +73,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         }
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(viewPager);
 
         if (savedInstanceState == null) {
@@ -101,6 +90,16 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     }
 
     @Override
+    public void onBackPressed() {
+        return;
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
@@ -108,17 +107,17 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         switch (position) {
             // Home
             case 0:
-
+                startActivityWithClassName(MDLiveDashboardActivity.class);
                 break;
 
             // See a Doctor
             case 1:
-
+                startActivityWithClassName(MDLiveGetStarted.class);
                 break;
 
             // MDLive My Health
             case 2:
-
+                startActivityWithClassName(MedicalHistoryActivity.class);
                 break;
 
             // MDLIVE Assist
@@ -141,29 +140,17 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
                 startActivityWithClassName(MyAccountActivity.class);
                 break;
 
-            // Symptom Checker
-            case 7:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 8:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
             // Support
-            case 9:
+            case 7:
                 startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
                 break;
 
-            // Share this App
-            case 10:
+            // Share
+            case 8:
 
                 break;
         }
     }
-
-
 
     /**
      *
@@ -219,67 +206,40 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
      */
 
     public void MyHealthConditionsLlOnClick(View view){
-
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(null).
-                add(R.id.container, new CheeseListFragment(), TAG).
-                commit();
-
-
-//        Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddConditions.class);
-//        startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-//        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+        Intent i = new Intent(getBaseContext(), MDLiveAddConditions.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
 
     public void MedicationsLlOnClick(View view){
-//        Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
-//        startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-//        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+        Intent i = new Intent(getBaseContext(), MDLiveAddMedications.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
 
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(TAG).
-                add(R.id.container, new CheeseListFragment(), TAG).
-                commit();
     }
 
     public void AllergiesLlOnClick(View view){
-//        Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
-//        startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-//        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
-
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(TAG).
-                add(R.id.container, new CheeseListFragment(), TAG).
-                commit();
+        Intent i = new Intent(getBaseContext(), MDLiveAddAllergies.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
 
     public void BehaviouralHealthLlOnClick(View view){
         Intent i = new Intent(MedicalHistoryActivity.this, MDLiveBehaviouralHealthActivity.class);
         startActivity(i);
-        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
 
     public void LifestyleLlOnClick(View view){
         Intent i = new Intent(MedicalHistoryActivity.this, MDLiveLifestyleActivity.class);
         startActivity(i);
-        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
 
     public void familyHistoryOnClick(View view){
         Intent i = new Intent(getBaseContext(), MDLiveFamilyActivity.class);
         startActivity(i);
-        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
 
-
     public void SavContinueBtnOnClick(View view){
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(TAG).
-                add(R.id.container, new CheeseListFragment(), TAG).
-                commit();
+
     }
 }

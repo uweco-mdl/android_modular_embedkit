@@ -346,11 +346,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      */
 
     private void checkMedicalDateHistory(final View view) {
-//        showProgress();
+        showProgressDialog();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // hideProgress();
+                hideProgressDialog();
                 try {
                     if(response.get("health_last_update") instanceof Number){
                         long num=response.getLong("health_last_update");
@@ -390,6 +390,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 medicalCommonErrorResponseHandler(error);
+                hideProgressDialog();
             }
         };
         MedicalHistoryLastUpdateServices services = new MedicalHistoryLastUpdateServices(getActivity(), null);
@@ -404,11 +405,12 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      */
 
     private void checkMedicalAggregation(final View view) {
-//        showProgress();
+        showProgressDialog();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
+                showProgressDialog();
                 medicalAggregationHandleSuccessResponse(view, response);
             }
         };
@@ -416,6 +418,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Log.e("error", error.getMessage());
+                hideProgressDialog();
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -484,16 +487,18 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * Based on the server response the corresponding action will be triggered.
      */
     private void checkMedicalCompletion(final View view) {
-//        showProgress();
+        showProgressDialog();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                hideProgressDialog();
                 medicalCompletionHandleSuccessResponse(view,response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -505,7 +510,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * Error Response Handler for Medical History Completion.
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
-        // hideProgress();
+        hideProgressDialog();
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null) {
             String message = "No Internet Connection";
@@ -599,7 +604,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.no_allergies_reported));
             }
             view.findViewById(R.id.ContainerScrollView).setVisibility(View.VISIBLE);
-            // hideProgress();
+            hideProgressDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -793,18 +798,19 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         femaleAttributes.put("is_breast_feeding", isBreastfeeding + "");
         HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
         postBody.put("female_questions", femaleAttributes);
-//        showProgress();
+
+        showProgressDialog();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // hideProgress();
+                hideProgressDialog();
                 getUserPharmacyDetails();
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // hideProgress();
+                hideProgressDialog();
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -824,13 +830,14 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                hideProgressDialog();
                 handleSuccessResponse(response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // hideProgress();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -884,7 +891,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             NetworkErrorListener errorListener = new NetworkErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    // hideProgress();
+                    hideProgressDialog();
                     if (error.networkResponse == null) {
                         if (error.getClass().equals(TimeoutError.class)) {
                             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -927,7 +934,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-//            // hideProgress();
+            hideProgressDialog();
             jsonResponse = response.toString();
             if(response.has("message")){
                 if(response.getString("message").equals("No pharmacy selected")){

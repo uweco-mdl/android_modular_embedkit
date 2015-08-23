@@ -5,11 +5,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthFragment;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
@@ -28,14 +27,15 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
-        MDLiveConfig.setData(3);
+
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.my_family_history).toUpperCase());
         }
-        toolbar.setTitle("FAMILY HISTORY");
+
         User user = null;
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
@@ -81,7 +81,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
         switch (position) {
             // Home
             case 0:
-
+                startActivityWithClassName(MDLiveGetStarted.class);
                 break;
 
             // See a Doctor
@@ -156,6 +156,14 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void onSignoutClicked(View view) {
+
+    }
+
+    public void onBackClicked(View view) {
+        finish();
+    }
+
+    public void onTickClicked(View view) {
 
     }
 }

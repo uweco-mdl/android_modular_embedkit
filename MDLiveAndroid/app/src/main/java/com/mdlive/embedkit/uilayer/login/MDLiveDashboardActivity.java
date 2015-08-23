@@ -142,7 +142,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     }
 
     public void onMyHealthClicked(View view) {
-
+        startActivityWithClassName(MedicalHistoryActivity.class);
     }
 
     public void onMessageCenterClicked(View view) {

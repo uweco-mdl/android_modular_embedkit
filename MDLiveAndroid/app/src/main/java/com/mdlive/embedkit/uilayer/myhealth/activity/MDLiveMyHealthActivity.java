@@ -11,13 +11,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifeStyleFragment;
 import com.mdlive.embedkit.uilayer.mdliveassist.MDLiveAssistFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.GetFamilyMemberFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.MyProfileFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.ViewCreditCard;
-import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
-import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
 
 /**
  * Created by sanjibkumar_p on 7/28/2015.

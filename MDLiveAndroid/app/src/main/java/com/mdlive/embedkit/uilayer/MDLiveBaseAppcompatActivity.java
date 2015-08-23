@@ -237,4 +237,9 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         editor.putLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
         editor.commit();
     }
+
+    private String getLockType() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, MODE_PRIVATE);
+        return preferences.getString(PreferenceConstants.SIGN_IN, "Pin");
+    }
 }

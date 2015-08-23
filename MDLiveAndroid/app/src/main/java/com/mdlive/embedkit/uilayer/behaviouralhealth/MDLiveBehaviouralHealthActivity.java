@@ -3,16 +3,13 @@ package com.mdlive.embedkit.uilayer.behaviouralhealth;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
-import com.embedkit.wrapper.R;
+
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
@@ -83,7 +80,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         switch (position) {
             // Home
             case 0:
-
+                startActivityWithClassName(MDLiveGetStarted.class);
                 break;
 
             // See a Doctor
