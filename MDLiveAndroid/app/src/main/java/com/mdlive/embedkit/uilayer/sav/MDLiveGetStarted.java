@@ -177,20 +177,19 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                             }
                             editor.commit();
 
-                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
-                            startActivity(intent);
-                            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
-
-                            /*if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
-                                editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
-                                        .replace("-", ""));
+                            if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
+                                String phoneNumberText = phonrNmberEditTxt.getText().toString();
+                                phoneNumberText = phoneNumberText.replace("(", "");
+                                phoneNumberText = phoneNumberText.replace(")", "");
+                                phoneNumberText = phoneNumberText.replace(" ", "");
+                                editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 clearCacheInVolley();
                                 Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                 startActivity(intent);
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             } else {
                                 MdliveUtils.alert(pDialog, MDLiveGetStarted.this, getString(R.string.valid_phone_number));
-                            }*/
+                            }
 
                         }
 

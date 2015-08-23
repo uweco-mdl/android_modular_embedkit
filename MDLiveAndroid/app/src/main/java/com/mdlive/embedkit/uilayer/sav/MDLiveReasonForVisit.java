@@ -512,6 +512,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         data.put("id", jsonObject.getInt("id"));
                         data.put("uploaded_at", jsonObject.getString("uploaded_at"));
                         listDatas.add(data);
+                        if(i == 7){
+                            i = recordsArray.length();
+                        }
                     }
 
                     if (recordsArray.length() >= 8) {
@@ -532,7 +535,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
                             int width = dm.widthPixels;
                             gridview.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    (width / 2) + 100));
+                                    (width / 2) + 150));
                         } else if (recordsArray.length() > 0) {
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -755,7 +758,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     if(recordsArray != null){
                         for(int i =0; i<recordsArray.length(); i++){
                             JSONObject jsonObject = recordsArray.getJSONObject(i);
-                            if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null) {
+                            if(i == 7){
+                                i = recordsArray.length();
+                            }else if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null) {
                                 hasPendingDownloads = true;
                                 i = recordsArray.length();
                             }
