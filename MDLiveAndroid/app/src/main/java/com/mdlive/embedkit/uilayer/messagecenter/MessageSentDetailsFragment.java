@@ -85,14 +85,7 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
 
         final View replyView = view.findViewById(R.id.fragment_message_reply_image_view);
         if (replyView != null) {
-            replyView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (getActivity() != null && getActivity() instanceof  MessageCenterInboxDetailsActivity) {
-                        ((MessageCenterInboxDetailsActivity) getActivity()).onReplyClicked(sentMessage);
-                    }
-                }
-            });
+            replyView.setVisibility(View.GONE);
         }
 
         final TextView detailsTextView = (TextView) view.findViewById(R.id.fragment_message_received_details_text_view);
