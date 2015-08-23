@@ -631,8 +631,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
                 try {
                     String numStr = personalInfo.getString("phone");
-                    String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
-                    phonrNmberEditTxt.setText(formattedString);
+                    if(numStr != null){
+                        numStr.replace("-", "");
+                        numStr.replace("(", "");
+                        numStr.replace(")", "");
+                        numStr.replace(" ", "");
+                    }
+                    phonrNmberEditTxt.setText(numStr);
                 } catch (Exception e) {
                 }
             }

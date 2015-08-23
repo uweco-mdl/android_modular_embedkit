@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -26,6 +29,19 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string));
 
         setProgressBar(findViewById(R.id.progressDialog));
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
@@ -41,6 +57,34 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
         ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
+    }
+
+    public void leftBtnOnClick(View v){
+    }
+
+    public void rightBtnOnClick(View view){
+        showProgress();
+        String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
+        NetworkSuccessListener successListener = new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgress();
+                Intent intent = new Intent(getApplicationContext(), MDLiveDashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        };
+
+        NetworkErrorListener errorListner = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
+            }
+        };
+        SummaryService summaryService = new SummaryService(this, pDialog );
+        summaryService.sendRating(rating,successListener,errorListner );
     }
 
     /**

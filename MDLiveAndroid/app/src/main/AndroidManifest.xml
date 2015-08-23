@@ -107,7 +107,9 @@
             android:name=".uilayer.sav.MDLiveReasonForVisit"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"
+            />
         <activity
             android:name=".uilayer.sav.MDLiveLocation"
             android:screenOrientation="portrait"
