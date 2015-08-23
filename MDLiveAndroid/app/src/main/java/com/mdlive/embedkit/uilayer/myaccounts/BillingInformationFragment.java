@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,9 +90,19 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
             @Override
             public void onClick(View view) {
                 Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
+
                 changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
-                changePhone.putExtra("Credit_Card_Response",myProfile.toString());
-                changePhone.putExtra("Credit_Card_View","replace");
+                if((mReplaceCreditCard.getText().toString()).equalsIgnoreCase("Add a new credit card"))
+                {
+//                    changePhone.putExtra("Fragment_Name","ADD CREDIT CARD");
+                    changePhone.putExtra("Credit_Card_View","Add");
+                    changePhone.putExtra("Credit_Card_Response","Add_New");
+                }
+                else
+                {
+                    changePhone.putExtra("Credit_Card_View","replace");
+                    changePhone.putExtra("Credit_Card_Response",myProfile.toString());
+                }
                 startActivityForResult(changePhone, 1);
             }
         });
@@ -155,30 +167,41 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
+        Log.i("response", response.toString());
         try {
 
-             myProfile = response.getJSONObject("billing_information");
+                if(response !=null) {
+                    myProfile = response.getJSONObject("billing_information");
 
-            country = myProfile.getString("billing_country");
-            cardExpirationYear = myProfile.getString("cc_expyear");
-            nameOnCard = myProfile.getString("billing_name");
+                    country = myProfile.getString("billing_country");
+                    cardExpirationYear = myProfile.getString("cc_expyear");
+                    nameOnCard = myProfile.getString("billing_name");
 
-            zip = myProfile.getString("billing_zip5");
-            securityCode = myProfile.getString("cc_cvv2");
-            cardNumber = myProfile.getString("cc_number");
-            state = myProfile.getString("billing_state");
+                    zip = myProfile.getString("billing_zip5");
+                    securityCode = myProfile.getString("cc_cvv2");
+                    cardNumber = myProfile.getString("cc_number");
+                    state = myProfile.getString("billing_state");
 //            mobile = myProfile.getString("cc_type_id");
-            address2 = myProfile.getString("billing_address2");
-            city = myProfile.getString("billing_city");
-            address1 = myProfile.getString("billing_address1");
-            cardExpirationMonth = myProfile.getString("cc_expmonth");
+                    address2 = myProfile.getString("billing_address2");
+                    city = myProfile.getString("billing_city");
+                    address1 = myProfile.getString("billing_address1");
+                    cardExpirationMonth = myProfile.getString("cc_expmonth");
 
 //            mViewCreditCard.setText("Visa ending in " + cardExpirationMonth + "/" + cardExpirationYear + "\n" + "Billing Address : " + nameOnCard + "\n" + address1 + address2 + "\n" +
 //                    city + ", " + state + "\n" + country);
-
-            mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear );
-            mCreditCardAddress.setText("Billing Address:" + "\n" +address1+ " " + address2 + "\n" +
-                    city + ", " + state + "\n" + country);
+                    if(TextUtils.isEmpty(cardNumber) && TextUtils.isEmpty(securityCode) && TextUtils.isEmpty(cardExpirationMonth) && TextUtils.isEmpty(cardExpirationYear) && TextUtils.isEmpty(nameOnCard)  )
+                    {
+                        mReplaceCreditCard.setText("Add a new credit card");
+                        mviewCreditCard.setVisibility(View.GONE);
+                    }
+                    else {
+                        mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear);
+                        mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
+                                city + ", " + state + "\n" + country);
+                        mReplaceCreditCard.setText("Replace credit card");
+                        mviewCreditCard.setVisibility(View.VISIBLE);
+                    }
+                }
 
         } catch (JSONException e) {
             e.printStackTrace();

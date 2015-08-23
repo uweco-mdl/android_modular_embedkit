@@ -36,7 +36,7 @@ import java.util.Calendar;
 /**
  * Created by venkataraman_r on 6/22/2015.
  */
-public class CreditCardInfoFragment extends Fragment{
+public class CreditCardInfoFragment extends Fragment {
 
     private EditText mCardNumber = null;
     private EditText mSecurityCode = null;
@@ -65,25 +65,26 @@ public class CreditCardInfoFragment extends Fragment{
     private ToggleButton changeAddress;
     RelativeLayout mAddressVisibility;
 
-    public static CreditCardInfoFragment newInstance(String response,String view) {
+    public static CreditCardInfoFragment newInstance(String response, String view) {
         final CreditCardInfoFragment cardInfo = new CreditCardInfoFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("Response", response);
-            bundle.putString("View",view);
-            cardInfo.setArguments(bundle);
+        Bundle bundle = new Bundle();
+        bundle.putString("Response", response);
+        bundle.putString("View", view);
+        cardInfo.setArguments(bundle);
         return cardInfo;
     }
 
     public CreditCardInfoFragment() {
         super();
     }
+
     String response;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View billingInformation = inflater.inflate(R.layout.fragments_billing_info,null);
+        View billingInformation = inflater.inflate(R.layout.fragments_billing_info, null);
 
         init(billingInformation);
 
@@ -91,35 +92,35 @@ public class CreditCardInfoFragment extends Fragment{
 
     }
 
-    public void init(View billingInformation)
-    {
-        mCardNumber = (EditText)billingInformation.findViewById(R.id.cardNumber);
-        mSecurityCode = (EditText)billingInformation.findViewById(R.id.securityCode);
-        mCardExpirationMonth = (TextView)billingInformation.findViewById(R.id.expirationDate);
+    public void init(View billingInformation) {
+        mCardNumber = (EditText) billingInformation.findViewById(R.id.cardNumber);
+        mSecurityCode = (EditText) billingInformation.findViewById(R.id.securityCode);
+        mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
-        mNameOnCard = (EditText)billingInformation.findViewById(R.id.nameOnCard);
-        mAddress1 = (EditText)billingInformation.findViewById(R.id.addressLine1);
-        mAddress2 = (EditText)billingInformation.findViewById(R.id.addressLine2);
-        mCity = (EditText)billingInformation.findViewById(R.id.city);
-        mState = (EditText)billingInformation.findViewById(R.id.state);
-        mZip = (EditText)billingInformation.findViewById(R.id.zip);
-        changeAddress = (ToggleButton)billingInformation.findViewById(R.id.addressChange);
-        mAddressVisibility =(RelativeLayout)billingInformation.findViewById(R.id.addressVisibility);
+        mNameOnCard = (EditText) billingInformation.findViewById(R.id.nameOnCard);
+        mAddress1 = (EditText) billingInformation.findViewById(R.id.addressLine1);
+        mAddress2 = (EditText) billingInformation.findViewById(R.id.addressLine2);
+        mCity = (EditText) billingInformation.findViewById(R.id.city);
+        mState = (EditText) billingInformation.findViewById(R.id.state);
+        mZip = (EditText) billingInformation.findViewById(R.id.zip);
+        changeAddress = (ToggleButton) billingInformation.findViewById(R.id.addressChange);
+        mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         changeAddress.setChecked(false);
 
 //        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
-         response = getArguments().getString("Response");
 
-        if(response != null)
-        {
-            if(getArguments().getString("View").equalsIgnoreCase("view")) {
-                if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
-                    ((MyAccountsHome) getActivity()).hideTick();
+        if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
+            response = getArguments().getString("Response");
+            if (response != null) {
+                if (getArguments().getString("View").equalsIgnoreCase("view")) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                    mAddressVisibility.setVisibility(View.GONE);
                 }
-                mAddressVisibility.setVisibility(View.GONE);
-            }
+
                 try {
                     Log.i("response", response);
                     JSONObject myProfile = new JSONObject(response);
@@ -152,16 +153,20 @@ public class CreditCardInfoFragment extends Fragment{
                     e.printStackTrace();
                 }
 
+            }
         }
-
+        else
+        {
+            mCardNumber.setEnabled(true);
+        }
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
 
-                int y = c.get(Calendar.YEAR)+4;
-                int m = c.get(Calendar.MONTH)-2;
+                int y = c.get(Calendar.YEAR) + 4;
+                int m = c.get(Calendar.MONTH) - 2;
                 int d = c.get(Calendar.DAY_OF_MONTH);
                 final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
@@ -192,7 +197,7 @@ public class CreditCardInfoFragment extends Fragment{
 
                     SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
 
-                        String name = prefs.getString("Profile_Address", "");
+                    String name = prefs.getString("Profile_Address", "");
                     try {
                         JSONObject myProfile = new JSONObject(name);
                         mAddress1.setText(myProfile.getString("address1"));
@@ -200,9 +205,7 @@ public class CreditCardInfoFragment extends Fragment{
                         mCity.setText(myProfile.getString("country"));
                         mState.setText(myProfile.getString("state"));
                         mZip.setText(myProfile.getString("zipcode"));
-                    }
-                    catch(Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -217,8 +220,7 @@ public class CreditCardInfoFragment extends Fragment{
         });
     }
 
-    public void addCreditCardInfo()
-    {
+    public void addCreditCardInfo() {
         cardNumber = mCardNumber.getText().toString();
         securityCode = mSecurityCode.getText().toString();
         nameOnCard = mNameOnCard.getText().toString();
@@ -229,8 +231,7 @@ public class CreditCardInfoFragment extends Fragment{
         country = "1";
         zip = mZip.getText().toString();
 
-        if(isEmpty(cardNumber)&& isEmpty(securityCode)&& isEmpty(cardExpirationMonth)&& isEmpty(nameOnCard)&& isEmpty(address1)&& isEmpty(address2)&& isEmpty(city)&& isEmpty(state)&& isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country))
-        {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -250,21 +251,17 @@ public class CreditCardInfoFragment extends Fragment{
 
                 parent.put("billing_information", jsonObject);
                 loadBillingInfo(parent.toString());
-                Log.i("ADD Credit Card",parent.toString());
-            }
-            catch (JSONException e) {
+                Log.i("ADD Credit Card", parent.toString());
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
-            Toast.makeText(getActivity(),"All fields are required",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public Boolean isEmpty(String cardInfo)
-    {
-        if(!TextUtils.isEmpty(cardInfo))
+    public Boolean isEmpty(String cardInfo) {
+        if (!TextUtils.isEmpty(cardInfo))
             return true;
         return false;
     }
@@ -288,21 +285,18 @@ public class CreditCardInfoFragment extends Fragment{
                 pDialog.dismiss();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, getActivity());
                 }
             }
         };
 
-        if(response == null) {
-            AddCreditCardInfoService service = new AddCreditCardInfoService(getActivity(), null);
-            service.addCreditCardInfo(successCallBackListener, errorListener, params);
-        }
-        else
-        {
+        if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             ReplaceCreditCardService service = new ReplaceCreditCardService(getActivity(), null);
             service.replaceCreditCardInfo(successCallBackListener, errorListener, params);
+        } else {
+            AddCreditCardInfoService service = new AddCreditCardInfoService(getActivity(), null);
+            service.addCreditCardInfo(successCallBackListener, errorListener, params);
         }
     }
 
