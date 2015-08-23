@@ -27,7 +27,7 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
 
         if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.adapter_provider, parent, false);
+            convertView = inflater.inflate(R.layout.new_adapter_layout, parent, false);
 
             viewHolder = new ViewHolder();
             viewHolder.mCircularNetworkImageView = (CircularNetworkImageView) convertView.findViewById(R.id.adapter_provider_image_view);
@@ -41,7 +41,7 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
-        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.last_visit) + MdliveUtils.getLastVisit(getItem(position).lastAppointment));
+        viewHolder.mTextViewBottom.setText("Provider since: " + getItem(position).providerSince);
 
         return convertView;
     }

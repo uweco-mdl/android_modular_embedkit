@@ -1,45 +1,41 @@
-package com.mdlive.embedkit.uilayer.login;
+package com.mdlive.embedkit.uilayer.familyhistory;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthFragment;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
-import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
+import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
-/**
- * Created by dhiman_da on 8/6/2015.
- */
-public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements OnEmailConfirmationClicked, NotifyDashboard, OnNotificationCliked {
-    private static final String DIALOG_FRAGMENT = "dialog_fragment";
+public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_activity_dashboard);
-
+        setContentView(R.layout.mdlive_lifestyle_activity);
+        MDLiveConfig.setData(3);
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-
+        toolbar.setTitle("FAMILY HISTORY");
         User user = null;
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
@@ -48,7 +44,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.dash_board__main_container, MDLiveDashBoardFragment.newInstance(), MAIN_CONTENT).
+                    add(R.id.dash_board__main_container, MDLiveFamilyFragment.newInstance(), MAIN_CONTENT).
                     commit();
 
             getSupportFragmentManager().
@@ -63,15 +59,13 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        return;
-    }
-
     /* On Email Unconfirmed Click listener */
     public void onEmailUnconfirmClicked(View view) {
-        final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
-        dialogFragment.show(getSupportFragmentManager(), DIALOG_FRAGMENT);
+        getSupportFragmentManager().
+                beginTransaction().
+                addToBackStack(MAIN_CONTENT).
+                replace(R.id.dash_board__main_container, EmailConfirmFragment.newInstance()).
+                commit();
     }
 
     /**
@@ -163,35 +157,5 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onSignoutClicked(View view) {
 
-    }
-    /* End of Dashboard icons click listener */
-
-    @Override
-    public void onEmailConfirmationClicked() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
-        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
-            ((MDLiveDashBoardFragment) fragment).loadEmailConfirmationService();
-        }
-    }
-
-    @Override
-    public void onShowNofifyDashboard(Appointment appointment) {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
-        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
-            ((MDLiveDashBoardFragment) fragment).showNotification(appointment);
-        }
-    }
-
-    @Override
-    public void onHideNotifyDashboard() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
-        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
-            ((MDLiveDashBoardFragment) fragment).hideNotification();
-        }
-    }
-
-    @Override
-    public void onNotificationClicked(Appointment appointment) {
-        onAppointmentClicked(appointment);
     }
 }

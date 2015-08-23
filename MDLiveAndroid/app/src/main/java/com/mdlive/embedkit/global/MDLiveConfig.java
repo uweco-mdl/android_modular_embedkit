@@ -92,6 +92,7 @@ public class MDLiveConfig {
     private static final String URL_MESSAGES_READ_TYPE = "?msg_type=";
     private static final String URL_MY_RECORDS = "/customer/records";
     private static final String URL_UPLOAD_DOCUMENT = "/customer/upload_document";
+    private static final String URL_CONSULTATION_HISTORY = "/customer/consultation_history";
 
     // URLS for BEHAVIOURAL section
     public static final String URL_BEHAVIOURAL_HISTORY = "/behavioral_histories";
@@ -256,6 +257,8 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_UPDATE_BEHAVIOURAL_HISTORY = URL_UPDATE_BEHAVIOURAL_HISTORY;
 
         AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
+
+        AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
     }
     /*
     private static final String BASE_URL = "https://stage-members.mdlive.com/services";

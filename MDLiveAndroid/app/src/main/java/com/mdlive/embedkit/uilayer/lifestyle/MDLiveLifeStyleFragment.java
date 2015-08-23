@@ -48,7 +48,6 @@ public class MDLiveLifeStyleFragment extends Fragment {
     private EditText mWeightLbsEditText;
     private TextView mBmiText;
     private ListView mListView;
-    private LinearLayout lifestyle_question_linearlayout;
     private TextView life_style_question_text;
     private RadioGroup radioGroup;
     private RadioButton yesRadioButton;
@@ -104,7 +103,6 @@ public class MDLiveLifeStyleFragment extends Fragment {
         mBmiText = (TextView) view.findViewById(R.id.life_style_bmi_value_text);
         mListView = (ListView) view.findViewById(R.id.lifestyle_listview);
 
-        lifestyle_question_linearlayout = (LinearLayout) view.findViewById(R.id.lifestyle_question_linearlayout);
     }
 
     @Override
@@ -154,26 +152,28 @@ public class MDLiveLifeStyleFragment extends Fragment {
         try {
             setInfoVisibilty();
             Log.d("LifeStyle Response", response.toString());
+            Log.d("LifeStyle Response", response.getInt("height_feet") + "");
 
-            mHeightFtEditText.setText(response.getString("height_feet"));
-            mHeightInEditText.setText(response.getString("height_inches"));
-            mWeightLbsEditText.setText(response.getString("weight"));
-
+            mHeightFtEditText.setText(response.getInt("height_feet") + "ft");
+            mHeightInEditText.setText(response.getInt("height_inches") + "in");
+            mWeightLbsEditText.setText(response.getInt("weight") + "lbs");
+            Log.d("LifeStyle Response", response.toString());
             JSONArray lifestyleConditionArray = response.getJSONArray("life_style_conditions");
             JSONObject jsonObject;
 
             List<Model> lifeStyleModels = new ArrayList<Model>();
-
             for (int i = 0; i < lifestyleConditionArray.length(); i++) {
                 jsonObject = lifestyleConditionArray.getJSONObject(i);
-                lifeStyleModels.add(new Model(Integer.parseInt(jsonObject.getString("id")), jsonObject.getString("condition"), jsonObject.getString("active")));
+                lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"), jsonObject.getString("active")));
+                Log.d("Adapter --->", "Here111");
 
             }
-
+            Log.d("Adapter --->", lifeStyleModels.toString() + "");
             adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels);
             mListView.setAdapter(adapter);
 
         } catch (Exception e) {
+            Log.e("Error  --->", e.getMessage());
             e.printStackTrace();
         }
 

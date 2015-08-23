@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by sanjibkumar_p on 7/24/2015.
  */
-public class MDLiveBehaviouralHealthFragment extends Fragment {
+public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     private BehavioralHistory mBehavioralHistory;
 
     private ProgressBar mProgressBar;

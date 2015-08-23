@@ -300,6 +300,19 @@
             android:theme="@style/AppTheme">
         </activity>
 -->
+        <activity
+            android:name=".uilayer.myhealth.ProviderDetailsActivity"
+            android:label="@string/title_activity_provider_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"  >
+        </activity>
+
+        <activity
+            android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
+            android:label="@string/title_activity_provider_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"  >
+        </activity>
     </application>
 
 </manifest>

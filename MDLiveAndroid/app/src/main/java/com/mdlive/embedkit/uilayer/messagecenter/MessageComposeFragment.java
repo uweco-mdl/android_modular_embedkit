@@ -19,6 +19,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationControl
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SendMessage;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Message;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
@@ -82,9 +83,12 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
         } else if (parcelable instanceof SentMessage) {
             url = ((SentMessage) parcelable).providerImageUrl;
             to = ((SentMessage) parcelable).from;
-        } else {
+        } else if (parcelable instanceof MyProvider) {
             url = ((MyProvider) parcelable).providerImageUrl;
             to = ((MyProvider) parcelable).name;
+        } else {
+            url = ((ConsultationHistory) parcelable).getProviderImageUrl();
+            to = ((ConsultationHistory) parcelable).getProviderName();
         }
 
         final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.image_view);
@@ -168,8 +172,10 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
             destinationUserId = ((ReceivedMessage) parcelable).providerId;
         } else if (parcelable instanceof SentMessage) {
             destinationUserId =((SentMessage) parcelable).providerId;
-        } else {
+        } else if (parcelable instanceof MyProvider) {
             destinationUserId = ((MyProvider) parcelable).providerId;
+        } else {
+            destinationUserId = ((ConsultationHistory) parcelable).getProviderId();
         }
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
