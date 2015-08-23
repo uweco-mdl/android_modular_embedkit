@@ -766,6 +766,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     hasPendingDownloads = true;
                 }
                 if(hasPendingDownloads && loadImageService != null && !loadImageService.isCancelled()){
+                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
                     loadImageService = new loadDownloadedImages();
                     loadImageService.execute();
                 }else{

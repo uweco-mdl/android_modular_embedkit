@@ -100,6 +100,13 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLiveMakeAppmtrequest.this);
         onBackPressed();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MdliveUtils.closingActivityAnimation(MDLiveMakeAppmtrequest.this);
     }
 
     public void rightBtnOnClick(View v){
@@ -250,6 +257,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 Intent intent = new Intent(MDLiveMakeAppmtrequest.this,MDLiveAppointmentThankYou.class);
                 startActivity(intent);
                 finish();
+                MdliveUtils.startActivityAnimation(MDLiveMakeAppmtrequest.this);
             }
         };
 

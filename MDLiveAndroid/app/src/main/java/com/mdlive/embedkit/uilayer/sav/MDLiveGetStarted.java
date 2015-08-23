@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -66,8 +65,8 @@ import java.util.List;
 
 public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
-    private TextView locationTxt,DateTxt;/*,genderText*/
-    private String birthDate;
+    private TextView locationTxt;/*,genderText*/
+    private String DateTxt;
     private String strPatientName,SavedLocation;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
@@ -83,21 +82,22 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
-        MdliveUtils.hideSoftKeyboard(this);
-
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                showHamburgerTick();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.get_started));
 
+        //((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        //((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.get_started_txt));
+
+        MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         clearCacheInVolley();
         loadUserInformationDetails();
@@ -116,15 +116,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        return;
-    }
-
-    public void leftBtnOnClick(View v){
-        MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
-        onBackPressed();
-    }
 
     /**
      *
@@ -137,7 +128,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
      *
      */
 
-    public void rightBtnOnClick(View v){
+    public void onTickClicked(View v){
         saveDateOfBirth();
         try{
             Log.e("Arkansas",locationTxt.getText().toString());
@@ -185,7 +176,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                                 editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
                             }
                             editor.commit();
-                            if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
+
+                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
+                            startActivity(intent);
+                            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+
+                            /*if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString()
                                         .replace("-", ""));
                                 clearCacheInVolley();
@@ -194,7 +190,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             } else {
                                 MdliveUtils.alert(pDialog, MDLiveGetStarted.this, getString(R.string.valid_phone_number));
-                            }
+                            }*/
 
                         }
 
@@ -218,19 +214,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
-        //DateTxt = (TextView) findViewById(R.id.dobTxt);
-//        genderText= (TextView) findViewById(R.id.txt_gender);
+
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         providerTypeArrayList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
 
-        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveGetStarted.this);
-                onBackPressed();
-            }
-        });
+
 
     }
     /**
@@ -555,7 +544,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
             }};
         ProviderTypeList services = new ProviderTypeList(MDLiveGetStarted.this, null);
-        services.getProviderType("",successCallBackListener, errorListener);
+        services.getProviderType("", successCallBackListener, errorListener);
     }
     /**
      * Load Family Member Type Details.
@@ -586,28 +575,28 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
     }
 
-                                private void loadDependentProviderTypeDetails(String depenedentId) {
-                                showProgress();
-                                NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+    private void loadDependentProviderTypeDetails(String depenedentId) {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                    Log.e("ptype Response", response.toString());
-                                    hideProgress();
-                                    handleproviderTypeSuccessResponse(response);
-                                    }
-                                    };
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("ptype Response", response.toString());
+                hideProgress();
+                handleproviderTypeSuccessResponse(response);
+            }
+        };
 
-                                    NetworkErrorListener errorListener = new NetworkErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                    Log.d("Response", error.toString());
-                                    hideProgress();
-                                    MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
-                                    }};
-                                    ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
-                                    ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
-                                    }
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Response", error.toString());
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+            }};
+        ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
+        ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
+    }
 
 
     /**
@@ -627,8 +616,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
 
-                birthDate = personalInfo.getString("birthdate");
-                //DateTxt.setText(personalInfo.getString("birthdate"));
                 for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
                     if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
                         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -639,12 +626,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                         locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
                     }
                 }
-//                genderText.setText(personalInfo.getString("gender"));
-                String numStr = personalInfo.getString("phone");
+
+                phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
+                phonrNmberEditTxt.addTextChangedListener(watcher);
+
                 try {
+                    String numStr = personalInfo.getString("phone");
                     String formattedString= MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
-                    phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
-                    phonrNmberEditTxt.addTextChangedListener(watcher);
                     phonrNmberEditTxt.setText(formattedString);
                 } catch (Exception e) {
                 }
@@ -661,8 +649,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
-            editor.putString(PreferenceConstants.PROVIDER_TYPE, ((TextView)findViewById(R.id.providertypeTxt)).getText().toString());
-            editor.putString(PreferenceConstants.PHONE_NUMBER, phonrNmberEditTxt.getText().toString());
             editor.commit();
             hideProgress();
             handleSuccessResponseFamilyMember(response);
@@ -681,36 +667,39 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(mayIallowtoParse){
+                formatDualString(s.toString());
+            }
         }
         @Override
         public void afterTextChanged(Editable s) {
-            if(mayIallowtoParse){
-                mayIallowtoParse = true;
-                if(s.length() > lastIndex){
-                    if(s.length() == 3 || s.length() == 7){
-                        phonrNmberEditTxt.setText(phonrNmberEditTxt.getText().toString() + "-");
-                    }
-                    lastIndex = s.length();
-                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
-
-                }else if(s.length() < lastIndex){
-                    if(s.length() == 4 || s.length() == 8){
-                        phonrNmberEditTxt.setText(phonrNmberEditTxt.getText().toString().substring
-                                (0, phonrNmberEditTxt.getText().toString().length() - 1));
-                    }
-                    lastIndex = s.length();
-                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
-                }else if(s.length() != 12 && (s.length() == lastIndex) && lastIndex == 4){
-                    mayIallowtoParse = false;
-                    String temp = phonrNmberEditTxt.getText().toString().substring(0, s.length()-1) + "-"+s.charAt(s.length()-1);
-                    phonrNmberEditTxt.setText(temp);
-                    lastIndex = temp.length() - 1;
-                    mayIallowtoParse = true;
-                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
-                }
-            }
         }
     };
+
+    public void formatDualString(String formatText){
+        boolean hasParenthesis = false;
+        if(formatText.indexOf(")") > 0){
+            hasParenthesis = true;
+        }
+        formatText= formatText.replace("(", "");
+        formatText= formatText.replace(")", "");
+        formatText= formatText.replace(" ", "");
+        if(formatText.length() > 10){
+            formatText = formatText.substring(0, formatText.length()-1);
+        }
+        if(formatText.length() >= 7){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+        }else if(formatText.length() >= 4){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
+        }else if(formatText.length() == 3 && hasParenthesis){
+            formatText = "("+formatText.substring(0, formatText.length())+")";
+        }
+        mayIallowtoParse = false;
+        phonrNmberEditTxt.setText(formatText);
+        phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
+        mayIallowtoParse = true;
+    }
+
     /**
      *
      *  Successful Response Handler for Provider Type Info.The Provider type info will provider the gender
@@ -732,7 +721,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                     providerTypeArrayList.add(value.toString());
 
 
-                    Log.e("ptype keys",value.toString());
+                    Log.e("ptype keys",key);
                 } catch (JSONException e) {
                     // Something went wrong!
                 }
@@ -794,8 +783,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             JSONObject personalInfo = response.getJSONObject("personal_info");
             dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JSONObject notiObj=response.getJSONObject("notifications");
-            birthDate = personalInfo.getString("birthdate");
-            //DateTxt.setText(personalInfo.getString("birthdate"));
+            DateTxt = personalInfo.getString("birthdate");
             locationTxt.setText(personalInfo.getString("city")+" ,"+personalInfo.getString("state"));
             String state = personalInfo.getString("state");
             if(state.length()<3) {
@@ -821,7 +809,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             }
 
             locationTxt.setText(state);
-            //genderText.setText(personalInfo.getString("gender"));
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -956,11 +943,22 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private void saveDateOfBirth() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(PreferenceConstants.DATE_OF_BIRTH, birthDate);
+        editor.putString(PreferenceConstants.DATE_OF_BIRTH, DateTxt);
         editor.putString(PreferenceConstants.LOCATION, SavedLocation);
         editor.commit();
     }
 
+    /**
+     * This function is for calling the Closing Activity Animation
+     */
+    @Override
+    public void onBackPressed() {
+    }
+
+    private void showHamburgerTick() {
+        findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
+        findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
+    }
 }
 
 

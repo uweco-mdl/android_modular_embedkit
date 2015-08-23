@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by sudha_s on 8/23/2015.
@@ -37,23 +35,28 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.INVISIBLE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string));
-        ((TextView) findViewById(R.id.headerTxt)).setGravity(Gravity.LEFT);
+
 
         getPreferenceValue();
     }
 
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     public void rightBtnOnClick(View view){
         Intent Reasonintent = new Intent(MDLiveAppointmentThankYou.this,MDLiveDashboardActivity.class);
         Reasonintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(Reasonintent);
-        MdliveUtils.startActivityAnimation(MDLiveAppointmentThankYou.this);
     }
 
     public void leftBtnOnClick(View view){
+
     }
 
 

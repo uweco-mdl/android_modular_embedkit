@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -84,12 +83,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         getConditionsOrAllergiesData();
     }
 
+
     /**
      * This function handles onClick event of done text in layout
      * saveBtnAction - is used to add new condition/allergy/medication
      */
     public void rightBtnOnClick(View view){
-        ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
         saveBtnAction();
     }
 

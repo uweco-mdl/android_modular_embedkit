@@ -89,7 +89,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details));
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
