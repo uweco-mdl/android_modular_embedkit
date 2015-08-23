@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -308,6 +309,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                         });
                     } else {
                         logD("Dependent Users", "" + user.mMode + ", " + user.mName);
+                        view.findViewById(R.id.drawer_user_row_down_image_view).setVisibility(View.GONE);
                         mAllUserLinearLayout.addView(view);
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -389,6 +391,11 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
                 ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)).setText(user.mName);
                 ((CircularNetworkImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_circular_image_view)).setImageUrl(user.mImageUrl, ApplicationController.getInstance().getImageLoader(mSelectedUserLinearLayout.getContext()));
+                if (mIsExpanded) {
+                    ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view)).setImageResource(R.drawable.arrow_up_black);
+                } else {
+                    ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view)).setImageResource(R.drawable.arrow_down_black);
+                }
                 mSelectedUserLinearLayout.setTag(user);
 
                 if (load) {

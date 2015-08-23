@@ -86,7 +86,7 @@ public class MDLiveConfig {
     private static final String URL_GET_RECEIVED_MESSAGES = "/messages/received_messages";
     private static final String URL_GET_SENT_MESSAGES = "/messages/sent_messages";
     private static final String URL_PROVIDER = "/providers";
-    private static final String URL_COMPOSE_MESSAGE = "/messages/:";
+    private static final String URL_COMPOSE_MESSAGE = "/messages/";
     private static final String URL_MESSAGES_READ = "/messages/";
     private static final String URL_MESSAGES_READ_TYPE = "?msg_type=";
     private static final String URL_MY_RECORDS = "/customer/records";
