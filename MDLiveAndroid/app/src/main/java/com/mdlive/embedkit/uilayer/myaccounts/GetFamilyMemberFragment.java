@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -64,14 +65,21 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
         TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
+        lv.addFooterView(v);
+
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
-                changePhone.putExtra("Fragment_Name","Add FAMILY MEMBER");
-                startActivityForResult(changePhone, 3);
-
+                if(nameList.size() <= IntegerConstants.ADD_CHILD_SIZE) {
+                    Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
+                    changePhone.putExtra("Fragment_Name", "Add FAMILY MEMBER");
+                    startActivityForResult(changePhone, 3);
+                }
+                else
+                {
+                    MdliveUtils.showAddChildExcededDialog(getActivity());
+                }
             }
         });
     }
@@ -128,13 +136,8 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 nameList.add(name);
                 urlList.add(url);
             }
-//            values.put("NAME", nameList);
-//            values.put("URL", urlList);
 
             lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList));
-
-
-            lv.addFooterView(v);
 
         } catch (JSONException e) {
             e.printStackTrace();

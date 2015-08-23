@@ -2,8 +2,10 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,12 +21,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -65,7 +69,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null;
     private JSONObject myProfile;
-
+    SharedPreferences sharedPref;
     public static MyProfileFragment newInstance() {
         final MyProfileFragment myProfileFragment = new MyProfileFragment();
         return myProfileFragment;
@@ -162,6 +166,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mPreferredSignIn.setText(items[item]);
+                        sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor1 = sharedPref.edit();
+                        editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
+                        editor1.commit();
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -229,12 +237,24 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mobile = myProfile.getString("cell");
             timeZone = myProfile.getString("timezone");
 
-            JSONObject securityQuestion = myProfile.getJSONObject("security");
-            securityQuestion1 = securityQuestion.getString("question1");
-            securityQuestion2 = securityQuestion.getString("question2");
-            answer1 = securityQuestion.getString("answer1");
-            answer2 = securityQuestion.getString("answer2");
+            sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("Profile_Address", myProfile.toString());
+            editor.commit();
 
+
+
+            try {
+                JSONObject securityQuestion = myProfile.getJSONObject("security");
+                securityQuestion1 = securityQuestion.getString("question1");
+                securityQuestion2 = securityQuestion.getString("question2");
+                answer1 = securityQuestion.getString("answer1");
+                answer2 = securityQuestion.getString("answer2");
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
             mProfileName.setText(profileName);
             mUserDOB.setText(userDOB);
             mGender.setText(gender);
@@ -245,6 +265,13 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mEmail.setText(email);
             mPreferredSignIn.setText("Pin");
             mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
+
+            sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = sharedPref.edit();
+            editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
+            editor1.commit();
+
+
         }
         catch(JSONException e)
         {
@@ -378,6 +405,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private void handleChangeProfilePicSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
+            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

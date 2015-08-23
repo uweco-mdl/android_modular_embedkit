@@ -233,7 +233,8 @@
         <activity
             android:name=".uilayer.myaccounts.MyAccountActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"/>
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
             android:screenOrientation="portrait"
@@ -273,9 +274,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
 
-        <activity android:name=".uilayer.myaccounts.MyAccountsHome"
+        <activity
+            android:name=".uilayer.myaccounts.MyAccountsHome"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity
+            android:name=".uilayer.myaccounts.AddFamilyMemberActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden"/>
+
         <!--
            &lt;!&ndash; From Unified Middle ware&ndash;&gt;
            <application android:allowBackup="true" android:name="com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController">

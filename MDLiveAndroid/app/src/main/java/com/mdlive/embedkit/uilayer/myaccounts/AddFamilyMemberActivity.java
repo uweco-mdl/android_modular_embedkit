@@ -1,7 +1,9 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +27,10 @@ import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoServi
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by venkataraman_r on 8/22/2015.
@@ -39,11 +45,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
     private EditText mLastName = null;
     private EditText mAddress1 = null;
     private EditText mCity = null;
-    private EditText mState = null;
+    private TextView mState = null;
 
     private EditText mPhone = null;
-    private EditText mDOB = null;
-    private EditText mGender = null;
+    private TextView mDOB = null;
+    private TextView mGender = null;
 
     private String Username = null;
     private String Email = null;
@@ -58,7 +64,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
     private String DOB = null;
     private String Gender = null;
-
+    private List<String> stateIds = new ArrayList<String>();
+    private List<String> stateList = new ArrayList<String>();
+    private RelativeLayout mStateLayout,mDOBLayout,mGenderLayout;
 
     private ProgressDialog pDialog;
 
@@ -94,7 +102,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             }
         });
 
-        mDOB.setOnClickListener(new View.OnClickListener() {
+        mDOBLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
@@ -104,7 +112,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
                 int d = c.get(Calendar.DAY_OF_MONTH);
                 final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-                DatePickerDialog dp = new DatePickerDialog(getBaseContext(),
+                DatePickerDialog dp = new DatePickerDialog(AddFamilyMemberActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -124,14 +132,35 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             }
         });
 
-        mGender.setOnClickListener(new View.OnClickListener() {
+        mStateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initializeStateDialog();
+            }
+        });
+
+        mGenderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                final CharSequence[] items = {
+                        "Male", "Female"
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddFamilyMemberActivity.this);
+                builder.setTitle("Make your selection");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        mGender.setText(items[item]);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
-    }
 
+
+    }
     public void init()
     {
         mUsername = (EditText)findViewById(R.id.userName);
@@ -143,12 +172,14 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         mAddress1 = (EditText)findViewById(R.id.streetAddress);
 
         mCity = (EditText)findViewById(R.id.city);
-        mState = (EditText)findViewById(R.id.state);
+        mState = (TextView)findViewById(R.id.state);
         mPhone = (EditText)findViewById(R.id.phone);
 
-        mDOB = (EditText)findViewById(R.id.DOB);
-        mGender = (EditText)findViewById(R.id.gender);
-
+        mDOB = (TextView)findViewById(R.id.DOB);
+        mGender = (TextView)findViewById(R.id.gender);
+        mDOBLayout = (RelativeLayout)findViewById(R.id.DOBLayout);
+        mStateLayout = (RelativeLayout)findViewById(R.id.stateLayout);
+        mGenderLayout = (RelativeLayout)findViewById(R.id.genderLayout);
 
         pDialog = MdliveUtils.getProgressDialog("Please wait...", AddFamilyMemberActivity.this);
     }
@@ -210,7 +241,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         }
         else
         {
-            Toast.makeText(getBaseContext(), "All fields are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddFamilyMemberActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -242,12 +273,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
                     MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getBaseContext());
+                    MdliveUtils.connectionTimeoutError(pDialog, AddFamilyMemberActivity.this);
                 }
             }
         };
 
-        AddFamilyMemberInfoService service = new AddFamilyMemberInfoService(getBaseContext(), null);
+        AddFamilyMemberInfoService service = new AddFamilyMemberInfoService(AddFamilyMemberActivity.this, null);
         service.addFamilyMemberInfo(successCallBackListener, errorListener, params);
     }
 
@@ -256,11 +287,31 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
             pDialog.dismiss();
 
-            Toast.makeText(getBaseContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
             finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
 
+    private void initializeStateDialog() {
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddFamilyMemberActivity.this);
+
+        stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+
+        final String[] stringArray = stateList.toArray(new String[stateList.size()]);
+
+        builder.setItems(stringArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                String SelectedText = stateIds.get(i);
+                mState.setText(SelectedText);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+}

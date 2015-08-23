@@ -86,7 +86,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.container, CreditCardInfoFragment.newInstance(response), "REPLACE CREDIT CARD").
+                    add(R.id.container, CreditCardInfoFragment.newInstance(response,getIntent().getStringExtra("Credit_Card_View")), "REPLACE CREDIT CARD").
                     commit();
         }
 
@@ -220,5 +220,9 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
                 break;
         }
+    }
+
+    public void hideTick() {
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
     }
 }

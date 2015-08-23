@@ -75,7 +75,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
 
     private void setupViewPager(ViewPager viewPager) {
         final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.my_account));
+        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.account));
         adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.billing));
         adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.family_history));
         viewPager.setAdapter(adapter);

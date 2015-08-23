@@ -12,10 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -59,11 +62,14 @@ public class CreditCardInfoFragment extends Fragment{
     private String state = null;
     private String country = null;
     private String zip = null;
+    private ToggleButton changeAddress;
+    RelativeLayout mAddressVisibility;
 
-    public static CreditCardInfoFragment newInstance(String response) {
+    public static CreditCardInfoFragment newInstance(String response,String view) {
         final CreditCardInfoFragment cardInfo = new CreditCardInfoFragment();
             Bundle bundle = new Bundle();
             bundle.putString("Response", response);
+            bundle.putString("View",view);
             cardInfo.setArguments(bundle);
         return cardInfo;
     }
@@ -97,46 +103,55 @@ public class CreditCardInfoFragment extends Fragment{
         mCity = (EditText)billingInformation.findViewById(R.id.city);
         mState = (EditText)billingInformation.findViewById(R.id.state);
         mZip = (EditText)billingInformation.findViewById(R.id.zip);
+        changeAddress = (ToggleButton)billingInformation.findViewById(R.id.addressChange);
+        mAddressVisibility =(RelativeLayout)billingInformation.findViewById(R.id.addressVisibility);
+        changeAddress.setChecked(false);
 
-        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
+//        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
          response = getArguments().getString("Response");
+
         if(response != null)
         {
-            try {
-                Log.i("response",response);
-                JSONObject myProfile = new JSONObject(response);
-                Toast.makeText(getActivity(),response.toString(),Toast.LENGTH_SHORT).show();
+            if(getArguments().getString("View").equalsIgnoreCase("view")) {
+                if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                    ((MyAccountsHome) getActivity()).hideTick();
+                }
+                mAddressVisibility.setVisibility(View.GONE);
+            }
+                try {
+                    Log.i("response", response);
+                    JSONObject myProfile = new JSONObject(response);
 //                Log.i("response",jsonObject.toString());
 //                JSONObject myProfile = jsonObject.getJSONObject("billing_information");
-                country = myProfile.getString("billing_country");
-                cardExpirationYear = myProfile.getString("cc_expyear");
-                nameOnCard = myProfile.getString("billing_name");
-                zip = myProfile.getString("billing_zip5");
-                securityCode = myProfile.getString("cc_cvv2");
-                cardNumber = myProfile.getString("cc_number");
-                state = myProfile.getString("billing_state");
+                    country = myProfile.getString("billing_country");
+                    cardExpirationYear = myProfile.getString("cc_expyear");
+                    nameOnCard = myProfile.getString("billing_name");
+                    zip = myProfile.getString("billing_zip5");
+                    securityCode = myProfile.getString("cc_cvv2");
+                    cardNumber = myProfile.getString("cc_number");
+                    state = myProfile.getString("billing_state");
 //            mobile = myProfile.getString("cc_type_id");
-                address2 = myProfile.getString("billing_address2");
-                city = myProfile.getString("billing_city");
-                address1 = myProfile.getString("billing_address1");
-                cardExpirationMonth = myProfile.getString("cc_expmonth");
+                    address2 = myProfile.getString("billing_address2");
+                    city = myProfile.getString("billing_city");
+                    address1 = myProfile.getString("billing_address1");
+                    cardExpirationMonth = myProfile.getString("cc_expmonth");
 
-                mCardNumber.setText(cardNumber);
-                mSecurityCode.setText(securityCode);
-                mCardExpirationMonth.setText(cardExpirationMonth);
-                mNameOnCard.setText(nameOnCard);
-                mAddress1.setText(address1);
-                mAddress2.setText(address2);
-                mCity.setText(city);
-                mState.setText(state);
-                mZip.setText(zip);
+                    mCardNumber.setText(cardNumber);
+                    mSecurityCode.setText(securityCode);
+                    mCardExpirationMonth.setText(cardExpirationMonth);
+                    mNameOnCard.setText(nameOnCard);
+                    mAddress1.setText(address1);
+                    mAddress2.setText(address2);
+                    mCity.setText(city);
+                    mState.setText(state);
+                    mZip.setText(zip);
 
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
         }
 
 
@@ -171,7 +186,37 @@ public class CreditCardInfoFragment extends Fragment{
             }
         });
 
+        changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+
+                        String name = prefs.getString("Profile_Address", "");
+                    try {
+                        JSONObject myProfile = new JSONObject(name);
+                        mAddress1.setText(myProfile.getString("address1"));
+                        mAddress2.setText(myProfile.getString("address2"));
+                        mCity.setText(myProfile.getString("country"));
+                        mState.setText(myProfile.getString("state"));
+                        mZip.setText(myProfile.getString("zipcode"));
+                    }
+                    catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    mAddress1.setText(address1);
+                    mAddress2.setText(address2);
+                    mCity.setText(city);
+                    mState.setText(state);
+                    mZip.setText(zip);
+                }
+            }
+        });
     }
+
     public void addCreditCardInfo()
     {
         cardNumber = mCardNumber.getText().toString();
@@ -200,7 +245,7 @@ public class CreditCardInfoFragment extends Fragment{
                 jsonObject.put("billing_state_id", state);
                 jsonObject.put("cc_expmonth", cardExpirationMonth);
                 jsonObject.put("cc_cvv2", securityCode);
-                jsonObject.put("cc_num", cardNumber);
+                jsonObject.put("cc_num", "4111111111111111");
                 jsonObject.put("billing_country_id", country);
 
                 parent.put("billing_information", jsonObject);

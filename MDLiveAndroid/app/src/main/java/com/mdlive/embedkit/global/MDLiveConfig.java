@@ -81,6 +81,7 @@ public class MDLiveConfig {
     private static final String URL_ADD_FAMILY_INFO = "/customer/1/add_family_member";
     private static final String URL_GET_FAMILY_MEMBER_INFO = "/customer/family_members";
     private static final String URL_EDIT_PROFILE_INFO = "/customer/3";
+    private static final String URL_CHANGE_PROFILE_PIC = "/customer/upload_photo";
 
     // URLS for MESSAGE CENTER section
     private static final String URL_GET_RECEIVED_MESSAGES = "/messages/received_messages";
@@ -239,6 +240,7 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_ADD_FAMILY_INFO=URL_ADD_FAMILY_INFO;
         AppSpecificConfig.URL_GET_FAMILY_MEMBER_INFO=URL_GET_FAMILY_MEMBER_INFO;
         AppSpecificConfig.URL_EDIT_PROFILE_INFO=URL_EDIT_PROFILE_INFO;
+        AppSpecificConfig.URL_CHANGE_PROFILE_PIC=URL_CHANGE_PROFILE_PIC;
 
 
         AppSpecificConfig.URL_LIFE_STYLE = URL_LIFE_STYLE;

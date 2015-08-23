@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -56,6 +57,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     private String state = null;
     private String country = null;
     private String zip = null;
+    RelativeLayout mviewCreditCard;
     JSONObject myProfile;
     public static BillingInformationFragment newInstance() {
         final BillingInformationFragment fragment = new BillingInformationFragment();
@@ -79,16 +81,27 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
         mCreditCardDate = (TextView) view.findViewById(R.id.cardEndDate);
         mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
         mReplaceCreditCard =(TextView)view.findViewById(R.id.addCreditCard);
-
+        mviewCreditCard =(RelativeLayout)view.findViewById(R.id.viewCreditCard);
 //        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
 
         mReplaceCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
                 changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
                 changePhone.putExtra("Credit_Card_Response",myProfile.toString());
+                changePhone.putExtra("Credit_Card_View","replace");
+                startActivityForResult(changePhone, 1);
+            }
+        });
+
+        mviewCreditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
+                changePhone.putExtra("Credit_Card_Response",myProfile.toString());
+                changePhone.putExtra("Credit_Card_View","view");
                 startActivityForResult(changePhone, 1);
             }
         });
@@ -143,10 +156,13 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
         try {
+
              myProfile = response.getJSONObject("billing_information");
+
             country = myProfile.getString("billing_country");
             cardExpirationYear = myProfile.getString("cc_expyear");
             nameOnCard = myProfile.getString("billing_name");
+
             zip = myProfile.getString("billing_zip5");
             securityCode = myProfile.getString("cc_cvv2");
             cardNumber = myProfile.getString("cc_number");
@@ -161,7 +177,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 //                    city + ", " + state + "\n" + country);
 
             mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear );
-            mCreditCardAddress.setText("Billing Address:" + "\n" +address1 + address2 + "\n" +
+            mCreditCardAddress.setText("Billing Address:" + "\n" +address1+ " " + address2 + "\n" +
                     city + ", " + state + "\n" + country);
 
         } catch (JSONException e) {
