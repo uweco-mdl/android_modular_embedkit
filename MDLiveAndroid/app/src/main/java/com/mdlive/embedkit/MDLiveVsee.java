@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -36,6 +38,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_vsee);
+        clearMinimizedTime();
 
         CONSULTED = false;
         CALL_ENDED = false;
@@ -182,6 +185,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
         VSeeVideoManager.instance().removeReceiver(simpleVidManagerReceiver);
         simpleServerConnectionReceiver = null;
         simpleVidManagerReceiver = null;
+        clearMinimizedTime();
         super.onDestroy();
     }
 
@@ -255,5 +259,13 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
     @Override
     public void onBackPressed() {
+    }
+
+
+    private void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }

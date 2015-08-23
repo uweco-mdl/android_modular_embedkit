@@ -51,6 +51,8 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
+        clearMinimizedTime();
+
         isReturning = getIntent().getBooleanExtra("isReturning",false);
         getProviderStatus();
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
@@ -330,5 +332,18 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onStop() {
         super.onStop();
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearMinimizedTime();
+    }
+
+    private void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }

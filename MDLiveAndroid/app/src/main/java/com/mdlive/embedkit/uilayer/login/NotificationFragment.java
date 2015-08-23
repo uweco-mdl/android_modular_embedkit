@@ -32,6 +32,7 @@ import org.json.JSONObject;
  */
 public class NotificationFragment extends MDLiveBaseFragment {
     private OnAppointmentClicked mOnAppointmentClicked;
+    private NotifyDashboard mNotifyDashboard;
 
     private static final long MILIS_IN_SECOND = 1000;
     private static final long DURATION = 30 * MILIS_IN_SECOND;
@@ -71,6 +72,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
         try {
             mOnAppointmentClicked = (OnAppointmentClicked) activity;
+            mNotifyDashboard = (NotifyDashboard) activity;
         } catch (ClassCastException cce) {
 
         }
@@ -142,6 +144,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         super.onDetach();
 
         mOnAppointmentClicked = null;
+        mNotifyDashboard = null;
     }
 
     public void setNotification(final UserBasicInfo userBasicInfo) {
@@ -207,6 +210,18 @@ public class NotificationFragment extends MDLiveBaseFragment {
                         }
                     }
                 });
+
+                // For Showing Dashboard Notification
+                if (mNotifyDashboard != null) {
+                    for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
+                        final int type = MdliveUtils.getRemainigTimeToAppointment(mPendingAppointment.getAppointments().get(i).getInMilliseconds(), "EST");
+                        if (type == 0) {
+                            mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(i));
+                        } else {
+                            mNotifyDashboard.onHideNotifyDashboard();
+                        }
+                    }
+                }
             }
         } else {
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.no_upcoming_appoinments));
@@ -216,5 +231,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     public interface OnAppointmentClicked {
         void onAppointmentClicked(final Appointment appointment);
+    }
+
+    public interface NotifyDashboard {
+        void onShowNofifyDashboard(final Appointment appointment);
+        void onHideNotifyDashboard();
     }
 }

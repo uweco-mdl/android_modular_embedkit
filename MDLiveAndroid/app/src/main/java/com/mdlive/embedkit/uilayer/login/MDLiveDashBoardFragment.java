@@ -16,6 +16,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -32,11 +33,14 @@ import java.util.List;
  */
 public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private OnUserSelectionChanged mOnUserSelectionChanged;
+    private OnNotificationCliked mOnNotificationCliked;
 
     private Spinner mSpinner;
     private DashBoardSpinnerAdapter mAdapter;
 
     private TextView mEmailConfirmationTextView;
+
+    private View mNotificationView;
 
     private UserBasicInfo mUserBasicInfo;
     private AdapterView.OnItemSelectedListener mOnItemSelectedListenerUserInfo = new AdapterView.OnItemSelectedListener() {
@@ -101,6 +105,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         try {
             mOnUserSelectionChanged = (OnUserSelectionChanged) activity;
+            mOnNotificationCliked = (OnNotificationCliked) activity;
         } catch (ClassCastException cce) {
             logE("MDLiveDashBoardFRagment", activity.getClass().getSimpleName() + ", should implement OnUserSelectionChanged");
         }
@@ -118,6 +123,11 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
         mEmailConfirmationTextView = (TextView) view.findViewById(R.id.dash_board_email_text_view);
+
+        mNotificationView = view.findViewById(R.id.dash_board_notification_layout);
+        if (mNotificationView != null) {
+            mNotificationView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -130,6 +140,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         super.onDetach();
 
         mOnUserSelectionChanged = null;
+        mOnNotificationCliked = null;
     }
 
     public void onUserInformationLoaded(final UserBasicInfo userBasicInfo) {
@@ -198,9 +209,40 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         service.emailConfirmation(successCallBackListener, errorListener, null);
     }
 
+    public void showNotification(final Appointment appointment) {
+        if (mNotificationView != null) {
+            mNotificationView.setTag(appointment);
+            mNotificationView.setVisibility(View.VISIBLE);
+            mNotificationView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        final Appointment appo = (Appointment) v.getTag();
+                        if (appo != null && mOnNotificationCliked != null) {
+                            mOnNotificationCliked.onNotificationClicked(appo);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+        }
+    }
+
+    public void hideNotification() {
+        if (mNotificationView != null) {
+            mNotificationView.setTag(null);
+            mNotificationView.setVisibility(View.GONE);
+        }
+    }
+
     public interface OnUserSelectionChanged {
         void onDependentSelected(final User user);
         void onPrimarySelected(final User user);
         void onAddChildSelectedFromDashboard(final User user, final int dependentUserSize);
+    }
+
+    public interface OnNotificationCliked {
+        void onNotificationClicked(final Appointment appointment);
     }
 }
