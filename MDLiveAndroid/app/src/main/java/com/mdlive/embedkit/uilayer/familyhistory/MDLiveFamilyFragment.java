@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,25 +17,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.lifestyle.LifeStyleBaseAdapter;
-import com.mdlive.embedkit.uilayer.lifestyle.Model;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.FamilyHistoryModel;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.familyhistory.FamilyHistoryServices;
 import com.mdlive.unifiedmiddleware.services.familyhistory.FamilyHistoryUpdateServices;
-import com.mdlive.unifiedmiddleware.services.lifestyle.LifeStyleUpdateServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.LifeStyleServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +46,7 @@ import java.util.List;
  */
 public class MDLiveFamilyFragment extends Fragment {
 
-    private EditText mFamilyHistoryOtherEditText;
+    protected static EditText mFamilyHistoryOtherEditText;
 
     private ProgressBar progressBar;
     private ProgressDialog pDialog = null;
@@ -64,10 +57,10 @@ public class MDLiveFamilyFragment extends Fragment {
     String rootJsonObjectString;
     HashMap<String, String> familyHistory_conditionValue = new HashMap<String, String>();
 
-    String mFamilyHistoryOtherEditTextValue;
+    protected String mFamilyHistoryOtherEditTextValue;
     View view;
 
-    private List<FamilyHistoryModel> familyHistoryList;
+    protected List<FamilyHistoryModel> familyHistoryList;
 
     /**
      * An interface for defining the callback method
@@ -187,36 +180,9 @@ public class MDLiveFamilyFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-    public void saveAction(View view) {
-        final JSONObject requestJSON = new JSONObject();
 
-        try {
 
-            final JSONArray lifeStyleConditionJSONArray = new JSONArray();
-
-            for (int i = 0; i < familyHistoryList.size(); i++) {
-                final JSONObject jsonObject = new JSONObject();
-
-                jsonObject.put("relationship", familyHistoryList.get(i).relationship);
-                jsonObject.put("condition", familyHistoryList.get(i).condition);
-                jsonObject.put("active", familyHistoryList.get(i).active);
-
-                Log.d("HELLO", familyHistoryList.get(i).toString());
-
-                lifeStyleConditionJSONArray.put(jsonObject);
-            }
-
-            requestJSON.put("family_histories", lifeStyleConditionJSONArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //initializeJsonElements();
-
-        getFamilyHistoryUpdateServiceData(requestJSON);
-    }
-
-    private void getFamilyHistoryUpdateServiceData(final JSONObject requestJSON) {
+    protected void getFamilyHistoryUpdateServiceData(final JSONObject requestJSON) {
 
         setProgressBarVisibility();
 
@@ -254,6 +220,7 @@ public class MDLiveFamilyFragment extends Fragment {
     private void handleUpdateSuccessResponse(JSONObject response) {
         try {
             setInfoVisibilty();
+            getActivity().finish();
             Log.d("FamilyHistoryUpdateRes", response.toString());
         }catch(Exception e){
             e.printStackTrace();
@@ -277,17 +244,6 @@ public class MDLiveFamilyFragment extends Fragment {
 
     }
 
-    public void addAction (View view) {
-        if(mFamilyHistoryOtherEditText.getText().length() != 0) {
-            mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
-            Log.d("FamilyHistoryOtherValue",mFamilyHistoryOtherEditTextValue.toString());
-        }
-        else {
-            mFamilyHistoryOtherEditTextValue = "";
-            Log.d("FamilyHistoryOtherValue",mFamilyHistoryOtherEditTextValue);
-        }
-    }
-
     private void getFamilyHistoryOtherEditTextEvent() {
 
         mFamilyHistoryOtherEditText.addTextChangedListener(new TextWatcher() {
@@ -295,7 +251,6 @@ public class MDLiveFamilyFragment extends Fragment {
             @SuppressLint("ShowToast")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
                 mFamilyHistoryOtherEditText.setCursorVisible(true);
 
             }
@@ -303,13 +258,11 @@ public class MDLiveFamilyFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
                 mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
                 Log.d("FamilyHistoryOtherValue", mFamilyHistoryOtherEditTextValue.toString());
 
@@ -336,6 +289,7 @@ public class MDLiveFamilyFragment extends Fragment {
             // Inflte & get reference of Views to be used
             final CheckBox checkBox = (CheckBox) rootLinearLayout.findViewById(R.id.my_family_history_checkBox);
             final Spinner spinner = (Spinner) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinner);
+            final CardView spinnerCv = (CardView) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinnerCv);
 
             // Set Checkbox values & check changed listener
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -343,26 +297,23 @@ public class MDLiveFamilyFragment extends Fragment {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
                         familyHistoryList.get(position).active = FamilyHistoryModel.YES;
-                        spinner.setVisibility(View.VISIBLE);
+                        spinnerCv.setVisibility(View.VISIBLE);
                     } else {
                         familyHistoryList.get(position).active = FamilyHistoryModel.NO;
-                        spinner.setVisibility(View.INVISIBLE);
+                        spinnerCv.setVisibility(View.GONE);
                     }
                 }
             });
 
             if (FamilyHistoryModel.YES.toString().equalsIgnoreCase(familyHistoryList.get(position).active)) {
                 checkBox.setChecked(true);
-                spinner.setVisibility(View.VISIBLE);
+                spinnerCv.setVisibility(View.VISIBLE);
 
                 if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
-                    // Do not set selection
-                    spinner.setPrompt(getString(R.string.family_history_spinner_promt));
-                    Log.d("Hello", "I am here");
                 }
             } else {
                 checkBox.setChecked(false);
-                spinner.setVisibility(View.INVISIBLE);
+                spinnerCv.setVisibility(View.GONE);
             }
 
             checkBox.setText(familyHistoryList.get(position).condition);
@@ -388,8 +339,6 @@ public class MDLiveFamilyFragment extends Fragment {
             });
 
             if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
-                // Do not set selection
-                spinner.setPrompt(getString(R.string.family_history_spinner_promt));
             } else {
                 int selectedPosition = 0;
                 for (int j = 0; j < relationShpList.size(); j++) {
@@ -400,8 +349,6 @@ public class MDLiveFamilyFragment extends Fragment {
                 }
                 spinner.setSelection(selectedPosition);
             }
-            spinner.setPrompt(getString(R.string.family_history_spinner_promt));
-
 
             scrollLinearLayout.addView(rootLinearLayout);
         }

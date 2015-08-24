@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,8 +22,12 @@ import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
-public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
+    MDLiveFamilyFragment mdLiveFamilyFragment = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +47,10 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
         }
 
         if (savedInstanceState == null) {
+            mdLiveFamilyFragment = MDLiveFamilyFragment.newInstance();
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.dash_board__main_container, MDLiveFamilyFragment.newInstance(), MAIN_CONTENT).
+                    add(R.id.dash_board__main_container, mdLiveFamilyFragment, MAIN_CONTENT).
                     commit();
 
             getSupportFragmentManager().
@@ -58,6 +64,8 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
                     commit();
         }
     }
+
+
 
     /* On Email Unconfirmed Click listener */
     public void onEmailUnconfirmClicked(View view) {
@@ -126,6 +134,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
         }
     }
 
+
     /* Start of Dashboard icons click listener */
     public void onSeeADoctorNowClicked(View view) {
         startActivityWithClassName(MDLiveGetStarted.class);
@@ -164,6 +173,47 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void onTickClicked(View view) {
+        saveAction(view);
+    }
 
+    public void addAction (View view) {
+        if(mdLiveFamilyFragment.mFamilyHistoryOtherEditText.getText().length() != 0) {
+            mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue = mdLiveFamilyFragment.mFamilyHistoryOtherEditText.getText().toString();
+            Log.d("FamilyHistoryOtherValue", mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue.toString());
+        }
+        else {
+            mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue = "";
+            Log.d("FamilyHistoryOtherValue",mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue);
+        }
+    }
+
+
+    public void saveAction(View view) {
+        final JSONObject requestJSON = new JSONObject();
+
+        try {
+
+            final JSONArray lifeStyleConditionJSONArray = new JSONArray();
+
+            for (int i = 0; i < mdLiveFamilyFragment.familyHistoryList.size(); i++) {
+                final JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("relationship", mdLiveFamilyFragment.familyHistoryList.get(i).relationship);
+                jsonObject.put("condition", mdLiveFamilyFragment.familyHistoryList.get(i).condition);
+                jsonObject.put("active", mdLiveFamilyFragment.familyHistoryList.get(i).active);
+
+                Log.d("HELLO", mdLiveFamilyFragment.familyHistoryList.get(i).toString());
+
+                lifeStyleConditionJSONArray.put(jsonObject);
+            }
+
+            requestJSON.put("family_histories", lifeStyleConditionJSONArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //initializeJsonElements();
+
+        mdLiveFamilyFragment.getFamilyHistoryUpdateServiceData(requestJSON);
     }
 }
