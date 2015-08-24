@@ -244,7 +244,7 @@
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyHistory"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.helpandsupport.MDLiveHelpAndSupportActivity"
             android:screenOrientation="portrait"
@@ -252,15 +252,15 @@
         <activity
             android:name=".uilayer.mdliveassist.MDLiveAssistActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.lifestyle.MDLiveLifestyleActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.myhealth.activity.MDLiveMyHealthActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.symptomchecker.MDLiveSymptomCheckerActivity"
             android:screenOrientation="portrait"
@@ -304,17 +304,22 @@
 -->
         <activity
             android:name=".uilayer.myhealth.ProviderDetailsActivity"
-            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
-            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
+
+        <activity
+            android:name=".uilayer.myhealth.MedicalHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"  >
+        </activity>
+
     </application>
 
 </manifest>
