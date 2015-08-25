@@ -13,12 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
@@ -87,7 +85,8 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
             header.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(), "Header ON Click --->", Toast.LENGTH_SHORT).show();
+                    Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
+                    startActivity(PrimaryCarePhysician);
                 }
             });
             mListView.addHeaderView(header);

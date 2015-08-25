@@ -41,6 +41,7 @@ public class MDLiveConfig {
     public static final String URL_MEDICATION_DELETE = "/medications";
     public static final String URL_MEDICATION_SEARCH = "/medications/search"; // need post body
     private static final String URL_MEDICAL_HISTORY_COMPLETION = "/medical_histories/history_completion";
+    private static final String URL_ADD_PCP = "/providers/add_primary_care_physician";
 
 
     private static final String URL_MEDICAL_HISTORY_AGGREGATION = "/medical_histories/history_aggregation";
@@ -239,6 +240,7 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_ADD_CREDIT_CARD_INFO=URL_ADD_CREDIT_CARD_INFO;
         AppSpecificConfig.URL_GET_CREDIT_CARD_INFO=URL_GET_CREDIT_CARD_INFO;
         AppSpecificConfig.URL_ADD_FAMILY_INFO=URL_ADD_FAMILY_INFO;
+        AppSpecificConfig.URL_ADD_PCP=URL_ADD_PCP;
         AppSpecificConfig.URL_GET_FAMILY_MEMBER_INFO=URL_GET_FAMILY_MEMBER_INFO;
         AppSpecificConfig.URL_EDIT_PROFILE_INFO=URL_EDIT_PROFILE_INFO;
         AppSpecificConfig.URL_CHANGE_PROFILE_PIC=URL_CHANGE_PROFILE_PIC;
