@@ -108,8 +108,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"
-            />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".uilayer.sav.MDLiveLocation"
             android:screenOrientation="portrait"
@@ -236,7 +235,8 @@
             android:name=".uilayer.myaccounts.MyAccountActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
             android:screenOrientation="portrait"
@@ -244,7 +244,7 @@
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyHistory"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".uilayer.helpandsupport.MDLiveHelpAndSupportActivity"
             android:screenOrientation="portrait"
@@ -252,7 +252,7 @@
         <activity
             android:name=".uilayer.mdliveassist.MDLiveAssistActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".uilayer.lifestyle.MDLiveLifestyleActivity"
             android:screenOrientation="portrait"
@@ -260,7 +260,7 @@
         <activity
             android:name=".uilayer.myhealth.activity.MDLiveMyHealthActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".uilayer.symptomchecker.MDLiveSymptomCheckerActivity"
             android:screenOrientation="portrait"
@@ -304,22 +304,29 @@
 -->
         <activity
             android:name=".uilayer.myhealth.ProviderDetailsActivity"
+            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
+            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
         <activity
             android:name=".uilayer.myhealth.MedicalHistoryActivity"
+            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
+        <activity
+            android:name=".uilayer.myhealth.PrimaryCarePhysicianActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
