@@ -2,23 +2,19 @@ package com.mdlive.embedkit.uilayer.lifestyle;
 
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -87,20 +83,22 @@ public class MDLiveLifeStyleFragment extends Fragment {
 
         view = inflater.inflate(R.layout.mdlive_life_style_fragment, container, false);
 
-        findWidgetId();
+        setWidgetId();
         getLifeStyleServiceData();
 
         return view;
     }
 
-    private void findWidgetId() {
+    private void setWidgetId() {
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
         mHeightFtEditText = (EditText) view.findViewById(R.id.life_style_heighteditTextone);
         mHeightInEditText = (EditText) view.findViewById(R.id.life_style_heighteditTexttwo);
         mWeightLbsEditText = (EditText) view.findViewById(R.id.life_style_weight_editTextone);
         mBmiText = (TextView) view.findViewById(R.id.life_style_bmi_value_text);
+        mHeightFtEditText.addTextChangedListener(bmiTextWatcher);
+        mHeightInEditText.addTextChangedListener(bmiTextWatcher);
+        mWeightLbsEditText.addTextChangedListener(bmiTextWatcher);
         mListView = (ListView) view.findViewById(R.id.lifestyle_listview);
 
     }
@@ -108,8 +106,6 @@ public class MDLiveLifeStyleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        getBmiTextEvent();
     }
 
     private void getLifeStyleServiceData() {
@@ -151,13 +147,10 @@ public class MDLiveLifeStyleFragment extends Fragment {
     private void handleSuccessResponse(JSONObject response) {
         try {
             setInfoVisibilty();
-            Log.d("LifeStyle Response", response.toString());
-            Log.d("LifeStyle Response", response.getInt("height_feet") + "");
-
-            mHeightFtEditText.setText(response.getInt("height_feet") + "ft");
-            mHeightInEditText.setText(response.getInt("height_inches") + "in");
-            mWeightLbsEditText.setText(response.getInt("weight") + "lbs");
-            Log.d("LifeStyle Response", response.toString());
+            mHeightFtEditText.setText(response.getInt("height_feet") + "");
+            mHeightInEditText.setText(response.getInt("height_inches") + "");
+            mWeightLbsEditText.setText(response.getInt("weight") + "");
+            setBMIText();
             JSONArray lifestyleConditionArray = response.getJSONArray("life_style_conditions");
             JSONObject jsonObject;
 
@@ -165,15 +158,12 @@ public class MDLiveLifeStyleFragment extends Fragment {
             for (int i = 0; i < lifestyleConditionArray.length(); i++) {
                 jsonObject = lifestyleConditionArray.getJSONObject(i);
                 lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"), jsonObject.getString("active")));
-                Log.d("Adapter --->", "Here111");
 
             }
-            Log.d("Adapter --->", lifeStyleModels.toString() + "");
             adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels);
             mListView.setAdapter(adapter);
 
         } catch (Exception e) {
-            Log.e("Error  --->", e.getMessage());
             e.printStackTrace();
         }
 
@@ -214,7 +204,6 @@ public class MDLiveLifeStyleFragment extends Fragment {
                         jsonObject.put("condition_id", modelitem.id);
                         jsonObject.put("condition", modelitem.condition);
                         jsonObject.put("active", modelitem.active);
-
                         lifeStyleConditionJSONArray.put(jsonObject);
                     }
 
@@ -237,7 +226,7 @@ public class MDLiveLifeStyleFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    handleSuccessResponse(response);
+                    getActivity().finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -258,9 +247,6 @@ public class MDLiveLifeStyleFragment extends Fragment {
                 }
             }
         };
-
-        Log.d("Hello", "Request:  " + requestJSON.toString());
-
         LifeStyleUpdateServices lifeStyleUpdateServices = new LifeStyleUpdateServices(getActivity(), pDialog);
         lifeStyleUpdateServices.postLifeStyleServices(requestJSON, responseListener, errorListener);
 
@@ -269,14 +255,43 @@ public class MDLiveLifeStyleFragment extends Fragment {
     private void handleUpdateSuccessResponse(JSONObject response) {
         try {
             setInfoVisibilty();
-            Log.d("LifeStyleUpdateResponse", response.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void getBmiTextEvent() {
-        mBmiText.setText("4");
+
+    TextWatcher bmiTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            setBMIText();
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private void setBMIText(){
+        try {
+            String heightFtValue = mHeightFtEditText.getText().toString();
+            String heightInValue = mHeightInEditText.getText().toString();
+            String weightValue = mWeightLbsEditText.getText().toString();
+            double bmiValue = 0;
+            if (!heightFtValue.isEmpty() && !weightValue.isEmpty()) {
+                float heightInches = 0.0f;
+                if(!heightInValue.isEmpty()){
+                    heightInches = Float.parseFloat(heightInValue);
+                }
+                float feetValue = Float.parseFloat(heightFtValue) + ( heightInches / 12);
+                bmiValue = (Float.parseFloat(weightValue) * 4.88) / (feetValue * feetValue);
+                mBmiText.setText(Math.round(bmiValue) + "");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

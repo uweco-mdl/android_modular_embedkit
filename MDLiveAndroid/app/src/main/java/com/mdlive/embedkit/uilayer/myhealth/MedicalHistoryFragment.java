@@ -240,16 +240,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
-
-
-    public void SavContinueBtnOnClick(View view){
-        updateMedicalHistory(view);
-    }
-
-    public void initializeViews() {
-
-    }
-
     /**
      * This function is used to initialize Yes/No Button actions used in layout.
      */

@@ -40,6 +40,9 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
+import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -161,7 +164,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new MedicalHistoryFragment(), getString(R.string.medical_history));
-        adapter.addFragment(MDLiveMyHealthVisitsFragment.newInstance(), getString(R.string.pharmacy));
+        adapter.addFragment(MDLivePharmacyFragment.newInstance(), getString(R.string.pharmacy));
         adapter.addFragment(MDLiveMyHealthProvidersFragment.newInstance(), getString(R.string.providers));
         adapter.addFragment(MDLiveMyHealthVisitsFragment.newInstance(), getString(R.string.visits));
         viewPager.setAdapter(adapter);
@@ -241,5 +244,15 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     public void SavContinueBtnOnClick(View view){
 
+    }
+
+    /**
+     * This function handles click listener of changePharmacyButton
+     *
+     * @param view - view of button which is called.
+     */
+    public void changePharmacyButtonOnClick(View view) {
+        Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+        startActivity(i);
     }
 }
