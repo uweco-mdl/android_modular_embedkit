@@ -1,6 +1,8 @@
 package com.mdlive.embedkit.uilayer.login;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -164,7 +167,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mEmailConfirmationTextView.setVisibility(View.GONE);
             }
-
+            SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = sharedPref.edit();
+            editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
+            editor1.commit();
             mSpinner.setOnItemSelectedListener(null);
             mSpinner.setAdapter(mAdapter);
             // Preventing  onItemSeleection to get callied

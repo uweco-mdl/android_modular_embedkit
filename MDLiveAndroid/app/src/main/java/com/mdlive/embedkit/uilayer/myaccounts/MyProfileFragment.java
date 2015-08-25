@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -57,7 +58,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private TextView mUserDOB = null;
     private TextView mGender = null;
     private TextView mUserName = null;
-    private TextView mPreferredSignIn = null;
+    private TextView mPreferredSignIn = null, changeLangTv;
     private TextView mEmail = null;
     private TextView mAddress = null;
     private TextView mMobile = null;
@@ -67,7 +68,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     private CardView mChangeSecurityQuestions = null;
     private Button mSave = null;
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
-    timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null;
+    timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null, prefLanguage;
     private JSONObject myProfile;
     SharedPreferences sharedPref;
     public static MyProfileFragment newInstance() {
@@ -95,6 +96,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mGender = (TextView)view.findViewById(R.id.txtGender);
         mUserName = (TextView)view.findViewById(R.id.txtUserName);
         mPreferredSignIn = (TextView)view.findViewById(R.id.preferredSignIn);
+        changeLangTv = (TextView)view.findViewById(R.id.changeLangTv);
         mEmail = (TextView)view.findViewById(R.id.email);
         mAddress = (TextView)view.findViewById(R.id.address);
         mMobile = (TextView)view.findViewById(R.id.phoneNumber);
@@ -178,6 +180,31 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             }
         });
 
+        changeLangTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final CharSequence[] items = {
+                        "EN", "ES", "KO"
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Make your selection");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        changeLangTv.setText(items[item]);
+                        sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor1 = sharedPref.edit();
+                        editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
+                        editor1.commit();
+                        LocalizationSingleton.getInstance().setLanguage(getActivity(),changeLangTv.getText().toString().toLowerCase());
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            }
+        });
+
         mProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,7 +263,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             address = myProfile.getString("address1")+"\n"+myProfile.getString("address2")+"\n"+myProfile.getString("state")+"\n"+myProfile.getString("country")+"\n"+myProfile.getString("zipcode");
             mobile = myProfile.getString("cell");
             timeZone = myProfile.getString("timezone");
-
+            prefLanguage = myProfile.getString("language_preference");
             sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("Profile_Address", myProfile.toString());
@@ -264,6 +291,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mTimeZone.setText(timeZone);
             mEmail.setText(email);
             mPreferredSignIn.setText("Pin");
+            sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
+            changeLangTv.setText(language);
             mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
             sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
