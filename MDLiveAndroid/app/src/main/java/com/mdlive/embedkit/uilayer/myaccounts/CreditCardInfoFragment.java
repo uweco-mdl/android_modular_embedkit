@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -62,7 +62,7 @@ public class CreditCardInfoFragment extends Fragment {
     private String state = null;
     private String country = null;
     private String zip = null;
-    private ToggleButton changeAddress;
+    private SwitchCompat changeAddress;
     RelativeLayout mAddressVisibility;
 
     public static CreditCardInfoFragment newInstance(String response, String view) {
@@ -103,10 +103,11 @@ public class CreditCardInfoFragment extends Fragment {
         mCity = (EditText) billingInformation.findViewById(R.id.city);
         mState = (EditText) billingInformation.findViewById(R.id.state);
         mZip = (EditText) billingInformation.findViewById(R.id.zip);
-        changeAddress = (ToggleButton) billingInformation.findViewById(R.id.addressChange);
+        changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         changeAddress.setChecked(false);
-
+//        ScrollView scrollView = (ScrollView)billingInformation.findViewById(R.id.scrollView);
+//        scrollView.smoothScrollBy(0, scrollView.getScrollY() + 10);
 //        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 

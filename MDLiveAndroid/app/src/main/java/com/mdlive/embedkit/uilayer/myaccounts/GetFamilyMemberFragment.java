@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +125,11 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
         try {
-            Log.i("response", response.toString());
+            if((response.get("primary_user").toString())== "false")
+            {
+                lv.removeFooterView(v);
+            }
+
             JSONArray jsonarray = (JSONArray) response.get("dependant_users");
 
             for (int i = 0; i < jsonarray.length(); i++) {
