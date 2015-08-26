@@ -102,7 +102,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
         mPassCode7.addTextChangedListener(this);
 
         mTitleTextView = (TextView) changePin.findViewById(R.id.fragment_change_pin_text_view);
-        mTitleTextView.setText(R.string.please_create_a_6_digit_pin);
+        mTitleTextView.setText(R.string.please_confirm_your_pin);
 
         changePin.findViewById(R.id.linear_layout).setVisibility(View.INVISIBLE);
     }

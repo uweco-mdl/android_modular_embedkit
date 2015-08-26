@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.CreateAccountFragment.OnSignupSuccess;
+import com.mdlive.embedkit.uilayer.login.LoginFragment.OnLoginResponse;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 
@@ -18,8 +20,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
  * Created by venkataraman_r on 7/22/2015.
  */
 
-public class LoginActivity extends AppCompatActivity implements LoginFragment.OnLoginResponse,
-        CreateAccountFragment.OnSignupSuccess, FragmentManager.OnBackStackChangedListener {
+public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
+        OnSignupSuccess, OnBackStackChangedListener {
     public static final String TAG = "LOGIN";
 
     @Override

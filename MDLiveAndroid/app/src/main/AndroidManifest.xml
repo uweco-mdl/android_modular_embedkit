@@ -224,6 +224,7 @@
         <activity
             android:name=".uilayer.login.LoginActivity"
             android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait" />
 
         <activity
