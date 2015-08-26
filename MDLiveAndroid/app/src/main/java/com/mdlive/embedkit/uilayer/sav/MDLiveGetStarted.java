@@ -650,7 +650,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                 dependentList.clear();
                 PatientList.clear();
             }
-
+            DateTxt = personalInfo.getString("birthdate");
             dependentList.add(personalInfo.getString("first_name") + " " + personalInfo.getString("last_name")) ;
             JsonParser parser = new JsonParser();
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -944,8 +944,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private void providerSuccessResponse(String response) {
         try {
             Log.e("REsponse--->", response.toString());
-
-
         }catch(Exception e){
             e.printStackTrace();
         }
