@@ -23,6 +23,7 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserInformat
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -200,7 +201,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (dependentUserSize >= IntegerConstants.ADD_CHILD_SIZE) {
             MdliveUtils.showAddChildExcededDialog(this);
         } else {
-            Toast.makeText(getBaseContext(), "Navigate to Add Child screen", Toast.LENGTH_SHORT).show();
+            startActivityWithClassName(AddFamilyMemberActivity.class);
+            finish();
         }
     }
 

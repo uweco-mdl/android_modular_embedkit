@@ -16,15 +16,18 @@ import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Provider;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -163,8 +166,36 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 pDialog.dismiss();
 
-                final Gson gson = new Gson();
+
+                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
+        /*
+        * This is a work around, as for new user rather sending on blank Json object
+        * It sends a empty JSON Array
+        * */
+                try {
+                    JSONObject primaryPhysicianJSONObject = response.getJSONObject("primary_care_physician");
+                    final PrimaryCarePhysician primaryCarePhysician = new PrimaryCarePhysician();
+                    primaryCarePhysician.zip = primaryPhysicianJSONObject.getString("zip");
+                    primaryCarePhysician.phone = primaryPhysicianJSONObject.getString("phone");
+                    primaryCarePhysician.fax = primaryPhysicianJSONObject.getString("fax");
+                    primaryCarePhysician.middleName = primaryPhysicianJSONObject.getString("middle_name");
+                    primaryCarePhysician.cell = primaryPhysicianJSONObject.getString("cell");
+                    primaryCarePhysician.state = primaryPhysicianJSONObject.getString("state");
+                    primaryCarePhysician.address1 = primaryPhysicianJSONObject.getString("address1");
+                    primaryCarePhysician.address2 = primaryPhysicianJSONObject.getString("address2");
+                    primaryCarePhysician.suffix = primaryPhysicianJSONObject.getString("suffix");
+                    primaryCarePhysician.city = primaryPhysicianJSONObject.getString("city");
+                    primaryCarePhysician.stateprov = primaryPhysicianJSONObject.getString("stateprov");
+                    primaryCarePhysician.country = primaryPhysicianJSONObject.getString("country");
+                    primaryCarePhysician.firstName = primaryPhysicianJSONObject.getString("first_name");
+                    primaryCarePhysician.email = primaryPhysicianJSONObject.getString("email");
+                    primaryCarePhysician.practice = primaryPhysicianJSONObject.getString("practice");
+                    primaryCarePhysician.prefix = primaryPhysicianJSONObject.getString("prefix");
+                    primaryCarePhysician.lastName = primaryPhysicianJSONObject.getString("last_name");
+                } catch (JSONException e) {
+                    provider.primaryCarePhysician = null;
+                }
 
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);

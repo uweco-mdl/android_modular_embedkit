@@ -88,12 +88,9 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
 
     @Override
     public void onSignUpSucess() {
-        getSupportActionBar().show();
-
-        getSupportFragmentManager().
-                beginTransaction().
-                add(R.id.container, CreatePinFragment.newInstance(), TAG).
-                commit();
+        final Intent intent = new Intent(getBaseContext(), PinActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

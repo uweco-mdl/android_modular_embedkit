@@ -81,6 +81,10 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
      */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        if (getDrawerLayout().isDrawerOpen(GravityCompat.START) || getDrawerLayout().isDrawerOpen(GravityCompat.END)) {
+            return;
+        }
+
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
 

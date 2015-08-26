@@ -151,12 +151,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         final Notifications notification = userBasicInfo.getNotifications();
 
         mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
-
-        if (userBasicInfo.getHealthLastUpdate() < 0) {
-            mPersonalInfoTextView.setText(getActivity().getString(R.string.no_health_record));
-        } else {
-            mPersonalInfoTextView.setText(MdliveUtils.getDaysAgo(mPersonalInfoTextView.getContext(), userBasicInfo.getHealthLastUpdate()));
-        }
+        mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
 
         final StringBuilder store = new StringBuilder();
 
