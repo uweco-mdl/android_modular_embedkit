@@ -286,7 +286,12 @@
             android:name=".uilayer.myaccounts.AddFamilyMemberActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".uilayer.myaccounts.MyAccountActivity">
+            <meta-data
+                android:name="androi.support.PARENT_ACTIVITY"
+                android:value="com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity"/>
+        </activity>
 
         <!--
            &lt;!&ndash; From Unified Middle ware&ndash;&gt;
@@ -326,7 +331,7 @@
         <activity
             android:name=".uilayer.myhealth.PrimaryCarePhysicianActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/MDLive_Red_Theme"/>
     </application>
 
 </manifest>

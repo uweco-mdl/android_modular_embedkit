@@ -136,15 +136,19 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        logD("Nav", "I am here");
         if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
             final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
-
+            logD("Nav", "I am here1");
             if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                logD("Nav", "I am dependent user :" + user.toString());
                 loadDependendUserDetails(user);
             } else {
+                logD("Nav", "I am primary user :");
                 loadUserInformationDetails();
             }
         } else {
+            logD("Nav", "I am here2");
             mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
             updateList();
         }

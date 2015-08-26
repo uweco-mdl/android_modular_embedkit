@@ -11,8 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +63,22 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
-      if (getIntent() != null) {
+
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.payment_txt));
+
+        if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             finalAmout = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
             storePayableAmount(finalAmout);
@@ -106,21 +122,40 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-        if (MdliveUtils.ssoInstance.getCurrentEnvironment() == 4) {
-            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
-        } else {
-            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
-        }
+//        if (MdliveUtils.ssoInstance.getCurrentEnvironment() == 4) {
+//            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
+//        } else {
+//            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+//        }
+        HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
 
-        findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
+    public void rightBtnOnClick(View view){
+
+        if (finalAmout.equals("0.00")) {
+            doConfirmAppointment();
+        } else {
+            /*if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+                if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
+                    HostedPCI.loadUrl("javascript:tokenizeForm()");
+                } else {
+                    MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_enter_valid_zipcode));
+                }
+
+            } else {
+                MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_fill_required_fields));
+
+            }*/
+        }
+
+    }
+
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLivePayment.this);
+        onBackPressed();
+    }
 
     final class IJavascriptHandler {
         IJavascriptHandler() {
@@ -536,17 +571,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (finalAmout.equals("0.00")) {
             doConfirmAppointment();
         } else {
-            /*if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-                if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
-                    HostedPCI.loadUrl("javascript:tokenizeForm()");
-                } else {
-                    MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_enter_valid_zipcode));
-                }
-
+            if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+                HostedPCI.loadUrl("javascript:tokenizeForm()");
             } else {
                 MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_fill_required_fields));
 
-            }*/
+            }
         }
     }
 

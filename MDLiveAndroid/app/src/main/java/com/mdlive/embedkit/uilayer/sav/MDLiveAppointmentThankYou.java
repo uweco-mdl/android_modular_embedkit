@@ -67,9 +67,9 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         ((TextView)findViewById(R.id.provider)).setText(providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
         consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+        consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
         ((TextView)findViewById(R.id.date)).setText(consultationDate);
-        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+        Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
         ((TextView)findViewById(R.id.time)).setText(Time);
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");

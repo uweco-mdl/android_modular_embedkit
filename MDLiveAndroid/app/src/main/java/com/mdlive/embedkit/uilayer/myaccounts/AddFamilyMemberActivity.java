@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -75,6 +78,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_familymember);
+        clearMinimizedTime();
 
         init();
 
@@ -86,6 +90,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
         TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
+        title.setText(getString(R.string.add_family_member).toUpperCase());
         ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +166,26 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent upIntent = new Intent(this, MyAccountActivity.class);
+        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(upIntent);
+        finish();
+    }
+
+    public void leftBtnOnClick(View view) {
+        Intent upIntent = new Intent(this, MyAccountActivity.class);
+        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(upIntent);
+        finish();
+    }
+
+    public void rightBtnOnClick(View view) {
+        addFamilyMemberInfo();
+    }
+
     public void init()
     {
         mUsername = (EditText)findViewById(R.id.userName);
@@ -288,6 +313,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             pDialog.dismiss();
 
             Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+            Intent upIntent = new Intent(this, MyAccountActivity.class);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(upIntent);
             finish();
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,5 +341,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             }
         });
         builder.show();
+    }
+
+    private void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }

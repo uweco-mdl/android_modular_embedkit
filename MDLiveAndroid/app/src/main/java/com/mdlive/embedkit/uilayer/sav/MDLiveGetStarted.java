@@ -67,10 +67,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private ProgressDialog pDialog = null;
     private TextView locationTxt;/*,genderText*/
     private String DateTxt;
-    private String strPatientName,SavedLocation;
+    private String strPatientName,SavedLocation,strProviderId;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
+    private ArrayList<String> providerTypeIdList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
     private EditText phonrNmberEditTxt;
@@ -183,6 +184,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                                 phoneNumberText = phoneNumberText.replace(")", "");
                                 phoneNumberText = phoneNumberText.replace(" ", "");
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
+                                editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
+                                editor.commit();
                                 clearCacheInVolley();
                                 Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);
                                 startActivity(intent);
@@ -216,6 +219,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         providerTypeArrayList = new ArrayList<String>();
+        providerTypeIdList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
 
 
@@ -717,19 +721,25 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         try {
             JSONObject providertype = response.getJSONObject("provider_types");
             providerTypeArrayList.clear();
+            providerTypeIdList.clear();
+
             Iterator<String> iter = providertype.keys();
             while (iter.hasNext()) {
                 String key = iter.next();
                 try {
                     Object value = providertype.get(key);
                     providerTypeArrayList.add(value.toString());
+                    providerTypeIdList.add(key);
 
 
                     Log.e("ptype keys",key);
                 } catch (JSONException e) {
                     // Something went wrong!
                 }
+                //Default first item coming from the service will set here.it will change into dynamic
+               // when we click the other items in the dialog.
                 ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+                strProviderId=providerTypeIdList.get(0);
             }
 
         } catch (Exception e) {
@@ -890,7 +900,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         ChooseProviderServices services = new ChooseProviderServices(MDLiveGetStarted.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         showProgress();
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), StringConstants.PROVIDERTYPE, successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)),strProviderId,successCallBackListener, errorListener);
     }
 
     /**
@@ -918,6 +928,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String SelectedText = list.get(position);
                 selectedText.setText(SelectedText);
+                strProviderId = providerTypeIdList.get(position);
+                Log.e("selected pos pID",strProviderId);
                 dialog.dismiss();
             }
         });
