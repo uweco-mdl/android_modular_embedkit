@@ -81,10 +81,6 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
      */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        if (getDrawerLayout().isDrawerOpen(GravityCompat.START) || getDrawerLayout().isDrawerOpen(GravityCompat.END)) {
-            return;
-        }
-
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
 
@@ -138,31 +134,45 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     /* Start of Dashboard icons click listener */
     public void onSeeADoctorNowClicked(View view) {
-        startActivityWithClassName(MDLiveGetStarted.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MDLiveGetStarted.class);
+        }
     }
 
     public void onScheduleAVisitClicked(View view) {
-        startActivityWithClassName(MDLiveGetStarted.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MDLiveGetStarted.class);
+        }
     }
 
     public void onMyHealthClicked(View view) {
-        startActivityWithClassName(MedicalHistoryActivity.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MedicalHistoryActivity.class);
+        }
     }
 
     public void onMessageCenterClicked(View view) {
-        startActivityWithClassName(MessageCenterActivity.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MessageCenterActivity.class);
+        }
     }
 
     public void onMdliveAssistClicked(View view) {
-        MdliveUtils.showMDLiveAssistDialog(this);
+        if (!isDrawerOpen()) {
+            MdliveUtils.showMDLiveAssistDialog(this);
+        }
     }
 
     public void onSymptomCheckerClicked(View view) {
-        startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+        }
     }
 
     public void onMyAccountClicked(View view) {
-        startActivityWithClassName(MyAccountActivity.class);
+        if (!isDrawerOpen()) {
+            startActivityWithClassName(MyAccountActivity.class);
+        }
     }
 
     public void onSignoutClicked(View view) {

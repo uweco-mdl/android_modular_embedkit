@@ -2,19 +2,20 @@ package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.CreateAccountFragment;
 import com.mdlive.embedkit.uilayer.login.CreateAccountFragment.OnSignupSuccess;
+import com.mdlive.embedkit.uilayer.login.ForgotPinFragment;
 import com.mdlive.embedkit.uilayer.login.LoginActivity;
 import com.mdlive.embedkit.uilayer.login.PinActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 /**
@@ -34,6 +35,7 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        showInitialToolbar();
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -60,6 +62,10 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
         editor.clear();
     }
 
+    public void onBackClicked(View view) {
+        onBackPressed();
+    }
+
     public void onSignUpClicked(View view) {
         getSupportActionBar().hide();
 
@@ -71,9 +77,13 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
     }
 
     public void onForgotPinClicked(View view) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_PASSWORD));
-        startActivity(intent);
+        showForgotPinToolbar();
+
+        getSupportFragmentManager().
+                beginTransaction().
+                addToBackStack(TAG).
+                add(R.id.main_container, ForgotPinFragment.newInstance(), TAG).
+                commit();
     }
 
     public void onSignInClicked(View view) {
@@ -89,6 +99,7 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
     public void onBackStackChanged() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             getSupportActionBar().show();
+            showInitialToolbar();
         }
     }
 
@@ -98,5 +109,30 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    public void onResetPinClicked(View view) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
+        if (fragment != null && fragment instanceof ForgotPinFragment) {
+            ((ForgotPinFragment) fragment).onResetPinClicked();
+        }
+    }
+
+    private void showInitialToolbar() {
+        findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.window_background_color));
+        findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
+        findViewById(R.id.sign_up).setVisibility(View.VISIBLE);
+        findViewById(R.id.forgot_pin).setVisibility(View.VISIBLE);
+        findViewById(R.id.headerTxt).setVisibility(View.GONE);
+
+    }
+
+    private void showForgotPinToolbar() {
+        findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.red_theme_primary));
+        findViewById(R.id.toolbar_cross).setVisibility(View.VISIBLE);
+        findViewById(R.id.sign_up).setVisibility(View.GONE);
+        findViewById(R.id.forgot_pin).setVisibility(View.GONE);
+        findViewById(R.id.headerTxt).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.forgot_pin).toUpperCase());
     }
 }

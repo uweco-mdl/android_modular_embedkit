@@ -24,7 +24,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
-import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -73,6 +73,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public DrawerLayout getDrawerLayout() {
         return mDrawerLayout;
+    }
+
+    public boolean isDrawerOpen() {
+        return getDrawerLayout().isDrawerOpen(GravityCompat.START) || getDrawerLayout().isDrawerOpen(GravityCompat.END);
     }
 
     /* Start of Drawer click listeners */
@@ -183,11 +187,17 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void onPersonalInfoClicked(View view) {
-        startActivityWithClassName(MDLivePharmacy.class);
+        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 0);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     public void onPreferedStoreClicked(View view) {
-
+        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 2);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override

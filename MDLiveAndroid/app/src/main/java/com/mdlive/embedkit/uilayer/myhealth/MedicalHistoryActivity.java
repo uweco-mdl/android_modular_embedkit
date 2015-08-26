@@ -16,6 +16,7 @@
 
 package com.mdlive.embedkit.uilayer.myhealth;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -40,7 +41,6 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
@@ -56,6 +56,13 @@ import java.util.List;
 public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnMedicalHistoryResponse{
 
     public static final String TAG = "MYHEALTH";
+    private static final String SELECTED_TAB = "slected_tab";
+
+    public static Intent getSelectedTabFromMedicalHistory(final Context context, final int selectedTab) {
+        final Intent intent = new Intent(context, MedicalHistoryActivity.class);
+        intent.putExtra(SELECTED_TAB, selectedTab);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,9 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
+            if (getIntent().getExtras() != null && getIntent().hasExtra(SELECTED_TAB)) {
+                viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_TAB, 0));
+            }
         }
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
