@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -115,33 +116,36 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String strappointmentContactNumber = appointmentContactNumber.getText().toString().trim();
         String strnxtavailable = appointmentNextAvailable.getText().toString().trim();
         String stridealdate = appointmentIdealDate.getText().toString().trim();
-        Log.e("post value","appmt reason->"+strappmtreason+"strappmtcomment->"+strappmtcomment+"strappointmentContactNumber->"+strappointmentContactNumber+"strnxtavailable"+strnxtavailable+"stridealdate"+postidealTime+"SelectVideo"+selectedvideo);
+        Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
         if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
 
                 && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)) {
 
             HashMap params1 = new HashMap();
-//                params1.put("appointment_method", "1");
-//                params1.put("contact_number",strappointmentContactNumber);
-//                params1.put("chief_complaint", "Tendinitis");
-//                params1.put("physician_id", DoctorId);
-//                params1.put("appointment_date", postidealTime);
-//                params1.put("preferred_time", appointmentNextAvailable);
-            params1.put("appointment_method", "1");
-            params1.put("contact_number","8870940080");
+            params1.put("appointment_method", selectedvideo);
+            params1.put("contact_number",strappointmentContactNumber);
             params1.put("chief_complaint", "Tendinitis");
-            params1.put("physician_id", 1248039);
-            params1.put("appointment_date", "2015/8/21");
-            params1.put("preferred_time", "morning");
+            params1.put("physician_id", DoctorId);
+            params1.put("appointment_date",postidealTime);
+            params1.put("preferred_time", strnxtavailable);//
             params.put("alternate_visit_option","No Answer");
             params.put("do_you_have_primary_care_physician","No");
             params.put("appointment",params1);
             LoadappmtRequest();
+            saveDateAndTime();
 
 
         } else {
             MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
         }
+    }
+    public void saveDateAndTime()
+    {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.IDEAL_DATE,  appointmentIdealDate.getText().toString().trim());
+        editor.putString(PreferenceConstants.NEXT_AVAIL_DATE, appointmentNextAvailable.getText().toString().trim());
+        editor.commit();
     }
 
     public void initialization()
@@ -314,40 +318,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     /*
 * Event for Add Child button click
 * */
-    public void submitRequestBtn(View view) {
-       String strappmtreason = appointmentReason.getText().toString().trim();
-        String strappmtcomment = appointmentComment.getText().toString().trim();
-        String strappointmentContactNumber = appointmentContactNumber.getText().toString().trim();
-        String strnxtavailable = appointmentNextAvailable.getText().toString().trim();
-        String stridealdate = appointmentIdealDate.getText().toString().trim();
-        Log.e("post value","appmt reason->"+strappmtreason+"strappmtcomment->"+strappmtcomment+"strappointmentContactNumber->"+strappointmentContactNumber+"strnxtavailable"+strnxtavailable+"stridealdate"+postidealTime+"SelectVideo"+selectedvideo);
-        if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
-
-               && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)) {
-
-                HashMap params1 = new HashMap();
-//                params1.put("appointment_method", "1");
-//                params1.put("contact_number",strappointmentContactNumber);
-//                params1.put("chief_complaint", "Tendinitis");
-//                params1.put("physician_id", DoctorId);
-//                params1.put("appointment_date", postidealTime);
-//                params1.put("preferred_time", appointmentNextAvailable);
-            params1.put("appointment_method", "1");
-            params1.put("contact_number","8870940080");
-            params1.put("chief_complaint", "Tendinitis");
-            params1.put("physician_id", 1248039);
-            params1.put("appointment_date", "2015/8/21");
-            params1.put("preferred_time", "morning");
-                params.put("alternate_visit_option","No Answer");
-                params.put("do_you_have_primary_care_physician","No");
-                params.put("appointment",params1);
-              LoadappmtRequest();
-
-
-        } else {
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
-        }
-    }
 
     /**
      * Instantiating array adapter to populate the listView
