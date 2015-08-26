@@ -11,11 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult;
@@ -117,6 +120,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         onBackPressed();
     }
 
+    public void pediatricOnClick(View v){
+        Intent Reasonintent = new Intent(MDLiveMedicalHistory.this, MDLivePediatric.class);
+        startActivityForResult(Reasonintent, IntegerConstants.PEDIATRIC_REQUEST_CODE);
+        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+    }
+
     /**
      * This function is used to update Medical history data in service
      * MedicalHistoryUpdateServices :: This class is used to update medical history. This class holds data ot update service
@@ -191,6 +200,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     public void rightBtnOnClick(View view){
         updateMedicalHistory();
     }
+
     public void SavContinueBtnOnClick(View view){
         updateMedicalHistory();
     }
@@ -260,6 +270,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 }
             }
         });
+
+        if (MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+            ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
+        }else{
+            ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
+        }
+
+
 /*        ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -299,8 +317,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     ((TextView)findViewById(R.id.AlergiesNameTv)).setText(data.getStringExtra("allegiesData"));
                 }
             }
+        }else if(requestCode == IntegerConstants.PEDIATRIC_REQUEST_CODE){
+            if (resultCode == RESULT_OK) {
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+            }
         }
-
     }
 
     @Override
@@ -526,7 +547,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             ValidateModuleFields();
             checkAgeAndFemale();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -541,7 +561,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=10) {
+            Log.e("gender", gender);
+
+
+            if(MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=1) {
                 if(gender.equalsIgnoreCase("Female")){
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);

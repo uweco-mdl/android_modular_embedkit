@@ -4,7 +4,6 @@ package com.mdlive.embedkit.uilayer.pediatric;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -564,9 +562,8 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 hideProgress();
-                Intent intent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
-                startActivity(intent);
-                MdliveUtils.startActivityAnimation(MDLivePediatric.this);
+                setResult(RESULT_OK);
+                finish();
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {

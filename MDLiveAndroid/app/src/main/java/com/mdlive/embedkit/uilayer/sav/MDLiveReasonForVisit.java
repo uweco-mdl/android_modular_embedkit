@@ -38,7 +38,6 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
-import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
@@ -164,16 +163,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
                     editor.commit();
                     //MDLivePharmacy
-                    if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-                        Intent Reasonintent = new Intent(MDLiveReasonForVisit.this, MDLivePediatric.class);
-                        startActivity(Reasonintent);
-                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-
-                    } else {
-                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
-                        startActivity(medicalIntent);
-                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
-                    }
+                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
+                    startActivity(medicalIntent);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
