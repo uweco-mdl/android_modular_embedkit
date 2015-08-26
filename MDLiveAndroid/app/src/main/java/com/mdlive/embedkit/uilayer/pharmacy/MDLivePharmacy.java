@@ -311,7 +311,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
         params.put("do_you_have_primary_care_physician", "No");
-        params.put("phys_availability_id", null);
+        params.put("phys_availability_id", "");
         params.put("alternate_visit_option", "No Answer");
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));

@@ -141,7 +141,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
 //
             video_call_icon = (ImageButton)row.findViewById(R.id.video_call_icon);
             if (array.get(pos).get("availability_type").equalsIgnoreCase(StringConstants.WITH_PATIENT)) {
-              video_call_icon.setBackgroundResource(R.drawable.clock_icon);
+                video_call_icon.setBackgroundResource(R.drawable.clock_icon);
             }
             else if(array.get(pos).get("availability_type").equalsIgnoreCase("phone"))
             {
@@ -159,8 +159,8 @@ public class ChooseProviderAdapter extends BaseAdapter {
             }
         }
 
-            return row;
-        }
+        return row;
+    }
 
 
 

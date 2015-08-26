@@ -703,7 +703,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("appointment_method", "1");
-        params.put("phys_availability_id", null);
+        params.put("phys_availability_id", "");
         params.put("alternate_visit_option", "No Answer");
         params.put("do_you_have_primary_care_physician","No");
         params.put("timeslot", "Now");
