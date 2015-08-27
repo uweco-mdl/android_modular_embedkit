@@ -104,7 +104,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
             ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.header_reason_txt));
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.header_reason_txt).toUpperCase());
 
 
             setProgressBar(findViewById(R.id.progressDialog));

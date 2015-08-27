@@ -57,10 +57,9 @@ import static java.util.Calendar.MONTH;
  * the provider like Specalties, about the provider,languages has been defined.
  */
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
-    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
+    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations,myText;
     private CircularNetworkImageView ProfileImg;
-    public String DoctorId;
-
+    public String DoctorId,str_ProfileImg="";
     private TextView tapSeetheDoctorTxt, byvideoBtn,byphoneBtn,reqfutureapptBtn;
     private LinearLayout tapSeetheDoctorTxtLayout, byvideoBtnLayout, byphoneBtnLayout,videophoneparentLl;
     private RelativeLayout reqfutureapptBtnLayout;
@@ -90,7 +89,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details).toUpperCase());
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
 
@@ -424,7 +423,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                    /* View line = new View(MDLiveProviderDetails.this);
                                     line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
                                     line.setBackgroundColor(0xAA345556);*/
-                                    TextView myText = new TextView(MDLiveProviderDetails.this);
+                                    myText  = new TextView(MDLiveProviderDetails.this);
                                     myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
                                     myText.setTextSize(16);
                                     myText.setPadding(20, 25, 20, 25);
@@ -457,6 +456,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                 }
             }
+            saveProviderDetailsForConFirmAppmt(str_Availability_Type,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString(),str_ProfileImg);
 
             Log.e("layout.getChildCount()", layout.getChildCount() + "");
             //with patient
@@ -753,7 +753,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         {
             str_AboutMe = providerdetObj.get("about_me").getAsString();
         }
-        String str_ProfileImg="";
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "provider_image_url")) {
             str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
         }
@@ -962,7 +961,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onClick(View v) {
                 String position = (String) v.getTag();
-                saveProviderDetailsForConFirmAppmt(position,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString());
+                saveProviderDetailsForConFirmAppmt(position,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString(),str_ProfileImg);
                /* if(firstClick) {
                     myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
@@ -1087,13 +1086,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         });*/
     }
     //Save to preferences for the Confirm appointment screen
-    public void saveProviderDetailsForConFirmAppmt(String consultationType,String selectedTime,String datteText)
+    public void saveProviderDetailsForConFirmAppmt(String consultationType,String selectedTime,String datteText,String providerProfile)
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.CONSULTATION_TYPE,consultationType);
         editor.putString(PreferenceConstants.SELECTED_TIMESLOT, selectedTime);
         editor.putString(PreferenceConstants.SELECTED_DATE, datteText);
+        editor.putString(PreferenceConstants.PROVIDER_PROFILE, providerProfile);
         editor.commit();
 
     }
