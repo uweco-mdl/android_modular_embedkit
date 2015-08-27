@@ -92,7 +92,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
         ((TextView)findViewById(R.id.txtTime)).setText(Time);
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        ((TextView)findViewById(R.id.phoneNumber)).setText(phone);
+        ((TextView)findViewById(R.id.phoneNumber)).setText("$49.00");
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         ((TextView)findViewById(R.id.amountInDollar)).setText(doctorEVisit);
     }

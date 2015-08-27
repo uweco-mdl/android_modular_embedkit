@@ -35,15 +35,20 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         fragment = getIntent().getStringExtra("Fragment_Name");
         TAG = fragment;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        try {
+            Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
-        TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
-        ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
+        ImageView back = (ImageView) findViewById(R.id.backImg);
+        TextView title = (TextView) findViewById(R.id.headerTxt);
+        ImageView apply = (ImageView) findViewById(R.id.txtApply);
 
 
         if (fragment.equals("CHANGE PASSWORD")) {

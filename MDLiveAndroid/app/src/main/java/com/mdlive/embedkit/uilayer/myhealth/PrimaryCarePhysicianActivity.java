@@ -28,13 +28,17 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
+        TextView title = (TextView) findViewById(R.id.headerTxt);
 
         title.setText(getResources().getString(R.string.pcp_title));
 

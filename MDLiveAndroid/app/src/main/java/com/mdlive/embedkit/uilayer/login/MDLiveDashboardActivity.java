@@ -33,11 +33,15 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_activity_dashboard);
 
-        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
+        try {
+            setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         User user = null;
