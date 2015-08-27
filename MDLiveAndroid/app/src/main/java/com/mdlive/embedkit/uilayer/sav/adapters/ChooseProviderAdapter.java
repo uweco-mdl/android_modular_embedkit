@@ -119,6 +119,27 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 {
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
                 }
+
+                //image view
+                video_call_icon = (ImageButton)row.findViewById(R.id.video_call_icon);
+                if (array.get(pos).get("availability_type").equalsIgnoreCase(StringConstants.WITH_PATIENT)) {
+                    video_call_icon.setBackgroundResource(R.drawable.clock_icon);
+                    ((TextView) row.findViewById(R.id.specalist)).setText("With Patient...");
+                }
+                else if(array.get(pos).get("availability_type").equalsIgnoreCase("phone"))
+                {
+                    video_call_icon.setBackgroundResource(R.drawable.phone_call_icon);
+                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by phone");
+                }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video"))
+                {
+                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by video");
+                    video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
+                }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video or phone"))
+                {
+                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by video or phone");
+                    video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
+                }
+
             }
             else {
 
@@ -139,25 +160,8 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
 //            withPatientTxt = (TextView) row.findViewById(R.id.callImg);
 //
-            video_call_icon = (ImageButton)row.findViewById(R.id.video_call_icon);
-            if (array.get(pos).get("availability_type").equalsIgnoreCase(StringConstants.WITH_PATIENT)) {
-                video_call_icon.setBackgroundResource(R.drawable.clock_icon);
-            }
-            else if(array.get(pos).get("availability_type").equalsIgnoreCase("phone"))
-            {
-                video_call_icon.setBackgroundResource(R.drawable.phone_call_icon);
-            }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video"))
-            {
-                video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
-            }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video or phone"))
-            {
-                video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
-            }
-            else
-            {
 
             }
-        }
 
         return row;
     }

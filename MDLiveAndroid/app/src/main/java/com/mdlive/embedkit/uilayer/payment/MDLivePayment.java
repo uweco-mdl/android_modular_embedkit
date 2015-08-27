@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -397,12 +396,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.putString(PreferenceConstants.APPT_ID, apptId);
                         editor.commit();
-                        Intent i = new Intent(MDLivePayment.this, MDLiveWaitingRoom.class);
+                        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
                         startActivity(i);
                         MdliveUtils.startActivityAnimation(MDLivePayment.this);
                     } else {
                         Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
+                }
 
                 } catch (Exception e) {
                     dismissDialog();
