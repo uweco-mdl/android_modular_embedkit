@@ -586,6 +586,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     byphoneBtnLayout.setVisibility(View.GONE);
 
                 } else if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
+                    tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
                     tapSeetheDoctorTxt.setVisibility(View.GONE);
                     reqfutureapptBtnLayout.setVisibility(View.GONE);
                    byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
