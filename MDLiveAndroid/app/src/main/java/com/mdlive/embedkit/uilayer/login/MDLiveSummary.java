@@ -41,7 +41,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string).toUpperCase());
 
         setProgressBar(findViewById(R.id.progressDialog));
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
