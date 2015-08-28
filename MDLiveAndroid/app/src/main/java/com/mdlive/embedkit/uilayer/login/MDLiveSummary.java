@@ -43,7 +43,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string));
 
-        setProgressBar(findViewById(R.id.progressDialog));
+        setProgressBar(findViewById(R.id.progressBar));
         TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
