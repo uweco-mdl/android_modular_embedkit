@@ -10,7 +10,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
@@ -77,7 +76,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
 
             // Message Center
             case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
+                onMessageClicked();
                 break;
 
             // Symptom Checker

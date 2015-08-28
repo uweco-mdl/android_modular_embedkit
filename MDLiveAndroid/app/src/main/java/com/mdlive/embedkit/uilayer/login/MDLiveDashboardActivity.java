@@ -10,7 +10,6 @@ import android.view.View;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
@@ -25,8 +24,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 /**
  * Created by dhiman_da on 8/6/2015.
  */
-public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements OnEmailConfirmationClicked, NotifyDashboard, OnNotificationCliked {
-    private static final String DIALOG_FRAGMENT = "dialog_fragment";
+public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements NotifyDashboard, OnNotificationCliked {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +72,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     /* On Email Unconfirmed Click listener */
     public void onEmailUnconfirmClicked(View view) {
-        final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
-        dialogFragment.show(getSupportFragmentManager(), DIALOG_FRAGMENT);
+        showEmailConfirmationDialog();
     }
 
     /**
@@ -111,7 +108,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
             // Message Center
             case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
+                onMessageClicked();
                 break;
 
             // Symptom Checker
@@ -179,9 +176,6 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         }
     }
 
-    public void onSignoutClicked(View view) {
-
-    }
     /* End of Dashboard icons click listener */
 
     @Override

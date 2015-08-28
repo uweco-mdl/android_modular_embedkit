@@ -57,7 +57,7 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         ViewHolderDropDown viewHolder = null;
 
-        if (convertView == null) {
+        //if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_dash_borad_spinner_dropdown, parent, false);
 
@@ -65,10 +65,10 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
             viewHolder.mTextView = (TextView) convertView.findViewById(R.id.adapter_dash_borad_spinner_dropdown_text_view);
             viewHolder.mImageView = (CircularNetworkImageView) convertView.findViewById(R.id.adapter_dash_borad_spinner_dropdown_circular_image_view);
 
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolderDropDown) convertView.getTag();
-        }
+            //convertView.setTag(viewHolder);
+        //} else {
+            //viewHolder = (ViewHolderDropDown) convertView.getTag();
+        //}
 
         viewHolder.mTextView.setText(getItem(position).mName);
         if (User.MODE_ADD_CHILD == getItem(position).mMode) {

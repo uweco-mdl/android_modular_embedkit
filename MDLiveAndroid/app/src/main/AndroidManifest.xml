@@ -30,12 +30,13 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/CustomTheme" >
+        android:theme="@style/CustomTheme"
+        android:name="android.support.multidex.MultiDexApplication">
 
         <!-- Google Api Key -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyD10ySfhNEM1FYuoRuoxK9yWjcGWOPA6Js" />
+            android:value="AIzaSyCw8f1PECz-qxjxvIHd0DaDU-SUDWbMS1w" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -233,7 +234,6 @@
 
         <activity
             android:name=".uilayer.login.LoginActivity"
-            android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait" />
 

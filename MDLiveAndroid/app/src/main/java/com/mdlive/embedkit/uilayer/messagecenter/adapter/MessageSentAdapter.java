@@ -27,7 +27,7 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        if (convertView == null) {
+        //if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_message_sent, parent, false);
 
@@ -38,10 +38,10 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_message_sent_bottom_text_view);
             viewHolder.mTextViewTime = (TextView) convertView.findViewById(R.id.adapter_message_sent_date_text_view);
 
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+            //convertView.setTag(viewHolder);
+        //} else {
+            //viewHolder = (ViewHolder) convertView.getTag();
+        //}
 
         if (getItem(position).readStatus) {
             viewHolder.mTextViewTop.setTextColor(Color.GRAY);

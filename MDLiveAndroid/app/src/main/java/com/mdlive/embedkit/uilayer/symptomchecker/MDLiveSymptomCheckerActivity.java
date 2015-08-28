@@ -13,7 +13,6 @@ import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
@@ -93,7 +92,7 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
 
             // Message Center
             case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
+                onMessageClicked();
                 break;
 
             // Symptom Checker

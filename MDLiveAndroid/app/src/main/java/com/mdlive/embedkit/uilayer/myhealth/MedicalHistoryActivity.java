@@ -39,7 +39,6 @@ import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
@@ -140,7 +139,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
             // Message Center
             case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
+                onMessageClicked();
                 break;
 
             // Symptom Checker

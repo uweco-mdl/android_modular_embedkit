@@ -23,7 +23,7 @@ public class RecordAdapter extends ArrayAdapter<Record> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        if (convertView == null) {
+        //if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_record, parent, false);
 
@@ -32,10 +32,10 @@ public class RecordAdapter extends ArrayAdapter<Record> {
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_record_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_record_bottom_text_view);
 
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+            //convertView.setTag(viewHolder);
+        //} else {
+            //viewHolder = (ViewHolder) convertView.getTag();
+        //}
 
         //viewHolder.mImageView.setImageBitmap(whatever);
         viewHolder.mTextViewTop.setText(getItem(position).docName);

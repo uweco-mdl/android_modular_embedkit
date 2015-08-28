@@ -97,13 +97,11 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (getActivity() != null && getActivity() instanceof MedicalHistoryActivity) {
-//                        ((MedicalHistoryActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i));
-                        final MyProvider provider = mProviderAdapter.getItem(i);
-                        Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
-                        intent.putExtra("ProviderID", String.valueOf(provider.providerId));
-                        getActivity().startActivity(intent);
-                    }
+                    i -= mListView.getHeaderViewsCount();
+                    final MyProvider provider = mProviderAdapter.getItem(i);
+                    Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
+                    intent.putExtra("ProviderID", String.valueOf(provider.providerId));
+                    getActivity().startActivity(intent);
                 }
             });
         }

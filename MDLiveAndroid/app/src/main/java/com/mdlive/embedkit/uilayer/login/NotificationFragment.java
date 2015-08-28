@@ -150,7 +150,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
     public void setNotification(final UserBasicInfo userBasicInfo) {
         final Notifications notification = userBasicInfo.getNotifications();
 
-        mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
+        if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+            mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
+        } else {
+            mMessagesTextView.setVisibility(View.GONE);
+        }
+
         mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
 
         final StringBuilder store = new StringBuilder();

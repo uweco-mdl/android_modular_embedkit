@@ -12,7 +12,6 @@ import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
@@ -100,7 +99,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
 
             // Message Center
             case 4:
-                startActivityWithClassName(MessageCenterActivity.class);
+                onMessageClicked();
                 break;
 
             // Symptom Checker
@@ -139,7 +138,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     }
 
     public void onMessageCenterClicked(View view) {
-        startActivityWithClassName(MessageCenterActivity.class);
+        onMessageClicked();
     }
 
     public void onMdliveAssistClicked(View view) {
@@ -152,10 +151,6 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
 
     public void onMyAccountClicked(View view) {
         startActivityWithClassName(MyAccountActivity.class);
-    }
-
-    public void onSignoutClicked(View view) {
-
     }
     /* End of Dashboard icons click listener */
 }

@@ -27,7 +27,7 @@ public class MessageReceivedAdapter extends ArrayAdapter<ReceivedMessage> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        if (convertView == null) {
+        //if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_message_received, parent, false);
 
@@ -38,10 +38,10 @@ public class MessageReceivedAdapter extends ArrayAdapter<ReceivedMessage> {
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_message_received_bottom_text_view);
             viewHolder.mTextViewTime = (TextView) convertView.findViewById(R.id.adapter_message_received_date_text_view);
 
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+            //convertView.setTag(viewHolder);
+        //} else {
+            //viewHolder = (ViewHolder) convertView.getTag();
+        //}
 
 
         if (getItem(position).readStatus) {

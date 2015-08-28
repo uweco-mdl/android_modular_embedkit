@@ -12,8 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
+import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
+import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
+import com.mdlive.embedkit.uilayer.login.LoginActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
@@ -31,6 +35,12 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by dhiman_da on 8/16/2015.
@@ -38,7 +48,10 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity implements NavigationDrawerCallbacks,
         OnUserInformationLoaded,
         OnUserSelectionChanged,
-        OnAppointmentClicked {
+        OnAppointmentClicked,
+        OnEmailConfirmationClicked {
+    public static final String DIALOG_FRAGMENT = "dialog_fragment";
+
     public static final String MAIN_CONTENT = "main_content";
     public static final String LEFT_MENU = "left_menu";
     public static final String RIGHT_MENU = "right_menu";
@@ -57,7 +70,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         super.onStart();
 
         if (showPinScreen()) {
-            startActivity(new Intent(getBaseContext(), UnlockActivity.class));
+            if (MdliveUtils.getLockType(this).equalsIgnoreCase("password")) {
+                startActivity(LoginActivity.getLockLoginIntnet(getBaseContext()));
+            } else {
+                startActivity(new Intent(getBaseContext(), UnlockActivity.class));
+            }
+
         }
     }
 
@@ -122,7 +140,14 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public abstract void onNavigationDrawerItemSelected(int position);
 
     public void onSignoutClicked(View view) {
+        MdliveUtils.clearNecessarySharedPrefernces(getApplicationContext());
 
+        final Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        finish();
     }
 
     @Override
@@ -183,7 +208,16 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void onMessageClicked(View view) {
-        startActivityWithClassName(MessageCenterActivity.class);
+        onMessageClicked();
+    }
+
+    public void onMessageClicked() {
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if (userBasicInfo != null && userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+            startActivityWithClassName(MessageCenterActivity.class);
+        } else {
+            showEmailConfirmationDialog();
+        }
     }
 
     public void onPersonalInfoClicked(View view) {
@@ -250,8 +284,39 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         editor.commit();
     }
 
-    private String getLockType() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, MODE_PRIVATE);
-        return preferences.getString(PreferenceConstants.SIGN_IN, "Pin");
+    public void showEmailConfirmationDialog() {
+        final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), DIALOG_FRAGMENT);
+    }
+
+    @Override
+    public void onEmailConfirmationClicked() {
+        loadEmailConfirmationService();
+    }
+
+    public void loadEmailConfirmationService() {
+        try {
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        MdliveUtils.showDialog(getBaseContext(), getString(R.string.app_name), response.getString("message"));
+                    } catch (JSONException e) {
+                    }
+                }
+            };
+
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            };
+
+            EmailConfirmationService service = new EmailConfirmationService(getBaseContext(), null);
+            service.emailConfirmation(successCallBackListener, errorListener, null);
+        } catch (Exception e) {
+
+        }
     }
 }

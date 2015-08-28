@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.mdlive.embedkit.uilayer.login.CreateAccountFragment.OnSignupSuccess;
 import com.mdlive.embedkit.uilayer.login.LoginFragment.OnLoginResponse;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by venkataraman_r on 7/22/2015.
@@ -23,6 +25,13 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
 public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
         OnSignupSuccess, OnBackStackChangedListener {
     public static final String TAG = "LOGIN";
+    private static final String UNLOCK_FLAG = "UNLOCK_FLAG";
+
+    public static Intent getLockLoginIntnet(final Context context) {
+        final Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(UNLOCK_FLAG, 1);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,8 +92,19 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
 
     @Override
     public void onLoginSucess() {
-        final Intent intent = new Intent(getBaseContext(), PinActivity.class);
-        startActivity(intent);
+        if (getIntent() != null && getIntent().hasExtra(UNLOCK_FLAG) && getIntent().getExtras().getInt(UNLOCK_FLAG) == 1) {
+            finish();
+            return;
+        }
+
+        if (MdliveUtils.getLockType(this).equalsIgnoreCase("password")) {
+            final Intent intent = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
+            startActivity(intent);
+        } else {
+            final Intent intent = new Intent(getBaseContext(), PinActivity.class);
+            startActivity(intent);
+        }
+
         finish();
     }
 
