@@ -14,8 +14,13 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by sudha_s on 8/22/2015.
@@ -88,12 +93,28 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
         ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType);
         consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-        ((TextView)findViewById(R.id.txtDate)).setText(consultationDate);
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
-        ((TextView)findViewById(R.id.txtTime)).setText(Time);
+
+        if(!consultationDate.isEmpty()&&!Time.isEmpty())
+        {
+            ((TextView)findViewById(R.id.txtDate)).setText(consultationDate);
+        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+            ((TextView)findViewById(R.id.txtTime)).setText(Time);
+        }else
+        {
+            Calendar calendar = Calendar.getInstance();
+            String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
+            ((TextView)findViewById(R.id.txtDate)).setText(format);
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
+            String  currentTime = df.format(calendar.getTime());
+            ((TextView)findViewById(R.id.txtTime)).setText(currentTime);
+        }
+
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        ((TextView)findViewById(R.id.phoneNumber)).setText("$49.00");
+        ((TextView)findViewById(R.id.phoneNumber)).setText(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        ((TextView)findViewById(R.id.amountInDollar)).setText(doctorEVisit);
+        ((TextView)findViewById(R.id.amountInDollar)).setText("");
+        String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
+        ((CircularNetworkImageView)findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
     }
 }

@@ -37,7 +37,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setVisibility(View.INVISIBLE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string).toUpperCase());
 
 
         getPreferenceValue();

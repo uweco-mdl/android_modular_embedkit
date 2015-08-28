@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -68,6 +69,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private LinearLayout providerImageHolder,detailsLl;
     private HorizontalScrollView horizontalscrollview;
     private int month, day, year;
+    private Button reqApmtBtm;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> timeSlotList = new ArrayList<>();
@@ -88,7 +90,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details).toUpperCase());
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
@@ -111,6 +113,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+//Enable or disable Request Appointment Button
+
+
+
     }
     /**
      * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
@@ -146,6 +152,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     public void Initialization()
     {
+        reqApmtBtm = (Button)findViewById(R.id.reqApmtBtm);
         aboutme_txt = (TextView)findViewById(R.id.aboutMe_txt);
         education_txt = (TextView)findViewById(R.id.education_txt);
         specialities_txt = (TextView)findViewById(R.id.specialities_txt);
@@ -171,40 +178,21 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         horizontalscrollview  = (HorizontalScrollView) findViewById(R.id.horizontalscrollview);
         setProgressBar(findViewById(R.id.progressDialog));
 
+        Calendar calendar = Calendar.getInstance();
+        String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
+        ((TextView)findViewById(R.id.dateTxt)).setText(format);
+
 
     }
 
-    public void rightBtnOnClick(View view){
 
-//        if(selectedTimeslot) {
-            Intent Reasonintent = new Intent(MDLiveProviderDetails.this, MDLiveReasonForVisit.class);
-            startActivity(Reasonintent);
-            MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-//        }else if(selectedVideoOrPhone)
-//        {
-//            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                }
-//            };
-//            DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                }
-//            };
-//
-//            MdliveUtils.showDialog(MDLiveProviderDetails.this,"Would you like this appointment by phone or video?",positiveOnClickListener, negativeOnClickListener,"phone","video");
-//
-//        }
-//        else
-//        {
-//            MdliveUtils.showDialog(MDLiveProviderDetails.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    finish();
-//                }
-//            });
-//        }
+
+
+    public void rightBtnOnClick(View view){
+        reqApmtBtm.setVisibility(View.VISIBLE);
+        Intent Reasonintent = new Intent(MDLiveProviderDetails.this, MDLiveReasonForVisit.class);
+        startActivity(Reasonintent);
+        MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
     }
 
     public void leftBtnOnClick(View view){
@@ -276,7 +264,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         hideProgress();
         //Fetch Data From the Services
-        Log.e("Response pdetails",response.toString());
+        Log.e("Response pdetails date",response.toString());
         JsonParser parser = new JsonParser();
         JsonObject responObj = (JsonObject)parser.parse(response.toString());
         JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -312,29 +300,44 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         JsonObject timeSlotObj = timeSlotArray.get(j).getAsJsonObject();
 
 
-                        if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type")&&MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
+                        if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
                             str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
 
-                            if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
-                                str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
+                            try {
+                                if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
+                                    str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
+                            try {
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
-                                HashMap<String, String> map = new HashMap<String, String>();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+                            Log.e("General Check timeslot", str_timeslot+"");
+                            Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
+                            Log.e("General Check appointment_type", str_appointmenttype+"");
+
                                 map.put("timeslot",str_timeslot);
-                                map.put("phys_id", str_phys_avail_id);
+                                map.put("phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id);
                                 map.put("appointment_type", str_appointmenttype);
 
                                 timeSlotListMap.add(map);
                                 if(str_timeslot.equals("0")){
                                     isDoctorAvailableNow = true;
                                     TextView myText = new TextView(MDLiveProviderDetails.this);
-                                    myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
+                                    myText.setTextColor(Color.WHITE);
                                     myText.setTextSize(16);
-                                    myText.setPadding(10,5,10,5);
+                                    myText.setPadding(25, 25, 25, 25);
                                     //myText.setBackgroundResource(R.drawable.edittext_bg);
                                     myText.setText("Now");
                                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                                    previousSelectedTv = myText;
                                     LinearLayout.LayoutParams lp = new
                                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                     lp.setMargins(5, 0, 5, 0);
@@ -342,7 +345,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     layout.addView(myText);
 
                                 }else {
-                                    setHorizontalScrollviewTimeslots(layout, str_timeslot,j);
+                                    setHorizontalScrollviewTimeslots(layout, str_timeslot, j);
                                 }
 
 //                              str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
@@ -384,9 +387,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
             JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
 
+            Log.e("Stage 1..", response.toString());
             boolean isDoctorAvailableNow = false, isDoctorWithPatient = false;
             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-            String str_appointmenttype = "", str_timeslot = "", str_phys_avail_id = "", str_Availability_Type = "";
+            String str_appointmenttype = "", str_timeslot = "", /*str_phys_avail_id = "",*/ str_Availability_Type = "";
             if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
                 str_Availability_Type = providerdetObj.get("availability_type").getAsString();
             }
@@ -408,12 +412,19 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
                                 str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
-                                if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
+
+                                /*if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
                                     str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
-                                }
+                                }*/
+
+                                Log.e("General Check timeslot", str_timeslot+"");
+                                //Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
+                                Log.e("General Check appointment_type", str_appointmenttype+"");
+
+
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("timeslot", str_timeslot);
-                                map.put("phys_id", str_phys_avail_id);
+                                map.put("phys_id", "");
                                 map.put("appointment_type", str_appointmenttype);
 
                                 timeSlotListMap.add(map);
@@ -424,13 +435,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     line.setLayoutParams(new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
                                     line.setBackgroundColor(0xAA345556);*/
                                     myText  = new TextView(MDLiveProviderDetails.this);
-                                    myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
+                                    myText.setTextColor(Color.WHITE);
                                     myText.setTextSize(16);
-                                    myText.setPadding(20, 25, 20, 25);
+                                    myText.setPadding(25, 25, 25, 25);
                                     myText.setBackgroundResource(R.drawable.edittext_bg);
                                     myText.setText("Now");
                                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                                    myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
+                                    myText.setTextColor(Color.WHITE);
                                     previousSelectedTv = myText;
                                     LinearLayout.LayoutParams lp = new
                                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -456,9 +467,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                 }
             }
-            saveProviderDetailsForConFirmAppmt(str_Availability_Type,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString(),str_ProfileImg);
+
+            try {
+                saveProviderDetailsForConFirmAppmt(str_Availability_Type, myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             Log.e("layout.getChildCount()", layout.getChildCount() + "");
+
+
             //with patient
             if (isDoctorWithPatient) {
                 if (layout.getChildCount() >= 1) {
@@ -467,106 +485,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     enableOrdisableProviderDetails(str_Availability_Type);
                 } else if (layout.getChildCount() <1) {
                     //Make future appointment
-                    tapSeetheDoctorTxt.setText("Currently with patient");
-                    tapSeetheDoctorTxt.setClickable(false);
-                    tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
-                    reqfutureapptBtn.setText("Make an appointment request");
-                    tapReqFutureBtnAction();
-                    videophoneparentLl.setVisibility(View.GONE);
-                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.GONE);
-                    byphoneBtnLayout.setVisibility(View.GONE);
-                    horizontalscrollview.setVisibility(View.GONE);
+                    onlyWithPatient();
 
                 }
 
             }
-            //No tome slots only make future appointements
-            //getchildcount is zero and not available now and later
-            //not available
-            else if (layout.getChildCount() == 0) {
-
-                Log.e("zero-->", "am in zero");
-                horizontalscrollview.setVisibility(View.GONE);
-                Log.e("Am in availble now", "Am in availble now");
-                ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-                if (str_Availability_Type.equalsIgnoreCase("video")) {
-                    Log.e("Am in availble now", "Am in video");
-                     tapSeetheDoctorTxt.setText("See this doctor now");
-                    reqfutureapptBtnLayout.setVisibility(View.GONE);
-                    videophoneparentLl.setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.GONE);
-                    byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                    byphoneBtnLayout.setVisibility(View.GONE);
-
-                } else if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
-                    tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
-                    tapSeetheDoctorTxt.setVisibility(View.GONE);
-                    reqfutureapptBtnLayout.setVisibility(View.GONE);
-                    byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                            Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
-                            startActivity(Reasonintent);
-                            MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-                        }
-                    });
-                    byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                            Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
-                            startActivity(Reasonintent);
-                            MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-                        }
-                    });
-                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-                    tapSeetheDoctorTxt.setText("Talk to this doctor now");
-                    ((ImageView)findViewById(R.id.arrowindicatorIcon)).setBackgroundResource(R.drawable.phone_icon);
-                    reqfutureapptBtnLayout.setVisibility(View.GONE);
-                    videophoneparentLl.setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.GONE);
-                    byvideoBtnLayout.setClickable(false);
-                    byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
-                    byphoneBtnLayout.setVisibility(View.GONE);
-                    byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                }
-
-                else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-                    tapSeetheDoctorTxt.setText("Currently with patient");
-                    tapSeetheDoctorTxt.setClickable(false);
-                    tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
-                    reqfutureapptBtn.setText("Make an appointment request");
-                    tapReqFutureBtnAction();
-                    videophoneparentLl.setVisibility(View.GONE);
-                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.GONE);
-                    byphoneBtnLayout.setVisibility(View.GONE);
-                    horizontalscrollview.setVisibility(View.GONE);
-
-                }
-
-                else {
-                    //Make future appointment only
-                    tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
-                    tapSeetheDoctorTxt.setText("Currently not available");
-                    tapSeetheDoctorTxt.setClickable(false);
-                    tapSeetheDoctorTxtLayout.setBackgroundResource((R.drawable.gray_rounded_bg));
-                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-                    videophoneparentLl.setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.GONE);
-                    byphoneBtnLayout.setVisibility(View.GONE);
-                    reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
-                    reqfutureapptBtnLayout.setClickable(true);
-                    reqfutureapptBtn.setText("Make an appointment request");
-                    tapReqFutureBtnAction();
-                }
-
-            }
-
 
             /*This is for Status is available and the timeslot is Zero..Remaining all
                     the status were not available.*/
@@ -624,6 +547,19 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             }
 
+            //Available now and later
+            //Part1 ----> timeslot zero followed by many timeslots
+            else if (isDoctorAvailableNow && layout.getChildCount() >= 1) {
+                enableOrdisableProviderDetails(str_Availability_Type);
+
+            }
+            //part 2 available ly later
+            //Part2 ----> timeslot not zero followed by many timeslots
+            else if (!isDoctorAvailableNow && layout.getChildCount() >=1) {
+                enableOrdisableProviderDetails(str_Availability_Type);
+
+            }
+
             //not available
 
             else if (layout.getChildCount() == 0 && str_Availability_Type.equals("not available")) {
@@ -663,38 +599,45 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     horizontalscrollview.setVisibility(View.GONE);
                 }
 
-
             }
 
 
-            //now and timeslots with patient status
             //not available
+            else if (layout.getChildCount() == 0) {
+                horizontalscrollview.setVisibility(View.GONE);
+                ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+                if (str_Availability_Type.equalsIgnoreCase("video")) {
+                    onlyvideo();
 
-//            else if (layout.getChildCount() > 0 && str_Availability_Type.equals("with Patient")) {
-//                if (str_appointmenttype.equals("1")) {
-//                    tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
-//                    tapSeetheDoctorTxt.setText("Currently with patient");
-//                    tapSeetheDoctorTxtLayout.setBackground(getResources().getDrawable(R.drawable.searchpvr_orange_rounded_corner));
-//                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-//                    byvideoBtnLayout.setVisibility(View.GONE);
-//                    byphoneBtnLayout.setVisibility(View.GONE);
-//                    horizontalscrollview.setVisibility(View.GONE);
-//                    reqfutureapptBtn.setVisibility(View.VISIBLE);
-//                    tapReqFutureBtnAction();
-//                }
-
-            //Available now and later
-            //Part1 ----> timeslot zero followed by many timeslots
-            else if (isDoctorAvailableNow && layout.getChildCount() >= 1) {
-                enableOrdisableProviderDetails(str_Availability_Type);
+                } else if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
+                    VideoOrPhoneNotAvailable();
+                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
+                    onlyPhone();
+                }
+                else if (str_Availability_Type.equalsIgnoreCase("With patient")) {
+                    onlyWithPatient();
+                }
+                else if (str_Availability_Type.equalsIgnoreCase("not available")){
+                    //Make future appointment only
+                    tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
+                    tapSeetheDoctorTxt.setText("Currently not available");
+                    tapSeetheDoctorTxt.setClickable(false);
+                    tapSeetheDoctorTxtLayout.setBackgroundResource((R.drawable.gray_rounded_bg));
+                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+                    videophoneparentLl.setVisibility(View.GONE);
+                    byvideoBtnLayout.setVisibility(View.GONE);
+                    byphoneBtnLayout.setVisibility(View.GONE);
+                    reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+                    reqfutureapptBtnLayout.setClickable(true);
+                    reqfutureapptBtn.setText("Make an appointment request");
+                    tapReqFutureBtnAction();
+                }
 
             }
-            //part 2 available ly later
-            //Part2 ----> timeslot not zero followed by many timeslots
-            else if (!isDoctorAvailableNow && layout.getChildCount() >=1) {
-                enableOrdisableProviderDetails(str_Availability_Type);
 
-            }
+
+
+
             setResponseQualificationDetails(providerdetObj, str_Availability_Type);
 
 
@@ -702,6 +645,70 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             e.printStackTrace();
         }
 
+    }
+
+    private void onlyWithPatient() {
+        tapSeetheDoctorTxt.setText("Currently with patient");
+        tapSeetheDoctorTxt.setClickable(false);
+        tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
+        reqfutureapptBtn.setText("Make an appointment request");
+        tapReqFutureBtnAction();
+        videophoneparentLl.setVisibility(View.GONE);
+        ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+        byvideoBtnLayout.setVisibility(View.GONE);
+        byphoneBtnLayout.setVisibility(View.GONE);
+        horizontalscrollview.setVisibility(View.GONE);
+    }
+
+    private void onlyPhone() {
+        tapSeetheDoctorTxt.setText("Talk to this doctor now");
+        ((ImageView)findViewById(R.id.arrowindicatorIcon)).setBackgroundResource(R.drawable.phone_icon);
+        reqfutureapptBtnLayout.setVisibility(View.GONE);
+        videophoneparentLl.setVisibility(View.GONE);
+        byvideoBtnLayout.setVisibility(View.GONE);
+        byvideoBtnLayout.setClickable(false);
+        byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
+        byphoneBtnLayout.setVisibility(View.GONE);
+        byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+    }
+
+    private void onlyvideo() {
+        tapSeetheDoctorTxt.setText("See this doctor now");
+        reqfutureapptBtnLayout.setVisibility(View.GONE);
+        videophoneparentLl.setVisibility(View.GONE);
+        byvideoBtnLayout.setVisibility(View.GONE);
+        byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+        byphoneBtnLayout.setVisibility(View.GONE);
+    }
+
+    private void VideoOrPhoneNotAvailable() {
+        tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+        tapSeetheDoctorTxt.setVisibility(View.GONE);
+        reqfutureapptBtnLayout.setVisibility(View.GONE);
+        byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                byvideoBtn.setTextColor(Color.WHITE);
+                byphoneBtn.setTextColor(Color.GRAY);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
+                startActivity(Reasonintent);
+                MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+            }
+        });
+        byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                byvideoBtn.setTextColor(Color.GRAY);
+                byphoneBtn.setTextColor(Color.WHITE);
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
+                startActivity(Reasonintent);
+                MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+            }
+        });
     }
     //This is to show the by video and by Phone icon for both the available now (video or phone)
     //and available now and later(video/phone).
@@ -716,7 +723,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             public void onClick(View v) {
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                byvideoBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
+                byvideoBtn.setTextColor(Color.WHITE);
+                byphoneBtn.setTextColor(Color.GRAY);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -730,7 +738,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             public void onClick(View v) {
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                byphoneBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
+                byphoneBtn.setTextColor(Color.WHITE);
+                byvideoBtn.setTextColor(Color.GRAY);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -755,6 +764,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "provider_image_url")) {
             str_ProfileImg = providerdetObj.get("provider_image_url").getAsString();
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(PreferenceConstants.PROVIDER_PROFILE, str_ProfileImg);
+            editor.commit();
         }
 
         String str_education="";
@@ -870,6 +883,19 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             tapReqFutureBtnAction();
         }
+        else
+        {
+            tapSeetheDoctorTxt.setText("Currently not available");
+            tapSeetheDoctorTxtLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
+            reqfutureapptBtn.setText("Make an appointment request");
+            tapReqFutureBtnAction();
+            tapSeetheDoctorTxt.setClickable(false);
+            videophoneparentLl.setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+        }
     }
 
     private void tapReqFutureBtnAction() {
@@ -884,206 +910,199 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     finish();
 
                 } else {
-                    ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.VISIBLE);
-                    tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
-                    reqfutureapptBtnLayout.setVisibility(View.GONE);
-                    videophoneparentLl.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            selectedAppmtTypeVideoOrPhone="video";
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byvideoBtn.setTextColor(Color.WHITE);
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                            byphoneBtn.setTextColor(Color.GRAY);
-                            horizontalscrollview.setVisibility(View.VISIBLE);
-                            horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
-                            if(updatedAppointmentDate!=null)
-                            {
-                                loadProviderDetails(updatedAppointmentDate);
-                            }else
-                            {
-
-                                loadProviderDetails(AppointmentDate);
-                            }
-
-                        }
-                    });
-                    byphoneBtnLayout.setVisibility(View.VISIBLE);
-                    byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            selectedAppmtTypeVideoOrPhone="phone";
-                            if(updatedAppointmentDate!=null)
-                            {
-                                loadProviderDetails(updatedAppointmentDate);
-                            }else
-                            {
-
-                                loadProviderDetails(AppointmentDate);
-                            }
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byphoneBtn.setTextColor(Color.WHITE);
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                            byvideoBtn.setTextColor(Color.GRAY);
-                            horizontalscrollview.setVisibility(View.VISIBLE);
-                            horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
-                        }
-                    });
-
+                    clickForVideoOrPhoneTapReqFutureAction();
 
                 }
+            }
+
+            private void clickForVideoOrPhoneTapReqFutureAction() {
+                ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.VISIBLE);
+                tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+                reqfutureapptBtnLayout.setVisibility(View.GONE);
+                videophoneparentLl.setVisibility(View.VISIBLE);
+                byvideoBtnLayout.setVisibility(View.VISIBLE);
+                byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedAppmtTypeVideoOrPhone="video";
+                        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                        byvideoBtn.setTextColor(Color.WHITE);
+                        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                        byphoneBtn.setTextColor(Color.GRAY);
+                        horizontalscrollview.setVisibility(View.VISIBLE);
+                        selectedVideoOrPhone=true;
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                        if(layout.getChildCount() > 0)
+                            layout.removeAllViews();
+                        if(previousSelectedTv != null)
+                            layout.addView(previousSelectedTv);
+                        for(TextView tv : videoList){
+                            layout.addView(tv);
+                        }
+                        horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
+                    }
+                });
+                byphoneBtnLayout.setVisibility(View.VISIBLE);
+                byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedAppmtTypeVideoOrPhone="phone";
+                        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                        byphoneBtn.setTextColor(Color.WHITE);
+                        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                        byvideoBtn.setTextColor(Color.GRAY);
+                        horizontalscrollview.setVisibility(View.VISIBLE);
+                        selectedVideoOrPhone=true;
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                        if(layout.getChildCount() > 0)
+                            layout.removeAllViews();
+                        if(previousSelectedTv != null)
+                            layout.addView(previousSelectedTv);
+                        for(TextView tv : phoneList){
+                            layout.addView(tv);
+                        }
+                        horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
+                    }
+                });
             }
         });
     }
 
     TextView previousSelectedTv;
+    ArrayList<TextView> videoList = new ArrayList<>();
+    ArrayList<TextView> phoneList = new ArrayList<>();
+
     private void setHorizontalScrollviewTimeslots(LinearLayout layout, String str_timeslot,int position) {
 
         final TextView myText = new TextView(MDLiveProviderDetails.this);
         myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
         myText.setTextSize(16);
         myText.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-
         myText.setClickable(true);
         myText.setTag(timeSlotListMap.get(position).get("appointment_type"));
         myText.setPadding(20, 25, 20, 25);
         myText.setText(MdliveUtils.getTimeFromTimestamp(str_timeslot));
         LinearLayout.LayoutParams lp = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(5, 0, 5, 0);
         myText.setLayoutParams(lp);
         layout.addView(myText);
+
+        if(timeSlotListMap.get(position).get("appointment_type").contains("video") && str_timeslot != null && !str_timeslot.equals("0")){
+            Log.e("appoint video", timeSlotListMap.get(position).get("appointment_type"));
+            Log.e("str_timeslot", str_timeslot);
+            videoList.add(myText);
+        }
+        if(timeSlotListMap.get(position).get("appointment_type").contains("phone") && str_timeslot != null && !str_timeslot.equals("0")){
+            Log.e("appoint phone", timeSlotListMap.get(position).get("appointment_type"));
+            Log.e("str_timeslot", str_timeslot);
+            phoneList.add(myText);
+        }
+
         firstClick=true;
 
+        clickEventForHorizontalText(myText);
+
+    }
+
+    private void clickEventForHorizontalText(final TextView myText) {
         myText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedTimeslot=true;
                 String position = (String) v.getTag();
                 saveProviderDetailsForConFirmAppmt(position,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString(),str_ProfileImg);
-               /* if(firstClick) {
-                    myText.setTextColor(R.drawable.searchpvr_white_rounded_corner);
-                    myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                    firstClick=false;
-                }else
-                {
-                    myText.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                    firstClick=true;
-                }*/
-
-
+           //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
                     previousSelectedTv = myText;
                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-//                    myText.setTextColor(Color.WHITE);
+                    myText.setTextColor(Color.WHITE);
                 }else{
                     previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-//                    myText.setTextColor(Color.BLACK);
+                    previousSelectedTv.setTextColor(Color.GRAY);
                     previousSelectedTv = myText;
                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    myText.setTextColor(Color.WHITE);
                 }
+                //Enabling or Disabling the Request Appointment Button.
 
-                if(position.equalsIgnoreCase("video"))
+                if(!selectedTimeslot)
                 {
-                    reqfutureapptBtnLayout.setVisibility(View.GONE);
-                    byvideoBtnLayout.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                    byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byvideoBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        }
-                    });
-                    byphoneBtnLayout.setVisibility(View.VISIBLE);
-                    byphoneBtnLayout.setClickable(false);
+                    Log.e("false", "selectedTimeslot");
+                    reqApmtBtm.setVisibility(View.GONE);
 
-                }else  if(position.equalsIgnoreCase("video or phone"))
+                }else
                 {
-                    byvideoBtnLayout.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byvideoBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
-
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        }
-                    });
-                    byphoneBtnLayout.setVisibility(View.VISIBLE);
-                    byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byphoneBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
-
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        }
-                    });
+                    Log.e("false","Visible");
+                    reqApmtBtm.setVisibility(View.VISIBLE);
                 }
-                else  if(position.equalsIgnoreCase("phone")){
-                    byvideoBtnLayout.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setClickable(false);
-                    byphoneBtnLayout.setVisibility(View.VISIBLE);
-                    byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                            byphoneBtn.setTextColor(R.drawable.searchpvr_white_rounded_corner);
-                            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        }
-                    });
-                }
+
+                visibilityBasedOnHorizontalTextView(position);
             }
+
         });
+    }
+
+         /* The visibility is based on Clicking the Horizontal Textview  and on clicking the
+            the Slot we can get the video or phone of the timeslot . So that the visibility
+             is based on the particular Method type.*/
 
 
-
-/*
-        horizontalscrollview.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                saveIdForConfirmAppmt();
-                for(int i=0;i<timeSlotListMap.size();i++)
-                {
-                    SharedPreferences settings = MDLiveProviderDetails.this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(PreferenceConstants.SAVE_TIMESLOT_PREFERENCES, timeSlotListMap.get(i).get("timeslot"));
-                    editor.putString(PreferenceConstants.SAVE_PHYS_ID_PREFERENCES, timeSlotListMap.get(i).get("phys_id"));
-//                    editor.putString(PreferenceConstants.SAVE_APPT_TYPE_PREFERENCES, timeSlotListMap.get(i).get("appointment_type"));
-                    Log.e("savedTime",timeSlotListMap.get(i).get("timeslot")+"saved physid-->"+timeSlotListMap.get(i).get("phys_id"));
-                    editor.commit();
-
-                    //update the status  based on timeslot whether it is video or phone.
-                   if(timeSlotListMap.get(i).get("appointment_type").equalsIgnoreCase("video"))
-                   {
-                       reqfutureapptBtnLayout.setVisibility(View.GONE);
-                       byvideoBtnLayout.setVisibility(View.VISIBLE);
-                       byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                       byphoneBtnLayout.setVisibility(View.INVISIBLE);
-
-                   }else  if(timeSlotListMap.get(i).get("appointment_type").equalsIgnoreCase("video or phone"))
-                   {
-                       byvideoBtnLayout.setVisibility(View.VISIBLE);
-                       byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                       byphoneBtnLayout.setVisibility(View.VISIBLE);
-                       byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                   }
-                   else  if(timeSlotListMap.get(i).get("appointment_type").equalsIgnoreCase("phone")){
-                       byvideoBtnLayout.setVisibility(View.VISIBLE);
-                       byvideoBtnLayout.setClickable(false);
-                       byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
-                       byphoneBtnLayout.setVisibility(View.VISIBLE);
-                       byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
-                   }
-
+    private void visibilityBasedOnHorizontalTextView(String position) {
+        if(position.equalsIgnoreCase("video"))
+        {
+            reqfutureapptBtnLayout.setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byvideoBtn.setTextColor(Color.WHITE);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    byphoneBtn.setTextColor(Color.GRAY);
                 }
+            });
+            byphoneBtnLayout.setVisibility(View.VISIBLE);
+            byphoneBtnLayout.setClickable(false);
 
-
-            }
-        });*/
+        }else  if(position.equalsIgnoreCase("video or phone"))
+        {
+            byvideoBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byvideoBtn.setTextColor(Color.WHITE);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    byphoneBtn.setTextColor(Color.GRAY);
+                }
+            });
+            byphoneBtnLayout.setVisibility(View.VISIBLE);
+            byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byphoneBtn.setTextColor(Color.WHITE);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    byvideoBtn.setTextColor(Color.GRAY);
+                }
+            });
+        }
+        else  if(position.equalsIgnoreCase("phone")){
+            byvideoBtnLayout.setVisibility(View.VISIBLE);
+            byvideoBtnLayout.setClickable(false);
+            byphoneBtnLayout.setVisibility(View.VISIBLE);
+            byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byphoneBtn.setTextColor(Color.WHITE);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    byvideoBtn.setTextColor(Color.GRAY);
+                }
+            });
+        }
     }
     //Save to preferences for the Confirm appointment screen
     public void saveProviderDetailsForConFirmAppmt(String consultationType,String selectedTime,String datteText,String providerProfile)
@@ -1233,6 +1252,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = Calendar.getInstance();
+                String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
+                ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMinDate(new Date().getTime());
                 return dialog;
@@ -1272,63 +1293,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     };
 
 
-
-//    @Override
-//    protected Dialog onCreateDialog(int id) {
-//        switch (id) {
-//            case DATE_PICKER_ID:
-//                // open datepicker dialog.
-//                // set date picker for current date
-//                // add pickerListener listner to date picker
-//                Calendar calendar = Calendar.getInstance();
-//                DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-//                dialog.getDatePicker().setMinDate(new Date().getTime());
-//                dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if (which == DialogInterface.BUTTON_POSITIVE) {
-//                            DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-//                            Calendar calendar = Calendar.getInstance();
-//                            calendar.set(year, month, day);
-//                            updatedAppointmentDate = format1.format(calendar.getTime());
-//
-//                            loadProviderDetails(updatedAppointmentDate);
-//                        }
-//                    }
-//                });
-//                return dialog;
-//        }
-//        return null;
-//    }
-//
-//    private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
-//
-//        // when dialog box is closed, below method will be called.
-//        @Override
-//        public void onDateSet(DatePicker view, int selectedYear,
-//                              int selectedMonth, int selectedDay) {
-//            Log.e("picker listener-->","Am in date Picker Listener");
-//
-//            year = selectedYear;
-//            month = selectedMonth;
-//            day = selectedDay;
-//
-//            // Show selected date
-//            Calendar cal = Calendar.getInstance();
-//            cal.set(Calendar.YEAR, selectedYear);
-//            cal.set(Calendar.DAY_OF_MONTH, selectedDay);
-//            cal.set(Calendar.MONTH, selectedMonth);
-//            String format = new SimpleDateFormat("E, MMM d, yyyy").format(cal.getTime());
-////            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
-////            String dateString = format1.format(cal.getTime());
-//            ((TextView)findViewById(R.id.dateTxt)).setText(format);
-//
-//
-//            DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-//            loadProviderDetails(format1.format(cal.getTime()));
-//
-//
-//        }
-//    };
 
 
     @Override

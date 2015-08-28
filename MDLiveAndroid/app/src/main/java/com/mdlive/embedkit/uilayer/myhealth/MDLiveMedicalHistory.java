@@ -94,7 +94,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history).toUpperCase());
 
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
