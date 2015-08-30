@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -152,7 +151,13 @@ public class MDLiveMyHealthVisitsFragment extends Fragment {
 
                 final Gson gson = new Gson();
                 final ConsultationHistoryDetails consultationHistoryDetails =  gson.fromJson(response.toString(), ConsultationHistoryDetails.class);
-
+                if(consultationHistoryDetails.getConsultationHistory().size()>0){
+                    try {
+                        getView().findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(consultationHistoryDetails.getConsultationHistory());
                     Log.e("Response - ", consultationHistoryDetails.getConsultationHistory().size() + " -- ");

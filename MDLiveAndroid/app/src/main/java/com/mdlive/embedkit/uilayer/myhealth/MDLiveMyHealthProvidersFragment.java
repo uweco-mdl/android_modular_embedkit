@@ -167,6 +167,8 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
 
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
+
+
         /*
         * This is a work around, as for new user rather sending on blank Json object
         * It sends a empty JSON Array
@@ -198,6 +200,13 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
                     Log.e("Response - ", provider.myProviders.size() + " -- ");
+                    if(provider.myProviders.size()>0){
+                        try {
+                            getView().findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
                     mProviderAdapter.notifyDataSetChanged();
                 }
                 Log.e("Response - ", provider.toString());

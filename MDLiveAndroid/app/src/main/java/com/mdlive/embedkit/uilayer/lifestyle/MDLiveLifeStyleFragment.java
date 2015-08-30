@@ -147,9 +147,9 @@ public class MDLiveLifeStyleFragment extends Fragment {
     private void handleSuccessResponse(JSONObject response) {
         try {
             setInfoVisibilty();
-            mHeightFtEditText.setText(response.getInt("height_feet") + "");
-            mHeightInEditText.setText(response.getInt("height_inches") + "");
-            mWeightLbsEditText.setText(response.getInt("weight") + "");
+            mHeightFtEditText.setText(response.optInt("height_feet",0) + "");
+            mHeightInEditText.setText(response.optInt("height_inches",0) + "");
+            mWeightLbsEditText.setText(response.optInt("weight",0) + "");
             setBMIText();
             JSONArray lifestyleConditionArray = response.getJSONArray("life_style_conditions");
             JSONObject jsonObject;
