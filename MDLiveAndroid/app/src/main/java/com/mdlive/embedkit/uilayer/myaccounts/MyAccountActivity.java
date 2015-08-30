@@ -42,7 +42,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_account).toUpperCase());
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.account_details).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

@@ -63,7 +63,7 @@ public class ChangePhoneNumber  extends Fragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
-                mPhoneNumber.setText(responseDetail.getString("cell"));
+                mPhoneNumber.setText(responseDetail.getString("phone"));
                 mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
 
             } catch (JSONException e) {
@@ -85,7 +85,7 @@ public class ChangePhoneNumber  extends Fragment {
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("cell", mPhoneNumber.getText().toString());
+                    jsonObject.put("phone", mPhoneNumber.getText().toString());
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id",  responseDetail.getString("state"));
                     jsonObject.put("city",  responseDetail.getString("country"));

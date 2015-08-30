@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +25,7 @@ import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
+import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -33,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * THis is the waiting Room screen. The provider status is checked here. If the Provider status is
@@ -41,12 +47,32 @@ import java.util.HashMap;
  *
  */
 public class MDLiveWaitingRoom extends MDLiveBaseActivity{
+    private static final long DELAY = 5000;
+    private static final int MAX_TIPS = 10;
 
     private WaitingRoomService waitingService;
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
     private String userName=null,password=null;
     private boolean isReturning,isStartedSummary;
-    private Handler handler;
+
+    WaitingRoomViewPager pager;
+    int viewPagerCurrentItem = 0;
+
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (viewPagerCurrentItem == pager.getChildCount() - 1) {
+                viewPagerCurrentItem = 0;
+            } else {
+                viewPagerCurrentItem++;
+            }
+            pager.setCurrentItem(viewPagerCurrentItem, true);
+
+            mHandler.postDelayed(this, DELAY);
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +87,63 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 movetohome();
             }
         });
+
+        pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
+        pager.setClipToPadding(false);
+        pager.setPageMargin(12);
+        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getWaitWatingRoomTips()));
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPagerCurrentItem = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewPagerCurrentItem = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        pager.setCurrentItem(viewPagerCurrentItem);
     }
 
+
+
+    private static class MyPagerAdapter extends FragmentPagerAdapter {
+        private WatingRoomTips mWatingRoomTips;
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public MyPagerAdapter(FragmentManager fm, final WatingRoomTips watingRoomTips) {
+            super(fm);
+
+            mWatingRoomTips = watingRoomTips;
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            return MDLiveWaitingRoomFragment.newInstance(mWatingRoomTips.mHeader, mWatingRoomTips.mColors[pos], mWatingRoomTips.mBodyText[pos]);
+        }
+
+        @Override
+        public int getCount() {
+            return MAX_TIPS;
+        }
+
+        @Override
+        public float getPageWidth (int position) {
+            return 0.93f;
+        }
+
+    }
 
     /***
      *This function will retrieve user Provider status from the server.
@@ -72,7 +153,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
 
     public void getProviderStatus() {
-        handler  = new Handler();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
 
             @Override
@@ -179,10 +259,8 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         try{
             JSONObject resObj=new JSONObject(response);
             if(resObj.getString("provider_status").equals("true")){
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Doctor has arrived...");
-                ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.green));
-                ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.grey_txt));
+                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Provider has Arrived");
+                ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.provider_arrived);
                 getVSEECredentials();
             }else if(isReturning && !resObj.getString("provider_status").equals("true") && !isStartedSummary) {
                 Log.d("Waiting Room -->","handleSuccessResponse ==");
@@ -214,10 +292,10 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 JSONObject resObj=new JSONObject(response);
                 userName=resObj.getString("username");
                 password=resObj.getString("password");
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Starting consultation...");
-                ((TextView)findViewById(R.id.numberOne)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberTwo)).setTextColor(getResources().getColor(R.color.grey_txt));
-                ((TextView)findViewById(R.id.numberThree)).setTextColor(getResources().getColor(R.color.green));
+
+//                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Start Consultation");
+//                ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.start_consultation);
+
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
                 Log.e("VeeSEE -->", "Final reached....");
                 i.putExtra("username",userName);
@@ -226,14 +304,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 startActivity(i);
                 finish();
                 overridePendingTransition(0, 0);
-//                overridePendingTransition(0, 0);
-
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                }, 5000);
             }
         }catch (JSONException e){
             e.printStackTrace();
@@ -273,9 +343,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    if(handler!=null){
-                        handler.removeCallbacksAndMessages(null);
-                    }
                     ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
                     Intent intent = new Intent();
                     ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
@@ -317,8 +384,16 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         if(isReturning){
             getProviderStatus();
         }
+
+        mHandler.postDelayed(mRunnable, DELAY);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mHandler.removeCallbacksAndMessages(null);
+    }
 
     @Override
     public void onBackPressed() {
@@ -345,5 +420,37 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         final SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
+    }
+
+    private WatingRoomTips getWaitWatingRoomTips() {
+        final WatingRoomTips tips = new WatingRoomTips();
+
+        final Random random = new Random(3);
+        int randomNumber = random.nextInt(3);
+
+        String[] strings = getResources().getStringArray(R.array.waiting_room_details);
+        String[] randomizeStrins = new String[MAX_TIPS];
+
+        int[] colors = getResources().getIntArray(R.array.waiting_room_header_colors);
+        int[] randomizeColors = new int[MAX_TIPS];
+
+        for (int i = 0; i < MAX_TIPS; i++) {
+            randomizeStrins[i] = strings[randomNumber];
+            randomizeColors[i] = colors[randomNumber];
+
+            randomNumber += 3;
+        }
+
+        tips.mHeader = getResources().getString(R.string.did_you_know);
+        tips.mColors = randomizeColors;
+        tips.mBodyText = randomizeStrins;
+
+        return tips;
+    }
+
+    public static class WatingRoomTips {
+        public String mHeader;
+        public int[] mColors;
+        public String[] mBodyText;
     }
 }

@@ -92,7 +92,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
                 Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
 
                 changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
-                if((mReplaceCreditCard.getText().toString()).equalsIgnoreCase("Add a new credit card"))
+                if((mReplaceCreditCard.getText().toString()).equalsIgnoreCase(getResources().getString(R.string.add_card)))
                 {
 //                    changePhone.putExtra("Fragment_Name","ADD CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View","Add");
@@ -191,14 +191,14 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 //                    city + ", " + state + "\n" + country);
                     if(TextUtils.isEmpty(cardNumber) && TextUtils.isEmpty(securityCode) && TextUtils.isEmpty(cardExpirationMonth) && TextUtils.isEmpty(cardExpirationYear) && TextUtils.isEmpty(nameOnCard)  )
                     {
-                        mReplaceCreditCard.setText("Add a new credit card");
+                        mReplaceCreditCard.setText(getResources().getString(R.string.add_card));
                         mviewCreditCard.setVisibility(View.GONE);
                     }
                     else {
                         mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear);
                         mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
                                 city + ", " + state + "\n" + country);
-                        mReplaceCreditCard.setText("Replace credit card");
+                        mReplaceCreditCard.setText(getResources().getString(R.string.replace_card));
                         mviewCreditCard.setVisibility(View.VISIBLE);
                     }
                 }

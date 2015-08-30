@@ -6,18 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.WaitingRoom.WaitingRoomViewPager;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
+import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,6 +38,27 @@ public class MDLiveVsee extends MDLiveBaseActivity
     private static VSeeServerConnection.SimpleVSeeServerConnectionReceiver simpleServerConnectionReceiver = null;
     private static VSeeVideoManager.SimpleVSeeVideoManagerReceiver simpleVidManagerReceiver = null;
 
+    private static final long DELAY = 5000;
+    private static final int MAX_TIPS = 10;
+
+    WaitingRoomViewPager pager;
+    int viewPagerCurrentItem = 0;
+
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (viewPagerCurrentItem == pager.getChildCount() - 1) {
+                viewPagerCurrentItem = 0;
+            } else {
+                viewPagerCurrentItem++;
+            }
+            pager.setCurrentItem(viewPagerCurrentItem, true);
+
+            mHandler.postDelayed(this, DELAY);
+        }
+    };
+
     /**
      * Called when the activity is first created.
      */
@@ -40,6 +69,29 @@ public class MDLiveVsee extends MDLiveBaseActivity
         setContentView(R.layout.mdlive_vsee);
         clearMinimizedTime();
 
+        pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
+        pager.setClipToPadding(false);
+        pager.setPageMargin(12);
+        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getWaitWatingRoomTips()));
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPagerCurrentItem = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewPagerCurrentItem = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        pager.setCurrentItem(viewPagerCurrentItem);
         CONSULTED = false;
         CALL_ENDED = false;
 
@@ -69,11 +121,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
                 }
             };
 
-        /** For this example, just accept all calls.  VSeeVideoManager calls can only be made
-        *   after initialization is complete.
-        *
-        * Also, set Call Join Waiting text message;
-        */
         if(simpleVidManagerReceiver == null)
             simpleVidManagerReceiver = new VSeeVideoManager.SimpleVSeeVideoManagerReceiver() {
                 @Override
@@ -169,6 +216,15 @@ public class MDLiveVsee extends MDLiveBaseActivity
             startActivity(i);
             finish();
         }
+
+        mHandler.postDelayed(mRunnable, DELAY);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -267,5 +323,67 @@ public class MDLiveVsee extends MDLiveBaseActivity
         final SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
+    }
+
+    private static class MyPagerAdapter extends FragmentPagerAdapter {
+        private WatingRoomTips mWatingRoomTips;
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public MyPagerAdapter(FragmentManager fm, final WatingRoomTips watingRoomTips) {
+            super(fm);
+
+            mWatingRoomTips = watingRoomTips;
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            return MDLiveWaitingRoomFragment.newInstance(mWatingRoomTips.mHeader, mWatingRoomTips.mColors[pos], mWatingRoomTips.mBodyText[pos]);
+        }
+
+        @Override
+        public int getCount() {
+            return MAX_TIPS;
+        }
+
+        @Override
+        public float getPageWidth (int position) {
+            return 0.93f;
+        }
+
+    }
+
+    private WatingRoomTips getWaitWatingRoomTips() {
+        final WatingRoomTips tips = new WatingRoomTips();
+
+        final Random random = new Random(3);
+        int randomNumber = random.nextInt(3);
+
+        String[] strings = getResources().getStringArray(R.array.waiting_room_details);
+        String[] randomizeStrins = new String[MAX_TIPS];
+
+        int[] colors = getResources().getIntArray(R.array.waiting_room_header_colors);
+        int[] randomizeColors = new int[MAX_TIPS];
+
+        for (int i = 0; i < MAX_TIPS; i++) {
+            randomizeStrins[i] = strings[randomNumber];
+            randomizeColors[i] = colors[randomNumber];
+
+            randomNumber += 3;
+        }
+
+        tips.mHeader = getResources().getString(R.string.did_you_know);
+        tips.mColors = randomizeColors;
+        tips.mBodyText = randomizeStrins;
+
+        return tips;
+    }
+
+    public static class WatingRoomTips {
+        public String mHeader;
+        public int[] mColors;
+        public String[] mBodyText;
     }
 }

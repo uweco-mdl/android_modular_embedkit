@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,7 +195,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                         changeLangTv.setText(items[item]);
                         sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor1 = sharedPref.edit();
-                        editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
+//                        editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
                         editor1.commit();
                         LocalizationSingleton.getInstance().setLanguage(getActivity(),changeLangTv.getText().toString().toLowerCase());
                     }
@@ -251,7 +252,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
     public void handlegetProfileInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
-
+        Log.i("response",response.toString());
         try {
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
@@ -261,15 +262,13 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             gender = myProfile.getString("gender");
             username = myProfile.getString("username");
             address = myProfile.getString("address1")+"\n"+myProfile.getString("address2")+"\n"+myProfile.getString("state")+"\n"+myProfile.getString("country")+"\n"+myProfile.getString("zipcode");
-            mobile = myProfile.getString("cell");
+            mobile = myProfile.getString("phone");
             timeZone = myProfile.getString("timezone");
             prefLanguage = myProfile.getString("language_preference");
             sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("Profile_Address", myProfile.toString());
             editor.commit();
-
-
 
             try {
                 JSONObject securityQuestion = myProfile.getJSONObject("security");
@@ -290,7 +289,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mMobile.setText(mobile);
             mTimeZone.setText(timeZone);
             mEmail.setText(email);
-            mPreferredSignIn.setText("Pin");
+
+            mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
+
             sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
             changeLangTv.setText(language);
@@ -300,7 +301,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             SharedPreferences.Editor editor1 = sharedPref.edit();
             editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
             editor1.commit();
-
 
         }
         catch(JSONException e)
