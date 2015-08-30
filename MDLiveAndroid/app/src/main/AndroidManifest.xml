@@ -246,7 +246,7 @@
             android:name=".uilayer.myaccounts.MyAccountActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden"
+            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden|uiMode"
             android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"

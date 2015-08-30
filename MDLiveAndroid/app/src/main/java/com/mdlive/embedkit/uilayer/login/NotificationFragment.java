@@ -113,6 +113,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
         if (userBasicInfo != null) {
             setNotification(userBasicInfo);
         }
+
+        if (mNotifyDashboard != null) {
+            mNotifyDashboard.onHideNotifyDashboard();
+        }
     }
 
     @Override

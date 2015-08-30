@@ -113,19 +113,14 @@ public class LoginFragment extends MDLiveBaseFragment{
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
-                }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
-                }
+                getProgressDialog().dismiss();
+                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
             }
         };
 
         logD("Login", params.toString());
 
-        LoginService service = new LoginService(getActivity(), null);
+        LoginService service = new LoginService(getActivity(), getProgressDialog());
         service.login(successCallBackListener, errorListener, params);
     }
 

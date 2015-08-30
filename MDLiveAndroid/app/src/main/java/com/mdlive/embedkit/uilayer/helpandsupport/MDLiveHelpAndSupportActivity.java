@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
@@ -88,7 +87,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
         switch (position) {
             // Home
             case 0:
-                startActivityWithClassName(MDLiveDashboardActivity.class);
+                onHomeClicked();
                 break;
 
             // See a Doctor

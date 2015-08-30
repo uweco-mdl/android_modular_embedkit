@@ -116,13 +116,12 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override

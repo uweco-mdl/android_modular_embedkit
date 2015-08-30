@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -106,16 +105,18 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
     @Override
     public void onSignUpSucess() {
         final Intent intent = new Intent(getBaseContext(), PinActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 
     public void onResetPinClicked(View view) {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
-        if (fragment != null && fragment instanceof ForgotPinFragment) {
-            ((ForgotPinFragment) fragment).onResetPinClicked();
-        }
+        final Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void showInitialToolbar() {

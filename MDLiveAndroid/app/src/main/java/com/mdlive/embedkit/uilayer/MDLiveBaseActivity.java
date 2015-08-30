@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
@@ -48,7 +47,7 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         switch (position) {
             // Home
             case 0:
-                startActivityWithClassName(MDLiveDashboardActivity.class);
+                onHomeClicked();
                 break;
 
             // See a Doctor

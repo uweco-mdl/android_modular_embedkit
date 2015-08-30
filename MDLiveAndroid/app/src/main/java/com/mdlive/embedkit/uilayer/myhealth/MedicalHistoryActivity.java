@@ -36,7 +36,6 @@ import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActi
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
@@ -119,7 +118,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         switch (position) {
             // Home
             case 0:
-                startActivityWithClassName(MDLiveDashboardActivity.class);
+                onHomeClicked();
                 break;
 
             // See a Doctor

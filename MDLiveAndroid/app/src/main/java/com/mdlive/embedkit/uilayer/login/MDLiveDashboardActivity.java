@@ -1,10 +1,13 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.mdlive.embedkit.R;
@@ -12,7 +15,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
@@ -25,6 +27,13 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
  * Created by dhiman_da on 8/6/2015.
  */
 public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements NotifyDashboard, OnNotificationCliked {
+    public static Intent getDashboardIntentWithUser(final Context context, final User user) {
+        final Intent intent = new Intent(context, MDLiveDashboardActivity.class);
+        intent.putExtra(User.USER_TAG, user);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,8 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         User user = null;
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
+
+            Log.d("Hello", "Selected User : " + user.toString());
         }
 
         if (savedInstanceState == null) {
@@ -154,7 +165,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onMessageCenterClicked(View view) {
         if (!isDrawerOpen()) {
-            startActivityWithClassName(MessageCenterActivity.class);
+            onMessageClicked();
         }
     }
 

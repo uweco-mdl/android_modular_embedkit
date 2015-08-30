@@ -179,6 +179,8 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
      * After getting the uniqueid save it to shared preference.
      */
     public void loadUserInformationDetails() {
+        /* Clears the Selected User Preference*, for safety */
+        //User.clearSelectedUser(getActivity());
         showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -186,6 +188,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
+                //User.clearSelectedUser(getActivity());
 
                 /* Security JSON we need to read again, because of the web service issue..
                 * We are excluding the security tag to be parsed by GSON,
@@ -241,6 +244,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
+                user.saveSelectedUser(getActivity());
 
                 /* Security JSON we need to read again, because of the web service issue..
                 * We are excluding the security tag to be parsed by GSON,
@@ -257,7 +261,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 }
 
                 mUserBasicInfo.saveToSharedPreference(getActivity());
-
                 updateList();
             }
         };

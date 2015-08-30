@@ -9,6 +9,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -171,8 +172,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     @Override
     public void reloadApplicationForUser(User user) {
+        user.saveSelectedUser(getBaseContext());
         final Intent intent = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(User.USER_TAG, user);
         startActivity(intent);
     }
@@ -218,6 +221,17 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             startActivityWithClassName(MessageCenterActivity.class);
         } else {
             showEmailConfirmationDialog();
+        }
+    }
+
+    public void onHomeClicked() {
+        final User user = User.getSelectedUser(getBaseContext());
+
+        if (user == null) {
+            Log.d("Helloo", "Selectd :" + user.toString());
+            startActivityWithClassName(MDLiveDashboardActivity.class);
+        } else {
+            startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
         }
     }
 

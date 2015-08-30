@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -41,7 +40,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private Spinner mSpinner;
     private DashBoardSpinnerAdapter mAdapter;
 
-    private TextView mEmailConfirmationTextView;
+    private View mEmailConfirmationView;
 
     private View mNotificationView;
 
@@ -125,7 +124,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
-        mEmailConfirmationTextView = (TextView) view.findViewById(R.id.dash_board_email_text_view);
+        mEmailConfirmationView = view.findViewById(R.id.dash_board_email_text_view);
 
         mNotificationView = view.findViewById(R.id.dash_board_notification_layout);
         if (mNotificationView != null) {
@@ -165,7 +164,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             }
 
             if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-                mEmailConfirmationTextView.setVisibility(View.GONE);
+                mEmailConfirmationView.setVisibility(View.GONE);
             }
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();

@@ -171,6 +171,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
     public void onBackPressed() {
         Intent upIntent = new Intent(this, MyAccountActivity.class);
         upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(upIntent);
         finish();
     }
@@ -178,6 +179,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
     public void leftBtnOnClick(View view) {
         Intent upIntent = new Intent(this, MyAccountActivity.class);
         upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(upIntent);
         finish();
     }

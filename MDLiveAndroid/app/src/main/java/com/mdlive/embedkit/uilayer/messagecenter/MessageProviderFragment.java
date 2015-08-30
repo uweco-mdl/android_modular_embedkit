@@ -109,13 +109,12 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        fetchMessageprovider();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        fetchMessageprovider();
     }
 
     @Override
