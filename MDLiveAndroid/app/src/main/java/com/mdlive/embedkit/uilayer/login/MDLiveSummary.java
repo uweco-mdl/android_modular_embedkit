@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -69,10 +68,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 hideProgress();
-                Intent intent = new Intent(getApplicationContext(), MDLiveDashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                onHomeClicked();
             }
         };
 
@@ -112,10 +108,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 hideProgress();
-                Intent intent = new Intent(getApplicationContext(), MDLiveDashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                onHomeClicked();
             }
         };
 
