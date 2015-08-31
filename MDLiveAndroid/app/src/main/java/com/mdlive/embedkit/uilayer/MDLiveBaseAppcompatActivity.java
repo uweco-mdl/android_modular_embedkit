@@ -9,7 +9,6 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -228,7 +227,6 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         final User user = User.getSelectedUser(getBaseContext());
 
         if (user == null) {
-            Log.d("Helloo", "Selectd :" + user.toString());
             startActivityWithClassName(MDLiveDashboardActivity.class);
         } else {
             startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
