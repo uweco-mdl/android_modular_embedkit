@@ -38,19 +38,17 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.GONE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.summary).toUpperCase());
 
         setProgressBar(findViewById(R.id.progressBar));
-        TextView payText=(TextView)findViewById(R.id.txtPaymentSummary);
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String docName = docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,"");
         txtDocName.setText(docName);
-        payText.setText(getString(R.string.dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
