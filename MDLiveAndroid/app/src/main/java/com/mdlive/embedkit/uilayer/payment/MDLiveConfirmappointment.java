@@ -111,11 +111,32 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
 
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        ((TextView)findViewById(R.id.phoneNumber)).setText(phone);
+        formatDualString(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView)findViewById(R.id.amountInDollar)).setText(getString(R.string.dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
         ((CircularNetworkImageView)findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
+    }
+    public void formatDualString(String formatText){
+        boolean hasParenthesis = false;
+        if(formatText.indexOf(")") > 0){
+            hasParenthesis = true;
+        }
+        formatText= formatText.replace("(", "");
+        formatText= formatText.replace(")", "");
+        formatText= formatText.replace(" ", "");
+        if(formatText.length() > 10){
+            formatText = formatText.substring(0, formatText.length()-1);
+        }
+        if(formatText.length() >= 7){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+        }else if(formatText.length() >= 4){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
+        }else if(formatText.length() == 3 && hasParenthesis){
+            formatText = "("+formatText.substring(0, formatText.length())+")";
+        }
+        ((TextView)findViewById(R.id.phoneNumber)).setText(formatText);
+
     }
 }

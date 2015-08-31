@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,6 +118,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String strappmtreason = appointmentReason.getText().toString().trim();
         String strappmtcomment = appointmentComment.getText().toString().trim();
         String strappointmentContactNumber = appointmentContactNumber.getText().toString().trim();
+        formatDualString(strappointmentContactNumber);
         String strnxtavailable = appointmentNextAvailable.getText().toString().trim();
         String stridealdate = appointmentIdealDate.getText().toString().trim();
         Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
@@ -157,6 +160,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         appointmentContactNumber = (EditText) findViewById(R.id.appointmentContactNumber);
         appointmentReason = (EditText) findViewById(R.id.appointmentReason);
         appointmentComment = (EditText) findViewById(R.id.appointmentComment);
+        formatDualString(appointmentContactNumber.getText().toString().trim());
 
     }
     public void onclickVideo(View v)
@@ -324,6 +328,48 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    int lastIndex = 12;
+    boolean mayIallowtoParse = true;
+
+    TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(mayIallowtoParse){
+                formatDualString(s.toString());
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    public void formatDualString(String formatText){
+        boolean hasParenthesis = false;
+        if(formatText.indexOf(")") > 0){
+            hasParenthesis = true;
+        }
+        formatText= formatText.replace("(", "");
+        formatText= formatText.replace(")", "");
+        formatText= formatText.replace(" ", "");
+        if(formatText.length() > 10){
+            formatText = formatText.substring(0, formatText.length()-1);
+        }
+        if(formatText.length() >= 7){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+        }else if(formatText.length() >= 4){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
+        }else if(formatText.length() == 3 && hasParenthesis){
+            formatText = "("+formatText.substring(0, formatText.length())+")";
+        }
+        mayIallowtoParse = false;
+        appointmentContactNumber.setText(formatText);
+        appointmentContactNumber.setSelection(appointmentContactNumber.getText().length());
+        mayIallowtoParse = true;
     }
 
 
