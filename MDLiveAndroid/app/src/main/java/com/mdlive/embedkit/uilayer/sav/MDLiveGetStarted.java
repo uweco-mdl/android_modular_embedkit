@@ -34,12 +34,14 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
@@ -101,7 +103,19 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         clearCacheInVolley();
-        loadUserInformationDetails();
+
+        final User user = User.getSelectedUser(getBaseContext());
+        if (user != null) {
+            if (user.mMode == User.MODE_PRIMARY) {
+                Log.e("Main","MainUser");
+                loadUserInformationDetails();
+            } else {
+                Log.e("Main",user.mId);
+                loadDependentUserInformationDetails(user.mId);
+            }
+        } else {
+            loadUserInformationDetails();
+        }
         loadProviderType();
 
         if (savedInstanceState == null) {
@@ -165,7 +179,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
 
                     } else {
                         if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
-                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                            Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
@@ -346,7 +360,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                         }
                     }else {
                         if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
-                            Intent intent = new Intent(MDLiveGetStarted.this, MDLiveFamilymember.class);
+                            Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
