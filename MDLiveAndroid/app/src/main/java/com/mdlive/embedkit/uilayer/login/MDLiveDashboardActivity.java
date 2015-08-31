@@ -17,7 +17,6 @@ import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationC
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -104,7 +103,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
             // See a Doctor
             case 1:
-                startActivityWithClassName(MDLiveGetStarted.class);
+                onSeeADoctorClicked();
                 break;
 
             // MDLive My Health
@@ -147,13 +146,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     /* Start of Dashboard icons click listener */
     public void onSeeADoctorNowClicked(View view) {
         if (!isDrawerOpen()) {
-            startActivityWithClassName(MDLiveGetStarted.class);
-        }
-    }
-
-    public void onScheduleAVisitClicked(View view) {
-        if (!isDrawerOpen()) {
-            startActivityWithClassName(MDLiveGetStarted.class);
+            onSeeADoctorClicked();
         }
     }
 

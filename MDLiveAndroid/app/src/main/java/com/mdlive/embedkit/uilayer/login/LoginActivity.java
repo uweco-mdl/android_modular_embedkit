@@ -61,15 +61,23 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
 
     /* Start Of Click listeners for Login Fragment*/
     public void onForgotUserNameClicked(View view) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_USERNAME));
-        startActivity(intent);
+        try {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_USERNAME));
+            startActivity(intent);
+        } catch (Exception e) {
+            MdliveUtils.showDialog(this, getString(R.string.app_name), getString(R.string.no_compitable_app));
+        }
     }
 
     public void onForgotPasswordClicked(View view) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_PASSWORD));
-        startActivity(intent);
+        try {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_PASSWORD));
+            startActivity(intent);
+        } catch (Exception e) {
+            MdliveUtils.showDialog(this, getString(R.string.app_name), getString(R.string.no_compitable_app));
+        }
     }
 
     public void onSignInClicked(View view) {

@@ -9,6 +9,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClick
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -230,6 +232,16 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             startActivityWithClassName(MDLiveDashboardActivity.class);
         } else {
             startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+        }
+    }
+
+    public void onSeeADoctorClicked() {
+        final User user = User.getSelectedUser(getBaseContext());
+
+        if (user == null) {
+            startActivityWithClassName(MDLiveGetStarted.class);
+        } else {
+            startActivity(MDLiveGetStarted.getGetStartedIntentWithUser(getBaseContext(), user));
         }
     }
 

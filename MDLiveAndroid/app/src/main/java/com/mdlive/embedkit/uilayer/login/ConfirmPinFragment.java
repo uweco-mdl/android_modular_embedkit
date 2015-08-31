@@ -174,6 +174,8 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
 
             if (pin.equals(getArguments().getString(PIN_TAG))) {
                 loadConfirmPin(pin);
+            } else {
+                showToast(R.string.pin_mismatch);
             }
         }
     }

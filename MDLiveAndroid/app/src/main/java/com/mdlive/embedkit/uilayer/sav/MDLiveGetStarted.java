@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -41,7 +44,10 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PharmacyDetails;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Security;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
@@ -59,13 +65,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserChangedInGetStarted;
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInstance;
+
 /**
  * The GetStarted class has the dependents name,Date of Birth ,gender and the Phone number
  * fields. Along with that it also contains the disclaimer text for the Telephone number.
  * The phone number field alone can be editable.
  */
 
-public class  MDLiveGetStarted extends MDLiveBaseActivity {
+public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChangedInGetStarted {
+    public static Intent getGetStartedIntentWithUser(final Context context, final User user) {
+        final Intent intent = new Intent(context, MDLiveGetStarted.class);
+        intent.putExtra(User.USER_TAG, user);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        return intent;
+    }
+
     private ProgressDialog pDialog = null;
     private TextView locationTxt;/*,genderText*/
     private String DateTxt;
@@ -80,6 +98,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private String dependentName=null;
     private String userInfoJSONString;
     ArrayAdapter<String> dataAdapter;
+    User user = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,24 +123,27 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         initialiseData();
         clearCacheInVolley();
 
-        final User user = User.getSelectedUser(getBaseContext());
-        if (user != null) {
-            if (user.mMode == User.MODE_PRIMARY) {
-                Log.e("Main","MainUser");
-                loadUserInformationDetails();
-            } else {
-                Log.e("Main",user.mId);
-                loadDependentUserInformationDetails(user.mId);
-            }
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
+            user = getIntent().getExtras().getParcelable(User.USER_TAG);
+            Log.d("Hello", "Selected User : " + user.toString());
+        }
+
+        if (user != null && user.mMode == User.MODE_DEPENDENT) {
+            Log.d("Hello", "Selected User : " + user.toString());
+            Log.d("Hello", "Selected User : " + "Dependent is called");
+            loadDependentUserInformationDetails(user.mId);
         } else {
+            Log.d("Hello", "Selected User : " + "Parent is called");
             loadUserInformationDetails();
         }
+
         loadProviderType();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    add(R.id.dash_board__left_container, newInstance(), LEFT_MENU).
                     commit();
 
             getSupportFragmentManager().
@@ -916,7 +938,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
         ChooseProviderServices services = new ChooseProviderServices(MDLiveGetStarted.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         showProgress();
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)),strProviderId,successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), strProviderId, successCallBackListener, errorListener);
     }
 
     /**
@@ -988,6 +1010,35 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
     private void showHamburgerTick() {
         findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
         findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onUserChangedInGetStarted() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null && fragment instanceof NavigationDrawerFragment) {
+            ((NavigationDrawerFragment) fragment).onUserChangedInGetStarted();
+        }
+    }
+
+    public void saveUserDataAndReloadDrawer(final JSONObject response) {
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        final UserBasicInfo userBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        userBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        userBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            userBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            userBasicInfo.setHealthLastUpdate(-1l);
+        }
+
+        userBasicInfo.saveToSharedPreference(getBaseContext());
+
+        onUserChangedInGetStarted();
+
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(RIGHT_MENU);
+        if (fragment != null && fragment instanceof NotificationFragment) {
+            ((NotificationFragment) fragment).setNotification(userBasicInfo);
+        }
     }
 }
 

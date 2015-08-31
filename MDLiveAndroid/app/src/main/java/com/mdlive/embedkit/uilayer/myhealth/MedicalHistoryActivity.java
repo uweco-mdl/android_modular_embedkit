@@ -41,7 +41,6 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -123,7 +122,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
             // See a Doctor
             case 1:
-                startActivityWithClassName(MDLiveGetStarted.class);
+                onSeeADoctorClicked();
                 break;
 
             // MDLive My Health

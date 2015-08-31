@@ -61,6 +61,8 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private float mDrawerWidth;
     private float mScrollHeight;
 
+    private OnUserChangedInGetStarted mOnUserChangedInGetStarted;
+
     public NavigationDrawerFragment() {
     }
 
@@ -87,6 +89,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             mOnUserInformationLoaded = (OnUserInformationLoaded) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks, OnUserInformationLoaded.");
+        }
+
+        try {
+            mOnUserChangedInGetStarted = (OnUserChangedInGetStarted) activity;
+        } catch (ClassCastException cce) {
+
         }
     }
 
@@ -160,6 +168,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
         mCallbacks = null;
         mOnUserInformationLoaded = null;
+        mOnUserChangedInGetStarted = null;
     }
 
     private void selectItem(int position) {
@@ -188,7 +197,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                //User.clearSelectedUser(getActivity());
+                User.clearUser(getActivity());
 
                 /* Security JSON we need to read again, because of the web service issue..
                 * We are excluding the security tag to be parsed by GSON,
@@ -435,6 +444,11 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         set.start();
     }
 
+    public void onUserChangedInGetStarted() {
+        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+        updateList();
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
@@ -449,5 +463,9 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         void sendUserInformation(UserBasicInfo userBasicInfo);
         void onAddChildSelectedFromDrawer(final User user, final int dependentUserSize);
         void reloadApplicationForUser(final User user);
+    }
+
+    public interface OnUserChangedInGetStarted {
+        void onUserChangedInGetStarted();
     }
 }
