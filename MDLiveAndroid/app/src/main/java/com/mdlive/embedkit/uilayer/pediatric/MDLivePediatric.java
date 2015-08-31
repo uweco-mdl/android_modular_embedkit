@@ -117,7 +117,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.pediatric_profile));
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -490,9 +490,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 enableSaveButton();
                 Gson gs = new Gson();
                 Log.e("Post Params", gs.toJson(postParams).toString());
-
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
