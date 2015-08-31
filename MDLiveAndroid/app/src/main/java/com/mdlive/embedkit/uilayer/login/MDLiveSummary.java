@@ -43,17 +43,17 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.summary).toUpperCase());
 
         setProgressBar(findViewById(R.id.progressBar));
-        TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
+//        TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String docName = docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,"");
-        txtDocName.setText(docName);
+//        txtDocName.setText(docName);
         pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
+//        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
     }
 
     public void leftBtnOnClick(View v){
