@@ -38,7 +38,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.INVISIBLE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.summary).toUpperCase());
 

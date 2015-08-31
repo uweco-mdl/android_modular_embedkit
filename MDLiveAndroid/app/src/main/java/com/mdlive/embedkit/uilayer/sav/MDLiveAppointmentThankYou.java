@@ -14,6 +14,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by sudha_s on 8/23/2015.
@@ -35,7 +36,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow);
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.thankyou_string).toUpperCase());
 
@@ -55,8 +56,9 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         startActivity(Reasonintent);
     }
 
-    public void leftBtnOnClick(View view){
-
+    public void leftBtnOnClick(View v){
+        MdliveUtils.hideSoftKeyboard(MDLiveAppointmentThankYou.this);
+        onBackPressed();
     }
 
 
@@ -73,5 +75,6 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         ((TextView)findViewById(R.id.time)).setText(Time);
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
+
     }
 }

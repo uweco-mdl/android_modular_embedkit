@@ -113,7 +113,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         ((TextView)findViewById(R.id.phoneNumber)).setText(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        ((TextView)findViewById(R.id.amountInDollar)).setText("");
+        SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView)findViewById(R.id.amountInDollar)).setText(getString(R.string.dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
         ((CircularNetworkImageView)findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
     }
