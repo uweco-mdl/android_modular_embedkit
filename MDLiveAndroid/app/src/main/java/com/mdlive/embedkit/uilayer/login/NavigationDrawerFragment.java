@@ -113,6 +113,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.drawer_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                return;
+            }
+        });
         mSelectedUserLinearLayout = (LinearLayout) view.findViewById(R.id.navigation_selected_user);
         mAllUserLinearLayout = (LinearLayout) view.findViewById(R.id.navigation_user_list);
         mDrawerListView = (ListView) view.findViewById(R.id.navigation_drawer_list_view);

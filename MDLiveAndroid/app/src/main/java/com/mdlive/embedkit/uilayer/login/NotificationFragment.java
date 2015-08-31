@@ -97,6 +97,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.notification_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                return;
+            }
+        });
         mMessagesTextView = (TextView) view.findViewById(R.id.notification_fragment_messages_text_view);
         mPersonalInfoTextView = (TextView) view.findViewById(R.id.notification_fragment_personal_text_view);
         mPreferedStoreTextView = (TextView) view.findViewById(R.id.notification_fragment_prefered_store_text_view);
