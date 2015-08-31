@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by dhiman_da on 8/21/2015.
@@ -56,6 +57,8 @@ public class PinActivity extends AppCompatActivity implements CreatePinFragment.
 
     @Override
     public void startDashboard() {
+        MdliveUtils.setLockType(getBaseContext(), "password");
+
         final Intent dashboard = new Intent(getBaseContext(), MDLiveDashboardActivity.class);
         startActivity(dashboard);
         finish();

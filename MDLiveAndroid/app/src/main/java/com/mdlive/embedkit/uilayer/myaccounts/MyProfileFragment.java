@@ -169,10 +169,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mPreferredSignIn.setText(items[item]);
-                        sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor1 = sharedPref.edit();
-                        editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
-                        editor1.commit();
+                        MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
                     }
                 });
                 AlertDialog alert = builder.create();

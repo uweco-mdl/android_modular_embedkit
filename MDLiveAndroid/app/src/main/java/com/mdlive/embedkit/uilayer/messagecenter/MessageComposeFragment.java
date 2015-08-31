@@ -18,7 +18,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SendMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Message;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
@@ -28,6 +27,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -151,72 +151,79 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
     }
 
     public void sendComposedMessage() {
-        MdliveUtils.hideKeyboard(getActivity(), (View)mSubjectEditText);
+        try {
+            MdliveUtils.hideKeyboard(getActivity(), (View)mSubjectEditText);
 
-        if (mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() < 1) {
-            MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
-            return;
-        }
+            if (mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() < 1) {
+                MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+                return;
+            }
 
-        if (mBodyEditText != null && mBodyEditText.getText().toString().trim().length() < 0) {
-            MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
-            return;
-        }
+            if (mBodyEditText != null && mBodyEditText.getText().toString().trim().length() < 0) {
+                MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+                return;
+            }
 
-        showProgressDialog();
+            showProgressDialog();
 
-        int destinationUserId = -1;
+            final JSONObject jsonObject = new JSONObject();
 
-        final Parcelable parcelable = getArguments().getParcelable(TAG);
-        if (parcelable instanceof ReceivedMessage) {
-            destinationUserId = ((ReceivedMessage) parcelable).providerId;
-        } else if (parcelable instanceof SentMessage) {
-            destinationUserId =((SentMessage) parcelable).providerId;
-        } else if (parcelable instanceof MyProvider) {
-            destinationUserId = ((MyProvider) parcelable).providerId;
-        } else {
-            destinationUserId = ((ConsultationHistory) parcelable).getProviderId();
-        }
+            final Parcelable parcelable = getArguments().getParcelable(TAG);
+            if (parcelable instanceof ReceivedMessage) {
+                jsonObject.put("destination_user_id", ((ReceivedMessage) parcelable).providerId);
+                jsonObject.put("message", mBodyEditText.getText().toString().trim());
+                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObject.put("replied_to_message_id", ((ReceivedMessage) parcelable).messageId);
+            } else if (parcelable instanceof SentMessage) {
+                jsonObject.put("destination_user_id", ((SentMessage) parcelable).providerId);
+                jsonObject.put("message", mBodyEditText.getText().toString().trim());
+                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObject.put("replied_to_message_id", ((SentMessage) parcelable).messageId);
+            } else if (parcelable instanceof MyProvider) {
+                jsonObject.put("destination_user_id", ((MyProvider) parcelable).providerId);
+                jsonObject.put("message", mBodyEditText.getText().toString().trim());
+                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+            } else {
+                jsonObject.put("destination_user_id", ((MyProvider) parcelable).providerId);
+                jsonObject.put("message", mBodyEditText.getText().toString().trim());
+                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+            }
 
-        final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                hideProgressDialog();
+            final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    hideProgressDialog();
 
-                final Gson gson = new Gson();
-                final Message message =  gson.fromJson(response.toString(), Message.class);
+                    final Gson gson = new Gson();
+                    final Message message =  gson.fromJson(response.toString(), Message.class);
 
-                MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().finish();
+                    MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    });
+                }
+            };
+
+            final NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgressDialog();
+                    try {
+                        MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                     }
-                });
-            }
-        };
-
-        final NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
-                try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    catch (Exception e) {
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                    }
                 }
-                catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
-                }
-            }
-        };
+            };
 
-        final SendMessage sendMessage = new SendMessage();
-        sendMessage.destinationUserId = String.valueOf(destinationUserId);
-        sendMessage.subject = mSubjectEditText == null ? "" : mSubjectEditText.getText().toString().trim();
-        sendMessage.message = mBodyEditText == null ? "" : mBodyEditText.getText().toString().trim();
 
-        final Gson gson = new Gson();
-        final String params = gson.toJson(sendMessage);
-
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
-        messageCenter.postMessage(successListener, errorListener, params);
+            final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
+            messageCenter.postMessage(successListener, errorListener, jsonObject.toString());
+        } catch (JSONException e) {
+            logE("JSONException", e.getMessage());
+        }
     }
 }

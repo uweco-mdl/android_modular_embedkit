@@ -128,6 +128,9 @@ public class MessageSentFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        mPageCount = 1;
+        mMessageSentAdapter.clear();
     }
 
     @Override
@@ -184,6 +187,7 @@ public class MessageSentFragment extends MDLiveBaseFragment {
 
     private void handleSucess(final JSONObject response) {
         final Gson gson = new Gson();
+        logD("Test", response.toString());
         final SentMessages newSentMessages =  gson.fromJson(response.toString(), SentMessages.class);
         if (newSentMessages.sentMessages != null && newSentMessages.sentMessages.size() > 0) {
             if (mMessageSentAdapter != null) {

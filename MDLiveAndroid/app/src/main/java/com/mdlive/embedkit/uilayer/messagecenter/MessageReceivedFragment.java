@@ -127,6 +127,9 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        mPageCount = 1;
+        mMessageReceivedAdapter.clear();
     }
 
     @Override

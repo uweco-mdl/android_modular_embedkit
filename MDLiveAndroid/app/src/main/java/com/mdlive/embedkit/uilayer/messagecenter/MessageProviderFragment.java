@@ -120,6 +120,8 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        mProviderAdapter.clear();
     }
 
     @Override
