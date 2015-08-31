@@ -199,6 +199,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity {
                                 phoneNumberText = phoneNumberText.replace(" ", "");
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
+                                if(((TextView)findViewById(R.id.providertypeTxt)).getText() != null)
+                                    editor.putString(PreferenceConstants.PROVIDER_MODE, ((TextView)findViewById(R.id.providertypeTxt)).getText().toString());
                                 editor.commit();
                                 clearCacheInVolley();
                                 Intent intent = new Intent(MDLiveGetStarted.this, MDLiveChooseProvider.class);

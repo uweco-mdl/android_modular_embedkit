@@ -69,8 +69,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
     private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
-    private boolean isFemaleQuestionsDone = false, isConditionsDone = false,
-            isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser = false;
+    private boolean  isNewUser = false;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup, ProceduresGroup;
     private LocationCooridnates locationService;
@@ -97,7 +96,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history).toUpperCase());
 
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         PediatricAgeCheckGroup_1 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup2));
@@ -106,7 +104,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         MedicationsGroup = ((RadioGroup) findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
         //error
-        //ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
+        ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
         locationService = new LocationCooridnates(getApplicationContext());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
@@ -125,6 +123,29 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         startActivityForResult(Reasonintent, IntegerConstants.PEDIATRIC_REQUEST_CODE);
         MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
     }
+
+    /**
+     * This function will retrieve the Pediatric profile information from the server.
+     * <p/>
+     * PediatricService - This service class will make the service calls to get the
+     * Pediatric profile.
+     */
+    /*private void checkPediatricProfileCompleted() {
+        NetworkSuccessListener successListener = new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                handleSuccessResponse(response);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                MdliveUtils.handelVolleyErrorResponse(MDLiveMedicalHistory.this,error,null);
+            }
+        };
+        PediatricService getProfileData = new PediatricService(MDLiveMedicalHistory.this, null);
+        getProfileData.doGetPediatricBelowTwo(successListener, errorListener);
+    }*/
 
     /**
      * This function is used to update Medical history data in service
@@ -277,19 +298,36 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
         }
 
+        if (MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+            ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
+        }else{
+            ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
+        }
 
-/*        ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        // Provider mode
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+
+      /*  if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
+            ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.VISIBLE);
+        }else{
+            ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.GONE);
+        }*/
+
+        ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //error
-                *//*if (checkedId == R.id.proceduresYesButton) {
+                if (checkedId == R.id.proceduresYesButton) {
+                    ProceduresGroup.clearCheck();
                     Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
-                    startActivity(i);
+                    startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
                     MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
-                }*//*
-                ValidateModuleFields();
+                }else{
+                    ValidateModuleFields();
+                }
             }
-        });*/
+        });
     }
 
 
@@ -474,6 +512,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 AllergiesGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
+
+        /* if (((LinearLayout) findViewById(R.id.MyHealthProceduresLl)).getVisibility() == View.VISIBLE &&
+                ProceduresGroup.getCheckedRadioButtonId() < 0) {
+            isAllFieldsfilled = false;
+        }*/
+
         if (isAllFieldsfilled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
@@ -544,9 +588,35 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
+            checkPediatricCompletion(historyPercentageArray);
             ValidateModuleFields();
             checkAgeAndFemale();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This will check weather the user has completed the allergy section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkPediatricCompletion(JSONArray historyPercentageArray) {
+        try {
+            int pediatricPercentage = 0;
+            for(int i = 0; i < historyPercentageArray.length(); i++){
+                if(historyPercentageArray.getJSONObject(i).has("pediatric")){
+                    pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
+                }
+            }
+            Log.e("pediatricPercentage", pediatricPercentage+"");
+            if(pediatricPercentage != 0){
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+            }else{
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_notcompleted_txt));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

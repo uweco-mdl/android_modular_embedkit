@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/CustomTheme"
-        android:name="android.support.multidex.MultiDexApplication">
+        android:name="com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController">
 
         <!-- Google Api Key -->
         <meta-data
@@ -60,6 +60,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveHealthModule"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveAddProcedures"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
 
         <activity
             android:name=".uilayer.login.MDLiveDashboardActivity"
@@ -246,7 +257,7 @@
             android:name=".uilayer.myaccounts.MyAccountActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden|uiMode"
+            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden"
             android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"

@@ -10,32 +10,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.myhealth.DeleteMedicationService;
-import com.mdlive.unifiedmiddleware.services.myhealth.MedicationService;
+import com.mdlive.unifiedmiddleware.services.myhealth.DeleteProcedureServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureListServices;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
- * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Medications.
- *
- * This class extends with MDLiveCommonConditionsMedicationsActivity
- *  which has all functions that is helped to achieve CRUD functions.
- *
+ * Created by srinivasan_ka on 8/26/2015.
  */
-public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActivity {
+public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //Setting up type in parent class for Conditions
-        type = TYPE_CONSTANT.MEDICATION;
+        type = TYPE_CONSTANT.PROCEDURE;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
         try {
@@ -49,19 +43,15 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-
-        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_medications_reported));
-        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_medications_reported_msg));
-        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_medication));
-        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_new_medication));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_procedure));
     }
 
 
     public void addConditionsClick(View view){
         Intent i = new Intent(getApplicationContext(), MDLiveHealthModule.class);
-        i.putExtra("type", "medication");
+        i.putExtra("type", "procedure");
         startActivityForResult(i, INSERT_CODE);
-        MdliveUtils.startActivityAnimation(MDLiveAddMedications.this);
+        MdliveUtils.startActivityAnimation(MDLiveAddProcedures.this);
     }
 
     /**
@@ -84,8 +74,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        MedicationService services = new MedicationService(MDLiveAddMedications.this, null);
-        services.doLoginRequest(successCallBackListener, errorListener);
+        ProcedureListServices services = new ProcedureListServices(MDLiveAddProcedures.this, null);
+        services.getAllergyListRequest(successCallBackListener, errorListener);
     }
 
     /**
@@ -99,7 +89,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     protected void medicalConditionOrAllergyListHandleSuccessResponse(JSONObject response) {
         try {
             Log.e("Conditions response", response.toString());
-            conditionsListJSONArray = response.getJSONArray((type == TYPE_CONSTANT.CONDITION)?"conditions":type == (TYPE_CONSTANT.ALLERGY)?"allergies":"medications");
+            conditionsListJSONArray = response.getJSONArray("surgeries");
             preRenderKnownConditionData();
         }catch(Exception e){
             e.printStackTrace();
@@ -141,11 +131,8 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        HashMap<String, String> postBody = new HashMap<String, String>();
-        postBody.put("id", conditionId);
-        DeleteMedicationService services = new DeleteMedicationService(MDLiveAddMedications.this, null);
-        services.doLoginRequest(new Gson().toJson(postBody), conditionId,
-                successCallBackListener, errorListener);
+        DeleteProcedureServices services = new DeleteProcedureServices(MDLiveAddProcedures.this, null);
+        services.deleteAllergyRequest(successCallBackListener, errorListener, conditionId);
     }
 
 

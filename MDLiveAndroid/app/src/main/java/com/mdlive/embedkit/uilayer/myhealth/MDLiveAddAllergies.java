@@ -1,33 +1,25 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.myhealth.AddAllergyServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.AllergyAutoSuggestionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.AllergyListServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteAllergyServices;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * This class is used to manipulate CRUD (Create, Read, Update, Delete) function for Allergies.
@@ -39,17 +31,12 @@ import java.util.HashMap;
 
 public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivity {
 
-    protected boolean isPerformingAutoSuggestion;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //Setting up type in parent class for Allergy
+        //Setting up type in parent class for Conditions
         type = TYPE_CONSTANT.ALLERGY;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
-        //((TextView) findViewById(R.id.CommonConditionsAllergiesHeaderTv)).setText(getResources().getString(R.string.add_allergy));
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -60,105 +47,26 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_allergies_reported));
+        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_allergies_reported_msg));
         ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_allergy));
+        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_allergies_hint));
+    }
+
+
+    public void addConditionsClick(View view){
+        Intent i = new Intent(getApplicationContext(), MDLiveHealthModule.class);
+        i.putExtra("type", "allergy");
+        startActivityForResult(i, INSERT_CODE);
+        MdliveUtils.startActivityAnimation(MDLiveAddAllergies.this);
     }
 
     /**
-     * This override function is used to save new allergies data in server
-     * This function will be called in MDLiveCommonConditionsMedicationsActivity
-     * which has already extends with MDLiveAddAllergies
-     */
-
-    @Override
-    protected void saveNewConditionsOrAllergies() {
-        showProgress();
-        setResult(RESULT_OK);
-        IsThisPageEdited = true;
-        if(newConditions.size() == 0){
-            hideProgress();
-            updateConditionsOrAllergies();
-        } else {
-            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    hideProgress();
-                    updateConditionsOrAllergies();
-                }
-            };
-            NetworkErrorListener errorListener = new NetworkErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    medicalCommonErrorResponseHandler(error);
-                }
-            };
-            AddAllergyServices services = new AddAllergyServices(MDLiveAddAllergies.this, null);
-            services.addAllergyRequest(successCallBackListener, errorListener, newConditions);
-        }
-    }
-
-    /**
-     * This override function is used to update allergies data in server
-     * This function will be called in MDLiveCommonConditionsMedicationsActivity
-     * which has already extends with MDLiveAddAllergies
-     */
-    @Override
-    protected void updateConditionsOrAllergies() {
-        try {
-            IsThisPageEdited = true;
-            new UpdateAllegyDatas().execute();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This asyntask class is used to update allergies data sequentially
-     * This function will be called in MDLiveCommonConditionsMedicationsActivity
-     * which has already extends with MDLiveAddAllergies
-     */
-    public class UpdateAllegyDatas extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected void onPreExecute() {
-            showProgress();
-            super.onPreExecute();
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            hideProgress();
-            checkMedicalAggregation();
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (existingConditions.size() == 0) {
-            } else {
-                for (int i = 0; i < existingConditions.size(); i++) {
-                    HashMap<String, String> allergy = existingConditions.get(i);
-                    HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-                    postBody.put("allergy", allergy);
-                    try{
-                        updateConditionDetails(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ALLERGY_LIST + "/" + allergy.get("id"),
-                                new Gson().toJson(postBody));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
-     *
      * This function will retrieve the known allergies from the server.
-     *
      * MedicalConditionListServices - This service class will make the service calls to get the
      * conditions list.
-     *
      */
-
     @Override
     protected void getConditionsOrAllergiesData() {
         showProgress();
@@ -172,32 +80,57 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             @Override
             public void onErrorResponse(VolleyError error) {
                 medicalCommonErrorResponseHandler(error);
-            }};
+            }
+        };
         AllergyListServices services = new AllergyListServices(MDLiveAddAllergies.this, null);
         services.getAllergyListRequest(successCallBackListener, errorListener);
     }
 
     /**
-     * This function is used to delete allegies datas from server
      *
-     * DeleteAllergyServices - This class has function to delete allergy data from server.
-     * This over ride function is called by MDLiveCommonConditionsMedicationsActivity which
-     * has already extends with MDLiveAddAllergies.
+     *  Successful Response Handler for Medical History Completion. Once the data is successfully received,
+     *  the conditions are fetched from the JSONObject response and this data is pre-rendered in the
+     *  layout by calling the preRenderKnownConditionData() function.
      *
-     * @param addConditionsLl - layout of allergy to be deleted.
-     * @param deleteView - delete button of allergy.
      */
+
+    protected void medicalConditionOrAllergyListHandleSuccessResponse(JSONObject response) {
+        try {
+            Log.e("Conditions response", response.toString());
+            conditionsListJSONArray = response.getJSONArray((type == TYPE_CONSTANT.CONDITION)?"conditions":type == (TYPE_CONSTANT.ALLERGY)?"allergies":"medications");
+            preRenderKnownConditionData();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
-    protected void deleteMedicalConditionsOrAllergyAction(ImageView deleteView, final LinearLayout addConditionsLl) {
+    protected void deleteConditions(){
         showProgress();
+        ArrayList<String> deleteIdItems = adapter.getRemovedItemsIds();
+        for(String id : deleteIdItems){
+            deleteMedicalConditionsOrAllergyAction(id);
+        }
+    }
+
+    /**
+     * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
+     *
+     * This function is used to delete allergy details
+     *
+     */
+    public void deleteMedicalConditionsOrAllergyAction(final String conditionId) {
+
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                IsThisPageEdited = true;
-                if (addConditionsLl.getChildCount() == 0) {
-                    addBlankConditionOrAllergy();
+                if(adapter.getRemovedItemsIds().get(adapter.getRemovedItemsIds().size()-1).equals(conditionId)){
+                    hideProgress();
+                    isEditCalled = false;
+                    adapter.getRemovedItemsIds().clear();
+                    adapter.notifyDataSetChanged();
+                    ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
                 }
-                hideProgress();
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -207,42 +140,17 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             }
         };
         DeleteAllergyServices services = new DeleteAllergyServices(MDLiveAddAllergies.this, null);
-        services.deleteAllergyRequest(successCallBackListener, errorListener, (String)((ViewGroup)(deleteView.getParent())).getTag());
+        services.deleteAllergyRequest(successCallBackListener, errorListener, conditionId);
     }
 
 
-
-    /**
-     *
-     * This function will n=make the service call to get the auto-completion allergies list based up
-     * on the data entered in the edit text.
-     *
-     * MedicalConditionAutoSuggestionServices - The service class for getting the Auto suggestion list.
-     *
-     * @param atv :: The auto completion text view
-     * @param constraint :: The text entered by the user.
-     *
-     */
-    protected void getAutoCompleteData(final AutoCompleteTextView atv, String constraint) {
-        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                isPerformingAutoSuggestion = false;
-                autoCompletionHandleSuccessResponse(atv, response);
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                isPerformingAutoSuggestion = false;
-                medicalCommonErrorResponseHandler(error);
-            }};
-        if( !isPerformingAutoSuggestion /*&& !previousSearch.equalsIgnoreCase(constraint)*/ ) {
-            AllergyAutoSuggestionServices services = new AllergyAutoSuggestionServices(MDLiveAddAllergies.this, null);
-            services.getAllergyAutoSuggestionRequest(successCallBackListener, errorListener, constraint);
-            previousSearch = constraint;
-            isPerformingAutoSuggestion = true;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == INSERT_CODE && resultCode == RESULT_OK){
+            getConditionsOrAllergiesData();
+        }else if(requestCode == UPDATE_CODE && resultCode == RESULT_OK){
+            getConditionsOrAllergiesData();
         }
     }
 
