@@ -547,11 +547,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             }
 
-
-
-
             setResponseQualificationDetails(providerdetObj, str_Availability_Type);
-
 
         }catch(Exception e){
             e.printStackTrace();
@@ -563,7 +559,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
         tapSeetheDoctorTxt.setText("Currently not available");
         tapSeetheDoctorTxt.setClickable(false);
-        tapSeetheDoctorTxtLayout.setBackgroundResource((R.drawable.gray_rounded_bg));
+        tapSeetheDoctorTxtLayout.setBackgroundResource((R.color.darkgrey_background));
         ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
         videophoneparentLl.setVisibility(View.GONE);
         byvideoBtnLayout.setVisibility(View.GONE);
@@ -812,16 +808,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
         else
         {
-            tapSeetheDoctorTxt.setText("Currently not available");
-            tapSeetheDoctorTxtLayout.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
-            reqfutureapptBtn.setText("Make an appointment request");
-            tapReqFutureBtnAction();
-            tapSeetheDoctorTxt.setClickable(false);
-            videophoneparentLl.setVisibility(View.GONE);
-            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
-            byvideoBtnLayout.setVisibility(View.GONE);
-            byphoneBtnLayout.setVisibility(View.GONE);
-            horizontalscrollview.setVisibility(View.GONE);
+         notAvailable();
         }
     }
 
