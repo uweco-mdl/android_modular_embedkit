@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -30,7 +33,9 @@ import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralUpdateServic
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -39,17 +44,15 @@ import java.util.List;
 public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     private BehavioralHistory mBehavioralHistory;
 
-    private ProgressBar mProgressBar;
-
     private LinearLayout mConditionLinearLayout;
 
     private RadioGroup mHospitalizedRadioGroup;
     private RadioButton mHospitalizedYesRadioButton;
     private RadioButton mHospitalizedNoRadioButton;
     private TextView mWhenTextView;
-    private TextView mHowLongTextView;
+    private EditText mHowLongTextView;
 
-    private LinearLayout mFamilyHistoryLinearLayout;
+    private LinearLayout mFamilyHistoryLinearLayout, mWhenLl, mhowLongLl;
 
     private RadioGroup mFamilyRadioGroup;
     private RadioButton mFamilyYesRadioButton;
@@ -60,8 +63,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     List<String> relationShpList;
 
-    private ProgressBar progressBar;
-    private ProgressDialog pDialog = null;
 
     public static MDLiveBehaviouralHealthFragment newInstance() {
         final MDLiveBehaviouralHealthFragment fragment = new MDLiveBehaviouralHealthFragment();
@@ -79,10 +80,8 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 
         mConditionLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_histroy_conditions);
         mHospitalizedRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_hospitalized_radio_group);
@@ -91,9 +90,15 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.behavioural_health_hospitalized_yes_radio_button) {
-
+                        mBehavioralHistory.hospitalized = "Yes";
+                        mWhenLl.setVisibility(View.VISIBLE);
+                        mhowLongLl.setVisibility(View.VISIBLE);
                     } else if (checkedId == R.id.behavioural_health_hospitalized_no_radio_button) {
-
+                        mBehavioralHistory.hospitalized = "No";
+                        mBehavioralHistory.hospitalizedDate = "";
+                        mBehavioralHistory.hospitalizedDuration = "";
+                        mWhenLl.setVisibility(View.GONE);
+                        mhowLongLl.setVisibility(View.GONE);
                     }
                 }
             });
@@ -101,9 +106,11 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
         mHospitalizedYesRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_yes_radio_button);
         mHospitalizedNoRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_no_radio_button);
+        mWhenLl = (LinearLayout)view.findViewById(R.id.behavoural_when_ll);
+        mhowLongLl = (LinearLayout)view.findViewById(R.id.behavoural_how_long_ll);
 
         mWhenTextView = (TextView) view.findViewById(R.id.mdlive_behavioural_histroy_when_text_view);
-        mHowLongTextView = (TextView) view.findViewById(R.id.mdlive_behavioural_histroy_how_long_text_view);
+        mHowLongTextView = (EditText) view.findViewById(R.id.mdlive_behavioural_histroy_how_long_text_view);
 
         mFamilyHistoryLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_family_histroy);
 
@@ -113,9 +120,9 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.behavioural_health_question_family_yes_radio_button) {
-
+                        mBehavioralHistory.familyHospitalized = "Yes";
                     } else if (checkedId == R.id.behavioural_health_question_family_no_radio_button) {
-
+                        mBehavioralHistory.familyHospitalized = "No";
                     }
                 }
             });
@@ -140,19 +147,21 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        final Gson gson = new Gson();
-        mBehavioralHistory = gson.fromJson(DummyJSON.getBehaviouralHistoryResponseString(), BehavioralHistory.class);
+        getBehaviouralHealthServiceData();
+//        final Gson gson = new Gson();
+//        mBehavioralHistory = gson.fromJson(DummyJSON.getBehaviouralHistoryResponseString(), BehavioralHistory.class);
         if (mBehavioralHistory != null) {
             handleInitialResponse();
         }
     }
 
     private void handleInitialResponse() {
-
-        mWhenTextView.setText(mBehavioralHistory.hospitalizedDate);
-        mHowLongTextView.setText(mBehavioralHistory.hospitalizedDuration);
-
+        if(!mBehavioralHistory.hospitalizedDate.isEmpty()) {
+            mWhenTextView.setText(mBehavioralHistory.hospitalizedDate);
+        }
+        if(!mBehavioralHistory.hospitalizedDuration.isEmpty()) {
+            mHowLongTextView.setText(mBehavioralHistory.hospitalizedDuration);
+        }
         int selectedPosition = 0;
         for (int j = 0; j < relationShpList.size(); j++) {
             if (mBehavioralHistory.counselingPreference.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
@@ -165,7 +174,8 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         if (mBehavioralHistory.behavioralMconditions != null && mBehavioralHistory.behavioralMconditions.size() > 0 && mConditionLinearLayout != null) {
             for (int i = 0; i < mBehavioralHistory.behavioralMconditions.size(); i++) {
                 final int position = i;
-                final CheckBox checkBox = new CheckBox(getActivity());
+                final View child = getActivity().getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
+                final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
                 checkBox.setText(mBehavioralHistory.behavioralMconditions.get(position).condition);
                 if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralMconditions.get(position).active)) {
                     checkBox.setChecked(true);
@@ -183,7 +193,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                     }
                 });
 
-                mConditionLinearLayout.addView(checkBox);
+                mConditionLinearLayout.addView(child);
             }
         }
 
@@ -191,7 +201,8 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         if (mBehavioralHistory.behavioralFamilyHistory != null && mBehavioralHistory.behavioralFamilyHistory.size() > 0 && mFamilyHistoryLinearLayout != null) {
             for (int i = 0; i < mBehavioralHistory.behavioralFamilyHistory.size(); i++) {
                 final int position = i;
-                final CheckBox checkBox = new CheckBox(getActivity());
+                final View child = getActivity().getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
+                final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
                 checkBox.setText(mBehavioralHistory.behavioralFamilyHistory.get(position).condition);
                 if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralFamilyHistory.get(position).active)) {
                     checkBox.setChecked(true);
@@ -209,21 +220,33 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                     }
                 });
 
-                mFamilyHistoryLinearLayout.addView(checkBox);
+                mFamilyHistoryLinearLayout.addView(child);
             }
         }
 
-        if("Yes".equalsIgnoreCase(mBehavioralHistory.familyHospitalized)) {
-            mHospitalizedYesRadioButton.setChecked(true);
-        }
         if("Yes".equalsIgnoreCase(mBehavioralHistory.hospitalized)) {
+            mHospitalizedYesRadioButton.setChecked(true);
+            mHospitalizedNoRadioButton.setChecked(false);
+            mWhenLl.setVisibility(View.VISIBLE);
+            mhowLongLl.setVisibility(View.VISIBLE);
+        } else{
+            mHospitalizedYesRadioButton.setChecked(false);
+            mHospitalizedNoRadioButton.setChecked(true);
+            mWhenLl.setVisibility(View.GONE);
+            mhowLongLl.setVisibility(View.GONE);
+        }
+
+        if("Yes".equalsIgnoreCase(mBehavioralHistory.familyHospitalized)) {
             mFamilyYesRadioButton.setChecked(true);
+            mFamilyNoRadioButton.setChecked(false);
+        } else {
+            mFamilyNoRadioButton.setChecked(true);
+            mFamilyYesRadioButton.setChecked(false);
         }
     }
 
     private void getBehaviouralHealthServiceData() {
-
-        setProgressBarVisibility();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -241,25 +264,30 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                            pDialog.dismiss();
-                setInfoVisibilty();
+                hideProgressDialog();
+
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
-        BehaviouralService services = new BehaviouralService(getActivity(), pDialog);
+        BehaviouralService services = new BehaviouralService(getActivity(), getProgressDialog());
         services.doGetBehavioralHealthService(responseListener, errorListener);
 
     }
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            setInfoVisibilty();
             Log.d("BehaviouralHealth Res", response.toString());
+            hideProgressDialog();
+            final Gson gson = new Gson();
+            mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
+            if (mBehavioralHistory != null) {
+                handleInitialResponse();
+            }
 
         }catch(Exception e){
             e.printStackTrace();
@@ -267,25 +295,12 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     }
 
-    /*
-     * set visible for the progress bar
-     */
-    public void setProgressBarVisibility()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    /*
-     * set visible for the details view layout
-     */
-    public void setInfoVisibilty()
-    {
-        progressBar.setVisibility(View.GONE);
-    }
-
-    private void getBehaviouralHealthUpdateServiceData(final JSONObject requestJSON) {
-
-        setProgressBarVisibility();
+    public void updateBehaviourHealthService() {
+        showProgressDialog();
+        mBehavioralHistory.hospitalizedDuration = mHowLongTextView.getText().toString().trim();
+        mBehavioralHistory.counselingPreference = mCounsellingSpinner.getSelectedItem().toString();
+        final Gson gson = new Gson();
+        String request = gson.toJson(mBehavioralHistory);
 
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -304,28 +319,41 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
-        BehaviouralUpdateService behaviouralUpdateServices = new BehaviouralUpdateService(getActivity(), pDialog);
-        behaviouralUpdateServices.postBehaviouralUpdateService(requestJSON, responseListener, errorListener);
+        BehaviouralUpdateService behaviouralUpdateServices = new BehaviouralUpdateService(getActivity(), getProgressDialog());
+        behaviouralUpdateServices.postBehaviouralUpdateService(request, responseListener, errorListener);
 
     }
 
     private void handleUpdateSuccessResponse(JSONObject response) {
         try {
-            setInfoVisibilty();
+            hideProgressDialog();
             Log.d("BehaviouralUpdateRes", response.toString());
+
+            getActivity().finish();
         }catch(Exception e){
             e.printStackTrace();
         }
 
     }
+    DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
+        // when dialog box is closed, below method will be called.
+        @Override
+        public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(selectedYear, selectedMonth, selectedDay);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+            mWhenTextView.setText(sdf.format(calendar.getTime()));
+            mBehavioralHistory.hospitalizedDate = sdf.format(calendar.getTime());
+        }
+    };
 }

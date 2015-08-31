@@ -1,11 +1,17 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
+import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
@@ -14,25 +20,32 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.mdlive.embedkit.R.layout.mdlive_activity_dashboard);
-        MDLiveConfig.setData(3);
+        setContentView(R.layout.mdlive_behavioural_history_layout);
+
+
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.behaviouralhealthhistory).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         }
-        toolbar.setTitle("BEHAVIORAL HEALTH HISTORY");
         User user = null;
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
@@ -56,13 +69,15 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         }
     }
 
-    /* On Email Unconfirmed Click listener */
-    public void onEmailUnconfirmClicked(View view) {
-        getSupportFragmentManager().
-                beginTransaction().
-                addToBackStack(MAIN_CONTENT).
-                replace(com.mdlive.embedkit.R.id.dash_board__main_container, EmailConfirmFragment.newInstance()).
-                commit();
+    public void onBackClicked(View view) {
+        finish();
+    }
+
+    public void onTickClicked(View view) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveBehaviouralHealthFragment) {
+            ((MDLiveBehaviouralHealthFragment) fragment).updateBehaviourHealthService();
+        }
     }
 
     /**
@@ -128,6 +143,10 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         onSeeADoctorClicked();
     }
 
+    public void onScheduleAVisitClicked(View view) {
+        startActivityWithClassName(MDLiveGetStarted.class);
+    }
+
     public void onMyHealthClicked(View view) {
 
     }
@@ -147,7 +166,22 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     public void onMyAccountClicked(View view) {
         startActivityWithClassName(MyAccountActivity.class);
     }
+
+    public void chooseStateOnClick(View view){
+        Calendar calendar = Calendar.getInstance();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveBehaviouralHealthFragment) {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, ((MDLiveBehaviouralHealthFragment) fragment).pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setCalendarViewShown(false);
+            datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+            datePickerDialog.show();
+        }
+    }
+
+
     /* End of Dashboard icons click listener */
+
+
 }
 
 

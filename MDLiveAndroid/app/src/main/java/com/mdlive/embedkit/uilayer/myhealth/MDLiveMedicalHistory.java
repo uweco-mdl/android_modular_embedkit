@@ -589,6 +589,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
             checkPediatricCompletion(historyPercentageArray);
+            checkMyHealthBehaviouralHistory(historyPercentageArray);
+            checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
             ValidateModuleFields();
             checkAgeAndFemale();
 
@@ -800,6 +802,64 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
     }
 
+    /**
+     * This will check weather the user has completed the behavioural heaqalth history section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkMyHealthBehaviouralHistory(JSONArray historyPercentageArray) {
+        Log.d("BEHAVIOURAL --->", historyPercentageArray.toString());
+        try {
+            for(int i =0; i<historyPercentageArray.length();i++){
+                if(historyPercentageArray.getJSONObject(i).has("behavioral")){
+                    findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
+                    if(historyPercentageArray.getJSONObject(0).getInt("behavioral")!=0){
+                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+            ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
+        }
+    }
+
+    /**
+     * This will check weather the user has completed the behavioural health history section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkMyHealthLifestyleAndFamilyHistory(JSONArray historyPercentageArray) {
+        try {
+            for(int i =0; i<historyPercentageArray.length();i++){
+                if(historyPercentageArray.getJSONObject(i).has("life_style")){
+                    if(historyPercentageArray.getJSONObject(0).getInt("life_style")!=0){
+                        ((TextView)findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    }
+                } else if(historyPercentageArray.getJSONObject(i).has("family_history")){
+                    findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
+                    if(historyPercentageArray.getJSONObject(0).getInt("family_history")!=0){
+                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+            ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
+        }
+    }
 
     /**
      * This will check weather the user has completed the Pediatric Profile section and will hide and
@@ -848,7 +908,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     private void checkProcedure(JSONArray historyPercentageArray) {
         try {
-            /*JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
+            JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
             String myHealthPercentage = historyPercentageArray.getJSONObject(0).getString("health");
             if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("conditions").length() == 0)){
                 findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
@@ -862,7 +922,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 ((TextView)findViewById(R.id.ProcedureNameTv)).setText(conditonsNames);
-            }*/
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
