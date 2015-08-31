@@ -153,8 +153,10 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == INSERT_CODE && resultCode == RESULT_OK){
+            IsThisPageEdited = true;
             getConditionsOrAllergiesData();
         }else if(requestCode == UPDATE_CODE && resultCode == RESULT_OK){
+            IsThisPageEdited = true;
             getConditionsOrAllergiesData();
         }
     }

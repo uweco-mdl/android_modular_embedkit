@@ -218,7 +218,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }};
         ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, pDialog);
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), settings.getString(PreferenceConstants.PROVIDER_MODE,""), successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID,""), successCallBackListener, errorListener);
     }
     /**
      *
@@ -388,7 +388,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     strDate = IntegerConstants.DATE_FLAG;
                 else
                     strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
-                 shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
+                    shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
             } catch (Exception e) {
                 e.printStackTrace();
