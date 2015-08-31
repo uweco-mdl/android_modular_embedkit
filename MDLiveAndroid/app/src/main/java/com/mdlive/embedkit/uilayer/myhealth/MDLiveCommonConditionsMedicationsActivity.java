@@ -56,7 +56,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aaviewmodule);
+        setContentView(R.layout.mdlive_view_health);
         conditionsList = new ArrayList<>();
         adapter = new ConditionsAdapter();
         conditionsListView = (ListView) findViewById(R.id.conditionsListView);
@@ -191,7 +191,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             holder.conditionSubName = (TextView) findViewById(R.id.conditionSubName);*/
 
             if(convertView == null){
-                convertView = getLayoutInflater().inflate(R.layout.aabdmodule, null);
+                convertView = getLayoutInflater().inflate(R.layout.mdlive_custom_addhealth, null);
                 holder = new ViewHolder();
                 holder.deleteIcon = (ImageView) convertView.findViewById(R.id.deleteIcon);
                 holder.conditionName = (TextView) convertView.findViewById(R.id.conditionName);
