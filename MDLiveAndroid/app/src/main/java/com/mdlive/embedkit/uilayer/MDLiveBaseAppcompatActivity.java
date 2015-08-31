@@ -9,7 +9,6 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -253,7 +252,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void onPreferedStoreClicked(View view) {
-        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 2);
+        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 1);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
