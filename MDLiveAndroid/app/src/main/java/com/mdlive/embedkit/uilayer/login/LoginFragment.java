@@ -113,7 +113,7 @@ public class LoginFragment extends MDLiveBaseFragment{
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                getProgressDialog().dismiss();
+                hideProgressDialog();
                 MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
             }
         };
