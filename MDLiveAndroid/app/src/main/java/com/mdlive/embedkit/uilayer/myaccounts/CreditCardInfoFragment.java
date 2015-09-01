@@ -1,6 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,9 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,9 @@ import com.mdlive.unifiedmiddleware.services.myaccounts.ReplaceCreditCardService
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by venkataraman_r on 6/22/2015.
@@ -64,6 +67,9 @@ public class CreditCardInfoFragment extends Fragment {
     private String zip = null;
     private SwitchCompat changeAddress;
     RelativeLayout mAddressVisibility;
+
+    private int year, month;
+    Calendar expiryDate = Calendar.getInstance();
 
     public static CreditCardInfoFragment newInstance(String response, String view) {
         final CreditCardInfoFragment cardInfo = new CreditCardInfoFragment();
@@ -164,33 +170,14 @@ public class CreditCardInfoFragment extends Fragment {
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-
-                int y = c.get(Calendar.YEAR) + 4;
-                int m = c.get(Calendar.MONTH) - 2;
-                int d = c.get(Calendar.DAY_OF_MONTH);
-                final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-                DatePickerDialog dp = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                String erg = "";
-                                erg = String.valueOf(monthOfYear + 1);
-                                erg += "/" + year;
-
-                                mCardExpirationMonth.setText(erg);
-                                cardExpirationMonth = String.valueOf(monthOfYear + 1);
-                                cardExpirationYear = String.valueOf(year);
-                            }
-
-                        }, y, m, d);
-                dp.setTitle("Calender");
-                dp.show();
+                showDatePicker();
             }
         });
+
+
+
+
+
 
         changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -220,7 +207,74 @@ public class CreditCardInfoFragment extends Fragment {
             }
         });
     }
+    private void showDatePicker() {
+        final Dialog d = new Dialog(getActivity());
+        d.setTitle(getString(R.string.expiration_month_year));
+        d.setContentView(R.layout.monthly_picker_dialog);
+        Button buttonDone = (Button) d.findViewById(R.id.set_button);
+        final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
+        final NumberPicker yearPicker = (NumberPicker) d.findViewById(R.id.year_picker);
+        yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                Log.e("Values",""+newVal);
+                Log.e("OldValues",""+oldVal);
+                Calendar c = Calendar.getInstance();
+                int minimumYear = c.get(Calendar.YEAR);
+                if(newVal!=minimumYear){
+                    monthPicker.setMaxValue(12);
+                    monthPicker.setMinValue(1);
+                    monthPicker.setValue(c.get(Calendar.MONTH) + 1);
+                }else{
+                    monthPicker.setMaxValue(12);
+                    monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
+                    monthPicker.setValue(1);
+                }
+            }
+        });
 
+        monthPicker.setWrapSelectorWheel(true);
+        try {
+            Calendar c = Calendar.getInstance();
+            Date mDate = new Date();
+            c.setTime(mDate);
+            monthPicker.setMaxValue(12);
+            monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
+            monthPicker.setValue(c.get(Calendar.MONTH) + 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Calendar c = Calendar.getInstance();
+        int minimumYear = c.get(Calendar.YEAR);
+        yearPicker.setMaxValue(9999);
+        yearPicker.setMinValue(minimumYear);
+        yearPicker.setWrapSelectorWheel(false);
+        yearPicker.setValue(minimumYear);
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    year = yearPicker.getValue();
+                    month = monthPicker.getValue() - 1;
+                    expiryDate.set(year, month, 1);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    mCardExpirationMonth.setText(dateFormat.format(expiryDate.getTime()));
+                    d.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        d.findViewById(R.id.CancelBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
+
+        d.show();
+    }
     public void addCreditCardInfo() {
         cardNumber = mCardNumber.getText().toString();
         securityCode = mSecurityCode.getText().toString();
