@@ -1,8 +1,9 @@
 package com.mdlive.embedkit.uilayer.lifestyle;
 
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,13 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -36,7 +35,7 @@ import java.util.List;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MDLiveLifeStyleFragment extends Fragment {
+public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
 
     private View view;
     private EditText mHeightFtEditText;
@@ -44,16 +43,8 @@ public class MDLiveLifeStyleFragment extends Fragment {
     private EditText mWeightLbsEditText;
     private TextView mBmiText;
     private ListView mListView;
-    private TextView life_style_question_text;
-    private RadioGroup radioGroup;
-    private RadioButton yesRadioButton;
-    private RadioButton noRadioButton;
-
-    private ProgressBar progressBar;
     private ProgressDialog pDialog = null;
-
     LifeStyleBaseAdapter adapter;
-
     List<Model> models;
 
     /**
@@ -84,14 +75,17 @@ public class MDLiveLifeStyleFragment extends Fragment {
         view = inflater.inflate(R.layout.mdlive_life_style_fragment, container, false);
 
         setWidgetId();
-        getLifeStyleServiceData();
-
         return view;
     }
 
-    private void setWidgetId() {
 
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLifeStyleServiceData();
+    }
+
+    private void setWidgetId() {
         mHeightFtEditText = (EditText) view.findViewById(R.id.life_style_heighteditTextone);
         mHeightInEditText = (EditText) view.findViewById(R.id.life_style_heighteditTexttwo);
         mWeightLbsEditText = (EditText) view.findViewById(R.id.life_style_weight_editTextone);
@@ -108,10 +102,11 @@ public class MDLiveLifeStyleFragment extends Fragment {
         super.onResume();
     }
 
+    /**
+     * This function will get the My Lifestyle details from the service.
+     */
     private void getLifeStyleServiceData() {
-
-        setProgressBarVisibility();
-
+        showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -121,19 +116,16 @@ public class MDLiveLifeStyleFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         };
 
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, getActivity());
                 }
             }
@@ -144,12 +136,19 @@ public class MDLiveLifeStyleFragment extends Fragment {
 
     }
 
+    /**
+     * This function will populate the lifestyle data to corresponding views. The body-mass index
+     * value is also set by calling setBMIText() function.
+     *
+     * @param response - The Response JsonObject
+     */
     private void handleSuccessResponse(JSONObject response) {
+
         try {
-            setInfoVisibilty();
-            mHeightFtEditText.setText(response.optInt("height_feet",0) + "");
-            mHeightInEditText.setText(response.optInt("height_inches",0) + "");
-            mWeightLbsEditText.setText(response.optInt("weight",0) + "");
+            hideProgressDialog();
+            mHeightFtEditText.setText(response.optInt("height_feet", 0) + "");
+            mHeightInEditText.setText(response.optInt("height_inches", 0) + "");
+            mWeightLbsEditText.setText(response.optInt("weight", 0) + "");
             setBMIText();
             JSONArray lifestyleConditionArray = response.getJSONArray("life_style_conditions");
             JSONObject jsonObject;
@@ -169,57 +168,48 @@ public class MDLiveLifeStyleFragment extends Fragment {
 
     }
 
-    /*
-         * set visible for the progress bar
-         */
-    public void setProgressBarVisibility() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    /*
-     * set visible for the details view layout
-     */
-    public void setInfoVisibilty() {
-        progressBar.setVisibility(View.GONE);
-    }
-
     public void lifeStyleSaveButtonEvent() {
-                models = adapter.getItems();
+        models = adapter.getItems();
 
-                final JSONObject requestJSON = new JSONObject();
+        final JSONObject requestJSON = new JSONObject();
 
-                try {
-                    final JSONObject personalInfoJSONObject = new JSONObject();
+        try {
+            final JSONObject personalInfoJSONObject = new JSONObject();
 
-                    personalInfoJSONObject.put("height_feet", mHeightFtEditText.getText().toString().trim());
-                    personalInfoJSONObject.put("height_inches", mHeightInEditText.getText().toString().trim());
-                    personalInfoJSONObject.put("weight", mWeightLbsEditText.getText().toString().trim());
+            personalInfoJSONObject.put("height_feet", mHeightFtEditText.getText().toString().trim());
+            personalInfoJSONObject.put("height_inches", mHeightInEditText.getText().toString().trim());
+            personalInfoJSONObject.put("weight", mWeightLbsEditText.getText().toString().trim());
 
-                    requestJSON.put("personal_info", personalInfoJSONObject);
+            requestJSON.put("personal_info", personalInfoJSONObject);
 
-                    final JSONArray lifeStyleConditionJSONArray = new JSONArray();
+            final JSONArray lifeStyleConditionJSONArray = new JSONArray();
 
-                    for (Model modelitem : models) {
-                        final JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("condition_id", modelitem.id);
-                        jsonObject.put("condition", modelitem.condition);
-                        jsonObject.put("active", modelitem.active);
-                        lifeStyleConditionJSONArray.put(jsonObject);
-                    }
+            for (Model modelitem : models) {
+                final JSONObject jsonObject = new JSONObject();
+                jsonObject.put("condition_id", modelitem.id);
+                jsonObject.put("condition", modelitem.condition);
+                jsonObject.put("active", modelitem.active);
+                lifeStyleConditionJSONArray.put(jsonObject);
+            }
 
-                    requestJSON.put("life_style_conditions", lifeStyleConditionJSONArray);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            requestJSON.put("life_style_conditions", lifeStyleConditionJSONArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-                //initializeJsonElements();
-                getLifeStyleUpdateServiceData(requestJSON);
+        updateLifeStyleService(requestJSON);
 
     }
 
-    private void getLifeStyleUpdateServiceData(final JSONObject requestJSON) {
+    /**
+     *
+     * This function will save the updated lifestyle data to service.
+     *
+     * @param requestJSON
+     */
+    private void updateLifeStyleService(final JSONObject requestJSON) {
 
-        setProgressBarVisibility();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -230,19 +220,16 @@ public class MDLiveLifeStyleFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         };
 
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, getActivity());
                 }
             }
@@ -252,30 +239,33 @@ public class MDLiveLifeStyleFragment extends Fragment {
 
     }
 
-    private void handleUpdateSuccessResponse(JSONObject response) {
-        try {
-            setInfoVisibilty();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
+    /**
+     *
+     * This textwatcher will call the setBMIText() function whenever the text is changed for
+     * weight and height edittexts.
+     *
+     */
     TextWatcher bmiTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
+
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             setBMIText();
         }
+
         @Override
         public void afterTextChanged(Editable s) {
         }
     };
 
-    private void setBMIText(){
+    /**
+     * This function will set the BMI value to the mBmiText textview by getting the height and
+     * weight values from the corresponding textviews.
+     *
+     */
+    private void setBMIText() {
         try {
             String heightFtValue = mHeightFtEditText.getText().toString();
             String heightInValue = mHeightInEditText.getText().toString();
@@ -283,14 +273,14 @@ public class MDLiveLifeStyleFragment extends Fragment {
             double bmiValue = 0;
             if (!heightFtValue.isEmpty() && !weightValue.isEmpty()) {
                 float heightInches = 0.0f;
-                if(!heightInValue.isEmpty()){
+                if (!heightInValue.isEmpty()) {
                     heightInches = Float.parseFloat(heightInValue);
                 }
-                float feetValue = Float.parseFloat(heightFtValue) + ( heightInches / 12);
+                float feetValue = Float.parseFloat(heightFtValue) + (heightInches / 12);
                 bmiValue = (Float.parseFloat(weightValue) * 4.88) / (feetValue * feetValue);
                 mBmiText.setText(Math.round(bmiValue) + "");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

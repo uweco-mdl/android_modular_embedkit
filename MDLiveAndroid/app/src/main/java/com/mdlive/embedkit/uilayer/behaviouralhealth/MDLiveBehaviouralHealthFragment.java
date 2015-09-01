@@ -281,7 +281,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            Log.d("BehaviouralHealth Res", response.toString());
             hideProgressDialog();
             final Gson gson = new Gson();
             mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
@@ -336,8 +335,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     private void handleUpdateSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
-            Log.d("BehaviouralUpdateRes", response.toString());
-
             getActivity().finish();
         }catch(Exception e){
             e.printStackTrace();

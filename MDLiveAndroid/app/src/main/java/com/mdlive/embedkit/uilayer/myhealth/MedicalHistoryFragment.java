@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +36,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryUpdateServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.UpdateFemaleAttributeServices;
-import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
@@ -74,17 +70,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             isAllergiesDone = false, isMedicationDone = false, isPediatricDone = false, isNewUser = false;
     private Button btnSaveContinue;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
-            MedicationsGroup, AllergiesGroup, ProceduresGroup;
-    private ArrayList<HashMap<String, Object>> myPhotosList;
-//    private ImageAdapter imageAdapter;
-    private GridView gridview;
-    public static Uri fileUri;
-    public JSONArray recordsArray;
-    private AlertDialog imagePickerDialog;
-//    private loadDownloadedImages loadImageService;
-//    private LocationCooridnates locationService;
-    private IntentFilter intentFilter;
-    private static List<BroadcastReceiver> registeredReceivers = new ArrayList<BroadcastReceiver>();
+            MedicationsGroup, AllergiesGroup;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -137,23 +123,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         btnSaveContinue = (Button) view.findViewById(R.id.SavContinueBtn);
         btnSaveContinue.setClickable(false);
         view.findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
-//        SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-//        ((TextView) view.findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
         PediatricAgeCheckGroup_1 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) view.findViewById(R.id.conditionsGroup));
-//        setProgressBar(view.findViewById(R.id.progressDialog));
         MedicationsGroup = ((RadioGroup) view.findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) view.findViewById(R.id.allergiesGroup));
-        ProceduresGroup = ((RadioGroup) view.findViewById(R.id.proceduresGroup));
-        myPhotosList = new ArrayList<HashMap<String, Object>>();
-//        locationService = new LocationCooridnates(getApplicationContext());
-//        intentFilter = new IntentFilter();
-//        intentFilter.addAction(getClass().getSimpleName());
-
-//        initializeViews();
-        initializeYesNoButtonActions();
-//        initializeCameraDialog();
         if(view!=null)
             checkMedicalDateHistory(view);
 
@@ -193,138 +167,9 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnMedicalHistoryResponse {
-        // void onLoginSucess(); TODO : Write necessary listeners
+        // void onLoginSucess();
     }
 
-
-    /**
-     * This function is used to update Medical history data in service
-     * MedicalHistoryUpdateServices :: This class is used to update medical history. This class holds data ot update service
-     *
-     */
-    private void updateMedicalHistory(View view){
-//        ((ProgressBar) view.findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
-        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-//                // hideProgress();
-                if (hasFemaleAttribute) {
-                    updateFemaleAttributes();
-                } else {
-                    getUserPharmacyDetails();
-                }
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                medicalCommonErrorResponseHandler(error);
-            }
-        };
-        try {
-            boolean hasAllergies = false, hasConditions = false, hasMedications = false, hasProcedures = false;
-            JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            hasAllergies = !(healthHistory.getJSONArray("allergies").length() == 0);
-            hasConditions = !(healthHistory.getJSONArray("conditions").length() == 0);
-            hasMedications = !(healthHistory.getJSONArray("medications").length() == 0);
-            HashMap<String,String> updateMap = new HashMap<String,String>();
-            updateMap.put("Do you have any health conditions?", hasConditions?"Yes":"No");
-            updateMap.put("Are you currently taking any medication?", hasMedications?"Yes":"No");
-            updateMap.put("Do you have any Allergies or Drug Sensitivities?", hasAllergies?"Yes":"No");
-            updateMap.put("Have you ever had any surgeries or medical procedures?", hasProcedures?"Yes":"No");
-            HashMap<String, HashMap<String,String>> medhistoryMap = new HashMap<String, HashMap<String,String>>();
-            medhistoryMap.put("medical_history",updateMap);
-            MedicalHistoryUpdateServices services = new MedicalHistoryUpdateServices(getActivity(), null);
-            services.updateMedicalHistoryRequest(medhistoryMap, successCallBackListener, errorListener);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    /**
-     * This function is used to initialize Yes/No Button actions used in layout.
-     */
-    private void initializeYesNoButtonActions() {
-
-        //TODO: Implement Yes/No buttons in UI and then work
-        /*PediatricAgeCheckGroup_1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.perdiatric1YesButton)
-                    isPregnant = true;
-                else
-                    isPregnant = false;
-                ValidateModuleFields();
-            }
-        });
-        PediatricAgeCheckGroup_2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.perdiatric2YesButton)
-                    isBreastfeeding = true;
-                else
-                    isBreastfeeding = false;
-                ValidateModuleFields();
-            }
-        });
-
-        // TODO : Move to activity level
-        PreExisitingGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.conditionYesButton) {
-                    PreExisitingGroup.clearCheck();
-                    Intent i = new Intent(getActivity(), MDLiveAddConditions.class);
-                    startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                }else{
-                    ValidateModuleFields();
-                }
-            }
-        });
-
-        // TODO : Move to activity level
-        MedicationsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.medicationsYesButton) {
-                    MedicationsGroup.clearCheck();
-                    Intent i = new Intent(getActivity(), MDLiveAddMedications.class);
-                    startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                }else{
-                    ValidateModuleFields();
-                }
-            }
-        });
-
-        // TODO : Move to activity level
-        AllergiesGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.allergiesYesButton) {
-                    AllergiesGroup.clearCheck();
-                    Intent i = new Intent(getActivity(), MDLiveAddAllergies.class);
-                    startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                }else{
-                    ValidateModuleFields();
-                }
-            }
-        });
-
-        // TODO : Move to activity level
-        ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.proceduresYesButton) {
-                    Intent i = new Intent(getActivity(), MDLiveAddAllergies.class);
-                    startActivity(i);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                }
-                ValidateModuleFields();
-            }
-        });*/
-    }
 
 
 
@@ -342,27 +187,24 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
                 try {
-                    if(response.get("health_last_update") instanceof Number){
-                        long num=response.getLong("health_last_update");
-                        int length = (int) Math.log10(num) + 1;
-                        System.out.println(length);
-                    }else if(response.get("health_last_update") instanceof CharSequence){
-                        if(response.getString("health_last_update").equals("")){
+                    if (response.get("health_last_update") instanceof Number) {
+                        long num = response.getLong("health_last_update");
+                    } else if (response.get("health_last_update") instanceof CharSequence) {
+                        if (response.getString("health_last_update").equals("")) {
                         }
                     }
-                    if(response.getString("health_last_update").length() == 0){
+                    if (response.getString("health_last_update").length() == 0) {
                         isNewUser = true;
-                    }else{
-                        if(response.has("health_last_update")){
+                    } else {
+                        if (response.has("health_last_update")) {
                             long time = response.getLong("health_last_update");
-                            if(time != 0){
+                            if (time != 0) {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTimeInMillis(time * 1000);
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                                ((LinearLayout)view.findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
-                                if(getActivity()!=null)
-                                    ((TextView)view.findViewById(R.id.updateInfoText)).setText(
-                                        getActivity().getResources().getString(R.string.last_update_txt)+
+                                ((LinearLayout) view.findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
+                                ((TextView) view.findViewById(R.id.updateInfoText)).setText(
+                                        getResources().getString(R.string.last_update_txt) +
                                                 dateFormat.format(calendar.getTime())
                                 );
                                 isNewUser = false;
@@ -380,10 +222,9 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 medicalCommonErrorResponseHandler(error);
-                hideProgressDialog();
             }
         };
-        MedicalHistoryLastUpdateServices services = new MedicalHistoryLastUpdateServices(getActivity(), null);
+        MedicalHistoryLastUpdateServices services = new MedicalHistoryLastUpdateServices(getActivity(), getProgressDialog());
         services.getMedicalHistoryLastUpdateRequest(successCallBackListener, errorListener);
     }
 
@@ -407,12 +248,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Log.e("error", error.getMessage());
                 hideProgressDialog();
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        MedicalHistoryAggregationServices services = new MedicalHistoryAggregationServices(getActivity(), null);
+        MedicalHistoryAggregationServices services = new MedicalHistoryAggregationServices(getActivity(), getProgressDialog());
         services.getMedicalHistoryAggregationRequest(successCallBackListener, errorListener);
     }
 
@@ -472,7 +312,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
     /**
      * Checks user medical history completion details.
-     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion details.
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered.
      */
@@ -527,10 +367,97 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             checkProcedure(view, historyPercentageArray);
             checkMyMedications(view, historyPercentageArray);
             checkAllergies(view, historyPercentageArray);
+            checkPediatricCompletion(view, historyPercentageArray);
+            checkMyHealthBehaviouralHistory(view, historyPercentageArray);
+            checkMyHealthLifestyleAndFamilyHistory(view, historyPercentageArray);
             ValidateModuleFields(view);
             checkAgeAndFemale(view);
-//            downloadMedicalRecordService();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * This will check weather the user has completed the behavioural health history section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkMyHealthLifestyleAndFamilyHistory(View view,JSONArray historyPercentageArray) {
+        try {
+            for(int i =0; i<historyPercentageArray.length();i++){
+                if(historyPercentageArray.getJSONObject(i).has("life_style")){
+                    if(historyPercentageArray.getJSONObject(i).getInt("life_style")!=0){
+                        ((TextView)view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    }
+                }
+            }
+
+            if(medicalAggregationJsonObject.has("family_history")){
+                if(medicalAggregationJsonObject.getJSONArray("family_history").length()>0){
+                    ((TextView)view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+            ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
+        }
+    }
+
+
+
+    /**
+     * This will check weather the user has completed the behavioural health history section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkMyHealthBehaviouralHistory(View view,JSONArray historyPercentageArray) {
+        try {
+            for(int i =0; i<historyPercentageArray.length();i++){
+                if(historyPercentageArray.getJSONObject(i).has("behavioral")){
+                    view.findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
+                    if(historyPercentageArray.getJSONObject(i).getInt("behavioral")!=0){
+                        ((TextView)view.findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+            ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
+        }
+    }
+
+    /**
+     * This will check weather the user has completed the allergy section and will hide and
+     * display teh layouts accordingly.
+     *
+     * @param historyPercentageArray - The history percentage JSONArray
+     */
+    private void checkPediatricCompletion(View view, JSONArray historyPercentageArray) {
+        try {
+            int pediatricPercentage = 0;
+            for(int i = 0; i < historyPercentageArray.length(); i++){
+                if(historyPercentageArray.getJSONObject(i).has("pediatric")){
+                    pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
+                }
+            }
+            if(pediatricPercentage != 0){
+                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+            }else{
+                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_notcompleted_txt));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -547,8 +474,8 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
             if(MdliveUtils.calculteAgeFromPrefs(getActivity())>=10) {
                 if(gender.equalsIgnoreCase("Female")){
-                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
-                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
+//                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
+//                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
                 }
             }else{
@@ -599,13 +526,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
 
-        if(isNewUser){
-            view.findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
-        }else{
-            view.findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
-            view.findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
-        }
 
     }
 
@@ -644,15 +564,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
 
-        if(isNewUser){
-            view.findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
-        }else{
-            view.findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
-            view.findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
-        }
-
-
         if(MedicationsGroup.getCheckedRadioButtonId() > 0 &&
                 MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton){
             ((RadioButton) view.findViewById(R.id.medicationsYesButton)).setChecked(false);
@@ -671,7 +582,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
             int myHealthPercentage = historyPercentageArray.getJSONObject(0).getInt("health");
             if (myHealthPercentage != 0 && !(healthHistory.getJSONArray("conditions").length() == 0)) {
-                view.findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
                 view.findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
                 String conditonsNames = "";
                 JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
@@ -691,15 +601,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             } else {
                 ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_conditions_reported));
             }
-
-            if(isNewUser){
-                view.findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
-            }else{
-                view.findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
-                view.findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
-            }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -773,186 +674,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                 }
                 ((TextView)view.findViewById(R.id.ProceduresNameTv)).setText(conditonsNames);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Sending the answer details of Female pediatric users
-     */
-    private void updateFemaleAttributes() {
-        HashMap<String, String> femaleAttributes = new HashMap<String, String>();
-        femaleAttributes.put("is_pregnant", isPregnant + "");
-        femaleAttributes.put("is_breast_feeding", isBreastfeeding + "");
-        HashMap<String, HashMap<String, String>> postBody = new HashMap<String, HashMap<String, String>>();
-        postBody.put("female_questions", femaleAttributes);
-
-        showProgressDialog();
-        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                hideProgressDialog();
-                getUserPharmacyDetails();
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
-                medicalCommonErrorResponseHandler(error);
-            }
-        };
-        UpdateFemaleAttributeServices services = new UpdateFemaleAttributeServices(getActivity(), null);
-        services.updateFemaleAttributeRequest(new Gson().toJson(postBody), successCallBackListener, errorListener);
-    }
-
-    /*
-   * This function will get latest default pharmacy details of users from webservice.
-   * PharmacyService class handles webservice integration.
-   * @responseListener - Receives webservice informatoin
-   * @errorListener - Received error information (if any problem in webservice)
-   * once message received by  @responseListener then it will redirect to handleSuccessResponse function
-   * to parse message content.
-   */
-    public void getUserPharmacyDetails() {
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                hideProgressDialog();
-                handleSuccessResponse(response);
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
-                if (error.networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        };
-                        // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
-                    }
-                }
-            }
-        };
-        callPharmacyService(responseListener, errorListener);
-    }
-
-
-
-    /**
-     *  This method is used to call pharmacy service
-     *  In pharmacy service, it requires GPS location details to get distance details.
-     *
-     *  @param errorListener - Pharmacy error response listener
-     *  @param responseListener - Pharmacy detail Success response listener
-     */
-    public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
-                                    final NetworkErrorListener errorListener){
-        /*if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
-            showProgress();
-            registerReceiver(locationReceiver, intentFilter);
-            registeredReceivers.add(locationReceiver);
-            locationService.setBroadCastData(getClass().getSimpleName());
-            locationService.startTrackingLocation(getApplicationContext());
-        }else*/{
-            PharmacyService services = new PharmacyService(getActivity(), null);
-            services.doMyPharmacyRequest("","",responseListener, errorListener);
-        }
-    }
-
-    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-//            unregisterReceiver(locationReceiver);
-//            registeredReceivers.remove(locationReceiver);
-            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    handleSuccessResponse(response);
-                }
-            };
-            NetworkErrorListener errorListener = new NetworkErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    hideProgressDialog();
-                    if (error.networkResponse == null) {
-                        if (error.getClass().equals(TimeoutError.class)) {
-                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            };
-                            // Show timeout error message
-                            MdliveUtils.connectionTimeoutError(pDialog, getActivity());
-                        }
-                    }
-                }
-            };
-            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")){
-                double lat=intent.getDoubleExtra("Latitude",0d);
-                double lon=intent.getDoubleExtra("Longitude",0d);
-                if(lat!=0 && lon!=0){
-                    PharmacyService services = new PharmacyService(getActivity(), null);
-                    services.doMyPharmacyRequest(lat+"", +lon+"",
-                            responseListener, errorListener);
-                }else{
-                    PharmacyService services = new PharmacyService(getActivity(), null);
-                    services.doMyPharmacyRequest("","",responseListener, errorListener);
-                }
-            }else{
-                PharmacyService services = new PharmacyService(getActivity(), null);
-                services.doMyPharmacyRequest("","",responseListener, errorListener);
-            }
-        }
-    };
-
-
-
-    /* This function handles webservice response and parsing the contents.
-    *  Once parsing operation done, then it will update UI
-    *  bundletoSend is stand for to send bundle of datas received from webservice to next page.
-    */
-    Bundle bundletoSend = new Bundle();
-    String jsonResponse;
-
-    private void handleSuccessResponse(JSONObject response) {
-        try {
-            hideProgressDialog();
-            jsonResponse = response.toString();
-            if(response.has("message")){
-                if(response.getString("message").equals("No pharmacy selected")){
-//                    getLocationBtnOnClickAction();
-                    Toast.makeText(getActivity(),"No Pharmacy Selected",Toast.LENGTH_LONG).show();
-                }
-            }else{
-                JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-                bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
-                JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
-                bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
-                bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
-                bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
-                bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
-                bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
-                bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
-                bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
-                bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
-                bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
-                bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
-                bundletoSend.putString("city", pharmacyDatas.getString("city"));
-                bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
-                bundletoSend.putString("state", pharmacyDatas.getString("state"));
-                String res = response.toString();
-                /*Intent i = new Intent(getApplicationContext(), MDLivePharmacy.class);
-                i.putExtra("Response",res);
-                startActivity(i);
-                MdliveUtils.startActivityAnimation(getActivity());*/
             }
         } catch (Exception e) {
             e.printStackTrace();

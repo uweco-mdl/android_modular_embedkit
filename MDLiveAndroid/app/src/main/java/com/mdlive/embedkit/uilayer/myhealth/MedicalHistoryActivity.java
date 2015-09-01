@@ -249,8 +249,9 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         startActivity(i);
     }
 
-    public void SavContinueBtnOnClick(View view){
-
+    public void ProceduresLlOnClick(View view){
+        Intent i = new Intent(getBaseContext(), MDLiveAddProcedures.class);
+        startActivity(i);
     }
 
     /**
