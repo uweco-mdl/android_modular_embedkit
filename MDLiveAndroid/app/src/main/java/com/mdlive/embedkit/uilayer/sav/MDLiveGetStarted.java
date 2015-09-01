@@ -87,7 +87,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     private ProgressDialog pDialog = null;
     private TextView locationTxt;/*,genderText*/
     private String DateTxt;
-    private String strPatientName,SavedLocation,strProviderId;
+    private String strPatientName,SavedLocation,strProviderId,assistFamilyMemmber,remainingFamilyMemberCount;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
@@ -121,6 +121,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
+        loadProviderType();
         clearCacheInVolley();
 
 
@@ -138,7 +139,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             loadUserInformationDetails();
         }
 
-        loadProviderType();
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
@@ -176,7 +177,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }else {
 
                 if (patientSpinner != null) {
-                    if ((dependentList.size() >= IntegerConstants.ADD_CHILD_SIZE) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                    if ((dependentList.size() >= Integer.parseInt(remainingFamilyMemberCount)) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -213,12 +214,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                 editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
                             }
                             editor.commit();
-
+                            Log.e("phne num lenght-->",phonrNmberEditTxt.getText().toString()+"Length-->"+phonrNmberEditTxt.getText().toString().length());
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
-                                phoneNumberText = phoneNumberText.replace("(", "");
-                                phoneNumberText = phoneNumberText.replace(")", "");
-                                phoneNumberText = phoneNumberText.replace(" ", "");
+                                Log.e("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
+//                                phoneNumberText = phoneNumberText.replace("(", "");
+//                                phoneNumberText = phoneNumberText.replace(")", "");
+//                                phoneNumberText = phoneNumberText.replace(" ", "");
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
                                 if(((TextView)findViewById(R.id.providertypeTxt)).getText() != null)
@@ -254,7 +256,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
-
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
         providerTypeArrayList = new ArrayList<String>();
         providerTypeIdList = new ArrayList<String>();
@@ -320,7 +321,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
             SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
-            Log.e("Result Location Nmae-->",longNameLocation);
+            Log.e("Result Location Nmae-->",SavedLocation);
             locationTxt.setText(longNameLocation);
             SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
             SharedPreferences.Editor searchEditor = searchPref.edit();
@@ -653,6 +654,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleSuccessResponse(JSONObject response) {
         try {
+          assistFamilyMemmber = response.getString("assist_phone_number");
+          remainingFamilyMemberCount = response.getString("remaining_family_members_limit");
+            Log.e("remainingFamilyMemberCount",remainingFamilyMemberCount);
             JSONObject personalInfo = response.getJSONObject("personal_info");
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
@@ -669,7 +673,45 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 }
 
                 phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
-                phonrNmberEditTxt.addTextChangedListener(watcher);
+                String numStr=personalInfo.getString("phone");
+
+                try {
+                    String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
+                    phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
+                    phonrNmberEditTxt.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (mayIallowtoEdit) {
+                                String temp = s.toString().replace("-", "");
+                                if (temp.length() == 10) {
+                                    String number = temp;
+                                    String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
+                                    mayIallowtoEdit = false;
+                                    phonrNmberEditTxt.setText(formattedString);
+                                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
+                                    mayIallowtoEdit = true;
+
+                                }
+                            }
+
+                        }
+                    });
+//phonrNmberEditTxt.addTextChangedListener(watcher);
+                    phonrNmberEditTxt.setText(formattedString);
+                } catch (Exception e) {
+                }
+
+               /* phonrNmberEditTxt.addTextChangedListener(watcher);
 
                 try {
                     String numStr = personalInfo.getString("phone");
@@ -681,7 +723,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     }
                     phonrNmberEditTxt.setText(numStr);
                 } catch (Exception e) {
-                }
+                }*/
             }
 
             if(dependentList.size()>IntegerConstants.NUMBER_ZERO){
@@ -706,6 +748,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     int lastIndex = 12;
     boolean mayIallowtoParse = true;
+    boolean mayIallowtoEdit = true;
 
     TextWatcher watcher = new TextWatcher() {
         @Override
@@ -714,36 +757,91 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if(mayIallowtoParse){
-                formatDualString(s.toString());
+                //formatDualString(s.toString());
             }
+
+
+            //
+
+
+
+            //
+
+
         }
         @Override
         public void afterTextChanged(Editable s) {
         }
     };
 
+
+
     public void formatDualString(String formatText){
-        boolean hasParenthesis = false;
-        if(formatText.indexOf(")") > 0){
-            hasParenthesis = true;
+//        boolean hasParenthesis = false;
+//        Log.e("Print format txt",formatText);
+//        if(formatText.indexOf(")") > 0){
+//            hasParenthesis = true;
+//        }
+//        formatText= formatText.replace("(", "");
+//        formatText= formatText.replace(")", "");
+//        formatText= formatText.replace(" ", "");
+//        if(formatText.length() > 10){
+//            formatText = formatText.substring(0, formatText.length()-1);
+//            Log.e("Print format txt",">10");
+//        }
+//        if(formatText.length() >= 7){
+//            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+//            Log.e("Print format txt",formatText);
+//        }else if(formatText.length() >= 4){
+//            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
+//            Log.e("Print format txt",">4");
+//        }else if(formatText.length() == 3 && hasParenthesis){
+//            Log.e("Print format txt",">3");
+//            formatText = "("+formatText.substring(0, formatText.length())+")";
+//        }
+//        mayIallowtoParse = false;
+//        phonrNmberEditTxt.setText(formatText);
+//        phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
+//        mayIallowtoParse = true;
+
+
+
+
+        try {
+            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(formatText));
+            phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
+            phonrNmberEditTxt.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (mayIallowtoEdit) {
+                        String temp = s.toString().replace("-", "");
+                        if (temp.length() == 10) {
+                            String number = temp;
+                            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
+                            mayIallowtoEdit = false;
+                            phonrNmberEditTxt.setText(formattedString);
+                            phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
+                            mayIallowtoEdit = true;
+
+                        }
+                    }
+
+                }
+            });
+//phonrNmberEditTxt.addTextChangedListener(watcher);
+            phonrNmberEditTxt.setText(formattedString);
+        } catch (Exception e) {
         }
-        formatText= formatText.replace("(", "");
-        formatText= formatText.replace(")", "");
-        formatText= formatText.replace(" ", "");
-        if(formatText.length() > 10){
-            formatText = formatText.substring(0, formatText.length()-1);
-        }
-        if(formatText.length() >= 7){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
-        }else if(formatText.length() >= 4){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
-        }else if(formatText.length() == 3 && hasParenthesis){
-            formatText = "("+formatText.substring(0, formatText.length())+")";
-        }
-        mayIallowtoParse = false;
-        phonrNmberEditTxt.setText(formatText);
-        phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
-        mayIallowtoParse = true;
     }
 
     /**
@@ -830,6 +928,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
+            Log.e("dependent user info",response.toString());
             dependentList.clear();
             PatientList.clear();
             JSONObject personalInfo = response.getJSONObject("personal_info");
@@ -838,6 +937,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             DateTxt = personalInfo.getString("birthdate");
             locationTxt.setText(personalInfo.getString("city")+" ,"+personalInfo.getString("state"));
             String state = personalInfo.getString("state");
+            String dep_phone = personalInfo.getString("phone");
+            formatDualString(dep_phone);
+
+
             if(state.length()<3) {
                 List<String> stateArr = Arrays.asList(getResources().getStringArray(R.array.stateName));
                 List<String> stateIdArr = Arrays.asList(getResources().getStringArray(R.array.stateCode));
