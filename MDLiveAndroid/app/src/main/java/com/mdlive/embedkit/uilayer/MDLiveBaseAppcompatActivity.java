@@ -304,7 +304,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             MdliveUtils.showAddChildExcededDialog(this);
         } else {
             startActivityWithClassNameAddFamilyMember(AddFamilyMemberActivity.class);
-            finish();
+
         }
     }
 
