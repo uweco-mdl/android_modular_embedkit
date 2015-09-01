@@ -108,6 +108,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
     protected void deleteConditions(){
         showProgress();
         ArrayList<String> deleteIdItems = adapter.getRemovedItemsIds();
+        deleteCount = deleteIdItems.size();
         for(String id : deleteIdItems){
             deleteMedicalConditionsOrAllergyAction(id);
         }
@@ -124,9 +125,16 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(adapter.getRemovedItemsIds().get(adapter.getRemovedItemsIds().size()-1).equals(conditionId)){
+                IsThisPageEdited = true;
+                deleteCount--;
+                if(deleteCount <= 0){
                     hideProgress();
                     isEditCalled = false;
+                    if(duplicateList.size() == 0){
+                        noConditionsLayout.setVisibility(View.VISIBLE);
+                        conditionsListView.setVisibility(View.GONE);
+                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                    }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
                     ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
@@ -136,6 +144,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                deleteCount--;
                 medicalCommonErrorResponseHandler(error);
             }
         };

@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -47,12 +48,13 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected TYPE_CONSTANT type;
     public Intent resultData = new Intent();
     public static boolean IsThisPageEdited = false;
-    public ArrayList<Model> originalList = new ArrayList<>();
     public ArrayList<Model> duplicateList = new ArrayList<>();
     public ConditionsAdapter adapter;
     public ListView conditionsListView;
     public LinearLayout noConditionsLayout;
     public static int INSERT_CODE = 100, UPDATE_CODE = 200;
+    public int deleteCount = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +112,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected void preRenderKnownConditionData() {
         try {
             duplicateList.clear();
-            originalList.clear();
             for (int i = 0; i < conditionsListJSONArray.length(); i++) {
                 String conditionName = null, conditionId = null;
                 Model data = new Model();
@@ -119,20 +120,22 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     conditionId = ((JSONObject) conditionsListJSONArray.get(i)).getString("id");
                     data.setConditionId(conditionId);
                     data.setConditionName(conditionName);
-                    data.setConditionSubName(((JSONObject) conditionsListJSONArray.get(i)).getString("year"));
+                    data.setConditionSubName(((JSONObject) conditionsListJSONArray.get(i)).getString("surgery_year"));
                 }else{
                     conditionName = (type == TYPE_CONSTANT.CONDITION) ? ((JSONObject) conditionsListJSONArray.get(i)).getString("condition") :
                             (type == TYPE_CONSTANT.ALLERGY) ? ((JSONObject) conditionsListJSONArray.get(i)).getString("name") : ((JSONObject) conditionsListJSONArray.get(i)).getString("name");
                     conditionId = ((JSONObject) conditionsListJSONArray.get(i)).getString("id");
                     data.setConditionId(conditionId);
                     data.setConditionName(conditionName);
+                    if(type == TYPE_CONSTANT.MEDICATION){
+                        data.setConditionSubName("2, once daily");
+                    }
                 }
                 duplicateList.add(data);
-                originalList.add(data);
             }
             adapter.notifyDataSetChanged();
             hideProgress();
-            if(originalList.size() > 0){
+            if(duplicateList.size() > 0){
                 conditionsListView.setVisibility(View.VISIBLE);
                 noConditionsLayout.setVisibility(View.GONE);
                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
@@ -214,15 +217,22 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), MDLiveHealthModule.class);
-                    i.putExtra("Content", getItem(position).getConditionName());
                     i.putExtra("Id", getItem(position).getConditionId());
-                    if(type == TYPE_CONSTANT.CONDITION){
-                        i.putExtra("type", "condition");
-                    }else if(type == TYPE_CONSTANT.ALLERGY){
-                        i.putExtra("type", "allergy");
-                    }else if(type == TYPE_CONSTANT.MEDICATION){
-                        i.putExtra("type", "medication");
+                    if(type == TYPE_CONSTANT.PROCEDURE){
+                        i.putExtra("type", "procedure");
+                        i.putExtra("Name", getItem(position).getConditionName());
+                        i.putExtra("Year", getItem(position).getConditionSubName());
+                    }else{
+                        i.putExtra("Content", getItem(position).getConditionName());
+                        if(type == TYPE_CONSTANT.CONDITION){
+                            i.putExtra("type", "condition");
+                        }else if(type == TYPE_CONSTANT.ALLERGY){
+                            i.putExtra("type", "allergy");
+                        }else if(type == TYPE_CONSTANT.MEDICATION){
+                            i.putExtra("type", "medication");
+                        }
                     }
+
                     startActivityForResult(i, UPDATE_CODE);
                     MdliveUtils.startActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
                 }
@@ -236,12 +246,23 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             if(getItem(position).getConditionName() != null)
                 holder.conditionName.setText(getItem(position).getConditionName());
 
-            if(type.equals(TYPE_CONSTANT.MEDICATION) && getItem(position).getConditionSubName() != null){
+            if(getItem(position).getConditionSubName() != null &&
+                    getItem(position).getConditionSubName().length() != 0){
                 holder.conditionSubName.setVisibility(View.VISIBLE);
-                holder.conditionSubName.setText(getItem(position).getConditionSubName());
+                if(type == TYPE_CONSTANT.PROCEDURE){
+                    holder.conditionSubName.setText("Year of procedure : "+getItem(position).getConditionSubName());
+                }else{
+                    holder.conditionSubName.setText(getItem(position).getConditionSubName());
+                }
             }else{
-                holder.conditionSubName.setVisibility(View.GONE);
+                if(type.equals(TYPE_CONSTANT.MEDICATION) && getItem(position).getConditionSubName() != null){
+                    holder.conditionSubName.setVisibility(View.VISIBLE);
+                    holder.conditionSubName.setText(getItem(position).getConditionSubName());
+                }else{
+                    holder.conditionSubName.setVisibility(View.GONE);
+                }
             }
+
             return convertView;
         }
     }
@@ -314,6 +335,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             hideProgress();
             JSONObject healthHistory = response.getJSONObject("health_history");
             String conditonsNames = "";
+            Log.e("HISTORY REPONSE", response.toString());
             if(type == TYPE_CONSTANT.CONDITION){
                 JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
                 for (int i = 0; i < conditonsArray.length(); i++) {
@@ -326,7 +348,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = "No conditions reported";
+                    conditonsNames = getString(R.string.no_conditions_reported);
+                Log.e("conditonsNames", conditonsNames);
                 resultData.putExtra("conditionsData", conditonsNames);
             }else if(type == TYPE_CONSTANT.MEDICATION){
                 JSONArray conditonsArray = healthHistory.getJSONArray("medications");
@@ -340,7 +363,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = "No medications reported";
+                    conditonsNames = getString(R.string.no_medications_reported);
                 resultData.putExtra("medicationData", conditonsNames);
             }else if(type == TYPE_CONSTANT.ALLERGY){
                 JSONArray conditonsArray = healthHistory.getJSONArray("allergies");
@@ -354,10 +377,22 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = "No allergies reported";
+                    conditonsNames = getString(R.string.no_allergies_reported);
                 resultData.putExtra("allegiesData", conditonsNames);
             }else if(type == TYPE_CONSTANT.PROCEDURE){
-
+                JSONArray conditonsArray = healthHistory.getJSONArray("surgeries");
+                for (int i = 0; i < conditonsArray.length(); i++) {
+                    if (conditonsArray.getJSONObject(i).getString("name").trim() != null &&
+                            !conditonsArray.getJSONObject(i).getString("name").trim().equals("")) {
+                        conditonsNames += conditonsArray.getJSONObject(i).getString("name");
+                        if (i != conditonsArray.length() - 1) {
+                            conditonsNames += ", ";
+                        }
+                    }
+                }
+                if (conditonsNames.trim().length() == 0)
+                    conditonsNames = getString(R.string.no_procedures_reported);
+                resultData.putExtra("proceduresData", conditonsNames);
             }
         } catch (JSONException e) {
             e.printStackTrace();

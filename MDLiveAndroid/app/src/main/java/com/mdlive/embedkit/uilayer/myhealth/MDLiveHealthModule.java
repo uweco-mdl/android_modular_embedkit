@@ -1,5 +1,7 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -37,15 +40,20 @@ import com.mdlive.unifiedmiddleware.services.myhealth.AllergyAutoSuggestionServi
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionAutoSuggestionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalConditionUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureAutoSuggestionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureListServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.SuggestMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.UpdateMedicationService;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -62,7 +70,6 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public boolean isPerformingAutoSuggestion = false;
     public AutoCompleteTextView conditionText;
     public boolean isUpdateMode = false;
-
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
     public AlertDialog procedureNameDialog, procedureYearDialog;
@@ -121,6 +128,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureYearList.add(getIntent().getStringExtra("Year"));
                 surgeryName.setText(getIntent().getStringExtra("Name"));
                 surgeryYear.setText(getIntent().getStringExtra("Year"));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 isUpdateMode = true;
             }else{
                 isUpdateMode = false;
@@ -148,6 +156,122 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     }
 
     public void initializeViews() {
+        surgeryName = ((TextView) findViewById(R.id.surgeryName));
+        surgeryYear = ((TextView) findViewById(R.id.surgeryYear));
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(nameView);
+        ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureNameList);
+        nameListView.setAdapter(nameAdapter);
+        nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        procedureNameDialog = alertDialog.create();
+
+        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(yearView);
+        ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureYearList);
+        yearListView.setAdapter(yearAdapter);
+        yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        procedureYearDialog = alertDialog.create();
+
+        nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.surgeryName)).setText(procedureNameList.get(position));
+                procedureNameDialog.dismiss();
+                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.surgeryYear)).setText(procedureYearList.get(position));
+                procedureYearDialog.dismiss();
+                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        try {
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
+            if(dateofBirth != null){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
+                years = Calendar.getInstance().get(Calendar.YEAR) - years;
+                for(int i = years; i <= Calendar.getInstance().get(Calendar.YEAR); i++){
+                    procedureYearList.add(i+"");
+                    Log.e("Years--->", i+"");
+                }
+            }
+            yearAdapter.notifyDataSetChanged();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        getSurgeryNameList(nameAdapter);
+
+    }
+
+    /**
+     * This is a override function which was declared in MDLiveCommonConditionsMedicationsActivity
+     *
+     * This function is used to delete allergy details
+     *
+     */
+    public void getSurgeryNameList(final ArrayAdapter<String> nameAdapter) {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleResponse(response, nameAdapter);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                medicalCommonErrorResponseHandler(error);
+            }
+        };
+        ProcedureListServices services = new ProcedureListServices(MDLiveHealthModule.this, null);
+        services.getAllergyListRequest(successCallBackListener, errorListener);
+    }
+
+    public void handleResponse(JSONObject response, ArrayAdapter<String> nameAdapter){
+        try {
+            hideProgress();
+            procedureNameList.clear();
+            if(response != null){
+                if(response.has("surgeries")){
+                    JSONArray surgeriesArray = response.getJSONArray("surgeries");
+                    for(int i = 1; i < surgeriesArray.length(); i++){
+                        JSONObject item = surgeriesArray.getJSONObject(i);
+                        procedureNameList.add(item.getString("name"));
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        nameAdapter.notifyDataSetChanged();
+        if(getIntent() != null && getIntent().hasExtra("Name")){
+            procedureNameList.add(getIntent().getStringExtra("Name"));
+            procedureYearList.add(getIntent().getStringExtra("Year"));
+            surgeryName.setText(getIntent().getStringExtra("Name"));
+            surgeryYear.setText(getIntent().getStringExtra("Year"));
+        }
+    }
+
+    public void initializeSearchViews() {
 
         surgeryName = ((TextView) findViewById(R.id.surgeryName));
         surgeryYear = ((TextView) findViewById(R.id.surgeryYear));
@@ -190,16 +314,20 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
 
 
 
-
     /**
      * This function handles onClick event of done text in layout
      * saveBtnAction - is used to add new condition/allergy/medication
      */
     public void rightBtnOnClick(View view) {
+        MdliveUtils.hideSoftKeyboard(MDLiveHealthModule.this);
         if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             if(surgeryName.getText() != null && !surgeryName.getText().toString().equals("Select Surgery Name")
                     && surgeryYear.getText() != null && !surgeryYear.getText().toString().equals("Year")) {
-                saveBtnAction();
+                if(isUpdateMode){
+                    saveBtnAction();
+                }else{
+                    saveBtnAction();
+                }
             }
             }else{
             if (conditionText.getText() != null && conditionText.getText().toString().length() > 0) {
@@ -234,13 +362,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         if(type == TYPE_CONSTANT.PROCEDURE){
             if(surgeryName.getText() != null && !surgeryName.getText().toString().equals("Select Surgery Name")
                     && surgeryYear.getText() != null && !surgeryYear.getText().toString().equals("Year")){
-                HashMap<String, ArrayList<HashMap<String, String>>> allergies = new HashMap<>();
-                ArrayList<HashMap<String, String>> namelist = new ArrayList<>();
+                HashMap<String, HashMap<String, String>> allergies = new HashMap<>();
                 HashMap<String, String> map = new HashMap<>();
                 map.put("name", surgeryName.getText().toString());
                 map.put("surgery_year", surgeryYear.getText().toString());
-                namelist.add(map);
-                allergies.put("surgery", namelist);
+                allergies.put("surgery", map);
                 Log.e("Post Body ", new Gson().toJson(allergies));
                 saveNewConditionsOrAllergies(new Gson().toJson(allergies));
             }
@@ -440,8 +566,13 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             AddMedicationService services = new AddMedicationService(MDLiveHealthModule.this, null);
             services.doLoginRequest(successCallBackListener, errorListener,text);
         }else if(type.equals(TYPE_CONSTANT.PROCEDURE)){
-            AddProcedureServices services = new AddProcedureServices(MDLiveHealthModule.this, null);
-            services.addAllergyRequest(successCallBackListener, errorListener, text);
+            if(isUpdateMode){
+                ProcedureUpdateServices services = new ProcedureUpdateServices(MDLiveHealthModule.this, null);
+                services.updateAllergyRequest(getIntent().getStringExtra("Id"), text, successCallBackListener, errorListener);
+            }else{
+                AddProcedureServices services = new AddProcedureServices(MDLiveHealthModule.this, null);
+                services.addAllergyRequest(successCallBackListener, errorListener, text);
+            }
         }
     }
 

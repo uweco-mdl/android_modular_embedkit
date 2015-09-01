@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
@@ -100,6 +102,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         PediatricAgeCheckGroup_1 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) findViewById(R.id.conditionsGroup));
+        ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
         setProgressBar(findViewById(R.id.progressDialog));
         MedicationsGroup = ((RadioGroup) findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
@@ -108,6 +111,18 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         locationService = new LocationCooridnates(getApplicationContext());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
 
         initializeYesNoButtonActions();
         checkMedicalDateHistory();
@@ -213,6 +228,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
     }
 
+    public void ProcedureL1OnClick(View view){
+        Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddProcedures.class);
+        startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
+        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+    }
 
     public void backImgOnClick(View view){
         onBackPressed();
@@ -308,19 +328,19 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
-      /*  if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
             ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.GONE);
-        }*/
+        }
 
         ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //error
-                if (checkedId == R.id.proceduresYesButton) {
+                if (checkedId == R.id.procedureYesButton) {
                     ProceduresGroup.clearCheck();
-                    Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddAllergies.class);
+                    Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddProcedures.class);
                     startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
                     MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
                 }else{
@@ -353,6 +373,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
                     findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
                     ((TextView)findViewById(R.id.AlergiesNameTv)).setText(data.getStringExtra("allegiesData"));
+                }
+                else if(data.hasExtra("proceduresData")){
+                    findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
+                    findViewById(R.id.ProcedureLl).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.ProcedureNameTv)).setText(data.getStringExtra("proceduresData"));
                 }
             }
         }else if(requestCode == IntegerConstants.PEDIATRIC_REQUEST_CODE){
@@ -513,10 +538,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             isAllFieldsfilled = false;
         }
 
-        /* if (((LinearLayout) findViewById(R.id.MyHealthProceduresLl)).getVisibility() == View.VISIBLE &&
+        if (((LinearLayout) findViewById(R.id.MyHealthProceduresLl)).getVisibility() == View.VISIBLE &&
                 ProceduresGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
-        }*/
+        }
 
         if (isAllFieldsfilled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -776,11 +801,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_conditions_reported));
+                    ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_condition_reported));
                 else
                     ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_conditions_reported));
+                ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_condition_reported));
             }
 
             if(isNewUser){
@@ -909,22 +934,34 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private void checkProcedure(JSONArray historyPercentageArray) {
         try {
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            String myHealthPercentage = historyPercentageArray.getJSONObject(0).getString("health");
-            if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("conditions").length() == 0)){
+            int myHealthPercentage = historyPercentageArray.getJSONObject(0).getInt("health");
+            if (myHealthPercentage != 0 && !(healthHistory.getJSONArray("surgeries").length() == 0)) {
                 findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
-//                findViewById(R.id.ProceduresLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.ProcedureLl).setVisibility(View.VISIBLE);
                 String conditonsNames = "";
-                JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
+                JSONArray conditonsArray = healthHistory.getJSONArray("surgeries");
                 for(int i = 0;i<conditonsArray.length();i++){
-                    conditonsNames += conditonsArray.getJSONObject(i).getString("condition");
+                    conditonsNames += conditonsArray.getJSONObject(i).getString("name");
                     if(i!=conditonsArray.length() - 1){
                         conditonsNames += ", ";
                     }
                 }
-                ((TextView)findViewById(R.id.ProcedureNameTv)).setText(conditonsNames);
+                if (conditonsNames.trim().length() == 0)
+                    ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.no_procedures_reported));
+                else
+                    ((TextView) findViewById(R.id.ProcedureNameTv)).setText(conditonsNames);
+            } else {
+                ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.no_procedures_reported));
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(isNewUser){
+            findViewById(R.id.MyHealthProceduresLl).setVisibility(View.VISIBLE);
+            findViewById(R.id.ProcedureLl).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
+            findViewById(R.id.ProcedureLl).setVisibility(View.VISIBLE);
         }
     }
 

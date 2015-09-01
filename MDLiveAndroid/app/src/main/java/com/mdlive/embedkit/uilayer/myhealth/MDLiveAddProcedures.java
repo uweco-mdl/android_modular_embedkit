@@ -15,7 +15,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.DeleteProcedureServices;
-import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureListServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureMyListServices;
 
 import org.json.JSONObject;
 
@@ -44,6 +44,9 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_procedure));
+        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_procedures_reported));
+        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_procedure_reported_msg));
+        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_procedures_text));
     }
 
 
@@ -74,7 +77,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
                 medicalCommonErrorResponseHandler(error);
             }
         };
-        ProcedureListServices services = new ProcedureListServices(MDLiveAddProcedures.this, null);
+        ProcedureMyListServices services = new ProcedureMyListServices(MDLiveAddProcedures.this, null);
         services.getAllergyListRequest(successCallBackListener, errorListener);
     }
 
@@ -100,6 +103,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
     protected void deleteConditions(){
         showProgress();
         ArrayList<String> deleteIdItems = adapter.getRemovedItemsIds();
+        deleteCount = deleteIdItems.size();
         for(String id : deleteIdItems){
             deleteMedicalConditionsOrAllergyAction(id);
         }
@@ -116,9 +120,16 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(adapter.getRemovedItemsIds().get(adapter.getRemovedItemsIds().size()-1).equals(conditionId)){
+                IsThisPageEdited = true;
+                deleteCount--;
+                if(deleteCount <= 0){
                     hideProgress();
                     isEditCalled = false;
+                    if(duplicateList.size() == 0){
+                        noConditionsLayout.setVisibility(View.VISIBLE);
+                        conditionsListView.setVisibility(View.GONE);
+                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                    }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
                     ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
@@ -128,6 +139,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                deleteCount--;
                 medicalCommonErrorResponseHandler(error);
             }
         };
@@ -140,8 +152,10 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == INSERT_CODE && resultCode == RESULT_OK){
+            IsThisPageEdited = true;
             getConditionsOrAllergiesData();
         }else if(requestCode == UPDATE_CODE && resultCode == RESULT_OK){
+            IsThisPageEdited = true;
             getConditionsOrAllergiesData();
         }
     }

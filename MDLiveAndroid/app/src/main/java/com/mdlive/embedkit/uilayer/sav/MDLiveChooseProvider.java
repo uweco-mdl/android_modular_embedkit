@@ -388,9 +388,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     strDate = IntegerConstants.DATE_FLAG;
                 else
                     strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
-                if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
+                if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull()){
                     shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
-
+                }else{
+                    shared_timestamp = 0;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 strDate = IntegerConstants.DATE_FLAG;

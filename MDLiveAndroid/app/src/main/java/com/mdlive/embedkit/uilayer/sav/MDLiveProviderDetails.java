@@ -135,8 +135,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         groupAffiliations = settings.getString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, null);
         detailsGroupAffiliations.setText(groupAffiliations);
         AppointmentType = StringConstants.APPOINTMENT_TYPE;
-        if(AppointmentDate!=null && AppointmentDate.length() != 0){
-            AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
+
+        try {
+            if(AppointmentDate!=null && AppointmentDate.length() != 0){
+                AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
