@@ -167,27 +167,32 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
             showProgressDialog();
 
             final JSONObject jsonObject = new JSONObject();
+            final JSONObject jsonObjectMessage = new JSONObject();
 
             final Parcelable parcelable = getArguments().getParcelable(TAG);
             if (parcelable instanceof ReceivedMessage) {
-                jsonObject.put("destination_user_id", ((ReceivedMessage) parcelable).providerId);
-                jsonObject.put("message", mBodyEditText.getText().toString().trim());
-                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
-                jsonObject.put("replied_to_message_id", ((ReceivedMessage) parcelable).messageId);
+                jsonObjectMessage.put("destination_user_id", ((ReceivedMessage) parcelable).providerId);
+                jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
+                jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("replied_to_message_id", ((ReceivedMessage) parcelable).messageId);
             } else if (parcelable instanceof SentMessage) {
-                jsonObject.put("destination_user_id", ((SentMessage) parcelable).providerId);
-                jsonObject.put("message", mBodyEditText.getText().toString().trim());
-                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
-                jsonObject.put("replied_to_message_id", ((SentMessage) parcelable).messageId);
+                jsonObjectMessage.put("destination_user_id", ((SentMessage) parcelable).providerId);
+                jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
+                jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("replied_to_message_id", ((SentMessage) parcelable).messageId);
             } else if (parcelable instanceof MyProvider) {
-                jsonObject.put("destination_user_id", ((MyProvider) parcelable).providerId);
-                jsonObject.put("message", mBodyEditText.getText().toString().trim());
-                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("destination_user_id", ((MyProvider) parcelable).providerId);
+                jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
+                jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("replied_to_message_id", null);
             } else {
-                jsonObject.put("destination_user_id", ((MyProvider) parcelable).providerId);
-                jsonObject.put("message", mBodyEditText.getText().toString().trim());
-                jsonObject.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("destination_user_id", ((MyProvider) parcelable).providerId);
+                jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
+                jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
+                jsonObjectMessage.put("replied_to_message_id", null);
             }
+
+            jsonObject.put("message", jsonObjectMessage);
 
             final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
