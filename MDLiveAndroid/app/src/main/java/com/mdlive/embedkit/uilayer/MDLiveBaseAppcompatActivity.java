@@ -88,6 +88,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public void setDrawerLayout(final DrawerLayout drawerLayout) {
         mDrawerLayout = drawerLayout;
+
+        if (mDrawerLayout != null) {
+            setDrawerListener();
+        }
     }
 
     public DrawerLayout getDrawerLayout() {
@@ -96,6 +100,30 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public boolean isDrawerOpen() {
         return getDrawerLayout().isDrawerOpen(GravityCompat.START) || getDrawerLayout().isDrawerOpen(GravityCompat.END);
+    }
+
+    public void setDrawerListener() {
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
     }
 
     /* Start of Drawer click listeners */
