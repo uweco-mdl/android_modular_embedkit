@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -279,7 +280,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+
+                    MdliveUtils.handelVolleyErrorResponseForDependentChild(getActivity(), error, getProgressDialog(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            loadUserInformationDetails();
+                        }
+                    });
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
