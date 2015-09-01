@@ -160,6 +160,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         finish();
     }
 
+    public void startActivityWithClassNameAddFamilyMember(final Class clazz) {
+        final Intent intent = new Intent(getBaseContext(), clazz);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
     /**
      * Called when an item in the navigation drawer is selected.
@@ -297,7 +303,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (dependentUserSize >= IntegerConstants.ADD_CHILD_SIZE) {
             MdliveUtils.showAddChildExcededDialog(this);
         } else {
-            startActivityWithClassName(AddFamilyMemberActivity.class);
+            startActivityWithClassNameAddFamilyMember(AddFamilyMemberActivity.class);
             finish();
         }
     }
