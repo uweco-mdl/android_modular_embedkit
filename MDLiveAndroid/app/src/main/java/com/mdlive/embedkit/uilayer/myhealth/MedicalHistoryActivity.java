@@ -261,6 +261,11 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         startActivity(i);
     }
 
+    public void myRecordsOnClick(View view){
+        Intent i = new Intent(getBaseContext(), MDLiveMyRecords.class);
+        startActivity(i);
+    }
+
     /**
      * This function handles click listener of changePharmacyButton
      *
