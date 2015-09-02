@@ -94,7 +94,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

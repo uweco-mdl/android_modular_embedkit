@@ -8,25 +8,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -133,7 +128,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

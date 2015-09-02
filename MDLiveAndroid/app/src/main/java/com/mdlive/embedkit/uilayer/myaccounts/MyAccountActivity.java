@@ -132,7 +132,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

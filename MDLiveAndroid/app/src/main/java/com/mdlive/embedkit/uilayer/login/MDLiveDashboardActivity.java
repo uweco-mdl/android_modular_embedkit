@@ -138,7 +138,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

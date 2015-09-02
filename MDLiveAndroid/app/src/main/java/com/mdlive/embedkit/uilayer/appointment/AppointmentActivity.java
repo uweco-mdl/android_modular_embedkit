@@ -120,7 +120,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

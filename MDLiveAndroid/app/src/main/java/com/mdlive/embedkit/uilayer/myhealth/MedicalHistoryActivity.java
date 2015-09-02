@@ -39,6 +39,7 @@ import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
@@ -84,6 +85,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL|TabLayout.GRAVITY_CENTER);
         tabLayout.setupWithViewPager(viewPager);
 
         if (savedInstanceState == null) {
@@ -157,7 +159,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }
@@ -214,6 +216,11 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     /**
      * This function is used to initialize clickListners of Buttons used in MedicalHistory page
      */
+    public void pediatricOnClick(View view) {
+        Intent i = new Intent(getBaseContext(), MDLivePediatric.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
+    }
 
     public void MyHealthConditionsLlOnClick(View view){
         Intent i = new Intent(getBaseContext(), MDLiveAddConditions.class);

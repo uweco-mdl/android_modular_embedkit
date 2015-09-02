@@ -114,7 +114,7 @@ public class MDLiveMyPharmacyActivity extends MDLiveBaseAppcompatActivity {
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

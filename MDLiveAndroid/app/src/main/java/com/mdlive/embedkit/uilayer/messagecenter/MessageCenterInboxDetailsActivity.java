@@ -131,7 +131,7 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

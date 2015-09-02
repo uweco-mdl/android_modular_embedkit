@@ -126,7 +126,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

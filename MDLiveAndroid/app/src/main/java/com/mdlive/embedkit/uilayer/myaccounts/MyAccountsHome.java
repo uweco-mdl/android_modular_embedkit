@@ -221,7 +221,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }

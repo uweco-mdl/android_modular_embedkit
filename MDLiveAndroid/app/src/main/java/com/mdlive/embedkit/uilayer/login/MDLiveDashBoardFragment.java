@@ -145,6 +145,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         mOnNotificationCliked = null;
     }
 
+    public void setPrimaryUserSelected() {
+        mSpinner.setSelection(0);
+    }
+
     public void onUserInformationLoaded(final UserBasicInfo userBasicInfo) {
         if (mSpinner != null) {
             mUserBasicInfo = userBasicInfo;

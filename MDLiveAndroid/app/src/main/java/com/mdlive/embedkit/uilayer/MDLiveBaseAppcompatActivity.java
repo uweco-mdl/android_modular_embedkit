@@ -2,13 +2,12 @@ package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.widget.Toast;
 
@@ -215,6 +214,14 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     @Override
+    public void setPrimaryUserSelected() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).setPrimaryUserSelected();
+        }
+    }
+
+    @Override
     public void onDependentSelected(User user) {
         if (user.mMode == User.MODE_ADD_CHILD) {
             Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
@@ -309,11 +316,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void shareApplication() {
-        final ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(this);
-        builder.setChooserTitle(R.string.share_app);
-        builder.setStream(Uri.parse("https://www.mdlive.com/"));
-        builder.setType("text/html");
-        builder.startChooser();
+        final Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/html");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(getString(R.string.share_details_text)));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using)));
     }
 
     private void clearMinimizedTime() {

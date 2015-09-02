@@ -104,24 +104,14 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
                 startActivityWithClassName(MyAccountActivity.class);
                 break;
 
-            // Symptom Checker
-            case 7:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 8:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
             // Support
-            case 9:
+            case 7:
                 startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
                 break;
 
-            // Share this App
-            case 10:
-
+            // Share
+            case 8:
+                shareApplication();
                 break;
         }
     }

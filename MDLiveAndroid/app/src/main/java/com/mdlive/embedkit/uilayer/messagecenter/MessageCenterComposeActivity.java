@@ -122,7 +122,7 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
 
             // Share
             case 8:
-
+                shareApplication();
                 break;
         }
     }
