@@ -140,29 +140,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     }
 
     /**
-     * This function will retrieve the Pediatric profile information from the server.
-     * <p/>
-     * PediatricService - This service class will make the service calls to get the
-     * Pediatric profile.
-     */
-    /*private void checkPediatricProfileCompleted() {
-        NetworkSuccessListener successListener = new NetworkSuccessListener() {
-            @Override
-            public void onResponse(Object response) {
-                handleSuccessResponse(response);
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                MdliveUtils.handelVolleyErrorResponse(MDLiveMedicalHistory.this,error,null);
-            }
-        };
-        PediatricService getProfileData = new PediatricService(MDLiveMedicalHistory.this, null);
-        getProfileData.doGetPediatricBelowTwo(successListener, errorListener);
-    }*/
-
-    /**
      * This function is used to update Medical history data in service
      * MedicalHistoryUpdateServices :: This class is used to update medical history. This class holds data ot update service
      *
@@ -609,7 +586,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
             //checkIsFirstTimeUser(historyPercentageArray);
             checkMyHealthHistory(historyPercentageArray);
-            //checkPediatricProfile(historyPercentageArray);
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);

@@ -89,7 +89,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if(fragment.equals("REPLACE CREDIT CARD")){
-            title.setText("REPLACE CREDIT CARD");
+            title.setText(getString(R.string.replace_card));
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().

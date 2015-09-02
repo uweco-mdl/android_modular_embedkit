@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,7 +69,7 @@ public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
                 super.onPageStarted(view, url, favicon);
             }
         });
-        mWebView.loadUrl(getString(R.string.symptomchecker_url));
+        mWebView.loadUrl(AppSpecificConfig.SYMPTOM_CHECKER_URL);
 
     }
 }
