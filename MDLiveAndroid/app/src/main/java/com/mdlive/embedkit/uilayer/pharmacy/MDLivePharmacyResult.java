@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -180,7 +179,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         pharmList = (ListView) findViewById(R.id.pharmList);
         adaper = new PharmacyListAdaper(MDLivePharmacyResult.this, list);
         pharmList.setAdapter(adaper);
-        showOrHideFooter();
         pharmList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -221,29 +219,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
-    /*
-    * shows or hide list footer/ bottom footer
-    * */
-    public void showOrHideFooter() {
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
-        // If list size is greater than zero then show the bottom footer
-        if (list != null && list.size() > 0) {
-            //findViewById(R.id.footer).setVisibility(View.GONE);
 
-            if (pharmList.getFooterViewsCount() == 0) {
-
-                pharmList.addFooterView(footerView, null, false);
-            }
-        }
-        // If list size is zero then remove the bootm footer & add the list footer
-        else {
-            //findViewById(R.id.footer).setVisibility(View.VISIBLE);
-            if (pharmList.getFooterViewsCount() > 0) {
-                pharmList.removeFooterView(footerView);
-            }
-        }
-    }
 
 
     /**
