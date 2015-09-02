@@ -85,7 +85,7 @@ public class ChangePhoneNumber  extends Fragment {
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("phone", mPhoneNumber.getText().toString());
+                    jsonObject.put("phone", mPhoneNumber.getText().toString().trim());
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id",  responseDetail.getString("state"));
                     jsonObject.put("city",  responseDetail.getString("country"));
@@ -95,7 +95,7 @@ public class ChangePhoneNumber  extends Fragment {
                     jsonObject.put("address2",  responseDetail.getString("address2"));
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name",  responseDetail.getString("last_name"));
-                    jsonObject.put("emergency_contact_number",mEmergencyContactNumber.getText().toString());
+                    jsonObject.put("emergency_contact_number",mEmergencyContactNumber.getText().toString().trim());
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
