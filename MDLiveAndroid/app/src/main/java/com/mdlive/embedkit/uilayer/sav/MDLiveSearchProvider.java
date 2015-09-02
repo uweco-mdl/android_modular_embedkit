@@ -238,12 +238,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         //MDLive Embed Kit Implementtaions
 
         postParams.put("located_in", filter_SavedLocation);
+        postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
         if (postParams.get("available_by") != null) {
             postParams.put("available_by", postParams.get("available_by"));
             Log.e("postParams.get-->",postParams.get("available_by"));
         }
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
+        postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
+        postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
         if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
             postParams.put("provider_name", edtSearch.getText().toString());
         }

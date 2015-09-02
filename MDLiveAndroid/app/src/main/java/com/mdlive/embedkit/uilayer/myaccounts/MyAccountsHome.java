@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +30,8 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
+
+        setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         fragment = getIntent().getStringExtra("Fragment_Name");
         TAG = fragment;

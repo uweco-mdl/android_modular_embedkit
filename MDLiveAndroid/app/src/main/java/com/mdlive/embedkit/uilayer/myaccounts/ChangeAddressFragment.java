@@ -96,12 +96,12 @@ public class ChangeAddressFragment  extends Fragment {
                     jsonObject.put("email", responseDetail.getString("email"));
                     jsonObject.put("phone", "pin");
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
-                    jsonObject.put("state_id", mState.getText().toString());
-                    jsonObject.put("city", mCity.getText().toString());
-                    jsonObject.put("zipcode", mZip.getText().toString());
+                    jsonObject.put("state_id", mState.getText().toString().trim());
+                    jsonObject.put("city", mCity.getText().toString().trim());
+                    jsonObject.put("zipcode", mZip.getText().toString().trim());
                     jsonObject.put("first_name", responseDetail.getString("first_name"));
-                    jsonObject.put("address1", mAddressLine1.getText().toString());
-                    jsonObject.put("address2", mAddressLine2.getText().toString());
+                    jsonObject.put("address1", mAddressLine1.getText().toString().trim());
+                    jsonObject.put("address2", mAddressLine2.getText().toString().trim());
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name",  responseDetail.getString("last_name"));
                     jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
