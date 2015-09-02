@@ -245,7 +245,7 @@
 
         <activity
             android:name=".uilayer.login.LoginActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:screenOrientation="portrait" />
 
         <activity
@@ -278,6 +278,7 @@
         <activity
             android:name=".uilayer.lifestyle.MDLiveLifestyleActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.myhealth.activity.MDLiveMyHealthActivity"
