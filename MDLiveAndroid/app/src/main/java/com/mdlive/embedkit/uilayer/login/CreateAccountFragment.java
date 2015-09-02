@@ -2,8 +2,10 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -106,8 +108,14 @@ public class CreateAccountFragment extends MDLiveBaseFragment {
                 super.onLoadResource(view, url);
             }
 
-            @Override
+
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("tel:")) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                    startActivity(intent);
+                } else if(url.startsWith("http:") || url.startsWith("https:")) {
+                    view.loadUrl(url);
+                }
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
