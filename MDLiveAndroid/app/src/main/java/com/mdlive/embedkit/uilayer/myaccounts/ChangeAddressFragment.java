@@ -68,7 +68,12 @@ public class ChangeAddressFragment  extends Fragment {
             JSONObject responseDetail = new JSONObject(response);
 
             mAddressLine1.setText(responseDetail.getString("address1"));
-            mAddressLine2.setText(responseDetail.getString("address2"));
+                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "responseDetail")) {
+                    mAddressLine2.setText("");
+                }else
+                {
+                    mAddressLine2.setText(responseDetail.getString("address2"));
+                }
             mState.setText(responseDetail.getString("state"));
             mCity.setText(responseDetail.getString("country"));
             mZip.setText(responseDetail.getString("zipcode"));
