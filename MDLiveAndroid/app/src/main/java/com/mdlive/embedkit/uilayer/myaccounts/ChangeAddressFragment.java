@@ -92,7 +92,6 @@ public class ChangeAddressFragment  extends Fragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
-
                 if (isEmpty(mAddressLine1.getText().toString()) && isEmpty(mAddressLine2.getText().toString()) && isEmpty(mState.getText().toString())
                         && isEmpty(mCity.getText().toString()) && isEmpty(mZip.getText().toString())) {
 

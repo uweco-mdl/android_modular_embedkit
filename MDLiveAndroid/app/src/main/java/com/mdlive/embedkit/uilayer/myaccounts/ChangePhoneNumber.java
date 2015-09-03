@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangePhoneNumber  extends Fragment {
+public class ChangePhoneNumber extends Fragment {
 
     public static ChangePhoneNumber newInstance(String response) {
 
@@ -59,12 +59,20 @@ public class ChangePhoneNumber  extends Fragment {
 
         response = getArguments().getString("Response");
 
-        if(response != null){
+        if (response != null) {
             try {
                 JSONObject responseDetail = new JSONObject(response);
+                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "phone")) {
+                    mPhoneNumber.setText(responseDetail.getString(""));
+                } else {
+                    mPhoneNumber.setText(responseDetail.getString("phone"));
+                }
+                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "emergency_contact_number")) {
+                    mEmergencyContactNumber.setText(responseDetail.getString(""));
+                } else {
+                    mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
+                }
 
-                mPhoneNumber.setText(responseDetail.getString("phone"));
-                mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -74,9 +82,8 @@ public class ChangePhoneNumber  extends Fragment {
 
     }
 
-    public void changePhoneNumberInfo()
-    {
-        if(response != null){
+    public void changePhoneNumberInfo() {
+        if (response != null) {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
@@ -87,39 +94,35 @@ public class ChangePhoneNumber  extends Fragment {
                     jsonObject.put("email", responseDetail.getString("email"));
                     jsonObject.put("phone", mPhoneNumber.getText().toString().trim());
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
-                    jsonObject.put("state_id",  responseDetail.getString("state"));
-                    jsonObject.put("city",  responseDetail.getString("country"));
-                    jsonObject.put("zipcode",  responseDetail.getString("zipcode"));
+                    jsonObject.put("state_id", responseDetail.getString("state"));
+                    jsonObject.put("city", responseDetail.getString("country"));
+                    jsonObject.put("zipcode", responseDetail.getString("zipcode"));
                     jsonObject.put("first_name", responseDetail.getString("first_name"));
-                    jsonObject.put("address1",  responseDetail.getString("address1"));
-                    jsonObject.put("address2",  responseDetail.getString("address2"));
+                    jsonObject.put("address1", responseDetail.getString("address1"));
+                    jsonObject.put("address2", responseDetail.getString("address2"));
                     jsonObject.put("gender", responseDetail.getString("gender"));
-                    jsonObject.put("last_name",  responseDetail.getString("last_name"));
-                    jsonObject.put("emergency_contact_number",mEmergencyContactNumber.getText().toString().trim());
+                    jsonObject.put("last_name", responseDetail.getString("last_name"));
+                    jsonObject.put("emergency_contact_number", mEmergencyContactNumber.getText().toString().trim());
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
                     loadProfileInfo(parent.toString());
                 }
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
-    public Boolean isEmpty(String cardInfo)
-    {
-        if(!TextUtils.isEmpty(cardInfo))
+
+    public Boolean isEmpty(String cardInfo) {
+        if (!TextUtils.isEmpty(cardInfo))
             return true;
         return false;
     }
 
-    public void loadProfileInfo(String params)
-    {
+    public void loadProfileInfo(String params) {
         pDialog.show();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -157,9 +160,8 @@ public class ChangePhoneNumber  extends Fragment {
         try {
             pDialog.dismiss();
 
-            if(response != null)
-            {
-                Toast.makeText(getActivity(),"Update phone number successfully",Toast.LENGTH_SHORT).show();
+            if (response != null) {
+                Toast.makeText(getActivity(), "Update phone number successfully", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 

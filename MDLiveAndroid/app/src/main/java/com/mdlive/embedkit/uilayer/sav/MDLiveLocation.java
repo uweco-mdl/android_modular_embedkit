@@ -313,12 +313,14 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                             if (zip.equalsIgnoreCase("administrative_area_level_1")) {
                                 SelectedZipCodeCity = localZip.get("short_name").getAsString();
                                 Log.e("Results", SelectedZipCodeCity);
+
                                 //This is for long name like Florida.
                                 zipcode_longNameText = localZip.get("long_name").getAsString();
                              //This is for Short name like FL
                                 for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
                                     if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
                                         longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
+                                        shortNameText = Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l);
                                         SaveZipCodeCity(longNameText);
                                         isCityFound=true;
                                         break;
@@ -399,6 +401,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         Log.e("Caller bname",activityCaller);
         if(activityCaller.equals("getstarted")){
             editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+            Log.e("print short name",shortNameText);
             editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
             editor.commit();
         }

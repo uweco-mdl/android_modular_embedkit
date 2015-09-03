@@ -136,6 +136,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (finalAmout.equals("0.00")) {
             doConfirmAppointment();
         } else {
+            HostedPCI.loadUrl("javascript:tokenizeForm()");
             /*if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                 if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
                     HostedPCI.loadUrl("javascript:tokenizeForm()");

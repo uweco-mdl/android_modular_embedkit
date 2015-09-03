@@ -260,7 +260,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
             postidealTime = format1.format(cal.getTime());
 
-
         }
     };
 
