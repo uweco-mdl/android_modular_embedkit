@@ -72,7 +72,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_health));
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_health).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
