@@ -28,7 +28,6 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -239,21 +238,20 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
-        if (postParams.get("available_by") != null) {
+//        if (postParams.get("available_by") != null) {
             postParams.put("available_by", postParams.get("available_by"));
-            Log.e("postParams.get-->",postParams.get("available_by"));
-        }
+//        }
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
         postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-            postParams.put("provider_name", edtSearch.getText().toString());
-        }
-        if (postParams.get("provider_type") != null) {
-            postParams.put("provider_type", postParams.get("provider_type"));
-            Log.e("postParams.get-->",postParams.get("provider_type"));
-        }
+//        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+            postParams.put("provider_name", "");
+//        }
+//        if (postParams.get("provider_type") != null) {
+//            postParams.put("provider_type", postParams.get("provider_type"));
+            postParams.put("provider_type", "2");
+//        }
         LoadFilterSearchServices();
     }
 
