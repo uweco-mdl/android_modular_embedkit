@@ -71,7 +71,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if(fragment.equals("CHANGE ADDRESS")){
-            title.setText("CHANGE ADDRESS");
+            title.setText("CURRENT ADDRESS");
             response = getIntent().getStringExtra("Address_Response");
             getSupportFragmentManager().
                     beginTransaction().
