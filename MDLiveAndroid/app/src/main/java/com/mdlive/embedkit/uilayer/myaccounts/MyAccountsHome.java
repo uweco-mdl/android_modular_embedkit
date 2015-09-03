@@ -80,7 +80,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if(fragment.equals("CHANGE PHONE NUMBER")){
-            title.setText("CHANGE PHONE NUMBER");
+            title.setText("PHONE NUMBER");
             response = getIntent().getStringExtra("Address_Response");
             getSupportFragmentManager().
                     beginTransaction().
