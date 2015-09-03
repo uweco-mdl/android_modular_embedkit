@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private boolean isFirstTime = true;
 
     private OnMedicalHistoryResponse mListener;
 
@@ -120,16 +122,15 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnSaveContinue = (Button) view.findViewById(R.id.SavContinueBtn);
-        btnSaveContinue.setClickable(false);
         view.findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         PediatricAgeCheckGroup_1 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) view.findViewById(R.id.conditionsGroup));
         MedicationsGroup = ((RadioGroup) view.findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) view.findViewById(R.id.allergiesGroup));
-        if(view!=null)
+        if(view!=null) {
             checkMedicalDateHistory(view);
+        }
 
     }
 
@@ -161,13 +162,9 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnMedicalHistoryResponse {
-        // void onLoginSucess();
     }
 
 
@@ -230,7 +227,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
     /**
      * Checks user medical history aggregation details.
-     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+     * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion details.
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered.
      */
@@ -361,9 +358,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     private void medicalCompletionHandleSuccessResponse(View view, JSONObject response) {
         try {
             JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
-            //checkIsFirstTimeUser(historyPercentageArray);
             checkMyHealthHistory(view, historyPercentageArray);
-            //checkPediatricProfile(historyPercentageArray);
             checkProcedure(view, historyPercentageArray);
             checkMyMedications(view, historyPercentageArray);
             checkAllergies(view, historyPercentageArray);
@@ -474,8 +469,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
             if(MdliveUtils.calculteAgeFromPrefs(getActivity())>=10) {
                 if(gender.equalsIgnoreCase("Female")){
-//                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
-//                    ((LinearLayout) view.findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
                 }
             }else{
@@ -612,46 +605,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         }
     }
 
-
-    /**
-     * This will check weather the user has completed the Pediatric Profile section and will hide and
-     * display teh layouts accordingly.
-     *
-     * @param historyPercentageArray - The history percentage JSONArray
-     */
-    private void checkPediatricProfile(JSONArray historyPercentageArray) {
-        try {
-            JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            int myHealthPercentage = -1;
-            for (int j = 0; j < historyPercentageArray.length(); j++) {
-                if (historyPercentageArray.getJSONObject(j).has("pediatric"))
-                    myHealthPercentage = historyPercentageArray.getJSONObject(j).getInt("pediatric");
-            }
-            if (myHealthPercentage == 100) {
-//                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText("Completed");
-            } else if (myHealthPercentage >= 0) {
-                if (!(healthHistory.getJSONObject("pediatric") == null)) {
-                    String pediotricNames = "";
-                    JSONObject pediatricObject = healthHistory.getJSONObject("pediatric");
-                    JSONArray perdiatricQuestionArray = pediatricObject.getJSONArray("questions");
-                    for (int i = 0; i < perdiatricQuestionArray.length(); i++) {
-                        if (perdiatricQuestionArray.getJSONObject(i).getString("name").trim() != null &&
-                                !perdiatricQuestionArray.getJSONObject(i).getString("name").trim().equals("")) {
-                            pediotricNames += perdiatricQuestionArray.getJSONObject(i).getString("name");
-                            if (i != perdiatricQuestionArray.length() - 1) {
-                                pediotricNames += ", ";
-                            }
-                        }
-                    }
-//                    ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(pediotricNames);
-                }
-            } else {
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * This will check weather the user has completed the Pediatric Profile section and will hide and
      * display teh layouts accordingly.
@@ -664,7 +617,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             String myHealthPercentage = historyPercentageArray.getJSONObject(0).getString("health");
             if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("conditions").length() == 0)){
                 view.findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
-//                view.findViewById(R.id.ProceduresLl).setVisibility(View.VISIBLE);
                 String conditonsNames = "";
                 JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
                 for(int i = 0;i<conditonsArray.length();i++){
@@ -680,4 +632,17 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         }
     }
 
+    /**
+     *
+     * Update the screen on returning back to the screen.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(getView()!=null  && !isFirstTime) {
+            checkMedicalDateHistory(getView());
+        }
+        isFirstTime = false;
+    }
 }
