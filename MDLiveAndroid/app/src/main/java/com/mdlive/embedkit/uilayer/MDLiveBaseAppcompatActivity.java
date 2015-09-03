@@ -16,7 +16,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
-import com.mdlive.embedkit.uilayer.login.LoginActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
@@ -29,6 +28,7 @@ import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -69,13 +69,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onStart() {
         super.onStart();
 
-        if (showPinScreen()) {
-            if (MdliveUtils.getLockType(this).equalsIgnoreCase("password")) {
-                startActivity(LoginActivity.getLockLoginIntnet(getBaseContext()));
-            } else {
-                startActivity(new Intent(getBaseContext(), UnlockActivity.class));
-            }
-
+        if (showPinScreen() && MdliveUtils.getLockType(getBaseContext()).equals("Pin")) {
+            sendBroadcast(getUnlockBroadcast());
         }
     }
 
@@ -176,12 +171,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public void onSignoutClicked(View view) {
         MdliveUtils.clearNecessarySharedPrefernces(getApplicationContext());
-
-        final Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-
+        sendBroadcast(getLogoutIntent());
         finish();
     }
 
@@ -382,5 +372,34 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         } catch (Exception e) {
 
         }
+    }
+
+    public Intent getLoginBroadcast() {
+        final Intent intent = new Intent();
+        intent.setAction(BroadcastConstant.LOGIN_ACTION);
+        intent.putExtra(BroadcastConstant.UNLOCK_FLAG, BroadcastConstant.SHOW_LOGIN);
+
+        return intent;
+    }
+
+    public Intent getUnlockBroadcast() {
+        final Intent intent = new Intent();
+        intent.setAction(BroadcastConstant.UNLOCK_ACTION);
+        
+        if (MdliveUtils.getLockType(getBaseContext()).equals("Pin")) {
+            intent.putExtra(BroadcastConstant.UNLOCK_FLAG, BroadcastConstant.SHOW_LOCK);
+        } else {
+            intent.putExtra(BroadcastConstant.UNLOCK_FLAG, BroadcastConstant.SHOW_LOGIN);
+        }
+
+        return intent;
+    }
+
+    public Intent getLogoutIntent() {
+        final Intent intent = new Intent();
+        intent.setAction(BroadcastConstant.LOGIN_ACTION);
+        intent.putExtra(BroadcastConstant.UNLOCK_FLAG, BroadcastConstant.SHOW_LOGIN_AFTER_LOGOUT);
+
+        return intent;
     }
 }
