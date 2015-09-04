@@ -9,6 +9,11 @@
         android:theme="@style/CustomTheme">
 
         <activity
+            android:name="com.mdlive.embedkit.uilayer.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
+        <activity
             android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveHealthModule"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
