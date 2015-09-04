@@ -185,11 +185,13 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
                 jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
                 jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
                 jsonObjectMessage.put("replied_to_message_id", null);
-            } else {
-                jsonObjectMessage.put("destination_user_id", ((MyProvider) parcelable).providerId);
+            } else if (parcelable instanceof ConsultationHistory) {
+                jsonObjectMessage.put("destination_user_id", ((ConsultationHistory) parcelable).getProviderId());
                 jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
                 jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
                 jsonObjectMessage.put("replied_to_message_id", null);
+            } else {
+                return;
             }
 
             jsonObject.put("message", jsonObjectMessage);
