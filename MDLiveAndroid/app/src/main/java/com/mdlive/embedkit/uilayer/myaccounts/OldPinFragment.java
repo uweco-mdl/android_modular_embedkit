@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -16,11 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
-public class OldPinFragment extends Fragment implements TextWatcher, View.OnClickListener {
+public class OldPinFragment extends MDLiveBaseFragment implements TextWatcher, View.OnClickListener {
 
     private EditText mPassCode1 = null;
     private EditText mPassCode2 = null;

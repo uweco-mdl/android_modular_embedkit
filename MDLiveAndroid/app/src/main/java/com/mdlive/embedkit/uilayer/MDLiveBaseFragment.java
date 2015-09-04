@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -24,7 +23,7 @@ public class MDLiveBaseFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressDialog = MdliveUtils.getProgressDialog(view.getContext().getString(R.string.please_wait), getActivity());
+        mProgressDialog = MdliveUtils.getFullScreenProgressDialog(getActivity());
     }
 
     @Override

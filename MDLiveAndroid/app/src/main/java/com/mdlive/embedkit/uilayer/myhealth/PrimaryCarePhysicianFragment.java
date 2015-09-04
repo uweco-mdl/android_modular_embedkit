@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -31,7 +30,7 @@ import java.util.List;
 /**
  * Created by venkataraman_r on 8/25/2015.
  */
-public class PrimaryCarePhysicianFragment extends Fragment {
+public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
 
     private EditText mMiddleName = null;
     private EditText mEmail = null;
@@ -45,7 +44,6 @@ public class PrimaryCarePhysicianFragment extends Fragment {
     private TextView mState = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
-    private ProgressDialog pDialog;
 
     @Nullable
     @Override
@@ -76,7 +74,6 @@ public class PrimaryCarePhysicianFragment extends Fragment {
         mZip = (EditText) primaryCarePhysician.findViewById(R.id.zip);
         mPhoneNumber = (EditText) primaryCarePhysician.findViewById(R.id.phoneNumber);
         mPracticeName = (EditText) primaryCarePhysician.findViewById(R.id.practiceName);
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
     }
 
 
@@ -140,7 +137,7 @@ public class PrimaryCarePhysicianFragment extends Fragment {
     }
 
     private void addPCP(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -154,12 +151,11 @@ public class PrimaryCarePhysicianFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -170,8 +166,7 @@ public class PrimaryCarePhysicianFragment extends Fragment {
 
     private void handleAddPCPSuccessResponse(JSONObject response) {
         try {
-
-            pDialog.dismiss();
+            hideProgressDialog();
 
             if(response != null) {
                 Toast.makeText(getActivity(), "Added successfully", Toast.LENGTH_SHORT).show();

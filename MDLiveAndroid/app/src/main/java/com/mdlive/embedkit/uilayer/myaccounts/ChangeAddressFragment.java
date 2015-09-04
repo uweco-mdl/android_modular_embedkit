@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -27,7 +26,14 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangeAddressFragment  extends Fragment {
+public class ChangeAddressFragment extends MDLiveBaseFragment {
+
+    private EditText mAddressLine1 = null;
+    private EditText mAddressLine2 = null;
+    private EditText mState = null;
+    private EditText mZip = null;
+    private EditText mCity = null;
+    private String response;
 
     public static ChangeAddressFragment newInstance(String response) {
 
@@ -37,15 +43,6 @@ public class ChangeAddressFragment  extends Fragment {
         changeAddressFragment.setArguments(bundle);
         return changeAddressFragment;
     }
-
-    private EditText mAddressLine1 = null;
-    private EditText mAddressLine2 = null;
-    private EditText mState = null;
-    private EditText mZip = null;
-    private EditText mCity = null;
-    private String response;
-
-    private ProgressDialog pDialog;
 
     @Nullable
     @Override
@@ -59,36 +56,32 @@ public class ChangeAddressFragment  extends Fragment {
         mZip = (EditText) changeAddressView.findViewById(R.id.zip);
         mCity = (EditText) changeAddressView.findViewById(R.id.city);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
         response = getArguments().getString("Response");
 
-        if(response != null){
-        try {
-            JSONObject responseDetail = new JSONObject(response);
+        if (response != null) {
+            try {
+                JSONObject responseDetail = new JSONObject(response);
 
-            mAddressLine1.setText(responseDetail.getString("address1"));
+                mAddressLine1.setText(responseDetail.getString("address1"));
                 if (MdliveUtils.checkJSONResponseHasString(responseDetail, "responseDetail")) {
                     mAddressLine2.setText("");
-                }else
-                {
+                } else {
                     mAddressLine2.setText(responseDetail.getString("address2"));
                 }
-            mState.setText(responseDetail.getString("state"));
-            mCity.setText(responseDetail.getString("country"));
-            mZip.setText(responseDetail.getString("zipcode"));
+                mState.setText(responseDetail.getString("state"));
+                mCity.setText(responseDetail.getString("country"));
+                mZip.setText(responseDetail.getString("zipcode"));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return changeAddressView;
 
     }
 
-    public void changeAddressInfo()
-    {
-        if(response != null){
+    public void changeAddressInfo() {
+        if (response != null) {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
@@ -107,33 +100,29 @@ public class ChangeAddressFragment  extends Fragment {
                     jsonObject.put("address1", mAddressLine1.getText().toString().trim());
                     jsonObject.put("address2", mAddressLine2.getText().toString().trim());
                     jsonObject.put("gender", responseDetail.getString("gender"));
-                    jsonObject.put("last_name",  responseDetail.getString("last_name"));
+                    jsonObject.put("last_name", responseDetail.getString("last_name"));
                     jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
                     loadProfileInfo(parent.toString());
                 }
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
-    public Boolean isEmpty(String cardInfo)
-    {
-        if(!TextUtils.isEmpty(cardInfo))
+
+    public Boolean isEmpty(String cardInfo) {
+        if (!TextUtils.isEmpty(cardInfo))
             return true;
         return false;
     }
 
-    public void loadProfileInfo(String params)
-    {
-        pDialog.show();
+    public void loadProfileInfo(String params) {
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -147,8 +136,7 @@ public class ChangeAddressFragment  extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -156,7 +144,7 @@ public class ChangeAddressFragment  extends Fragment {
                                 dialog.dismiss();
                             }
                         };
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -168,11 +156,10 @@ public class ChangeAddressFragment  extends Fragment {
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
-            if(response != null)
-            {
-                Toast.makeText(getActivity(),"Update address successfully",Toast.LENGTH_SHORT).show();
+            if (response != null) {
+                Toast.makeText(getActivity(), "Update address successfully", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 

@@ -1,13 +1,10 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,12 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
-public class MyAccountNewPinFragment extends Fragment implements TextWatcher, View.OnClickListener {
+public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextWatcher, View.OnClickListener {
 
     private EditText mPassCode1 = null;
     private EditText mPassCode2 = null;
@@ -40,10 +37,6 @@ public class MyAccountNewPinFragment extends Fragment implements TextWatcher, Vi
     private View dummyEditText4 = null;
     private View dummyEditText5 = null;
     private View dummyEditText6 = null;
-
-    private ProgressDialog pDialog;
-    Toolbar toolbar;
-    private TextView toolbarTitle;
 
     public static MyAccountNewPinFragment newInstance(String oldPin) {
 
@@ -86,8 +79,6 @@ public class MyAccountNewPinFragment extends Fragment implements TextWatcher, Vi
         dummyEditText5 = (View) changePin.findViewById(R.id.dumy_passcode_field_5);
         dummyEditText6 = (View) changePin.findViewById(R.id.dumy_passcode_field_6);
         mTitle = (TextView) changePin.findViewById(R.id.title);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         mPassCode7.addTextChangedListener(this);
         mPassCode7.requestFocus();

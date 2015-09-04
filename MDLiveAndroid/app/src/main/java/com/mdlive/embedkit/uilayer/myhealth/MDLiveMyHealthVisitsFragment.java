@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.widget.ListView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.myhealth.adapter.ConsultationHistoryAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistoryDetails;
@@ -29,7 +28,9 @@ import org.json.JSONObject;
  * Use the {@link MDLiveMyHealthProvidersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MDLiveMyHealthVisitsFragment extends Fragment {
+public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
+    private ListView mListView;
+    private ConsultationHistoryAdapter mProviderAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -59,10 +60,6 @@ public class MDLiveMyHealthVisitsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mdlive_my_health_providers, null, false);
     }
-    private ProgressDialog pDialog;
-
-    private ListView mListView;
-    private ConsultationHistoryAdapter mProviderAdapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -106,8 +103,6 @@ public class MDLiveMyHealthVisitsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
         getMyVisitData();
     }
 
@@ -142,12 +137,12 @@ public class MDLiveMyHealthVisitsFragment extends Fragment {
     }
 
     private void getMyVisitData() {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                hideProgressDialog();
 
                 final Gson gson = new Gson();
                 final ConsultationHistoryDetails consultationHistoryDetails =  gson.fromJson(response.toString(), ConsultationHistoryDetails.class);
@@ -169,16 +164,16 @@ public class MDLiveMyHealthVisitsFragment extends Fragment {
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final ConsultationHistoryServices messageCenter = new ConsultationHistoryServices(getActivity(), pDialog);
+        final ConsultationHistoryServices messageCenter = new ConsultationHistoryServices(getActivity(), getProgressDialog());
         messageCenter.getConsultationHistory(successListener, errorListener);
     }
 

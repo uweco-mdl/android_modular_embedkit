@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,15 +28,13 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
     public static final String RIGHT_MENU = "right_menu";
 
     public View progressBarLayout;
+    private ProgressDialog mProgressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-//        }
+        mProgressDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
     @Override
@@ -108,18 +107,20 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
      * Show progressbar that is used in activity when service calls.
      */
     public void showProgress() {
-        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
-            progressBarLayout.setVisibility(View.VISIBLE);
-        }
+//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
+//            progressBarLayout.setVisibility(View.VISIBLE);
+//        }
+        mProgressDialog.show();
     }
 
     /**
      * Hide progressbar that is used in activity when service call ends.
      */
     public void hideProgress() {
-        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
-            progressBarLayout.setVisibility(View.GONE);
-        }
+//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
+//            progressBarLayout.setVisibility(View.GONE);
+//        }
+        mProgressDialog.hide();
     }
 
     /*
@@ -184,7 +185,8 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 
     public void setProgressBar(View progressBarLayout){
         this.progressBarLayout=progressBarLayout;
+        if (progressBarLayout != null) {
+            progressBarLayout.setVisibility(View.GONE);
+        }
     }
-
-
 }

@@ -2,11 +2,9 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
-public class AddFamilyMemberFragment extends Fragment {
+public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
 
     private EditText mUsername = null;
@@ -70,8 +69,6 @@ public class AddFamilyMemberFragment extends Fragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout,mDOBLayout,mGenderLayout;
-
-    private ProgressDialog pDialog;
 
     public static AddFamilyMemberFragment newInstance() {
 
@@ -169,8 +166,6 @@ public class AddFamilyMemberFragment extends Fragment {
         mDOBLayout = (RelativeLayout)addFamilyMember.findViewById(R.id.DOBLayout);
         mStateLayout = (RelativeLayout)addFamilyMember.findViewById(R.id.stateLayout);
         mGenderLayout = (RelativeLayout)addFamilyMember.findViewById(R.id.genderLayout);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
     }
 
     public void addFamilyMemberInfo()
@@ -242,7 +237,7 @@ public class AddFamilyMemberFragment extends Fragment {
     }
 
     private void addFamilyMember(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -256,13 +251,13 @@ public class AddFamilyMemberFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
 
-                pDialog.dismiss();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -273,8 +268,7 @@ public class AddFamilyMemberFragment extends Fragment {
 
     private void handleAddFamilyInfoSuccessResponse(JSONObject response) {
         try {
-
-            pDialog.dismiss();
+            hideProgressDialog();
 
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();

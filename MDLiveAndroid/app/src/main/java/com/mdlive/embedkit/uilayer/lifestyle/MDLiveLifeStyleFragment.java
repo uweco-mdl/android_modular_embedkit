@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.lifestyle;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,7 +42,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     private EditText mWeightLbsEditText;
     private TextView mBmiText;
     private ListView mListView;
-    private ProgressDialog pDialog = null;
+
     LifeStyleBaseAdapter adapter;
     List<Model> models;
 
@@ -126,12 +125,12 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
 
-        LifeStyleServices lifeStyleServices = new LifeStyleServices(getActivity(), pDialog);
+        LifeStyleServices lifeStyleServices = new LifeStyleServices(getActivity(), getProgressDialog());
         lifeStyleServices.getLifeStyleServices(responseListener, errorListener);
 
     }
@@ -230,11 +229,11 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        LifeStyleUpdateServices lifeStyleUpdateServices = new LifeStyleUpdateServices(getActivity(), pDialog);
+        LifeStyleUpdateServices lifeStyleUpdateServices = new LifeStyleUpdateServices(getActivity(), getProgressDialog());
         lifeStyleUpdateServices.postLifeStyleServices(requestJSON, responseListener, errorListener);
 
     }

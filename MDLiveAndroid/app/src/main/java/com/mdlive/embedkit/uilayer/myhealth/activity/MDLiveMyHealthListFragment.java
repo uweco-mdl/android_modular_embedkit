@@ -4,7 +4,6 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyHistory;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by sanjibkumar_p on 7/28/2015.
  */
-public class MDLiveMyHealthListFragment extends Fragment {
+public class MDLiveMyHealthListFragment extends MDLiveBaseFragment {
     public static MDLiveMyHealthListFragment newInstance() {
         MDLiveMyHealthListFragment fragment = new MDLiveMyHealthListFragment();
         return fragment;

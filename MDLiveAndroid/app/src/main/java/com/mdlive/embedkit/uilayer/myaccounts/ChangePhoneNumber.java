@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -27,7 +26,7 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangePhoneNumber extends Fragment {
+public class ChangePhoneNumber extends MDLiveBaseFragment {
 
     public static ChangePhoneNumber newInstance(String response) {
 
@@ -43,8 +42,6 @@ public class ChangePhoneNumber extends Fragment {
 
     private String response;
 
-    private ProgressDialog pDialog;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,9 +50,6 @@ public class ChangePhoneNumber extends Fragment {
 
         mPhoneNumber = (EditText) changePhoneNumberView.findViewById(R.id.phoneNumber);
         mEmergencyContactNumber = (EditText) changePhoneNumberView.findViewById(R.id.emergencyContactNumber);
-
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         response = getArguments().getString("Response");
 
@@ -123,7 +117,7 @@ public class ChangePhoneNumber extends Fragment {
     }
 
     public void loadProfileInfo(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -137,8 +131,7 @@ public class ChangePhoneNumber extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -146,7 +139,7 @@ public class ChangePhoneNumber extends Fragment {
                                 dialog.dismiss();
                             }
                         };
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -158,7 +151,7 @@ public class ChangePhoneNumber extends Fragment {
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             if (response != null) {
                 Toast.makeText(getActivity(), "Update phone number successfully", Toast.LENGTH_SHORT).show();
