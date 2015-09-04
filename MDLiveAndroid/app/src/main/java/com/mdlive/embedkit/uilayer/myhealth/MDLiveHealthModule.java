@@ -191,7 +191,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         final String[] modesList =  new String[]{
                 "Daily","Morning","Night","Evening"
         };
-
+        ((TextView)findViewById(R.id.timesTxt)).setText(timesList[0]);
+        ((TextView)findViewById(R.id.modeTxt)).setText(modesList[0]);
         View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(yearView);
         ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
