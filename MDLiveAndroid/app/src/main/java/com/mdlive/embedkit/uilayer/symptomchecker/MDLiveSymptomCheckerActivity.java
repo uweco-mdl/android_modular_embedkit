@@ -54,7 +54,7 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     /**

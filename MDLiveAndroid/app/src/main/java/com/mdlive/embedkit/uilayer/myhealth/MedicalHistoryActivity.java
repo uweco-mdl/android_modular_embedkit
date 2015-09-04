@@ -103,7 +103,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     /**

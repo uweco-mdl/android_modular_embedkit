@@ -72,9 +72,9 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public boolean isUpdateMode = false;
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
-    public AlertDialog procedureNameDialog, procedureYearDialog;
+    public AlertDialog procedureNameDialog, procedureYearDialog, dosageDialog, timesDialog, modeDialog;
     public TextView surgeryName, surgeryYear;
-
+    public EditText dosageTxt;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +141,9 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 isUpdateMode = false;
             }
             conditionText.addTextChangedListener(getEditTextWatcher(conditionText));
+            if(type.equals(TYPE_CONSTANT.MEDICATION)){
+                initializeMedicationViews();
+            }
         }
     }
 
@@ -154,6 +157,64 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             procedureYearDialog.show();
         }
     }
+
+    public void timesTxtOnClick(View view){
+        if(timesDialog != null){
+            timesDialog.show();
+        }
+    }
+
+    public void modeTxtOnClick(View view){
+        if(modeDialog != null){
+            modeDialog.show();
+        }
+    }
+
+
+    public void initializeMedicationViews() {
+        dosageTxt = ((EditText) findViewById(R.id.dosageTxt));
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(nameView);
+        ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
+        final String[] timesList = new String[]{
+                "One Time","Two Times","Three Times","Four Times", "Five Times"
+        };
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timesList);
+        nameListView.setAdapter(nameAdapter);
+        nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        timesDialog = alertDialog.create();
+
+        final String[] modesList =  new String[]{
+                "Daily","Morning","Night","Evening"
+        };
+
+        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(yearView);
+        ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,modesList);
+        yearListView.setAdapter(yearAdapter);
+        yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        modeDialog = alertDialog.create();
+        nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.timesTxt)).setText(timesList[position]);
+                timesDialog.dismiss();
+            }
+        });
+        yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.modeTxt)).setText(modesList[position]);
+                modeDialog.dismiss();
+            }
+        });
+    }
+
 
     public void initializeViews() {
         surgeryName = ((TextView) findViewById(R.id.surgeryName));

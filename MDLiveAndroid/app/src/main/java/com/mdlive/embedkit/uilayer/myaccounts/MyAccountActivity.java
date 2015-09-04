@@ -68,7 +68,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     private void setupViewPager(ViewPager viewPager) {

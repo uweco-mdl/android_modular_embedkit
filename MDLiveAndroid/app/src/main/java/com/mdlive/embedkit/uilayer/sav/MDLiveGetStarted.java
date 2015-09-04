@@ -1108,6 +1108,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     @Override
     public void onBackPressed() {
+        onHomeClicked();
     }
 
     private void showHamburgerTick() {

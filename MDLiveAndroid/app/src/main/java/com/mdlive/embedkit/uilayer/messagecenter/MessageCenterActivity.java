@@ -64,7 +64,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     private void setupViewPager(ViewPager viewPager) {

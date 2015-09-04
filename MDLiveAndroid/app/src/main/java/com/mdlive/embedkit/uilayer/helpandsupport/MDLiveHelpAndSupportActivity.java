@@ -56,7 +56,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     /**
