@@ -598,6 +598,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
         byphoneBtnLayout.setVisibility(View.GONE);
         byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+        accessModeCall("phone");
     }
 
     private void onlyvideo() {
@@ -607,6 +608,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byvideoBtnLayout.setVisibility(View.GONE);
         byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
         byphoneBtnLayout.setVisibility(View.GONE);
+        accessModeCall("video");
     }
 
     private void VideoOrPhoneNotAvailable() {
@@ -623,7 +625,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                accessModeCall("video");
             }
+
+
         });
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -635,8 +640,16 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                accessModeCall("phone");
             }
         });
+    }
+
+    private void accessModeCall(String accessType) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.ACCESS_MODE, accessType);
+        editor.commit();
     }
     //This is to show the by video and by Phone icon for both the available now (video or phone)
     //and available now and later(video/phone).
@@ -775,6 +788,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             byphoneBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setClickable(false);
+            accessModeCall("video");
             tapReqFutureBtnAction();
 
         }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
@@ -795,6 +809,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+            accessModeCall("phone");
             tapReqFutureBtnAction();
         }
         else if(str_Availability_Type.equalsIgnoreCase("With Patient")){

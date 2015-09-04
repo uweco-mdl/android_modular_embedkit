@@ -125,6 +125,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
         mEmailConfirmationView = view.findViewById(R.id.dash_board_email_text_view);
+        mEmailConfirmationView.setVisibility(View.GONE);
 
         mNotificationView = view.findViewById(R.id.dash_board_notification_layout);
         if (mNotificationView != null) {
@@ -169,6 +170,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
             if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mEmailConfirmationView.setVisibility(View.GONE);
+            } else {
+                mEmailConfirmationView.setVisibility(View.VISIBLE);
             }
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();

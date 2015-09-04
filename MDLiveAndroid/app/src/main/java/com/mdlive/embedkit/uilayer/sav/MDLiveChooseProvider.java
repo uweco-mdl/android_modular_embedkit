@@ -36,7 +36,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 
 import org.apache.http.HttpStatus;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -238,76 +237,53 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             JsonObject responObj = (JsonObject)parser.parse(response);
             boolean StrDoctorOnCall = false;
             if(responObj.get("doctor_on_call").isJsonNull())
-            {   docOnCalLinLay.setVisibility(View.GONE);
-                filterMainRl.setVisibility(View.GONE);
-            }else{
-                StrDoctorOnCall =  responObj.get("doctor_on_call").getAsBoolean();
-                setHeaderContent(StrDoctorOnCall);
-                if (responObj.has("physicians")){
-                    if(!responObj.get("physicians").isJsonNull() && responObj.get("physicians").isJsonArray()){
-                        if(!responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS_FILTERS)
-                                && !responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS)){
-                            JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
-                            setBodyContent(responArray);
-                        }
-                    }else
-                    {
-                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
-                    }
-                }
-            }
-
-            if(!responObj.get("physicians").isJsonNull())
             {
-                if(responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS)){
-                    docOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
+
+                if (responObj.has("physicians")) {
+                    JsonArray responseArray = responObj.get("physicians").getAsJsonArray();
+                    if (responseArray.size() != 0) {
+                        if (responseArray.get(0).isJsonObject()) {
+                            setBodyContent(responseArray);
+                            setListView();
+                        } else {
+                            MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
                         }
-                    });
-                }else if(responObj.get("physicians").toString().contains(StringConstants.NO_PROVIDERS_FILTERS)){
-                    docOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
+
+                    }
                 }
-                else{
-                    JsonArray responArray = responObj.get("physicians").getAsJsonArray();
-                    // Here the Array has blank string in response
-                    if (responArray.size() > IntegerConstants.NUMBER_ZERO) {
-                        docOnCalLinLay.setVisibility(View.GONE);
-                        if(!StrDoctorOnCall){
-                            filterMainRl.setVisibility(View.VISIBLE);
-                        }
-                        doctorOnCallButtonClick();
-                    } else
-                    {
-                        docOnCalLinLay.setVisibility(View.GONE);
-                        filterMainRl.setVisibility(View.GONE);
-                        MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
+
+            }else  if(!responObj.get("physicians").isJsonNull()){
+                if (responObj.has("physicians")){
+                    Log.e("Coming","First");
+                    JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
+                    if(responArray.size()!=0){
+                        if(responArray.get(0).isJsonObject()){
+                            if(!responObj.get("doctor_on_call_video").isJsonNull()){
+                                StrDoctorOnCall =  responObj.get("doctor_on_call_video").getAsBoolean();
+                            }else{
+                                StrDoctorOnCall = false;
                             }
-                        });
-                        docOnCalLinLay.setVisibility(View.GONE);
-                        filterMainRl.setVisibility(View.GONE);
+                            setHeaderContent(StrDoctorOnCall);
+                            setBodyContent(responArray);
+                            setListView();
+                        }else{
+                            showOrHideFooter();
+                            MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                        }
+
                     }
                 }
             }
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -554,40 +530,55 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 providerListMap.clear();
                 baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
                 listView.setAdapter(baseadapter);
-                JSONObject jobj=new JSONObject(response);
-                JSONArray jArray=jobj.getJSONArray("physicians");
-                Log.e("jArray.toString()",jArray.toString());
-                if(jArray.toString().contains(StringConstants.NO_PROVIDERS_FILTERS)){
-                    docOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS_FILTERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                }
-                else if(jArray.length()==0)
-                {
-                    docOnCalLinLay.setVisibility(View.GONE);
-                    filterMainRl.setVisibility(View.GONE);
-                    MdliveUtils.showDialog(MDLiveChooseProvider.this,StringConstants.NO_PROVIDERS,new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                }
-                else{
-                    providerListMap.clear();
-                    handleSuccessResponse(response);
-                }
+                handleSuccessResponse(response);
+
 
             }catch (Exception e){
                 e.printStackTrace();
             }
 
         }
+//        if(resultCode==1){
+//            String response=data.getStringExtra("Response");
+//            try{
+//                // Clear the ListView
+//                providerListMap.clear();
+//                baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
+//                listView.setAdapter(baseadapter);
+//                JSONObject jobj=new JSONObject(response);
+//                JSONArray jArray=jobj.getJSONArray("physicians");
+//                Log.e("jArray.toString()",jArray.toString());
+//                if(jArray.toString().length()<=1){
+//                    docOnCalLinLay.setVisibility(View.GONE);
+//                    filterMainRl.setVisibility(View.GONE);
+//                    MdliveUtils.showDialog(MDLiveChooseProvider.this,jArray.toString(),new DialogInterface.OnClickListener(){
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+//                        }
+//                    });
+//                }
+//                else if(jArray.length()==0)
+//                {
+//                    docOnCalLinLay.setVisibility(View.GONE);
+//                    filterMainRl.setVisibility(View.GONE);
+//                    MdliveUtils.showDialog(MDLiveChooseProvider.this,jArray.toString(),new DialogInterface.OnClickListener(){
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+//                        }
+//                    });
+//                }
+//                else{
+//                    providerListMap.clear();
+//                    handleSuccessResponse(response);
+//                }
+//
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
 
     /*
