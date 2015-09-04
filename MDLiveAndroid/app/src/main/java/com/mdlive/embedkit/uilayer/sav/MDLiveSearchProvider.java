@@ -238,20 +238,19 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
-//        if (postParams.get("available_by") != null) {
             postParams.put("available_by", postParams.get("available_by"));
-//        }
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
         postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-//        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-            postParams.put("provider_name", "");
-//        }
-//        if (postParams.get("provider_type") != null) {
-//            postParams.put("provider_type", postParams.get("provider_type"));
+            postParams.put("provider_name",edtSearch.getText().toString() );
+        if (postParams.get("provider_type") != null) {
+            postParams.put("provider_type", postParams.get("provider_type"));
+
+        }else
+        {
             postParams.put("provider_type", "2");
-//        }
+        }
         LoadFilterSearchServices();
     }
 
