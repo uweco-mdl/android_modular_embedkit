@@ -230,6 +230,10 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     }
 
     public void hideTick() {
-        findViewById(R.id.txtApply).setVisibility(View.GONE);
+        findViewById(R.id.txtApply).setVisibility(View.INVISIBLE);
+    }
+
+    public void showTick() {
+        findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
     }
 }
