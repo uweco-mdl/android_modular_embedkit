@@ -182,24 +182,26 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     private void loadPendingAppoinments() {
-        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                logD("PendingAppoinments", response.toString().trim());
-                mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+        if (getActivity() != null && MdliveUtils.isNetworkAvailable(getActivity())) {
+            final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    logD("PendingAppoinments", response.toString().trim());
+                    mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
 
-                onNotificationLoaded();
-            }
-        };
+                    onNotificationLoaded();
+                }
+            };
 
-        final NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        };
+            final NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            };
 
-        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
-        service.getUserPendingHistory(successCallBackListener, errorListener);
+            final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+            service.getUserPendingHistory(successCallBackListener, errorListener);
+        }
     }
 
     private void onNotificationLoaded() {
