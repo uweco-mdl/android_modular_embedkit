@@ -3,10 +3,13 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +22,6 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -35,7 +37,7 @@ import java.util.Iterator;
 /**
  * Created by venkataraman_r on 6/17/2015.
  */
-public class SecurityQuestionsFragment extends MDLiveBaseFragment {
+public class SecurityQuestionsFragment extends Fragment {
 
     private RelativeLayout mSecurityQuestion1Layout = null;
     private RelativeLayout mSecurityQuestion2Layout = null;
@@ -64,19 +66,139 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
         getSecurityQuestionsService();
 
+        if (TextUtils.isEmpty(mSecurityAnswer1.getText().toString()) && TextUtils.isEmpty(mSecurityAnswer2.getText().toString())) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+
+
+
+        mSecurityAnswer2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (!TextUtils.isEmpty(mSecurityAnswer1.getText().toString()) && !TextUtils.isEmpty(mSecurityAnswer2.getText().toString())) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+
+            }
+        });
+
+
+        mSecurityAnswer1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (!TextUtils.isEmpty(mSecurityAnswer1.getText().toString()) && !TextUtils.isEmpty(mSecurityAnswer2.getText().toString())) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+            }
+        });
+
         mSecurityQuestion1Layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                MdliveUtils.hideKeyboard(getActivity(),view);
+
                 final SecurityQuestionsAdapter adapter = new SecurityQuestionsAdapter(getActivity(), mQuestions);
 
+//                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+
+//                final Dialog dialog = new Dialog(getActivity());
+//                dialog.setContentView(R.layout.custom_dialog);
+//
+//                dialog.setTitle("List");
+//                ListView lv = (ListView) dialog.findViewById(R.id.lv);
+//                lv.setAdapter(adapter);
+//                lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//                dialog.show();
+
                 showSecurityQuestionsDialog(mSecurityQuestion1,mSecurityAnswer1);
+
+//                lv.setOnItemClickListener(new ListView.OnItemClickListener() {
+//                    public void onItemClick(AdapterView<?> listView, View itemView, int position, long itemId) {
+//
+//                        Toast.makeText(getActivity(), mQuestions.get(position), Toast.LENGTH_SHORT).show();
+//                        mSecurityQuestion1.setText(mQuestions.get(position));
+//                        dialog.dismiss();
+//
+//                    }
+//                });
+//                lv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                        Toast.makeText(getActivity(), mQuestions.get(i), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//                    }
+//                });
+
+//                ListView listView = new ListView(getActivity());
+//                listView.setAdapter(adapter);
+//                listView.setDivider(null);
+//
+//                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+//                builder.setTitle("Select security questions");
+//                builder.setView(listView);
+//
+//                final android.app.AlertDialog alert = builder.create();
+//                alert.show();
+//
+//                listView.setOnItemClickListener(new ListView.OnItemClickListener() {
+//                    public void onItemClick(AdapterView<?> listView, View itemView, int position, long itemId) {
+//
+//                        Toast.makeText(getActivity(), mQuestions.get(position), Toast.LENGTH_SHORT).show();
+//                        mSecurityQuestion1.setText(mQuestions.get(position));
+//                        alert.dismiss();
+//                    }
+//                });
+
+
             }
         });
 
         mSecurityQuestion2Layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                MdliveUtils.hideKeyboard(getActivity(),view);
                 showSecurityQuestionsDialog(mSecurityQuestion2,mSecurityAnswer2);
             }
         });

@@ -42,8 +42,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
     private EditText mPhoneNumber = null;
     private EditText mEmergencyContactNumber = null;
     private final static int PHONENUMBER_LENGTH = 10;
-    String ContactNo;
-    String emergencyContactNo;
+
     private String response;
 
     @Nullable
@@ -62,14 +61,12 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                 JSONObject responseDetail = new JSONObject(response);
 
                 mPhoneNumber.setText(responseDetail.getString("phone"));
-                if (responseDetail.getString("emergency_contact_number") == "null") {
+                if (responseDetail.getString("emergency_contact_number").equalsIgnoreCase("null") || (responseDetail.getString("emergency_contact_number") == null)  || (TextUtils.isEmpty(responseDetail.getString("emergency_contact_number")))) {
                     mEmergencyContactNumber.setText("");
                 } else {
                     mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
                 }
 
-                ContactNo = mPhoneNumber.getText().toString();
-                emergencyContactNo =mEmergencyContactNumber.getText().toString();
 
                 if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
                     if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
@@ -111,7 +108,6 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     }
                 }
             }
-
         });
 
         mEmergencyContactNumber.addTextChangedListener(new TextWatcher() {
@@ -155,7 +151,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("phone", ContactNo.trim());
+                    jsonObject.put("phone", mPhoneNumber.getText().toString().trim());
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", responseDetail.getString("state"));
                     jsonObject.put("city", responseDetail.getString("country"));
@@ -165,12 +161,13 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     jsonObject.put("address2", responseDetail.getString("address2"));
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name", responseDetail.getString("last_name"));
-                    jsonObject.put("emergency_contact_number",emergencyContactNo.trim());
+                    jsonObject.put("emergency_contact_number", mEmergencyContactNumber.getText().toString().trim());
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
                     loadProfileInfo(parent.toString());
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

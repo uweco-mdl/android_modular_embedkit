@@ -89,7 +89,14 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if(fragment.equals("REPLACE CREDIT CARD")){
-            title.setText(getString(R.string.replace_card));
+            if(getIntent().getStringExtra("Fragment_Name1").equals("ADD CREDIT CARD")){
+                title.setText(getString(R.string.add_card));
+            }
+            else if(getIntent().getStringExtra("Fragment_Name1").equals("VIEW CREDIT CARD")){
+                title.setText(getString(R.string.view_card));
+            }
+            else{
+            title.setText(getString(R.string.replace_card));}
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().
@@ -129,6 +136,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
     public void leftBtnOnClick(View v) {
         finish();
+
     }
 
     public void rightBtnOnClick(View v) {
@@ -236,4 +244,5 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     public void showTick() {
         findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
     }
+
 }

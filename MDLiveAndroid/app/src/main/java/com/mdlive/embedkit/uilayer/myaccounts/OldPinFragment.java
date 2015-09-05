@@ -100,6 +100,12 @@ public class OldPinFragment extends MDLiveBaseFragment implements TextWatcher, V
         dummyEditText6.setClickable(false);
         mPassCode6.setBackgroundResource(R.drawable.gray_circle);
 
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+
     }
 
     @Override
@@ -165,6 +171,16 @@ public class OldPinFragment extends MDLiveBaseFragment implements TextWatcher, V
                     default:
                         break;
                 }
+            }
+        }
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+        else{
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).showTick();
             }
         }
     }

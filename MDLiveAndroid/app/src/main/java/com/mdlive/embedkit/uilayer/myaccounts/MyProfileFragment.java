@@ -36,6 +36,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.ChangeProfilePicService;
+import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
 
 import org.json.JSONException;
@@ -170,6 +171,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                     public void onClick(DialogInterface dialog, int item) {
                         mPreferredSignIn.setText(items[item]);
                         MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
+
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -192,9 +194,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                         changeLangTv.setText(items[item]);
                         sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor1 = sharedPref.edit();
-//                        editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
+                        editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
                         editor1.commit();
-                        LocalizationSingleton.getInstance().setLanguage(getActivity(),changeLangTv.getText().toString().toLowerCase());
+                        LocalizationSingleton.getInstance().setLanguage(getActivity(), changeLangTv.getText().toString().toLowerCase());
+                        changePhoneNumberInfo();
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -249,7 +252,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
     public void handlegetProfileInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
-        Log.i("response",response.toString());
+        Log.i("response", response.toString());
         try {
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
@@ -258,7 +261,13 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             userDOB = myProfile.getString("birthdate");
             gender = myProfile.getString("gender");
             username = myProfile.getString("username");
-            address = myProfile.getString("address1")+"\n"+myProfile.getString("address2")+"\n"+myProfile.getString("state")+"\n"+myProfile.getString("country")+"\n"+myProfile.getString("zipcode");
+            String address2;
+            if (((myProfile.getString("address2")).equalsIgnoreCase("null")) || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
+                address2="";
+            } else {
+                address2 = myProfile.getString("address2");
+            }
+            address = myProfile.getString("address1")+"\n"+address2+"\n"+myProfile.getString("state")+"\n"+myProfile.getString("country")+"\n"+myProfile.getString("zipcode");
             mobile = myProfile.getString("phone");
             timeZone = myProfile.getString("timezone");
             prefLanguage = myProfile.getString("language_preference");
@@ -291,14 +300,13 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
-            changeLangTv.setText(language);
+            changeLangTv.setText(language.toUpperCase());
             mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
             sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();
             editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
             editor1.commit();
-
         }
         catch(JSONException e)
         {
@@ -437,4 +445,70 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getProfileInfoService();
     }
+    public void changePhoneNumberInfo() {
+
+            try {
+                    JSONObject parent = new JSONObject();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("email", myProfile.getString("email"));
+                    jsonObject.put("phone", myProfile.getString("phone"));
+                    jsonObject.put("birthdate", myProfile.getString("birthdate"));
+                    jsonObject.put("state_id", myProfile.getString("state"));
+                    jsonObject.put("city", myProfile.getString("country"));
+                    jsonObject.put("zipcode", myProfile.getString("zipcode"));
+                    jsonObject.put("first_name", myProfile.getString("first_name"));
+                    jsonObject.put("address1", myProfile.getString("address1"));
+                    jsonObject.put("address2", myProfile.getString("address2"));
+                    jsonObject.put("gender", myProfile.getString("gender"));
+                    jsonObject.put("last_name", myProfile.getString("last_name"));
+                    jsonObject.put("language_preference", changeLangTv.getText().toString());
+                    jsonObject.put("", mPreferredSignIn.getText().toString());
+
+                    parent.put("member", jsonObject);
+                    loadProfileInfo(parent.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    public void loadProfileInfo(String params) {
+        showProgressDialog();
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgressDialog();
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                if (error.networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                    }
+                }
+            }
+        };
+
+        EditMyProfileService service = new EditMyProfileService(getActivity(), null);
+        service.editMyProfile(successCallBackListener, errorListener, params);
+    }
+}

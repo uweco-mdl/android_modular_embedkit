@@ -164,10 +164,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         });
 
 
-
-
-
-
         changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -239,6 +235,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         yearPicker.setMinValue(minimumYear);
         yearPicker.setWrapSelectorWheel(false);
         yearPicker.setValue(minimumYear);
+
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,10 +269,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         address2 = mAddress2.getText().toString();
         city = mCity.getText().toString();
         state = mState.getText().toString();
+        cardExpirationMonth = mCardExpirationMonth.getText().toString();
         country = "1";
         zip = mZip.getText().toString();
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -284,7 +282,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 jsonObject.put("billing_zip5", zip);
                 jsonObject.put("billing_address2", address2);
                 jsonObject.put("cc_hsa", true);
-                jsonObject.put("cc_expyear", cardExpirationYear);
+                jsonObject.put("cc_expyear", cardExpirationMonth);
                 jsonObject.put("billing_name", nameOnCard);
                 jsonObject.put("billing_city", city);
                 jsonObject.put("billing_state_id", state);

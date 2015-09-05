@@ -436,5 +436,8 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 e.printStackTrace();
             }
         }
+        else {
+            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+        }
     }
 }

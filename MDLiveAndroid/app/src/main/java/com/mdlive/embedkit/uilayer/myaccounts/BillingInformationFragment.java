@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -59,7 +58,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
     private String state = null;
     private String country = null;
     private String zip = null;
-    RelativeLayout mviewCreditCard;
+    android.support.v7.widget.CardView mviewCreditCard;
     JSONObject myProfile;
     public static BillingInformationFragment newInstance() {
         final BillingInformationFragment fragment = new BillingInformationFragment();
@@ -83,7 +82,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
         mCreditCardDate = (TextView) view.findViewById(R.id.cardEndDate);
         mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
         mReplaceCreditCard =(TextView)view.findViewById(R.id.addCreditCard);
-        mviewCreditCard =(RelativeLayout)view.findViewById(R.id.viewCreditCard);
+        mviewCreditCard =(android.support.v7.widget.CardView)view.findViewById(R.id.viewCreditCard);
 //        sharedpreferences = view.getContext().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
 
         mReplaceCreditCard.setOnClickListener(new View.OnClickListener() {
@@ -92,14 +91,16 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
                 Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
 
                 changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
-                if((mReplaceCreditCard.getText().toString()).equalsIgnoreCase(getResources().getString(R.string.add_card)))
+                if((mReplaceCreditCard.getText().toString()).equalsIgnoreCase("Add credit card"))
                 {
-//                    changePhone.putExtra("Fragment_Name","ADD CREDIT CARD");
+
+                    changePhone.putExtra("Fragment_Name1","ADD CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View","Add");
                     changePhone.putExtra("Credit_Card_Response","Add_New");
                 }
                 else
                 {
+                    changePhone.putExtra("Fragment_Name1","REPLACE CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View","replace");
                     changePhone.putExtra("Credit_Card_Response",myProfile.toString());
                 }
@@ -112,6 +113,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
             public void onClick(View view) {
                 Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
                 changePhone.putExtra("Fragment_Name","REPLACE CREDIT CARD");
+                changePhone.putExtra("Fragment_Name1","VIEW CREDIT CARD");
                 changePhone.putExtra("Credit_Card_Response",myProfile.toString());
                 changePhone.putExtra("Credit_Card_View","view");
                 startActivityForResult(changePhone, 1);
