@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -53,7 +54,20 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
+        ((TextView)findViewById(R.id.ques)).setText(
+                shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+", "+
+                getResources().getString(R.string.next_steps_content_txt)
+                );
+    }
+
+    public void questionBoxOnClick(View v){
+        if(((LinearLayout) findViewById(R.id.questionContainer)).getVisibility() == View.VISIBLE){
+            ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.down_arrow_icon);
+            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.GONE);
+        }else{
+            ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.right_arrow_icon);
+            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.VISIBLE);
+        }
     }
 
     public void leftBtnOnClick(View v){

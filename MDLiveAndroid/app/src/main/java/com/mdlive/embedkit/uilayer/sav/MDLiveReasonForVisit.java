@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -361,6 +363,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             fileUri = getOutputMediaFileUri();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            fetchLastFileInGallery();
             startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
             MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
         }
@@ -539,41 +542,14 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
                     if (recordsArray != null && recordsArray.length() > 0) {
                         photosContainer.setVisibility(View.VISIBLE);
-                        loadImageService = new loadDownloadedImages();
-                        loadImageService.execute();
+                        if(loadImageService == null){
+                            loadImageService = new loadDownloadedImages();
+                            loadImageService.execute();
+                        }
                     } else {
                         ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
                         photosContainer.setVisibility(View.GONE);
                     }
-               /* boolean hasPendingDownloads = false;
-                try {
-                    for(int i =0; i<recordsArray.length(); i++){
-                        JSONObject jsonObject = recordsArray.getJSONObject(i);
-                        if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null) {
-                            hasPendingDownloads = true;
-                            i = recordsArray.length();
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    hasPendingDownloads = true;
-                }
-                if(hasPendingDownloads){
-                    if(recordsArray != null){
-                        for(int i =0; i<recordsArray.length(); i++){
-                            JSONObject jsonObject = recordsArray.getJSONObject(i);
-                            try {
-                                if(getDatasInVolleyCache(jsonObject.getInt("id")+"") == null){
-                                    downloadImageService(jsonObject.getInt("id"));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    *//*loadDownloadedImages loadImageService = new loadDownloadedImages(recordsArray);
-                    loadImageService.execute();*//*
-                }*/
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -587,11 +563,26 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
          * UploadImageService - This class file is used to upload record to service.
          * @param filePath :: path of image in Device.
          */
-        private void uploadMedicalRecordService(String filePath) {
+        private void uploadMedicalRecordService(final String filePath, final boolean capturedInCamera) {
             showProgress();
+            try {
+                if(loadImageService != null){
+                    loadImageService.cancel(true);
+                    loadImageService = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    if(capturedInCamera){
+                        checkOutLastFileInGallery();
+                    }
+                    File file = new File(filePath);
+                    if(file.exists()){
+                        file.delete();
+                    }
                     hideProgress();
                     try {
                         if(response!= null){
@@ -619,6 +610,49 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             services.doUploadDocumentService(new File(filePath), successCallBackListener, errorListener);
         }
 
+
+        String lastFileNameId = "";
+
+        public void fetchLastFileInGallery(){
+            String[] projections = {
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.ImageColumns.MIME_TYPE};
+
+            final Cursor cursor = getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projections, null, null,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+            if(cursor != null && cursor.moveToFirst()){
+                lastFileNameId = cursor.getString(0);
+            }
+        }
+
+        public void checkOutLastFileInGallery(){
+            String[] projections = {
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.ImageColumns.MIME_TYPE};
+
+            final Cursor cursor = getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projections, null, null,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+            if(cursor != null && cursor.moveToFirst()){
+                if(lastFileNameId == null){
+                    if(cursor.getString(0) != null){
+                        ContentResolver cr = getContentResolver();
+                        cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
+                    }
+                }else if(lastFileNameId != null && lastFileNameId != cursor.getString(0)){
+                    ContentResolver cr = getContentResolver();
+                    cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
+                }
+                lastFileNameId = "";
+            }
+        }
 
         /**
          * helper to retrieve the path of an image URI
@@ -653,7 +687,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         File file = new File(fileUri.getPath());
                         String hasErrorText = checkSizeOfImageAndType(file);
                         if(file.exists() && hasErrorText == null){
-                            uploadMedicalRecordService(fileUri.getPath());
+                            uploadMedicalRecordService(fileUri.getPath(), true);
                         }else{
                             MdliveUtils.showDialog(MDLiveReasonForVisit.this,
                                     hasErrorText,
@@ -692,7 +726,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         String hasErrorText = checkSizeOfImageAndType(file);
 
                         if(fileUri != null && hasErrorText == null){
-                            uploadMedicalRecordService(getPath(fileUri));
+                            uploadMedicalRecordService(getPath(fileUri), false);
                         }else{
                             MdliveUtils.showDialog(MDLiveReasonForVisit.this,
                                     hasErrorText,
