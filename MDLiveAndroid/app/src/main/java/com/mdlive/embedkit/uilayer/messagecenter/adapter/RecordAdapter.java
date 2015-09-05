@@ -32,10 +32,10 @@ public class RecordAdapter extends ArrayAdapter<Record> {
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_record_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_record_bottom_text_view);
 
-        String extensionRemoved = MdliveUtils.getExtention(getItem(position).downloadLink);
+//        String extensionRemoved = MdliveUtils.getExtention(getItem(position).downloadLink);
 
 
-            if(extensionRemoved.equalsIgnoreCase("jpeg") || extensionRemoved.equalsIgnoreCase("jpg"))
+            /*if(extensionRemoved.equalsIgnoreCase("jpeg") || extensionRemoved.equalsIgnoreCase("jpg"))
             {
                 viewHolder.mImageView.setImageResource(R.drawable.ic_jpg_format);
             }
@@ -63,7 +63,7 @@ public class RecordAdapter extends ArrayAdapter<Record> {
             {
                 viewHolder.mImageView.setImageResource(R.drawable.ic_empty_format);
             }
-
+*/
 
         viewHolder.mTextViewTop.setText(getItem(position).docName);
         viewHolder.mTextViewBottom.setText(" by " + getItem(position).uploadedBy + " on " +getItem(position).uploadedAt);
