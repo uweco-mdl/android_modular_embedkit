@@ -168,14 +168,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void addAction (View view) {
-        if(mdLiveFamilyFragment.mFamilyHistoryOtherEditText.getText().length() != 0) {
-            mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue = mdLiveFamilyFragment.mFamilyHistoryOtherEditText.getText().toString();
-            Log.d("FamilyHistoryOtherValue", mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue.toString());
-        }
-        else {
-            mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue = "";
-            Log.d("FamilyHistoryOtherValue",mdLiveFamilyFragment.mFamilyHistoryOtherEditTextValue);
-        }
+        mdLiveFamilyFragment.addNewHistoryData();
     }
 
 
@@ -192,9 +185,6 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
                 jsonObject.put("relationship", mdLiveFamilyFragment.familyHistoryList.get(i).relationship);
                 jsonObject.put("condition", mdLiveFamilyFragment.familyHistoryList.get(i).condition);
                 jsonObject.put("active", mdLiveFamilyFragment.familyHistoryList.get(i).active);
-
-                Log.d("HELLO", mdLiveFamilyFragment.familyHistoryList.get(i).toString());
-
                 lifeStyleConditionJSONArray.put(jsonObject);
             }
 
