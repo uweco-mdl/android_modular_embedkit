@@ -159,49 +159,51 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     public void setNotification(final UserBasicInfo userBasicInfo) {
-        final Notifications notification = userBasicInfo.getNotifications();
+        try {
+            final Notifications notification = userBasicInfo.getNotifications();
 
-        if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-            mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
-        } else {
-            mMessagesTextView.setVisibility(View.GONE);
+            if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
+            } else {
+                mMessagesTextView.setVisibility(View.GONE);
+            }
+
+            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
+
+            final StringBuilder store = new StringBuilder();
+
+            if (notification.getPharmacyDetails() != null) {
+                store.append(notification.getPharmacyDetails().getStoreName() + "\n");
+                store.append(notification.getPharmacyDetails().getAddress1() + "\n");
+                store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
+            } else {
+                store.append(getActivity().getString(R.string.no_prefered_store));
+            }
+            mPreferedStoreTextView.setText(store.toString());
+        } catch (Exception e) {
+
         }
-
-        mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
-
-        final StringBuilder store = new StringBuilder();
-
-        if (notification.getPharmacyDetails() != null) {
-            store.append(notification.getPharmacyDetails().getStoreName() + "\n");
-            store.append(notification.getPharmacyDetails().getAddress1() + "\n");
-            store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
-        } else {
-            store.append(getActivity().getString(R.string.no_prefered_store));
-        }
-        mPreferedStoreTextView.setText(store.toString());
     }
 
     private void loadPendingAppoinments() {
-        if (getActivity() != null && MdliveUtils.isNetworkAvailable(getActivity())) {
-            final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    logD("PendingAppoinments", response.toString().trim());
-                    mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                logD("PendingAppoinments", response.toString().trim());
+                mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
 
-                    onNotificationLoaded();
-                }
-            };
+                onNotificationLoaded();
+            }
+        };
 
-            final NetworkErrorListener errorListener = new NetworkErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            };
+        final NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        };
 
-            final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
-            service.getUserPendingHistory(successCallBackListener, errorListener);
-        }
+        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+        service.getUserPendingHistory(successCallBackListener, errorListener);
     }
 
     private void onNotificationLoaded() {

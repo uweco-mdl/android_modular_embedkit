@@ -1,12 +1,10 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,13 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
@@ -40,15 +35,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -58,9 +48,9 @@ import java.util.Date;
 public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     private static final int PICK_PHOTO_INTENT = 1;
     private static final int TAKE_PHOTO_INTENT = 2;
-    private ListView mListView;
+    private static ListView mListView;
     private View mEmptyView;
-    private RecordAdapter mRecordAdapter;
+    private static RecordAdapter mRecordAdapter;
 
     public static MessageMyRecordsFragment newInstance() {
         final MessageMyRecordsFragment messageMyRecordsFragment = new MessageMyRecordsFragment();
@@ -349,15 +339,6 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                try{
-                    String message = response.getString("message");
-                    Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-
                 fetchMyRecords();
             }
         };
