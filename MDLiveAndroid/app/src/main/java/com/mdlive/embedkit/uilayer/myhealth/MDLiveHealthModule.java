@@ -67,7 +67,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
 
     public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE};
     protected TYPE_CONSTANT type;
-    public boolean isPerformingAutoSuggestion = false;
+    public boolean isPerformingAutoSuggestion = false, allowtoDisplayContents = true;
     public AutoCompleteTextView conditionText;
     public boolean isUpdateMode = false;
     public LinkedList<String> procedureNameList = new LinkedList<>();
@@ -511,7 +511,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             for (int i = 0; i < conditionArray.length(); i++) {
                 conditionList.add(conditionArray.getJSONObject(i).getString("name"));
             }
-            if (conditionList.size() > 0 && atv.hasFocus()) {
+            if (conditionList.size() > 0 && atv.hasFocus() && allowtoDisplayContents) {
                 if (atv.getAdapter() != null) {
                     ((ArrayAdapter<String>) atv.getAdapter()).clear();
                 }
@@ -543,6 +543,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                allowtoDisplayContents = true;
                 if ((conditonEt.getText().toString()).startsWith(" ")) {
                     conditonEt.getText().clear();
                 }
@@ -589,6 +590,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     public void onClick(View view) {
                         atv.setText(text.getText().toString());
                         atv.dismissDropDown();
+                        allowtoDisplayContents = false;
                         atv.setAdapter(null);
                     }
                 });
