@@ -238,7 +238,9 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
                 final Gson gson = new Gson();
                 final Records records = gson.fromJson(response.toString(), Records.class);
 
+
                 if (mRecordAdapter != null) {
+                    mRecordAdapter.clear();
                     mRecordAdapter.addAll(records.records);
                     mRecordAdapter.notifyDataSetChanged();
                 }
@@ -340,7 +342,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     }
 
 
-    class DownloadFileFromURL extends AsyncTask<String, String, String> {
+    class DownloadFileFromURL extends AsyncTask<String, String, String[]> {
 
         @Override
         protected void onPreExecute() {
@@ -350,11 +352,10 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
 
 
         @Override
-        protected String doInBackground(String... f_url) {
+        protected String[] doInBackground(String... f_url) {
             int count;
             try {
 
-                Log.i("image_URL",f_url[0]);
                 URL url = new URL(f_url[0]);
                 URLConnection conection = url.openConnection();
                 conection.connect();
@@ -384,18 +385,38 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
                 Log.e("Error: ", e.getMessage());
             }
 
-            return f_url[1];
+//            return new String[] {f_url[0],f_url[1]};
+            return f_url;
         }
 
 
         @Override
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String... file_url) {
 
             hideProgressDialog();
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse("file://" + "/sdcard/"+file_url), "image/*");
-            startActivity(intent);
+
+                if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("jpeg") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("jpg") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("png") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("gif")) {
+                    intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "image/*");
+                    startActivity(intent);
+                } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("pdf")) {
+                    intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/pdf");
+                    startActivity(intent);
+                } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("doc") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("docx"))) {
+                    intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/msword");
+                    startActivity(intent);
+                } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("xls") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("xlsx"))) {
+                    intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/vnd.ms-excel");
+                    startActivity(intent);
+                } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("pptx") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("ppt"))) {
+                    intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/vnd.ms-powerpoint");
+                    startActivity(intent);
+                }
+                 else
+                {
+                    MdliveUtils.alert(getProgressDialog(),getActivity(),getString(R.string.no_compitable_app));
+                }
         }
     }
 }
