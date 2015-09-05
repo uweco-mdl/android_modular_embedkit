@@ -578,10 +578,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 public void onResponse(JSONObject response) {
                     if(capturedInCamera){
                         checkOutLastFileInGallery();
-                    }
-                    File file = new File(filePath);
-                    if(file.exists()){
-                        file.delete();
+                        File file = new File(filePath);
+                        if(file.exists()){
+                            file.delete();
+                        }
                     }
                     hideProgress();
                     try {
