@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,7 +54,6 @@ import java.util.TimeZone;
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     private ListView listView;
-    private ProgressDialog pDialog;
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
@@ -115,12 +113,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * **/
 
     private void Initailization() {
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", this);
         providerListMap = new  ArrayList<HashMap<String, String>>();
         docOnCalLinLay = (RelativeLayout)findViewById(R.id.docOnCalLinLay);
         filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
-        setProgressBar(findViewById(R.id.progressDialog));
+        //setProgressBar(findViewById(R.id.progressDialog));
         seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
@@ -207,15 +204,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, null);
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     setInfoVisibilty();
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveChooseProvider.this);
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveChooseProvider.this);
                     e.printStackTrace();
                 }
             }};
-        ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, pDialog);
+        ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, getProgressDialog());
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID,""), successCallBackListener, errorListener);
     }

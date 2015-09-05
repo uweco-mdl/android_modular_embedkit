@@ -189,4 +189,8 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
             progressBarLayout.setVisibility(View.GONE);
         }
     }
+
+    public ProgressDialog getProgressDialog() {
+        return mProgressDialog;
+    }
 }
