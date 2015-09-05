@@ -3,7 +3,9 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,9 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
 
     private EditText mPhoneNumber = null;
     private EditText mEmergencyContactNumber = null;
-
+    private final static int PHONENUMBER_LENGTH = 10;
+    String ContactNo;
+    String emergencyContactNo;
     private String response;
 
     @Nullable
@@ -56,22 +60,87 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
         if (response != null) {
             try {
                 JSONObject responseDetail = new JSONObject(response);
-                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "phone")) {
-                    mPhoneNumber.setText(responseDetail.getString(""));
-                } else {
-                    mPhoneNumber.setText(responseDetail.getString("phone"));
-                }
-                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "emergency_contact_number")) {
-                    mEmergencyContactNumber.setText(responseDetail.getString(""));
+
+                mPhoneNumber.setText(responseDetail.getString("phone"));
+                if (responseDetail.getString("emergency_contact_number") == "null") {
+                    mEmergencyContactNumber.setText("");
                 } else {
                     mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
                 }
 
+                ContactNo = mPhoneNumber.getText().toString();
+                emergencyContactNo =mEmergencyContactNumber.getText().toString();
+
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence c, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+            }
+
+        });
+
+        mEmergencyContactNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+
+            }
+        });
+
         return changePhoneNumberView;
 
     }
@@ -86,7 +155,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("phone", mPhoneNumber.getText().toString().trim());
+                    jsonObject.put("phone", ContactNo.trim());
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", responseDetail.getString("state"));
                     jsonObject.put("city", responseDetail.getString("country"));
@@ -96,7 +165,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     jsonObject.put("address2", responseDetail.getString("address2"));
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name", responseDetail.getString("last_name"));
-                    jsonObject.put("emergency_contact_number", mEmergencyContactNumber.getText().toString().trim());
+                    jsonObject.put("emergency_contact_number",emergencyContactNo.trim());
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
