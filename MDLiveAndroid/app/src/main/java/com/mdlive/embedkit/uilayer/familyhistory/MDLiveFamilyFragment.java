@@ -176,7 +176,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -292,7 +292,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
             checkBox.setText(familyHistoryList.get(position).condition);
 
             // Set Spinner values & selection listener
-            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.Relationship));
+            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                     (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
             dataAdapter.setDropDownViewResource
@@ -369,7 +369,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         checkBox.setText(model.condition);
 
         // Set Spinner values & selection listener
-        final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.Relationship));
+        final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                 (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
         dataAdapter.setDropDownViewResource

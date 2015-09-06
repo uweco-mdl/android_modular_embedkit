@@ -187,7 +187,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, getProgressDialog());
                     }
 
                     if (isReturning && !isStartedSummary) {
@@ -334,13 +334,13 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.home_dialog_title));
+        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
 
         // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.home_dialog_text));
+        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
 
         // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
@@ -359,7 +359,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
@@ -441,7 +441,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             randomNumber += 3;
         }
 
-        tips.mHeader = getResources().getString(R.string.did_you_know);
+        tips.mHeader = getResources().getString(R.string.mdl_did_you_know);
         tips.mColors = randomizeColors;
         tips.mBodyText = randomizeStrins;
 

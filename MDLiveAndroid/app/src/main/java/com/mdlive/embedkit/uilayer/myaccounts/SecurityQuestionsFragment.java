@@ -1,9 +1,7 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +20,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -37,7 +36,7 @@ import java.util.Iterator;
 /**
  * Created by venkataraman_r on 6/17/2015.
  */
-public class SecurityQuestionsFragment extends Fragment {
+public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
     private RelativeLayout mSecurityQuestion1Layout = null;
     private RelativeLayout mSecurityQuestion2Layout = null;
@@ -45,7 +44,6 @@ public class SecurityQuestionsFragment extends Fragment {
     private TextView mSecurityQuestion2 = null;
     private EditText mSecurityAnswer1 = null;
     private EditText mSecurityAnswer2 = null;
-    private ProgressDialog pDialog;
     private ArrayList<String> mQuestions = null;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,8 +57,6 @@ public class SecurityQuestionsFragment extends Fragment {
         mSecurityAnswer2 = (EditText)securityQuestions.findViewById(R.id.answer2);
 
         mQuestions = new ArrayList<String>();
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         final LayoutInflater inflater1 = getLayoutInflater(savedInstanceState);
 
@@ -207,7 +203,7 @@ public class SecurityQuestionsFragment extends Fragment {
     }
 
     private void getSecurityQuestionsService() {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -221,13 +217,12 @@ public class SecurityQuestionsFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -238,7 +233,7 @@ public class SecurityQuestionsFragment extends Fragment {
 
     public void handleSecurityQuestionsSuccessResponse(JSONObject response)
     {
-        pDialog.dismiss();
+        hideProgressDialog();
         mQuestions = getListofValues(response);
     }
 
@@ -311,7 +306,7 @@ public class SecurityQuestionsFragment extends Fragment {
             Toast.makeText(getActivity(), "Answers are mandatory", Toast.LENGTH_SHORT).show();
     }
     private void updateSecurityQuestionsService(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -325,8 +320,7 @@ public class SecurityQuestionsFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -338,7 +332,7 @@ public class SecurityQuestionsFragment extends Fragment {
                             }
                         };
                         // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -350,7 +344,7 @@ public class SecurityQuestionsFragment extends Fragment {
 
     private void handleUpdateSecurityQuestionsSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {

@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,7 +56,6 @@ import java.util.List;
  * the City.
  */
 public class MDLiveLocation extends MDLiveBaseActivity {
-    private ProgressDialog pDialog;
     private EditText ZipcodeEditTxt;
     private TextView CurrentLocationTxt,StateTxt;
     private String SelectedZipCodeCity;
@@ -83,7 +81,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.updatelocation));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_update_location));
 
 
         StateTxt = (TextView) findViewById(R.id.StateTxt);
@@ -161,8 +159,8 @@ public class MDLiveLocation extends MDLiveBaseActivity {
          * of the state from the localisation
          */
 
-        LongNameList = Arrays.asList(getResources().getStringArray(R.array.stateName));
-        ShortNameList = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+        LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
 
     }
@@ -180,7 +178,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 if(MdliveUtils.validateZipCode(getEditTextValue)){
                     loadZipCode(getEditTextValue);
                 }else{
-                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip));
+                    MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, getString(R.string.mdl_valid_zip));
                 }
             }else{
                 SaveZipCodeCity(selectedCity);
@@ -188,7 +186,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }
 
         }else{
-            MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip_state));
+            MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, getString(R.string.mdl_valid_zip_state));
         }
     }
 
@@ -239,12 +237,12 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response",error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
 
             }
         };
 
-        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveLocation.this, pDialog);
+        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveLocation.this, getProgressDialog());
         currentlocationservices.getCurrentLocation(latitude, longitude, responseListener, errorListener);
     }
 
@@ -278,13 +276,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                             }
                         };
                         // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveLocation.this);
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveLocation.this);
                     }
                 }
             }
         };
 
-        ZipCodeServices zipcodeservices = new ZipCodeServices(MDLiveLocation.this, pDialog);
+        ZipCodeServices zipcodeservices = new ZipCodeServices(MDLiveLocation.this, getProgressDialog());
         zipcodeservices.getZipCodeServices(EditTextValue, responseListener, errorListener);
     }
 
@@ -317,17 +315,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                                 //This is for long name like Florida.
                                 zipcode_longNameText = localZip.get("long_name").getAsString();
                              //This is for Short name like FL
-                                for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();l++) {
-                                    if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l))) {
-                                        longNameText = Arrays.asList(getResources().getStringArray(R.array.stateName)).get(l);
-                                        shortNameText = Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(l);
+                                for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();l++) {
+                                    if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
+                                        longNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
+                                        shortNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l);
                                         SaveZipCodeCity(longNameText);
                                         isCityFound=true;
                                         break;
                                     }
                                 }
                                 if(!isCityFound){
-                                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.find_location_zipcode));
+                                    MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, getString(R.string.mdl_find_location_zipcode));
                                 }
 
                             }
@@ -337,7 +335,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 }
             }else{
 
-          MdliveUtils.alert(pDialog, MDLiveLocation.this, "Unable to find location by Zipcode.");
+          MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, "Unable to find location by Zipcode.");
             }
 
         } catch (Exception e) {

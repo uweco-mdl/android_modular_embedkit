@@ -32,7 +32,7 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mylifestyle).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_mylifestyle).toUpperCase());
         }
 
         User user = null;

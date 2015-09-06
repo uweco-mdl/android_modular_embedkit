@@ -95,7 +95,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.medical_history).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_medical_history).toUpperCase());
 
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,""));
@@ -359,7 +359,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
         }else if(requestCode == IntegerConstants.PEDIATRIC_REQUEST_CODE){
             if (resultCode == RESULT_OK) {
-                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_completed_txt));
             }
         }
     }
@@ -426,7 +426,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                                 ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.updateInfoText)).setText(
-                                        getResources().getString(R.string.last_update_txt)+
+                                        getResources().getString(R.string.mdl_last_update_txt)+
                                                 dateFormat.format(calendar.getTime())
                                 );
                                 isNewUser = false;
@@ -616,9 +616,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
             Log.e("pediatricPercentage", pediatricPercentage+"");
             if(pediatricPercentage != 0){
-                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_completed_txt));
             }else{
-                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_notcompleted_txt));
+                ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_notcompleted_txt));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -679,11 +679,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.no_allergies_reported));
+                    ((TextView) findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.mdl_no_allergies_reported));
                 else
                     ((TextView) findViewById(R.id.AlergiesNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.no_allergies_reported));
+                ((TextView) findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.mdl_no_allergies_reported));
             }
             findViewById(R.id.ContainerScrollView).setVisibility(View.VISIBLE);
             hideProgress();
@@ -726,11 +726,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.no_medications_reported));
+                    ((TextView) findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.mdl_no_medications_reported));
                 else
                     ((TextView) findViewById(R.id.MedicationsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.no_medications_reported));
+                ((TextView) findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.mdl_no_medications_reported));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -777,11 +777,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_condition_reported));
+                    ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_condition_reported));
                 else
                     ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_condition_reported));
+                ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_condition_reported));
             }
 
             if(isNewUser){
@@ -816,7 +816,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 if(historyPercentageArray.getJSONObject(i).has("behavioral")){
                     findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
                     if(historyPercentageArray.getJSONObject(0).getInt("behavioral")!=0){
-                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                     break;
                 }
@@ -842,12 +842,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("life_style")){
                     if(historyPercentageArray.getJSONObject(0).getInt("life_style")!=0){
-                        ((TextView)findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                        ((TextView)findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                 } else if(historyPercentageArray.getJSONObject(i).has("family_history")){
                     findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
                     if(historyPercentageArray.getJSONObject(0).getInt("family_history")!=0){
-                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
 
                 }
@@ -923,11 +923,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.no_procedures_reported));
+                    ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.mdl_no_procedures_reported));
                 else
                     ((TextView) findViewById(R.id.ProcedureNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.no_procedures_reported));
+                ((TextView) findViewById(R.id.ProcedureNameTv)).setText(getString(R.string.mdl_no_procedures_reported));
             }
         } catch (Exception e) {
             e.printStackTrace();

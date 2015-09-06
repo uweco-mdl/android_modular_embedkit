@@ -156,7 +156,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -193,14 +193,14 @@ public class BillingInformationFragment extends MDLiveBaseFragment implements Vi
 //                    city + ", " + state + "\n" + country);
                     if(TextUtils.isEmpty(cardNumber) && TextUtils.isEmpty(securityCode) && TextUtils.isEmpty(cardExpirationMonth) && TextUtils.isEmpty(cardExpirationYear) && TextUtils.isEmpty(nameOnCard)  )
                     {
-                        mReplaceCreditCard.setText(getResources().getString(R.string.add_card));
+                        mReplaceCreditCard.setText(getResources().getString(R.string.mdl_add_card));
                         mviewCreditCard.setVisibility(View.GONE);
                     }
                     else {
                         mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear);
                         mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
                                 city + ", " + state + "\n" + country);
-                        mReplaceCreditCard.setText(getResources().getString(R.string.replace_card));
+                        mReplaceCreditCard.setText(getResources().getString(R.string.mdl_replace_card));
                         mviewCreditCard.setVisibility(View.VISIBLE);
                     }
                 }

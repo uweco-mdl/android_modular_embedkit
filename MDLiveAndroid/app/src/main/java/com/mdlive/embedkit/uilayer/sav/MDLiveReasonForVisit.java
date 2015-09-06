@@ -106,7 +106,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
             ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.header_reason_txt).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_header_reason_txt).toUpperCase());
 
 
             setProgressBar(findViewById(R.id.progressDialog));
@@ -262,7 +262,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     hideProgress();
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
                 }
             };
             ReasonForVisitServices services = new ReasonForVisitServices(MDLiveReasonForVisit.this, null);

@@ -91,7 +91,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
         TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
-        title.setText(getString(R.string.add_family_member).toUpperCase());
+        title.setText(getString(R.string.mdl_add_family_member).toUpperCase());
         ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +211,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         mStateLayout = (RelativeLayout)findViewById(R.id.stateLayout);
         mGenderLayout = (RelativeLayout)findViewById(R.id.genderLayout);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", AddFamilyMemberActivity.this);
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
     public void addFamilyMemberInfo()
@@ -300,7 +300,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
                 pDialog.dismiss();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, AddFamilyMemberActivity.this);
@@ -331,8 +331,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddFamilyMemberActivity.this);
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
 

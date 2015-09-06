@@ -102,7 +102,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
         mPassCode7.addTextChangedListener(this);
 
         mTitleTextView = (TextView) changePin.findViewById(R.id.fragment_change_pin_text_view);
-        mTitleTextView.setText(R.string.please_confirm_your_pin);
+        mTitleTextView.setText(R.string.mdl_please_confirm_your_pin);
 
         changePin.findViewById(R.id.linear_layout).setVisibility(View.INVISIBLE);
     }
@@ -175,7 +175,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
             if (pin.equals(getArguments().getString(PIN_TAG))) {
                 loadConfirmPin(pin);
             } else {
-                showToast(R.string.pin_mismatch);
+                showToast(R.string.mdl_pin_mismatch);
             }
         }
     }
@@ -210,7 +210,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
                 logE("Error", e.getMessage());
             }
         } else {
-            showToast(R.string.pin_mismatch);
+            showToast(R.string.mdl_pin_mismatch);
         }
     }
 
@@ -232,7 +232,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -253,7 +253,7 @@ public class ConfirmPinFragment extends MDLiveBaseFragment implements TextWatche
                     mOnCreatePinSucessful.startDashboard();
                 }
             } else {
-                showToast(R.string.pin_creation_failed);
+                showToast(R.string.mdl_pin_creation_failed);
             }
 
         } catch (Exception e) {

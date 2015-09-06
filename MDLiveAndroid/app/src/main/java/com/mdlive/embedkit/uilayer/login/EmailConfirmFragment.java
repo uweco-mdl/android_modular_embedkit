@@ -83,7 +83,7 @@ public class EmailConfirmFragment extends MDLiveBaseFragment {
 
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -101,10 +101,10 @@ public class EmailConfirmFragment extends MDLiveBaseFragment {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle(getActivity().getString(R.string.app_name));
+            builder.setTitle(getActivity().getString(R.string.mdl_app_name));
             builder.setMessage(response.getString("message"));
 
-            builder.setPositiveButton(getActivity().getString(R.string.ok), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getActivity().getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
 

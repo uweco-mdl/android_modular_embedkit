@@ -374,7 +374,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
             randomNumber += 3;
         }
 
-        tips.mHeader = getResources().getString(R.string.did_you_know);
+        tips.mHeader = getResources().getString(R.string.mdl_did_you_know);
         tips.mColors = randomizeColors;
         tips.mBodyText = randomizeStrins;
 

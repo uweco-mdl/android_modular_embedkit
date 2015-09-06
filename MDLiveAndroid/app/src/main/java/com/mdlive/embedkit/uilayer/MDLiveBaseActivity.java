@@ -130,13 +130,13 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.home_dialog_title));
+        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
 
         // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.home_dialog_text));
+        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
 
         // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     Intent intent = new Intent();
@@ -155,7 +155,7 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

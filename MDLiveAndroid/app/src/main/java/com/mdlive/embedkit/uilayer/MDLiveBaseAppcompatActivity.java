@@ -308,8 +308,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void shareApplication() {
         final Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(getString(R.string.share_details_text)));
-        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using)));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(getString(R.string.mdl_share_details_text)));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
     }
 
     private void clearMinimizedTime() {
@@ -354,7 +354,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        MdliveUtils.showDialog(getBaseContext(), getString(R.string.app_name), response.getString("message"));
+                        MdliveUtils.showDialog(getBaseContext(), getString(R.string.mdl_app_name), response.getString("message"));
                     } catch (JSONException e) {
                     }
                 }

@@ -99,12 +99,12 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
 
         final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
         if (header != null) {
-            header.setText(R.string.no_messages_inbox_header);
+            header.setText(R.string.mdl_no_messages_inbox_header);
         }
 
         final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
         if (details != null) {
-            details.setText(R.string.no_messages_inbox_details);
+            details.setText(R.string.mdl_no_messages_inbox_details);
         }
     }
 
@@ -175,7 +175,7 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
                 handleError();
 
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

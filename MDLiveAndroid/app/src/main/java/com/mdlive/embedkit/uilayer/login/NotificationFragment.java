@@ -163,7 +163,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             final Notifications notification = userBasicInfo.getNotifications();
 
             if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
+                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
             } else {
                 mMessagesTextView.setVisibility(View.GONE);
             }
@@ -177,7 +177,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 store.append(notification.getPharmacyDetails().getAddress1() + "\n");
                 store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
             } else {
-                store.append(getActivity().getString(R.string.no_prefered_store));
+                store.append(getActivity().getString(R.string.mdl_no_prefered_store));
             }
             mPreferedStoreTextView.setText(store.toString());
         } catch (Exception e) {
@@ -239,7 +239,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 }
             }
         } else {
-            mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.no_upcoming_appoinments));
+            mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
         }
     }

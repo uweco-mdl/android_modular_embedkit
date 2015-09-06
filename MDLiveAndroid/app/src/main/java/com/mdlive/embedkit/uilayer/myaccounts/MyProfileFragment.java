@@ -238,7 +238,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -271,10 +271,13 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mobile = myProfile.getString("phone");
             timeZone = myProfile.getString("timezone");
             prefLanguage = myProfile.getString("language_preference");
-            sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("Profile_Address", myProfile.toString());
-            editor.commit();
+
+            if (getActivity() != null) {
+                sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Profile_Address", myProfile.toString());
+                editor.commit();
+            }
 
             try {
                 JSONObject securityQuestion = myProfile.getJSONObject("security");
@@ -298,15 +301,17 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
 
-            sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-            String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
-            changeLangTv.setText(language.toUpperCase());
-            mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
+            if (getActivity() != null) {
+                sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
+                changeLangTv.setText(language.toUpperCase());
+                mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
-            sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor1 = sharedPref.edit();
-            editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
-            editor1.commit();
+                sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = sharedPref.edit();
+                editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
+                editor1.commit();
+            }
         }
         catch(JSONException e)
         {

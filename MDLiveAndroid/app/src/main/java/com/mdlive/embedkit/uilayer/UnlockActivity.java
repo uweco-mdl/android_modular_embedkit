@@ -134,6 +134,6 @@ public class UnlockActivity extends AppCompatActivity implements OnSignupSuccess
         findViewById(R.id.sign_up).setVisibility(View.GONE);
         findViewById(R.id.forgot_pin).setVisibility(View.GONE);
         findViewById(R.id.headerTxt).setVisibility(View.VISIBLE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.forgot_pin).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_forgot_pin).toUpperCase());
     }
 }

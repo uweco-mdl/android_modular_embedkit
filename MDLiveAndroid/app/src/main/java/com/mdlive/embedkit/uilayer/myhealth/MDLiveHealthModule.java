@@ -85,22 +85,22 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         if(getIntent() != null && getIntent().hasExtra("type")){
             if(getIntent().getStringExtra("type").equals("condition")){
                 type = TYPE_CONSTANT.CONDITION;
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_medical_condition));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_condition_with_eg_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_medical_condition));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_condition_with_eg_hint));
             }else if(getIntent().getStringExtra("type").equals("allergy")){
                 type = TYPE_CONSTANT.ALLERGY;
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_allergy));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_allergies_with_eg_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_allergy));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_allergies_with_eg_hint));
             }else if(getIntent().getStringExtra("type").equals("medication")){
                 type = TYPE_CONSTANT.MEDICATION;
                 ((LinearLayout) findViewById(R.id.medicationCredentailsLayout)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_medication));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_medication_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_medication));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_medication_hint));
             }else if(getIntent().getStringExtra("type").equals("procedure")){
                 type = TYPE_CONSTANT.PROCEDURE;
                 ((EditText) findViewById(R.id.conditionText)).setVisibility(View.GONE);
                 ((LinearLayout) findViewById(R.id.procedureLayout)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_procedure));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_procedure));
             }
         }
 
@@ -244,8 +244,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView)findViewById(R.id.surgeryName)).setText(procedureNameList.get(position));
                 procedureNameDialog.dismiss();
-                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
-                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
                     ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 }
             }
@@ -256,8 +256,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView)findViewById(R.id.surgeryYear)).setText(procedureYearList.get(position));
                 procedureYearDialog.dismiss();
-                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
-                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
                     ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 }
             }
@@ -441,11 +441,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             } else {
                 String name = (type == TYPE_CONSTANT.CONDITION) ? "condition" : (type == TYPE_CONSTANT.ALLERGY) ? "allergy" : "medication";
                 if (type == TYPE_CONSTANT.CONDITION) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.condition_already_exist));
+                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_condition_already_exist));
                 } else if (type == TYPE_CONSTANT.MEDICATION) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.medication_already_exist));
+                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_medication_already_exist));
                 } else if (type == TYPE_CONSTANT.ALLERGY) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.allergy_already_exist));
+                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_allergy_already_exist));
                 }
             }
         }

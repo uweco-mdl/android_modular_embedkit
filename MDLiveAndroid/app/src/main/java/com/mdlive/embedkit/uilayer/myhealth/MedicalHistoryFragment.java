@@ -2,32 +2,22 @@ package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -44,10 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
 
 
 /**
@@ -201,7 +188,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                                 ((LinearLayout) view.findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
                                 ((TextView) view.findViewById(R.id.updateInfoText)).setText(
-                                        getResources().getString(R.string.last_update_txt) +
+                                        getResources().getString(R.string.mdl_last_update_txt) +
                                                 dateFormat.format(calendar.getTime())
                                 );
                                 isNewUser = false;
@@ -385,14 +372,14 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("life_style")){
                     if(historyPercentageArray.getJSONObject(i).getInt("life_style")!=0){
-                        ((TextView)view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                        ((TextView)view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                 }
             }
 
             if(medicalAggregationJsonObject.has("family_history")){
                 if(medicalAggregationJsonObject.getJSONArray("family_history").length()>0){
-                    ((TextView)view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                    ((TextView)view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                 }
             }
         } catch (Exception e) {
@@ -419,7 +406,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 if(historyPercentageArray.getJSONObject(i).has("behavioral")){
                     view.findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
                     if(historyPercentageArray.getJSONObject(i).getInt("behavioral")!=0){
-                        ((TextView)view.findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.pediatric_completed_txt));
+                        ((TextView)view.findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                     break;
                 }
@@ -449,9 +436,9 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 }
             }
             if(pediatricPercentage != 0){
-                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_completed_txt));
+                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_completed_txt));
             }else{
-                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.pediatric_notcompleted_txt));
+                ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_notcompleted_txt));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -507,11 +494,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.no_allergies_reported));
+                    ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.mdl_no_allergies_reported));
                 else
                     ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.no_allergies_reported));
+                ((TextView) view.findViewById(R.id.AlergiesNameTv)).setText(getString(R.string.mdl_no_allergies_reported));
             }
             view.findViewById(R.id.ContainerScrollView).setVisibility(View.VISIBLE);
             hideProgressDialog();
@@ -547,11 +534,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) view.findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.no_medications_reported));
+                    ((TextView) view.findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.mdl_no_medications_reported));
                 else
                     ((TextView) view.findViewById(R.id.MedicationsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) view.findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.no_medications_reported));
+                ((TextView) view.findViewById(R.id.MedicationsNameTv)).setText(getString(R.string.mdl_no_medications_reported));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -588,11 +575,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_conditions_reported));
+                    ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_conditions_reported));
                 else
                     ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.no_conditions_reported));
+                ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_conditions_reported));
             }
 
         } catch (Exception e) {

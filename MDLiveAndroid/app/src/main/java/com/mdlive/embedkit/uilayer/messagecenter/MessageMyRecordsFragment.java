@@ -172,7 +172,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
         }
         else
         {
-            MdliveUtils.alert(getProgressDialog(),getActivity(),getString(R.string.no_compitable_app));
+            MdliveUtils.alert(getProgressDialog(),getActivity(),getString(R.string.mdl_no_compitable_app));
         }
 
         return type;

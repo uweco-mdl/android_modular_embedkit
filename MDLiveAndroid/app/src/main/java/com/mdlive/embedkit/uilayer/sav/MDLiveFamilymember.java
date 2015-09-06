@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.sav;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,7 +50,6 @@ import static java.util.Calendar.MONTH;
  * This class handles the Add FamilyMember related functionalities implementation.
  */
 public class MDLiveFamilymember extends MDLiveBaseActivity {
-    private ProgressDialog pDialog;
     private SwitchCompat mySwitch;
     private Button addChildBtn;
     private EditText firstNameEditText, lastNameEditText;
@@ -75,7 +73,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             userInfoJSONString = getIntent().getExtras().getString("user_info");
         }
 
-        pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         firstNameEditText = (EditText) findViewById(R.id.patientEt);
         lastNameEditText = (EditText) findViewById(R.id.lastNamePatientEt);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
@@ -126,7 +123,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         mySwitch.setChecked(false);
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
 
-        mySwitch.setText(getString(R.string.legalparent_guardian_formated, sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")));
+        mySwitch.setText(getString(R.string.mdl_legalparent_guardian_formated, sharedpreferences.getString(PreferenceConstants.PATIENT_NAME,"")));
 
         //attach a listener to check for changes in state
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -199,11 +196,11 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
                 PostDependentServices();
             }else{
-                MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.age_error_message));
+                MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_age_error_message));
             }
 
         } else {
-            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
+            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandetory_fileds));
         }
     }
 
@@ -314,14 +311,14 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilymember.this,error,pDialog);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilymember.this,error, getProgressDialog());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, pDialog);
+        AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, getProgressDialog());
         addChildServices.getChildDependentsr(array, responseListener, errorListener);
     }
 

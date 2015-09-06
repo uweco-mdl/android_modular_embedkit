@@ -90,7 +90,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.search_pharm_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));
 
 
 
@@ -143,7 +143,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         zipcodeText = ((EditText) findViewById(R.id.zipcodeText));
         cityText = ((EditText) findViewById(R.id.cityText));
         setProgressBar(findViewById(R.id.progressDialog));
-        errorMesssage = getString(R.string.no_pharmacies_listed);
+        errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
 
         //This function is used to initialized State Dialog.
         initializeStateDialog();
@@ -163,7 +163,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 if (hasFocus) {
                     cityText.setText(StringConstants.EMPTY_STRING);
                     stageListView.setItemChecked(0, true);
-                    chooseState.setText(getString(R.string.select_stg));
+                    chooseState.setText(getString(R.string.mdl_select_stg));
                 }
             }
         });
@@ -279,43 +279,43 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         if (zipcodeText.getText() != null && !zipcodeText.getText().toString().trim().equals("")) {
             if (MdliveUtils.validateZipCode(zipcodeText.getText().toString())) {
                 if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().length() != 0) {
-                    errorMesssage = getString(R.string.not_find_pharmacy_zip,
+                    errorMesssage = getString(R.string.mdl_not_find_pharmacy_zip,
                             pharmacy_search_name.getText().toString(),
                             zipcodeText.getText().toString());
                 } else {
-                    errorMesssage = getString(R.string.no_pharmacies_listed);
+                    errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
                 }
             } else {
-                return getString(R.string.valid_zip);
+                return getString(R.string.mdl_valid_zip);
             }
-        } else if (chooseState.getText() != null && !chooseState.getText().toString().equals(getString(R.string.select_stg)) && !chooseState.getText().toString().trim().equals("")) {
+        } else if (chooseState.getText() != null && !chooseState.getText().toString().equals(getString(R.string.mdl_select_stg)) && !chooseState.getText().toString().trim().equals("")) {
             if (cityText.getText() == null || cityText.getText().toString().trim().equals("")) {
-                return getString(R.string.input_city);
+                return getString(R.string.mdl_input_city);
             }
             if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().length() != 0) {
-                errorMesssage = getString(R.string.not_find_pharmacy_state,
+                errorMesssage = getString(R.string.mdl_not_find_pharmacy_state,
                         pharmacy_search_name.getText().toString(),
                         cityText.getText().toString(),
                         chooseState.getText().toString());
             } else {
-                errorMesssage = getString(R.string.no_pharmacies_listed);
+                errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
             }
         } else if (cityText.getText() != null && !cityText.getText().toString().trim().equals("")) {
-            if (chooseState.getText() == null || chooseState.getText().toString().equals(getString(R.string.select_stg)) || chooseState.getText().toString().trim().equals("")) {
-                return getString(R.string.input_state);
+            if (chooseState.getText() == null || chooseState.getText().toString().equals(getString(R.string.mdl_select_stg)) || chooseState.getText().toString().trim().equals("")) {
+                return getString(R.string.mdl_input_state);
             }
             if (pharmacy_search_name.getText() != null && pharmacy_search_name.getText().toString().trim().length() != 0) {
-                errorMesssage = getString(R.string.not_find_pharmacy_state,
+                errorMesssage = getString(R.string.mdl_not_find_pharmacy_state,
                         pharmacy_search_name.getText().toString(),
                         cityText.getText().toString(),
                         chooseState.getText().toString());
             } else {
-                errorMesssage = getString(R.string.no_pharmacies_listed);
+                errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
             }
         } else if ((TextUtils.isEmpty(zipcodeText.getText().toString()))
                 && ((TextUtils.isEmpty(chooseState.getText().toString())
-                || chooseState.getText().toString().equals(getString(R.string.select_stg))))) {
-            return getString(R.string.input_state_city);
+                || chooseState.getText().toString().equals(getString(R.string.mdl_select_stg))))) {
+            return getString(R.string.mdl_input_state_city);
         }
         return null;
     }
@@ -406,7 +406,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 isPerformingAutoSuggestion = false;
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, getProgressDialog());
             }
         };
         if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(searchText)) {
@@ -484,7 +484,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void addExtrasForLocationInIntent(Location location) {
         sendingIntent.putExtra("longitude", location.getLongitude());
         sendingIntent.putExtra("latitude", location.getLatitude());
-        errorMesssage = getString(R.string.no_pharmacies_listed);
+        errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
     }
 
     /**
@@ -521,8 +521,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         stageListView = (ListView) convertView.findViewById(R.id.popupListview);
-        stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, stateList);
         stageListView.setAdapter(adapter);
         stageListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

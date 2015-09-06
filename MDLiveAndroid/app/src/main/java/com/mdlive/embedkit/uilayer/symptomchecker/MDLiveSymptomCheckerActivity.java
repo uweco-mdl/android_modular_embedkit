@@ -116,7 +116,7 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void showHamburgerBell() {
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.symptom_checker).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_symptom_checker).toUpperCase());
 
         findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
         findViewById(R.id.toolbar_tick).setVisibility(View.GONE);

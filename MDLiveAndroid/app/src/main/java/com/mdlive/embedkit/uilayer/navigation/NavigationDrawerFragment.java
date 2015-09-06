@@ -124,12 +124,12 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem(getResources().getString(R.string.dashboard), getResources().getDrawable(R.drawable.arrow_down)));
-        items.add(new NavigationItem(getResources().getString(R.string.appointments), getResources().getDrawable(R.drawable.arrow_down)));
-        items.add(new NavigationItem(getResources().getString(R.string.schedule_a_visit), getResources().getDrawable(R.drawable.arrow_down)));
-        items.add(new NavigationItem(getResources().getString(R.string.messages), getResources().getDrawable(R.drawable.arrow_down)));
-        items.add(new NavigationItem(getResources().getString(R.string.providers), getResources().getDrawable(R.drawable.arrow_down)));
-        items.add(new NavigationItem(getResources().getString(R.string.support), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_dashboard), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_appointments), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_schedule_a_visit), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_messages), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_providers), getResources().getDrawable(R.drawable.arrow_down)));
+        items.add(new NavigationItem(getResources().getString(R.string.mdl_support), getResources().getDrawable(R.drawable.arrow_down)));
         return items;
     }
 
@@ -146,7 +146,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.myPrimaryDarkColor));
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, toolbar, R.string.mdl_drawer_open, R.string.mdl_drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);

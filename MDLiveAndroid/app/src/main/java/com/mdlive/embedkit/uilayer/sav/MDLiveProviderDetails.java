@@ -91,7 +91,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.doctor_details).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
 
@@ -715,7 +715,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "education")) {
             str_education = providerdetObj.get("education").getAsString();
         }
-        if(str_Availability_Type.equals(getString(R.string.with_patient)))
+        if(str_Availability_Type.equals(getString(R.string.mdl_with_patient)))
         {
             tapSeetheDoctorTxtLayout.setClickable(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -735,7 +735,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         }else
         {
-            if(!str_Availability_Type.equals(getString(R.string.with_patient))) {
+            if(!str_Availability_Type.equals(getString(R.string.mdl_with_patient))) {
 //                   tapSeetheDoctorTxtLayout.setText(getString(R.string.providerDeatils_choose_doctor,str_DoctorName));
             }
         }

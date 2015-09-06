@@ -53,7 +53,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
 
         if (fragment.equals("CHANGE PASSWORD")) {
-            title.setText(getResources().getString(R.string.change_password).toUpperCase());
+            title.setText(getResources().getString(R.string.mdl_change_password).toUpperCase());
 
             getSupportFragmentManager().
                     beginTransaction().
@@ -62,7 +62,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if (fragment.equals("SECURITY QUESTION")) {
-            title.setText(getResources().getString(R.string.change_security_questions).toUpperCase());
+            title.setText(getResources().getString(R.string.mdl_change_security_questions).toUpperCase());
 
             getSupportFragmentManager().
                     beginTransaction().
@@ -90,13 +90,13 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
         if(fragment.equals("REPLACE CREDIT CARD")){
             if(getIntent().getStringExtra("Fragment_Name1").equals("ADD CREDIT CARD")){
-                title.setText(getString(R.string.add_card));
+                title.setText(getString(R.string.mdl_add_card));
             }
             else if(getIntent().getStringExtra("Fragment_Name1").equals("VIEW CREDIT CARD")){
-                title.setText(getString(R.string.view_card));
+                title.setText(getString(R.string.mdl_view_card));
             }
             else{
-            title.setText(getString(R.string.replace_card));}
+            title.setText(getString(R.string.mdl_replace_card));}
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().

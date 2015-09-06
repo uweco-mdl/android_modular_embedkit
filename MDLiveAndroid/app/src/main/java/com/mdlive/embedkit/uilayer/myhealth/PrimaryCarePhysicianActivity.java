@@ -37,7 +37,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
 
         TextView title = (TextView) findViewById(R.id.headerTxt);
 
-        title.setText(getResources().getString(R.string.pcp_title));
+        title.setText(getResources().getString(R.string.mdl_pcp_title));
 
         getSupportFragmentManager().
                 beginTransaction().

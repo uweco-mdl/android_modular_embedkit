@@ -118,7 +118,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.pediatric_profile));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_pediatric_profile));
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
 //        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
@@ -159,7 +159,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         lasShotLabel = (TextView) findViewById(R.id.txt_lastShot_label);
         birthComplicationLayout = (RelativeLayout) findViewById(R.id.layout_birthComplications);
         if (checkPerdiatricAge()) {
-            txtAge.setText(getString(R.string.AgeUnder13));
+            txtAge.setText(getString(R.string.mdl_AgeUnder13));
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
             edtBirthComplications.setVisibility(View.GONE);
             txtDietType.setVisibility(View.GONE);
@@ -169,7 +169,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             edtLastShot_view.setVisibility(View.GONE);
             findViewById(R.id.separator).setVisibility(View.GONE);
         } else {
-            txtAge.setText(getString(R.string.AgeUnder2));
+            txtAge.setText(getString(R.string.mdl_AgeUnder2));
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
             txtDietType.setVisibility(View.VISIBLE);
             txtDietTypeHeader.setVisibility(View.VISIBLE);
@@ -179,7 +179,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         }
         explanationListners();
         dietList = new ArrayList<>();
-        dietList = Arrays.asList(getResources().getStringArray(R.array.dietlist));
+        dietList = Arrays.asList(getResources().getStringArray(R.array.mdl_dietlist));
         buttonClick();
         radioClick();
         getPediatricProfileBelowTwo();
@@ -457,7 +457,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
-               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,null);
+               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
             }
         };
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
@@ -567,7 +567,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,null);
+               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
             }
         };
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
@@ -586,7 +586,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
     private void showListViewDialog(final List<String> list, final TextView selectedText, final String typeName) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePediatric.this);
-        alertDialog.setItems(getResources().getStringArray(R.array.dietlist), new DialogInterface.OnClickListener() {
+        alertDialog.setItems(getResources().getStringArray(R.array.mdl_dietlist), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String selectedType = list.get(which);

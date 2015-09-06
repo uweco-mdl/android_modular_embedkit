@@ -41,7 +41,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.make_appointment_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt));
 
 
 

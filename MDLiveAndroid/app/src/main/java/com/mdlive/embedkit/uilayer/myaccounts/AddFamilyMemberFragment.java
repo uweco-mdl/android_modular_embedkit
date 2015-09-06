@@ -254,7 +254,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
 
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -281,8 +281,8 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
 

@@ -15,7 +15,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.android.volley.VolleyError;
@@ -44,7 +43,6 @@ import java.util.List;
 public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     private EditText mFamilyHistoryOtherEditText;
 
-    private ProgressBar progressBar;
     private ProgressDialog pDialog = null;
 
     private JSONObject innerJsonObject;
@@ -65,6 +63,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
         findWidgetId();
         getFamilyHistoryServiceData();
 
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
     /**
@@ -126,9 +125,6 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     }
 
     private void findWidgetId() {
-
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-
         mFamilyHistoryOtherEditText = (EditText)findViewById(R.id.my_family_history_other_editText);
 
     }
@@ -142,7 +138,6 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.finish();
     }
 
     private void getFamilyHistoryServiceData() {
@@ -167,7 +162,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);
@@ -211,7 +206,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
      */
     public void setProgressBarVisibility()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        pDialog.show();
     }
 
     /*
@@ -219,7 +214,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
      */
     public void setInfoVisibilty()
     {
-        progressBar.setVisibility(View.GONE);
+        pDialog.dismiss();
     }
 
     public void saveAction(View view) {
@@ -274,7 +269,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);
@@ -392,7 +387,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
 
                 if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
                     // Do not set selection
-                    spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+                    spinner.setPrompt(getString(R.string.mdl_relationship));
                     Log.d("Hello", "I am here");
                 }
             } else {
@@ -403,7 +398,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             checkBox.setText(familyHistoryList.get(position).condition);
 
             // Set Spinner values & selection listener
-            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.Relationship));
+            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                     (getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
             dataAdapter.setDropDownViewResource
@@ -424,7 +419,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
 
             if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
                 // Do not set selection
-                spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+                spinner.setPrompt(getString(R.string.mdl_relationship));
             } else {
                 int selectedPosition = 0;
                 for (int j = 0; j < relationShpList.size(); j++) {
@@ -435,7 +430,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
                 }
                 spinner.setSelection(selectedPosition);
             }
-            spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+            spinner.setPrompt(getString(R.string.mdl_relationship));
 
 
             scrollLinearLayout.addView(rootLinearLayout);

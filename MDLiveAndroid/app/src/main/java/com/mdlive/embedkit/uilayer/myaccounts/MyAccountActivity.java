@@ -44,7 +44,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.account_details).toUpperCase());
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_account_details).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -76,9 +76,9 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
 
     private void setupViewPager(ViewPager viewPager) {
         final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.account));
-        adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.billing));
-        adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.family_history));
+        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.mdl_account));
+        adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.mdl_billing));
+        adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.mdl_family_history));
         viewPager.setAdapter(adapter);
     }
 

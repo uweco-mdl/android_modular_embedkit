@@ -40,7 +40,7 @@ public class SSOActivity extends MDLiveBaseActivity {
         setContentView(R.layout.mdlive_sso);
         MdliveUtils.clearSharedPrefValues(this);
 
-        mProgressDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
+        mProgressDialog = MdliveUtils.getProgressDialog(getString(R.string.mdl_please_wait), this);
         setProgressBar(findViewById(R.id.progressDialog));
         SSOUser ssoUser = getUser();
         MDLiveConfig.setData(ssoUser.getCurrentEnvironment());
@@ -77,7 +77,7 @@ public class SSOActivity extends MDLiveBaseActivity {
     private void makeSSOCall(final SSOUser user) {
         MdliveUtils.ssoInstance = user;
         if (user == null) {
-            MdliveUtils.showDialog(this, getString(R.string.error), getString(R.string.user_details_missing), new DialogInterface.OnClickListener() {
+            MdliveUtils.showDialog(this, getString(R.string.mdl_error), getString(R.string.mdl_user_details_missing), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
@@ -148,7 +148,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);
@@ -212,7 +212,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);

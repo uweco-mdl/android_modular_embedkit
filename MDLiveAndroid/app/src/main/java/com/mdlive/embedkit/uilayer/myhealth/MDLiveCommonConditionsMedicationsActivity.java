@@ -348,7 +348,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.no_conditions_reported);
+                    conditonsNames = getString(R.string.mdl_no_conditions_reported);
                 Log.e("conditonsNames", conditonsNames);
                 resultData.putExtra("conditionsData", conditonsNames);
             }else if(type == TYPE_CONSTANT.MEDICATION){
@@ -363,7 +363,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.no_medications_reported);
+                    conditonsNames = getString(R.string.mdl_no_medications_reported);
                 resultData.putExtra("medicationData", conditonsNames);
             }else if(type == TYPE_CONSTANT.ALLERGY){
                 JSONArray conditonsArray = healthHistory.getJSONArray("allergies");
@@ -377,7 +377,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.no_allergies_reported);
+                    conditonsNames = getString(R.string.mdl_no_allergies_reported);
                 resultData.putExtra("allegiesData", conditonsNames);
             }else if(type == TYPE_CONSTANT.PROCEDURE){
                 JSONArray conditonsArray = healthHistory.getJSONArray("surgeries");
@@ -391,7 +391,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.no_procedures_reported);
+                    conditonsNames = getString(R.string.mdl_no_procedures_reported);
                 resultData.putExtra("proceduresData", conditonsNames);
             }
         } catch (JSONException e) {

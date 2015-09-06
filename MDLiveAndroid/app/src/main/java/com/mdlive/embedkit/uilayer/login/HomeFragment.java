@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
 
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-        toolbarTitle.setText(getResources().getString(R.string.app_name));
+        toolbarTitle.setText(getResources().getString(R.string.mdl_app_name));
 
         emailConfirmation.setOnClickListener(this);
     }

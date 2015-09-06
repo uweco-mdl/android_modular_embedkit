@@ -51,12 +51,12 @@ public class EmailConfirmationDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
                 // Set Dialog Title
-                .setTitle(getString(R.string.email_confirmation))
+                .setTitle(getString(R.string.mdl_email_confirmation))
                 .setView(R.layout.email_confirmation_layout)
                         // Set Dialog Message
                         //.setMessage(Html.fromHtml(getString(R.string.email_confirmation_detail_text), null, new HTMLTagHandler()))
                         // Positive button
-                .setPositiveButton(getString(R.string.resend_email_confirmation), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.mdl_resend_email_confirmation), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (mOnEmailConfirmationClicked != null) {
                             mOnEmailConfirmationClicked.onEmailConfirmationClicked();
@@ -66,7 +66,7 @@ public class EmailConfirmationDialogFragment extends DialogFragment {
                     }
                 })
                         // Negative Button
-                .setNegativeButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.mdl_dismiss), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();
                     }

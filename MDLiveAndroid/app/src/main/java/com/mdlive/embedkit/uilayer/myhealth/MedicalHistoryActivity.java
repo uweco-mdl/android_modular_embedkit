@@ -72,7 +72,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_health).toUpperCase());
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_health).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -172,10 +172,10 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
      */
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new MedicalHistoryFragment(), getString(R.string.medical_history));
-        adapter.addFragment(MDLivePharmacyFragment.newInstance(), getString(R.string.pharmacy));
-        adapter.addFragment(MDLiveMyHealthProvidersFragment.newInstance(), getString(R.string.providers));
-        adapter.addFragment(MDLiveMyHealthVisitsFragment.newInstance(), getString(R.string.visits));
+        adapter.addFragment(new MedicalHistoryFragment(), getString(R.string.mdl_medical_history));
+        adapter.addFragment(MDLivePharmacyFragment.newInstance(), getString(R.string.mdl_pharmacy));
+        adapter.addFragment(MDLiveMyHealthProvidersFragment.newInstance(), getString(R.string.mdl_providers));
+        adapter.addFragment(MDLiveMyHealthVisitsFragment.newInstance(), getString(R.string.mdl_visits));
         viewPager.setAdapter(adapter);
     }
 

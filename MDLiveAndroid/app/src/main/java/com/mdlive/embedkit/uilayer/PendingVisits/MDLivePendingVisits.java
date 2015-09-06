@@ -87,7 +87,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePendingVisits.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePendingVisits.this, error, getProgressDialog());
 
             }
         };

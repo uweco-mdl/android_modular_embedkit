@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
             intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_USERNAME));
             startActivity(intent);
         } catch (Exception e) {
-            MdliveUtils.showDialog(this, getString(R.string.app_name), getString(R.string.no_compitable_app));
+            MdliveUtils.showDialog(this, getString(R.string.mdl_app_name), getString(R.string.mdl_no_compitable_app));
         }
     }
 
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResponse,
             intent.setData(Uri.parse(AppSpecificConfig.URL_FORGOT_PASSWORD));
             startActivity(intent);
         } catch (Exception e) {
-            MdliveUtils.showDialog(this, getString(R.string.app_name), getString(R.string.no_compitable_app));
+            MdliveUtils.showDialog(this, getString(R.string.mdl_app_name), getString(R.string.mdl_no_compitable_app));
         }
     }
 

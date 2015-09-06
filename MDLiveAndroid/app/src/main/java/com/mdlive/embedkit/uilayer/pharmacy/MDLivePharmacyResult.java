@@ -112,7 +112,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_phr_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_phr_txt));
 
         initializeViews();
         initializeListView();
@@ -157,7 +157,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         keyParams = new HashMap<String, Object>();
         progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         bottomLoder = (ProgressBar)findViewById(R.id.bottomLoader);
-        errorMesssage = getString(R.string.no_pharmacies_listed);
+        errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
     }
 
     public void leftBtnOnClick(View v){
@@ -266,7 +266,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 }
                 progressBar.setVisibility(View.GONE);
                 resetLoadingViews();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         if(bottomLoder.getVisibility()==View.VISIBLE){
@@ -549,7 +549,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
@@ -614,7 +614,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,null);
@@ -672,7 +672,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -703,13 +703,13 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.home_dialog_title));
+        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
 
         // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.home_dialog_text));
+        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
 
         // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     Intent intent = new Intent();
@@ -728,7 +728,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

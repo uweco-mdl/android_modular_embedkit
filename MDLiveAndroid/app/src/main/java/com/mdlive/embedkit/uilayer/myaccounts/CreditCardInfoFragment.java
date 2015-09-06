@@ -194,7 +194,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
     private void showDatePicker() {
         final Dialog d = new Dialog(getActivity());
-        d.setTitle(getString(R.string.expiration_month_year));
+        d.setTitle(getString(R.string.mdl_expiration_month_year));
         d.setContentView(R.layout.monthly_picker_dialog);
         Button buttonDone = (Button) d.findViewById(R.id.set_button);
         final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
@@ -325,7 +325,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

@@ -81,7 +81,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.make_appointment_txt).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt).toUpperCase());
 
 
         initialization();
@@ -141,7 +141,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
 
         } else {
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.app_name), getResources().getString(R.string.please_enter_mandetory_fileds));
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandetory_fileds));
         }
     }
     public void saveDateAndTime()
@@ -295,7 +295,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                             if(errorMsg != null && errorMsg.length() != 0){
                                 (MDLiveMakeAppmtrequest.this).runOnUiThread(new Runnable() {
                                     public void run() {
-                                        MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
+                                        MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
@@ -306,7 +306,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                             }
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, null);
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     e.printStackTrace();

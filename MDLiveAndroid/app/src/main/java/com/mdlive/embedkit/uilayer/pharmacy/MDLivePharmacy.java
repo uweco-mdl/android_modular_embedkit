@@ -80,7 +80,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_pharm_txt).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_pharm_txt).toUpperCase());
 
 
         intentFilter = new IntentFilter();
@@ -243,7 +243,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
         PharmacyService insuranceService = new PharmacyService(MDLivePharmacy.this, null);
@@ -302,7 +302,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
 
@@ -344,7 +344,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
         callPharmacyService(responseListener, errorListener);
@@ -382,7 +382,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     progressBar.setVisibility(View.GONE);
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
                 }
             };
             if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
@@ -526,13 +526,13 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.home_dialog_title));
+        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
 
         // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.home_dialog_text));
+        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
 
         // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     Intent intent = new Intent();
@@ -551,7 +551,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

@@ -42,7 +42,7 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.my_provider));
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_provider));
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -126,7 +126,7 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
      */
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(ProviderDetailsFragment.newInstance(getIntent().getStringExtra("ProviderID")), getString(R.string.providers));
+        adapter.addFragment(ProviderDetailsFragment.newInstance(getIntent().getStringExtra("ProviderID")), getString(R.string.mdl_providers));
         viewPager.setAdapter(adapter);
     }
 

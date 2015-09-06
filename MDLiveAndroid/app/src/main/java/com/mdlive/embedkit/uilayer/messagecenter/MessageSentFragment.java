@@ -100,12 +100,12 @@ public class MessageSentFragment extends MDLiveBaseFragment {
 
         final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
         if (header != null) {
-            header.setText(R.string.no_messages_sent_header);
+            header.setText(R.string.mdl_no_messages_sent_header);
         }
 
         final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
         if (details != null) {
-            details.setText(R.string.no_messages_sent_details);
+            details.setText(R.string.mdl_no_messages_sent_details);
         }
     }
 
@@ -174,7 +174,7 @@ public class MessageSentFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 handleError();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
