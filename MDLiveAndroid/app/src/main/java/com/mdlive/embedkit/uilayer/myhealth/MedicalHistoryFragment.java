@@ -277,21 +277,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 AllergiesGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
-        if (isAllFieldsfilled) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_bg));
-            } else {
-                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_bg);
-            }
-            btnSaveContinue.setClickable(true);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btnSaveContinue.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey));
-            } else {
-                btnSaveContinue.setBackgroundResource(R.drawable.btn_rounded_grey);
-            }
-            btnSaveContinue.setClickable(false);
-        }
     }
 
     /**
@@ -432,6 +417,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             int pediatricPercentage = 0;
             for(int i = 0; i < historyPercentageArray.length(); i++){
                 if(historyPercentageArray.getJSONObject(i).has("pediatric")){
+                    view.findViewById(R.id.pediatric_cardview).setVisibility(View.VISIBLE);
                     pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
                 }
             }

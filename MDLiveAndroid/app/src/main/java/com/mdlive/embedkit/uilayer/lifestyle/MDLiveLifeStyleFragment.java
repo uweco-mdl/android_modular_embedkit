@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +90,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         mHeightFtEditText = (EditText) view.findViewById(R.id.life_style_heighteditTextone);
         mHeightInEditText = (EditText) view.findViewById(R.id.life_style_heighteditTexttwo);
         mWeightLbsEditText = (EditText) view.findViewById(R.id.life_style_weight_editTextone);
+        mHeightInEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "11")});
         mBmiText = (TextView) view.findViewById(R.id.life_style_bmi_value_text);
         mHeightFtEditText.addTextChangedListener(bmiTextWatcher);
         mHeightInEditText.addTextChangedListener(bmiTextWatcher);
@@ -281,6 +284,42 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     *
+     * This filter class will set the minimum and maximum values to an Edit text.
+     *
+     *
+     */
+    private class InputFilterMinMax implements InputFilter {
+
+        private int min, max;
+
+        public InputFilterMinMax(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+
+        public InputFilterMinMax(String min, String max) {
+            this.min = Integer.parseInt(min);
+            this.max = Integer.parseInt(max);
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            try {
+                int input = Integer.parseInt(dest.toString() + source.toString());
+                if (isInRange(min, max, input))
+                    return null;
+            } catch (NumberFormatException nfe) { }
+            return "";
+        }
+
+        private boolean isInRange(int a, int b, int c) {
+            return b > a ? c >= a && c <= b : c >= b && c <= a;
         }
     }
 }
