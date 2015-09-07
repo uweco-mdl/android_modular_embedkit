@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.View;
 import android.widget.Toast;
 
@@ -307,8 +306,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public void shareApplication() {
         final Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(getString(R.string.mdl_share_details_text)));
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mdl_share_details_text));
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
     }
 

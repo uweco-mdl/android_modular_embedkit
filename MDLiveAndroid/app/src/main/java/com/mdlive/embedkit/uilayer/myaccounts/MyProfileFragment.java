@@ -161,9 +161,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mPreferredSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final CharSequence[] items = {
-                        "Pin", "Password"
-                };
+                final CharSequence[] items = view.getContext().getResources().getStringArray(R.array.mdl_lock_types);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Make your selection");
@@ -179,6 +177,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             }
         });
+        mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
 
         changeLangTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,8 +297,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mMobile.setText(mobile);
             mTimeZone.setText(timeZone);
             mEmail.setText(email);
-
-            mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
 
             if (getActivity() != null) {
                 sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
