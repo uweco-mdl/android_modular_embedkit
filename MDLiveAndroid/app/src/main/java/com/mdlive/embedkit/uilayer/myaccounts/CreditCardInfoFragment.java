@@ -137,10 +137,17 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
                     mCardNumber.setText(cardNumber);
                     mSecurityCode.setText(securityCode);
-                    mCardExpirationMonth.setText(cardExpirationMonth);
+                    mCardExpirationMonth.setText(cardExpirationMonth+"/"+cardExpirationYear);
                     mNameOnCard.setText(nameOnCard);
                     mAddress1.setText(address1);
-                    mAddress2.setText(address2);
+
+                    if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
+                        address2="";
+                        mAddress2.setText(address2);
+                    } else {
+                        mAddress2.setText(address2);
+                    }
+
                     mCity.setText(city);
                     mState.setText(state);
                     mZip.setText(zip);
@@ -174,7 +181,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     try {
                         JSONObject myProfile = new JSONObject(name);
                         mAddress1.setText(myProfile.getString("address1"));
-                        mAddress2.setText(myProfile.getString("address2"));
+                        if (myProfile.getString("address2").equalsIgnoreCase("null") || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
+                            mAddress2.setText("");
+                        } else {
+                            mAddress2.setText(myProfile.getString("address2"));
+                        }
                         mCity.setText(myProfile.getString("country"));
                         mState.setText(myProfile.getString("state"));
                         mZip.setText(myProfile.getString("zipcode"));
@@ -244,10 +255,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     month = monthPicker.getValue() - 1;
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    cardExpirationMonth = String.valueOf(month);
+                    cardExpirationYear = String.valueOf(year);
                     mCardExpirationMonth.setText(dateFormat.format(expiryDate.getTime()));
                     d.dismiss();
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         });
@@ -273,7 +286,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         country = "1";
         zip = mZip.getText().toString();
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -282,7 +295,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 jsonObject.put("billing_zip5", zip);
                 jsonObject.put("billing_address2", address2);
                 jsonObject.put("cc_hsa", true);
-                jsonObject.put("cc_expyear", cardExpirationMonth);
+                jsonObject.put("cc_expyear", cardExpirationYear);
                 jsonObject.put("billing_name", nameOnCard);
                 jsonObject.put("billing_city", city);
                 jsonObject.put("billing_state_id", state);
