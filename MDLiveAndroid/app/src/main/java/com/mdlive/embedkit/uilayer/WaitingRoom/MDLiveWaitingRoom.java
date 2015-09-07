@@ -259,7 +259,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         try{
             JSONObject resObj=new JSONObject(response);
             if(resObj.getString("provider_status").equals("true")){
-                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Provider has Arrived");
+                ((TextView)findViewById(R.id.txt_waitingtext)).setText(R.string.mdl_provider_arrived);
                 ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.provider_arrived);
                 getVSEECredentials();
             }else if(isReturning && !resObj.getString("provider_status").equals("true") && !isStartedSummary) {

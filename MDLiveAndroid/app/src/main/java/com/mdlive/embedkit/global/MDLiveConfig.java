@@ -167,12 +167,12 @@ public class MDLiveConfig {
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "";
                 break;
             default:
-                AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
-                AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
-                AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
-                AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";
-                AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
+                AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
+                AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
+                AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
+                AppSpecificConfig.URL_SIGN_UP = "https://dev-members.mdlive.com/signup/mobile";
+                AppSpecificConfig.URL_FORGOT_USERNAME = "https://dev-members.mdlive.com/forgot_username";
+                AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
         }
 
