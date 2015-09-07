@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -38,6 +39,8 @@ import org.json.JSONObject;
 public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     private ListView mListView;
     private ProviderAdapter mProviderAdapter;
+    private boolean isFirstTime = true;
+    private View mHeaderView;
 
     /**
      * Use this factory method to create a new instance of
@@ -80,29 +83,14 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
-        if (mListView != null) {
-            mProviderAdapter = new ProviderAdapter(view.getContext(), R.layout.new_adapter_layout, android.R.id.text1);
-            View header = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
-            header.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
-                    startActivity(PrimaryCarePhysician);
-                }
-            });
-            mListView.addHeaderView(header);
-            mListView.setAdapter(mProviderAdapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    i -= mListView.getHeaderViewsCount();
-                    final MyProvider provider = mProviderAdapter.getItem(i);
-                    Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
-                    intent.putExtra("ProviderID", String.valueOf(provider.providerId));
-                    getActivity().startActivity(intent);
-                }
-            });
-        }
+        mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
+        mHeaderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
+                startActivity(PrimaryCarePhysician);
+            }
+        });
     }
 
     @Override
@@ -110,16 +98,25 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
         super.onStart();
     }
 
+    /**
+     *
+     * Update the screen on returning back to the screen.
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
+        if(getView()!=null  && !isFirstTime) {
+            getMyHealthProvider();
+        }
+        isFirstTime = false;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        fetchMessageprovider();
+        getMyHealthProvider();
     }
 
     @Override
@@ -152,14 +149,19 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
         super.onDetach();
     }
 
-    private void fetchMessageprovider() {
+    /**
+     *
+     * This function will get the list of providers. Moreover, this will also get
+     * the primary care physician details, if any.
+     *
+     *
+     */
+    private void getMyHealthProvider() {
         showProgressDialog();
-
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
 
@@ -188,13 +190,43 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                     primaryCarePhysician.practice = primaryPhysicianJSONObject.getString("practice");
                     primaryCarePhysician.prefix = primaryPhysicianJSONObject.getString("prefix");
                     primaryCarePhysician.lastName = primaryPhysicianJSONObject.getString("last_name");
+                    provider.primaryCarePhysician = primaryCarePhysician;
                 } catch (JSONException e) {
                     provider.primaryCarePhysician = null;
                 }
 
+                if (mListView != null) {
+                    if(mListView.getAdapter()!= null){
+                        if(mListView.getHeaderViewsCount()>0) {
+                            mListView.removeHeaderView(mHeaderView);
+                        }
+                        mListView.setAdapter(null);
+                    }
+
+                    mProviderAdapter = new ProviderAdapter(getView().getContext(), R.layout.new_adapter_layout, android.R.id.text1);
+
+                    if(provider.primaryCarePhysician!=null && provider.primaryCarePhysician.firstName!=null && provider.primaryCarePhysician.lastName!=null){
+                        mHeaderView.findViewById(R.id.AddPcpText).setVisibility(View.GONE);
+                        mHeaderView.findViewById(R.id.PcpValueLl).setVisibility(View.VISIBLE);
+                        ((TextView)mHeaderView.findViewById(R.id.ProviderName)).setText(provider.primaryCarePhysician.firstName + " " + provider.primaryCarePhysician.lastName);
+                    }
+
+
+                    mListView.addHeaderView(mHeaderView);
+                    mListView.setAdapter(mProviderAdapter);
+                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            i -= mListView.getHeaderViewsCount();
+                            final MyProvider provider = mProviderAdapter.getItem(i);
+                            Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
+                            intent.putExtra("ProviderID", String.valueOf(provider.providerId));
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                }
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
-                    Log.e("Response - ", provider.myProviders.size() + " -- ");
                     if(provider.myProviders.size()>0){
                         try {
                             getView().findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
