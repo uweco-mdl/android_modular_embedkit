@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +57,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private TextView addressline1, addressline2, addressline3;
     private SupportMapFragment mapView;
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private GoogleMap map;
     private Bundle bundletoSend = new Bundle();
     private IntentFilter intentFilter;
@@ -172,9 +171,10 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             registerReceiver(locationReceiver, intentFilter);
             //locationService.setBroadCastData(StringConstants.DEFAULT);
             if (!MdliveUtils.isNetworkAvailable(MDLivePharmacy.this)) {
-                if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+                hideProgress();
+                /*if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
                     progressBar.setVisibility(View.GONE);
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,7 +203,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
         addressline3 = ((TextView) findViewById(R.id.addressline3));
-        progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
+        //progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
     }
 
     /**
@@ -215,11 +215,11 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      */
 
     public void checkInsuranceEligibility() {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 Log.e("Zero Dollar Insurance", response.toString());
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
@@ -242,7 +242,8 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
@@ -274,12 +275,12 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      * ConfirmAppointmentServices-Class will send the request to the server and get the responses
      */
     private void doConfirmAppointment() {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    progressBar.setVisibility(View.GONE);
+                    hideProgress();
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -301,7 +302,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
@@ -333,7 +334,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
    */
 
     public void getUserPharmacyDetails() {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -343,7 +344,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
@@ -381,7 +382,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             NetworkErrorListener errorListener = new NetworkErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    progressBar.setVisibility(View.GONE);
+                    hideProgress();
                     MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
                 }
             };
@@ -439,7 +440,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name") + " "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
@@ -449,7 +450,11 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                     + pharmacyDatas.getString("state") + " "
                     + (TextUtils.isEmpty(pharmacyDatas.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode"))));
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
+
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
+            if(pharmacyDatas.has("phone")){
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(formatDualString(pharmacyDatas.getString("phone")));
+            }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
             bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
@@ -475,11 +480,36 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         }
     }
 
-    /**
-     * This function is used for parse and update UI for server response.
-     *
-     * @param response - Response received from server.
-     */
+    public String formatDualString(String formatText) {
+        boolean hasParenthesis = false;
+        Log.e("Print format txt",formatText);
+        if(formatText.indexOf(")") > 0){
+            hasParenthesis = true;
+        }
+        formatText= formatText.replace("(", "");
+        formatText= formatText.replace(")", "");
+        formatText= formatText.replace(" ", "");
+        if(formatText.length() > 10){
+            formatText = formatText.substring(0, formatText.length()-1);
+            Log.e("Print format txt",">10");
+        }
+        if(formatText.length() >= 7){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+            Log.e("Print format txt",formatText);
+        }else if(formatText.length() >= 4){
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
+            Log.e("Print format txt",">4");
+        }else if(formatText.length() == 3 && hasParenthesis){
+            Log.e("Print format txt",">3");
+            formatText = "("+formatText.substring(0, formatText.length())+")";
+        }
+       return formatText;
+    }
+        /**
+         * This function is used for parse and update UI for server response.
+         *
+         * @param response - Response received from server.
+         */
     public void loadDatas(String response) {
         try {
             JSONObject jobj = new JSONObject(response);
@@ -493,6 +523,9 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                     + MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode")));
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
+            if(pharmacyDatas.has("phone")){
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(formatDualString(pharmacyDatas.getString("phone")));
+            }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
             bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
