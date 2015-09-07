@@ -104,12 +104,12 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        fetchMessageprovider();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchMessageprovider();
     }
 
     @Override
@@ -120,8 +120,6 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        mProviderAdapter.clear();
     }
 
     @Override
@@ -132,6 +130,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+        mProviderAdapter.clear();
     }
 
     @Override

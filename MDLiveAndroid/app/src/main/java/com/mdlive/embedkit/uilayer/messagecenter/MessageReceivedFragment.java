@@ -111,12 +111,12 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
@@ -127,9 +127,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        mPageCount = 1;
-        mMessageReceivedAdapter.clear();
     }
 
     @Override
@@ -140,6 +137,9 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        mPageCount = 1;
+        mMessageReceivedAdapter.clear();
     }
 
     @Override
@@ -187,13 +187,20 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     }
 
     private void handleSucess(final JSONObject response) {
+        logD("Hello", "Page Number : " + mPageCount);
+        logD("Hello", response.toString());
         final Gson gson = new Gson();
         final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
         if (newReceivedMessages.receivedMessages != null && newReceivedMessages.receivedMessages.size() > 0) {
             if (mMessageReceivedAdapter != null) {
                 mMessageReceivedAdapter.addAll(newReceivedMessages.receivedMessages);
                 mMessageReceivedAdapter.notifyDataSetChanged();
-                mPageCount += 1;
+                if (newReceivedMessages.receivedMessages.size() < NUMBER_OF_ITEMS_PER_PAGE) {
+                    /* Do Not increase the Page number, Remove the Scroll listener */
+                    mListView.setOnScrollListener(null);
+                } else {
+                    mPageCount += 1;
+                }
             }
 
             mListView.setVisibility(View.VISIBLE);
