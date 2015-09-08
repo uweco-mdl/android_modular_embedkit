@@ -91,7 +91,7 @@ public class CreatePinFragment extends MDLiveBaseFragment implements TextWatcher
         mPassCode7.requestFocus();
 
         mTitleTextView = (TextView) changePin.findViewById(R.id.fragment_change_pin_text_view);
-        mTitleTextView.setText(R.string.please_create_a_6_digit_pin);
+        mTitleTextView.setText(R.string.mdl_please_create_a_6_digit_pin);
 
         changePin.findViewById(R.id.dont_use_pin_text_view).setOnClickListener(new View.OnClickListener() {
             @Override

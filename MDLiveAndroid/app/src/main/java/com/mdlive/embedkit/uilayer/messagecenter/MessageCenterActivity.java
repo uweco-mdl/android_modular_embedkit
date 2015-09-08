@@ -38,7 +38,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.message_center).toUpperCase());
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_message_center).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -64,14 +64,14 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     private void setupViewPager(ViewPager viewPager) {
         final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MessageReceivedFragment.newInstance(), getString(R.string.inbox));
-        adapter.addFragment(MessageSentFragment.newInstance(), getString(R.string.sent));
-        adapter.addFragment(MessageProviderFragment.newInstance(), getString(R.string.compose));
+        adapter.addFragment(MessageReceivedFragment.newInstance(), getString(R.string.mdl_inbox));
+        adapter.addFragment(MessageSentFragment.newInstance(), getString(R.string.mdl_sent));
+        adapter.addFragment(MessageProviderFragment.newInstance(), getString(R.string.mdl_compose));
         viewPager.setAdapter(adapter);
     }
 

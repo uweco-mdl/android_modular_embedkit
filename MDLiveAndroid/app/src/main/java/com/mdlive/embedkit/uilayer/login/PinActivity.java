@@ -106,10 +106,10 @@ public class PinActivity extends AppCompatActivity implements CreatePinFragment.
     }
 
     private void showPinToolbar() {
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.create_a_pin).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_create_a_pin).toUpperCase());
     }
 
     private void showConfirmPinToolbar() {
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.confirm_your_pin).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_confirm_your_pin).toUpperCase());
     }
 }

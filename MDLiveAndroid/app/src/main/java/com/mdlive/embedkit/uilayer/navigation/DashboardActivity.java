@@ -33,7 +33,7 @@ public class DashboardActivity extends ActionBarActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
         // populate the navigation drawer
-        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.app_name), "Accounts & Settings", BitmapFactory.decodeResource(getResources(), R.drawable.dropdown_icon));
+        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.mdl_app_name), "Accounts & Settings", BitmapFactory.decodeResource(getResources(), R.drawable.dropdown_icon));
     }
     @Override
     public void onNavigationDrawerItemSelected(int position) {

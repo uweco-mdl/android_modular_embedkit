@@ -1,11 +1,11 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -27,7 +28,7 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangePhoneNumber extends Fragment {
+public class ChangePhoneNumber extends MDLiveBaseFragment {
 
     public static ChangePhoneNumber newInstance(String response) {
 
@@ -40,10 +41,9 @@ public class ChangePhoneNumber extends Fragment {
 
     private EditText mPhoneNumber = null;
     private EditText mEmergencyContactNumber = null;
+    private final static int PHONENUMBER_LENGTH = 10;
 
     private String response;
-
-    private ProgressDialog pDialog;
 
     @Nullable
     @Override
@@ -54,30 +54,89 @@ public class ChangePhoneNumber extends Fragment {
         mPhoneNumber = (EditText) changePhoneNumberView.findViewById(R.id.phoneNumber);
         mEmergencyContactNumber = (EditText) changePhoneNumberView.findViewById(R.id.emergencyContactNumber);
 
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
         response = getArguments().getString("Response");
 
         if (response != null) {
             try {
                 JSONObject responseDetail = new JSONObject(response);
-                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "phone")) {
-                    mPhoneNumber.setText(responseDetail.getString(""));
-                } else {
-                    mPhoneNumber.setText(responseDetail.getString("phone"));
-                }
-                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "emergency_contact_number")) {
-                    mEmergencyContactNumber.setText(responseDetail.getString(""));
+
+                mPhoneNumber.setText(responseDetail.getString("phone"));
+                if (responseDetail.getString("emergency_contact_number").equalsIgnoreCase("null") || (responseDetail.getString("emergency_contact_number") == null)  || (TextUtils.isEmpty(responseDetail.getString("emergency_contact_number")))) {
+                    mEmergencyContactNumber.setText("");
                 } else {
                     mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
                 }
 
 
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence c, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+            }
+        });
+
+        mEmergencyContactNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).showTick();
+                    }
+                } else {
+                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                        ((MyAccountsHome) getActivity()).hideTick();
+                    }
+                }
+
+            }
+        });
+
         return changePhoneNumberView;
 
     }
@@ -108,6 +167,7 @@ public class ChangePhoneNumber extends Fragment {
                     parent.put("member", jsonObject);
                     loadProfileInfo(parent.toString());
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -123,7 +183,7 @@ public class ChangePhoneNumber extends Fragment {
     }
 
     public void loadProfileInfo(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -137,8 +197,7 @@ public class ChangePhoneNumber extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -146,7 +205,7 @@ public class ChangePhoneNumber extends Fragment {
                                 dialog.dismiss();
                             }
                         };
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -158,7 +217,7 @@ public class ChangePhoneNumber extends Fragment {
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             if (response != null) {
                 Toast.makeText(getActivity(), "Update phone number successfully", Toast.LENGTH_SHORT).show();

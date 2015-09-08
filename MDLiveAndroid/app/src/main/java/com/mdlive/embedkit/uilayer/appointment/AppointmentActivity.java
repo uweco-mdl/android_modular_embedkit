@@ -42,7 +42,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.appointment_details).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_appointment_details).toUpperCase());
         }
 
         if (savedInstanceState == null) {

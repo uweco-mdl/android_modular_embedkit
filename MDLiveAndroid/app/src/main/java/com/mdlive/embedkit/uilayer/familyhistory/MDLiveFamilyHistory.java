@@ -2,9 +2,8 @@ package com.mdlive.embedkit.uilayer.familyhistory;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,17 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.FamilyHistoryModel;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -39,37 +40,91 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class MDLiveFamilyHistory extends AppCompatActivity {
+public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     private EditText mFamilyHistoryOtherEditText;
 
-    private ProgressBar progressBar;
     private ProgressDialog pDialog = null;
 
-    JSONObject innerJsonObject;
-    JSONArray innerJsonArray;
-    JSONObject innerJSONArrayJsonObject;
-    String rootJsonObjectString;
-    HashMap<String, String> familyHistory_conditionValue = new HashMap<String, String>();
+    private JSONObject innerJsonObject;
+    private JSONArray innerJsonArray;
+    private String rootJsonObjectString;
+    private HashMap<String, String> familyHistory_conditionValue = new HashMap<String, String>();
 
-    String mFamilyHistoryOtherEditTextValue;
+    private String mFamilyHistoryOtherEditTextValue;
 
     private List<FamilyHistoryModel> familyHistoryList;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_family_histroy);
 
         findWidgetId();
         getFamilyHistoryServiceData();
 
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+
+        switch (position) {
+            // Home
+            case 0:
+                onHomeClicked();
+                break;
+
+            // See a Doctor
+            case 1:
+                onSeeADoctorClicked();
+                break;
+
+            // MDLive My Health
+            case 2:
+                startActivityWithClassName(MedicalHistoryActivity.class);
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                onMessageClicked();
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 7:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share
+            case 8:
+                shareApplication();
+                break;
+        }
     }
 
     private void findWidgetId() {
-
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-
         mFamilyHistoryOtherEditText = (EditText)findViewById(R.id.my_family_history_other_editText);
 
     }
@@ -83,7 +138,6 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.finish();
     }
 
     private void getFamilyHistoryServiceData() {
@@ -108,7 +162,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);
@@ -152,7 +206,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
      */
     public void setProgressBarVisibility()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        pDialog.show();
     }
 
     /*
@@ -160,7 +214,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
      */
     public void setInfoVisibilty()
     {
-        progressBar.setVisibility(View.GONE);
+        pDialog.dismiss();
     }
 
     public void saveAction(View view) {
@@ -215,7 +269,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);
@@ -333,7 +387,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
 
                 if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
                     // Do not set selection
-                    spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+                    spinner.setPrompt(getString(R.string.mdl_relationship));
                     Log.d("Hello", "I am here");
                 }
             } else {
@@ -344,7 +398,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
             checkBox.setText(familyHistoryList.get(position).condition);
 
             // Set Spinner values & selection listener
-            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.Relationship));
+            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                     (getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
             dataAdapter.setDropDownViewResource
@@ -365,7 +419,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
 
             if ("null".equalsIgnoreCase(familyHistoryList.get(position).relationship) || familyHistoryList.get(position).relationship == null) {
                 // Do not set selection
-                spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+                spinner.setPrompt(getString(R.string.mdl_relationship));
             } else {
                 int selectedPosition = 0;
                 for (int j = 0; j < relationShpList.size(); j++) {
@@ -376,7 +430,7 @@ public class MDLiveFamilyHistory extends AppCompatActivity {
                 }
                 spinner.setSelection(selectedPosition);
             }
-            spinner.setPrompt(getString(R.string.family_history_spinner_promt));
+            spinner.setPrompt(getString(R.string.mdl_relationship));
 
 
             scrollLinearLayout.addView(rootLinearLayout);

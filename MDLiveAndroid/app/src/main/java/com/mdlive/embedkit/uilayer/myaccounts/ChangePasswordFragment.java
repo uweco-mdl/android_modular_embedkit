@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -24,6 +22,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -35,7 +34,7 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 6/17/2015.
  */
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends MDLiveBaseFragment {
 
     public static ChangePasswordFragment newInstance() {
         final ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
@@ -52,7 +51,6 @@ public class ChangePasswordFragment extends Fragment {
     private ImageButton mNewPasswordShow = null;
     private ImageButton mConfirmPasswordShow = null;
 
-    private ProgressDialog pDialog;
     public static final String TAG = "CHANGE PASSWORD";
 
     @Nullable
@@ -70,9 +68,6 @@ public class ChangePasswordFragment extends Fragment {
         mCurrentPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.currentPasswordShow);
         mNewPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.newPasswordShow);
         mConfirmPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.confirmPasswordShow);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
 
         mCurrentPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -378,7 +373,7 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private void loadChangePasswordService(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -392,8 +387,7 @@ public class ChangePasswordFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -405,7 +399,7 @@ public class ChangePasswordFragment extends Fragment {
                             }
                         };
                         // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -417,7 +411,7 @@ public class ChangePasswordFragment extends Fragment {
 
     private void handleChangePasswordSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
             //Fetch Data From the Services
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
@@ -441,6 +435,9 @@ public class ChangePasswordFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        else {
+            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 }

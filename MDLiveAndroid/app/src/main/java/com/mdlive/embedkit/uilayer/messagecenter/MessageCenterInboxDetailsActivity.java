@@ -52,13 +52,13 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
                 Parcelable parcelable = getIntent().getExtras().getParcelable(DATA_TAG);
 
                 if (parcelable instanceof ReceivedMessage) {
-                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.inbox).toUpperCase());
+                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_inbox).toUpperCase());
                     getSupportFragmentManager().
                             beginTransaction().
                             add(R.id.container, MessageReceivedDetailsFragment.newInstance((ReceivedMessage) parcelable)).
                             commit();
                 } else if (parcelable instanceof SentMessage) {
-                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.sent).toUpperCase());
+                    ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_sent).toUpperCase());
                     getSupportFragmentManager().
                             beginTransaction().
                             add(R.id.container, MessageSentDetailsFragment.newInstance((SentMessage) parcelable)).

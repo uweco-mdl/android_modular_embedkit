@@ -56,7 +56,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     /**
@@ -162,7 +162,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
     }
 
     public void showHamburgerBell() {
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.help_and_support_title).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_help_and_support_title).toUpperCase());
 
         findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
         findViewById(R.id.toolbar_tick).setVisibility(View.GONE);
@@ -172,7 +172,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
     }
 
     public void showTickCross() {
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.new_question).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_new_question).toUpperCase());
 
         findViewById(R.id.toolbar_cross).setVisibility(View.VISIBLE);
         findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);

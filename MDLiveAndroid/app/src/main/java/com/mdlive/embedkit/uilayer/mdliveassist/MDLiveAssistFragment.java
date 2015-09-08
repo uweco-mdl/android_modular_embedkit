@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 
-import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -61,10 +59,10 @@ public class MDLiveAssistFragment extends Fragment {
             ImageView alertImage = (ImageView)view.findViewById(R.id.alertdialogimageview);
             alertImage.setImageResource(R.drawable.ic_launcher);
             TextView alertText = (TextView)view.findViewById(R.id.alertdialogtextview);
-            alertText.setText(getActivity().getText(R.string.call_text));
+            alertText.setText(getActivity().getText(R.string.mdl_call_text));
 
             builder.setView(view);
-            builder.setPositiveButton(getActivity().getText(R.string.call),
+            builder.setPositiveButton(getActivity().getText(R.string.mdl_call),
                     new DialogInterface.OnClickListener() {
 
                         @Override
@@ -72,7 +70,7 @@ public class MDLiveAssistFragment extends Fragment {
                             try {
 
                                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:" + getActivity().getText(R.string.callnumber)));
+                                intent.setData(Uri.parse("tel:" + getActivity().getText(R.string.mdl_callnumber)));
                                 getActivity().startActivity(intent);
 
                             } catch (Exception e) {
@@ -80,7 +78,7 @@ public class MDLiveAssistFragment extends Fragment {
                             }
                         }
                     });
-            builder.setNegativeButton(getActivity().getText(R.string.cancel), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getActivity().getText(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 

@@ -95,7 +95,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.choose_provicer));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provicer));
 
 
         initialiseData();
@@ -194,7 +194,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void locationAction(View v) {
         Intent intent = new Intent(MDLiveSearchProvider.this, MDLiveLocation.class);
-        intent.putExtra("activitycaller", getString(R.string.searchprovider));
+        intent.putExtra("activitycaller", getString(R.string.mdl_searchprovider));
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveSearchProvider.this);
     }
@@ -238,20 +238,19 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
-//        if (postParams.get("available_by") != null) {
             postParams.put("available_by", postParams.get("available_by"));
-//        }
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
         postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-//        if (edtSearch.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-            postParams.put("provider_name", "");
-//        }
-//        if (postParams.get("provider_type") != null) {
-//            postParams.put("provider_type", postParams.get("provider_type"));
+            postParams.put("provider_name",edtSearch.getText().toString() );
+        if (postParams.get("provider_type") != null) {
+            postParams.put("provider_type", postParams.get("provider_type"));
+
+        }else
+        {
             postParams.put("provider_type", "2");
-//        }
+        }
         LoadFilterSearchServices();
     }
 
@@ -260,8 +259,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
-        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
-        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
+        SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+        filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -328,7 +327,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
             }};
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String dependent_id=  settings.getString("dependent_id","");
@@ -584,7 +583,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                             if(errorMsg != null && errorMsg.length() != 0){
                                 (MDLiveSearchProvider.this).runOnUiThread(new Runnable() {
                                     public void run() {
-                                        MdliveUtils.showDialog(MDLiveSearchProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
+                                        MdliveUtils.showDialog(MDLiveSearchProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
@@ -595,7 +594,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                             }
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, null);
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     e.printStackTrace();

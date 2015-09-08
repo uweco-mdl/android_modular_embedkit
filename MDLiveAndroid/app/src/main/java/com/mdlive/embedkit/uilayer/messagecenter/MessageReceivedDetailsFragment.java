@@ -165,7 +165,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

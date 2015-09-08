@@ -125,6 +125,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
         mEmailConfirmationView = view.findViewById(R.id.dash_board_email_text_view);
+        mEmailConfirmationView.setVisibility(View.GONE);
 
         mNotificationView = view.findViewById(R.id.dash_board_notification_layout);
         if (mNotificationView != null) {
@@ -169,6 +170,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
             if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mEmailConfirmationView.setVisibility(View.GONE);
+            } else {
+                mEmailConfirmationView.setVisibility(View.VISIBLE);
             }
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();
@@ -193,7 +196,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.app_name), response.getString("message"));
+                    MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_app_name), response.getString("message"));
                 } catch (JSONException e) {
                     logE("Email Confirmation", "Email Confirmation : " + response.toString());
                     logE("Email Confirmation", "Email Confirmation : " + e.getMessage());
@@ -207,7 +210,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

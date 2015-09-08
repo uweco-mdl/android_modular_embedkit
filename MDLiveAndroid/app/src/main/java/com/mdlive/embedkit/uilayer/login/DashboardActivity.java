@@ -61,7 +61,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationDr
                 DashboardActivity.this,
                 drawerLayout,
                 toolbar,
-                R.string.ok,
+                R.string.mdl_ok_upper,
                 R.string.action_cancel_calls){
 
         };

@@ -48,10 +48,11 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_allergies_reported));
-        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_allergies_reported_msg));
-        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_allergy));
-        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_allergies_hint));
+        ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_procedure_img);
+        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_allergies_reported));
+        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.mdl_empty_allergies_reported_msg));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.mdl_add_allergy));
+        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.mdl_add_allergies_hint));
     }
 
 

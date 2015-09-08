@@ -4,10 +4,10 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="@string/mdl_app_name"
         android:largeHeap="true"
         android:theme="@style/CustomTheme">
-
+ 
         <activity
             android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveHealthModule"
             android:screenOrientation="portrait"
@@ -21,6 +21,7 @@
         <activity
             android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveMyRecords"
             android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/MDLive_Red_Theme"/>
 
         <activity
@@ -32,7 +33,6 @@
 
         <activity
             android:name=".uilayer.sav.MDLiveGetStarted"
-            android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -141,8 +141,7 @@
             <activity
             android:name=".uilayer.sav.VseeMainActivity"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_home" >
+            android:screenOrientation="portrait" >
             </activity>
         -->
 
@@ -153,17 +152,14 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".uilayer.WaitingRoom.MDLiveWaitingRoom"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.payment.MDLiveConfirmappointment"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.payment.MDLiveStartVisit"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
         <!--<activity
@@ -255,21 +251,18 @@
 
         <activity
             android:name=".uilayer.myhealth.ProviderDetailsActivity"
-            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
-            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>
 
         <activity
             android:name=".uilayer.myhealth.MedicalHistoryActivity"
-            android:label="@string/title_activity_provider_details"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"  >
         </activity>

@@ -114,6 +114,12 @@ public class MyAccountNewPinFragment extends Fragment implements TextWatcher, Vi
         dummyEditText6.setClickable(false);
         mPassCode6.setBackgroundResource(R.drawable.gray_circle);
 
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+
     }
 
     @Override
@@ -179,6 +185,16 @@ public class MyAccountNewPinFragment extends Fragment implements TextWatcher, Vi
                     default:
                         break;
                 }
+            }
+        }
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+        else{
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).showTick();
             }
         }
     }

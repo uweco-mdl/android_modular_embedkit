@@ -38,7 +38,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.behaviouralhealthhistory).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_behaviouralhealthhistory).toUpperCase());
             ((TextView) findViewById(R.id.headerTxt)).setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         }
         User user = null;

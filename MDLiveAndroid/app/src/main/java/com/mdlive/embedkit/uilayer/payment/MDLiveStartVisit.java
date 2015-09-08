@@ -31,7 +31,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
             }
@@ -39,9 +39,9 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.left_icon)).setImageResource(R.drawable.exit_icon);
-        ((ImageView) findViewById(R.id.right_icon)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.make_appointment_txt));
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt));
 
 
 
@@ -63,7 +63,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
 
     }
 
-    public void onLeftDrawerClicked(View v){
+    public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLiveStartVisit.this);
         onBackPressed();
     }
@@ -74,26 +74,11 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(MDLiveStartVisit.this);
     }
 
-    public void onRightDrawerClicked(View v) {
-        Intent intent = new Intent(MDLiveStartVisit.this, MDLiveWaitingRoom.class);
-        startActivity(intent);
-        MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
-    }
-
     public void rightBtnOnClick(View v) {
         Intent intent = new Intent(MDLiveStartVisit.this, MDLiveWaitingRoom.class);
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
     }
-
-
-    public void leftBtnOnClick(View v){
-        MdliveUtils.hideSoftKeyboard(MDLiveStartVisit.this);
-        onBackPressed();
-    }
-
-
-
 
 
     }

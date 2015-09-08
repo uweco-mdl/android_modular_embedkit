@@ -65,7 +65,7 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
             }
         } else if (questionEditText.getText().length() == 0) {
             if (getActivity() != null) {
-                MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.app_name), getActivity().getString(R.string.please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdl_please_enter_mandetory_fileds));
             }
         }
 
@@ -93,7 +93,7 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

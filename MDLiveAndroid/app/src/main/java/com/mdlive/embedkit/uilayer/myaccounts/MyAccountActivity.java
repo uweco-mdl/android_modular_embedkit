@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTabHost;
@@ -17,6 +18,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -33,6 +35,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
+        clearMinimizedTime();
 
         setTitle("");
 //        adapter= new MyAdapter(getSupportFragmentManager());
@@ -41,7 +44,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.account_details).toUpperCase());
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_account_details).toUpperCase());
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -68,14 +71,14 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
 
     @Override
     public void onBackPressed() {
-        return;
+        onHomeClicked();
     }
 
     private void setupViewPager(ViewPager viewPager) {
         final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.account));
-        adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.billing));
-        adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.family_history));
+        adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.mdl_account));
+        adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.mdl_billing));
+        adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.mdl_family_history));
         viewPager.setAdapter(adapter);
     }
 
@@ -146,10 +149,6 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         }
     }
 
-//    public void onChangePasswordClicked() {
-//        setFirstTabLayerLevel(1);
-//    }
-
     public void onChangePinClicked() {
         getSupportFragmentManager().
                 beginTransaction().
@@ -166,10 +165,10 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
                 commit();
     }
 
-//    public void setFirstTabLayerLevel(final int level) {
-//        adapter.setFirstTabLayerLevel(level);
-//        adapter.notifyDataSetChanged();
-//
-//        Toast.makeText(getBaseContext(), "Coming here", Toast.LENGTH_SHORT).show();
-//    }
+    private void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

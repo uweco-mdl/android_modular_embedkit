@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -84,10 +83,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         return intent;
     }
 
-    private ProgressDialog pDialog = null;
     private TextView locationTxt;/*,genderText*/
     private String DateTxt;
-    private String strPatientName,SavedLocation,strProviderId,assistFamilyMemmber,remainingFamilyMemberCount;
+    private String strPatientName,SavedLocation,strProviderId,assistFamilyMemmber;
+
+    private int remainingFamilyMemberCount;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
@@ -117,7 +117,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         //((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         //((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.get_started_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_get_started_txt));
 
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
@@ -129,16 +129,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
             Log.d("Hello", "Selected User : " + user.toString());
         }
-
-        if (user != null && user.mMode == User.MODE_DEPENDENT) {
-            Log.d("Hello", "Selected User : " + user.toString());
-            Log.d("Hello", "Selected User : " + "Dependent is called");
-            loadDependentUserInformationDetails(user.mId);
-        } else {
-            Log.d("Hello", "Selected User : " + "Parent is called");
-            loadUserInformationDetails();
-        }
-
 
 
         if (savedInstanceState == null) {
@@ -177,7 +167,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }else {
 
                 if (patientSpinner != null) {
-                    if ((dependentList.size() >= Integer.parseInt(remainingFamilyMemberCount)) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -196,7 +188,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             }
                         };
 
-                        MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), getResources().getString(R.string.call_to_add_another_child), StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
+                        MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_call_to_add_another_child), StringConstants.ALERT_DISMISS, StringConstants.ALERT_CALLNOW,
                                 negativeOnClickListener, positiveOnClickListener);
 
 
@@ -231,7 +223,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                 startActivity(intent);
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             } else {
-                                MdliveUtils.alert(pDialog, MDLiveGetStarted.this, getString(R.string.valid_phone_number));
+                                MdliveUtils.alert(getProgressDialog(), MDLiveGetStarted.this, getString(R.string.mdl_valid_phone_number));
                             }
 
                         }
@@ -278,13 +270,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     public void goToLocation(View v){
         Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
-        LocationIntent.putExtra("activitycaller", getString(R.string.getstarted));
+        LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
         startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
+        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
         Log.e("Long Location Nmae-->", longLocation);
-        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
+        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 
         if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
             locationTxt.setText(longLocation);
@@ -319,8 +311,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             loadUserInformationDetails();
         }else if(requestCode == IdConstants.REQUEST_LOCATION_CHANGE && resultCode == Activity.RESULT_OK){
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.florida));
-            SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl));
+            String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+            SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
             Log.e("Result Location Nmae-->",SavedLocation);
             locationTxt.setText(longNameLocation);
             SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
@@ -351,7 +343,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 dependentName = spinner.getSelectedItem().toString();
                 if(list!=null){
-                    if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
+                    if( remainingFamilyMemberCount<1)
                     {
                         if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
                         {
@@ -374,9 +366,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                     dialogInterface.dismiss();
                                     patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
 
+
+
                                 }
                             };
-                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.app_name), getString(R.string.plscalAlert_txt),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.mdl_app_name), getString(R.string.mdl_plscalAlert_txt, assistFamilyMemmber),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
                                     negativeOnClickListener,positiveOnClickListener );
                         }else
                         {
@@ -449,7 +443,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             }
                         };
 
-                        MdliveUtils.showDialog(MDLiveGetStarted.this, "",getString(R.string.adult_share_account), getString(R.string.Ok), "", positiveOnClickListener, null);
+                        MdliveUtils.showDialog(MDLiveGetStarted.this, "",getString(R.string.mdl_adult_share_account), getString(R.string.mdl_Ok), "", positiveOnClickListener, null);
                     }
                 }
 
@@ -489,14 +483,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                 dialog.dismiss();
                             }
                         };
-                        MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveGetStarted.this);
                     }
                 }
 
             }
         };
 
-        MDLivePendigVisitService getApponitmentsService=new MDLivePendigVisitService(MDLiveGetStarted.this,pDialog);
+        MDLivePendigVisitService getApponitmentsService=new MDLivePendigVisitService(MDLiveGetStarted.this,getProgressDialog());
         getApponitmentsService.getUserPendingHistory(successListener,errorListner);
     }
 
@@ -555,7 +549,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
@@ -574,6 +568,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
+                if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                    Log.d("Hello", "Selected User : " + user.toString());
+                    Log.d("Hello", "Selected User : " + "Dependent is called");
+                    loadDependentUserInformationDetails(user.mId);
+                } else {
+                    Log.d("Hello", "Selected User : " + "Parent is called");
+                    loadUserInformationDetails();
+                }
                 handleproviderTypeSuccessResponse(response);
             }
         };
@@ -583,7 +585,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
         ProviderTypeList services = new ProviderTypeList(MDLiveGetStarted.this, null);
         services.getProviderType("", successCallBackListener, errorListener);
@@ -611,7 +613,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
@@ -634,7 +636,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
         ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
         ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
@@ -654,21 +656,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-          assistFamilyMemmber = response.getString("assist_phone_number");
-          remainingFamilyMemberCount = response.getString("remaining_family_members_limit");
-            Log.e("remainingFamilyMemberCount",remainingFamilyMemberCount);
+            assistFamilyMemmber = response.getString("assist_phone_number");
+            remainingFamilyMemberCount = response.getInt("remaining_family_members_limit");
             JSONObject personalInfo = response.getJSONObject("personal_info");
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
 
-                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
-                    if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
+                    if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
                         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
-                        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                         editor.commit();
-                        locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                        locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                     }
                 }
 
@@ -873,7 +874,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     // Something went wrong!
                 }
                 //Default first item coming from the service will set here.it will change into dynamic
-               // when we click the other items in the dialog.
+                // when we click the other items in the dialog.
                 ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
                 strProviderId=providerTypeIdList.get(0);
             }
@@ -928,6 +929,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
+            remainingFamilyMemberCount = 0;
             Log.e("dependent user info",response.toString());
             dependentList.clear();
             PatientList.clear();
@@ -942,8 +944,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
 
             if(state.length()<3) {
-                List<String> stateArr = Arrays.asList(getResources().getStringArray(R.array.stateName));
-                List<String> stateIdArr = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+                List<String> stateArr = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+                List<String> stateIdArr = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
                 for (int l = 0; l < stateIdArr.size(); l++) {
                     if (state.equals(stateIdArr.get(l))) {
                         state = stateArr.get(l);
@@ -952,14 +954,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 }
             }
 
-            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.stateName)).size();i++){
-                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.stateCode)).get(i))){
+            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
+                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
                     SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
-                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                     editor.commit();
-                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.stateName)).get(i));
+                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                 }
             }
 
@@ -1021,7 +1023,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveGetStarted.this).runOnUiThread(new Runnable() {
                                 public void run() {
-                                    MdliveUtils.showDialog(MDLiveGetStarted.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.ok), null, new DialogInterface.OnClickListener() {
+                                    MdliveUtils.showDialog(MDLiveGetStarted.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
@@ -1031,17 +1033,17 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, null);
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
-                    MdliveUtils.connectionTimeoutError(pDialog, MDLiveGetStarted.this);
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveGetStarted.this);
                     e.printStackTrace();
                 }
             }};
-        ChooseProviderServices services = new ChooseProviderServices(MDLiveGetStarted.this, pDialog);
+        ChooseProviderServices services = new ChooseProviderServices(MDLiveGetStarted.this, getProgressDialog());
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         showProgress();
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.fl)), strProviderId, successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl)), strProviderId, successCallBackListener, errorListener);
     }
 
     /**
@@ -1108,6 +1110,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     @Override
     public void onBackPressed() {
+        onHomeClicked();
     }
 
     private void showHamburgerTick() {

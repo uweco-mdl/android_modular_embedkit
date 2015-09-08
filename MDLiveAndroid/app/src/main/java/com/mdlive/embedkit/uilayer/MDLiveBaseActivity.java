@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,15 +28,13 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
     public static final String RIGHT_MENU = "right_menu";
 
     public View progressBarLayout;
+    private ProgressDialog mProgressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-//        }
+        mProgressDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
     @Override
@@ -108,18 +107,20 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
      * Show progressbar that is used in activity when service calls.
      */
     public void showProgress() {
-        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
-            progressBarLayout.setVisibility(View.VISIBLE);
-        }
+//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
+//            progressBarLayout.setVisibility(View.VISIBLE);
+//        }
+        mProgressDialog.show();
     }
 
     /**
      * Hide progressbar that is used in activity when service call ends.
      */
     public void hideProgress() {
-        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
-            progressBarLayout.setVisibility(View.GONE);
-        }
+//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
+//            progressBarLayout.setVisibility(View.GONE);
+//        }
+        mProgressDialog.hide();
     }
 
     /*
@@ -129,13 +130,13 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.home_dialog_title));
+        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
 
         // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.home_dialog_text));
+        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
 
         // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     Intent intent = new Intent();
@@ -154,7 +155,7 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
@@ -184,7 +185,12 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 
     public void setProgressBar(View progressBarLayout){
         this.progressBarLayout=progressBarLayout;
+        if (progressBarLayout != null) {
+            progressBarLayout.setVisibility(View.GONE);
+        }
     }
 
-
+    public ProgressDialog getProgressDialog() {
+        return mProgressDialog;
+    }
 }

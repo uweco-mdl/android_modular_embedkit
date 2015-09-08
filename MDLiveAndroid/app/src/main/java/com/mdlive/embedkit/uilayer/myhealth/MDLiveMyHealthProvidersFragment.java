@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.myhealth;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
@@ -35,7 +36,11 @@ import org.json.JSONObject;
  * Use the {@link MDLiveMyHealthProvidersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MDLiveMyHealthProvidersFragment extends Fragment {
+public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
+    private ListView mListView;
+    private ProviderAdapter mProviderAdapter;
+    private boolean isFirstTime = true;
+    private View mHeaderView;
 
     /**
      * Use this factory method to create a new instance of
@@ -65,10 +70,6 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mdlive_my_health_providers, null, false);
     }
-    private ProgressDialog pDialog;
-
-    private ListView mListView;
-    private ProviderAdapter mProviderAdapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,29 +83,15 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
-        if (mListView != null) {
-            mProviderAdapter = new ProviderAdapter(view.getContext(), R.layout.new_adapter_layout, android.R.id.text1);
-            View header = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
-            header.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
-                    startActivity(PrimaryCarePhysician);
-                }
-            });
-            mListView.addHeaderView(header);
-            mListView.setAdapter(mProviderAdapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    i -= mListView.getHeaderViewsCount();
-                    final MyProvider provider = mProviderAdapter.getItem(i);
-                    Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
-                    intent.putExtra("ProviderID", String.valueOf(provider.providerId));
-                    getActivity().startActivity(intent);
-                }
-            });
-        }
+        mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
+        mHeaderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
+                startActivity(PrimaryCarePhysician);
+            }
+        });
+        view.findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
     }
 
     @Override
@@ -112,18 +99,25 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
         super.onStart();
     }
 
+    /**
+     *
+     * Update the screen on returning back to the screen.
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
+        if(getView()!=null  && !isFirstTime) {
+            getMyHealthProvider();
+        }
+        isFirstTime = false;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
-        fetchMessageprovider();
+        getMyHealthProvider();
     }
 
     @Override
@@ -156,15 +150,19 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
         super.onDetach();
     }
 
-    private void fetchMessageprovider() {
-        pDialog.show();
-
+    /**
+     *
+     * This function will get the list of providers. Moreover, this will also get
+     * the primary care physician details, if any.
+     *
+     *
+     */
+    private void getMyHealthProvider() {
+        showProgressDialog();
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
-
-
+                hideProgressDialog();
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
 
@@ -193,20 +191,44 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
                     primaryCarePhysician.practice = primaryPhysicianJSONObject.getString("practice");
                     primaryCarePhysician.prefix = primaryPhysicianJSONObject.getString("prefix");
                     primaryCarePhysician.lastName = primaryPhysicianJSONObject.getString("last_name");
+                    provider.primaryCarePhysician = primaryCarePhysician;
                 } catch (JSONException e) {
                     provider.primaryCarePhysician = null;
                 }
 
+                if (mListView != null) {
+                    if(mListView.getAdapter()!= null){
+                        if(mListView.getHeaderViewsCount()>0) {
+                            mListView.removeHeaderView(mHeaderView);
+                        }
+                        mListView.setAdapter(null);
+                    }
+
+                    mProviderAdapter = new ProviderAdapter(getView().getContext(), R.layout.new_adapter_layout, android.R.id.text1);
+
+                    if(provider.primaryCarePhysician!=null && provider.primaryCarePhysician.firstName!=null && provider.primaryCarePhysician.lastName!=null){
+                        mHeaderView.findViewById(R.id.AddPcpText).setVisibility(View.GONE);
+                        mHeaderView.findViewById(R.id.PcpValueLl).setVisibility(View.VISIBLE);
+                        ((TextView)mHeaderView.findViewById(R.id.ProviderName)).setText(provider.primaryCarePhysician.firstName + " " + provider.primaryCarePhysician.lastName);
+                    }
+
+
+                    mListView.addHeaderView(mHeaderView);
+                    mListView.setAdapter(mProviderAdapter);
+                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            i -= mListView.getHeaderViewsCount();
+                            final MyProvider provider = mProviderAdapter.getItem(i);
+                            Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
+                            intent.putExtra("ProviderID", String.valueOf(provider.providerId));
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                }
+
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
-                    Log.e("Response - ", provider.myProviders.size() + " -- ");
-                    if(provider.myProviders.size()>0){
-                        try {
-                            getView().findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
                     mProviderAdapter.notifyDataSetChanged();
                 }
                 Log.e("Response - ", provider.toString());
@@ -215,16 +237,17 @@ public class MDLiveMyHealthProvidersFragment extends Fragment {
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
+
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.getProvider(successListener, errorListener);
     }
 

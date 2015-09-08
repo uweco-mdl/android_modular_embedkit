@@ -39,6 +39,7 @@ public class MDLiveWaitingRoomNew extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_new_room);
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
         updateUiForProviderStatus(1);
         getProviderStatus();
     }
@@ -61,7 +62,7 @@ public class MDLiveWaitingRoomNew extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoomNew.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoomNew.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveWaitingRoomNew.this);
@@ -93,7 +94,7 @@ public class MDLiveWaitingRoomNew extends Activity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoomNew.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoomNew.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveWaitingRoomNew.this);

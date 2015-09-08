@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -103,6 +104,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
         mUpcomingAppoinmantTextView = (TextView) view.findViewById(R.id.notification_fragment_upcoming_appoinment_text_view);
         mUpcomingAppoinmantListView = (ListView) view.findViewById(R.id.notification_fragment_upcoming_appoinment_list_view);
 
+        view.findViewById(R.id.notification_button).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     @Override
@@ -152,26 +159,30 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     public void setNotification(final UserBasicInfo userBasicInfo) {
-        final Notifications notification = userBasicInfo.getNotifications();
+        try {
+            final Notifications notification = userBasicInfo.getNotifications();
 
-        if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-            mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.messages, notification.getMessages(), notification.getMessages()));
-        } else {
-            mMessagesTextView.setVisibility(View.GONE);
+            if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
+            } else {
+                mMessagesTextView.setVisibility(View.GONE);
+            }
+
+            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
+
+            final StringBuilder store = new StringBuilder();
+
+            if (notification.getPharmacyDetails() != null) {
+                store.append(notification.getPharmacyDetails().getStoreName() + "\n");
+                store.append(notification.getPharmacyDetails().getAddress1() + "\n");
+                store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
+            } else {
+                store.append(getActivity().getString(R.string.mdl_no_prefered_store));
+            }
+            mPreferedStoreTextView.setText(store.toString());
+        } catch (Exception e) {
+
         }
-
-        mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
-
-        final StringBuilder store = new StringBuilder();
-
-        if (notification.getPharmacyDetails() != null) {
-            store.append(notification.getPharmacyDetails().getStoreName() + "\n");
-            store.append(notification.getPharmacyDetails().getAddress1() + "\n");
-            store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
-        } else {
-            store.append(getActivity().getString(R.string.no_prefered_store));
-        }
-        mPreferedStoreTextView.setText(store.toString());
     }
 
     private void loadPendingAppoinments() {
@@ -228,7 +239,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 }
             }
         } else {
-            mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.no_upcoming_appoinments));
+            mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
         }
     }

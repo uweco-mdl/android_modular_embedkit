@@ -1,36 +1,26 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Provider;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
@@ -40,12 +30,9 @@ import org.json.JSONObject;
 /**
  * Created by unnikrishnan_b on 8/22/2015.
  */
-public class ProviderDetailsFragment extends Fragment {
+public class ProviderDetailsFragment extends MDLiveBaseFragment {
     private static final String PROVIDER_TAG = "provider";
 
-    private ProgressDialog pDialog;
-    private ListView mListView;
-    private ProviderAdapter mProviderAdapter;
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv;
     private LinearLayout aboutmeLl, educationLl, boardCertificationsLl,providerImageHolder,hosaffiliationsLl, languagesLl, specialitiesLl;
     private CircularNetworkImageView ProfileImg;
@@ -138,8 +125,6 @@ public class ProviderDetailsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
         getProviderDetails();
     }
 
@@ -174,12 +159,12 @@ public class ProviderDetailsFragment extends Fragment {
     }
 
     private void getProviderDetails() {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     Log.e("Response pdetails", response.toString());
                     JsonParser parser = new JsonParser();
@@ -258,15 +243,15 @@ public class ProviderDetailsFragment extends Fragment {
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final ProviderDetailServices providerDetails = new ProviderDetailServices(getActivity(), pDialog);
+        final ProviderDetailServices providerDetails = new ProviderDetailServices(getActivity(), getProgressDialog());
         Log.d("Hello", "Provider Id :" + getArguments().getString(PROVIDER_TAG));
         providerDetails.getProviderDetails(getArguments().getString(PROVIDER_TAG),successListener, errorListener);
     }

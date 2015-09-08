@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -22,7 +22,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 
 public class MDLiveSummary extends MDLiveBaseActivity {
-    private ProgressDialog pDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setVisibility(View.INVISIBLE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.summary).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_summary).toUpperCase());
 
         setProgressBar(findViewById(R.id.progressBar));
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
@@ -49,11 +48,23 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         SharedPreferences docPreferences =this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String docName = docPreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES,"");
 //        txtDocName.setText(docName);
-        pDialog = MdliveUtils.getProgressDialog(getString(R.string.please_wait), this);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
-        ((TextView)findViewById(R.id.NextStepsContentTv)).setText(java.text.MessageFormat.format(getResources().getString(R.string.next_steps_content_txt) ,new String[]{shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+"'"}));
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView)findViewById(R.id.ques)).setText(
+                getResources().getString(R.string.mdl_summary_michelle_txt,sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""))
+                );
+    }
+
+    public void questionBoxOnClick(View v){
+        if(((LinearLayout) findViewById(R.id.questionContainer)).getVisibility() == View.VISIBLE){
+            ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.down_arrow_icon);
+            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.GONE);
+        }else{
+            ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.right_arrow_icon);
+            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.VISIBLE);
+        }
     }
 
     public void leftBtnOnClick(View v){
@@ -74,10 +85,10 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
             }
         };
-        SummaryService summaryService = new SummaryService(this, pDialog );
+        SummaryService summaryService = new SummaryService(this, getProgressDialog());
         summaryService.sendRating(rating,successListener,errorListner );
     }
 
@@ -114,10 +125,10 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
             }
         };
-        SummaryService summaryService = new SummaryService(this, pDialog );
+        SummaryService summaryService = new SummaryService(this, getProgressDialog());
         summaryService.sendRating(rating,successListener,errorListner );
     }
 }

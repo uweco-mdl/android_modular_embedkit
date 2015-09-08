@@ -1,13 +1,12 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -17,12 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.RecordAdapter;
@@ -31,19 +29,16 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Records;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
+import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalImageService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -53,12 +48,9 @@ import java.util.Date;
 public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     private static final int PICK_PHOTO_INTENT = 1;
     private static final int TAKE_PHOTO_INTENT = 2;
-
-    private ProgressDialog pDialog;
-
-    private ListView mListView;
+    private static ListView mListView;
     private View mEmptyView;
-    private RecordAdapter mRecordAdapter;
+    private static RecordAdapter mRecordAdapter;
 
     public static MessageMyRecordsFragment newInstance() {
         final MessageMyRecordsFragment messageMyRecordsFragment = new MessageMyRecordsFragment();
@@ -97,27 +89,108 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
             mRecordAdapter = new RecordAdapter(view.getContext(), R.layout.adapter_record, android.R.id.text1);
 
             mListView.setAdapter(mRecordAdapter);
+            File dataDir = null;
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                dataDir = new File(Environment.getExternalStorageDirectory(), "Download");
+                if(!dataDir.isDirectory()) {
+                    dataDir.mkdirs();
+                }
+            }
 
+            if(!dataDir.isDirectory()) {
+                dataDir = getActivity().getFilesDir();
+            }
+
+
+            final File finalDataDir = dataDir;
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                public void onItemClick(AdapterView<?> adapterView, View view,final int i, long l) {
 
-                    new DownloadFileFromURL().execute(mRecordAdapter.getItem(i).downloadLink,mRecordAdapter.getItem(i).docName);
-
+                    final File tempFile = new File(finalDataDir,mRecordAdapter.getItem(i).docName);
+//                    new DownloadFileFromURL().execute(mRecordAdapter.getItem(i).downloadLink,mRecordAdapter.getItem(i).docName);
+                    final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject responObj) {
+                            hideProgressDialog();
+                            try {
+                                String base64String = null;
+                                JsonParser parser = new JsonParser();
+                                if (responObj.optString("file_stream").length() != 0 && responObj.optString("file_type").length() != 0) {
+                                    base64String = responObj.optString("file_stream");
+                                    FileOutputStream fos = null;
+                                    try {
+                                        if (base64String != null) {
+                                            fos = new FileOutputStream(tempFile);
+                                            byte[] decodedString = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT);
+                                            fos.write(decodedString);
+                                            fos.flush();
+                                            fos.close();
+                                        }
+                                        Uri path = Uri.fromFile(tempFile);
+                                        Intent openIntent = new Intent(Intent.ACTION_VIEW);
+                                        String docType = getDocumentType(mRecordAdapter.getItem(i).docName);
+                                        openIntent.setDataAndType(path, docType);
+                                        getActivity().startActivity(openIntent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        if (fos != null) {
+                                            fos = null;
+                                        }
+                                    }
+                                }
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    showProgressDialog();
+                    DownloadMedicalImageService service = new DownloadMedicalImageService(getActivity(),getProgressDialog());
+                    service.doDownloadImagesRequest(mRecordAdapter.getItem(i).id,successListener,errorListener);
                 }
             });
         }
 
-        final Button button = (Button) view.findViewById(R.id.addPhoto);
-//        if (button != null) {
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    showChosserDialog();
-//                }
-//            });
-//        }
+
     }
+
+
+    String getDocumentType(String urlName) {
+        String type = "";
+        if((MdliveUtils.getExtention(urlName).equalsIgnoreCase("gif") || MdliveUtils.getExtention(urlName).equalsIgnoreCase("png")
+                || MdliveUtils.getExtention(urlName).equalsIgnoreCase("jpg") || MdliveUtils.getExtention(urlName).equalsIgnoreCase("jpeg"))) {
+            type = "image/*";
+        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("pdf")) {
+            type = "application/pdf";
+        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("doc") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("docx"))) {
+            type = "application/msword";
+        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("xls") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("xlsx"))) {
+            type = "application/vnd.ms-excel";
+        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("pptx") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("ppt"))) {
+            type = "application/vnd.ms-powerpoint";
+        }
+        else
+        {
+            MdliveUtils.alert(getProgressDialog(),getActivity(),getString(R.string.mdl_no_compitable_app));
+        }
+
+        return type;
+    }
+
+    final NetworkErrorListener errorListener = new NetworkErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            hideProgressDialog();
+            try {
+                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                final String errorResponse = new String(error.networkResponse.data);
+                Log.e("MDLIVE ERROR", "Error : " + errorResponse);
+            } catch (Exception e) {
+                MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+            }
+        }
+    };
 
     @Override
     public void onStart() {
@@ -132,8 +205,6 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         fetchMyRecords();
         //uploadDocument();
@@ -217,12 +288,12 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
     }
 
     private void fetchMyRecords() {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 logE("", response.toString());
 
                 try {
@@ -238,7 +309,9 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
                 final Gson gson = new Gson();
                 final Records records = gson.fromJson(response.toString(), Records.class);
 
+
                 if (mRecordAdapter != null) {
+                    mRecordAdapter.clear();
                     mRecordAdapter.addAll(records.records);
                     mRecordAdapter.notifyDataSetChanged();
                 }
@@ -247,49 +320,37 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.getMyRecords(successListener, errorListener);
     }
 
     private void uploadDocument(final String params) {
-        pDialog.show();
+        showProgressDialog();
 
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                pDialog.dismiss();
-
-                try{
-                    String message = response.getString("message");
-                    Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-
+                hideProgressDialog();
                 fetchMyRecords();
-//                final Gson gson = new Gson();
-//                final Message message = gson.fromJson(response.toString(), Message.class);
             }
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
 
                 final String errorResponse = new String(error.networkResponse.data);
@@ -297,17 +358,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
             }
         };
 
-//        final CustomerDocument customerDocument = new CustomerDocument();
-//        customerDocument.documentTypeId = 2;
-//        customerDocument.fileName = fileName;
-//        customerDocument.document = new String("Hello");
-//
-//        final Gson gson = new Gson();
-//        final String params = gson.toJson(customerDocument);
-//
-//        Log.d("Params", "Params : " + params);
-
-        final MessageCenter messageCenter = new MessageCenter(getActivity(), pDialog);
+        final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.uploadDocument(successListener, errorListener, params);
     }
 
@@ -339,63 +390,4 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment {
         builder.show();
     }
 
-
-    class DownloadFileFromURL extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressDialog();
-        }
-
-
-        @Override
-        protected String doInBackground(String... f_url) {
-            int count;
-            try {
-
-                Log.i("image_URL",f_url[0]);
-                URL url = new URL(f_url[0]);
-                URLConnection conection = url.openConnection();
-                conection.connect();
-
-                int lenghtOfFile = conection.getContentLength();
-
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
-
-                OutputStream output = new FileOutputStream("/sdcard/"+f_url[1]);
-
-                byte data[] = new byte[1024];
-
-                long total = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-
-                output.close();
-                input.close();
-
-            } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
-            }
-
-            return f_url[1];
-        }
-
-
-        @Override
-        protected void onPostExecute(String file_url) {
-
-            hideProgressDialog();
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse("file://" + "/sdcard/"+file_url), "image/*");
-            startActivity(intent);
-        }
-    }
 }

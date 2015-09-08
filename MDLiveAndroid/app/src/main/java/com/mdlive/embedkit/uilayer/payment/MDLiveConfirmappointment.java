@@ -45,7 +45,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.confirm_appointment_txt).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_confirm_appointment_txt).toUpperCase());
 
 
 
@@ -87,18 +87,18 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         providerName = sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, "");
-        ((TextView)findViewById(R.id.txtProfileName)).setText(providerName);
+        ((TextView)findViewById(R.id.txtProfileName)).setText("Dr. "+providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
         ((TextView)findViewById(R.id.txtproviderType)).setText(providerType);
-        consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType);
-        consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+        consultationType = sharedpreferences.getString(PreferenceConstants.ACCESS_MODE, "");
+        ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType+" Consultation");
+        consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+
 
         if(!consultationDate.isEmpty()&&!Time.isEmpty())
         {
             ((TextView)findViewById(R.id.txtDate)).setText(consultationDate);
-        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
             ((TextView)findViewById(R.id.txtTime)).setText(Time);
         }else
         {
@@ -114,7 +114,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         formatDualString(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView)findViewById(R.id.amountInDollar)).setText(getString(R.string.dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
+        ((TextView)findViewById(R.id.amountInDollar)).setText(getString(R.string.mdl_dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
         String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
         ((CircularNetworkImageView)findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
     }
@@ -130,7 +130,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             formatText = formatText.substring(0, formatText.length()-1);
         }
         if(formatText.length() >= 7){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
+            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+formatText.substring(6, formatText.length());
         }else if(formatText.length() >= 4){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
         }else if(formatText.length() == 3 && hasParenthesis){

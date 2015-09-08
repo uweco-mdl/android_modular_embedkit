@@ -43,10 +43,11 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_procedure));
-        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_procedures_reported));
-        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_procedure_reported_msg));
-        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_procedures_text));
+        ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_medication_img);
+        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.mdl_add_procedure));
+        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_procedures_reported));
+        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.mdl_empty_procedure_reported_msg));
+        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.mdl_add_procedures_text));
     }
 
 

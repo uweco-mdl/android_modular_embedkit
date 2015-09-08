@@ -49,11 +49,11 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-
-        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.no_medications_reported));
-        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.empty_medications_reported_msg));
-        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.add_medication));
-        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.add_new_medication));
+        ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_medication_img);
+        ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_medications_reported));
+        ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.mdl_empty_medications_reported_msg));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.mdl_add_medication));
+        ((TextView) findViewById(R.id.addItemTv)).setText(getResources().getString(R.string.mdl_add_new_medication));
     }
 
 

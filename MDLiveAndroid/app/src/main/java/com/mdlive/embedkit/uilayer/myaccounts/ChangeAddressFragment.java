@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
@@ -22,6 +24,10 @@ import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by venkataraman_r on 8/21/2015.
@@ -40,12 +46,14 @@ public class ChangeAddressFragment  extends Fragment {
 
     private EditText mAddressLine1 = null;
     private EditText mAddressLine2 = null;
-    private EditText mState = null;
+    private TextView mState = null;
     private EditText mZip = null;
     private EditText mCity = null;
     private String response;
-
+    private List<String> stateIds = new ArrayList<String>();
+    private List<String> stateList = new ArrayList<String>();
     private ProgressDialog pDialog;
+    private RelativeLayout mStateLayout;
 
     @Nullable
     @Override
@@ -55,32 +63,41 @@ public class ChangeAddressFragment  extends Fragment {
 
         mAddressLine1 = (EditText) changeAddressView.findViewById(R.id.addressLine1);
         mAddressLine2 = (EditText) changeAddressView.findViewById(R.id.addressLine2);
-        mState = (EditText) changeAddressView.findViewById(R.id.state);
+        mState = (TextView) changeAddressView.findViewById(R.id.state);
         mZip = (EditText) changeAddressView.findViewById(R.id.zip);
         mCity = (EditText) changeAddressView.findViewById(R.id.city);
+        mStateLayout = (RelativeLayout)changeAddressView.findViewById(R.id.stateLayout);
 
         pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
         response = getArguments().getString("Response");
 
-        if(response != null){
-        try {
-            JSONObject responseDetail = new JSONObject(response);
+        mStateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initializeStateDialog();
+            }
+        });
 
-            mAddressLine1.setText(responseDetail.getString("address1"));
-                if (MdliveUtils.checkJSONResponseHasString(responseDetail, "responseDetail")) {
+        if (response != null) {
+            try {
+                JSONObject responseDetail = new JSONObject(response);
+
+                mAddressLine1.setText(responseDetail.getString("address1"));
+
+                if ((responseDetail.getString("address2").equalsIgnoreCase("null")) || (responseDetail.getString("address2") == null)  || (TextUtils.isEmpty(responseDetail.getString("address2")))) {
                     mAddressLine2.setText("");
-                }else
-                {
+                } else {
                     mAddressLine2.setText(responseDetail.getString("address2"));
                 }
-            mState.setText(responseDetail.getString("state"));
-            mCity.setText(responseDetail.getString("country"));
-            mZip.setText(responseDetail.getString("zipcode"));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                mState.setText(responseDetail.getString("state"));
+                mCity.setText(responseDetail.getString("country"));
+                mZip.setText(responseDetail.getString("zipcode"));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return changeAddressView;
 
@@ -92,13 +109,14 @@ public class ChangeAddressFragment  extends Fragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
-                if (isEmpty(mAddressLine1.getText().toString()) && isEmpty(mAddressLine2.getText().toString()) && isEmpty(mState.getText().toString())
+
+                if (isEmpty(mAddressLine1.getText().toString())&& isEmpty(mState.getText().toString())
                         && isEmpty(mCity.getText().toString()) && isEmpty(mZip.getText().toString())) {
 
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("phone", "pin");
+                    jsonObject.put("phone", responseDetail.getString("phone"));
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", mState.getText().toString().trim());
                     jsonObject.put("city", mCity.getText().toString().trim());
@@ -179,5 +197,26 @@ public class ChangeAddressFragment  extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void initializeStateDialog() {
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+
+        final String[] stringArray = stateList.toArray(new String[stateList.size()]);
+
+        builder.setItems(stringArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                String SelectedText = stateIds.get(i);
+                mState.setText(SelectedText);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 }

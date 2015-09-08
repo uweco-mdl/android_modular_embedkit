@@ -99,24 +99,24 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
 
         final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
         if (header != null) {
-            header.setText(R.string.no_messages_inbox_header);
+            header.setText(R.string.mdl_no_messages_inbox_header);
         }
 
         final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
         if (details != null) {
-            details.setText(R.string.no_messages_inbox_details);
+            details.setText(R.string.mdl_no_messages_inbox_details);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchReceivedMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
@@ -127,9 +127,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        mPageCount = 1;
-        mMessageReceivedAdapter.clear();
     }
 
     @Override
@@ -140,6 +137,9 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        mPageCount = 1;
+        mMessageReceivedAdapter.clear();
     }
 
     @Override
@@ -175,7 +175,7 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
                 handleError();
 
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -187,13 +187,20 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     }
 
     private void handleSucess(final JSONObject response) {
+        logD("Hello", "Page Number : " + mPageCount);
+        logD("Hello", response.toString());
         final Gson gson = new Gson();
         final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
         if (newReceivedMessages.receivedMessages != null && newReceivedMessages.receivedMessages.size() > 0) {
             if (mMessageReceivedAdapter != null) {
                 mMessageReceivedAdapter.addAll(newReceivedMessages.receivedMessages);
                 mMessageReceivedAdapter.notifyDataSetChanged();
-                mPageCount += 1;
+                if (newReceivedMessages.receivedMessages.size() < NUMBER_OF_ITEMS_PER_PAGE) {
+                    /* Do Not increase the Page number, Remove the Scroll listener */
+                    mListView.setOnScrollListener(null);
+                } else {
+                    mPageCount += 1;
+                }
             }
 
             mListView.setVisibility(View.VISIBLE);

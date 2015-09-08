@@ -1,11 +1,8 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
 import android.app.DatePickerDialog;
-import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -58,8 +54,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     private RadioButton mFamilyYesRadioButton;
     private RadioButton mFamilyNoRadioButton;
     private Spinner mCounsellingSpinner;
-
-//    private Button mSaveButton;
 
     List<String> relationShpList;
 
@@ -133,7 +127,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
         mCounsellingSpinner = (Spinner) view.findViewById(R.id.behavioural_health_counselling_spinner);
 //        final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.counseling_preference));
-        relationShpList = Arrays.asList(getResources().getStringArray(R.array.counseling_preference));
+        relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_counseling_preference));
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                 (view.getContext(), android.R.layout.simple_spinner_item, relationShpList);
         dataAdapter.setDropDownViewResource

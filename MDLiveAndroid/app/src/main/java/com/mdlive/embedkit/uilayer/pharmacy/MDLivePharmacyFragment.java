@@ -131,7 +131,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
             }
         };
         callPharmacyService(responseListener, errorListener);

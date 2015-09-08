@@ -1,12 +1,10 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +21,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -39,7 +38,7 @@ import java.util.Date;
 /**
  * Created by venkataraman_r on 6/22/2015.
  */
-public class CreditCardInfoFragment extends Fragment {
+public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
     private EditText mCardNumber = null;
     private EditText mSecurityCode = null;
@@ -50,9 +49,6 @@ public class CreditCardInfoFragment extends Fragment {
     private EditText mCity = null;
     private EditText mState = null;
     private EditText mZip = null;
-
-    SharedPreferences sharedpreferences;
-    private ProgressDialog pDialog;
 
     private String cardNumber = null;
     private String securityCode = null;
@@ -112,10 +108,6 @@ public class CreditCardInfoFragment extends Fragment {
         changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         changeAddress.setChecked(false);
-//        ScrollView scrollView = (ScrollView)billingInformation.findViewById(R.id.scrollView);
-//        scrollView.smoothScrollBy(0, scrollView.getScrollY() + 10);
-//        sharedpreferences = getActivity().getSharedPreferences("MDLIVE_BILLING", Context.MODE_PRIVATE);
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
 
 
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
@@ -131,8 +123,6 @@ public class CreditCardInfoFragment extends Fragment {
                 try {
                     Log.i("response", response);
                     JSONObject myProfile = new JSONObject(response);
-//                Log.i("response",jsonObject.toString());
-//                JSONObject myProfile = jsonObject.getJSONObject("billing_information");
                     country = myProfile.getString("billing_country");
                     cardExpirationYear = myProfile.getString("cc_expyear");
                     nameOnCard = myProfile.getString("billing_name");
@@ -140,7 +130,6 @@ public class CreditCardInfoFragment extends Fragment {
                     securityCode = myProfile.getString("cc_cvv2");
                     cardNumber = myProfile.getString("cc_number");
                     state = myProfile.getString("billing_state");
-//            mobile = myProfile.getString("cc_type_id");
                     address2 = myProfile.getString("billing_address2");
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
@@ -148,10 +137,17 @@ public class CreditCardInfoFragment extends Fragment {
 
                     mCardNumber.setText(cardNumber);
                     mSecurityCode.setText(securityCode);
-                    mCardExpirationMonth.setText(cardExpirationMonth);
+                    mCardExpirationMonth.setText(cardExpirationMonth+"/"+cardExpirationYear);
                     mNameOnCard.setText(nameOnCard);
                     mAddress1.setText(address1);
-                    mAddress2.setText(address2);
+
+                    if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
+                        address2="";
+                        mAddress2.setText(address2);
+                    } else {
+                        mAddress2.setText(address2);
+                    }
+
                     mCity.setText(city);
                     mState.setText(state);
                     mZip.setText(zip);
@@ -175,10 +171,6 @@ public class CreditCardInfoFragment extends Fragment {
         });
 
 
-
-
-
-
         changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -189,7 +181,11 @@ public class CreditCardInfoFragment extends Fragment {
                     try {
                         JSONObject myProfile = new JSONObject(name);
                         mAddress1.setText(myProfile.getString("address1"));
-                        mAddress2.setText(myProfile.getString("address2"));
+                        if (myProfile.getString("address2").equalsIgnoreCase("null") || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
+                            mAddress2.setText("");
+                        } else {
+                            mAddress2.setText(myProfile.getString("address2"));
+                        }
                         mCity.setText(myProfile.getString("country"));
                         mState.setText(myProfile.getString("state"));
                         mZip.setText(myProfile.getString("zipcode"));
@@ -209,7 +205,7 @@ public class CreditCardInfoFragment extends Fragment {
     }
     private void showDatePicker() {
         final Dialog d = new Dialog(getActivity());
-        d.setTitle(getString(R.string.expiration_month_year));
+        d.setTitle(getString(R.string.mdl_expiration_month_year));
         d.setContentView(R.layout.monthly_picker_dialog);
         Button buttonDone = (Button) d.findViewById(R.id.set_button);
         final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
@@ -250,6 +246,7 @@ public class CreditCardInfoFragment extends Fragment {
         yearPicker.setMinValue(minimumYear);
         yearPicker.setWrapSelectorWheel(false);
         yearPicker.setValue(minimumYear);
+
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,10 +255,12 @@ public class CreditCardInfoFragment extends Fragment {
                     month = monthPicker.getValue() - 1;
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    cardExpirationMonth = String.valueOf(month);
+                    cardExpirationYear = String.valueOf(year);
                     mCardExpirationMonth.setText(dateFormat.format(expiryDate.getTime()));
                     d.dismiss();
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         });
@@ -283,10 +282,11 @@ public class CreditCardInfoFragment extends Fragment {
         address2 = mAddress2.getText().toString();
         city = mCity.getText().toString();
         state = mState.getText().toString();
+        cardExpirationMonth = mCardExpirationMonth.getText().toString();
         country = "1";
         zip = mZip.getText().toString();
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationYear) && isEmpty(country)) {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -322,7 +322,7 @@ public class CreditCardInfoFragment extends Fragment {
     }
 
     private void loadBillingInfo(String params) {
-        pDialog.show();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -336,12 +336,11 @@ public class CreditCardInfoFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                pDialog.dismiss();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }
         };
@@ -357,13 +356,10 @@ public class CreditCardInfoFragment extends Fragment {
 
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+            hideProgressDialog();
 
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
-//            SharedPreferences.Editor editor = sharedpreferences.edit();
-//            editor.putBoolean("Add_CREDIT_CARD", true);
-//            editor.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

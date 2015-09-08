@@ -4,7 +4,6 @@ package com.mdlive.embedkit.uilayer.payment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,7 +51,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private int year, month;
     private String promoCode = null;
     private WebView HostedPCI;
-    protected static ProgressDialog pDialog;
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
     private String finalAmout = "";
@@ -75,7 +73,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.payment_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_payment_txt));
 
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
@@ -171,7 +169,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     String params = getBillingPutParams(billingResponse);
                     updateCardDetails(params);
                 } else {
-                    MdliveUtils.alert(pDialog, MDLivePayment.this, jobj.getString("status"));
+                    MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
                 }
 
             } catch (Exception e) {
@@ -187,7 +185,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     private void showDatePicker() {
         final Dialog d = new Dialog(this);
-        d.setTitle(getString(R.string.expiration_month_year));
+        d.setTitle(getString(R.string.mdl_expiration_month_year));
         d.setContentView(R.layout.monthly_picker_dialog);
         Button buttonDone = (Button) d.findViewById(R.id.set_button);
         final NumberPicker monthPicker = (NumberPicker) d.findViewById(R.id.month_picker);
@@ -283,7 +281,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 try {
                     dismissDialog();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -291,7 +289,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         };
 
-        ConfirmAppointmentServices billingUpdateService = new ConfirmAppointmentServices(MDLivePayment.this, pDialog);
+        ConfirmAppointmentServices billingUpdateService = new ConfirmAppointmentServices(MDLivePayment.this, getProgressDialog());
         billingUpdateService.doUpdateBillingInformation(params, successListener, errorListener);
 
     }
@@ -418,7 +416,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     dismissDialog();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
                 } catch (Exception e) {
                     dismissDialog();
                     e.printStackTrace();
@@ -458,7 +456,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
         // set dialog message
 
-        alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.apply), new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                     applyPromoCode(editText.getText().toString());
@@ -467,7 +465,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
             }
-        }).setNegativeButton(getString(R.string.CANCEL), new DialogInterface.OnClickListener() {
+        }).setNegativeButton(getString(R.string.mdl_cancel_upper), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
@@ -503,13 +501,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dismissDialog();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, pDialog);
+                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
 
 
             }
         };
 
-        ConfirmAppointmentServices promocodeService = new ConfirmAppointmentServices(MDLivePayment.this, pDialog);
+        ConfirmAppointmentServices promocodeService = new ConfirmAppointmentServices(MDLivePayment.this, getProgressDialog());
         promocodeService.doGetPromocode(promoCode, successListener, errorListener);
 
     }
@@ -574,7 +572,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                 HostedPCI.loadUrl("javascript:tokenizeForm()");
             } else {
-                MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_fill_required_fields));
+                MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, getString(R.string.mdl_please_fill_required_fields));
 
             }
         }

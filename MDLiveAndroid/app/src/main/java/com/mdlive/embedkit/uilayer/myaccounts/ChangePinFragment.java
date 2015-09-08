@@ -117,6 +117,12 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack(null);
+
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
     }
 
     @Override
@@ -182,6 +188,17 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
                     default:
                         break;
                 }
+            }
+        }
+
+        if (mPassCode7.getText().length() < 6) {
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+        }
+        else{
+            if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+                ((MyAccountsHome) getActivity()).showTick();
             }
         }
     }
@@ -251,7 +268,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -300,4 +317,5 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             Toast.makeText(getActivity(), "create pin and confirm pin must be same", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

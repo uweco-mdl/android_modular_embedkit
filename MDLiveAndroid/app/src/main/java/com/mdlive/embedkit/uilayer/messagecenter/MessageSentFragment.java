@@ -100,24 +100,24 @@ public class MessageSentFragment extends MDLiveBaseFragment {
 
         final TextView header = (TextView) view.findViewById(R.id.message_center_empty_header_text_view);
         if (header != null) {
-            header.setText(R.string.no_messages_sent_header);
+            header.setText(R.string.mdl_no_messages_sent_header);
         }
 
         final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
         if (details != null) {
-            details.setText(R.string.no_messages_sent_details);
+            details.setText(R.string.mdl_no_messages_sent_details);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        fetchSentMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchSentMessages(mPageCount, NUMBER_OF_ITEMS_PER_PAGE);
     }
 
     @Override
@@ -128,9 +128,6 @@ public class MessageSentFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        mPageCount = 1;
-        mMessageSentAdapter.clear();
     }
 
     @Override
@@ -141,6 +138,9 @@ public class MessageSentFragment extends MDLiveBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        mPageCount = 1;
+        mMessageSentAdapter.clear();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class MessageSentFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 handleError();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -186,14 +186,21 @@ public class MessageSentFragment extends MDLiveBaseFragment {
     }
 
     private void handleSucess(final JSONObject response) {
+        logD("Hello", "Page Number : " + mPageCount);
+        logD("Hello", response.toString());
+
         final Gson gson = new Gson();
-        logD("Test", response.toString());
         final SentMessages newSentMessages =  gson.fromJson(response.toString(), SentMessages.class);
         if (newSentMessages.sentMessages != null && newSentMessages.sentMessages.size() > 0) {
             if (mMessageSentAdapter != null) {
                 mMessageSentAdapter.addAll(newSentMessages.sentMessages);
                 mMessageSentAdapter.notifyDataSetChanged();
-                mPageCount += 1;
+                if (newSentMessages.sentMessages.size() < NUMBER_OF_ITEMS_PER_PAGE) {
+                    /* Do Not increase the Page number, Remove the Scroll listener */
+                    mListView.setOnScrollListener(null);
+                } else {
+                    mPageCount += 1;
+                }
             }
 
             mListView.setVisibility(View.VISIBLE);

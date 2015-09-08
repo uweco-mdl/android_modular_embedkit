@@ -81,6 +81,8 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView.findViewById(R.id.thumpImage);
         }
 
+
+        imageView.setImageBitmap(null);
         if (myPhotosList != null && !TextUtils.isEmpty((String) myPhotosList.get(position).get("download_link"))) {
             if (ApplicationController.getInstance().getBitmapLruCache() != null &&
                     ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id") + "") == null) {
@@ -95,8 +97,9 @@ public class ImageAdapter extends BaseAdapter {
                 }
             } else if (ApplicationController.getInstance().getBitmapLruCache().getBitmap(myPhotosList.get(position).get("id") + "") != null) {
                 imageView.setImageBitmap(ApplicationController.getInstance().getBitmapLruCache().get(myPhotosList.get(position).get("id") + ""));
+            }else{
+                imageView.setImageBitmap(null);
             }
-
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -63,44 +63,51 @@ import java.util.LinkedList;
  */
 public class MDLiveHealthModule extends MDLiveBaseActivity {
 
-    public ArrayList<String> existingConditions;
+//    public ArrayList<String> existingConditions;
 
     public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE};
     protected TYPE_CONSTANT type;
-    public boolean isPerformingAutoSuggestion = false;
+    public boolean isPerformingAutoSuggestion = false, allowtoDisplayContents = true;
     public AutoCompleteTextView conditionText;
     public boolean isUpdateMode = false;
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
-    public AlertDialog procedureNameDialog, procedureYearDialog;
+    public AlertDialog procedureNameDialog, procedureYearDialog, dosageDialog, timesDialog, modeDialog;
     public TextView surgeryName, surgeryYear;
+    public EditText dosageTxt;
+    String[] timesList = new String[]{
+            "Once","Twice","Three times","Four times", "Five times", "Six times"
+    };
+    String[] modesList =  new String[]{
+            "Hourly","Daily","Weekly","Monthly"
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_add_health);
 
-        existingConditions = new ArrayList<>();
+        //existingConditions = new ArrayList<>();
 
         if(getIntent() != null && getIntent().hasExtra("type")){
             if(getIntent().getStringExtra("type").equals("condition")){
                 type = TYPE_CONSTANT.CONDITION;
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_medical_condition));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_condition_with_eg_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_medical_condition));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_condition_with_eg_hint));
             }else if(getIntent().getStringExtra("type").equals("allergy")){
                 type = TYPE_CONSTANT.ALLERGY;
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_allergy));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_allergies_with_eg_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_allergy));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_allergies_with_eg_hint));
             }else if(getIntent().getStringExtra("type").equals("medication")){
                 type = TYPE_CONSTANT.MEDICATION;
                 ((LinearLayout) findViewById(R.id.medicationCredentailsLayout)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_medication));
-                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.add_medication_hint));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_medication));
+                ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_medication_hint));
             }else if(getIntent().getStringExtra("type").equals("procedure")){
                 type = TYPE_CONSTANT.PROCEDURE;
                 ((EditText) findViewById(R.id.conditionText)).setVisibility(View.GONE);
                 ((LinearLayout) findViewById(R.id.procedureLayout)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.add_procedure));
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_procedure));
             }
         }
 
@@ -133,6 +140,31 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             }else{
                 isUpdateMode = false;
             }
+        }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
+            initializeMedicationViews();
+            if(getIntent() != null && getIntent().hasExtra("Name")){
+                conditionText.setText(getIntent().getStringExtra("Name"));
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                isUpdateMode = true;
+            }else{
+                isUpdateMode = false;
+            }
+            if(getIntent() != null && getIntent().hasExtra("Dosage")){
+                ((EditText) findViewById(R.id.dosageTxt)).setText(getIntent().getStringExtra("Dosage"));
+            }
+            if(getIntent() != null && getIntent().hasExtra("Frequency")){
+                for(String times : timesList){
+                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(times.toLowerCase())){
+                        ((TextView) findViewById(R.id.timesTxt)).setText(times);
+                    }
+                }
+                for(String modes : modesList){
+                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(modes.toLowerCase())){
+                        ((TextView) findViewById(R.id.modeTxt)).setText(modes);
+                    }
+                }
+            }
+            conditionText.addTextChangedListener(getEditTextWatcher(conditionText));
         }else{
             if(getIntent() != null && getIntent().hasExtra("Content")){
                 isUpdateMode = true;
@@ -154,6 +186,59 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             procedureYearDialog.show();
         }
     }
+
+    public void timesTxtOnClick(View view){
+        if(timesDialog != null){
+            timesDialog.show();
+        }
+    }
+
+    public void modeTxtOnClick(View view){
+        if(modeDialog != null){
+            modeDialog.show();
+        }
+    }
+
+
+    public void initializeMedicationViews() {
+        dosageTxt = ((EditText) findViewById(R.id.dosageTxt));
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(nameView);
+        ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
+
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timesList);
+        nameListView.setAdapter(nameAdapter);
+        nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        timesDialog = alertDialog.create();
+        ((TextView)findViewById(R.id.timesTxt)).setText(timesList[0]);
+        ((TextView)findViewById(R.id.modeTxt)).setText(modesList[0]);
+        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        alertDialog.setView(yearView);
+        ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,modesList);
+        yearListView.setAdapter(yearAdapter);
+        yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        modeDialog = alertDialog.create();
+        nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.timesTxt)).setText(timesList[position]);
+                timesDialog.dismiss();
+            }
+        });
+        yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)findViewById(R.id.modeTxt)).setText(modesList[position]);
+                modeDialog.dismiss();
+            }
+        });
+    }
+
 
     public void initializeViews() {
         surgeryName = ((TextView) findViewById(R.id.surgeryName));
@@ -182,8 +267,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView)findViewById(R.id.surgeryName)).setText(procedureNameList.get(position));
                 procedureNameDialog.dismiss();
-                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
-                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
                     ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 }
             }
@@ -194,8 +279,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView)findViewById(R.id.surgeryYear)).setText(procedureYearList.get(position));
                 procedureYearDialog.dismiss();
-                if(!surgeryName.getText().toString().equals(getString(R.string.select_surgery_txt))
-                        && !surgeryYear.getText().equals(getString(R.string.year_txt))){
+                if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                        && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
                     ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 }
             }
@@ -329,7 +414,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     saveBtnAction();
                 }
             }
-            }else{
+        }else{
             if (conditionText.getText() != null && conditionText.getText().toString().length() > 0) {
                 if(isUpdateMode){
                     updateNewConditionsOrAllergies(conditionText.getText().toString(), getIntent().getStringExtra("Id"));
@@ -370,20 +455,41 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 Log.e("Post Body ", new Gson().toJson(allergies));
                 saveNewConditionsOrAllergies(new Gson().toJson(allergies));
             }
+        }else if(type == TYPE_CONSTANT.MEDICATION){
+            LinkedHashSet<String> listToSet = new LinkedHashSet<String>();
+            ArrayList<String> duplicationCollection = MDLiveCommonConditionsMedicationsActivity.conditionsCollection;
+            listToSet.addAll(duplicationCollection);
+            listToSet.add(conditionText.getText().toString().toLowerCase());
+            if (((duplicationCollection.size() + 1) == listToSet.size())) {
+                HashMap<String, HashMap<String, String>> medications = new HashMap<>();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("name", conditionText.getText().toString());
+                map.put("current_status", "Yes");
+                if(dosageTxt.getText() != null && dosageTxt.getText().toString().length() != 0){
+                    map.put("dosage", dosageTxt.getText().toString());
+                }else{
+                    map.put("dosage", "");
+                }
+                map.put("frequency", ((TextView)findViewById(R.id.timesTxt)).getText().toString() +" "+
+                        ((TextView)findViewById(R.id.modeTxt)).getText().toString());
+                medications.put("medication", map);
+                Log.e("Post Body ", new Gson().toJson(medications));
+                saveNewConditionsOrAllergies(new Gson().toJson(medications));
+            }else{
+                MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_medication_already_exist));
+            }
         }else{
             LinkedHashSet<String> listToSet = new LinkedHashSet<String>();
-            listToSet.addAll(existingConditions);
-            listToSet.add(conditionText.getText().toString());
-            if (((existingConditions.size() + 1) == listToSet.size())) {
+            ArrayList<String> duplicationCollection = MDLiveCommonConditionsMedicationsActivity.conditionsCollection;
+            listToSet.addAll(duplicationCollection);
+            listToSet.add(conditionText.getText().toString().toLowerCase());
+            if (((duplicationCollection.size() + 1) == listToSet.size())) {
                 saveNewConditionsOrAllergies(conditionText.getText().toString());
             } else {
-                String name = (type == TYPE_CONSTANT.CONDITION) ? "condition" : (type == TYPE_CONSTANT.ALLERGY) ? "allergy" : "medication";
                 if (type == TYPE_CONSTANT.CONDITION) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.condition_already_exist));
-                } else if (type == TYPE_CONSTANT.MEDICATION) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.medication_already_exist));
-                } else if (type == TYPE_CONSTANT.ALLERGY) {
-                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.allergy_already_exist));
+                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_condition_already_exist));
+                }else if (type == TYPE_CONSTANT.ALLERGY) {
+                    MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_allergy_already_exist));
                 }
             }
         }
@@ -449,7 +555,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             for (int i = 0; i < conditionArray.length(); i++) {
                 conditionList.add(conditionArray.getJSONObject(i).getString("name"));
             }
-            if (conditionList.size() > 0 && atv.hasFocus()) {
+            if (conditionList.size() > 0 && atv.hasFocus() && allowtoDisplayContents) {
                 if (atv.getAdapter() != null) {
                     ((ArrayAdapter<String>) atv.getAdapter()).clear();
                 }
@@ -481,6 +587,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                allowtoDisplayContents = true;
                 if ((conditonEt.getText().toString()).startsWith(" ")) {
                     conditonEt.getText().clear();
                 }
@@ -527,6 +634,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     public void onClick(View view) {
                         atv.setText(text.getText().toString());
                         atv.dismissDropDown();
+                        allowtoDisplayContents = false;
                         atv.setAdapter(null);
                     }
                 });
@@ -564,7 +672,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             services.addMedicalConditionsRequest(successCallBackListener, errorListener, text);
         }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
             AddMedicationService services = new AddMedicationService(MDLiveHealthModule.this, null);
-            services.doLoginRequest(successCallBackListener, errorListener,text);
+            services.addMedicationRequest(successCallBackListener, errorListener,text);
         }else if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             if(isUpdateMode){
                 ProcedureUpdateServices services = new ProcedureUpdateServices(MDLiveHealthModule.this, null);
@@ -621,11 +729,23 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             MedicalConditionUpdateServices services = new MedicalConditionUpdateServices(MDLiveHealthModule.this, null);
             services.updateConditionRequest(conditionId, new Gson().toJson(postBody), successCallBackListener, errorListener);
         }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
-            condition.put("name", conditionName);
+            HashMap<String, HashMap<String, String>> medications = new HashMap<>();
+            HashMap<String, String> map = new HashMap<>();
+            map.put("name", conditionText.getText().toString());
+            map.put("current_status", "Yes");
+            if(dosageTxt.getText() != null && dosageTxt.getText().toString().length() != 0){
+                map.put("dosage", dosageTxt.getText().toString());
+            }else{
+                map.put("dosage", "");
+            }
+            map.put("frequency", ((TextView)findViewById(R.id.timesTxt)).getText().toString() +" "+
+                    ((TextView)findViewById(R.id.modeTxt)).getText().toString());
+            medications.put("medication", map);
+          /*  condition.put("name", conditionName);
             condition.put("id", conditionId);
-            postBody.put("medication", condition);
+            postBody.put("medication", condition);*/
             UpdateMedicationService services = new UpdateMedicationService(MDLiveHealthModule.this, null);
-            services.doLoginRequest(conditionId, new Gson().toJson(postBody), successCallBackListener, errorListener);
+            services.doLoginRequest(conditionId, new Gson().toJson(medications), successCallBackListener, errorListener);
         }else if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             condition.put("name", conditionName);
             condition.put("surgery_year", conditionId);

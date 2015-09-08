@@ -95,7 +95,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
 
         final TextView details = (TextView) view.findViewById(R.id.message_center_empty_details_text_view);
         if (details != null) {
-            details.setText(R.string.no_messages_compose_details);
+            details.setText(R.string.mdl_no_messages_compose_details);
         }
 
         mListLayout.setVisibility(View.INVISIBLE);
@@ -104,12 +104,12 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        fetchMessageprovider();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchMessageprovider();
     }
 
     @Override
@@ -120,8 +120,6 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        mProviderAdapter.clear();
     }
 
     @Override
@@ -132,6 +130,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+        mProviderAdapter.clear();
     }
 
     @Override
@@ -166,7 +165,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
                 handleError();
 
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

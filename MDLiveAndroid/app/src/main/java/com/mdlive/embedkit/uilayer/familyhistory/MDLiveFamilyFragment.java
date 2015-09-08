@@ -1,9 +1,7 @@
 package com.mdlive.embedkit.uilayer.familyhistory;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,11 +15,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.FamilyHistoryModel;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -44,23 +42,18 @@ import java.util.List;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MDLiveFamilyFragment extends Fragment {
+public class MDLiveFamilyFragment extends MDLiveBaseFragment {
+    EditText mFamilyHistoryOtherEditText;
+    private JSONObject innerJsonObject;
+    private JSONArray innerJsonArray;
+    private JSONObject innerJSONArrayJsonObject;
+    private String rootJsonObjectString;
+    private HashMap<String, String> familyHistory_conditionValue = new HashMap<String, String>();
 
-    protected static EditText mFamilyHistoryOtherEditText;
+    String mFamilyHistoryOtherEditTextValue;
+    private View view;
 
-    private ProgressBar progressBar;
-    private ProgressDialog pDialog = null;
-
-    JSONObject innerJsonObject;
-    JSONArray innerJsonArray;
-    JSONObject innerJSONArrayJsonObject;
-    String rootJsonObjectString;
-    HashMap<String, String> familyHistory_conditionValue = new HashMap<String, String>();
-
-    protected String mFamilyHistoryOtherEditTextValue;
-    View view;
-
-    protected List<FamilyHistoryModel> familyHistoryList;
+    List<FamilyHistoryModel> familyHistoryList;
 
     /**
      * An interface for defining the callback method
@@ -96,16 +89,12 @@ public class MDLiveFamilyFragment extends Fragment {
     }
 
     private void findWidgetId() {
-
-        progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
-
         mFamilyHistoryOtherEditText = (EditText)view.findViewById(R.id.my_family_history_other_editText);
-
+        getFamilyHistoryOtherEditTextEvent();
     }
 
     private void getFamilyHistoryServiceData() {
-
-        setProgressBarVisibility();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -123,23 +112,23 @@ public class MDLiveFamilyFragment extends Fragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
-        FamilyHistoryServices services = new FamilyHistoryServices(getActivity() , pDialog);
+        FamilyHistoryServices services = new FamilyHistoryServices(getActivity() , getProgressDialog());
         services.getFamilyHistoryServices(responseListener, errorListener);
 
     }
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            setInfoVisibilty();
+            hideProgressDialog();
             Log.d("FamilyHistory Res", response.toString());
 
             JSONObject resObj = new JSONObject(response.toString());
@@ -164,27 +153,9 @@ public class MDLiveFamilyFragment extends Fragment {
 
     }
 
-    /*
-     * set visible for the progress bar
-     */
-    public void setProgressBarVisibility()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    /*
-     * set visible for the details view layout
-     */
-    public void setInfoVisibilty()
-    {
-        progressBar.setVisibility(View.GONE);
-    }
-
-
 
     protected void getFamilyHistoryUpdateServiceData(final JSONObject requestJSON) {
-
-        setProgressBarVisibility();
+        showProgressDialog();
 
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -203,23 +174,23 @@ public class MDLiveFamilyFragment extends Fragment {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setInfoVisibilty();
+                hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
-                    MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
 
-        FamilyHistoryUpdateServices familyHistoryUpdateServices = new FamilyHistoryUpdateServices(getActivity(), pDialog);
+        FamilyHistoryUpdateServices familyHistoryUpdateServices = new FamilyHistoryUpdateServices(getActivity(), getProgressDialog());
         familyHistoryUpdateServices.postFamilyHistoryUpdateServices(requestJSON, responseListener, errorListener);
 
     }
 
     private void handleUpdateSuccessResponse(JSONObject response) {
         try {
-            setInfoVisibilty();
+            hideProgressDialog();
             getActivity().finish();
             Log.d("FamilyHistoryUpdateRes", response.toString());
         }catch(Exception e){
@@ -263,9 +234,11 @@ public class MDLiveFamilyFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
-                Log.d("FamilyHistoryOtherValue", mFamilyHistoryOtherEditTextValue.toString());
-
+                if(mFamilyHistoryOtherEditText.getText().toString().isEmpty()){
+                    view.findViewById(R.id.my_family_history_other_btn).setClickable(false);
+                } else {
+                    view.findViewById(R.id.my_family_history_other_btn).setClickable(true);
+                }
             }
         });
 
@@ -319,7 +292,7 @@ public class MDLiveFamilyFragment extends Fragment {
             checkBox.setText(familyHistoryList.get(position).condition);
 
             // Set Spinner values & selection listener
-            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.Relationship));
+            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                     (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
             dataAdapter.setDropDownViewResource
@@ -352,5 +325,81 @@ public class MDLiveFamilyFragment extends Fragment {
 
             scrollLinearLayout.addView(rootLinearLayout);
         }
+    }
+
+    void addNewHistoryData(){
+        EditText otherConditionEt = (EditText)view.findViewById(R.id.my_family_history_other_editText);
+        final FamilyHistoryModel model = new FamilyHistoryModel(null, otherConditionEt.getText().toString(), FamilyHistoryModel.YES);
+        Log.d("FamilyHistoryResVal = ", model.toString());
+        familyHistoryList.add(model);
+        // Inflate Row
+        final LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
+        final View rootLinearLayout = inflater.inflate(R.layout.mdlive_familyhistory_addrows, null, false);
+
+        // Inflate & get reference of Views to be used
+        final CheckBox checkBox = (CheckBox) rootLinearLayout.findViewById(R.id.my_family_history_checkBox);
+        final Spinner spinner = (Spinner) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinner);
+        final CardView spinnerCv = (CardView) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinnerCv);
+
+        // Set Checkbox values & check changed listener
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    model.active = FamilyHistoryModel.YES;
+                    spinnerCv.setVisibility(View.VISIBLE);
+                } else {
+                    model.active = FamilyHistoryModel.NO;
+                    spinnerCv.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        if (FamilyHistoryModel.YES.toString().equalsIgnoreCase(model.active)) {
+            checkBox.setChecked(true);
+            spinnerCv.setVisibility(View.VISIBLE);
+
+            if ("null".equalsIgnoreCase(model.relationship) || model.relationship == null) {
+            }
+        } else {
+            checkBox.setChecked(false);
+            spinnerCv.setVisibility(View.GONE);
+        }
+
+        checkBox.setText(model.condition);
+
+        // Set Spinner values & selection listener
+        final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
+        dataAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int selectedIndex, long id) {
+                model.relationship = relationShpList.get(selectedIndex);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        if ("null".equalsIgnoreCase(model.relationship) || model.relationship == null) {
+        } else {
+            int selectedPosition = 0;
+            for (int j = 0; j < relationShpList.size(); j++) {
+                if (model.relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
+                    selectedPosition = j;
+                    break;
+                }
+            }
+            spinner.setSelection(selectedPosition);
+        }
+        final LinearLayout scrollLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_family_scroll_view);
+        scrollLinearLayout.addView(rootLinearLayout);
     }
 }

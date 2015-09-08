@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -47,7 +45,7 @@ public class MDLiveBehaviouralHealthHistory extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_health_history);
         initializeUI();
-        pDialog = MdliveUtils.getProgressDialog("Loading...", this);
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
         conditonMap = new HashMap<>();
         getUserHealthHistories();
 
@@ -110,7 +108,7 @@ public class MDLiveBehaviouralHealthHistory extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveBehaviouralHealthHistory.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(MDLiveBehaviouralHealthHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveBehaviouralHealthHistory.this);

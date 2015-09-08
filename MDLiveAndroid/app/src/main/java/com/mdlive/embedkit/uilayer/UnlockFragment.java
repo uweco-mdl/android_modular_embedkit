@@ -187,7 +187,7 @@ public class UnlockFragment extends MDLiveBaseFragment implements TextWatcher, V
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -206,7 +206,7 @@ public class UnlockFragment extends MDLiveBaseFragment implements TextWatcher, V
             if (response.getString("message").equalsIgnoreCase("Success")) {
                 getActivity().finish();
             } else {
-                showToast(R.string.pin_creation_failed);
+                showToast(R.string.mdl_pin_creation_failed);
             }
 
         } catch (Exception e) {

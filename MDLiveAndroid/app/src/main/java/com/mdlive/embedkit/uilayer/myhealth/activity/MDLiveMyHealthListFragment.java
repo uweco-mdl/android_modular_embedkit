@@ -4,7 +4,6 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyHistory;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by sanjibkumar_p on 7/28/2015.
  */
-public class MDLiveMyHealthListFragment extends Fragment {
+public class MDLiveMyHealthListFragment extends MDLiveBaseFragment {
     public static MDLiveMyHealthListFragment newInstance() {
         MDLiveMyHealthListFragment fragment = new MDLiveMyHealthListFragment();
         return fragment;
@@ -47,10 +47,10 @@ public class MDLiveMyHealthListFragment extends Fragment {
         if (listView != null) {
             final List<ListItem> items = new ArrayList<ListItem>();
 
-            items.add(new ListItem(view.getContext().getString(R.string.family_history), R.drawable.ic_launcher ,"completed"));
-            items.add(new ListItem(view.getContext().getString(R.string.behaviouralhealthhistory), R.drawable.ic_launcher,"completed"));
-            items.add(new ListItem(view.getContext().getString(R.string.LifeStyle), R.drawable.ic_launcher,"completed"));
-            items.add(new ListItem(view.getContext().getString(R.string.spinnerdisplay), R.drawable.ic_launcher,"completed"));
+            items.add(new ListItem(view.getContext().getString(R.string.mdl_family_history), R.drawable.ic_launcher ,"completed"));
+            items.add(new ListItem(view.getContext().getString(R.string.mdl_behaviouralhealthhistory), R.drawable.ic_launcher,"completed"));
+            items.add(new ListItem(view.getContext().getString(R.string.mdl_LifeStyle), R.drawable.ic_launcher,"completed"));
+            items.add(new ListItem(view.getContext().getString(R.string.mdl_spinnerdisplay), R.drawable.ic_launcher,"completed"));
 
             final MyHealthListAdapter adapter = new MyHealthListAdapter(view.getContext(), R.layout.adapter_health_list, items);
             listView.setAdapter(adapter);
@@ -61,14 +61,14 @@ public class MDLiveMyHealthListFragment extends Fragment {
                     final ListItem item = adapter.getItem(position);
 
                     Intent intent = null;
-                    if (item.mString.equals(view.getContext().getString(R.string.family_history))) {
+                    if (item.mString.equals(view.getContext().getString(R.string.mdl_family_history))) {
                         intent = new Intent(view.getContext(), MDLiveFamilyHistory.class);
-                    } else if (item.mString.equals(view.getContext().getString(R.string.behaviouralhealthhistory))) {
+                    } else if (item.mString.equals(view.getContext().getString(R.string.mdl_behaviouralhealthhistory))) {
                         intent = new Intent(view.getContext(), MDLiveBehaviouralHealthActivity.class);
-                    } else if (item.mString.equals(view.getContext().getString(R.string.LifeStyle))) {
+                    } else if (item.mString.equals(view.getContext().getString(R.string.mdl_LifeStyle))) {
                         intent = new Intent(view.getContext(), MDLiveLifestyleActivity.class);
                     }
-                    else if (item.mString.equals(view.getContext().getString(R.string.spinnerdisplay))) {
+                    else if (item.mString.equals(view.getContext().getString(R.string.mdl_spinnerdisplay))) {
                         //intent = new Intent(view.getContext(), SpinnerDropDownActivity.class);
                     }
                     else {

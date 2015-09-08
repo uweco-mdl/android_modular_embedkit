@@ -155,12 +155,12 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
             MdliveUtils.hideKeyboard(getActivity(), (View)mSubjectEditText);
 
             if (mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() < 1) {
-                MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandetory_fileds));
                 return;
             }
 
             if (mBodyEditText != null && mBodyEditText.getText().toString().trim().length() < 0) {
-                MdliveUtils.showDialog(getActivity(), getString(R.string.app_name), getString(R.string.please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandetory_fileds));
                 return;
             }
 
@@ -185,11 +185,13 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
                 jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
                 jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
                 jsonObjectMessage.put("replied_to_message_id", null);
-            } else {
-                jsonObjectMessage.put("destination_user_id", ((MyProvider) parcelable).providerId);
+            } else if (parcelable instanceof ConsultationHistory) {
+                jsonObjectMessage.put("destination_user_id", ((ConsultationHistory) parcelable).getProviderId());
                 jsonObjectMessage.put("message", mBodyEditText.getText().toString().trim());
                 jsonObjectMessage.put("subject", mSubjectEditText.getText().toString().trim());
                 jsonObjectMessage.put("replied_to_message_id", null);
+            } else {
+                return;
             }
 
             jsonObject.put("message", jsonObjectMessage);

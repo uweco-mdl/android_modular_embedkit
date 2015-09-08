@@ -42,7 +42,7 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             setTitle("");
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.compose_message).toUpperCase());
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_compose_message).toUpperCase());
         }
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

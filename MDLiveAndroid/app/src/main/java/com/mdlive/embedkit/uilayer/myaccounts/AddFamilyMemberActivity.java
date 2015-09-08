@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoService;
@@ -83,15 +85,20 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         init();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Toolbar toolbar = null;
+        try {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
         TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
-        title.setText(getString(R.string.add_family_member).toUpperCase());
+        title.setText(getString(R.string.mdl_add_family_member).toUpperCase());
         ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +218,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         mStateLayout = (RelativeLayout)findViewById(R.id.stateLayout);
         mGenderLayout = (RelativeLayout)findViewById(R.id.genderLayout);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", AddFamilyMemberActivity.this);
+        pDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
     public void addFamilyMemberInfo()
@@ -300,7 +307,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
                 pDialog.dismiss();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, null);
+                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, AddFamilyMemberActivity.this);
@@ -318,10 +325,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             pDialog.dismiss();
 
             Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-            Intent upIntent = new Intent(this, MyAccountActivity.class);
-            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(upIntent);
-            finish();
+
+            final User user = User.getSelectedUser(getBaseContext());
+            if (user == null) {
+                final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -331,8 +345,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddFamilyMemberActivity.this);
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.stateCode));
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
 

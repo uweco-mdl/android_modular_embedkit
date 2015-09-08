@@ -29,23 +29,27 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            setTitle("");
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.my_record).toUpperCase());
-            ((ImageView)findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-            ((ImageView)findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        try {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                setTitle("");
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
+                ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         if (savedInstanceState == null) {
 
-                getSupportFragmentManager().
-                        beginTransaction().
-                        add(R.id.container, MessageMyRecordsFragment.newInstance(), MAIN_CONTENT).
-                        commit();
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.container, MessageMyRecordsFragment.newInstance(), MAIN_CONTENT).
+                    commit();
 
             getSupportFragmentManager().
                     beginTransaction().
@@ -111,7 +115,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
                 break;
 
             // Share
-            case 8:   
+            case 8:
 
                 break;
         }
@@ -124,7 +128,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
     public void addPhotoOnClick(View view) {
         android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
 
-        if (fragment!= null && fragment instanceof MessageMyRecordsFragment) {
+        if (fragment != null && fragment instanceof MessageMyRecordsFragment) {
             ((MessageMyRecordsFragment) fragment).showChosserDialog();
         }
     }
