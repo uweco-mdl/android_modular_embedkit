@@ -130,16 +130,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             Log.d("Hello", "Selected User : " + user.toString());
         }
 
-        if (user != null && user.mMode == User.MODE_DEPENDENT) {
-            Log.d("Hello", "Selected User : " + user.toString());
-            Log.d("Hello", "Selected User : " + "Dependent is called");
-            loadDependentUserInformationDetails(user.mId);
-        } else {
-            Log.d("Hello", "Selected User : " + "Parent is called");
-            loadUserInformationDetails();
-        }
-
-
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
@@ -578,6 +568,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
+                if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                    Log.d("Hello", "Selected User : " + user.toString());
+                    Log.d("Hello", "Selected User : " + "Dependent is called");
+                    loadDependentUserInformationDetails(user.mId);
+                } else {
+                    Log.d("Hello", "Selected User : " + "Parent is called");
+                    loadUserInformationDetails();
+                }
                 handleproviderTypeSuccessResponse(response);
             }
         };
