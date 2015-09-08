@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetFamilyMemberInfoService;
@@ -51,7 +51,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         values = new HashMap<String, ArrayList<String>>();
@@ -69,15 +69,14 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
-                if(nameList.size() <= IntegerConstants.ADD_CHILD_SIZE) {
+                if (userBasicInfo.getRemainingFamilyMembersLimit() < 0) {
+                    MdliveUtils.showAddChildExcededDialog(getActivity(),userBasicInfo.getAssistPhoneNumber());
+                } else {
                     Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
                     changePhone.putExtra("Fragment_Name", "Add FAMILY MEMBER");
                     startActivityForResult(changePhone, 3);
-                }
-                else
-                {
-                    MdliveUtils.showAddChildExcededDialog(getActivity());
                 }
             }
         });

@@ -28,7 +28,6 @@ import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -296,8 +295,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     private void onAddChildSelcted(final User user, final int dependentUserSize) {
-        if (dependentUserSize >= IntegerConstants.ADD_CHILD_SIZE) {
-            MdliveUtils.showAddChildExcededDialog(this);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+
+        if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
+            MdliveUtils.showAddChildExcededDialog(this,userBasicInfo.getAssistPhoneNumber());
         } else {
             Intent addFamilyMember = new Intent(getBaseContext(), AddFamilyMemberActivity.class);
             startActivity(addFamilyMember); ;

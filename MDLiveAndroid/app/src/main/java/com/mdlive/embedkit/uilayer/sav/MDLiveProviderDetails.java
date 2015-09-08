@@ -784,6 +784,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("See this doctor now");
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             byphoneBtnLayout.setVisibility(View.GONE);
