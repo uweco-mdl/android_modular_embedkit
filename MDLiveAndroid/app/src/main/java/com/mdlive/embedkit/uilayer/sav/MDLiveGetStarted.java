@@ -85,7 +85,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private TextView locationTxt;/*,genderText*/
     private String DateTxt;
-    private String strPatientName,SavedLocation,strProviderId,assistFamilyMemmber,remainingFamilyMemberCount;
+    private String strPatientName,SavedLocation,strProviderId,assistFamilyMemmber;
+
+    private int remainingFamilyMemberCount;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> providerTypeArrayList;
@@ -128,14 +130,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             Log.d("Hello", "Selected User : " + user.toString());
         }
 
-       /* if (user != null && user.mMode == User.MODE_DEPENDENT) {
+        if (user != null && user.mMode == User.MODE_DEPENDENT) {
             Log.d("Hello", "Selected User : " + user.toString());
             Log.d("Hello", "Selected User : " + "Dependent is called");
             loadDependentUserInformationDetails(user.mId);
         } else {
             Log.d("Hello", "Selected User : " + "Parent is called");
             loadUserInformationDetails();
-        }*/
+        }
 
 
 
@@ -175,7 +177,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }else {
 
                 if (patientSpinner != null) {
-                    if ((dependentList.size() >= Integer.parseInt(remainingFamilyMemberCount)) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -349,7 +353,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
                 dependentName = spinner.getSelectedItem().toString();
                 if(list!=null){
-                    if(list.size()>= IntegerConstants.ADD_CHILD_SIZE)
+                    if( remainingFamilyMemberCount<1)
                     {
                         if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
                         {
@@ -372,9 +376,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                     dialogInterface.dismiss();
                                     patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
 
+
+
                                 }
                             };
-                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.mdl_app_name), getString(R.string.mdl_plscalAlert_txt),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
+                            MdliveUtils.showDialog(MDLiveGetStarted.this, getResources().getString(R.string.mdl_app_name), getString(R.string.mdl_plscalAlert_txt, assistFamilyMemmber),  StringConstants.ALERT_DISMISS,StringConstants.ALERT_CALLNOW,
                                     negativeOnClickListener,positiveOnClickListener );
                         }else
                         {
@@ -572,14 +578,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
-                if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                    Log.d("Hello", "Selected User : " + user.toString());
-                    Log.d("Hello", "Selected User : " + "Dependent is called");
-                    loadDependentUserInformationDetails(user.mId);
-                } else {
-                    Log.d("Hello", "Selected User : " + "Parent is called");
-                    loadUserInformationDetails();
-                }
                 handleproviderTypeSuccessResponse(response);
             }
         };
@@ -660,9 +658,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-          assistFamilyMemmber = response.getString("assist_phone_number");
-          remainingFamilyMemberCount = response.getString("remaining_family_members_limit");
-            Log.e("remainingFamilyMemberCount",remainingFamilyMemberCount);
+            assistFamilyMemmber = response.getString("assist_phone_number");
+            remainingFamilyMemberCount = response.getInt("remaining_family_members_limit");
             JSONObject personalInfo = response.getJSONObject("personal_info");
             userInfoJSONString = personalInfo.toString();
             if (!personalInfo.toString().isEmpty()) {
@@ -879,7 +876,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     // Something went wrong!
                 }
                 //Default first item coming from the service will set here.it will change into dynamic
-               // when we click the other items in the dialog.
+                // when we click the other items in the dialog.
                 ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
                 strProviderId=providerTypeIdList.get(0);
             }
@@ -934,6 +931,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
+            remainingFamilyMemberCount = 0;
             Log.e("dependent user info",response.toString());
             dependentList.clear();
             PatientList.clear();
