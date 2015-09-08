@@ -633,22 +633,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         try {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
-
-            Log.e("gender", gender);
-
-
-            if(MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this)>=1) {
-                if(gender.equalsIgnoreCase("Female")){
+            if(gender.equalsIgnoreCase("Female")){
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
-                }
             }else{
                 hasFemaleAttribute = false;
             }
-
             ValidateModuleFields();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
