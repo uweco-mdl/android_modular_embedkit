@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -347,16 +348,18 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
 
     /**
-     * This will check weather the user has completed the behavioural health history section and will hide and
-     * display teh layouts accordingly.
+     * This will check weather the user has completed the the family history and lifestyle section and will hide and
+     * display the layouts accordingly.
      *
      * @param historyPercentageArray - The history percentage JSONArray
+     * @param view - The layout view
+     *
      */
     private void checkMyHealthLifestyleAndFamilyHistory(View view,JSONArray historyPercentageArray) {
         try {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("life_style")){
-                    if(historyPercentageArray.getJSONObject(i).getInt("life_style")!=0){
+                    if(historyPercentageArray.getJSONObject(i).optInt("life_style",0) == 40){
                         ((TextView)view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                 }
