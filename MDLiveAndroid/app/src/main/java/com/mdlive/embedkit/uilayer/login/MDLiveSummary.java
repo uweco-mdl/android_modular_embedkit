@@ -51,9 +51,9 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setRating(0);
         String shortDocName = docName.split(",")[0];
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView)findViewById(R.id.ques)).setText(
-                shortDocName.substring(shortDocName.lastIndexOf(" ")+1)+", "+
-                getResources().getString(R.string.mdl_next_steps_content_txt)
+                getResources().getString(R.string.mdl_summary_michelle_txt,sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""))
                 );
     }
 
