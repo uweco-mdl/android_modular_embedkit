@@ -91,6 +91,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 startActivity(PrimaryCarePhysician);
             }
         });
+        view.findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
     }
 
     @Override
@@ -225,15 +226,9 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                         }
                     });
                 }
+
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
-                    if(provider.myProviders.size()>0){
-                        try {
-                            getView().findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
                     mProviderAdapter.notifyDataSetChanged();
                 }
                 Log.e("Response - ", provider.toString());
