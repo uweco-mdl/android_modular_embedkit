@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoService;
@@ -318,10 +320,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             pDialog.dismiss();
 
             Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-            Intent upIntent = new Intent(this, MyAccountActivity.class);
-            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(upIntent);
-            finish();
+
+            final User user = User.getSelectedUser(getBaseContext());
+            if (user == null) {
+                final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -299,8 +299,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (dependentUserSize >= IntegerConstants.ADD_CHILD_SIZE) {
             MdliveUtils.showAddChildExcededDialog(this);
         } else {
-            startActivityWithClassNameAddFamilyMember(AddFamilyMemberActivity.class);
-
+            Intent addFamilyMember = new Intent(getBaseContext(), AddFamilyMemberActivity.class);
+            startActivity(addFamilyMember); ;
         }
     }
 
