@@ -815,7 +815,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("behavioral")){
                     findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
-                    if(historyPercentageArray.getJSONObject(0).getInt("behavioral")!=0){
+                    if(historyPercentageArray.getJSONObject(i).getInt("behavioral")!=0){
                         ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                     break;
@@ -841,12 +841,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         try {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("life_style")){
-                    if(historyPercentageArray.getJSONObject(0).getInt("life_style")!=0){
+                    if(historyPercentageArray.getJSONObject(i).getInt("life_style")!=0){
                         ((TextView)findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                 } else if(historyPercentageArray.getJSONObject(i).has("family_history")){
                     findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
-                    if(historyPercentageArray.getJSONObject(0).getInt("family_history")!=0){
+                    if(historyPercentageArray.getJSONObject(i).getInt("family_history")!=0){
                         ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
 
@@ -859,45 +859,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
             ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
-        }
-    }
-
-    /**
-     * This will check weather the user has completed the Pediatric Profile section and will hide and
-     * display teh layouts accordingly.
-     *
-     * @param historyPercentageArray - The history percentage JSONArray
-     */
-    private void checkPediatricProfile(JSONArray historyPercentageArray) {
-        try {
-            JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-            int myHealthPercentage = -1;
-            for (int j = 0; j < historyPercentageArray.length(); j++) {
-                if (historyPercentageArray.getJSONObject(j).has("pediatric"))
-                    myHealthPercentage = historyPercentageArray.getJSONObject(j).getInt("pediatric");
-            }
-            if (myHealthPercentage == 100) {
-//                ((TextView) findViewById(R.id.PediatricNameTv)).setText("Completed");
-            } else if (myHealthPercentage >= 0) {
-                if (!(healthHistory.getJSONObject("pediatric") == null)) {
-                    String pediotricNames = "";
-                    JSONObject pediatricObject = healthHistory.getJSONObject("pediatric");
-                    JSONArray perdiatricQuestionArray = pediatricObject.getJSONArray("questions");
-                    for (int i = 0; i < perdiatricQuestionArray.length(); i++) {
-                        if (perdiatricQuestionArray.getJSONObject(i).getString("name").trim() != null &&
-                                !perdiatricQuestionArray.getJSONObject(i).getString("name").trim().equals("")) {
-                            pediotricNames += perdiatricQuestionArray.getJSONObject(i).getString("name");
-                            if (i != perdiatricQuestionArray.length() - 1) {
-                                pediotricNames += ", ";
-                            }
-                        }
-                    }
-//                    ((TextView) findViewById(R.id.PediatricNameTv)).setText(pediotricNames);
-                }
-            } else {
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
