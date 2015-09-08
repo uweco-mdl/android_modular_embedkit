@@ -85,10 +85,15 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
 
         init();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Toolbar toolbar = null;
+        try {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
