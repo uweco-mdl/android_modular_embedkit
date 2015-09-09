@@ -2,13 +2,13 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,37 +38,66 @@ import java.util.Iterator;
  */
 public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
+    public static SecurityQuestionsFragment newInstance(String response) {
+
+        final SecurityQuestionsFragment securityQuestionsFragment = new SecurityQuestionsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("Response", response);
+        securityQuestionsFragment.setArguments(bundle);
+        return securityQuestionsFragment;
+    }
+
     private RelativeLayout mSecurityQuestion1Layout = null;
     private RelativeLayout mSecurityQuestion2Layout = null;
+    private android.support.v7.widget.CardView mSecurityAnswer1Layout = null;
+    private android.support.v7.widget.CardView mSecurityAnswer2Layout = null;
     private TextView mSecurityQuestion1 = null;
     private TextView mSecurityQuestion2 = null;
     private EditText mSecurityAnswer1 = null;
     private EditText mSecurityAnswer2 = null;
     private ArrayList<String> mQuestions = null;
+    private String response;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View securityQuestions = inflater.inflate(R.layout.fragments_security_questions, null);
+
         mSecurityQuestion1Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion1Layout);
         mSecurityQuestion2Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion2Layout);
         mSecurityQuestion1 = (TextView)securityQuestions.findViewById(R.id.changeQuestion1);
         mSecurityQuestion2 = (TextView)securityQuestions.findViewById(R.id.changeQuestion2);
         mSecurityAnswer1 = (EditText)securityQuestions.findViewById(R.id.answer1);
         mSecurityAnswer2 = (EditText)securityQuestions.findViewById(R.id.answer2);
+        mSecurityAnswer1Layout = (android.support.v7.widget.CardView)securityQuestions.findViewById(R.id.answer1Layout);
+        mSecurityAnswer2Layout = (android.support.v7.widget.CardView)securityQuestions.findViewById(R.id.answer2Layout);
 
         mQuestions = new ArrayList<String>();
 
-        final LayoutInflater inflater1 = getLayoutInflater(savedInstanceState);
+        response = getArguments().getString("Response");
 
-        getSecurityQuestionsService();
+        if (response != null) {
+
+            try {
+                JSONObject responseDetail = new JSONObject(response);
+                JSONObject securityQuestion = responseDetail.getJSONObject("security");
+                if(!TextUtils.isEmpty(securityQuestion.toString())) {
+                    mSecurityQuestion1.setText(securityQuestion.getString("question1"));
+                    mSecurityQuestion2.setText(securityQuestion.getString("question2"));
+                    mSecurityAnswer1.setText(securityQuestion.getString("answer1"));
+                    mSecurityAnswer2.setText(securityQuestion.getString("answer2"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        final LayoutInflater inflater1 = getLayoutInflater(savedInstanceState);
 
         if (TextUtils.isEmpty(mSecurityAnswer1.getText().toString()) && TextUtils.isEmpty(mSecurityAnswer2.getText().toString())) {
             if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
                 ((MyAccountsHome) getActivity()).hideTick();
             }
         }
-
-
 
         mSecurityAnswer2.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,7 +122,6 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
                         ((MyAccountsHome) getActivity()).hideTick();
                     }
                 }
-
             }
         });
 
@@ -143,7 +171,8 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 //                lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 //                dialog.show();
 
-                showSecurityQuestionsDialog(mSecurityQuestion1,mSecurityAnswer1);
+                showSecurityQuestionsDialog(mSecurityQuestion1,mSecurityAnswer1Layout);
+                mSecurityAnswer1.setText("");
 
 //                lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 //                    public void onItemClick(AdapterView<?> listView, View itemView, int position, long itemId) {
@@ -195,14 +224,23 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
             public void onClick(View view) {
 
                 MdliveUtils.hideKeyboard(getActivity(),view);
-                showSecurityQuestionsDialog(mSecurityQuestion2,mSecurityAnswer2);
+                showSecurityQuestionsDialog(mSecurityQuestion2,mSecurityAnswer2Layout);
+                mSecurityAnswer2.setText("");
             }
         });
 
         return securityQuestions;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getSecurityQuestionsService();
+    }
+
     private void getSecurityQuestionsService() {
+
         showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -247,35 +285,55 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
             while (a.hasNext()) {
                 String key = a.next();
                 list.add(key);
-                Log.i("value", key);
             }
 
         } catch (Exception e) {
 
         }
-        Log.i("list",list.get(0));
 
-        mSecurityQuestion1.setText(list.get(0));
-        mSecurityQuestion2.setText(list.get(0));
+        if((mSecurityAnswer1.getText().length()) == 0 && (mSecurityAnswer2.getText().length() == 0)) {
+            mSecurityQuestion1.setText("Select Question");
+            mSecurityQuestion2.setText("Select Question");
+            mSecurityAnswer1Layout.setVisibility(View.GONE);
+            mSecurityAnswer2Layout.setVisibility(View.GONE);
+        }
         return list;
-
     }
 
-    private void showSecurityQuestionsDialog(final TextView textView,final EditText editText) {
+    private void showSecurityQuestionsDialog(final TextView textView,final android.support.v7.widget.CardView answerLayout) {
         if (getActivity() == null) {
             return;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Select security question");
+//        final String[] stringArray = mQuestions.toArray(new String[mQuestions.size()]);
+       final ArrayList<String> stringArray =new ArrayList<String>();
+//        final String[] stringArray =new String[mQuestions.size()];
+        int j=0;
+        for(int i=0;i<mQuestions.size();i++)
+        {
+            if(textView == mSecurityQuestion1) {
+                if (!mSecurityQuestion2.getText().toString().equals(mQuestions.get(i))) {
+                    stringArray.add(mQuestions.get(i));
+                    j++;
+                }
+            }
 
-        final String[] stringArray = mQuestions.toArray(new String[mQuestions.size()]);
-        builder.setItems(stringArray, new DialogInterface.OnClickListener() {
+            if(textView == mSecurityQuestion2) {
+                if (!mSecurityQuestion1.getText().toString().equals(mQuestions.get(i))) {
+                    stringArray.add(mQuestions.get(i));
+                    j++;
+                }
+            }
+        }
+
+        builder.setItems(stringArray.toArray(new String[stringArray.size()]), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                textView.setText(mQuestions.get(i));
-                editText.setVisibility(View.VISIBLE);
+                textView.setText(stringArray.get(i));
+                answerLayout.setVisibility(View.VISIBLE);
                 dialogInterface.dismiss();
             }
         });

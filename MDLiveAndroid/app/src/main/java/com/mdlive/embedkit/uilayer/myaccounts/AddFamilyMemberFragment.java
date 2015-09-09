@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,29 +43,27 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
     private EditText mUsername = null;
     private EditText mEmail = null;
-
     private EditText mFirstName = null;
-
     private EditText mLastName = null;
     private EditText mAddress1 = null;
     private EditText mCity = null;
     private TextView mState = null;
-
     private EditText mPhone = null;
     private TextView mDOB = null;
     private TextView mGender = null;
-
+    private TextView mValidEmailText = null;
+    private TextView mValidationEmail = null;
+    private TextView mUsernameLength = null;
+    private TextView mUsernameAlphaNumericCheck = null;
+    private TextView mUsernameSpecialCharactersCheck = null;
     private String Username = null;
     private String Email = null;
     private String FirstName = null;
-
     private String LastName = null;
     private String Address1 = null;
-
     private String City = null;
     private String State = null;
     private String Phone = null;
-
     private String DOB = null;
     private String Gender = null;
     private List<String> stateIds = new ArrayList<String>();
@@ -75,6 +75,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         final AddFamilyMemberFragment addFamilyMember = new AddFamilyMemberFragment();
         return addFamilyMember;
     }
+
     public AddFamilyMemberFragment(){ super(); }
 
     @Nullable
@@ -117,6 +118,21 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             }
         });
 
+        mEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus) {
+                    mValidationEmail.setVisibility(View.VISIBLE);
+                    mValidEmailText.setVisibility(View.VISIBLE);
+                } else {
+                    mValidationEmail.setVisibility(View.GONE);
+                    mValidEmailText.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         mStateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +160,86 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             }
         });
 
+        mUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus) {
+                    if (mUsername.getText().length() == 0) {
+                        mUsernameLength.setVisibility(View.GONE);
+                        mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                        mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
+                    } else {
+                        mUsernameLength.setVisibility(View.VISIBLE);
+                        mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                        mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
+                    }
+
+                    if (mUsername.getText().length() > 6 && mUsername.getText().length() < 16) {
+                        mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
+                    } else {
+                        mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
+                    }
+                    if (mUsername.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                        mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
+
+                    } else {
+                        mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
+                    }
+                } else {
+                    mUsernameLength.setVisibility(View.GONE);
+                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (mUsername.getText().length() == 0) {
+                    mUsernameLength.setVisibility(View.GONE);
+                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
+                } else {
+                    mUsernameLength.setVisibility(View.VISIBLE);
+                    mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                    mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
+                }
+
+                if (mUsername.getText().length() > 6 && mUsername.getText().length() < 16) {
+                    mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                    mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
+                } else {
+                    mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                    mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
+                }
+                if (mUsername.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                    mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                    mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
+
+                } else {
+                    mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                    mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
         return addFamilyMember;
 
     }
@@ -162,6 +258,12 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mPhone = (EditText)addFamilyMember.findViewById(R.id.phone);
 
         mDOB = (TextView)addFamilyMember.findViewById(R.id.DOB);
+        mValidEmailText = (TextView)addFamilyMember.findViewById(R.id.validEmailText);
+        mValidationEmail = (TextView)addFamilyMember.findViewById(R.id.validationEmail);
+        mUsernameLength = (TextView)addFamilyMember.findViewById(R.id.userNameLength);
+        mUsernameAlphaNumericCheck = (TextView)addFamilyMember.findViewById(R.id.userNameAlphaNumericCheck);
+        mUsernameSpecialCharactersCheck = (TextView)addFamilyMember.findViewById(R.id.userNameSpecialCharactersCheck);
+
         mGender = (TextView)addFamilyMember.findViewById(R.id.gender);
         mDOBLayout = (RelativeLayout)addFamilyMember.findViewById(R.id.DOBLayout);
         mStateLayout = (RelativeLayout)addFamilyMember.findViewById(R.id.stateLayout);
@@ -170,58 +272,56 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
     public void addFamilyMemberInfo()
     {
-        Username = mUsername.getText().toString();
-        Email = mEmail.getText().toString();
+        Username = mUsername.getText().toString().trim();
+        Email = mEmail.getText().toString().trim();
 
-        FirstName = mFirstName.getText().toString();
+        FirstName = mFirstName.getText().toString().trim();
 
-        LastName = mLastName.getText().toString();
-        Address1 = mAddress1.getText().toString();
+        LastName = mLastName.getText().toString().trim();
+        Address1 = mAddress1.getText().toString().trim();
 
-        City = mCity.getText().toString();
-        State = mState.getText().toString();
+        City = mCity.getText().toString().trim();
+        State = mState.getText().toString().trim();
 
-        Phone = mPhone.getText().toString();
+        Phone = mPhone.getText().toString().trim();
 
-        DOB = mDOB.getText().toString();
-        Gender = mGender.getText().toString();
+        DOB = mDOB.getText().toString().trim();
+        Gender = mGender.getText().toString().trim();
 
         if(isEmpty(Username)&& isEmpty(Email)&&  isEmpty(FirstName)&&  isEmpty(LastName)&& isEmpty(Address1)&&  isEmpty(City)
-                && isEmpty(State) &&  isEmpty(Phone) &&  isEmpty(DOB) && isEmpty(Gender))
-        {
-            try {
-                JSONObject parent = new JSONObject();
+                && isEmpty(State) &&  isEmpty(Phone) &&  isEmpty(DOB) && isEmpty(Gender)) {
+                try {
+                    JSONObject parent = new JSONObject();
 
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("computer", "MAC");
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("computer", "MAC");
 
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("username", Username);
-                jsonObject1.put("first_name", FirstName);
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("username", Username);
+                    jsonObject1.put("first_name", FirstName);
 //                jsonObject1.put("middle_name", MiddleName);
-                jsonObject1.put("last_name", LastName);
-                jsonObject1.put("gender", Gender);
-                jsonObject1.put("email", Email);
-                jsonObject1.put("phone", Phone);
+                    jsonObject1.put("last_name", LastName);
+                    jsonObject1.put("gender", Gender);
+                    jsonObject1.put("email", Email);
+                    jsonObject1.put("phone", Phone);
 //                jsonObject1.put("cell", Cell);
-                jsonObject1.put("address1", Address1);
+                    jsonObject1.put("address1", Address1);
 //                jsonObject1.put("address2", Address2);
-                jsonObject1.put("city", City);
-                jsonObject1.put("state_id", State);
+                    jsonObject1.put("city", City);
+                    jsonObject1.put("state_id", State);
 //                jsonObject1.put("zip", Zip);
-                jsonObject1.put("birthdate", DOB);
-                jsonObject1.put("answer", "idontknow");
+                    jsonObject1.put("birthdate", DOB);
+                    jsonObject1.put("answer", "idontknow");
 
-                parent.put("member", jsonObject1);
-                parent.put("camera", jsonObject);
+                    parent.put("member", jsonObject1);
+                    parent.put("camera", jsonObject);
 
-                Log.i("params", parent.toString());
-                addFamilyMember(parent.toString());
+                    Log.i("params", parent.toString());
+                    addFamilyMember(parent.toString());
 
-            }
-            catch (JSONException e) {
-                e.printStackTrace();
-            }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
         }
         else
         {

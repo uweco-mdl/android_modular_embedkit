@@ -184,9 +184,13 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     mCurrentPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mCurrentPasswordShow.setImageResource(R.drawable.eye_on);
+                    mCurrentPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     mCurrentPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mCurrentPasswordShow.setImageResource(R.drawable.eye_off);
+                    mCurrentPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 }
                 return false;
@@ -199,9 +203,13 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     mNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mNewPasswordShow.setImageResource(R.drawable.eye_on);
+                    mNewPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     mNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mNewPasswordShow.setImageResource(R.drawable.eye_off);
+                    mNewPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 }
                 return false;
@@ -214,9 +222,13 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     mConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mConfirmPasswordShow.setImageResource(R.drawable.eye_on);
+                    mConfirmPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     mConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mConfirmPasswordShow.setImageResource(R.drawable.eye_off);
+                    mConfirmPassword.setSelection(mCurrentPassword.getText().length());
                     return true;
                 }
                 return false;

@@ -85,7 +85,7 @@ public class ChangeAddressFragment  extends Fragment {
 
                 mAddressLine1.setText(responseDetail.getString("address1"));
 
-                if ((responseDetail.getString("address2").equalsIgnoreCase("null")) || (responseDetail.getString("address2") == null)  || (TextUtils.isEmpty(responseDetail.getString("address2")))) {
+                if ((responseDetail.getString("address2").equalsIgnoreCase("null")) || (responseDetail.getString("address2") == null)  || (TextUtils.isEmpty(responseDetail.getString("address2") )) ||((responseDetail.getString("address2").trim().length()) == 0)) {
                     mAddressLine2.setText("");
                 } else {
                     mAddressLine2.setText(responseDetail.getString("address2"));
@@ -100,7 +100,6 @@ public class ChangeAddressFragment  extends Fragment {
             }
         }
         return changeAddressView;
-
     }
 
     public void changeAddressInfo()
@@ -110,8 +109,8 @@ public class ChangeAddressFragment  extends Fragment {
                 JSONObject responseDetail = new JSONObject(response);
 
 
-                if (isEmpty(mAddressLine1.getText().toString())&& isEmpty(mState.getText().toString())
-                        && isEmpty(mCity.getText().toString()) && isEmpty(mZip.getText().toString())) {
+                if (isEmpty(mAddressLine1.getText().toString().trim())&& isEmpty(mState.getText().toString().trim())
+                        && isEmpty(mCity.getText().toString().trim()) && isEmpty(mZip.getText().toString().trim())) {
 
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
