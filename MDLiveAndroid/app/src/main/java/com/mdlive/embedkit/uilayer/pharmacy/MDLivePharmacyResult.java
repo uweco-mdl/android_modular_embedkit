@@ -123,6 +123,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
     public void rightBtnOnClick(View view){
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+        if(getIntent().hasExtra("FROM_MY_HEALTH")){
+            i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
+        }
         startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
         finish();
@@ -447,6 +450,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                                if(getIntent().hasExtra("FROM_MY_HEALTH")){
+                                    i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
+                                }
                                 startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
                                 finish();
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
@@ -566,7 +572,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             progressBar.setVisibility(View.GONE);
-            if (response.getString("message").equals("Pharmacy details updated")) {
+            if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().getBooleanExtra("FROM_MY_HEALTH",false)){
+                finish();
+            }else if (response.getString("message").equals("Pharmacy details updated")) {
                 checkInsuranceEligibility();
             }
         } catch (Exception e) {

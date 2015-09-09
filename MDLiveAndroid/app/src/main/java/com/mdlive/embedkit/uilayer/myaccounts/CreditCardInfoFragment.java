@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -40,8 +43,8 @@ import java.util.Date;
  */
 public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
-    private EditText mCardNumber = null;
-    private EditText mSecurityCode = null;
+//    private EditText mCardNumber = null;
+//    private EditText mSecurityCode = null;
     private TextView mCardExpirationMonth = null;
     private EditText mNameOnCard = null;
     private EditText mAddress1 = null;
@@ -63,6 +66,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private String zip = null;
     private SwitchCompat changeAddress;
     RelativeLayout mAddressVisibility;
+    private WebView myAccountHostedPCI;
 
     private int year, month;
     Calendar expiryDate = Calendar.getInstance();
@@ -89,15 +93,46 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         View billingInformation = inflater.inflate(R.layout.fragments_billing_info, null);
 
         init(billingInformation);
+        myAccountHostedPCI.getSettings().setJavaScriptEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            myAccountHostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        }
+        myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
 
         return billingInformation;
 
     }
 
+    final class IJavascriptHandler {
+        IJavascriptHandler() {
+        }
+
+        // This annotation is required in Jelly Bean and later:
+        @JavascriptInterface
+        public void sendToAndroid(String billingResponse) {
+            // this is called from JS with passed value
+            try {
+                JSONObject jobj = new JSONObject(billingResponse);
+                if (jobj.getString("status").equals("success")) {
+                    addCreditCardInfo();
+                } else {
+                    MdliveUtils.alert(getProgressDialog(), getActivity(), jobj.getString("status"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // This annotation is required in Jelly Bean and later:
+        @JavascriptInterface
+        public void scanCreditCard() {
+        }
+    }
+
     public void init(View billingInformation) {
-        mCardNumber = (EditText) billingInformation.findViewById(R.id.cardNumber);
-        mSecurityCode = (EditText) billingInformation.findViewById(R.id.securityCode);
-        mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
         mNameOnCard = (EditText) billingInformation.findViewById(R.id.nameOnCard);
         mAddress1 = (EditText) billingInformation.findViewById(R.id.addressLine1);
@@ -105,8 +140,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mCity = (EditText) billingInformation.findViewById(R.id.city);
         mState = (EditText) billingInformation.findViewById(R.id.state);
         mZip = (EditText) billingInformation.findViewById(R.id.zip);
+        mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
+
         changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
+        myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         changeAddress.setChecked(false);
 
 
@@ -135,8 +173,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
 
-                    mCardNumber.setText(cardNumber);
-                    mSecurityCode.setText(securityCode);
+//                    mCardNumber.setText(cardNumber);
+//                    mSecurityCode.setText(securityCode);
                     mCardExpirationMonth.setText(cardExpirationMonth+"/"+cardExpirationYear);
                     mNameOnCard.setText(nameOnCard);
                     mAddress1.setText(address1);
@@ -160,7 +198,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         }
         else
         {
-            mCardNumber.setEnabled(true);
+//            mCardNumber.setEnabled(true);
         }
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
@@ -275,8 +313,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         d.show();
     }
     public void addCreditCardInfo() {
-        cardNumber = mCardNumber.getText().toString();
-        securityCode = mSecurityCode.getText().toString();
+//        cardNumber = mCardNumber.getText().toString();
+//        securityCode = mSecurityCode.getText().toString();
         nameOnCard = mNameOnCard.getText().toString();
         address1 = mAddress1.getText().toString();
         address2 = mAddress2.getText().toString();
@@ -286,7 +324,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         country = "1";
         zip = mZip.getText().toString();
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
+        if ( isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -300,7 +338,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 jsonObject.put("billing_city", city);
                 jsonObject.put("billing_state_id", state);
                 jsonObject.put("cc_expmonth", cardExpirationMonth);
-                jsonObject.put("cc_cvv2", securityCode);
+                jsonObject.put("cc_cvv2", "123");
                 jsonObject.put("cc_num", "4111111111111111");
                 jsonObject.put("billing_country_id", country);
 
@@ -364,4 +402,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
+
+
 }

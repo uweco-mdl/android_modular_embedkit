@@ -127,7 +127,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         formatText= formatText.replace(")", "");
         formatText= formatText.replace(" ", "");
         if(formatText.length() > 10){
-            formatText = formatText.substring(0, formatText.length()-1);
+            formatText = formatText.substring(0, formatText.length());
         }
         if(formatText.length() >= 7){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+formatText.substring(6, formatText.length());

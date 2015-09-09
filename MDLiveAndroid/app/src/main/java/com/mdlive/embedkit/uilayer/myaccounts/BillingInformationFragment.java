@@ -154,11 +154,9 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
 
             if (response != null) {
                 myProfile = response.getJSONObject("billing_information");
-
                 country = myProfile.getString("billing_country");
                 cardExpirationYear = myProfile.getString("cc_expyear");
                 nameOnCard = myProfile.getString("billing_name");
-
                 zip = myProfile.getString("billing_zip5");
                 securityCode = myProfile.getString("cc_cvv2");
                 cardNumber = myProfile.getString("cc_number");

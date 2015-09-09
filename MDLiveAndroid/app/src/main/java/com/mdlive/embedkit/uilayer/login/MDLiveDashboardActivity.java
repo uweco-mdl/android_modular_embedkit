@@ -18,9 +18,11 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -209,5 +211,55 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     @Override
     public void onNotificationClicked(Appointment appointment) {
         onAppointmentClicked(appointment);
+    }
+
+    @Override
+    public void sendUserInformation(UserBasicInfo userBasicInfo) {
+        super.sendUserInformation(userBasicInfo);
+
+        checkDeeplink();
+    }
+
+    public void checkDeeplink() {
+        Log.d("DeepLink", "In Deeplink check");
+
+        if (DeepLinkUtils.DEEPLINK_DATA != null ) {
+            Log.d("DeepLink", "Data : " + DeepLinkUtils.DEEPLINK_DATA);
+
+            final int pageCode = DeepLinkUtils.getPageCode();
+
+            switch (pageCode) {
+                case 0:
+                    // Home screen
+                    // Do nothing, already in Home
+                    break;
+                case 1:
+                    // Assist screen
+                    MdliveUtils.showMDLiveAssistDialog(this);
+                    break;
+                case 2:
+                    // SAV screen
+                    onSeeADoctorClicked();
+                    break;
+                case 3:
+                    // Medical health screen
+                    startActivityWithClassName(MedicalHistoryActivity.class);
+                    break;
+                case 4:
+                    // Message center screen
+                    onMessageClicked();
+                    break;
+                case 5:
+                    // Symptom Checker screen
+                    startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                    break;
+                case 6:
+                    // My Account screen
+                    startActivityWithClassName(MyAccountActivity.class);
+                    break;
+            }
+
+            DeepLinkUtils.DEEPLINK_DATA.setPage("");
+        }
     }
 }

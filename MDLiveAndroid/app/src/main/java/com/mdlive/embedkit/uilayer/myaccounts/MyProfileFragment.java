@@ -152,9 +152,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mChangeSecurityQuestions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changePassword = new Intent(getActivity(),MyAccountsHome.class);
-                changePassword.putExtra("Fragment_Name","SECURITY QUESTION");
-                startActivity(changePassword);
+                Intent changeSecurityQuestions = new Intent(getActivity(),MyAccountsHome.class);
+                changeSecurityQuestions.putExtra("Fragment_Name","SECURITY QUESTION");
+                changeSecurityQuestions.putExtra("Security_Response",myProfile.toString());
+                startActivity(changeSecurityQuestions);
             }
         });
 
@@ -443,6 +444,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         try {
             hideProgressDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

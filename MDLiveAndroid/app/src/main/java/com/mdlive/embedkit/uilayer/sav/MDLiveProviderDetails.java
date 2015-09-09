@@ -498,6 +498,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     VideoOrPhoneNotAvailable();
                 } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
                   onlyPhone();
+                }else if (str_Availability_Type.equalsIgnoreCase("With Patient")) {
+                    onlyWithPatient();
                 }
 
 

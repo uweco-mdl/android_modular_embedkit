@@ -273,6 +273,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
      */
     public void changePharmacyButtonOnClick(View view) {
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+        i.putExtra("FROM_MY_HEALTH",true);
         startActivity(i);
     }
 

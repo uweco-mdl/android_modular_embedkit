@@ -120,7 +120,7 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 //        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
 //            progressBarLayout.setVisibility(View.GONE);
 //        }
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
     }
 
     /*

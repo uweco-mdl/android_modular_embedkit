@@ -149,7 +149,7 @@ public class LoginFragment extends MDLiveBaseFragment{
             }
 
             else {
-                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdl_please_enter_valid_fileds));
+                MdliveUtils.showDialog(getActivity(),getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdl_fileds));
             }
 
         } catch (Exception e) {
