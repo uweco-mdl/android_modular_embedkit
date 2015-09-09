@@ -21,9 +21,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -31,12 +32,14 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
+import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
+import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
 
 import org.json.JSONObject;
 
@@ -54,6 +57,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
     private String finalAmout = "";
+    private boolean setExistingCardDetailUser=false;
+    JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
 
 
@@ -81,6 +86,19 @@ public class MDLivePayment extends MDLiveBaseActivity {
             storePayableAmount(finalAmout);
             ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
         }
+        getCreditCardInfoService();
+        ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setExistingCardDetailUser=true;
+                getCreditCardInfoService();
+
+            }
+        });
+
+
+
+
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (EditText) findViewById(R.id.edtExpiryDate);
         setProgressBar(findViewById(R.id.progressDialog));
@@ -135,17 +153,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
             doConfirmAppointment();
         } else {
             HostedPCI.loadUrl("javascript:tokenizeForm()");
-            /*if (edtZipCode.getText().toString().length() != IntegerConstants.NUMBER_ZERO && dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-                if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
-                    HostedPCI.loadUrl("javascript:tokenizeForm()");
-                } else {
-                    MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_enter_valid_zipcode));
-                }
-
-            } else {
-                MdliveUtils.alert(pDialog, MDLivePayment.this, getString(R.string.please_fill_required_fields));
-
-            }*/
         }
 
     }
@@ -154,6 +161,76 @@ public class MDLivePayment extends MDLiveBaseActivity {
         MdliveUtils.hideSoftKeyboard(MDLivePayment.this);
         onBackPressed();
     }
+
+    public void getCreditCardInfoService() {
+        showProgressDialog();
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                handlegetCreditCardInfoSuccessResponse(response);
+
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dismissDialog();
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, null);
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLivePayment.this);
+                }
+            }
+        };
+
+        GetCreditCardInfoService service = new GetCreditCardInfoService(MDLivePayment.this, null);
+        service.getCreditCardInfo(successCallBackListener, errorListener, null);
+    }
+
+    public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
+        dismissDialog();
+        Log.i("response", response.toString());
+        try {
+            if (response != null) {
+                Log.e("inside","Am not in main Null");
+                myProfile = response.getJSONObject("billing_information");
+                Log.e("inside",myProfile.getString("cc_number"));
+                if (myProfile.getString("cc_number").equals(null)||myProfile.getString("cc_number").equals("null")||myProfile.getString("cc_number").equals("")||myProfile.getString("cc_number").isEmpty()
+                        ) {
+                    Log.e("inside","Am in Null");
+                    ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.GONE);
+                    ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
+                } else {
+                    Log.e("inside","Am not in Null");
+                    ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
+                    ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);
+                }
+
+                //this is called when master card image view is clicked
+                if(setExistingCardDetailUser) {
+                    String params = getExistingBillingPutParams(response.toString());
+                    updateCardDetails(params);
+//                    HostedPCI.loadUrl("javascript:tokenizeForm()");
+                }
+//                getBillingPutParams(response.toString());
+            }else
+            {
+                Log.e("inside","Am in main  Null");
+
+
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     final class IJavascriptHandler {
         IJavascriptHandler() {
@@ -165,12 +242,26 @@ public class MDLivePayment extends MDLiveBaseActivity {
             // this is called from JS with passed value
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
-                if (jobj.getString("status").equals("success")) {
-                    String params = getBillingPutParams(billingResponse);
-                    updateCardDetails(params);
-                } else {
-                    MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
+                if(setExistingCardDetailUser)
+                {
+                    if (jobj.getString("status").equals("success")) {
+                        String params = getExistingBillingPutParams(billingResponse);
+                        updateCardDetails(params);
+                        Log.e("print params->",params);
+                    } else {
+                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
+                    }
+                }else
+                {
+                    if (jobj.getString("status").equals("success")) {
+                        String params = getBillingPutParams(billingResponse);
+                        updateCardDetails(params);
+                        Log.e("print params->",params);
+                    } else {
+                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
+                    }
                 }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -260,7 +351,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
      * errorListener-Listner will invoke on Error response
      */
 
-    public void updateCardDetails(String params) {
+    public void updateCardDetails(final String params) {
         showProgressDialog();
         final NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
@@ -269,7 +360,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     dismissDialog();
                     JSONObject resObj = new JSONObject(response.toString());
                     if (resObj.has("message")) {
-                        doConfirmAppointment();
+//                        if(setExistingCardDetailUser) {
+//                            getExistingBillingPutParams(params);
+//                        }else
+//                        {
+                            doConfirmAppointment();
+//                        }
+
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -305,7 +403,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public String getBillingPutParams(String billingDetails) {
         try {
             JSONObject resObj = new JSONObject(billingDetails);
+            Log.e("payment res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
+
             HashMap<String, String> cardInfo = new HashMap<>();
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
@@ -322,6 +422,38 @@ public class MDLivePayment extends MDLiveBaseActivity {
             //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Gson().toJson(billingParams);
+    }
+
+    public String getExistingBillingPutParams(String billingDetails) {
+        try {
+            JSONObject resObj = new JSONObject(billingDetails);
+            Log.e("payment res-->",resObj.toString());
+            JSONObject billingObj = resObj.getJSONObject("billing_information");
+
+            HashMap<String, String> cardInfo = new HashMap<>();
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
+            cardInfo.put("billing_address1", "test1");
+            cardInfo.put("billing_address2", "test");
+            cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
+            cardInfo.put("billing_city", "Test");
+            cardInfo.put("billing_country_id", "1");
+            cardInfo.put("cc_num", billingObj.getString("cc_number"));
+            cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
+            cardInfo.put("cc_expyear", billingObj.getString("cc_expyear"));
+            cardInfo.put("cc_expmonth", billingObj.getString("cc_expmonth"));
+            cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
+            //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
+            cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
+            billingParams.put("billing_information", cardInfo);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -399,7 +531,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         startActivity(i);
                         MdliveUtils.startActivityAnimation(MDLivePayment.this);
                     } else {
-                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                        final String resumeScreen = response.getString("resume_screen");
+
+                        MdliveUtils.showDialog(MDLivePayment.this,response.getString("message"),new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(resumeScreen.equalsIgnoreCase("Get Started")) {
+                                Intent getStartedIntent = new Intent(MDLivePayment.this, MDLiveProviderDetails.class);
+                                startActivity(getStartedIntent);
+                                MdliveUtils.startActivityAnimation(MDLivePayment.this);
+                                finish();
+                            }
+                        }
+                    });
+
+//                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                 }
 
                 } catch (Exception e) {

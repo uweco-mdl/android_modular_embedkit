@@ -273,10 +273,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 Log.d("Sucess Response", response.toString());
                 handlepostSuccessResponse(response);
-                Intent intent = new Intent(MDLiveMakeAppmtrequest.this,MDLiveAppointmentThankYou.class);
-                startActivity(intent);
-                finish();
-                MdliveUtils.startActivityAnimation(MDLiveMakeAppmtrequest.this);
+
             }
         };
 
@@ -323,6 +320,13 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
             Log.e("mak res",response.toString());
+            if (response.has("message")) {
+                Intent intent = new Intent(MDLiveMakeAppmtrequest.this, MDLiveAppointmentThankYou.class);
+                startActivity(intent);
+                finish();
+                MdliveUtils.startActivityAnimation(MDLiveMakeAppmtrequest.this);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
