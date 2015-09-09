@@ -82,7 +82,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             }else{
                 isEditCalled = false;
                 adapter.notifyDataSetChanged();
-                ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+                ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
             }
         }else{
             isEditCalled = true;
