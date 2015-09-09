@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterComposeActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -149,7 +150,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         logD("Nav", "I am here");
-        if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
+        if (getActivity() != null && (getActivity() instanceof MDLiveDashboardActivity || getActivity() instanceof MessageCenterComposeActivity)) {
             final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
             logD("Nav", "I am here1");
             if (user != null && user.mMode == User.MODE_DEPENDENT) {
@@ -217,7 +218,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     mUserBasicInfo.setHealthLastUpdate(-1l);
                 }
 
-                mUserBasicInfo.saveToSharedPreference(getActivity());
+                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
 
                 updateList();
             }
@@ -273,7 +274,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     mUserBasicInfo.setHealthLastUpdate(-1l);
                 }
 
-                mUserBasicInfo.saveToSharedPreference(getActivity());
+                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
                 updateList();
             }
         };
