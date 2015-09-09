@@ -152,7 +152,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         sendingIntent = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+        if(getIntent().hasExtra("FROM_MY_HEALTH")){
+            sendingIntent.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
+        }
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
         adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
         pharmacy_search_name.setThreshold(3);

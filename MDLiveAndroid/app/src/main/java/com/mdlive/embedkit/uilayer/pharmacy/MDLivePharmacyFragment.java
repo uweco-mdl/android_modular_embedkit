@@ -93,6 +93,12 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getUserPharmacyDetails();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
