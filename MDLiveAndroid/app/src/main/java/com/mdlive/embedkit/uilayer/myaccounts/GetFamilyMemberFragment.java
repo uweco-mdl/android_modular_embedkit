@@ -71,7 +71,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
             public void onClick(View v) {
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
-                if (userBasicInfo.getRemainingFamilyMembersLimit() < 0) {
+                if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
                     MdliveUtils.showAddChildExcededDialog(getActivity(),userBasicInfo.getAssistPhoneNumber());
                 } else {
                     Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
