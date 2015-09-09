@@ -19,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,6 +41,7 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
+import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
@@ -50,6 +52,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalService;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 
 import org.apache.http.HttpStatus;
@@ -165,7 +168,73 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
                     editor.commit();
                     //MDLivePharmacy
+
+                    if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+                        checkMedicalCompletion();
+                    }else{
+                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Checks user medical history completion details.
+         * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+         * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+         * Based on the server response the corresponding action will be triggered.
+         */
+        private void checkMedicalCompletion() {
+            showProgress();
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    hideProgress();
+                    try {
+                        JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
+                        checkPediatricCompletion(historyPercentageArray);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgress();
+                    medicalCommonErrorResponseHandler(error);
+                }
+            };
+            MedicalHistoryCompletionServices services = new MedicalHistoryCompletionServices(MDLiveReasonForVisit.this, null);
+            services.getMedicalHistoryCompletionRequest(successCallBackListener, errorListener);
+        }
+
+        /**
+         * This will check weather the user has completed the allergy section and will hide and
+         * display teh layouts accordingly.
+         *
+         * @param historyPercentageArray - The history percentage JSONArray
+         */
+        private void checkPediatricCompletion(JSONArray historyPercentageArray) {
+            try {
+                int pediatricPercentage = 0;
+                for(int i = 0; i < historyPercentageArray.length(); i++){
+                    if(historyPercentageArray.getJSONObject(i).has("pediatric")){
+                        pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
+                    }
+                }
+                Log.e("pediatricPercentage", pediatricPercentage + "");
+                if(pediatricPercentage != 0){
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
+                    startActivity(medicalIntent);
+                    MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                }else{
+                    Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLivePediatric.class);
+                    medicalIntent.putExtra("firstTimeUser", "true");
                     startActivity(medicalIntent);
                     MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
                 }
