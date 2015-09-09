@@ -48,7 +48,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
         ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_medication_img);
         ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_medications_reported));
         ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.mdl_empty_medications_reported_msg));
@@ -139,7 +139,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
-                    ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+                    ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
                 }
             }
         };

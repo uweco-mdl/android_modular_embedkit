@@ -1137,7 +1137,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             userBasicInfo.setHealthLastUpdate(-1l);
         }
 
-        userBasicInfo.saveToSharedPreference(getBaseContext());
+        userBasicInfo.saveToSharedPreference(getBaseContext(), response.toString().trim());
 
         onUserChangedInGetStarted();
 
