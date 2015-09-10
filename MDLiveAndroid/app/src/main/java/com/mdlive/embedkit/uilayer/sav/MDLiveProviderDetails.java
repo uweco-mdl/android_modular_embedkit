@@ -788,7 +788,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
-            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+//            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             byphoneBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setClickable(false);
             accessModeCall("video");
@@ -801,7 +801,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             tapSeetheDoctorTxt.setVisibility(View.GONE);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             ByPhoneOrByVideoForNowAndLater();
-
             tapReqFutureBtnAction();
         }
         else  if(str_Availability_Type.equalsIgnoreCase("phone")){
@@ -811,7 +810,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
-            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             accessModeCall("phone");
             tapReqFutureBtnAction();
         }
@@ -825,7 +824,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
-            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
 
             tapReqFutureBtnAction();
         }
@@ -857,6 +856,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
                 reqfutureapptBtnLayout.setVisibility(View.GONE);
                 videophoneparentLl.setVisibility(View.VISIBLE);
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtnLayout.setVisibility(View.VISIBLE);
                 byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

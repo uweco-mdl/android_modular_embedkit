@@ -453,7 +453,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
-                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
@@ -478,33 +478,10 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    public String formatDualString(String formatText) {
-        boolean hasParenthesis = false;
-        Log.e("Print format txt",formatText);
-        if(formatText.indexOf(")") > 0){
-            hasParenthesis = true;
-        }
-        formatText= formatText.replace("(", "");
-        formatText= formatText.replace(")", "");
-        formatText= formatText.replace(" ", "");
-        if(formatText.length() > 10){
-            formatText = formatText.substring(0, formatText.length()-1);
-            Log.e("Print format txt",">10");
-        }
-        if(formatText.length() >= 7){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+" "+formatText.substring(6, formatText.length());
-            Log.e("Print format txt",formatText);
-        }else if(formatText.length() >= 4){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
-            Log.e("Print format txt",">4");
-        }else if(formatText.length() == 3 && hasParenthesis){
-            Log.e("Print format txt",">3");
-            formatText = "("+formatText.substring(0, formatText.length())+")";
-        }
-       return formatText;
-    }
+
         /**
          * This function is used for parse and update UI for server response.
          *
@@ -524,7 +501,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
-                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));

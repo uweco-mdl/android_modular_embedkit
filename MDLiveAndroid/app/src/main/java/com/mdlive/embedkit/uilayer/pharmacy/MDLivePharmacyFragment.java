@@ -218,6 +218,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
             bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
             bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
+            if(pharmacyDatas.has("phone")){
+                ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+            }
             bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
             bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
             bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
