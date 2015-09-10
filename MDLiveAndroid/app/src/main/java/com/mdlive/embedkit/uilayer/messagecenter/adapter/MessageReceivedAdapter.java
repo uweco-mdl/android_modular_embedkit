@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.messagecenter.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +44,14 @@ public class MessageReceivedAdapter extends ArrayAdapter<ReceivedMessage> {
 
 
         if (getItem(position).readStatus) {
-            viewHolder.mTextViewTop.setTextColor(Color.GRAY);
-            viewHolder.mTextViewBottom.setTextColor(Color.GRAY);
-            viewHolder.mTextViewTime.setTextColor(Color.GRAY);
+            viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
+            viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
+            viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
             viewHolder.mReadImageView.setVisibility(View.INVISIBLE);
         } else {
-            viewHolder.mTextViewTop.setTextColor(Color.BLACK);
-            viewHolder.mTextViewBottom.setTextColor(Color.BLACK);
-            viewHolder.mTextViewTime.setTextColor(Color.BLACK);
+            viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
+            viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
+            viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
             viewHolder.mReadImageView.setVisibility(View.VISIBLE);
         }
 

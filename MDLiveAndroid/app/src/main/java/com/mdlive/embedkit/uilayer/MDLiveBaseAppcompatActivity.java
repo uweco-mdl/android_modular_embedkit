@@ -218,7 +218,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
-            ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user);
+            ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
         }
     }
 
@@ -231,7 +231,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
-            ((NavigationDrawerFragment) fragment).loadUserInformationDetails();
+            ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
         }
     }
 
