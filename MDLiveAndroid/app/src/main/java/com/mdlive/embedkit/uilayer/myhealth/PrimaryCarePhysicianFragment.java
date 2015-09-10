@@ -100,7 +100,11 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
 
     public void uploadPCP() {
 
-        if (isEmpty(mFirstName.getText().toString()) && isEmpty(mFirstName.getText().toString()) && isEmpty(mFirstName.getText().toString()) && isEmpty(mFirstName.getText().toString())) {
+        if (isEmpty(mFirstName.getText().toString().trim()) &&
+                isEmpty(mLastName.getText().toString().trim()) &&
+                isEmpty(mState.getText().toString().trim()) &&
+                isEmpty(mCountry.getText().toString().trim()) &&
+                isEmpty(mPhoneNumber.getText().toString().trim())) {
             try {
                 JSONObject parent = new JSONObject();
 
@@ -126,7 +130,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.mdl_please_enter_mandetory_fileds), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -169,7 +173,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
             hideProgressDialog();
 
             if(response != null) {
-                Toast.makeText(getActivity(), "Added successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.mdl_pcp_added_succesfully), Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
         } catch (Exception e) {
