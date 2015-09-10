@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,8 @@ import java.util.HashMap;
  * Created by venkataraman_r on 7/27/2015.
  */
 public class GetFamilyMemberFragment extends MDLiveBaseFragment {
+    private OnChildAdded mOnChildAdded;
+
     private ListView lv;
     private HashMap<String, ArrayList<String>> values;
     private ArrayList<String> nameList;
@@ -42,6 +45,17 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
     public GetFamilyMemberFragment() {
         super();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mOnChildAdded = (OnChildAdded) activity;
+        } catch (ClassCastException cce) {
+
+        }
     }
 
     @Nullable
@@ -74,7 +88,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
                 if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
-                    MdliveUtils.showAddChildExcededDialog(getActivity(),userBasicInfo.getAssistPhoneNumber());
+                    MdliveUtils.showAddChildExcededDialog(getActivity(), userBasicInfo.getAssistPhoneNumber());
                 } else {
                     Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
                     changePhone.putExtra("Fragment_Name", "Add FAMILY MEMBER");
@@ -92,6 +106,13 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         getFamilyMemberInfoService();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mOnChildAdded = null;
+    }
+
     public void getFamilyMemberInfoService() {
         showProgressDialog();
 
@@ -102,7 +123,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
             @Override
             public void onResponse(JSONObject response) {
-                handlegetCreditCardInfoSuccessResponse(response);
+                handleFamilyMemberAddedSucessResponse(response);
             }
         };
 
@@ -123,7 +144,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         service.getFamilyMemberInfo(successCallBackListener, errorListener, null);
     }
 
-    public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
+    public void handleFamilyMemberAddedSucessResponse(JSONObject response) {
         hideProgressDialog();
         try {
             if((response.get("primary_user").toString())== "false")
@@ -143,6 +164,10 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
 
             lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList));
 
+            if (mOnChildAdded != null) {
+                mOnChildAdded.reloadNavigartion();
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -158,5 +183,9 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 getFamilyMemberInfoService();
                 break;
         }
+    }
+
+    public interface OnChildAdded {
+        void reloadNavigartion();
     }
 }
