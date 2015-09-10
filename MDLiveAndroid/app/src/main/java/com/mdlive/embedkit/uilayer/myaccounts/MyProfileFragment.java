@@ -262,12 +262,48 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             gender = myProfile.getString("gender");
             username = myProfile.getString("username");
             String address2;
+            String address1;
+            String city;
+            String state;
+            String country;
+            String zip;
+
+
             if (((myProfile.getString("address2")).equalsIgnoreCase("null")) || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
                 address2="";
             } else {
                 address2 = myProfile.getString("address2");
             }
-            address = myProfile.getString("address1")+"\n"+address2+"\n"+myProfile.getString("state")+"\n"+myProfile.getString("country")+"\n"+myProfile.getString("zipcode");
+
+            if (((myProfile.getString("address1")).equalsIgnoreCase("null")) || (myProfile.getString("address1") == null)  || (TextUtils.isEmpty(myProfile.getString("address1")))) {
+                address1="";
+            } else {
+                address1 = myProfile.getString("address1");
+            }
+
+            if (((myProfile.getString("state")).equalsIgnoreCase("null")) || (myProfile.getString("state") == null)  || (TextUtils.isEmpty(myProfile.getString("state")))) {
+                state="";
+            } else {
+                state = myProfile.getString("state")+" ";
+            }
+
+            if (((myProfile.getString("city")).equalsIgnoreCase("null")) || (myProfile.getString("city") == null)  || (TextUtils.isEmpty(myProfile.getString("city")))) {
+                city="";
+            } else {
+                city = myProfile.getString("city");
+            }
+            if (((myProfile.getString("country")).equalsIgnoreCase("null")) || (myProfile.getString("country") == null)  || (TextUtils.isEmpty(myProfile.getString("country")))) {
+                country="";
+            } else {
+                country = myProfile.getString("country");
+            }
+            if (((myProfile.getString("zipcode")).equalsIgnoreCase("null")) || (myProfile.getString("zipcode") == null)  || (TextUtils.isEmpty(myProfile.getString("zipcode")))) {
+                zip="";
+            } else {
+                zip = myProfile.getString("zipcode");
+            }
+
+            address = address1 +" "+address2+"\n"+city+"\n"+state + country+"\n"+zip;
             mobile = myProfile.getString("phone");
             timeZone = myProfile.getString("timezone");
             prefLanguage = myProfile.getString("language_preference");
@@ -295,7 +331,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mGender.setText(gender);
             mUserName.setText(username);
             mAddress.setText(address);
-            mMobile.setText(mobile);
+
+            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(mobile));
+            mMobile.setText(formattedString);
+
             mTimeZone.setText(timeZone);
             mEmail.setText(email);
 
@@ -444,7 +483,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         try {
             hideProgressDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

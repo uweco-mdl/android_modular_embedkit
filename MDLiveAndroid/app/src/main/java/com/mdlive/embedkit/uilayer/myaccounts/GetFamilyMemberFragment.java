@@ -34,7 +34,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     private HashMap<String, ArrayList<String>> values;
     private ArrayList<String> nameList;
     private ArrayList<String> urlList;
-    View v;
+    View header,footer;
     public static GetFamilyMemberFragment newInstance() {
         final GetFamilyMemberFragment fragment = new GetFamilyMemberFragment();
         return fragment;
@@ -59,12 +59,14 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         lv = (ListView) view.findViewById(R.id.listView);
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        v = inflater.inflate(R.layout.add_family_footer, null);
-        CardView addFamilyMember1 = (CardView) v.findViewById(R.id.addFamilyMember);
+        footer = inflater.inflate(R.layout.add_family_footer, null);
+        header = inflater.inflate(R.layout.add_family_header, null);
+        CardView addFamilyMember1 = (CardView) footer.findViewById(R.id.addFamilyMember);
 
         TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
-        lv.addFooterView(v);
+        lv.addFooterView(footer);
+        lv.addHeaderView(header);
 
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +128,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         try {
             if((response.get("primary_user").toString())== "false")
             {
-                lv.removeFooterView(v);
+                lv.removeFooterView(footer);
             }
 
             JSONArray jsonarray = (JSONArray) response.get("dependant_users");

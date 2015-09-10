@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,8 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by venkataraman_r on 6/22/2015.
@@ -50,7 +54,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private EditText mAddress1 = null;
     private EditText mAddress2 = null;
     private EditText mCity = null;
-    private EditText mState = null;
+    private TextView mState = null;
     private EditText mZip = null;
 
     private String cardNumber = null;
@@ -65,7 +69,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private String country = null;
     private String zip = null;
     private SwitchCompat changeAddress;
-    RelativeLayout mAddressVisibility;
+    RelativeLayout mAddressVisibility,mStateLayout;
+    private List<String> stateIds = new ArrayList<String>();
+    private List<String> stateList = new ArrayList<String>();
     private WebView myAccountHostedPCI;
 
     private int year, month;
@@ -138,14 +144,16 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mAddress1 = (EditText) billingInformation.findViewById(R.id.addressLine1);
         mAddress2 = (EditText) billingInformation.findViewById(R.id.addressLine2);
         mCity = (EditText) billingInformation.findViewById(R.id.city);
-        mState = (EditText) billingInformation.findViewById(R.id.state);
+        mState = (TextView) billingInformation.findViewById(R.id.state);
         mZip = (EditText) billingInformation.findViewById(R.id.zip);
         mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
         changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
+        mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
         changeAddress.setChecked(false);
+
 
 
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
@@ -156,6 +164,13 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                         ((MyAccountsHome) getActivity()).hideTick();
                     }
                     mAddressVisibility.setVisibility(View.GONE);
+                    mCardExpirationMonth.setEnabled(false);
+                    mNameOnCard.setEnabled(false);
+                    mAddress1.setEnabled(false);
+                    mAddress2.setEnabled(false);
+                    mCity.setEnabled(false);
+                    mStateLayout.setEnabled(false);
+                    mZip.setEnabled(false);
                 }
 
                 try {
@@ -176,8 +191,19 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 //                    mCardNumber.setText(cardNumber);
 //                    mSecurityCode.setText(securityCode);
                     mCardExpirationMonth.setText(cardExpirationMonth+"/"+cardExpirationYear);
-                    mNameOnCard.setText(nameOnCard);
-                    mAddress1.setText(address1);
+                    if (nameOnCard.equalsIgnoreCase("null") || (nameOnCard == null)  || (TextUtils.isEmpty(nameOnCard))) {
+                        nameOnCard="";
+                        mNameOnCard.setText(nameOnCard);
+                    } else {
+                        mNameOnCard.setText(nameOnCard);
+                    }
+
+                    if (address1.equalsIgnoreCase("null") || (address1 == null)  || (TextUtils.isEmpty(address1))) {
+                        address1="";
+                        mAddress1.setText(address1);
+                    } else {
+                        mAddress1.setText(address1);
+                    }
 
                     if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
                         address2="";
@@ -186,20 +212,33 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                         mAddress2.setText(address2);
                     }
 
-                    mCity.setText(city);
-                    mState.setText(state);
-                    mZip.setText(zip);
+                    if (city.equalsIgnoreCase("null") || (city == null)  || (TextUtils.isEmpty(city))) {
+                        city="";
+                        mCity.setText(city);
+                    } else {
+                        mCity.setText(city);
+                    }
 
+                    if (state.equalsIgnoreCase("null") || (state.equals(null))  || (TextUtils.isEmpty(state))) {
+                        state="";
+                        mState.setText(state);
+                    } else {
+                        mState.setText(state);
+                    }
+
+                    if (zip.equalsIgnoreCase("null") || (zip == null)  || (TextUtils.isEmpty(zip))) {
+                        zip="";
+                        mZip.setText(zip);
+                    } else {
+                        mZip.setText(zip);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         }
-        else
-        {
-//            mCardNumber.setEnabled(true);
-        }
+
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +247,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             }
         });
 
+        mStateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initializeStateDialog();
+            }
+        });
 
         changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -218,15 +263,35 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     String name = prefs.getString("Profile_Address", "");
                     try {
                         JSONObject myProfile = new JSONObject(name);
-                        mAddress1.setText(myProfile.getString("address1"));
-                        if (myProfile.getString("address2").equalsIgnoreCase("null") || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
+                        if (myProfile.getString("address1").trim().equalsIgnoreCase("null") || (myProfile.getString("address1").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("address1").trim()))) {
+                            mAddress1.setText("");
+                        } else {
+                            mAddress1.setText(myProfile.getString("address1").trim());
+                        }
+
+                        if (myProfile.getString("address2").trim().equalsIgnoreCase("null") || (myProfile.getString("address2").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("address2").trim()))) {
                             mAddress2.setText("");
                         } else {
-                            mAddress2.setText(myProfile.getString("address2"));
+                            mAddress2.setText(myProfile.getString("address2").trim());
                         }
-                        mCity.setText(myProfile.getString("country"));
-                        mState.setText(myProfile.getString("state"));
-                        mZip.setText(myProfile.getString("zipcode"));
+
+                        if (myProfile.getString("state").trim().equalsIgnoreCase("null") || (myProfile.getString("state").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("state").trim()))) {
+                            mState.setText("");
+                        } else {
+                            mState.setText(myProfile.getString("state").trim());
+                        }
+
+                        if (myProfile.getString("city").trim().equalsIgnoreCase("null") || (myProfile.getString("city").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("city").trim()))) {
+                            mCity.setText("");
+                        } else {
+                            mCity.setText(myProfile.getString("city").trim());
+                        }
+
+                        if (myProfile.getString("zipcode").trim().equalsIgnoreCase("null") || (myProfile.getString("zipcode").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("zipcode").trim()))) {
+                            mZip.setText("");
+                        } else {
+                            mZip.setText(myProfile.getString("zipcode").trim());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -315,16 +380,16 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     public void addCreditCardInfo() {
 //        cardNumber = mCardNumber.getText().toString();
 //        securityCode = mSecurityCode.getText().toString();
-        nameOnCard = mNameOnCard.getText().toString();
-        address1 = mAddress1.getText().toString();
-        address2 = mAddress2.getText().toString();
-        city = mCity.getText().toString();
+        nameOnCard = mNameOnCard.getText().toString().trim();
+        address1 = mAddress1.getText().toString().trim();
+        address2 = mAddress2.getText().toString().trim();
+        city = mCity.getText().toString().trim();
         state = mState.getText().toString();
         cardExpirationMonth = mCardExpirationMonth.getText().toString();
         country = "1";
-        zip = mZip.getText().toString();
+        zip = mZip.getText().toString().trim();
 
-        if ( isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(address2) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
+        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -402,6 +467,25 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
+    private void initializeStateDialog() {
 
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+
+        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+
+        final String[] stringArray = stateList.toArray(new String[stateList.size()]);
+
+        builder.setItems(stringArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                String SelectedText = stateIds.get(i);
+                mState.setText(SelectedText);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
 
 }
