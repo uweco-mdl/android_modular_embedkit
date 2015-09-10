@@ -338,6 +338,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     myText.setTextColor(Color.WHITE);
                                     myText.setTextSize(16);
                                     myText.setPadding(25, 25, 25, 25);
+                                    myText.setClickable(true);
                                     //myText.setBackgroundResource(R.drawable.edittext_bg);
                                     myText.setText("Now");
                                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
@@ -346,6 +347,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                     lp.setMargins(5, 0, 5, 0);
                                     myText.setLayoutParams(lp);
+                                    myText.setTag("Now");
+                                    clickEventForHorizontalText(myText);
                                     layout.addView(myText);
 
                                 }else {
@@ -438,13 +441,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     myText.setBackgroundResource(R.drawable.edittext_bg);
                                     myText.setText("Now");
                                     myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                                    myText.setTextColor(Color.WHITE);
+                                    myText.setClickable(true);
                                     previousSelectedTv = myText;
                                     LinearLayout.LayoutParams lp = new
                                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                     lp.setMargins(5, 0, 5, 0);
                                     myText.setLayoutParams(lp);
-
+                                    myText.setTag("Now");
+                                    clickEventForHorizontalText(myText);
                                     layout.addView(myText);
                                     //layout.addView(line, 1);
                                 } else {
@@ -788,7 +792,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
-            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+//            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             byphoneBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setClickable(false);
             accessModeCall("video");
@@ -801,7 +805,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             tapSeetheDoctorTxt.setVisibility(View.GONE);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             ByPhoneOrByVideoForNowAndLater();
-
             tapReqFutureBtnAction();
         }
         else  if(str_Availability_Type.equalsIgnoreCase("phone")){
@@ -811,7 +814,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
-            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             accessModeCall("phone");
             tapReqFutureBtnAction();
         }
@@ -825,7 +828,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
-            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
 
             tapReqFutureBtnAction();
         }
@@ -857,6 +860,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
                 reqfutureapptBtnLayout.setVisibility(View.GONE);
                 videophoneparentLl.setVisibility(View.VISIBLE);
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtnLayout.setVisibility(View.VISIBLE);
                 byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -867,6 +872,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                         byphoneBtn.setTextColor(Color.GRAY);
                         horizontalscrollview.setVisibility(View.VISIBLE);
+                        visibilityBasedOnHorizontalTextView("video");
                         selectedVideoOrPhone=true;
                         LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                         if(layout.getChildCount() > 0)
@@ -889,6 +895,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                         byvideoBtn.setTextColor(Color.GRAY);
                         horizontalscrollview.setVisibility(View.VISIBLE);
+                        visibilityBasedOnHorizontalTextView("phone");
                         selectedVideoOrPhone=true;
                         LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                         if(layout.getChildCount() > 0)
@@ -990,7 +997,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         {
             reqfutureapptBtnLayout.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.VISIBLE);
-            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+            byvideoBtn.setTextColor(Color.WHITE);
+            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            byphoneBtn.setTextColor(Color.GRAY);
             byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -998,6 +1008,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     byvideoBtn.setTextColor(Color.WHITE);
                     byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                     byphoneBtn.setTextColor(Color.GRAY);
+
                 }
             });
             byphoneBtnLayout.setVisibility(View.VISIBLE);
@@ -1029,6 +1040,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         else  if(position.equalsIgnoreCase("phone")){
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setClickable(false);
+            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            byvideoBtn.setTextColor(Color.GRAY);
+            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+            byphoneBtn.setTextColor(Color.WHITE);
             byphoneBtnLayout.setVisibility(View.VISIBLE);
             byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

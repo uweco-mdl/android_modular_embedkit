@@ -1,6 +1,9 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +24,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
@@ -38,7 +44,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private Bundle bundletoSend = new Bundle();
     private IntentFilter intentFilter;
     private static View view;
-
+    private Activity parentActivity;
+    private LocationCooridnates locationService;
+    private boolean isChecked = false;
     public static MDLivePharmacyFragment newInstance() {
         final MDLivePharmacyFragment pharmacyFragment = new MDLivePharmacyFragment();
         return pharmacyFragment;
@@ -51,13 +59,12 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        parentActivity = activity;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("onCreateView---->>>", "getUserPharmacyDetails");
-
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -88,14 +95,43 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationService = new LocationCooridnates(getActivity());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
         initializeMapView();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getUserPharmacyDetails();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && parentActivity instanceof MedicalHistoryActivity && ((MedicalHistoryActivity)parentActivity).getViewPager().getCurrentItem() == 1 && !isChecked){
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+            if(userBasicInfo.getNotifications().getPharmacyDetails() == null){
+
+                if(locationService!=null && locationService.checkLocationServiceSettingsEnabled(getActivity())){
+                    showProgressDialog();
+                    isChecked = true;
+                    getActivity().registerReceiver(locationReceiver, intentFilter);
+                    locationService.setBroadCastData(getClass().getSimpleName());
+                    locationService.startTrackingLocation(getActivity());
+                } else {
+                    isChecked = true;
+                    Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
+                    startActivity(pharmacyintent);
+                }
+            }else {
+                getUserPharmacyDetails();
+            }
+        } else {
+            isChecked = false;
+            getUserPharmacyDetails();
+        }
     }
 
     @Override
@@ -218,6 +254,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
             bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
             bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
+            if(pharmacyDatas.has("phone")){
+                ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+            }
             bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
             bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
             bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
@@ -280,4 +319,30 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         }
     }
 
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgressDialog();
+            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")){
+                double lat=intent.getDoubleExtra("Latitude",0d);
+                double lon=intent.getDoubleExtra("Longitude",0d);
+                if(lat!=0 && lon!=0){
+                    Intent i = new Intent(getActivity(), MDLivePharmacyResult.class);
+                    i.putExtra("longitude", lat + "");
+                    i.putExtra("latitude", lon + "");
+                    i.putExtra("errorMesssage", "No Pharmacies listed in your location");
+                    startActivity(i);
+                    MdliveUtils.startActivityAnimation(getActivity());
+                } else{
+                    isChecked = true;
+                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                    startActivity(pharmacyintent);
+                }
+            } else {
+                isChecked = true;
+                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                startActivity(pharmacyintent);
+            }
+        }
+    };
 }

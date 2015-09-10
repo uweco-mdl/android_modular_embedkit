@@ -210,9 +210,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
                                 Log.e("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
-//                                phoneNumberText = phoneNumberText.replace("(", "");
-//                                phoneNumberText = phoneNumberText.replace(")", "");
-//                                phoneNumberText = phoneNumberText.replace(" ", "");
+                                phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
                                 if(((TextView)findViewById(R.id.providertypeTxt)).getText() != null)
@@ -252,9 +250,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         providerTypeArrayList = new ArrayList<String>();
         providerTypeIdList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
-
-
-
     }
     /**
      *
@@ -656,6 +651,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleSuccessResponse(JSONObject response) {
         try {
+            Log.e("userinfo Res-->",response.toString());
             assistFamilyMemmber = response.getString("assist_phone_number");
             remainingFamilyMemberCount = response.getInt("remaining_family_members_limit");
             JSONObject personalInfo = response.getJSONObject("personal_info");
@@ -674,11 +670,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 }
 
                 phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
-                String numStr=personalInfo.getString("phone");
+                String numStr = personalInfo.getString("phone");
 
                 try {
                     String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(numStr));
                     phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
+
                     phonrNmberEditTxt.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -693,7 +690,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                         @Override
                         public void afterTextChanged(Editable s) {
                             if (mayIallowtoEdit) {
-                                String temp = s.toString().replace("-", "");
+                                mayIallowtoEdit=false;
+                                phonrNmberEditTxt.setText(MdliveUtils.formatDualString(s.toString()));
+                                phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
+                                mayIallowtoEdit = true;
+                                /*String temp = s.toString().replace("-", "");
                                 if (temp.length() == 10) {
                                     String number = temp;
                                     String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
@@ -701,8 +702,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                     phonrNmberEditTxt.setText(formattedString);
                                     phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
                                     mayIallowtoEdit = true;
-
-                                }
+                                }*/
                             }
 
                         }
@@ -825,16 +825,19 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (mayIallowtoEdit) {
-                        String temp = s.toString().replace("-", "");
-                        if (temp.length() == 10) {
-                            String number = temp;
-                            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
-                            mayIallowtoEdit = false;
-                            phonrNmberEditTxt.setText(formattedString);
-                            phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
-                            mayIallowtoEdit = true;
-
-                        }
+                        mayIallowtoEdit=false;
+                        phonrNmberEditTxt.setText(MdliveUtils.formatDualString(s.toString()));
+                        phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
+                        mayIallowtoEdit = true;
+                                /*String temp = s.toString().replace("-", "");
+                                if (temp.length() == 10) {
+                                    String number = temp;
+                                    String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
+                                    mayIallowtoEdit = false;
+                                    phonrNmberEditTxt.setText(formattedString);
+                                    phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().toString().length());
+                                    mayIallowtoEdit = true;
+                                }*/
                     }
 
                 }

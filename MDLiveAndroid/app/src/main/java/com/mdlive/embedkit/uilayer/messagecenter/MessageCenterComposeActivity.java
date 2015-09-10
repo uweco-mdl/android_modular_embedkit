@@ -16,6 +16,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageComposeFragment.OnBothTextEntered;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
@@ -24,7 +25,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 /**
  * Created by dhiman_da on 8/19/2015.
  */
-public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
+public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity implements OnBothTextEntered {
     public static final String DATA_TAG = "data";
 
     public static Intent getMessageComposeDetailsIntent(final Context context, final Parcelable parcelable) {
@@ -37,6 +38,8 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
+
+        showRight(false);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -135,6 +138,19 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MessageComposeFragment) {
             ((MessageComposeFragment) fragment).sendComposedMessage();
+        }
+    }
+
+    @Override
+    public void onBothTextEntered(boolean value) {
+        showRight(value);
+    }
+
+    private void showRight(final boolean value) {
+        if (value) {
+            findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.txtApply).setVisibility(View.GONE);
         }
     }
 }

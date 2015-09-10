@@ -34,12 +34,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
  */
 public class AddFamilyMemberFragment extends MDLiveBaseFragment {
-
 
     private EditText mUsername = null;
     private EditText mEmail = null;
@@ -69,7 +70,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout,mDOBLayout,mGenderLayout;
-
+    private boolean mayIallowtoEdit = true;
     public static AddFamilyMemberFragment newInstance() {
 
         final AddFamilyMemberFragment addFamilyMember = new AddFamilyMemberFragment();
@@ -159,6 +160,39 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 alert.show();
             }
         });
+
+
+        try {
+            mPhone.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (mayIallowtoEdit) {
+                        String temp = s.toString().replace("-", "");
+                        if (temp.length() == 10) {
+                            String number = temp;
+                            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
+                            mayIallowtoEdit = false;
+                            mPhone.setText(formattedString);
+                            mPhone.setSelection(mPhone.getText().toString().length());
+                            mayIallowtoEdit = true;
+                        }
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+        }
+
 
         mUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -290,6 +324,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
         if(isEmpty(Username)&& isEmpty(Email)&&  isEmpty(FirstName)&&  isEmpty(LastName)&& isEmpty(Address1)&&  isEmpty(City)
                 && isEmpty(State) &&  isEmpty(Phone) &&  isEmpty(DOB) && isEmpty(Gender)) {
+            if(validEmail(Email)) {
                 try {
                     JSONObject parent = new JSONObject();
 
@@ -322,6 +357,10 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+            else {
+                Toast.makeText(getActivity(), "Email id is invalid", Toast.LENGTH_SHORT).show();
+            }
         }
         else
         {
@@ -369,7 +408,6 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private void handleAddFamilyInfoSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
-
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {
@@ -396,5 +434,16 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             }
         });
         builder.show();
+    }
+
+    private boolean validEmail(String email){
+
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        Matcher matcher = pattern.matcher(email);
+        if(matcher.matches()) {
+           return true;
+        }
+        return false;
     }
 }

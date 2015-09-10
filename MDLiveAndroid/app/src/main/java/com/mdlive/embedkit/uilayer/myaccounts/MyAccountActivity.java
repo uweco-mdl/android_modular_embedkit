@@ -3,11 +3,12 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -16,6 +17,7 @@ import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
+import com.mdlive.embedkit.uilayer.myaccounts.GetFamilyMemberFragment.OnChildAdded;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -24,7 +26,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 /**
  * Created by sanjibkumar_p on 7/27/2015.
  */
-public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements FragmentTabHost.OnTabChangeListener {
+public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements OnTabChangeListener, OnChildAdded {
 
     private static final String MY_ACCOUNT_TAG = "Account";
     private static final String BILLING_TAG = "Billing";
@@ -170,5 +172,13 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements Fr
         final SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
+    }
+
+    @Override
+    public void reloadNavigartion() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null && fragment instanceof NavigationDrawerFragment) {
+            ((NavigationDrawerFragment) fragment).reload();
+        }
     }
 }

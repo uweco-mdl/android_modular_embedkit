@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,11 @@ public class ChangeAddressFragment  extends Fragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
-                mAddressLine1.setText(responseDetail.getString("address1"));
+                if ((responseDetail.getString("address1").equalsIgnoreCase("null")) || (responseDetail.getString("address1") == null)  || (TextUtils.isEmpty(responseDetail.getString("address1") )) ||((responseDetail.getString("address1").trim().length()) == 0)) {
+                    mAddressLine1.setText("");
+                } else {
+                    mAddressLine1.setText(responseDetail.getString("address1"));
+                }
 
                 if ((responseDetail.getString("address2").equalsIgnoreCase("null")) || (responseDetail.getString("address2") == null)  || (TextUtils.isEmpty(responseDetail.getString("address2") )) ||((responseDetail.getString("address2").trim().length()) == 0)) {
                     mAddressLine2.setText("");
@@ -91,9 +96,24 @@ public class ChangeAddressFragment  extends Fragment {
                     mAddressLine2.setText(responseDetail.getString("address2"));
                 }
 
-                mState.setText(responseDetail.getString("state"));
-                mCity.setText(responseDetail.getString("country"));
-                mZip.setText(responseDetail.getString("zipcode"));
+                if ((responseDetail.getString("state").equalsIgnoreCase("null")) || (responseDetail.getString("state") == null)  || (TextUtils.isEmpty(responseDetail.getString("state") )) ||((responseDetail.getString("state").trim().length()) == 0)) {
+                    mState.setText("");
+                } else {
+                    mState.setText(responseDetail.getString("state"));
+                }
+
+                if ((responseDetail.getString("city").equalsIgnoreCase("null")) || (responseDetail.getString("city") == null)  || (TextUtils.isEmpty(responseDetail.getString("city") )) ||((responseDetail.getString("city").trim().length()) == 0)) {
+                    mCity.setText("");
+                } else {
+                    mCity.setText(responseDetail.getString("city"));
+                }
+
+                if ((responseDetail.getString("zipcode").equalsIgnoreCase("null")) || (responseDetail.getString("zipcode") == null)  || (TextUtils.isEmpty(responseDetail.getString("zipcode") )) ||((responseDetail.getString("zipcode").trim().length()) == 0)) {
+                    mZip.setText("");
+                } else {
+                    mZip.setText(responseDetail.getString("zipcode"));
+                }
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -107,7 +127,6 @@ public class ChangeAddressFragment  extends Fragment {
         if(response != null){
             try {
                 JSONObject responseDetail = new JSONObject(response);
-
 
                 if (isEmpty(mAddressLine1.getText().toString().trim())&& isEmpty(mState.getText().toString().trim())
                         && isEmpty(mCity.getText().toString().trim()) && isEmpty(mZip.getText().toString().trim())) {
@@ -129,17 +148,20 @@ public class ChangeAddressFragment  extends Fragment {
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
+                    Log.i("request:", jsonObject.toString());
                     loadProfileInfo(parent.toString());
+                }
+
+                else
+                {
+                    Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
                 }
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        else
-        {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
-        }
+
     }
     public Boolean isEmpty(String cardInfo)
     {

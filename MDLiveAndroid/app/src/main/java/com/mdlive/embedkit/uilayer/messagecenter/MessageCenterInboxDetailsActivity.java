@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -22,10 +23,12 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 
+import static com.mdlive.embedkit.uilayer.messagecenter.MessageReceivedDetailsFragment.*;
+
 /**
  * Created by dhiman_da on 8/19/2015.
  */
-public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivity {
+public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivity implements ReloadMessageCount {
     public static final String DATA_TAG = "data";
 
     public static Intent getMessageDetailsIntent(final Context context, final Parcelable parcelable) {
@@ -55,7 +58,7 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
                     ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_inbox).toUpperCase());
                     getSupportFragmentManager().
                             beginTransaction().
-                            add(R.id.container, MessageReceivedDetailsFragment.newInstance((ReceivedMessage) parcelable)).
+                            add(R.id.container, newInstance((ReceivedMessage) parcelable)).
                             commit();
                 } else if (parcelable instanceof SentMessage) {
                     ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_sent).toUpperCase());
@@ -133,6 +136,14 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
             case 8:
                 shareApplication();
                 break;
+        }
+    }
+
+    @Override
+    public void reloadMessageCount() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null) {
+            ((NavigationDrawerFragment) fragment).reload();
         }
     }
 

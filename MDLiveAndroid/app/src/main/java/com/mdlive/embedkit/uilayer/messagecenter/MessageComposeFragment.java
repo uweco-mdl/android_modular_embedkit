@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +35,13 @@ import org.json.JSONObject;
 /**
  * Created by dhiman_da on 6/24/2015.
  */
-public class MessageComposeFragment extends MDLiveBaseFragment {
+public class MessageComposeFragment extends MDLiveBaseFragment implements TextWatcher {
     private static final String TAG = "data";
 
     private EditText mSubjectEditText;
     private EditText mBodyEditText;
+
+    private OnBothTextEntered mOnBothTextEntered;
 
     public static MessageComposeFragment newInstance(final Parcelable parcelable) {
         final Bundle args = new Bundle();
@@ -56,6 +60,8 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        mOnBothTextEntered = (OnBothTextEntered) activity;
     }
 
     @Override
@@ -103,6 +109,17 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
 
         mSubjectEditText = (EditText) view.findViewById(R.id.fragment_message_compose_subject_edit_text);
         mBodyEditText = (EditText) view.findViewById(R.id.fragment_message_compose_body_edit_text);
+
+        mSubjectEditText.addTextChangedListener(this);
+        mBodyEditText.addTextChangedListener(this);
+        mBodyEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBodyEditText.requestFocusFromTouch();
+                mBodyEditText.setFocusableInTouchMode(true);
+                mBodyEditText.requestFocus();
+            }
+        });
     }
 
     @Override
@@ -148,6 +165,8 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        mOnBothTextEntered = null;
     }
 
     public void sendComposedMessage() {
@@ -232,5 +251,30 @@ public class MessageComposeFragment extends MDLiveBaseFragment {
         } catch (JSONException e) {
             logE("JSONException", e.getMessage());
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if ((mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() > 0)
+                &&
+                mBodyEditText != null && mBodyEditText.getText().toString().trim().length() > 0) {
+            mOnBothTextEntered.onBothTextEntered(true);
+        } else {
+            mOnBothTextEntered.onBothTextEntered(false);
+        }
+    }
+
+    public interface OnBothTextEntered {
+        void onBothTextEntered(final boolean value);
     }
 }

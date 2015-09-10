@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterComposeActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -146,22 +146,22 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        logD("Nav", "I am here");
-        if (getActivity() != null && (getActivity() instanceof MDLiveDashboardActivity || getActivity() instanceof MessageCenterComposeActivity)) {
+        if (getActivity() != null && (getActivity() instanceof MDLiveDashboardActivity)) {
             final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
-            logD("Nav", "I am here1");
             if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                logD("Nav", "I am dependent user :" + user.toString());
-                loadDependendUserDetails(user);
+                loadDependendUserDetails(user, true);
             } else {
-                logD("Nav", "I am primary user :");
-                loadUserInformationDetails();
+                loadUserInformationDetails(true);
             }
         } else {
-            logD("Nav", "I am here2");
             mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
             updateList();
         }
@@ -192,16 +192,17 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
      *
      * After getting the uniqueid save it to shared preference.
      */
-    public void loadUserInformationDetails() {
+    public void loadUserInformationDetails(final boolean showProgress) {
         /* Clears the Selected User Preference*, for safety */
         //User.clearSelectedUser(getActivity());
-        showProgressDialog();
+        if (showProgress) {
+            showProgressDialog();
+        }
 
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                hideProgressDialog();
                 User.clearUser(getActivity());
 
                 /* Security JSON we need to read again, because of the web service issue..
@@ -221,13 +222,19 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
 
                 updateList();
+
+                if (showProgress) {
+                    hideProgressDialog();
+                }
             }
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
+                if (showProgress) {
+                    hideProgressDialog();
+                }
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
@@ -250,14 +257,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
      *
      * After getting the uniqueid save it to shared preference.
      */
-    public void loadDependendUserDetails(final User user) {
-        showProgressDialog();
+    public void loadDependendUserDetails(final User user, final boolean showProgress) {
+        if (showProgress) {
+            showProgressDialog();
+        }
 
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
-                hideProgressDialog();
                 user.saveSelectedUser(getActivity());
 
                 /* Security JSON we need to read again, because of the web service issue..
@@ -276,13 +283,20 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
                 mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
                 updateList();
+
+                if (showProgress) {
+                    hideProgressDialog();
+                }
             }
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
+                if (showProgress) {
+                    hideProgressDialog();
+                }
+
                 try {
                     //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
 
@@ -294,7 +308,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                                 prefs.edit().clear().commit();
                             }
 
-                            loadUserInformationDetails();
+                            loadUserInformationDetails(true);
                             if (mOnUserInformationLoaded != null) {
                                 mOnUserInformationLoaded.setPrimaryUserSelected();
                             }
@@ -437,9 +451,9 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 if (load) {
                     if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
                         if (user.mMode == User.MODE_PRIMARY) {
-                            loadUserInformationDetails();
+                            loadUserInformationDetails(true);
                         } else {
-                            loadDependendUserDetails(user);
+                            loadDependendUserDetails(user, true);
                         }
                     } else {
                         if (mOnUserInformationLoaded != null) {
@@ -449,6 +463,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 } else {
                     // No need to load new data
                 }
+
+                setMaxWidthForLeftText(mSelectedUserLinearLayout,
+                        ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)),
+                        mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view));
             }
 
             @Override
@@ -467,6 +485,51 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void onUserChangedInGetStarted() {
         mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
         updateList();
+    }
+
+    public void reload() {
+        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+
+        if (mUserBasicInfo.getPrimaryUser()) {
+            loadUserInformationDetails(true);
+        } else {
+            final User user = User.getSelectedUser(getActivity());
+            if (user != null) {
+                loadDependendUserDetails(user, true);
+            }
+        }
+    }
+
+    /**
+     *  This method is used to shrink pharmacy store name if exceeds screen display
+     *
+     *  While pharmacy name is shrinking, then there will not be any changes on distance text.
+     */
+    public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView,
+                                       final View rightTextView) {
+        parentView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int rWidth, aWidth, bWidth;
+                rWidth = parentView.getWidth();
+                leftTextView.measure(0, 0);
+                aWidth = leftTextView.getMeasuredWidth();
+                rightTextView.measure(0, 0);
+                bWidth = rightTextView.getMeasuredWidth();
+                int aMarginEnd = 0, bMarginStart = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    aMarginEnd = (int) (((LinearLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * leftTextView.getResources().getDisplayMetrics().density);
+                    bMarginStart = (int) (((LinearLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * leftTextView.getResources().getDisplayMetrics().density);
+                } else {
+                    aMarginEnd = 10;
+                    bMarginStart = 10;
+                }
+                leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
+                leftTextView.invalidate();
+                rightTextView.invalidate();
+                parentView.invalidate();
+            }
+        }, 50);
     }
 
     /**

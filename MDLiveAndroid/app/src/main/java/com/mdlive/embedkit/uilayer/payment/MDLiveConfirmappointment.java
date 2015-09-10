@@ -136,7 +136,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }else if(formatText.length() == 3 && hasParenthesis){
             formatText = "("+formatText.substring(0, formatText.length())+")";
         }
-        ((TextView)findViewById(R.id.phoneNumber)).setText(formatText);
+        ((TextView)findViewById(R.id.phoneNumber)).setText(MdliveUtils.formatDualString(formatText));
 
     }
 }

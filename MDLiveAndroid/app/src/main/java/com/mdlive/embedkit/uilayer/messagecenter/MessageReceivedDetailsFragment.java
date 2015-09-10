@@ -27,6 +27,8 @@ import org.json.JSONObject;
 public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     private static final String RECEIVED_MESSAGE_TAG = "received_message";
 
+    private ReloadMessageCount mReloadMessageCount;
+
     public static MessageReceivedDetailsFragment newInstance(final ReceivedMessage receivedMessage) {
         final Bundle args = new Bundle();
         args.putParcelable(RECEIVED_MESSAGE_TAG, receivedMessage);
@@ -44,6 +46,8 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        mReloadMessageCount = (ReloadMessageCount) activity;
     }
 
     @Override
@@ -149,6 +153,8 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        mReloadMessageCount = null;
     }
 
     private void callReceivedMessageRead(final String id) {
@@ -158,6 +164,10 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
+
+                if (mReloadMessageCount != null) {
+                    mReloadMessageCount.reloadMessageCount();
+                }
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -175,5 +185,9 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
 
         final MessageCenter messageCenter = new MessageCenter(getActivity(), getProgressDialog());
         messageCenter.getMessaseReceivedRead(id, successListener, errorListener, null);
+    }
+
+    public interface ReloadMessageCount {
+        void reloadMessageCount();
     }
 }
