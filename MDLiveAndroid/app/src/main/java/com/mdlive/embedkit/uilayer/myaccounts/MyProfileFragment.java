@@ -184,7 +184,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View view) {
                 final CharSequence[] items = {
-                        "EN", "ES", "KO"
+                        "EN"/*, "ES", "KO"*/
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

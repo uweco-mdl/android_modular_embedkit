@@ -23,9 +23,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -35,8 +38,11 @@ import android.widget.Toast;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.BehavioralHistory;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.ConditionAndActive;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
@@ -51,6 +57,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
+import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralService;
+import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralUpdateService;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalService;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
@@ -79,7 +87,7 @@ import javax.net.ssl.HttpsURLConnection;
      * Created by srinivasan_ka on 8/13/2015.
      */
 public class MDLiveReasonForVisit extends MDLiveBaseActivity {
-
+        private BehavioralHistory mBehavioralHistory;
         private loadDownloadedImages loadImageService;
         private ImageAdapter imageAdapter;
         private GridView gridview;
@@ -91,6 +99,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public static Uri fileUri;
         public ImageView takePhoto, takeGallery;
         public RelativeLayout photosContainer;
+        public boolean isTherapistUser = false;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -111,13 +120,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_header_reason_txt).toUpperCase());
 
-
             setProgressBar(findViewById(R.id.progressDialog));
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             //((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
             ReasonList = new ArrayList<String>();
             initializeViews();
-            ReasonForVisit();
 
             if (savedInstanceState == null) {
                 getSupportFragmentManager().
@@ -142,18 +149,167 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             findViewById(R.id.MyHealthAddPhotoL2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(findViewById(R.id.childHeader).getVisibility() == View.VISIBLE){
-                        findViewById(R.id.childHeader).setVisibility(View.GONE);
+                    if (findViewById(R.id.topContentHolder).getVisibility() == View.VISIBLE) {
+                        findViewById(R.id.topContentHolder).setVisibility(View.GONE);
                         findViewById(R.id.photoLayout).setVisibility(View.VISIBLE);
-                        ((ImageView)findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.down_arrow_icon_white);
-                    }else{
-                        findViewById(R.id.childHeader).setVisibility(View.VISIBLE);
+                        ((ImageView) findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.down_arrow_icon_white);
+                    } else {
+                        findViewById(R.id.topContentHolder).setVisibility(View.VISIBLE);
                         findViewById(R.id.photoLayout).setVisibility(View.GONE);
-                        ((ImageView)findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.arrow_up);
+                        ((ImageView) findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.arrow_up);
                     }
                 }
             });
+
+            // Provider mode
+            String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+
+            Log.e("Provider Mode", providerMode);
+
+            if (providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")) {
+                isTherapistUser = true;
+                ((LinearLayout) findViewById(R.id.behaviourView)).setVisibility(View.VISIBLE);
+                ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.GONE);
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                getBehaviouralHealthServiceData();
+            } else {
+                isTherapistUser = false;
+                ((LinearLayout) findViewById(R.id.behaviourView)).setVisibility(View.GONE);
+                ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.VISIBLE);
+                ReasonForVisit();
+            }
         }
+
+
+
+        private void getBehaviouralHealthServiceData() {
+            showProgress();
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        handleSuccessResponse(response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgress();
+                    try {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
+                    }
+                    catch (Exception e) {
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveReasonForVisit.this);
+                    }
+                }};
+            BehaviouralService services = new BehaviouralService(MDLiveReasonForVisit.this, getProgressDialog());
+            services.doGetBehavioralHealthService(responseListener, errorListener);
+        }
+
+
+        private void handleSuccessResponse(JSONObject response) {
+            //try {
+                hideProgress();
+                Log.e("Provider Mode Response ", response.toString());
+                final Gson gson = new Gson();
+                mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
+
+                Log.e("Hello", mBehavioralHistory.toString());
+                Log.e("mBehavioralHistory.behavioralHealthReasons", mBehavioralHistory.behavioralHealthReasons.toString());
+                Log.e("mBehavioralHistory.behavioralHealthDescription ", mBehavioralHistory.behavioralHealthDescription.toString());
+
+                LinearLayout behaviourHolder = (LinearLayout) findViewById(R.id.behaviourHolder);
+                if(behaviourHolder.getChildCount() > 0){
+                    behaviourHolder.removeAllViews();
+                }
+                if (mBehavioralHistory.behavioralHealthReasons != null && mBehavioralHistory.behavioralHealthReasons.size() > 0) {
+                    for (int i = 0; i < mBehavioralHistory.behavioralHealthReasons.size(); i++) {
+                        final int position = i;
+                        final View child = getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
+                        final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
+                        checkBox.setText(mBehavioralHistory.behavioralHealthReasons.get(position).condition);
+                        if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralHealthReasons.get(position).active)) {
+                            checkBox.setChecked(true);
+                        } else {
+                            checkBox.setChecked(false);
+                        }
+                        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked) {
+                                    mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.YES;
+                                } else {
+                                    mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.NO;
+                                }
+                            }
+                        });
+                        behaviourHolder.addView(child);
+                        Log.e("Child Added", i+"");
+                    }
+                }
+
+                EditText behaviour_reason = ((EditText) findViewById(R.id.behaviour_reason));
+                if(mBehavioralHistory.behavioralHealthDescription != null && mBehavioralHistory.behavioralHealthDescription.length() != 0){
+                    behaviour_reason.setText(mBehavioralHistory.behavioralHealthDescription);
+                }
+                behaviour_reason.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if(s != null && s.length() != 0){
+                            mBehavioralHistory.behavioralHealthDescription = s.toString();
+                        }else{
+                            mBehavioralHistory.behavioralHealthDescription = "";
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+            //}catch(Exception e){
+                //e.printStackTrace();
+            //}
+        }
+
+
+        public void updateBehaviourHealthService() {
+            showProgress();
+            final Gson gson = new Gson();
+            String request = gson.toJson(mBehavioralHistory);
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    hideProgress();
+                    startNextActivity();
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgress();
+                    try {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
+                    }
+                    catch (Exception e) {
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveReasonForVisit.this);
+                    }
+                }};
+            BehaviouralUpdateService behaviouralUpdateServices = new BehaviouralUpdateService(MDLiveReasonForVisit.this, getProgressDialog());
+            behaviouralUpdateServices.postBehaviouralUpdateService(request, responseListener, errorListener);
+        }
+
+
+
+
 
         public void leftBtnOnClick(View v){
             MdliveUtils.hideSoftKeyboard(MDLiveReasonForVisit.this);
@@ -162,25 +318,32 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         public void rightBtnOnClick(View v){
             try {
-                if(baseadapter.getSelectedPosition() >= 0){
-                    SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
-                    editor.commit();
-                    //MDLivePharmacy
-
-                    if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-                        checkMedicalCompletion();
-                    }else{
-                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
-                        startActivity(medicalIntent);
-                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                if(isTherapistUser){
+                    updateBehaviourHealthService();
+                }else{
+                    if(baseadapter.getSelectedPosition() >= 0){
+                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
+                        editor.commit();
+                        startNextActivity();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        public void startNextActivity(){
+            if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+                checkMedicalCompletion();
+            }else{
+                Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
+                startActivity(medicalIntent);
+                MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+            }
+        }
+
 
         /**
          * Checks user medical history completion details.
@@ -221,6 +384,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
          */
         private void checkPediatricCompletion(JSONArray historyPercentageArray) {
             try {
+                hideProgress();
                 int pediatricPercentage = 0;
                 for(int i = 0; i < historyPercentageArray.length(); i++){
                     if(historyPercentageArray.getJSONObject(i).has("pediatric")){
@@ -297,7 +461,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             takeGallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(myPhotosList.size() < 8){
+                    if (myPhotosList.size() < 8) {
                         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                         photoPickerIntent.setType("image/*");
                         startActivityForResult(photoPickerIntent, IntegerConstants.PICK_IMAGE_REQUEST_CODE);

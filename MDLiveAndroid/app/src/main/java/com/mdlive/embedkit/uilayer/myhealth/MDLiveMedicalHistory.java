@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
@@ -192,6 +193,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
         MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
     }
+
+    public void BehaviourLlOnClick(View view){
+        Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveBehaviouralHealthActivity.class);
+        startActivityForResult(i, IntegerConstants.RELOAD_REQUEST_CODE);
+        MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+    }
+
 
     public void MedicationsLlOnClick(View view){
         Intent i = new Intent(MDLiveMedicalHistory.this, MDLiveAddMedications.class);
