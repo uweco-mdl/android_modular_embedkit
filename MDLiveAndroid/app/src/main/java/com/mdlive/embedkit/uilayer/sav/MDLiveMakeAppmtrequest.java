@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,7 +47,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import static java.util.Calendar.MONTH;
@@ -167,20 +165,20 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     public void onclickVideo(View v)
     {
         selectedvideo = 1;
-        ((Button)findViewById(R.id.videoBtn)).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-        ((Button)findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-        ((Button)findViewById(R.id.phoneBtn)).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-        ((Button)findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+        ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
 
     }
     public void onclickPhone(View v)
     {
 
         selectedvideo=2;
-        ((Button)findViewById(R.id.phoneBtn)).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-        ((Button)findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-        ((Button)findViewById(R.id.videoBtn)).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-        ((Button)findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+        ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
     }
 
     /**
@@ -234,7 +232,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 // add pickerListener listner to date picker
                 Calendar calendar = Calendar.getInstance();
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(new Date().getTime());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis()-10000);
                 return dialog;
         }
         return null;

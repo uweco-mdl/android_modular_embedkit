@@ -365,33 +365,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             downloadMedicalRecordService();
         }
 
- /*   *//*
-* shows or hide list footer/ bottom footer
-* Here the footer can set as static and also in dynamic ways.if the list has dats the the
-* footer will be added in the listview which is the dynamic creation of the footer.
-* If there is no data on the list then the static footer will be shown.
-* *//*
-    public void showOrHideFooter() {
-        final View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.mdlive_footer, null, false);
 
-        // If list size is greater than zero then show the bottom footer
-        if (ReasonList != null && ReasonList.size() > IntegerConstants.NUMBER_ZERO) {
-            findViewById(R.id.footer).setVisibility(View.GONE);
-
-            if (listView.getFooterViewsCount() == IntegerConstants.NUMBER_ZERO) {
-
-                listView.addFooterView(footerView, null, false);
-            }
-        }
-        // If list size is zero then remove the bootm footer & add the list footer
-        else {
-            findViewById(R.id.footer).setVisibility(View.VISIBLE);
-            if (listView.getFooterViewsCount() > IntegerConstants.NUMBER_ZERO) {
-                listView.removeFooterView(footerView);
-            }
-        }
-    }*/
 
         /**
          * Filter Search for the Listview. we can filter the list by giving the name and if the name

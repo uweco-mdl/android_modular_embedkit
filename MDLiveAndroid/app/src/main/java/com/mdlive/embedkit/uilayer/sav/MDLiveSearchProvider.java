@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -30,6 +31,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
@@ -131,6 +133,19 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch = (EditText) findViewById(R.id.edt_searchProvider);
         setProgressBar(findViewById(R.id.progressDialog));
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
+        {
+            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+
+
+        }else if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone"))
+        {
+            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+        }else
+        {
+            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.VISIBLE);
+        }
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
@@ -145,6 +160,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 //            }
 //        });
     }
+
 
     public void availbleAction(View v) {
         showListViewDialog(AvailableByArrayList, (TextView) findViewById(R.id.AvailableTxtView), "available_by", SearchArrayListAvailableBy);
@@ -238,7 +254,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
-            postParams.put("available_by", postParams.get("available_by"));
+
         postParams.put("appointment_date", AppointmentTxtView.getText().toString());
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
@@ -251,6 +267,22 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         {
             postParams.put("provider_type", "2");
         }
+
+        // PHS USERS Available by
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
+        {
+            postParams.put("available_by", "1");
+
+        }else if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone"))
+        {
+            postParams.put("available_by", "2");
+        }else
+        {
+            postParams.put("available_by", postParams.get("available_by"));
+        }
+
+
         LoadFilterSearchServices();
     }
 
