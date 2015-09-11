@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private static View view;
     private Activity parentActivity;
     private LocationCooridnates locationService;
-    private boolean isChecked = false;
+    private boolean isVisibleToUser = false;
     public static MDLivePharmacyFragment newInstance() {
         final MDLivePharmacyFragment pharmacyFragment = new MDLivePharmacyFragment();
         return pharmacyFragment;
@@ -110,28 +109,8 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && parentActivity instanceof MedicalHistoryActivity && ((MedicalHistoryActivity)parentActivity).getViewPager().getCurrentItem() == 1 && !isChecked){
-            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-            if(userBasicInfo.getNotifications().getPharmacyDetails() == null){
-
-                if(locationService!=null && locationService.checkLocationServiceSettingsEnabled(getActivity())){
-                    showProgressDialog();
-                    isChecked = true;
-                    getActivity().registerReceiver(locationReceiver, intentFilter);
-                    locationService.setBroadCastData(getClass().getSimpleName());
-                    locationService.startTrackingLocation(getActivity());
-                } else {
-                    isChecked = true;
-                    Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
-                    startActivity(pharmacyintent);
-                }
-            }else {
-                getUserPharmacyDetails();
-            }
-        } else {
-            isChecked = false;
+        this.isVisibleToUser = isVisibleToUser;
             getUserPharmacyDetails();
-        }
     }
 
     @Override
@@ -155,7 +134,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     /*
    * This function will get latest default pharmacy details of users from webservice.
    * PharmacyService class handles webservice integration.
-   * @responseListener - Receives webservice informatoin
+   * @responseListener - Receives webservice information
    * @errorListener - Received error information (if any problem in webservice)
    * once message received by  @responseListener then it will redirect to handleSuccessResponse function
    * to parse message content.
@@ -238,38 +217,58 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private void handleSuccessResponse(JSONObject response) {
         try {
 //            progressBar.setVisibility(View.GONE);
-            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-            addressline1.setText(pharmacyDatas.getString("store_name") + " " +
-                    ((pharmacyDatas.getString("distance") != null && !pharmacyDatas.getString("distance").isEmpty()) ?
-                            pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
-            addressline2.setText(pharmacyDatas.getString("address1"));
-            addressline3.setText(pharmacyDatas.getString("city") + ", "
-                    + pharmacyDatas.getString("state") + " "
-                    + (TextUtils.isEmpty(pharmacyDatas.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode"))));
-            bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
-            JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
-            bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
-            bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
-            bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
-            bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
-            bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
-            bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
-            if(pharmacyDatas.has("phone")){
-                ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
-            }
-            bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
-            bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
-            bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
-            bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
-            bundletoSend.putString("city", pharmacyDatas.getString("city"));
-            bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
-            bundletoSend.putString("state", pharmacyDatas.getString("state"));
-            if (map != null) {
-                LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
-                        Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
-                Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
-                        .title("Marker"));
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+            if(response.has("pharmacy")) {
+                JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+                addressline1.setText(pharmacyDatas.getString("store_name") + " " +
+                        ((pharmacyDatas.getString("distance") != null && !pharmacyDatas.getString("distance").isEmpty()) ?
+                                pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
+                addressline2.setText(pharmacyDatas.getString("address1"));
+                addressline3.setText(pharmacyDatas.getString("city") + ", "
+                        + pharmacyDatas.getString("state") + " "
+                        + (TextUtils.isEmpty(pharmacyDatas.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode"))));
+                bundletoSend.putInt("pharmacy_id", pharmacyDatas.getInt("pharmacy_id"));
+                JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
+                bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
+                bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
+                bundletoSend.putBoolean("twenty_four_hours", pharmacyDatas.getBoolean("twenty_four_hours"));
+                bundletoSend.putBoolean("active", pharmacyDatas.getBoolean("active"));
+                bundletoSend.putString("store_name", pharmacyDatas.getString("store_name"));
+                bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
+                if (pharmacyDatas.has("phone")) {
+                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                }
+                bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
+                bundletoSend.putString("address2", pharmacyDatas.getString("address2"));
+                bundletoSend.putString("zipcode", pharmacyDatas.getString("zipcode"));
+                bundletoSend.putString("fax", pharmacyDatas.getString("fax"));
+                bundletoSend.putString("city", pharmacyDatas.getString("city"));
+                bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
+                bundletoSend.putString("state", pharmacyDatas.getString("state"));
+                if (map != null) {
+                    LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
+                            Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
+                    Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
+                            .title("Marker"));
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+                }
+            } else {
+                if(isVisibleToUser && parentActivity instanceof MedicalHistoryActivity && ((MedicalHistoryActivity)parentActivity).getViewPager().getCurrentItem() == 1){
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                    if(userBasicInfo.getNotifications().getPharmacyDetails() == null){
+                        if(locationService!=null && locationService.checkLocationServiceSettingsEnabled(getActivity())){
+                            showProgressDialog();
+                            getActivity().registerReceiver(locationReceiver, intentFilter);
+                            locationService.setBroadCastData(getClass().getSimpleName());
+                            locationService.startTrackingLocation(getActivity());
+                        } else {
+                            Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
+                            pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                            startActivity(pharmacyintent);
+                        }
+                    }else {
+                        getUserPharmacyDetails();
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -334,13 +333,13 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     startActivity(i);
                     MdliveUtils.startActivityAnimation(getActivity());
                 } else{
-                    isChecked = true;
                     Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
                     startActivity(pharmacyintent);
                 }
             } else {
-                isChecked = true;
                 Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
                 startActivity(pharmacyintent);
             }
         }

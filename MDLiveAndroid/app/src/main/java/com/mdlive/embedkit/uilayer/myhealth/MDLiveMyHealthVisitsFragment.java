@@ -143,7 +143,7 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-
+                Log.e("Response - ", response.toString());
                 final Gson gson = new Gson();
                 final ConsultationHistoryDetails consultationHistoryDetails =  gson.fromJson(response.toString(), ConsultationHistoryDetails.class);
                 if(consultationHistoryDetails.getConsultationHistory().size()>0){

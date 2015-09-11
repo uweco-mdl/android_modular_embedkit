@@ -40,6 +40,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
@@ -759,8 +760,15 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        MdliveUtils.closingActivityAnimation(this);
+        if(getIntent().hasExtra("FROM_MY_HEALTH")){
+            Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
+            i.putExtra("FROM_PHARMACY",true);
+            startActivity(i);
+            MdliveUtils.closingActivityAnimation(this);
+        } else {
+            super.onBackPressed();
+            MdliveUtils.closingActivityAnimation(this);
+        }
     }
     /**
      * This method will stop the service call if activity is closed during service call.

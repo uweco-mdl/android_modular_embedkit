@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    Log.d("Response - ", response.toString());
                     handleSuccessResponse(response);
                 } catch (Exception e) {
                     e.printStackTrace();

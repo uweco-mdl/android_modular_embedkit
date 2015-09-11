@@ -27,6 +27,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -284,5 +285,9 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     @Override
     protected void onResume() {
         super.onResume();
+        if(getIntent().hasExtra("FROM_PHARMACY")){
+            Log.d("On Resume - ", "From Pharmacy");
+            getViewPager().setCurrentItem(0);
+        }
     }
 }
