@@ -5,7 +5,7 @@
  * Method:    getProdApiKeyFromNative
  * Signature: ()Ljava/lang/String;
  */
-   JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdApiKeyFromNative
+  JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdApiKeyFromNative
      (JNIEnv * env, jobject obj)
      {
            return (*env)->NewStringUTF(env, "9e511cd537c72a11338b");
@@ -16,7 +16,7 @@
     * Method:    getProdSecretKeyFromNative
     * Signature: ()Ljava/lang/String;
     */
-   JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdSecretKeyFromNative
+  JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdSecretKeyFromNative
      (JNIEnv * env, jobject obj)
      {
          return (*env)->NewStringUTF(env, "e7302efc779e724040d");
