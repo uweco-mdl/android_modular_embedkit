@@ -32,6 +32,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -546,8 +547,16 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        MdliveUtils.closingActivityAnimation(this);
+
+        if(getIntent().hasExtra("FROM_MY_HEALTH")){
+            Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            MdliveUtils.closingActivityAnimation(this);
+        } else {
+            super.onBackPressed();
+            MdliveUtils.closingActivityAnimation(this);
+        }
     }
 
     /**
