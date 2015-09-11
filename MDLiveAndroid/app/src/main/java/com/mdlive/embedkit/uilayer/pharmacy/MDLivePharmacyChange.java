@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -547,10 +548,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra("FROM_PHARMACY",true);
             startActivity(i);
             MdliveUtils.closingActivityAnimation(this);
         } else {

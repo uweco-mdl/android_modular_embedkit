@@ -70,7 +70,7 @@ public class MDLiveAssistFragment extends Fragment {
                             try {
 
                                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:" + getActivity().getText(R.string.mdl_callnumber)));
+//                                intent.setData(Uri.parse("tel:" + getActivity().getText(R.string.mdl_callnumber)));
                                 getActivity().startActivity(intent);
 
                             } catch (Exception e) {

@@ -762,7 +762,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onBackPressed() {
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra("FROM_PHARMACY",true);
             startActivity(i);
             MdliveUtils.closingActivityAnimation(this);
         } else {
