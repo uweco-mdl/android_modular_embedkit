@@ -214,6 +214,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 if(setExistingCardDetailUser) {
                     String params = getExistingBillingPutParams(response.toString());
                     updateCardDetails(params);
+                    setExistingCardDetailUser=false;
 //                    HostedPCI.loadUrl("javascript:tokenizeForm()");
                 }
 //                getBillingPutParams(response.toString());
@@ -247,7 +248,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     if (jobj.getString("status").equals("success")) {
                         String params = getExistingBillingPutParams(billingResponse);
                         updateCardDetails(params);
-                        Log.e("print params->",params);
+//                        Log.e("print params->",params);
                     } else {
                         MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
                     }
@@ -359,6 +360,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 try {
                     dismissDialog();
                     JSONObject resObj = new JSONObject(response.toString());
+                    Log.e("billing success res-->",response.toString());
                     if (resObj.has("message")) {
 //                        if(setExistingCardDetailUser) {
 //                            getExistingBillingPutParams(params);
@@ -403,7 +405,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public String getBillingPutParams(String billingDetails) {
         try {
             JSONObject resObj = new JSONObject(billingDetails);
-            Log.e("payment res-->",resObj.toString());
+            Log.e("success res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
 
             HashMap<String, String> cardInfo = new HashMap<>();
@@ -523,13 +525,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 try {
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.APPT_ID, apptId);
-                        editor.commit();
-                        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
-                        startActivity(i);
-                        MdliveUtils.startActivityAnimation(MDLivePayment.this);
+                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(PreferenceConstants.APPT_ID, apptId);
+                            editor.commit();
+                            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+                            startActivity(i);
+                            MdliveUtils.startActivityAnimation(MDLivePayment.this);
+
                     } else {
                         final String resumeScreen = response.getString("resume_screen");
 

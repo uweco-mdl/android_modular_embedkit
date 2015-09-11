@@ -231,6 +231,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 tapSeetheDoctorTxtLayout.setClickable(true);
                 if( ((RelativeLayout) findViewById(R.id.dateTxtLayout)).getVisibility() == View.VISIBLE){
                     handleDateResponse(response);
+                    selectedTimeslot=true;
                 }else{
                     handleSuccessResponse(response);
                 }
@@ -284,48 +285,61 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         }
 
-        if(layout.getChildCount() > 0){
-            layout.removeAllViews();
-        }
-        tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
-        reqfutureapptBtnLayout.setVisibility(View.GONE);
-        for(int i=0;i<available_hour.size();i++)
+        if(layout.getChildCount() == 0){
+
+            ((RelativeLayout)findViewById(R.id.noappmtsTxtLayout)).setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.reqfutureapptBtn)).setText(getString(R.string.mdl_notimeslots_txt));
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.reqfutureapptBtn)).setText("Make an appointment request");
+            tapReqFutureBtnAction();
+
+        }else
         {
-            JsonObject availabilityStatus = available_hour.get(i).getAsJsonObject();
-            String str_availabilityStatus = "";
-
-            if(MdliveUtils.checkJSONResponseHasString(availabilityStatus, "status")) {
-                str_availabilityStatus = availabilityStatus.get("status").getAsString();
-                setResponseQualificationDetails(providerdetObj, str_Availability_Type);
-                if(str_availabilityStatus.equals("Available"))
-                {
-                    JsonArray timeSlotArray = availabilityStatus.get("time_slot").getAsJsonArray();
-                    for(int j=0;j<timeSlotArray.size();j++) {
-                        JsonObject timeSlotObj = timeSlotArray.get(j).getAsJsonObject();
 
 
-                        if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
-                            str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
 
-                            try {
-                                if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
-                                    str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
+            if(layout.getChildCount() > 0){
+                layout.removeAllViews();
+            }
+            tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+            reqfutureapptBtnLayout.setVisibility(View.GONE);
+            for(int i=0;i<available_hour.size();i++)
+            {
+                JsonObject availabilityStatus = available_hour.get(i).getAsJsonObject();
+                String str_availabilityStatus = "";
+
+                if(MdliveUtils.checkJSONResponseHasString(availabilityStatus, "status")) {
+                    str_availabilityStatus = availabilityStatus.get("status").getAsString();
+                    setResponseQualificationDetails(providerdetObj, str_Availability_Type);
+                    if(str_availabilityStatus.equals("Available"))
+                    {
+                        JsonArray timeSlotArray = availabilityStatus.get("time_slot").getAsJsonArray();
+                        for(int j=0;j<timeSlotArray.size();j++) {
+                            JsonObject timeSlotObj = timeSlotArray.get(j).getAsJsonObject();
+
+
+                            if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
+                                str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
+
+                                try {
+                                    if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
+                                        str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
 
-                            try {
-                                str_timeslot = timeSlotObj.get("timeslot").getAsString();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    str_timeslot = timeSlotObj.get("timeslot").getAsString();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-                            HashMap<String, String> map = new HashMap<String, String>();
+                                HashMap<String, String> map = new HashMap<String, String>();
 
-                            Log.e("General Check timeslot", str_timeslot+"");
-                            Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
-                            Log.e("General Check appointment_type", str_appointmenttype+"");
+                                Log.e("General Check timeslot", str_timeslot+"");
+                                Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
+                                Log.e("General Check appointment_type", str_appointmenttype+"");
 
                                 map.put("timeslot",str_timeslot);
                                 map.put("phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id);
@@ -348,6 +362,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     lp.setMargins(5, 0, 5, 0);
                                     myText.setLayoutParams(lp);
                                     myText.setTag("Now");
+                                    selectedTimeslot=true;
                                     clickEventForHorizontalText(myText);
                                     layout.addView(myText);
 
@@ -365,6 +380,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 }
             }
         }
+
+
+
+
+    }
 
 
 
@@ -401,6 +421,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             if (layout.getChildCount() > 0) {
                 layout.removeAllViews();
             }
+
             for (int i = 0; i < available_hour.size(); i++) {
                 JsonObject availabilityStatus = available_hour.get(i).getAsJsonObject();
                 String str_availabilityStatus = "";
@@ -448,6 +469,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     lp.setMargins(5, 0, 5, 0);
                                     myText.setLayoutParams(lp);
                                     myText.setTag("Now");
+                                    selectedTimeslot=true;
                                     clickEventForHorizontalText(myText);
                                     layout.addView(myText);
                                     //layout.addView(line, 1);
@@ -463,6 +485,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                 }
             }
+
+
 
             try {
                 saveProviderDetailsForConFirmAppmt(str_Availability_Type, myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
@@ -564,6 +588,20 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             e.printStackTrace();
         }
 
+    }
+
+    private void enableReqAppmtBtn() {
+        if(!selectedTimeslot)
+        {
+            Log.e("false", "selectedTimeslot");
+            reqApmtBtm.setVisibility(View.GONE);
+
+        }else
+        {
+            Log.e("false","Visible");
+            reqApmtBtm.setVisibility(View.VISIBLE);
+
+        }
     }
 
     private void notAvailable() {
@@ -861,7 +899,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 reqfutureapptBtnLayout.setVisibility(View.GONE);
                 videophoneparentLl.setVisibility(View.VISIBLE);
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byvideoBtn.setTextColor(Color.GRAY);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byvideoBtn.setTextColor(Color.GRAY);
                 byvideoBtnLayout.setVisibility(View.VISIBLE);
                 byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -882,6 +922,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         for(TextView tv : videoList){
                             layout.addView(tv);
                         }
+
+                        //Enable Request Appointment Button
+                        enableReqAppmtBtn();
+
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                     }
                 });
@@ -905,6 +949,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         for(TextView tv : phoneList){
                             layout.addView(tv);
                         }
+                        //Enable Request Appointment Button
+                        enableReqAppmtBtn();
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                     }
                 });
@@ -970,16 +1016,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 }
                 //Enabling or Disabling the Request Appointment Button.
 
-                if(!selectedTimeslot)
-                {
-                    Log.e("false", "selectedTimeslot");
-                    reqApmtBtm.setVisibility(View.GONE);
-
-                }else
-                {
-                    Log.e("false","Visible");
-                    reqApmtBtm.setVisibility(View.VISIBLE);
-                }
+                enableReqAppmtBtn();
 
                 visibilityBasedOnHorizontalTextView(position);
             }
