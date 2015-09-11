@@ -55,11 +55,16 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     public static final String TAG = "MYHEALTH";
     private static final String SELECTED_TAB = "slected_tab";
+    ViewPager viewPager;
 
     public static Intent getSelectedTabFromMedicalHistory(final Context context, final int selectedTab) {
         final Intent intent = new Intent(context, MedicalHistoryActivity.class);
         intent.putExtra(SELECTED_TAB, selectedTab);
         return intent;
+    }
+
+    public ViewPager getViewPager(){
+        return viewPager;
     }
 
     @Override
@@ -75,7 +80,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
             ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_health).toUpperCase());
         }
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
             if (getIntent().getExtras() != null && getIntent().hasExtra(SELECTED_TAB)) {
@@ -87,7 +92,6 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL | TabLayout.GRAVITY_CENTER);
         tabLayout.setupWithViewPager(viewPager);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
