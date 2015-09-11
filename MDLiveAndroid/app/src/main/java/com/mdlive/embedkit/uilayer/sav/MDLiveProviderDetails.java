@@ -69,6 +69,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private LinearLayout providerImageHolder,detailsLl;
     private HorizontalScrollView horizontalscrollview;
     private int month, day, year;
+    private  LinearLayout layout;
     private Button reqApmtBtm;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
@@ -172,6 +173,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
         byphoneBtnLayout = (LinearLayout)findViewById(R.id.byphoneBtnLayout);
         reqfutureapptBtn = (TextView)findViewById(R.id.reqfutureapptBtn);
+         layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
         reqfutureapptBtnLayout= (RelativeLayout)findViewById(R.id.reqfutureapptBtnLayout);
 
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
@@ -229,8 +231,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onResponse(JSONObject response) {
                 tapSeetheDoctorTxtLayout.setClickable(true);
+                layout.removeAllViews();
                 if( ((RelativeLayout) findViewById(R.id.dateTxtLayout)).getVisibility() == View.VISIBLE){
                     handleDateResponse(response);
+
                     selectedTimeslot=true;
                 }else{
                     handleSuccessResponse(response);
@@ -278,7 +282,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
         JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
         boolean isDoctorAvailableNow = false, isDoctorWithPatient = false;
-        LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+
         String str_appointmenttype="",str_timeslot="",str_phys_avail_id="",str_Availability_Type="";
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
             str_Availability_Type = providerdetObj.get("availability_type").getAsString();
@@ -288,7 +292,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         if(layout.getChildCount() == 0){
 
             ((RelativeLayout)findViewById(R.id.noappmtsTxtLayout)).setVisibility(View.VISIBLE);
-            ((TextView)findViewById(R.id.reqfutureapptBtn)).setText(getString(R.string.mdl_notimeslots_txt));
+            ((TextView)findViewById(R.id.noAppmtsTxt)).setText(getString(R.string.mdl_notimeslots_txt));
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
             ((TextView)findViewById(R.id.reqfutureapptBtn)).setText("Make an appointment request");
             tapReqFutureBtnAction();
