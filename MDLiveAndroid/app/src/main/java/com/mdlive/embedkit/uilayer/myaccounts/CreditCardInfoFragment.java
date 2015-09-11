@@ -163,7 +163,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
                         ((MyAccountsHome) getActivity()).hideTick();
                     }
-                    mAddressVisibility.setVisibility(View.GONE);
                     mCardExpirationMonth.setEnabled(false);
                     mNameOnCard.setEnabled(false);
                     mAddress1.setEnabled(false);

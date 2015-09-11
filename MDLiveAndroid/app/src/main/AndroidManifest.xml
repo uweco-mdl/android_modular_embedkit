@@ -7,7 +7,7 @@
         android:label="@string/mdl_app_name"
         android:largeHeap="true"
         android:theme="@style/CustomTheme">
- 
+
         <activity
             android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveHealthModule"
             android:screenOrientation="portrait"

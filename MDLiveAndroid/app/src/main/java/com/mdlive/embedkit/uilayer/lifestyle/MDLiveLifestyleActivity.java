@@ -43,17 +43,17 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
-                    add(com.mdlive.embedkit.R.id.dash_board__main_container, MDLiveLifeStyleFragment.newInstance(), MAIN_CONTENT).
+                    add(R.id.dash_board__main_container, MDLiveLifeStyleFragment.newInstance(), MAIN_CONTENT).
                     commit();
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(com.mdlive.embedkit.R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(user), LEFT_MENU).
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(user), LEFT_MENU).
                     commit();
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(com.mdlive.embedkit.R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
     }
@@ -63,7 +63,7 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
         getSupportFragmentManager().
                 beginTransaction().
                 addToBackStack(MAIN_CONTENT).
-                replace(com.mdlive.embedkit.R.id.dash_board__main_container, EmailConfirmFragment.newInstance()).
+                replace(R.id.dash_board__main_container, EmailConfirmFragment.newInstance()).
                 commit();
     }
 

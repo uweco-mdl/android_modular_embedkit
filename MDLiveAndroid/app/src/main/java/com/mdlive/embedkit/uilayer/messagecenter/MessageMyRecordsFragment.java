@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -443,14 +442,12 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
         super.onActivityResult(requestCode, resultCode, data);
         // if the result is capturing Image
         if (requestCode == IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-            Toast.makeText(getActivity(), "From Camera!", Toast.LENGTH_SHORT).show();
             if (resultCode == Activity.RESULT_OK) {
                 // successfully captured the image
                 cameraPlugIn.handleCapturedImageRequest();
             }
         }
         if (requestCode == IntegerConstants.PICK_IMAGE_REQUEST_CODE) {
-            Toast.makeText(getActivity(), "From Gallery!", Toast.LENGTH_SHORT).show();
             if (resultCode == Activity.RESULT_OK) {
                 cameraPlugIn.handlePickedImageRequest(data);
             }

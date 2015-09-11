@@ -23,7 +23,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 
-import static com.mdlive.embedkit.uilayer.messagecenter.MessageReceivedDetailsFragment.*;
+import static com.mdlive.embedkit.uilayer.messagecenter.MessageReceivedDetailsFragment.ReloadMessageCount;
+import static com.mdlive.embedkit.uilayer.messagecenter.MessageReceivedDetailsFragment.newInstance;
 
 /**
  * Created by dhiman_da on 8/19/2015.

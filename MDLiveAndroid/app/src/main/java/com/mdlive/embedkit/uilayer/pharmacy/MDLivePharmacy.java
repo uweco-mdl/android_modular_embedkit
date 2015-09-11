@@ -79,7 +79,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_pharm_txt).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_pharm_txt).toUpperCase());
 
 
         intentFilter = new IntentFilter();

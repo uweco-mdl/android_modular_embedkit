@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
@@ -41,8 +42,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt));
-
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_time_for_visit_txt).toUpperCase());
 
 
         if (savedInstanceState == null) {
@@ -58,12 +58,12 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
         }
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
-        ((CircularNetworkImageView)findViewById(R.id.doctorPic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
+        String str_ProfileImg = sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
+        ((CircularNetworkImageView) findViewById(R.id.doctorPic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
 
     }
 
-    public void leftBtnOnClick(View v){
+    public void leftBtnOnClick(View v) {
         MdliveUtils.hideSoftKeyboard(MDLiveStartVisit.this);
         onBackPressed();
     }
@@ -75,9 +75,29 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View v) {
+        SharedPreferences consulatationPreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String consultationType = consulatationPreferences.getString(PreferenceConstants.ACCESS_MODE, "");
+        String selectedTimeslot = consulatationPreferences.getString(PreferenceConstants.SELECTED_TIMESLOT,"");
+        if (consultationType.equalsIgnoreCase("phone")) {
+            Intent intent = new Intent(MDLiveStartVisit.this, MDLiveDashboardActivity.class);
+            startActivity(intent);
+            MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+        }
+        else if(!selectedTimeslot.equalsIgnoreCase("Now"))
+        {
+
+            Intent intent = new Intent(MDLiveStartVisit.this, MDLiveDashboardActivity.class);
+            startActivity(intent);
+            MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+        }
+
+    else
+    {
         Intent intent = new Intent(MDLiveStartVisit.this, MDLiveWaitingRoom.class);
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+    }
+
     }
 
 

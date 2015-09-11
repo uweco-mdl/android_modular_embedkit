@@ -672,7 +672,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             services.addMedicalConditionsRequest(successCallBackListener, errorListener, text);
         }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
             AddMedicationService services = new AddMedicationService(MDLiveHealthModule.this, null);
-            services.addMedicationRequest(successCallBackListener, errorListener,text);
+//            services.addMedicationRequest(successCallBackListener, errorListener,text);
         }else if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             if(isUpdateMode){
                 ProcedureUpdateServices services = new ProcedureUpdateServices(MDLiveHealthModule.this, null);
