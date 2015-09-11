@@ -114,6 +114,11 @@ public class MDLiveConfig {
     // URL for NotificationService
     public static final String URL_NOTIFICATION = "/notifications";
 
+    static {
+        System.loadLibrary("app");
+    }
+
+
     public static void setData(int currentEnvironment){
         switch (currentEnvironment){
             case 1:
@@ -149,12 +154,12 @@ public class MDLiveConfig {
             case 4:
                 // Production environment
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "";
-                AppSpecificConfig.SECRET_KEY = "";
+                AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
+                AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case 5:
                 // QA Pluto URL
@@ -164,7 +169,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://pluto-members.mdtestsite.net/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             default:
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
@@ -268,6 +273,10 @@ public class MDLiveConfig {
 
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
     }
+
+
+    static native String getProdApiKeyFromNative();
+    static native String getProdSecretKeyFromNative();
     /*
     private static final String BASE_URL = "https://stage-members.mdlive.com/services";
     private static final String LOGIN_SERVICES = "/customer_logins";
