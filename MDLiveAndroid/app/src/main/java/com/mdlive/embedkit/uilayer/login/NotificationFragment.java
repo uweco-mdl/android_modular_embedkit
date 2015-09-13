@@ -40,6 +40,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     private PendingAppointment mPendingAppointment;
 
+    private View mMessagesLinearLayout;
     private TextView mMessagesTextView;
     private TextView mPersonalInfoTextView;
     private TextView mPreferedStoreTextView;
@@ -98,6 +99,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mMessagesLinearLayout = view.findViewById(R.id.notification_fragment_messages_linear_layout);
         mMessagesTextView = (TextView) view.findViewById(R.id.notification_fragment_messages_text_view);
         mPersonalInfoTextView = (TextView) view.findViewById(R.id.notification_fragment_personal_text_view);
         mPreferedStoreTextView = (TextView) view.findViewById(R.id.notification_fragment_prefered_store_text_view);
@@ -165,7 +167,8 @@ public class NotificationFragment extends MDLiveBaseFragment {
             if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
             } else {
-                mMessagesTextView.setVisibility(View.GONE);
+                //mMessagesTextView.setVisibility(View.GONE);
+                mMessagesLinearLayout.setVisibility(View.GONE);
             }
 
             mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
