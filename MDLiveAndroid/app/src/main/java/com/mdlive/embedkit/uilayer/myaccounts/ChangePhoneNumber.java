@@ -42,8 +42,8 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
 
     private EditText mPhoneNumber = null;
     private EditText mEmergencyContactNumber = null;
-    private final static int PHONENUMBER_LENGTH = 12;
-    private boolean mayIallowtoEdit = true;
+    private final static int PHONENUMBER_LENGTH = 14;
+    private boolean mayIAllowToEdit = true;
     private String response;
 
     @Nullable
@@ -63,7 +63,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
 
                 mPhoneNumber.setText(responseDetail.getString("phone"));
 
-                String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(mPhoneNumber.getText().toString()));
+                String formattedString = MdliveUtils.formatDualString(mPhoneNumber.getText().toString());
                 mPhoneNumber.setText(formattedString);
                 mPhoneNumber.setSelection(mPhoneNumber.getText().toString().length());
 
@@ -71,7 +71,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     mEmergencyContactNumber.setText("");
                 } else {
                     mEmergencyContactNumber.setText(responseDetail.getString("emergency_contact_number"));
-                    formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(mEmergencyContactNumber.getText().toString()));
+                    formattedString = MdliveUtils.formatDualString(mEmergencyContactNumber.getText().toString());
                     mEmergencyContactNumber.setText(formattedString);
                     mEmergencyContactNumber.setSelection(mEmergencyContactNumber.getText().toString().length());
 
@@ -109,16 +109,12 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
             public void afterTextChanged(Editable s) {
 
 
-                if (mayIallowtoEdit) {
-                    String temp = s.toString().replace("-", "");
-                    if (temp.length() == 10) {
-                        String number = temp;
-                        String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
-                        mayIallowtoEdit = false;
+                if (mayIAllowToEdit) {
+                        String formattedString = MdliveUtils.formatDualString(mPhoneNumber.getText().toString());
+                        mayIAllowToEdit = false;
                         mPhoneNumber.setText(formattedString);
                         mPhoneNumber.setSelection(mPhoneNumber.getText().toString().length());
-                        mayIallowtoEdit = true;
-                    }
+                        mayIAllowToEdit = true;
                 }
 
                 if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
@@ -147,16 +143,12 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if (mayIallowtoEdit) {
-                    String temp = editable.toString().replace("-", "");
-                    if (temp.length() == 10) {
-                        String number = temp;
-                        String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
-                        mayIallowtoEdit = false;
+                if (mayIAllowToEdit) {
+                        String formattedString = MdliveUtils.formatDualString(mEmergencyContactNumber.getText().toString());
+                        mayIAllowToEdit = false;
                         mEmergencyContactNumber.setText(formattedString);
                         mEmergencyContactNumber.setSelection(mEmergencyContactNumber.getText().toString().length());
-                        mayIallowtoEdit = true;
-                    }
+                        mayIAllowToEdit = true;
                 }
 
 
@@ -187,8 +179,8 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", responseDetail.getString("email"));
-                    jsonObject.put("phone", mPhoneNumber.getText().toString().trim().replace("-", ""));
-                    Log.i("PhoneNumber", mPhoneNumber.getText().toString().trim().replace("-", ""));
+                    jsonObject.put("phone", mPhoneNumber.getText().toString().trim().replaceAll("[-() ]", ""));
+                    Log.i("PhoneNumber", mPhoneNumber.getText().toString().trim().replaceAll("[-() ]", ""));
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", responseDetail.getString("state"));
                     jsonObject.put("city", responseDetail.getString("country"));
@@ -198,11 +190,12 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     jsonObject.put("address2", responseDetail.getString("address2"));
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name", responseDetail.getString("last_name"));
-                    jsonObject.put("emergency_contact_number", mEmergencyContactNumber.getText().toString().trim().replace("-", ""));
-                    Log.i("EmergencyContactNumber", mEmergencyContactNumber.getText().toString().trim().replace("-", ""));
+                    jsonObject.put("emergency_contact_number", mEmergencyContactNumber.getText().toString().trim().replaceAll("[-() ]", ""));
+                    Log.i("EmergencyContactNumber", mEmergencyContactNumber.getText().toString().trim().replaceAll("[-() ]", ""));
                     jsonObject.put("language_preference", "ko");
 
                     parent.put("member", jsonObject);
+                    Log.i("Request",jsonObject.toString());
                     loadProfileInfo(parent.toString());
                 }
 
