@@ -324,7 +324,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     if(baseadapter.getSelectedPosition() >= 0){
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
+                        if(baseadapter.isNotFoundinList()){
+                            editor.putString(PreferenceConstants.REASON,
+                                    ((EditText) findViewById(R.id.search_edit)).getText().toString().trim());
+                        }else{
+                            editor.putString(PreferenceConstants.REASON, listView.getAdapter().getItem(baseadapter.getSelectedPosition()).toString());
+                        }
                         editor.commit();
                         startNextActivity();
                     }
