@@ -184,7 +184,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View view) {
                 final CharSequence[] items = {
-                        "EN"/*, "ES", "KO"*/
+                        changeLangTv.getResources().getString(R.string.mdl_language_english)
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -340,7 +340,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             if (getActivity() != null) {
                 sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
+                String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,getActivity().getString(R.string.mdl_language_english));
                 changeLangTv.setText(language.toUpperCase());
                 mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
@@ -348,6 +348,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 SharedPreferences.Editor editor1 = sharedPref.edit();
                 editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
                 editor1.commit();
+
+                changeLangTv.setText(getActivity().getString(R.string.mdl_language_english));
             }
         }
         catch(JSONException e)
