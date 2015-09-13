@@ -405,7 +405,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.mdl_no_conditions_reported);
+                    conditonsNames = getString(R.string.mdl_no_condition_reported);
                 Log.e("conditonsNames", conditonsNames);
                 resultData.putExtra("conditionsData", conditonsNames);
             }else if(type == TYPE_CONSTANT.MEDICATION){
