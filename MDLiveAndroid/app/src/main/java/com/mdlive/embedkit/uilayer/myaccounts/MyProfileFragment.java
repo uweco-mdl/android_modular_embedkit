@@ -185,7 +185,6 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             public void onClick(View view) {
                 final CharSequence[] items = {
                         changeLangTv.getResources().getString(R.string.mdl_language_english)
-                        /*"EN", "ES", "KO"*/
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -349,6 +348,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 SharedPreferences.Editor editor1 = sharedPref.edit();
                 editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
                 editor1.commit();
+
+                changeLangTv.setText(getActivity().getString(R.string.mdl_language_english));
             }
         }
         catch(JSONException e)
