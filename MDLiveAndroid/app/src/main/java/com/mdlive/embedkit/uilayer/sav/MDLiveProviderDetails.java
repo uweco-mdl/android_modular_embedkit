@@ -374,6 +374,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                                     lp.setMargins(5, 0, 5, 0);
                                     myText.setLayoutParams(lp);
                                     myText.setTag("Now");
+                                    defaultNowTextPreferences(myText, str_appointmenttype);
                                     selectedTimeslot=true;
                                     clickEventForHorizontalText(myText);
                                     layout.addView(myText);
@@ -491,6 +492,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                                     lp.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
                                     myText.setLayoutParams(lp);
                                     myText.setTag("Now");
+                                    defaultNowTextPreferences(myText, str_appointmenttype);
                                     selectedTimeslot=true;
                                     clickEventForHorizontalText(myText);
                                     layout.addView(myText);
@@ -511,7 +513,8 @@ Log.e("Date View-->",layout.getChildCount()+"");
 
 
             try {
-                saveProviderDetailsForConFirmAppmt(str_Availability_Type, myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+               saveConsultationType(str_Availability_Type);
+                saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -715,6 +718,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.ACCESS_MODE, accessType);
+        editor.putString(PreferenceConstants.CONSULTATION_TYPE, accessType);
         editor.commit();
     }
     //This is to show the by video and by Phone icon for both the available now (video or phone)
@@ -1019,7 +1023,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                             for(TextView tv : videoList){
                                 layout.addView(tv);
                             }
-
+                            saveConsultationType("video");
                             //Enable Request Appointment Button
                             enableReqAppmtBtn();
 
@@ -1046,6 +1050,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                             for(TextView tv : phoneList){
                                 layout.addView(tv);
                             }
+                            saveConsultationType("phone");
                             //Enable Request Appointment Button
                             enableReqAppmtBtn();
                             horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
@@ -1106,30 +1111,59 @@ Log.e("Date View-->",layout.getChildCount()+"");
 
     }
 
-    private void clickEventForHorizontalText(final Button myText) {
-        myText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void defaultNowTextPreferences(final TextView timeslotTxt, final String appointmentType) {
+
                 selectedTimeslot=true;
-                String position = (String) v.getTag();
-                saveProviderDetailsForConFirmAppmt(position,myText.getText().toString(),((TextView)findViewById(R.id.dateTxt)).getText().toString(),str_ProfileImg);
-           //This is to select and Unselect the Timeslot
+                Log.e("check now", timeslotTxt.getText().toString());
+                //saveConsultationType(appointmentType);
+                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+                //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
-                    previousSelectedTv = myText;
-                    myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                    myText.setTextColor(Color.WHITE);
+                    previousSelectedTv = timeslotTxt;
+                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setTextColor(Color.WHITE);
                 }else{
                     previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                     previousSelectedTv.setTextColor(Color.GRAY);
-                    previousSelectedTv = myText;
-                    myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                    myText.setTextColor(Color.WHITE);
+                    previousSelectedTv = timeslotTxt;
+                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setTextColor(Color.WHITE);
                 }
                 //Enabling or Disabling the Request Appointment Button.
 
                 enableReqAppmtBtn();
 
-                visibilityBasedOnHorizontalTextView(position);
+                visibilityBasedOnHorizontalTextView(appointmentType);
+
+    }
+
+    private void clickEventForHorizontalText(final Button timeslotTxt) {
+        timeslotTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTimeslot=true;
+                String appointmentType = (String) v.getTag();
+                Log.e("check now", timeslotTxt.getText().toString());
+                //saveConsultationType(appointmentType);
+                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+           //This is to select and Unselect the Timeslot
+                if(previousSelectedTv == null){
+                    previousSelectedTv = timeslotTxt;
+                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setTextColor(Color.WHITE);
+                }else{
+                    previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    previousSelectedTv.setTextColor(Color.GRAY);
+                    previousSelectedTv = timeslotTxt;
+                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setTextColor(Color.WHITE);
+                }
+                //Enabling or Disabling the Request Appointment Button.
+
+                enableReqAppmtBtn();
+
+
+                visibilityBasedOnHorizontalTextView(appointmentType);
             }
 
         });
@@ -1205,16 +1239,25 @@ Log.e("Date View-->",layout.getChildCount()+"");
         }
     }
     //Save to preferences for the Confirm appointment screen
-    public void saveProviderDetailsForConFirmAppmt(String consultationType,String selectedTime,String datteText,String providerProfile)
+    public void saveProviderDetailsForConFirmAppmt(String selectedTime,String datteText,String providerProfile)
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(PreferenceConstants.CONSULTATION_TYPE,consultationType);
+
         editor.putString(PreferenceConstants.SELECTED_TIMESLOT, selectedTime);
         editor.putString(PreferenceConstants.SELECTED_DATE, datteText);
         editor.putString(PreferenceConstants.PROVIDER_PROFILE, providerProfile);
         editor.commit();
 
+    }
+
+    public void saveConsultationType(String consultationType){
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        if(consultationType != null){
+            editor.putString(PreferenceConstants.CONSULTATION_TYPE,consultationType);
+        }
+        editor.commit();
     }
 
     /**

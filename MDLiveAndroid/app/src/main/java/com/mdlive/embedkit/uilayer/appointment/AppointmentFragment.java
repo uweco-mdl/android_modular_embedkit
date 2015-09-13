@@ -1,6 +1,8 @@
 package com.mdlive.embedkit.uilayer.appointment;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -71,8 +74,19 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         switch (type) {
 
             case 0 :
+                SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+               String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
                 view.findViewById(R.id.help).setVisibility(View.GONE);
-                view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                if(appointment.getApptType().equalsIgnoreCase("phone")) {
+                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                }else if(Time.isEmpty())
+                {
+                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                } else{
+            view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+        }
                 view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
                 break;
 

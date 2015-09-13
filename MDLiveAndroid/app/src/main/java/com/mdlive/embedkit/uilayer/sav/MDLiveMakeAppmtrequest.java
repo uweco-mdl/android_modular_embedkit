@@ -321,6 +321,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             Log.e("mak res",response.toString());
             if (response.has("message")) {
                 Intent intent = new Intent(MDLiveMakeAppmtrequest.this, MDLiveAppointmentThankYou.class);
+                intent.putExtra("activitycaller", getString(R.string.mdl_makeAppmtRequest));
                 startActivity(intent);
                 finish();
                 MdliveUtils.startActivityAnimation(MDLiveMakeAppmtrequest.this);

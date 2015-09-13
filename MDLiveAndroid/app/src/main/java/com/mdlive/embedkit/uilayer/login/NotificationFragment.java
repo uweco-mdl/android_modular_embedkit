@@ -189,6 +189,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     private void loadPendingAppoinments() {
+        if (MdliveUtils.isNetworkAvailable(getActivity())) {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -207,6 +208,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
         final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
         service.getUserPendingHistory(successCallBackListener, errorListener);
+        }
     }
 
     private void onNotificationLoaded() {

@@ -65,16 +65,30 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     public void getPreferenceValue()
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        providerName = sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, "");
+        providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
         ((TextView)findViewById(R.id.provider)).setText(providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
         consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
-        ((TextView)findViewById(R.id.date)).setText(consultationDate);
-        Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
-        ((TextView)findViewById(R.id.time)).setText(Time);
+
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
+        String activityCaller = null;
+        if(getIntent().hasExtra("activitycaller")){
+            activityCaller  = getIntent().getStringExtra("activitycaller");
+        }
+
+        if(activityCaller != null && activityCaller.equals(getString(R.string.mdl_makeAppmtRequest))){
+            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+            ((TextView)findViewById(R.id.date)).setText(consultationDate);
+            Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+            ((TextView)findViewById(R.id.time)).setText(Time);
+        }else
+        {
+            consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
+            ((TextView)findViewById(R.id.date)).setText(consultationDate);
+            Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
+            ((TextView)findViewById(R.id.time)).setText(Time);
+        }
 
     }
 }

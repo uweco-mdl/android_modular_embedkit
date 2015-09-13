@@ -29,9 +29,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -287,7 +287,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.putString(PreferenceConstants.APPT_ID, apptId);
                         editor.commit();
-                        Intent i = new Intent(MDLivePharmacy.this, MDLiveWaitingRoom.class);
+                        Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
                         startActivity(i);
                         MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                     } else {

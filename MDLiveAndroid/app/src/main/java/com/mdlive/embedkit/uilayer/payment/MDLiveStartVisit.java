@@ -75,31 +75,22 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View v) {
-        SharedPreferences consulatationPreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        String consultationType = consulatationPreferences.getString(PreferenceConstants.ACCESS_MODE, "");
-        String selectedTimeslot = consulatationPreferences.getString(PreferenceConstants.SELECTED_TIMESLOT,"");
-        if (consultationType.equalsIgnoreCase("phone")) {
-            Intent intent = new Intent(MDLiveStartVisit.this, MDLiveDashboardActivity.class);
-            startActivity(intent);
-            MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
-        }
-        else if(!selectedTimeslot.equalsIgnoreCase("Now"))
-        {
+        movetoWaitingRoom();
 
-            Intent intent = new Intent(MDLiveStartVisit.this, MDLiveDashboardActivity.class);
-            startActivity(intent);
-            MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
-        }
+    }
 
-    else
-    {
+    private void movetoHome() {
+        Intent intent = new Intent(MDLiveStartVisit.this, MDLiveDashboardActivity.class);
+        startActivity(intent);
+        MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+    }
+
+    private void movetoWaitingRoom() {
         Intent intent = new Intent(MDLiveStartVisit.this, MDLiveWaitingRoom.class);
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
     }
 
-    }
 
-
-    }
+}
 
