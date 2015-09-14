@@ -1131,7 +1131,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                 }
                 //Enabling or Disabling the Request Appointment Button.
 
-                enableReqAppmtBtn();
+//                enableReqAppmtBtn();
 
                 visibilityBasedOnHorizontalTextView(appointmentType);
 
