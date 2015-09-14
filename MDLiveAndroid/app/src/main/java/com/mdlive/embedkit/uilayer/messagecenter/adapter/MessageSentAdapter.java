@@ -42,20 +42,12 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
             //viewHolder = (ViewHolder) convertView.getTag();
         //}
 
-        if (getItem(position).readStatus) {
-            viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
-            viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
-            viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
-            viewHolder.mReadImageView.setVisibility(View.GONE);
-        } else {
-            viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
-            viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
-            viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
-            viewHolder.mReadImageView.setVisibility(View.GONE);
-        }
+        viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
+        viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
+        viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
-        viewHolder.mTextViewTop.setText(getItem(position).from);
+        viewHolder.mTextViewTop.setText(getItem(position).to);
         viewHolder.mTextViewBottom.setText(getItem(position).subject);
         viewHolder.mTextViewTime.setText(MdliveUtils.getReceivedSentTime(getItem(position).inMilliseconds, getItem(position).timeZone));
 

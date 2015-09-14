@@ -176,7 +176,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
                     mReplaceCreditCard.setText(getResources().getString(R.string.mdl_add_card));
                     mviewCreditCard.setVisibility(View.GONE);
                 } else {
-                    mCreditCardDate.setText("Mastercard ending in " + cardExpirationMonth + "/" + cardExpirationYear);
+                    mCreditCardDate.setText("Mastercard ending in " + cardNumber);
 
                     mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
                             city + ", " + state + "\n" + country);

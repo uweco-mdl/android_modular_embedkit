@@ -158,6 +158,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
     }
 
     public void onCrossClicked(View view) {
+        MdliveUtils.hideSoftKeyboard(this);
         getSupportFragmentManager().popBackStack();
     }
 

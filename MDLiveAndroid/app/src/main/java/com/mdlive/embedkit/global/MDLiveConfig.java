@@ -114,6 +114,8 @@ public class MDLiveConfig {
     // URL for NotificationService
     public static final String URL_NOTIFICATION = "/notifications";
 
+    public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
+
     static {
         System.loadLibrary("app");
     }
@@ -123,6 +125,7 @@ public class MDLiveConfig {
         switch (currentEnvironment){
             case 1:
                 // dev environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
                 AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
@@ -133,6 +136,7 @@ public class MDLiveConfig {
                 break;
             case 2:
                 // QA environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
                 AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
@@ -143,6 +147,7 @@ public class MDLiveConfig {
                 break;
             case 3:
                 // stage environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
@@ -153,6 +158,7 @@ public class MDLiveConfig {
                 break;
             case 4:
                 // Production environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
                 AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
@@ -163,6 +169,7 @@ public class MDLiveConfig {
                 break;
             case 5:
                 // QA Pluto URL
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
                 AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
@@ -172,6 +179,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             default:
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
                 AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
@@ -272,6 +280,8 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
 
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
+
+        AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
     }
 
 

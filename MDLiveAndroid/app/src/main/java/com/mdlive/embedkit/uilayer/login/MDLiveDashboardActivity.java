@@ -78,6 +78,13 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        MdliveUtils.hideSoftKeyboard(this);
+    }
+
+    @Override
     public void onBackPressed() {
         return;
     }
