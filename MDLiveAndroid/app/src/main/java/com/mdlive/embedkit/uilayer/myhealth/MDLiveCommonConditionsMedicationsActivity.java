@@ -147,7 +147,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("dosage")
                             && !((JSONObject) conditionsListJSONArray.get(i)).isNull("dosage")
                             && ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage").trim().length() > 0){
-                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage")+"mg, ";
+                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage")+", ";
                         data.setDosage(((JSONObject) conditionsListJSONArray.get(i)).getString("dosage"));
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("frequency")
@@ -269,7 +269,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                             i.putExtra("Name", getItem(position).getConditionName());
                             if(getItem(position).getDosage() != null &&
                                     getItem(position).getDosage().length() != 0){
-                                i.putExtra("Dosage", getItem(position).getDosage().replace("mg", ""));
+                                i.putExtra("Dosage", getItem(position).getDosage());
                             }
                             if(getItem(position).getFrequency() != null &&
                                     getItem(position).getFrequency().length() != 0){

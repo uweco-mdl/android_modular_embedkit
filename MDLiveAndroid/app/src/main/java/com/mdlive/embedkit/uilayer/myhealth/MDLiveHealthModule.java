@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -67,7 +68,6 @@ import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInst
 public class MDLiveHealthModule extends MDLiveBaseActivity {
 
 //    public ArrayList<String> existingConditions;
-
     public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE};
     protected TYPE_CONSTANT type;
     public boolean isPerformingAutoSuggestion = false, allowtoDisplayContents = true;
@@ -681,6 +681,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.e("Response String", response.toString());
                 hideProgress();
                 setResult(RESULT_OK);
                 finish();
@@ -790,19 +791,30 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
      */
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
         hideProgress();
-        NetworkResponse networkResponse = error.networkResponse;
-        if (networkResponse != null) {
-            String message = "No Internet Connection";
-            if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                message = "Internal Server Error";
-            } else if (networkResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
-                message = "Unprocessable Entity Error";
-            } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
-                message = "Page Not Found";
+        try {
+            String responseBody = new String(error.networkResponse.data, "utf-8");
+            JSONObject errorObj = new JSONObject(responseBody);
+            NetworkResponse errorResponse = error.networkResponse;
+            if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                if (errorObj.has("message") || errorObj.has("error")) {
+                    final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
+                    (MDLiveHealthModule.this).runOnUiThread(new Runnable() {
+                        public void run() {
+                            MdliveUtils.showDialog(MDLiveHealthModule.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }, null);
+                        }
+                    });
+                }
+            } else {
+                MdliveUtils.handelVolleyErrorResponse(MDLiveHealthModule.this, error, getProgressDialog());
             }
-            MdliveUtils.showDialog(MDLiveHealthModule.this, "Error",
-                    "Status Code : " + error.networkResponse.statusCode + "\n" +
-                            "Server Response : " + message);
+        }catch(Exception e){
+            MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveHealthModule.this);
+            e.printStackTrace();
         }
 
     }
