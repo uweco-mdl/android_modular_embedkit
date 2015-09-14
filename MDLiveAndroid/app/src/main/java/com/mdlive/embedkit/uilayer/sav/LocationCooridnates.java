@@ -77,7 +77,7 @@ public class LocationCooridnates {
 
         trackingTimer = new Timer();
         // timer will run until 20000 milli second for location updates.
-        trackingTimer.schedule(new GetLastLocation(), 20000);
+        trackingTimer.schedule(new GetLastLocation(), 60000);
         return true;
     }
 

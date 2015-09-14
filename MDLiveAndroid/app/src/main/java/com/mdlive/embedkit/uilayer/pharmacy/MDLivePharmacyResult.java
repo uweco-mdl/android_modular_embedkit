@@ -127,7 +127,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
         }
-        startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
+        startActivity(i);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
         finish();
     }
@@ -454,7 +454,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 if(getIntent().hasExtra("FROM_MY_HEALTH")){
                                     i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
                                 }
-                                startActivityForResult(i, IntegerConstants.PHAMRACY_RESULT_CODE);
+                                startActivity(i);
                                 finish();
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
                             }
@@ -763,6 +763,8 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
             i.putExtra("FROM_PHARMACY",true);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
             MdliveUtils.closingActivityAnimation(this);
         } else {
