@@ -184,7 +184,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View view) {
                 final CharSequence[] items = {
-                        "EN", "ES", "KO"
+                        changeLangTv.getResources().getString(R.string.mdl_language_english)
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -268,36 +268,37 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             String country;
             String zip;
 
-
-            if (((myProfile.getString("address2")).equalsIgnoreCase("null")) || (myProfile.getString("address2") == null)  || (TextUtils.isEmpty(myProfile.getString("address2")))) {
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
                 address2="";
             } else {
                 address2 = myProfile.getString("address2");
             }
 
-            if (((myProfile.getString("address1")).equalsIgnoreCase("null")) || (myProfile.getString("address1") == null)  || (TextUtils.isEmpty(myProfile.getString("address1")))) {
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
                 address1="";
             } else {
                 address1 = myProfile.getString("address1");
             }
 
-            if (((myProfile.getString("state")).equalsIgnoreCase("null")) || (myProfile.getString("state") == null)  || (TextUtils.isEmpty(myProfile.getString("state")))) {
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
                 state="";
             } else {
                 state = myProfile.getString("state")+" ";
             }
 
-            if (((myProfile.getString("city")).equalsIgnoreCase("null")) || (myProfile.getString("city") == null)  || (TextUtils.isEmpty(myProfile.getString("city")))) {
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
                 city="";
             } else {
                 city = myProfile.getString("city");
             }
-            if (((myProfile.getString("country")).equalsIgnoreCase("null")) || (myProfile.getString("country") == null)  || (TextUtils.isEmpty(myProfile.getString("country")))) {
+
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("country"))) {
                 country="";
             } else {
                 country = myProfile.getString("country");
             }
-            if (((myProfile.getString("zipcode")).equalsIgnoreCase("null")) || (myProfile.getString("zipcode") == null)  || (TextUtils.isEmpty(myProfile.getString("zipcode")))) {
+
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
                 zip="";
             } else {
                 zip = myProfile.getString("zipcode");
@@ -332,7 +333,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             mUserName.setText(username);
             mAddress.setText(address);
 
-            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(mobile));
+            String formattedString = MdliveUtils.formatDualString(mobile);
             mMobile.setText(formattedString);
 
             mTimeZone.setText(timeZone);
@@ -340,7 +341,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             if (getActivity() != null) {
                 sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,"EN");
+                String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,getActivity().getString(R.string.mdl_language_english));
                 changeLangTv.setText(language.toUpperCase());
                 mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
@@ -348,6 +349,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 SharedPreferences.Editor editor1 = sharedPref.edit();
                 editor1.putString(PreferenceConstants.SIGN_IN, mPreferredSignIn.getText().toString());
                 editor1.commit();
+
+                changeLangTv.setText(getActivity().getString(R.string.mdl_language_english));
             }
         }
         catch(JSONException e)

@@ -36,7 +36,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mdlive_tab_activity);
+        setContentView(R.layout.mdlive_my_account_activity);
         clearMinimizedTime();
 
         setTitle("");

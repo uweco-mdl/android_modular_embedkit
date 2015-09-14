@@ -15,6 +15,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
+import com.mdlive.embedkit.uilayer.sav.MDLiveAppointmentThankYou;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -76,21 +77,48 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View v) {
+        if (consultationType.equalsIgnoreCase("phone")) {
+            movetothankyou();
+        }
+        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
+        {
+            movetostartVisit();
+        }
+        else if(!Time.equalsIgnoreCase("Now"))
+        {
+
+            movetothankyou();
+        }
+
+        else
+        {
+            movetostartVisit();
+        }
+
+
+    }
+
+    private void movetostartVisit() {
         Intent intent = new Intent(MDLiveConfirmappointment.this, MDLiveStartVisit.class);
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
-
     }
+    private void movetothankyou() {
+        Intent intent = new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+        startActivity(intent);
+        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+    }
+
 
 
     public void getPreferenceValue()
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        providerName = sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, "");
-        ((TextView)findViewById(R.id.txtProfileName)).setText("Dr. "+providerName);
+        providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
+        ((TextView)findViewById(R.id.txtProfileName)).setText(providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
         ((TextView)findViewById(R.id.txtproviderType)).setText(providerType);
-        consultationType = sharedpreferences.getString(PreferenceConstants.ACCESS_MODE, "");
+        consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
         ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType+" Consultation");
         consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");

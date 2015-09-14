@@ -346,10 +346,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 for (int i = 0; i < users.size(); i++) {
                     final int position = i;
                     final User user = users.get(position);
-                    final View view = inflater.inflate(R.layout.drawer_user_row, mSelectedUserLinearLayout, false);
-                    view.setTag(users.get(i));
+                    View view = null;
 
                     if (i == 0) {
+                        view = inflater.inflate(R.layout.drawer_user_row, mSelectedUserLinearLayout, false);
+                        view.setTag(users.get(i));
+
                         mSelectedUserLinearLayout.addView(view);
                         mSelectedUserLinearLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -358,6 +360,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                             }
                         });
                     } else {
+                        if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
+                            view = inflater.inflate(R.layout.drawer_user_row_add_child, mSelectedUserLinearLayout, false);
+                            view.setTag(users.get(i));
+                        } else {
+                            view = inflater.inflate(R.layout.drawer_user_row_middle, mSelectedUserLinearLayout, false);
+                            view.setTag(users.get(i));
+                        }
+
                         logD("Dependent Users", "" + user.mMode + ", " + user.mName);
                         view.findViewById(R.id.drawer_user_row_down_image_view).setVisibility(View.GONE);
                         mAllUserLinearLayout.addView(view);
@@ -384,6 +394,11 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     } else {
                         ((CircularNetworkImageView) view.findViewById(R.id.drawer_user_row_circular_image_view)).setImageUrl(users.get(i).mImageUrl, ApplicationController.getInstance().getImageLoader(view.getContext()));
                     }
+
+                    setMaxWidthForLeftText(mSelectedUserLinearLayout,
+                            ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_circular_image_view)),
+                            ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)),
+                            mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view));
                 }
 
                 mAllUserLinearLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -465,6 +480,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 }
 
                 setMaxWidthForLeftText(mSelectedUserLinearLayout,
+                        ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_circular_image_view)),
                         ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)),
                         mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view));
             }
@@ -505,26 +521,32 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
      *
      *  While pharmacy name is shrinking, then there will not be any changes on distance text.
      */
-    public void setMaxWidthForLeftText(final View parentView, final TextView leftTextView,
+    public void setMaxWidthForLeftText(final View parentView, final ImageView imageView, final TextView leftTextView,
                                        final View rightTextView) {
         parentView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int rWidth, aWidth, bWidth;
+                int rWidth, iWidth, aWidth, bWidth, iLeftMargin, iRightMargin;
                 rWidth = parentView.getWidth();
+                iWidth = imageView.getWidth();
                 leftTextView.measure(0, 0);
                 aWidth = leftTextView.getMeasuredWidth();
                 rightTextView.measure(0, 0);
                 bWidth = rightTextView.getMeasuredWidth();
+
                 int aMarginEnd = 0, bMarginStart = 0;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     aMarginEnd = (int) (((LinearLayout.LayoutParams)leftTextView.getLayoutParams()).getMarginEnd() * leftTextView.getResources().getDisplayMetrics().density);
                     bMarginStart = (int) (((LinearLayout.LayoutParams)rightTextView.getLayoutParams()).getMarginStart() * leftTextView.getResources().getDisplayMetrics().density);
+                    iLeftMargin = (int) (((LinearLayout.LayoutParams)imageView.getLayoutParams()).getMarginStart() * leftTextView.getResources().getDisplayMetrics().density);
+                    iRightMargin = (int) (((LinearLayout.LayoutParams)imageView.getLayoutParams()).getMarginEnd() * leftTextView.getResources().getDisplayMetrics().density);
                 } else {
                     aMarginEnd = 10;
                     bMarginStart = 10;
+                    iLeftMargin = 10;
+                    iRightMargin = 10;
                 }
-                leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart));
+                leftTextView.setMaxWidth(rWidth - (bWidth + aMarginEnd + bMarginStart + iWidth + iLeftMargin + iRightMargin));
                 leftTextView.invalidate();
                 rightTextView.invalidate();
                 parentView.invalidate();

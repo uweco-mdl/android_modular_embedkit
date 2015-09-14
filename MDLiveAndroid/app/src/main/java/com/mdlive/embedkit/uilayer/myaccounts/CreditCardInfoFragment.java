@@ -170,6 +170,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     mCity.setEnabled(false);
                     mStateLayout.setEnabled(false);
                     mZip.setEnabled(false);
+                    changeAddress.setEnabled(false);
                 }
 
                 try {
@@ -190,43 +191,42 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 //                    mCardNumber.setText(cardNumber);
 //                    mSecurityCode.setText(securityCode);
                     mCardExpirationMonth.setText(cardExpirationMonth+"/"+cardExpirationYear);
-                    if (nameOnCard.equalsIgnoreCase("null") || (nameOnCard == null)  || (TextUtils.isEmpty(nameOnCard))) {
-                        nameOnCard="";
+                    if (MdliveUtils.checkIsEmpty(nameOnCard)) {
+                        nameOnCard = "";
                         mNameOnCard.setText(nameOnCard);
                     } else {
                         mNameOnCard.setText(nameOnCard);
                     }
 
-                    if (address1.equalsIgnoreCase("null") || (address1 == null)  || (TextUtils.isEmpty(address1))) {
-                        address1="";
+                    if (MdliveUtils.checkIsEmpty(address1)) {
+                        address1 = "";
                         mAddress1.setText(address1);
                     } else {
                         mAddress1.setText(address1);
                     }
 
-                    if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
-                        address2="";
+                    if (MdliveUtils.checkIsEmpty(address2)) {
+                        address2 = "";
                         mAddress2.setText(address2);
                     } else {
                         mAddress2.setText(address2);
                     }
 
-                    if (city.equalsIgnoreCase("null") || (city == null)  || (TextUtils.isEmpty(city))) {
-                        city="";
+                    if (MdliveUtils.checkIsEmpty(city)) {
+                        city = "";
                         mCity.setText(city);
                     } else {
                         mCity.setText(city);
                     }
 
-                    if (state.equalsIgnoreCase("null") || (state.equals(null))  || (TextUtils.isEmpty(state))) {
-                        state="";
+                    if (MdliveUtils.checkIsEmpty(state)) {
+                        state = "";
                         mState.setText(state);
                     } else {
                         mState.setText(state);
                     }
-
-                    if (zip.equalsIgnoreCase("null") || (zip == null)  || (TextUtils.isEmpty(zip))) {
-                        zip="";
+                    if (MdliveUtils.checkIsEmpty(zip)) {
+                        zip = "";
                         mZip.setText(zip);
                     } else {
                         mZip.setText(zip);
@@ -262,31 +262,28 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     String name = prefs.getString("Profile_Address", "");
                     try {
                         JSONObject myProfile = new JSONObject(name);
-                        if (myProfile.getString("address1").trim().equalsIgnoreCase("null") || (myProfile.getString("address1").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("address1").trim()))) {
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
                             mAddress1.setText("");
                         } else {
                             mAddress1.setText(myProfile.getString("address1").trim());
                         }
 
-                        if (myProfile.getString("address2").trim().equalsIgnoreCase("null") || (myProfile.getString("address2").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("address2").trim()))) {
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
                             mAddress2.setText("");
                         } else {
                             mAddress2.setText(myProfile.getString("address2").trim());
                         }
-
-                        if (myProfile.getString("state").trim().equalsIgnoreCase("null") || (myProfile.getString("state").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("state").trim()))) {
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
                             mState.setText("");
                         } else {
                             mState.setText(myProfile.getString("state").trim());
                         }
-
-                        if (myProfile.getString("city").trim().equalsIgnoreCase("null") || (myProfile.getString("city").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("city").trim()))) {
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
                             mCity.setText("");
                         } else {
                             mCity.setText(myProfile.getString("city").trim());
                         }
-
-                        if (myProfile.getString("zipcode").trim().equalsIgnoreCase("null") || (myProfile.getString("zipcode").trim() == null)  || (TextUtils.isEmpty(myProfile.getString("zipcode").trim()))) {
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
                             mZip.setText("");
                         } else {
                             mZip.setText(myProfile.getString("zipcode").trim());
@@ -388,7 +385,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         country = "1";
         zip = mZip.getText().toString().trim();
 
-        if (isEmpty(cardNumber) && isEmpty(securityCode) && isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
+        if (isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();

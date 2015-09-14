@@ -15,6 +15,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInstance;
 
 
 /**
@@ -67,6 +70,19 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditionsListView.setAdapter(adapter);
         setProgressBar(findViewById(R.id.progressBar));
         getConditionsOrAllergiesData();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
     }
 
 
@@ -131,7 +147,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("dosage")
                             && !((JSONObject) conditionsListJSONArray.get(i)).isNull("dosage")
                             && ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage").trim().length() > 0){
-                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage")+"mg, ";
+                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("dosage")+", ";
                         data.setDosage(((JSONObject) conditionsListJSONArray.get(i)).getString("dosage"));
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("frequency")
@@ -253,7 +269,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                             i.putExtra("Name", getItem(position).getConditionName());
                             if(getItem(position).getDosage() != null &&
                                     getItem(position).getDosage().length() != 0){
-                                i.putExtra("Dosage", getItem(position).getDosage().replace("mg", ""));
+                                i.putExtra("Dosage", getItem(position).getDosage());
                             }
                             if(getItem(position).getFrequency() != null &&
                                     getItem(position).getFrequency().length() != 0){
@@ -405,7 +421,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    conditonsNames = getString(R.string.mdl_no_conditions_reported);
+                    conditonsNames = getString(R.string.mdl_no_condition_reported);
                 Log.e("conditonsNames", conditonsNames);
                 resultData.putExtra("conditionsData", conditonsNames);
             }else if(type == TYPE_CONSTANT.MEDICATION){

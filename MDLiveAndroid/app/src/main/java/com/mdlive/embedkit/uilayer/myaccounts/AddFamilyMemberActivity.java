@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -45,7 +44,7 @@ import java.util.regex.Pattern;
 /**
  * Created by venkataraman_r on 8/22/2015.
  */
-public class AddFamilyMemberActivity extends AppCompatActivity{
+public class AddFamilyMemberActivity extends AppCompatActivity {
 
     private EditText mUsername = null;
     private EditText mEmail = null;
@@ -74,8 +73,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
     private String Gender = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
-    private RelativeLayout mStateLayout,mDOBLayout,mGenderLayout;
-    private boolean mayIallowtoEdit = true;
+    private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
+    private boolean mayIAllowToEdit = true;
     private ProgressDialog pDialog;
 
 
@@ -190,36 +189,34 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
             }
         });
 
-        try {
-            mPhone.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+        mPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (mayIallowtoEdit) {
-                        String temp = s.toString().replace("-", "");
-                        if (temp.length() == 10) {
-                            String number = temp;
-                            String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(number));
-                            mayIallowtoEdit = false;
-                            mPhone.setText(formattedString);
-                            mPhone.setSelection(mPhone.getText().toString().length());
-                            mayIallowtoEdit = true;
-                        }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mayIAllowToEdit) {
+                    try {
+
+                        String formattedString = MdliveUtils.formatDualString(mPhone.getText().toString());
+                        mayIAllowToEdit = false;
+                        mPhone.setText(formattedString);
+                        mPhone.setSelection(mPhone.getText().toString().length());
+                        mayIAllowToEdit = true;
+                    } catch (Exception e) {
                     }
                 }
-            });
+            }
+        });
 
-        } catch (Exception e) {
-        }
 
         mUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -323,102 +320,80 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         addFamilyMemberInfo();
     }
 
-    public void init()
-    {
-        mUsername = (EditText)findViewById(R.id.userName);
-        mEmail = (EditText)findViewById(R.id.email);
-
-        mFirstName = (EditText)findViewById(R.id.firstName);
-
-        mLastName = (EditText)findViewById(R.id.lastName);
-        mAddress1 = (EditText)findViewById(R.id.streetAddress);
-
-        mCity = (EditText)findViewById(R.id.city);
-        mState = (TextView)findViewById(R.id.state);
-        mPhone = (EditText)findViewById(R.id.phone);
-
-        mDOB = (TextView)findViewById(R.id.DOB);
-        mGender = (TextView)findViewById(R.id.gender);
-        mDOBLayout = (RelativeLayout)findViewById(R.id.DOBLayout);
-        mStateLayout = (RelativeLayout)findViewById(R.id.stateLayout);
-        mGenderLayout = (RelativeLayout)findViewById(R.id.genderLayout);
-        mValidEmailText = (TextView)findViewById(R.id.validEmailText);
-        mValidationEmail = (TextView)findViewById(R.id.validationEmail);
-        mUsernameLength = (TextView)findViewById(R.id.userNameLength);
-        mUsernameAlphaNumericCheck = (TextView)findViewById(R.id.userNameAlphaNumericCheck);
-        mUsernameSpecialCharactersCheck = (TextView)findViewById(R.id.userNameSpecialCharactersCheck);
+    public void init() {
+        mUsername = (EditText) findViewById(R.id.userName);
+        mEmail = (EditText) findViewById(R.id.email);
+        mFirstName = (EditText) findViewById(R.id.firstName);
+        mLastName = (EditText) findViewById(R.id.lastName);
+        mAddress1 = (EditText) findViewById(R.id.streetAddress);
+        mCity = (EditText) findViewById(R.id.city);
+        mState = (TextView) findViewById(R.id.state);
+        mPhone = (EditText) findViewById(R.id.phone);
+        mDOB = (TextView) findViewById(R.id.DOB);
+        mGender = (TextView) findViewById(R.id.gender);
+        mDOBLayout = (RelativeLayout) findViewById(R.id.DOBLayout);
+        mStateLayout = (RelativeLayout) findViewById(R.id.stateLayout);
+        mGenderLayout = (RelativeLayout) findViewById(R.id.genderLayout);
+        mValidEmailText = (TextView) findViewById(R.id.validEmailText);
+        mValidationEmail = (TextView) findViewById(R.id.validationEmail);
+        mUsernameLength = (TextView) findViewById(R.id.userNameLength);
+        mUsernameAlphaNumericCheck = (TextView) findViewById(R.id.userNameAlphaNumericCheck);
+        mUsernameSpecialCharactersCheck = (TextView) findViewById(R.id.userNameSpecialCharactersCheck);
 
         pDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }
 
-    public void addFamilyMemberInfo()
-    {
+    public void addFamilyMemberInfo() {
         Username = mUsername.getText().toString().trim();
         Email = mEmail.getText().toString().trim();
-
         FirstName = mFirstName.getText().toString().trim();
-
         LastName = mLastName.getText().toString().trim();
         Address1 = mAddress1.getText().toString().trim();
-
         City = mCity.getText().toString().trim();
         State = mState.getText().toString().trim();
-
-        Phone = mPhone.getText().toString().trim();
-
+        Phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
         DOB = mDOB.getText().toString().trim();
         Gender = mGender.getText().toString().trim();
 
-        if(isEmpty(Username)&& isEmpty(Email)&&  isEmpty(FirstName)&&  isEmpty(LastName)&& isEmpty(Address1)&&  isEmpty(City)
-                && isEmpty(State) &&  isEmpty(Phone) &&  isEmpty(DOB) && isEmpty(Gender))
-        {
-            if(validEmail(Email)) {
+        if (isEmpty(Username) && isEmpty(Email) && isEmpty(FirstName) && isEmpty(LastName) && isEmpty(Address1) && isEmpty(City)
+                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender)) {
+            if (validEmail(Email)) {
                 try {
                     JSONObject parent = new JSONObject();
 
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("computer", "MAC");
-
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put("username", Username);
                     jsonObject1.put("first_name", FirstName);
-//                jsonObject1.put("middle_name", MiddleName);
                     jsonObject1.put("last_name", LastName);
                     jsonObject1.put("gender", Gender);
                     jsonObject1.put("email", Email);
                     jsonObject1.put("phone", Phone);
-//                jsonObject1.put("cell", Cell);
                     jsonObject1.put("address1", Address1);
-//                jsonObject1.put("address2", Address2);
                     jsonObject1.put("city", City);
                     jsonObject1.put("state_id", State);
-//                jsonObject1.put("zip", Zip);
                     jsonObject1.put("birthdate", DOB);
                     jsonObject1.put("answer", "idontknow");
 
                     parent.put("member", jsonObject1);
                     parent.put("camera", jsonObject);
 
-                    Log.i("params", parent.toString());
                     addFamilyMember(parent.toString());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(getBaseContext(), "Email id is invalid", Toast.LENGTH_SHORT).show();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(AddFamilyMemberActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public Boolean isEmpty(String cardInfo)
-    {
-        if(!TextUtils.isEmpty(cardInfo))
+    public Boolean isEmpty(String cardInfo) {
+        if (!TextUtils.isEmpty(cardInfo))
             return true;
         return false;
     }
@@ -442,8 +417,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
                 pDialog.dismiss();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, pDialog);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, AddFamilyMemberActivity.this);
                 }
             }
@@ -503,12 +477,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity{
         editor.commit();
     }
 
-    private boolean validEmail(String email){
+    private boolean validEmail(String email) {
 
         Pattern pattern = Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-
         Matcher matcher = pattern.matcher(email);
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             return true;
         }
         return false;

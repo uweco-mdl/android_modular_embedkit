@@ -1,10 +1,8 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -34,7 +33,7 @@ import java.util.List;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangeAddressFragment  extends Fragment {
+public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
     public static ChangeAddressFragment newInstance(String response) {
 
@@ -53,7 +52,6 @@ public class ChangeAddressFragment  extends Fragment {
     private String response;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
-    private ProgressDialog pDialog;
     private RelativeLayout mStateLayout;
 
     @Nullable
@@ -69,8 +67,6 @@ public class ChangeAddressFragment  extends Fragment {
         mCity = (EditText) changeAddressView.findViewById(R.id.city);
         mStateLayout = (RelativeLayout)changeAddressView.findViewById(R.id.stateLayout);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
-
         response = getArguments().getString("Response");
 
         mStateLayout.setOnClickListener(new View.OnClickListener() {
@@ -84,31 +80,31 @@ public class ChangeAddressFragment  extends Fragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
 
-                if ((responseDetail.getString("address1").equalsIgnoreCase("null")) || (responseDetail.getString("address1") == null)  || (TextUtils.isEmpty(responseDetail.getString("address1") )) ||((responseDetail.getString("address1").trim().length()) == 0)) {
+                if (MdliveUtils.checkIsEmpty(responseDetail.getString("address1"))) {
                     mAddressLine1.setText("");
                 } else {
                     mAddressLine1.setText(responseDetail.getString("address1"));
                 }
 
-                if ((responseDetail.getString("address2").equalsIgnoreCase("null")) || (responseDetail.getString("address2") == null)  || (TextUtils.isEmpty(responseDetail.getString("address2") )) ||((responseDetail.getString("address2").trim().length()) == 0)) {
+                if (MdliveUtils.checkIsEmpty(responseDetail.getString("address2"))) {
                     mAddressLine2.setText("");
                 } else {
                     mAddressLine2.setText(responseDetail.getString("address2"));
                 }
 
-                if ((responseDetail.getString("state").equalsIgnoreCase("null")) || (responseDetail.getString("state") == null)  || (TextUtils.isEmpty(responseDetail.getString("state") )) ||((responseDetail.getString("state").trim().length()) == 0)) {
+                if (MdliveUtils.checkIsEmpty(responseDetail.getString("state"))) {
                     mState.setText("");
                 } else {
                     mState.setText(responseDetail.getString("state"));
                 }
 
-                if ((responseDetail.getString("city").equalsIgnoreCase("null")) || (responseDetail.getString("city") == null)  || (TextUtils.isEmpty(responseDetail.getString("city") )) ||((responseDetail.getString("city").trim().length()) == 0)) {
+                if (MdliveUtils.checkIsEmpty(responseDetail.getString("city"))) {
                     mCity.setText("");
                 } else {
                     mCity.setText(responseDetail.getString("city"));
                 }
 
-                if ((responseDetail.getString("zipcode").equalsIgnoreCase("null")) || (responseDetail.getString("zipcode") == null)  || (TextUtils.isEmpty(responseDetail.getString("zipcode") )) ||((responseDetail.getString("zipcode").trim().length()) == 0)) {
+                if (MdliveUtils.checkIsEmpty(responseDetail.getString("zipcode"))) {
                     mZip.setText("");
                 } else {
                     mZip.setText(responseDetail.getString("zipcode"));
@@ -172,7 +168,7 @@ public class ChangeAddressFragment  extends Fragment {
 
     public void loadProfileInfo(String params)
     {
-        pDialog.show();
+       showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -187,7 +183,7 @@ public class ChangeAddressFragment  extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                pDialog.dismiss();
+               hideProgressDialog();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -195,7 +191,7 @@ public class ChangeAddressFragment  extends Fragment {
                                 dialog.dismiss();
                             }
                         };
-                        MdliveUtils.connectionTimeoutError(pDialog, getActivity());
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 }
             }
@@ -207,7 +203,7 @@ public class ChangeAddressFragment  extends Fragment {
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-            pDialog.dismiss();
+           hideProgressDialog();
 
             if(response != null)
             {

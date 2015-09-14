@@ -329,6 +329,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     Intent i = new Intent(getActivity(), MDLivePharmacyResult.class);
                     i.putExtra("longitude", lat + "");
                     i.putExtra("latitude", lon + "");
+                    i.putExtra("FROM_MY_HEALTH", true);
                     i.putExtra("errorMesssage", "No Pharmacies listed in your location");
                     startActivity(i);
                     MdliveUtils.startActivityAnimation(getActivity());

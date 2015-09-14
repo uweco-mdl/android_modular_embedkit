@@ -562,11 +562,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                 }
                 if (conditonsNames.trim().length() == 0)
-                    ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_conditions_reported));
+                    ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_condition_reported));
                 else
                     ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(conditonsNames);
             } else {
-                ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_conditions_reported));
+                ((TextView) view.findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_condition_reported));
             }
 
         } catch (Exception e) {
@@ -589,17 +589,23 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         try {
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
             String myHealthPercentage = historyPercentageArray.getJSONObject(0).getString("health");
-            if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("conditions").length() == 0)){
+            if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("surgeries").length() == 0)){
                 view.findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
                 String conditonsNames = "";
-                JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
+                JSONArray conditonsArray = healthHistory.getJSONArray("surgeries");
                 for(int i = 0;i<conditonsArray.length();i++){
-                    conditonsNames += conditonsArray.getJSONObject(i).getString("condition");
+                    conditonsNames += conditonsArray.getJSONObject(i).getString("name");
                     if(i!=conditonsArray.length() - 1){
                         conditonsNames += ", ";
                     }
                 }
-                ((TextView)view.findViewById(R.id.ProceduresNameTv)).setText(conditonsNames);
+
+                if (conditonsNames.trim().length() == 0)
+                    ((TextView) view.findViewById(R.id.ProceduresNameTv)).setText(getString(R.string.mdl_no_procedures_reported));
+                else
+                    ((TextView) view.findViewById(R.id.ProceduresNameTv)).setText(conditonsNames);
+            } else {
+                ((TextView) view.findViewById(R.id.ProceduresNameTv)).setText(getString(R.string.mdl_no_procedures_reported));
             }
         } catch (Exception e) {
             e.printStackTrace();

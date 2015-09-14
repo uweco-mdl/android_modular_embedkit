@@ -90,6 +90,10 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     public int getSelectedPosition(){
         return checkedItemPosition;
     }
+
+    public boolean isNotFoundinList(){
+        return notFound;
+    }
     @Override
     public int getCount() {
         return array.size();
@@ -131,9 +135,10 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         reasonListItem = (LinearLayout) row.findViewById(R.id.reasonListItem);
 
         if(notFound){
-            reasonListItem.setVisibility(View.GONE);
+            reasonCheckbox.setVisibility(View.GONE);
             reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
         }else {
+            reasonCheckbox.setVisibility(View.VISIBLE);
             reasonTxt.setText(array.get(pos));
         }
 
