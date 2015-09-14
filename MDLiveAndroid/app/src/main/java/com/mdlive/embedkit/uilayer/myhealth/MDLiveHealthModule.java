@@ -1,7 +1,5 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -10,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -27,8 +27,9 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.AddAllergyServices;
@@ -58,6 +59,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInstance;
+
 /**
  * Created by srinivasan_ka on 8/26/2015.
  */
@@ -79,7 +82,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             "Once","Twice","Three times","Four times", "Five times", "Six times"
     };
     String[] modesList =  new String[]{
-            "Hourly","Daily","Weekly","Monthly"
+            "Daily", "Hourly", "Weekly","Monthly"
     };
 
     @Override
@@ -173,7 +176,30 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 isUpdateMode = false;
             }
             conditionText.addTextChangedListener(getEditTextWatcher(conditionText));
+
+            conditionText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(actionId == EditorInfo.IME_ACTION_DONE){
+                            rightBtnOnClick(null);
+                    }
+                    return false;
+                }
+            });
         }
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
     }
 
     public void surgeryNameClick(View view){
@@ -287,8 +313,10 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         });
 
         try {
-            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
+//            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+            String dateofBirth =userBasicInfo.getPersonalInfo().getBirthdate();
+//            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
