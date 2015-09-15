@@ -158,8 +158,8 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         }
         int selectedPosition = 0;
         for (int j = 0; j < relationShpList.size(); j++) {
-            if (mBehavioralHistory.counselingPreference.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
-                selectedPosition = j;
+            if (mBehavioralHistory.counselingPreference!=null && mBehavioralHistory.counselingPreference.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
+                        selectedPosition = j;
                 break;
             }
         }
