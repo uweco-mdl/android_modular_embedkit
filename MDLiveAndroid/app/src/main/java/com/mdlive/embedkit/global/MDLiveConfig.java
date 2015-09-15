@@ -10,6 +10,20 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
  */
 public class MDLiveConfig {
 
+    private MDLiveConfig(){}
+
+    public enum ENVIRON {
+        PROD, STAGE, QA, DEV, QAPL, UNDEFINED
+    }
+
+    public enum SIGNALS {
+        EXIT_SIGNAL
+    }
+
+    public static final String ZERO_PAY = "0.00";     // used to indicate a "zero payment" liability for consultations
+
+    public static ENVIRON CURRENT_ENVIRONMENT;
+
     public static final String SSO_SERVICE = "/customer_logins/embed_kit";
     public static final String LOGIN_SERVICES = "/customer_logins";
     public static final String URL_USER_INFORMATION = "/customer/:id";
@@ -121,9 +135,9 @@ public class MDLiveConfig {
     }
 
 
-    public static void setData(int currentEnvironment){
+    public static void setData(ENVIRON currentEnvironment){
         switch (currentEnvironment){
-            case 1:
+            case DEV:
                 // dev environment
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
@@ -134,7 +148,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
-            case 2:
+            case QA:
                 // QA environment
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
@@ -145,7 +159,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "http://www.mdlive.com/mobile/forgotpassword";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
-            case 3:
+            case STAGE:
                 // stage environment
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
@@ -156,7 +170,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
-            case 4:
+            case PROD:
                 // Production environment
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
@@ -167,7 +181,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
-            case 5:
+            case QAPL:
                 // QA Pluto URL
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
@@ -178,6 +192,8 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
+
+            case UNDEFINED:
             default:
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
@@ -284,28 +300,7 @@ public class MDLiveConfig {
         AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
     }
 
-
     static native String getProdApiKeyFromNative();
     static native String getProdSecretKeyFromNative();
-    /*
-    private static final String BASE_URL = "https://stage-members.mdlive.com/services";
-    private static final String LOGIN_SERVICES = "/customer_logins";
-    public static final String URL_USER_INFORMATION = "/customer/:id";
-    public static final String URL_PROVIDER_TYPE = "/providers/provider_type_list";
-    public static final String URL_FAMILY_MEMBER = "/customer/family_members";
-    private static final String MDLIVE_API_KEY = "c9e63d9a77f17039c470";
-    private static final String MDLIVE_SECRET_KEY = "b302e84f866a8730eb2";
-    private static final String DEFAULT_USER_ID = "MobileUser";
 
-    public static void setData(){
-
-        AppSpecificConfig.BASE_URL = BASE_URL;
-        AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;
-        AppSpecificConfig.API_KEY = MDLIVE_API_KEY;
-        AppSpecificConfig.SECRET_KEY = MDLIVE_SECRET_KEY;
-        AppSpecificConfig.DEFAULT_USER_ID = DEFAULT_USER_ID;
-        AppSpecificConfig.URL_USER_INFORMATION = URL_USER_INFORMATION;
-        AppSpecificConfig.URL_FAMILY_MEMBER = URL_FAMILY_MEMBER;
-        AppSpecificConfig.URL_PROVIDER_TYPE = URL_PROVIDER_TYPE;
-    }*/
 }
