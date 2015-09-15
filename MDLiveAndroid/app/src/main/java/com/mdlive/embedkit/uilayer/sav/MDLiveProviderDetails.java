@@ -513,7 +513,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
 
 
             try {
-               saveConsultationType(str_Availability_Type);
+//               saveConsultationType(str_Availability_Type);
                 saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -876,6 +876,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxt.setText("Talk to this doctor now");
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
 //            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
@@ -1013,7 +1014,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                             byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                             byphoneBtn.setTextColor(Color.GRAY);
                             horizontalscrollview.setVisibility(View.VISIBLE);
-                            visibilityBasedOnHorizontalTextView("video");
+//                            visibilityBasedOnHorizontalTextView("video");
                             selectedVideoOrPhone=true;
                             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                             if(layout.getChildCount() > 0)
@@ -1040,7 +1041,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
                             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                             byvideoBtn.setTextColor(Color.GRAY);
                             horizontalscrollview.setVisibility(View.VISIBLE);
-                            visibilityBasedOnHorizontalTextView("phone");
+//                            visibilityBasedOnHorizontalTextView("phone");
                             selectedVideoOrPhone=true;
                             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                             if(layout.getChildCount() > 0)
@@ -1056,7 +1057,6 @@ Log.e("Date View-->",layout.getChildCount()+"");
                             horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                         }
                     });
-
 
                 }
 
@@ -1177,6 +1177,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
     private void visibilityBasedOnHorizontalTextView(String position) {
         if(position.equalsIgnoreCase("video"))
         {
+            saveConsultationType("Video");
             reqfutureapptBtnLayout.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
@@ -1220,6 +1221,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
             });
         }
         else  if(position.equalsIgnoreCase("phone")){
+            saveConsultationType("Phone");
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setClickable(false);
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
@@ -1429,7 +1431,6 @@ Log.e("Date View-->",layout.getChildCount()+"");
             DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
             updatedAppointmentDate = format1.format(cal.getTime());
             loadProviderDetails(updatedAppointmentDate);
-
 
 
         }

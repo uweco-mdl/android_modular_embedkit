@@ -167,7 +167,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }else {
 
                 if (patientSpinner != null) {
-                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_FAMILY_MEMBER)) {
                         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
 
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -193,7 +193,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
 
                     } else {
-                        if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                        if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_FAMILY_MEMBER)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
@@ -340,7 +340,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 if(list!=null){
                     if( remainingFamilyMemberCount<1)
                     {
-                        if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
+                        if(StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName))
                         {
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -373,7 +373,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
                         }
                     }else {
-                        if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
+                        if (StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
@@ -916,7 +916,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         }catch(Exception e){
             e.printStackTrace();
         }
-        dependentList.add(StringConstants.ADD_CHILD);
+        dependentList.add(StringConstants.ADD_FAMILY_MEMBER);
         setSpinnerValues(dependentList, patientSpinner);
 
     }

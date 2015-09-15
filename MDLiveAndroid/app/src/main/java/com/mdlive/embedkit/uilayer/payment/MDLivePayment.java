@@ -243,12 +243,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             // this is called from JS with passed value
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
+                Log.e("token response",jobj.getString("status"));
                 if(setExistingCardDetailUser)
                 {
                     if (jobj.getString("status").equals("success")) {
                         String params = getExistingBillingPutParams(billingResponse);
                         updateCardDetails(params);
-//                        Log.e("print params->",params);
+                        Log.e("get Existing params->",params);
                     } else {
                         MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
                     }
@@ -421,7 +422,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             cardInfo.put("cc_expyear", new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth", String.valueOf(month + 1));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
+            cardInfo.put("billing_zip5", "92111");
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -521,6 +522,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.e("confirm appmt res---->",response.toString());
                 dismissDialog();
                 try {
                     String apptId = response.getString("appointment_id");
