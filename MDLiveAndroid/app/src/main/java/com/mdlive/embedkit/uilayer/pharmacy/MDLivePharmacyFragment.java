@@ -87,7 +87,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         //This function is for initialize google map that was used in layout
 
         //This function is for get user pharmacy details
-        getUserPharmacyDetails();
+       // getUserPharmacyDetails();
     }
 
 

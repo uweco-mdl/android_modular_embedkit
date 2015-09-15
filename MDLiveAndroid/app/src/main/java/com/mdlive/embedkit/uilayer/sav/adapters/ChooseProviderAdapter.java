@@ -129,14 +129,14 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 else if(array.get(pos).get("availability_type").equalsIgnoreCase("phone"))
                 {
                     video_call_icon.setBackgroundResource(R.drawable.phone_call_icon);
-                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by phone");
+                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by phone");
                 }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video"))
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by video");
+                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by video");
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video or phone"))
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText("available now by video or phone");
+                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by video or phone");
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }
 

@@ -631,6 +631,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(isNewUser){
+            findViewById(R.id.PediatricLayoutLl).setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -829,6 +832,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
             ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
         }
+
+        if(isNewUser){
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.GONE);
+        }
+
     }
 
     /**

@@ -51,7 +51,9 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
     }
 
     public void onTickClicked() {
-        if (questionEditText.getText().toString() != null && questionEditText.getText().length() > 0) {
+        if (questionEditText.getText().toString() != null && questionEditText.getText().length() > 0
+                && !questionEditText.getText().toString().startsWith(" ")) {
+            MdliveUtils.hideKeyboard(getActivity(), (View) questionEditText);
             try {
                 final JSONObject outerJsonObject = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -65,7 +67,7 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
             }
         } else if (questionEditText.getText().length() == 0) {
             if (getActivity() != null) {
-                MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdl_please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdli_ask_a_question_validation));
             }
         }
 

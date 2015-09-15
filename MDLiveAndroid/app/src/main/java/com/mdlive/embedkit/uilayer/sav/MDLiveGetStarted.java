@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -167,7 +168,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }else {
 
                 if (patientSpinner != null) {
-                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                    if ((remainingFamilyMemberCount < 1) && patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_FAMILY_MEMBER)) {
                         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
 
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -193,7 +194,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
 
                     } else {
-                        if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_CHILD)) {
+                        if (patientSpinner.getSelectedItem().toString().equals(StringConstants.ADD_FAMILY_MEMBER)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
@@ -332,7 +333,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         Log.e("List of Spinner value ", list.toString());
         dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+
+        SpinnerAdapter mAdapter=new SpinnerAdapter(MDLiveGetStarted.this,R.layout.mdlive_custom_spinner,list);
+        spinner.setAdapter(mAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, final int position, long id) {
@@ -340,7 +343,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 if(list!=null){
                     if( remainingFamilyMemberCount<1)
                     {
-                        if(StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName))
+                        if(StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName))
                         {
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
@@ -373,7 +376,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
                         }
                     }else {
-                        if (StringConstants.ADD_CHILD.equalsIgnoreCase(dependentName)) {
+                        if (StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
@@ -390,6 +393,49 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onNothingSelected(AdapterView<?> arg0) { }
         });
     }
+
+
+    /***
+     * SpinnerAdapter- Class is used to inflate custom text and inflate the custom view in spinner
+     */
+
+
+    public class SpinnerAdapter extends ArrayAdapter<String>{
+        ArrayList<String> objects;
+        public SpinnerAdapter(Context ctx, int txtViewResourceId, ArrayList<String> objects){
+            super(ctx, txtViewResourceId, objects);
+            this.objects=objects;
+        }
+        @Override
+        public View getDropDownView(int position, View cnvtView, ViewGroup prnt){
+
+            LayoutInflater inflater = getLayoutInflater();
+            View mySpinner = inflater.inflate(R.layout.mdlive_custom_spinner_drop_down, prnt, false);
+            TextView main_text = (TextView) mySpinner.findViewById(R.id.txtPatientName);
+            main_text.setText(objects.get(position));
+            return mySpinner;
+
+
+        }
+        @Override
+        public View getView(int pos, View cnvtView, ViewGroup prnt){
+            return getCustomView(pos, cnvtView, prnt);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = getLayoutInflater();
+            View mySpinner = inflater.inflate(R.layout.mdlive_custom_spinner_text, parent, false);
+            TextView main_text = (TextView) mySpinner .findViewById(R.id.txtPatientName);
+            main_text.setText(objects.get(position));
+
+            return  mySpinner;
+        }
+    }
+
+
+
+
+
 
     /**
      * This function is used to clear cache from volley.This is mainly for clearing
@@ -916,7 +962,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         }catch(Exception e){
             e.printStackTrace();
         }
-        dependentList.add(StringConstants.ADD_CHILD);
+        dependentList.add(StringConstants.ADD_FAMILY_MEMBER);
         setSpinnerValues(dependentList, patientSpinner);
 
     }

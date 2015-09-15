@@ -78,11 +78,9 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
                 view.findViewById(R.id.help).setVisibility(View.GONE);
                 if(appointment.getApptType().equalsIgnoreCase("phone")) {
-                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
                 }else if(Time.isEmpty())
                 {
-                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
                 } else{
             view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);

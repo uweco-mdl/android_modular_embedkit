@@ -128,6 +128,8 @@ public class MDLiveConfig {
     // URL for NotificationService
     public static final String URL_NOTIFICATION = "/notifications";
 
+    public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
+
     static {
         System.loadLibrary("app");
     }
@@ -137,64 +139,70 @@ public class MDLiveConfig {
         switch (currentEnvironment){
             case DEV:
                 // dev environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
                 AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
                 AppSpecificConfig.URL_SIGN_UP = "https://dev-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://dev-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case QA:
                 // QA environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
                 AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "http://www.mdlive.com/mobile/forgotusername";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "http://www.mdlive.com/mobile/forgotpassword";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case STAGE:
                 // stage environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
                 AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
                 AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case PROD:
                 // Production environment
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://rtl.mdlive.com/services";
                 AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
                 AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case QAPL:
                 // QA Pluto URL
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://pluto-members.mdtestsite.net/services";
                 AppSpecificConfig.API_KEY = "b74d0fb9a114904c009b";
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://pluto-members.mdtestsite.net/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
 
             case UNDEFINED:
             default:
+                AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://dev-members.mdlive.com/services";
                 AppSpecificConfig.API_KEY = "a775f7e2ed1ce6cb313b";
                 AppSpecificConfig.SECRET_KEY = "843f117b0bf7368ed5d";
                 AppSpecificConfig.URL_SIGN_UP = "https://dev-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://dev-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
         }
 
         AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;
@@ -288,6 +296,8 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
 
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
+
+        AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
     }
 
     static native String getProdApiKeyFromNative();
