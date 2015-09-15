@@ -84,15 +84,17 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
-            if (getIntent().getExtras() != null && getIntent().hasExtra(SELECTED_TAB)) {
-                viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_TAB, 0));
-            }
+
         }
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL | TabLayout.GRAVITY_CENTER);
         tabLayout.setupWithViewPager(viewPager);
+        if (getIntent().getExtras() != null && getIntent().hasExtra(SELECTED_TAB)) {
+            viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_TAB, 0));
+            viewPager.invalidate();
+        }
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
@@ -279,6 +281,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     public void changePharmacyButtonOnClick(View view) {
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
         i.putExtra("FROM_MY_HEALTH",true);
+        i.putExtra("FROM_MY_HEALTH_STATUS","true");
         startActivity(i);
     }
 
