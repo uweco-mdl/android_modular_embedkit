@@ -111,3 +111,11 @@
 -keep class !unifiedmiddleware.** {*;}
 
 -keep class !mobile.UILayer.** {*;}
+
+# Maintain visibility of Inner class enums
+
+-keepattributes InnerClasses
+-keep public enum com.mdlive.embedkit.global.MDLiveConfig$** {
+    **[] $VALUES;
+    public *;
+}
