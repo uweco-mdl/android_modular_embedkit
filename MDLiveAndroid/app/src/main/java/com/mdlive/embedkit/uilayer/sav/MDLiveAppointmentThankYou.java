@@ -77,16 +77,18 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             activityCaller  = getIntent().getStringExtra("activitycaller");
         }
 
-        if(activityCaller != null && activityCaller.equals(getString(R.string.mdl_makeAppmtRequest))){
-            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
-            ((TextView)findViewById(R.id.date)).setText(consultationDate);
-            Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-            ((TextView)findViewById(R.id.time)).setText(Time);
-        }else
-        {
+        if(activityCaller != null && activityCaller.equalsIgnoreCase(getString(R.string.mdl_makeAppmtRequest))){
             consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
             ((TextView)findViewById(R.id.date)).setText(consultationDate);
             Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
+            ((TextView)findViewById(R.id.time)).setText(Time);
+
+        }else
+        {
+
+            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+            ((TextView)findViewById(R.id.date)).setText(consultationDate);
+            Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
             ((TextView)findViewById(R.id.time)).setText(Time);
         }
 

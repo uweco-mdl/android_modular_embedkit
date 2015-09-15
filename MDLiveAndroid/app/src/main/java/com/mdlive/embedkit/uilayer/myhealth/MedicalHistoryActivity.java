@@ -56,6 +56,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     public static final String TAG = "MYHEALTH";
     private static final String SELECTED_TAB = "slected_tab";
+    public static boolean isFromMyHealth = false;
     ViewPager viewPager;
 
     public static Intent getSelectedTabFromMedicalHistory(final Context context, final int selectedTab) {

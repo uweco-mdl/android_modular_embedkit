@@ -728,7 +728,12 @@ Log.e("Date View-->",layout.getChildCount()+"");
         tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
 
         byvideoBtnLayout.setVisibility(View.VISIBLE);
-        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+
+        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+        byvideoBtn.setTextColor(Color.WHITE);
+        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+        byphoneBtn.setTextColor(Color.WHITE);
+//        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -743,7 +748,7 @@ Log.e("Date View-->",layout.getChildCount()+"");
         });
 
         byphoneBtnLayout.setVisibility(View.VISIBLE);
-        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+//        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

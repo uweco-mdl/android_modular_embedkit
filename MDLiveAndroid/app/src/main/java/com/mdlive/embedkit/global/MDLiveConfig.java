@@ -132,7 +132,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://dev-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://dev-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case 2:
                 // QA environment
@@ -143,7 +143,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "http://www.mdlive.com/mobile/forgotusername";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "http://www.mdlive.com/mobile/forgotpassword";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case 3:
                 // stage environment
@@ -154,7 +154,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case 4:
                 // Production environment
@@ -165,7 +165,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             case 5:
                 // QA Pluto URL
@@ -176,7 +176,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://pluto-members.mdtestsite.net/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
                 break;
             default:
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
@@ -186,7 +186,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "https://dev-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://dev-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://dev-members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://dev-symptom.mdlive.com/sc/html/index.html?vendorid=mdlive";
         }
 
         AppSpecificConfig.LOGIN_SERVICES = LOGIN_SERVICES;

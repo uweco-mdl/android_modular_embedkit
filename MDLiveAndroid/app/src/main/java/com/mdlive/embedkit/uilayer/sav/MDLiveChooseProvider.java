@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -52,6 +53,7 @@ import java.util.TimeZone;
  * and Doctor on call will be hidden when the response is false.
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
+    private static final long THIRTY_SECONDS = 30 * 1000;
 
     private ListView listView;
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
@@ -63,6 +65,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private RelativeLayout docOnCalLinLay;
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
+
+    private Handler mHandler;
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ChooseProviderResponseList();
+            mHandler.postDelayed(this, THIRTY_SECONDS);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +94,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider).toUpperCase());
 
         Initailization();
-        ChooseProviderResponseList();
+
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
@@ -96,6 +108,22 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+
+        mHandler = new Handler();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mHandler.post(mRunnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void leftBtnOnClick(View v){
