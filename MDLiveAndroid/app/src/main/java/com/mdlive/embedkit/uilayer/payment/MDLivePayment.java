@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
@@ -56,7 +57,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private WebView HostedPCI;
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
-    private String finalAmout = "";
+    private String finalAmount = "";
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
@@ -82,9 +83,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
-            finalAmout = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
-            storePayableAmount(finalAmout);
-            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+            finalAmount = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmount);
+            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
         }
         getCreditCardInfoService();
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
@@ -149,7 +150,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     public void rightBtnOnClick(View view){
 
-        if (finalAmout.equals("0.00")) {
+        if (finalAmount.equals(MDLiveConfig.ZERO_PAY)) {
             doConfirmAppointment();
         } else {
             HostedPCI.loadUrl("javascript:tokenizeForm()");
@@ -668,18 +669,18 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObject = new JSONObject(response);
             if (resObject.has("discount_amount")) {
                 String discountAmount = resObject.getString("discount_amount").replace("$", "");
-                payableAmount = Double.parseDouble(finalAmout) - Double.parseDouble(discountAmount.trim());
+                payableAmount = Double.parseDouble(finalAmount) - Double.parseDouble(discountAmount.trim());
                 if (payableAmount <= 0.00) {
                     payableAmount = 0.00;
-                    finalAmout = String.format("%.2f", payableAmount);
-                    storePayableAmount(finalAmout);
+                    finalAmount = String.format("%.2f", payableAmount);
+                    storePayableAmount(finalAmount);
                     doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
 
                 } else {
-                    finalAmout = String.format("%.2f", payableAmount);
-                    storePayableAmount(finalAmout);
+                    finalAmount = String.format("%.2f", payableAmount);
+                    storePayableAmount(finalAmount);
                 }
-                ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+                ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -717,7 +718,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
     public void payNow(View paymentButton) {
-        if (finalAmout.equals("0.00")) {
+        if (finalAmount.equals(MDLiveConfig.ZERO_PAY)) {
             doConfirmAppointment();
         } else {
             if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {

@@ -136,6 +136,8 @@ public class MDLiveConfig {
 
 
     public static void setData(ENVIRON currentEnvironment){
+        CURRENT_ENVIRONMENT = currentEnvironment;
+
         switch (currentEnvironment){
             case DEV:
                 // dev environment
