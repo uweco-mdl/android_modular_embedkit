@@ -168,6 +168,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
 
     public void addAction (View view) {
         mdLiveFamilyFragment.addNewHistoryData();
+        MdliveUtils.hideSoftKeyboard(this);
     }
 
 

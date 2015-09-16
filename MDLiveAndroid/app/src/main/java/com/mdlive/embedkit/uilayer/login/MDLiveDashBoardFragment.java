@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -43,6 +44,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private View mEmailConfirmationView;
 
     private View mNotificationView;
+
+    private TextView mMessageCountTextView;
 
     private UserBasicInfo mUserBasicInfo;
     private AdapterView.OnItemSelectedListener mOnItemSelectedListenerUserInfo = new AdapterView.OnItemSelectedListener() {
@@ -131,6 +134,11 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         if (mNotificationView != null) {
             mNotificationView.setVisibility(View.GONE);
         }
+
+        mMessageCountTextView = (TextView) view.findViewById(R.id.message_count);
+        if (mMessageCountTextView != null) {
+            mMessageCountTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -173,6 +181,14 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             } else {
                 mEmailConfirmationView.setVisibility(View.VISIBLE);
             }
+
+            if (mMessageCountTextView != null) {
+                if (userBasicInfo.getNotifications().getMessages() > 0) {
+                    mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
+                    mMessageCountTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();
             editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());

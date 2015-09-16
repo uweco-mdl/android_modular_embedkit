@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -31,6 +32,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -226,7 +228,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         try {
 //            progressBar.setVisibility(View.GONE);
             if(response.has("pharmacy")) {
-                JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+                final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
                 addressline1.setText(pharmacyDatas.getString("store_name") + " " +
                         ((pharmacyDatas.getString("distance") != null && !pharmacyDatas.getString("distance").isEmpty()) ?
                                 pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
@@ -244,6 +246,19 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
                 if (pharmacyDatas.has("phone")) {
                     ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setClickable(true);
+                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                intent.setData(Uri.parse("tel:" + MdliveUtils.formatDualString(pharmacyDatas.getString("phone"))));
+                                startActivity(intent);
+                            } catch (JSONException e) {
+
+                            }
+                        }
+                    });
                 }
                 bundletoSend.putString("address1", pharmacyDatas.getString("address1"));
                 bundletoSend.putString("address2", pharmacyDatas.getString("address2"));

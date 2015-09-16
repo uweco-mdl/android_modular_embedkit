@@ -2,7 +2,6 @@ package com.mdlive.embedkit.uilayer.helpandsupport;
 
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Message;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.helpandsupport.HelpandSupportAskQuestionPostService;
@@ -51,8 +48,7 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
     }
 
     public void onTickClicked() {
-        if (questionEditText.getText().toString() != null && questionEditText.getText().length() > 0
-                && !questionEditText.getText().toString().startsWith(" ")) {
+        if (questionEditText.getText().toString() != null && questionEditText.getText().toString().trim().length() > 0) {
             MdliveUtils.hideKeyboard(getActivity(), (View) questionEditText);
             try {
                 final JSONObject outerJsonObject = new JSONObject();
@@ -65,8 +61,9 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
             } catch (JSONException e) {
 
             }
-        } else if (questionEditText.getText().length() == 0) {
+        } else {
             if (getActivity() != null) {
+                MdliveUtils.hideKeyboard(getActivity(), (View) questionEditText);
                 MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_app_name), getActivity().getString(R.string.mdli_ask_a_question_validation));
             }
         }
@@ -85,8 +82,6 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         };
 
@@ -111,17 +106,9 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
         try {
             hideProgressDialog();
 
-            final Gson gson = new Gson();
-            final Message message =  gson.fromJson(response.toString(), Message.class);
-
-            MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (getActivity() != null && getActivity() instanceof MDLiveHelpAndSupportActivity) {
-                        ((MDLiveHelpAndSupportActivity) getActivity()).onCrossClicked(questionEditText);
-                    }
-                }
-            });
+            if (getActivity() != null && getActivity() instanceof MDLiveHelpAndSupportActivity) {
+                ((MDLiveHelpAndSupportActivity) getActivity()).onCrossClicked(questionEditText);
+            }
         }catch(Exception e){
             e.printStackTrace();
         }

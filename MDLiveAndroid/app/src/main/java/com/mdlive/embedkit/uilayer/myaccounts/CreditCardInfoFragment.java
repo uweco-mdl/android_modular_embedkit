@@ -293,11 +293,16 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     }
 
                 } else {
-                    mAddress1.setText(address1);
-                    mAddress2.setText(address2);
-                    mCity.setText(city);
-                    mState.setText(state);
-                    mZip.setText(zip);
+//                    mAddress1.setText(address1);
+//                    mAddress2.setText(address2);
+//                    mCity.setText(city);
+//                    mState.setText(state);
+//                    mZip.setText(zip);
+                    mAddress1.setText("");
+                    mAddress2.setText("");
+                    mCity.setText("");
+                    mState.setText("");
+                    mZip.setText("");
                 }
             }
         });

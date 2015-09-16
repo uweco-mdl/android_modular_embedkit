@@ -212,6 +212,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
         expandmapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.expandmapView));
         googleMap = mapView.getMap();
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         expandgoogleMap = mapView.getMap();
         if (googleMap != null) {
             if (googleMap != null) {

@@ -203,7 +203,8 @@
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyHistory"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".uilayer.helpandsupport.MDLiveHelpAndSupportActivity"
             android:screenOrientation="portrait"
@@ -258,7 +259,8 @@
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"  >
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
 
         <activity

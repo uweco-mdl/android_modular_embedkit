@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -51,9 +49,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View view){
-        Intent Reasonintent = new Intent(MDLiveAppointmentThankYou.this,MDLiveDashboardActivity.class);
-        Reasonintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(Reasonintent);
+        onHomeClicked();
     }
 
     public void leftBtnOnClick(View v){
