@@ -19,8 +19,9 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHist
  * Created by unnikrishnan_b on 8/22/2015.
  */
 public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory> {
-    Context context;
-    int selectedPosition = -1;
+    private Context context;
+    private int selectedPosition = -1;
+    private View selectedView;
 
     public void setSelectedPosition(int selectedPosition) {
         this.selectedPosition = selectedPosition;
@@ -33,6 +34,13 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         this.context = context;
     }
 
+    public View getSelectedView(){
+        return selectedView;
+    }
+
+    public void setSelectedView(View view){
+        selectedView = view;
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
