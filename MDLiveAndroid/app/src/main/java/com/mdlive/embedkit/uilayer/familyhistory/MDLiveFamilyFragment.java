@@ -329,9 +329,12 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
 
     void addNewHistoryData(){
         EditText otherConditionEt = (EditText)view.findViewById(R.id.my_family_history_other_editText);
+        MdliveUtils.hideKeyboard(otherConditionEt.getContext(), otherConditionEt);
         final FamilyHistoryModel model = new FamilyHistoryModel(null, otherConditionEt.getText().toString(), FamilyHistoryModel.YES);
         Log.d("FamilyHistoryResVal = ", model.toString());
         familyHistoryList.add(model);
+
+        otherConditionEt.setText("");
         // Inflate Row
         final LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
         final View rootLinearLayout = inflater.inflate(R.layout.mdlive_familyhistory_addrows, null, false);

@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddPCP;
@@ -31,6 +32,7 @@ import java.util.List;
  * Created by venkataraman_r on 8/25/2015.
  */
 public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
+    private static final String PRIMARY_CAR_PHYSICIAN_TAG = "PrimaryCarePhysician";
 
     private EditText mMiddleName = null;
     private EditText mEmail = null;
@@ -45,35 +47,86 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
 
+
+    public static PrimaryCarePhysicianFragment newInstance(final PrimaryCarePhysician primaryCarePhysician) {
+        final Bundle args = new Bundle();
+        args.putParcelable(PRIMARY_CAR_PHYSICIAN_TAG, primaryCarePhysician);
+
+        final PrimaryCarePhysicianFragment fragment = new PrimaryCarePhysicianFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    public PrimaryCarePhysicianFragment() {
+        super();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View primaryCarePhysician = inflater.inflate(R.layout.activity_primary_care_physician, null);
-
-        init(primaryCarePhysician);
-
-        mState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initializeStateDialog();
-            }
-        });
-
-        return primaryCarePhysician;
+        return inflater.inflate(R.layout.activity_primary_care_physician, container, false);
     }
 
-    public void init(View primaryCarePhysician) {
-        mMiddleName = (EditText) primaryCarePhysician.findViewById(R.id.middleName);
-        mEmail = (EditText) primaryCarePhysician.findViewById(R.id.email);
-        mFirstName = (EditText) primaryCarePhysician.findViewById(R.id.firstName);
-        mLastName = (EditText) primaryCarePhysician.findViewById(R.id.lastName);
-        mAddress1 = (EditText) primaryCarePhysician.findViewById(R.id.streetAddress);
-        mCountry = (EditText) primaryCarePhysician.findViewById(R.id.country);
-        mState = (TextView) primaryCarePhysician.findViewById(R.id.state);
-        mZip = (EditText) primaryCarePhysician.findViewById(R.id.zip);
-        mPhoneNumber = (EditText) primaryCarePhysician.findViewById(R.id.phoneNumber);
-        mPracticeName = (EditText) primaryCarePhysician.findViewById(R.id.practiceName);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mMiddleName = (EditText) view.findViewById(R.id.middleName);
+        if (mMiddleName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mMiddleName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).middleName);
+        }
+
+        mEmail = (EditText) view.findViewById(R.id.email);
+        if (mEmail != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mEmail.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).email);
+        }
+
+        mFirstName = (EditText) view.findViewById(R.id.firstName);
+        if (mFirstName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mFirstName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).firstName);
+        }
+
+        mLastName = (EditText) view.findViewById(R.id.lastName);
+        if (mLastName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mLastName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).lastName);
+        }
+
+        mAddress1 = (EditText) view.findViewById(R.id.streetAddress);
+        if (mAddress1 != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mAddress1.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).address1);
+        }
+
+        mCountry = (EditText) view.findViewById(R.id.country);
+        if (mCountry != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mCountry.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).country);
+        }
+
+        mState = (TextView) view.findViewById(R.id.state);
+        if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
+            mState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    initializeStateDialog();
+                }
+            });
+        }
+
+        mZip = (EditText) view.findViewById(R.id.zip);
+        if (mZip != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mZip.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).zip);
+        }
+
+        mPhoneNumber = (EditText) view.findViewById(R.id.phoneNumber);
+        if (mPhoneNumber != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mPhoneNumber.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).phone);
+        }
+
+        mPracticeName = (EditText) view.findViewById(R.id.practiceName);
+        if (mPracticeName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
+            mPracticeName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).practice);
+        }
     }
 
 

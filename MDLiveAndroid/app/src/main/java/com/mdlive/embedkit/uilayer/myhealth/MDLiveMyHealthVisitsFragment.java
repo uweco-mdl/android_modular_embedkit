@@ -30,6 +30,8 @@ import org.json.JSONObject;
  */
 public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     private ListView mListView;
+
+    private View mHeaderView;
     private ConsultationHistoryAdapter mProviderAdapter;
 
     /**
@@ -72,8 +74,15 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mHeaderView = LayoutInflater.from(view.getContext()).inflate(R.layout.mdlive_my_health_visits_header, null);
+        if (mListView != null && mListView.getHeaderViewsCount() > 0 && mHeaderView != null) {
+            mListView.removeHeaderView(mHeaderView);
+        }
+
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
         if (mListView != null) {
+            mListView.addHeaderView(mHeaderView);
+
             mProviderAdapter = new ConsultationHistoryAdapter(view.getContext(), R.layout.consultation_history_adapter_layout, android.R.id.text1);
             mListView.setAdapter(mProviderAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

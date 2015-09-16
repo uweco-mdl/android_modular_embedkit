@@ -40,7 +40,7 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
-        viewHolder.mTextViewBottom.setText("Provider since: " + getItem(position).providerSince);
+        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdli_provider_since) + getItem(position).providerSince);
 
         return convertView;
     }

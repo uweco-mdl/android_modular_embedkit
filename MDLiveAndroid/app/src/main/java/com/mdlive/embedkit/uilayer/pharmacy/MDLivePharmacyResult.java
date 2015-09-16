@@ -1,13 +1,11 @@
 package com.mdlive.embedkit.uilayer.pharmacy;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,6 +37,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
@@ -93,11 +93,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
-     /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
-        }*/
+
 
         setContentView(R.layout.mdlive_pharmacy_result);
 
@@ -118,6 +114,19 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         initializeViews();
         initializeListView();
         initializeMapView();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
+
         getPharmacySearchResults(getPostBody(getIntent()));
     }
 
@@ -127,6 +136,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
         }
+        if(getIntent().hasExtra("PHARMACY_SELECTED")){
+            i.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED", false));
+        }
+
         startActivity(i);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
         finish();
@@ -199,6 +212,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
         expandmapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.expandmapView));
         googleMap = mapView.getMap();
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         expandgoogleMap = mapView.getMap();
         if (googleMap != null) {
             if (googleMap != null) {
@@ -454,6 +468,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 if(getIntent().hasExtra("FROM_MY_HEALTH")){
                                     i.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
                                 }
+                                if(getIntent().hasExtra("PHARMACY_SELECTED")){
+                                    i.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED", false));
+                                }
                                 startActivity(i);
                                 finish();
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
@@ -573,8 +590,14 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             progressBar.setVisibility(View.GONE);
-            if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().getBooleanExtra("FROM_MY_HEALTH",false)){
-                finish();
+            reloadSlidingMenu();
+            if(getIntent().hasExtra("FROM_MY_HEALTH")){
+                Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
+                i.putExtra("FROM_SELECTION", true);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                MdliveUtils.closingActivityAnimation(this);
             }else if (response.getString("message").equals("Pharmacy details updated")) {
                 checkInsuranceEligibility();
             }
@@ -702,71 +725,20 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
-
-    /**
-     * The back image will pull you back to the Previous activity
-     * The home button will pull you back to the Dashboard activity
-     */
-    public void movetohome()
-    {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.mdl_home_dialog_title));
-
-        // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.mdl_home_dialog_text));
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.mdl_ok_upper), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    Intent intent = new Intent();
-                    ComponentName cn = new ComponentName(MdliveUtils.ssoInstance.getparentPackagename(),
-                            MdliveUtils.ssoInstance.getparentClassname());
-                    intent.setComponent(cn);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(intent);
-                    finish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        final AlertDialog alert = alertDialog.create();
-
-        alert.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
-            }
-        });
-        alert.show();
-    }
-
     /**
      * This method will close the activity with transition effect.
      */
 
     @Override
     public void onBackPressed() {
-        if(getIntent().hasExtra("FROM_MY_HEALTH")){
-            Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-            i.putExtra("FROM_PHARMACY",true);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-            MdliveUtils.closingActivityAnimation(this);
+        if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
+                !getIntent().getBooleanExtra("PHARMACY_SELECTED", false)){
+                Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
+                i.putExtra("FROM_PHARMACY",true);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                MdliveUtils.closingActivityAnimation(this);
         } else {
             super.onBackPressed();
             MdliveUtils.closingActivityAnimation(this);

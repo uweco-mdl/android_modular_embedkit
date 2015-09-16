@@ -155,6 +155,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         sendingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if(getIntent().hasExtra("FROM_MY_HEALTH")){
             sendingIntent.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
+            sendingIntent.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED",false));
         }
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
         adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
@@ -547,7 +548,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(getIntent().hasExtra("FROM_MY_HEALTH")){
+        if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
+                !getIntent().getBooleanExtra("PHARMACY_SELECTED", false)){
             Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
             i.putExtra("FROM_PHARMACY",true);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -282,7 +282,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     public void changePharmacyButtonOnClick(View view) {
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
         i.putExtra("FROM_MY_HEALTH",true);
-        i.putExtra("FROM_MY_HEALTH_STATUS","true");
+        i.putExtra("PHARMACY_SELECTED", true);
         startActivity(i);
     }
 
@@ -292,6 +292,11 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         if(getIntent().hasExtra("FROM_PHARMACY")){
             Log.d("On Resume - ", "From Pharmacy");
             getViewPager().setCurrentItem(0);
+        }
+        if(getIntent().hasExtra("FROM_SELECTION")){
+            Log.d("On Resume - ", "From Pharmacy");
+            getViewPager().setCurrentItem(1);
+            reloadSlidingMenu();
         }
     }
 }

@@ -344,6 +344,10 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
                 final Records records = gson.fromJson(response.toString(), Records.class);
 
 
+                if(records.records != null && records.records.size() > 0){
+                    mListView.setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.GONE);
+                }
                 if (mRecordAdapter != null) {
                     mRecordAdapter.clear();
                     mRecordAdapter.addAll(records.records);

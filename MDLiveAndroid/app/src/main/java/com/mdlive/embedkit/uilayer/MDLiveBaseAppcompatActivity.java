@@ -402,4 +402,14 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         return intent;
     }
+
+
+    public void reloadSlidingMenu() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
+            ((NavigationDrawerFragment) fragment).reload();
+        }
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
@@ -12,13 +14,22 @@ import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
 
 /**
  * Created by venkataraman_r on 8/25/2015.
  */
 public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
-
     public static String TAG = "PRIMARY CARE PHYSICIAN";
+
+    private static final String PCP_DATA = "PCP_DATA";
+
+    public static Intent getPCPIntent(final Context context, final PrimaryCarePhysician pcp) {
+        final Intent intent = new Intent(context, PrimaryCarePhysicianActivity.class);
+        intent.putExtra(PCP_DATA, pcp);
+
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,11 +50,12 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
 
         title.setText(getResources().getString(R.string.mdl_pcp_title));
 
-        getSupportFragmentManager().
-                beginTransaction().
-                add(R.id.container, new PrimaryCarePhysicianFragment(), "PRIMARY CARE PHYSICIAN").
-                commit();
-
+        if (savedInstanceState == null && getIntent().hasExtra(PCP_DATA)) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.container, PrimaryCarePhysicianFragment.newInstance((PrimaryCarePhysician) getIntent().getParcelableExtra(PCP_DATA)), "PRIMARY CARE PHYSICIAN").
+                    commit();
+        }
     }
 
     @Override
