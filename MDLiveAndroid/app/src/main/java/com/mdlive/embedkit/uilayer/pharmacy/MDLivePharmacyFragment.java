@@ -46,6 +46,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private Activity parentActivity;
     private LocationCooridnates locationService;
     private boolean isVisibleToUser = false;
+    private boolean isLoading = false;
     public static MDLivePharmacyFragment newInstance() {
         final MDLivePharmacyFragment pharmacyFragment = new MDLivePharmacyFragment();
         return pharmacyFragment;
@@ -103,6 +104,10 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+     /*   if(!isLoading){
+            isLoading = true;
+            getUserPharmacyDetails();
+        }*/
         getUserPharmacyDetails();
     }
 
@@ -110,7 +115,10 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
+        if(!isLoading){
+            isLoading = true;
             getUserPharmacyDetails();
+        }
     }
 
     @Override
@@ -266,13 +274,17 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                             startActivity(pharmacyintent);
                         }
                     }else {
-                        getUserPharmacyDetails();
+                        if(!isLoading){
+                            isLoading = true;
+                            getUserPharmacyDetails();
+                        }
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        isLoading = false;
     }
 
     /**
