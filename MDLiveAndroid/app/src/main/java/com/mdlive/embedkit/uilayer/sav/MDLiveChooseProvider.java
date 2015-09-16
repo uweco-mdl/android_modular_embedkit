@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -66,14 +65,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
 
-    private Handler mHandler;
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            ChooseProviderResponseList();
-            mHandler.postDelayed(this, THIRTY_SECONDS);
-        }
-    };
+//    private Handler mHandler;
+//    private Runnable mRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            ChooseProviderResponseList();
+//            mHandler.postDelayed(this, THIRTY_SECONDS);
+//        }
+//    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +93,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider).toUpperCase());
 
         Initailization();
+        ChooseProviderResponseList();
 
 
 
@@ -109,21 +109,21 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     commit();
         }
 
-        mHandler = new Handler();
+//        mHandler = new Handler();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mHandler.post(mRunnable);
+//        mHandler.post(mRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        mHandler.removeCallbacksAndMessages(null);
+//        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void leftBtnOnClick(View v){
@@ -374,10 +374,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private void setBodyContent(JsonArray responArray) {
         doctorOnCallButtonClick();
         for(int i=0;i<responArray.size();i++) {
-            providerName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
-            speciality =  responArray.get(i).getAsJsonObject().get("speciality").getAsString();
-            doctorId =  responArray.get(i).getAsJsonObject().get("id").getAsString();
-            imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+            try {
+                 providerName = responArray.get(i).getAsJsonObject().get("name").getAsString();
+
+                doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
+
+                imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             JsonArray  affiliationsArray = responArray.get(i).getAsJsonObject().get("provider_groups").getAsJsonArray();
             for(int j=0;j<affiliationsArray.size();j++) {
                 groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
@@ -404,7 +410,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
-            map.put("speciality", speciality);
+//            map.put("speciality", speciality);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
@@ -413,6 +419,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("next_availability",getDateCurrentTimeZone(strDate));
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
+            Log.e("check providerlist",providerListMap.toString());
         }
     }
     /**
@@ -431,10 +438,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
-            map.put("speciality", speciality);
+//            map.put("speciality", speciality);
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
+            map.put("group_name", groupAffiliations);
             map.put("available_now_status", available_now_status+"");
             map.put("next_availability",getDateCurrentTimeZone(strDate));
             providerListMap.add(map);
@@ -480,7 +488,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 calendar.setTimeInMillis(timestamp * 1000);
                 calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                sdf.setTimeZone(TimeZone.getTimeZone("EDT"));
 
 
                 Calendar today = Calendar.getInstance();
