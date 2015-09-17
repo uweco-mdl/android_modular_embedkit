@@ -24,6 +24,7 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_symptom_checker_activity);
+        clearMinimizedTime();
         setTitle("");
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

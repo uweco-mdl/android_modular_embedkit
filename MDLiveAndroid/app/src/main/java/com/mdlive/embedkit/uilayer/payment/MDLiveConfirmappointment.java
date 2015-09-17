@@ -32,6 +32,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_appointment);
+        clearMinimizedTime();
         getPreferenceValue();
 
         try {

@@ -89,6 +89,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_add_health);
+        clearMinimizedTime();
 
         //existingConditions = new ArrayList<>();
 

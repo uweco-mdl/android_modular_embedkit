@@ -38,6 +38,7 @@ import org.json.JSONObject;
  */
 public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     private ListView mListView;
+    private View mNoProvidersView;
     private ProviderAdapter mProviderAdapter;
     private boolean isFirstTime = true;
     private View mHeaderView;
@@ -92,7 +93,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 startActivity(PrimaryCarePhysicianActivity.getPCPIntent(getActivity(), primaryCarePhysician));
             }
         });
-        view.findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
+        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);;
     }
 
     @Override
@@ -232,6 +233,8 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
                     mProviderAdapter.notifyDataSetChanged();
+
+                    mNoProvidersView.setVisibility(View.GONE);
                 }
                 Log.e("Response - ", provider.toString());
             }

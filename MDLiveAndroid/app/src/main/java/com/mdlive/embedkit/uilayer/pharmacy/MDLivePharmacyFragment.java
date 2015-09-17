@@ -42,6 +42,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private SupportMapFragment mapView;
 //    private RelativeLayout progressBar;
     private GoogleMap map;
+    private View mSmallMapView;
     private Bundle bundletoSend = new Bundle();
     private IntentFilter intentFilter;
     private static View view;
@@ -138,6 +139,8 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         addressline2 = ((TextView) view.findViewById(R.id.addressline2));
         addressline3 = ((TextView) view.findViewById(R.id.addressline3));
 //        progressBar = (RelativeLayout) view.findViewById(R.id.progressDialog);
+
+        mSmallMapView = view.findViewById(R.id.small_map_layout);
     }
 
 

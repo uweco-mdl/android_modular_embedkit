@@ -26,6 +26,7 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 

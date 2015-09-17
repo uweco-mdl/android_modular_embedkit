@@ -38,6 +38,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
+        clearMinimizedTime();
         setTitle("");
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -415,13 +415,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         clearMinimizedTime();
     }
 
-    private void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-    }
-
     private WatingRoomTips getWaitWatingRoomTips() {
         final WatingRoomTips tips = new WatingRoomTips();
 

@@ -32,6 +32,8 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
+        clearMinimizedTime();
+
         Log.d("INSIDE --->>>>", "INSIDE --->>>>");
 /* Pass 1 for Dev env,Pass 2 for QA env, Pass 3 for Stage env, Pass 4 for Prod env, 5 for Pluto*/
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

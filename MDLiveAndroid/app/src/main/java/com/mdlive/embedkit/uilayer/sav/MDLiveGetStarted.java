@@ -105,6 +105,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
+        clearMinimizedTime();
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

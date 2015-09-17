@@ -125,7 +125,7 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     }
 
     private void launchComposeMessage(ConsultationHistory consultationHistory){
-        context.startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(context, consultationHistory));
+        context.startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntentWithHeading(context, consultationHistory, context.getString(R.string.mdl_send_message_caps)));
     }
 }
 

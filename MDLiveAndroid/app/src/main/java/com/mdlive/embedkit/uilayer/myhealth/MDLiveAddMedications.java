@@ -37,6 +37,7 @@ public class MDLiveAddMedications extends MDLiveCommonConditionsMedicationsActiv
         //Setting up type in parent class for Conditions
         type = TYPE_CONSTANT.MEDICATION;
         super.onCreate(savedInstanceState);
+        clearMinimizedTime();
         IsThisPageEdited = false;
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

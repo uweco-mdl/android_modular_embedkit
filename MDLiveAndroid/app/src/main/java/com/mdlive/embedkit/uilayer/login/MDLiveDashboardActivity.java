@@ -40,6 +40,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_activity_dashboard);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

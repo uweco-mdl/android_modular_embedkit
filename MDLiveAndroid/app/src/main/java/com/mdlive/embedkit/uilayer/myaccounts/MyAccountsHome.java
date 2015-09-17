@@ -30,6 +30,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

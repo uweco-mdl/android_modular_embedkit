@@ -312,7 +312,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
     }
 
-    private void clearMinimizedTime() {
+    public void clearMinimizedTime() {
         final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
         editor.clear();

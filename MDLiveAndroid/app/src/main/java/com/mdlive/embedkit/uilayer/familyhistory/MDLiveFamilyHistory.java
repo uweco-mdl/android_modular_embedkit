@@ -59,6 +59,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_family_histroy);
+        clearMinimizedTime();
 
         findWidgetId();
         getFamilyHistoryServiceData();

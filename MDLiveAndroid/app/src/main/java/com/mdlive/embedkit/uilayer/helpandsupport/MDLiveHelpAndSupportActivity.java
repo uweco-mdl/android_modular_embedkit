@@ -24,6 +24,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_help_and_support_activity);
+        clearMinimizedTime();
         setTitle("");
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

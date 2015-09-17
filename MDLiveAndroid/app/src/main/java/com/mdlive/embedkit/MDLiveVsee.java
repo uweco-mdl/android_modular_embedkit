@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.WaitingRoomViewPager;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -315,14 +313,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
     @Override
     public void onBackPressed() {
-    }
-
-
-    private void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
     }
 
     private static class MyPagerAdapter extends FragmentPagerAdapter {

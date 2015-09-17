@@ -62,6 +62,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_view_health);
+        clearMinimizedTime();
         conditionsList = new ArrayList<>();
         adapter = new ConditionsAdapter();
         conditionsCollection = new ArrayList<>();

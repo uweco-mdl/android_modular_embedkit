@@ -31,6 +31,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_history_layout);
+        clearMinimizedTime();
 
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));

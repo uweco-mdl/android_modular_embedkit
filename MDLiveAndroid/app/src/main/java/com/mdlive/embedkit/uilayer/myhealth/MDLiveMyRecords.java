@@ -28,6 +28,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
+        clearMinimizedTime();
 
         try {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -96,12 +97,16 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
 
         setContentView(R.layout.mdlive_pharmacy_result);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    toolbar.setElevation(4 * toolbar.getResources().getDisplayMetrics().density);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +114,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_phr_txt));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_phr_txt).toUpperCase());
 
         initializeViews();
         initializeListView();

@@ -64,6 +64,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        clearMinimizedTime();
         cxt = this;
         initializeUI();
         touchHandlers();

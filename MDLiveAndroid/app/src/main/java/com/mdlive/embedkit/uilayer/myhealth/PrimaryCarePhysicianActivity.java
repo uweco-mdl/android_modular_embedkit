@@ -35,6 +35,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
+        clearMinimizedTime();
 
         try {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

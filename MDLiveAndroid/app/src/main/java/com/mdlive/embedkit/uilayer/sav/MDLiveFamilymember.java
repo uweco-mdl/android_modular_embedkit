@@ -68,6 +68,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_familymember);
+        clearMinimizedTime();
 
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("user_info") != null) {
             userInfoJSONString = getIntent().getExtras().getString("user_info");

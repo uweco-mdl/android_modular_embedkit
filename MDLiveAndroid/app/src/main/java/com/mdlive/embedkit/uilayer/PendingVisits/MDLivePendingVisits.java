@@ -29,6 +29,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pending_visits);
+        clearMinimizedTime();
         initializeUI();
         getUserInformation();
 
