@@ -47,6 +47,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_appointment);
         getPreferenceValue();
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -79,13 +80,13 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     }
     //do confirm appointment service
     private void doConfirmAppointment() {
-//       hideProgress();
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("confirm appmt res---->", response.toString());
-//                hideProgress();
+                hideProgress();
                 try {
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
@@ -145,10 +146,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
-//                   hideProgress();
+                   hideProgress();
                     MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
                 } catch (Exception e) {
-//                   hideProgress();
+                   hideProgress();
                     e.printStackTrace();
                 }
             }
