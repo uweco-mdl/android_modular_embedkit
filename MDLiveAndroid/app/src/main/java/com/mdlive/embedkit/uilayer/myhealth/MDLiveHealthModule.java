@@ -75,7 +75,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public boolean isUpdateMode = false;
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
-    public AlertDialog procedureNameDialog, procedureYearDialog, dosageDialog, timesDialog, modeDialog;
+    public AlertDialog procedureNameDialog, procedureYearDialog, timesDialog, modeDialog;
     public TextView surgeryName, surgeryYear;
     public EditText dosageTxt;
     String[] timesList = new String[]{
@@ -384,7 +384,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             surgeryYear.setText(getIntent().getStringExtra("Year"));
         }
     }
-
+/*
     public void initializeSearchViews() {
 
         surgeryName = ((TextView) findViewById(R.id.surgeryName));
@@ -424,7 +424,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             }
         });
 
-    }
+    }*/
 
 
 

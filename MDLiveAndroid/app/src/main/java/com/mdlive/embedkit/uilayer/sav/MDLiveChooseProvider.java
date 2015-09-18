@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -53,7 +54,6 @@ import java.util.TimeZone;
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private static final long THIRTY_SECONDS = 30 * 1000;
-
     private ListView listView;
     private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
@@ -65,14 +65,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private Button seenextAvailableBtn;
     private TextView loadingTxt;
 
-//    private Handler mHandler;
-//    private Runnable mRunnable = new Runnable() {
-//        @Override
-//        public void run() {
-//            ChooseProviderResponseList();
-//            mHandler.postDelayed(this, THIRTY_SECONDS);
-//        }
-//    };
+    private Handler mHandler;
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ChooseProviderResponseList();
+            mHandler.postDelayed(this, THIRTY_SECONDS);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,21 +110,20 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     commit();
         }
 
-//        mHandler = new Handler();
+        mHandler = new Handler();
+        setListViews();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-//        mHandler.post(mRunnable);
+        mHandler.post(mRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-//        mHandler.removeCallbacksAndMessages(null);
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void leftBtnOnClick(View v){
@@ -196,6 +195,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
+
             public void onResponse(JSONObject response) {
                 handleSuccessResponse(response.toString());
             }
@@ -269,8 +269,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     JsonArray responseArray = responObj.get("physicians").getAsJsonArray();
                     if (responseArray.size() != 0) {
                         if (responseArray.get(0).isJsonObject()) {
+                            providerListMap.clear();
                             setBodyContent(responseArray);
-                            setListView();
+                            //setListView();
                         } else {
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
@@ -294,9 +295,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             }else{
                                 StrDoctorOnCall = false;
                             }
+                            providerListMap.clear();
                             setHeaderContent(StrDoctorOnCall);
                             setBodyContent(responArray);
-                            setListView();
+                            //setListView();
                         }else{
                             showOrHideFooter();
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
@@ -313,7 +315,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
-        setListView();
+        baseadapter.notifyDataSetChanged();
+        //setListView();
     }
     /**
      *
@@ -323,7 +326,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *  the speciality will be displayed here
      *
      */
-    private void setListView() {
+    private void setListViews() {
         showOrHideFooter();
         Log.e("List","Am in SetListview");
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);

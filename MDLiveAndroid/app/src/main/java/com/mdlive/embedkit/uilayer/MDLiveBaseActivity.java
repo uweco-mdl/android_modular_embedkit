@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -89,6 +91,13 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
                 shareApplication();
                 break;
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        LocalizationSingleton.localiseLayout(this, (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0));
     }
 
     @Override

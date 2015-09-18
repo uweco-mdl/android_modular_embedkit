@@ -130,6 +130,8 @@ public class MDLiveConfig {
 
     public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
 
+    public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
+
     static {
         System.loadLibrary("app");
     }
@@ -258,6 +260,7 @@ public class MDLiveConfig {
         AppSpecificConfig.SSO_SERVICE = SSO_SERVICE;
         AppSpecificConfig.LOCATION_SERVICE = LOCATION_SERVICE;
         AppSpecificConfig.ADD_CHILD = ADD_CHILD;
+        AppSpecificConfig.EMAIL_CONFIRMATION = EMAIL_CONFIRMATION;
 
         AppSpecificConfig.URL_CHANGE_PASSWORD=URL_CHANGE_PASSWORD;
         AppSpecificConfig.URL_CHANGE_PIN=URL_CHANGE_PIN;

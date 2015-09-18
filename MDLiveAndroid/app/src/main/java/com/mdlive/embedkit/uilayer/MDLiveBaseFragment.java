@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -24,6 +26,14 @@ public class MDLiveBaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mProgressDialog = MdliveUtils.getFullScreenProgressDialog(getActivity());
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalizationSingleton.localiseLayout(getActivity(), (ViewGroup) ((ViewGroup) getView()
+                .findViewById(android.R.id.content)).getChildAt(0));
     }
 
     @Override

@@ -138,6 +138,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
+                    conditionsCollection = getRefreshedNameList();
                     ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
                 }
             }
