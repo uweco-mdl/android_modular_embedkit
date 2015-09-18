@@ -24,7 +24,7 @@ public class MDLiveBaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        LocalizationSingleton.localiseLayout(view.getContext(), (ViewGroup) view);
         mProgressDialog = MdliveUtils.getFullScreenProgressDialog(getActivity());
     }
 
@@ -32,8 +32,6 @@ public class MDLiveBaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        LocalizationSingleton.localiseLayout(getActivity(), (ViewGroup) ((ViewGroup) getView()
-                .findViewById(android.R.id.content)).getChildAt(0));
     }
 
     @Override
