@@ -90,7 +90,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
         pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
         pager.setClipToPadding(false);
-        pager.setPageMargin(12);
+        pager.setPageMargin(44);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getWaitWatingRoomTips()));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
