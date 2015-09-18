@@ -28,12 +28,9 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
-import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -57,7 +54,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private WebView HostedPCI;
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
-    private String finalAmount = "";
+    private String finalAmout = "";
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
@@ -66,7 +63,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
-        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -84,15 +80,16 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
-            finalAmount = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
-            storePayableAmount(finalAmount);
-            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
+            finalAmout = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmout);
+            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
         }
         getCreditCardInfoService();
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExistingCardDetailUser=true;
+                //Delete
+               setExistingCardDetailUser=true;
                 getCreditCardInfoService();
 
             }
@@ -150,12 +147,20 @@ public class MDLivePayment extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View view){
+     //Delete
 
-        if (finalAmount.equals(MDLiveConfig.ZERO_PAY)) {
-            doConfirmAppointment();
+        if (finalAmout.equals("0.00")) {
+            //Remove this..it is in next screen
+             //* doConfirmAppointment();*//*
+            CheckdoconfirmAppointment(true);
+            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePayment.this);
         } else {
             HostedPCI.loadUrl("javascript:tokenizeForm()");
         }
+
+
 
     }
 
@@ -365,12 +370,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     JSONObject resObj = new JSONObject(response.toString());
                     Log.e("billing success res-->",response.toString());
                     if (resObj.has("message")) {
-//                        if(setExistingCardDetailUser) {
-//                            getExistingBillingPutParams(params);
-//                        }else
-//                        {
-                            doConfirmAppointment();
-//                        }
+                //Remove this..it is in next screen
+                           /* doConfirmAppointment();*/
+                        CheckdoconfirmAppointment(true);
 
 
                     }
@@ -472,6 +474,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.AMOUNT, amount);
         editor.commit();
     }
+    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.commit();
+    }
+
 
     private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
@@ -519,7 +528,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     }
 
 
-    private void doConfirmAppointment() {
+   /* private void doConfirmAppointment() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -544,7 +553,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(resumeScreen.equalsIgnoreCase("Get Started")) {
-                                Intent getStartedIntent = new Intent(MDLivePayment.this, MDLiveProviderDetails.class);
+                                Intent getStartedIntent = new Intent(MDLivePayment.this, MDLiveGetStarted.class);
                                 startActivity(getStartedIntent);
                                 MdliveUtils.startActivityAnimation(MDLivePayment.this);
                                 finish();
@@ -596,7 +605,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePayment.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
-    }
+    }*/
 
 
     public void showDialog() {
@@ -670,18 +679,20 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObject = new JSONObject(response);
             if (resObject.has("discount_amount")) {
                 String discountAmount = resObject.getString("discount_amount").replace("$", "");
-                payableAmount = Double.parseDouble(finalAmount) - Double.parseDouble(discountAmount.trim());
+                payableAmount = Double.parseDouble(finalAmout) - Double.parseDouble(discountAmount.trim());
                 if (payableAmount <= 0.00) {
                     payableAmount = 0.00;
-                    finalAmount = String.format("%.2f", payableAmount);
-                    storePayableAmount(finalAmount);
-                    doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
+                    finalAmout = String.format("%.2f", payableAmount);
+                    storePayableAmount(finalAmout);
+                   /* Delete it
+                    doConfirmAppointment();*///Call the  confirm Appointment service if the user is Zero Dollar
+                    CheckdoconfirmAppointment(true);
 
                 } else {
-                    finalAmount = String.format("%.2f", payableAmount);
-                    storePayableAmount(finalAmount);
+                    finalAmout = String.format("%.2f", payableAmount);
+                    storePayableAmount(finalAmout);
                 }
-                ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
+                ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -719,8 +730,10 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
     public void payNow(View paymentButton) {
-        if (finalAmount.equals(MDLiveConfig.ZERO_PAY)) {
-            doConfirmAppointment();
+        if (finalAmout.equals("0.00")) {
+            //Remove this..it is in next screen
+                           /* doConfirmAppointment();*/;
+            CheckdoconfirmAppointment(true);
         } else {
             if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                 HostedPCI.loadUrl("javascript:tokenizeForm()");
