@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +42,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -204,6 +206,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
         addressline3 = ((TextView) findViewById(R.id.addressline3));
+
         //progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
     }
 
@@ -442,7 +445,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             hideProgress();
-            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+            final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name") + " "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
                     pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
@@ -455,6 +458,18 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:" + MdliveUtils.formatDualString(pharmacyDatas.getString("phone"))));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                });
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
@@ -491,7 +506,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     public void loadDatas(String response) {
         try {
             JSONObject jobj = new JSONObject(response);
-            JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
+            final JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name")+" "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
                             pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
@@ -503,6 +518,18 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:" + MdliveUtils.formatDualString(pharmacyDatas.getString("phone"))));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                });
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));

@@ -329,6 +329,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
         }
 
+        if (getActivity() == null) {
+            return;
+        }
+
         if (mSelectedUserLinearLayout != null) {
             List<User> users = null;
 
@@ -506,7 +510,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void reload() {
         mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
 
-        if (mUserBasicInfo.getPrimaryUser()) {
+        if (mUserBasicInfo != null && mUserBasicInfo.getPrimaryUser()) {
             loadUserInformationDetails(true);
         } else {
             final User user = User.getSelectedUser(getActivity());

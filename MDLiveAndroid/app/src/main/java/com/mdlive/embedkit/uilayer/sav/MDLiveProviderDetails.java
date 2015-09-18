@@ -103,8 +103,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         Initialization();
         getPreferenceDetails();
         //Service call Method
-        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        AppointmentDate = format.format(new Date());
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        final Calendar calendar = Calendar.getInstance();
+        AppointmentDate = format.format(calendar.getTime());
         loadProviderDetails(AppointmentDate);
 
         if (savedInstanceState == null) {
@@ -1457,10 +1458,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = Calendar.getInstance();
-                String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
+                String format = new SimpleDateFormat("E, MM dd, yyyy").format(calendar.getTime());
                 ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(new Date().getTime());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 return dialog;
         }
         return null;
