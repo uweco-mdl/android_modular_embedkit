@@ -84,7 +84,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
 
         final TextView timeTextView = (TextView) view.findViewById(R.id.fragment_message_received_date_text_view);
         if (timeTextView != null) {
-            timeTextView.setText(MdliveUtils.getReceivedSentTime(receivedMessage.inMilliseconds, receivedMessage.timeZone));
+            timeTextView.setText(MdliveUtils.getReceivedSentTimeInDetails(receivedMessage.inMilliseconds, receivedMessage.timeZone));
         }
 
         final View replyView = view.findViewById(R.id.fragment_message_reply_image_view);

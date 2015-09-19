@@ -906,6 +906,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
+            Log.d("Provider Response - ", " - " + response.toString());
             JSONObject providertype = response.getJSONObject("provider_types");
             providerTypeArrayList.clear();
             providerTypeIdList.clear();
@@ -917,20 +918,26 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     Object value = providertype.get(key);
                     providerTypeArrayList.add(value.toString());
                     providerTypeIdList.add(key);
-
-
-                    Log.e("ptype keys",key);
                 } catch (JSONException e) {
                     // Something went wrong!
                 }
                 //Default first item coming from the service will set here.it will change into dynamic
                 // when we click the other items in the dialog.
-                ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
-                strProviderId=providerTypeIdList.get(0);
+
             }
+            int id = 0;
+            for(int tmpId = 0; tmpId <providerTypeIdList.size();tmpId++){
+                if(!providerTypeIdList.get(tmpId).equals("1")){
+                    id = tmpId;
+                    break;
+                }
+            }
+            ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(id));
+            strProviderId=providerTypeIdList.get(id);
+
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

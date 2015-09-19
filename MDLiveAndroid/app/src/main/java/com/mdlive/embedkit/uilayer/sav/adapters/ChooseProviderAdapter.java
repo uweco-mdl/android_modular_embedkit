@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -75,14 +76,14 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 inflate = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent, false);
-            ((TextView) row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+           /* ((ImageView) row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, MDLiveSearchProvider.class);
                     ((Activity) context).startActivityForResult(intent, 1);
                     MdliveUtils.hideSoftKeyboard(((Activity) context));
                 }
-            });
+            });*/
 //            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
