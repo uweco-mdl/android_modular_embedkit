@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -225,22 +226,26 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 mUpcomingAppoinmantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (mOnAppointmentClicked != null) {
+                        if (mOnAppointmentClicked != null &&
+                                (getActivity() != null && !(getActivity() instanceof AppointmentActivity))) {
                             mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
                         }
                     }
                 });
 
                 // For Showing Dashboard Notification
-                if (mNotifyDashboard != null) {
-                    for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
+                if (mNotifyDashboard != null && mPendingAppointment.getAppointments().size() > 0) {
+                    mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(0));
+                    /*for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
                         final int type = MdliveUtils.getRemainigTimeToAppointment(mPendingAppointment.getAppointments().get(i).getInMilliseconds(), "EST");
                         if (type == 0) {
                             mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(i));
                         } else {
                             mNotifyDashboard.onHideNotifyDashboard();
                         }
-                    }
+                    }*/
+                } else {
+                    mNotifyDashboard.onHideNotifyDashboard();
                 }
             }
         } else {
