@@ -42,6 +42,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private PendingAppointment mPendingAppointment;
 
     private View mMessagesLinearLayout;
+    private View mNoAppointmentLinearLayout;
     private TextView mMessagesTextView;
     private TextView mPersonalInfoTextView;
     private TextView mPreferedStoreTextView;
@@ -101,6 +102,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mMessagesLinearLayout = view.findViewById(R.id.notification_fragment_messages_linear_layout);
+        mNoAppointmentLinearLayout = view.findViewById(R.id.notification_fragment_upcoming_appoinment_linear_layout);
         mMessagesTextView = (TextView) view.findViewById(R.id.notification_fragment_messages_text_view);
         mPersonalInfoTextView = (TextView) view.findViewById(R.id.notification_fragment_personal_text_view);
         mPreferedStoreTextView = (TextView) view.findViewById(R.id.notification_fragment_prefered_store_text_view);
@@ -216,6 +218,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         if (mPendingAppointment.getAppointments() != null &&
                 mPendingAppointment.getAppointments().size() > 0) {
             mUpcomingAppoinmantTextView.setVisibility(View.GONE);
+            mNoAppointmentLinearLayout.setVisibility(View.GONE);
             mUpcomingAppoinmantListView.setVisibility(View.VISIBLE);
 
             if (mUpcomingAppoinmantListView != null) {
@@ -234,8 +237,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 });
 
                 // For Showing Dashboard Notification
-                if (mNotifyDashboard != null && mPendingAppointment.getAppointments().size() > 0) {
-                    mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(0));
+                if (mNotifyDashboard != null) {
+                    if ( mPendingAppointment.getAppointments().size() > 0) {
+                        mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(0));
+                    } else {
+                        mNotifyDashboard.onHideNotifyDashboard();
+                    }
                     /*for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
                         final int type = MdliveUtils.getRemainigTimeToAppointment(mPendingAppointment.getAppointments().get(i).getInMilliseconds(), "EST");
                         if (type == 0) {
@@ -244,11 +251,11 @@ public class NotificationFragment extends MDLiveBaseFragment {
                             mNotifyDashboard.onHideNotifyDashboard();
                         }
                     }*/
-                } else {
-                    mNotifyDashboard.onHideNotifyDashboard();
                 }
             }
         } else {
+            mUpcomingAppoinmantTextView.setVisibility(View.VISIBLE);
+            mNoAppointmentLinearLayout.setVisibility(View.VISIBLE);
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
         }

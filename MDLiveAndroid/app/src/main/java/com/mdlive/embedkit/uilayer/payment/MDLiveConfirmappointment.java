@@ -100,10 +100,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         if (consultationType.equalsIgnoreCase("phone")) {
                             movetothankyou();
                         }
-                        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
-                        {
-                            movetostartVisit();
-                        }
+//                        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
+//                        {
+//                            movetostartVisit();
+//                        }
                         else if(!Time.equalsIgnoreCase("Now"))
                         {
 
@@ -167,8 +167,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("do_you_have_primary_care_physician", "No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        SharedPreferences promocodePreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
 //        if (promoCode != null && !promoCode.isEmpty()) {
-            params.put("promocode", "getwell");
+            params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE,""));
+
 //        }
 
         Gson gson = new GsonBuilder().serializeNulls().create();

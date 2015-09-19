@@ -377,6 +377,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 //Remove this..it is in next screen
                            /* doConfirmAppointment();*/
                         CheckdoconfirmAppointment(true);
+                        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+                        startActivity(i);
+                        MdliveUtils.startActivityAnimation(MDLivePayment.this);
 
 
                     }
@@ -460,7 +463,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             cardInfo.put("cc_expyear", billingObj.getString("cc_expyear"));
             cardInfo.put("cc_expmonth", billingObj.getString("cc_expmonth"));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
+            cardInfo.put("billing_zip5", "92111");
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -471,7 +474,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
         return new Gson().toJson(billingParams);
     }
 
-
+    public void storeOfferCode(String offercode) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.OFFER_CODE, offercode);
+        editor.commit();
+    }
     public void storePayableAmount(String amount) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -630,6 +638,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                     applyPromoCode(editText.getText().toString());
                     promoCode = editText.getText().toString();
+                    storeOfferCode(promoCode);
                 }
 
 

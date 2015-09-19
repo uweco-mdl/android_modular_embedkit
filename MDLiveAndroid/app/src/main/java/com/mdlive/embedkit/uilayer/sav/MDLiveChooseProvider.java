@@ -90,7 +90,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        /*((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
+       /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider).toUpperCase());
 
         Initailization();
@@ -410,7 +410,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
              available_now_status =  responArray.get(i).getAsJsonObject().get("available_now_status").getAsBoolean();
-            appointmentDate = getDateCurrentTimeZone(strDate);
+            appointmentDate = MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
@@ -420,7 +420,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("availability_type", availabilityType);
             map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
-            map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
             Log.e("check providerlist",providerListMap.toString());
@@ -491,7 +491,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 TimeZone tz = TimeZone.getDefault();
                 calendar.setTimeInMillis(timestamp * 1000);
                 calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("EDT"));
 
 
@@ -499,6 +499,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 today.set(Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
                         Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+                          Calendar.getInstance().get(Calendar.AM_PM);
+
 
                 Calendar tomorrow = Calendar.getInstance();
                 tomorrow.add(Calendar.DATE, 1);  // number of days to add
