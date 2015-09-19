@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -38,6 +39,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
+import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
 import org.json.JSONObject;
 
@@ -95,6 +97,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
             }
         });
+
 
 
 
@@ -619,6 +622,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
         final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
         // set dialog message
 
+
+
+
         alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
@@ -637,6 +643,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
         // create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (editText.hasFocus()) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
@@ -649,13 +664,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     }
 
-    public void applyPromoCode(String promoCode) {
+    public void applyPromoCode(final String promoCode) {
         showProgressDialog();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 dismissDialog();
-                handlePromocodeResponse(response.toString());
+                handlePromocodeResponse(response.toString(),promoCode);
+
 
             }
         };
@@ -675,18 +691,22 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     }
 
-    public void handlePromocodeResponse(String response) {
+    public void handlePromocodeResponse(String response,String promoCode) {
         try {
             JSONObject resObject = new JSONObject(response);
-            if (resObject.has("discount_amount")) {
+            if (resObject.has("discount_amount")){
+                checkInsuranceEligibility(promoCode);
+            }
+
+           /* if (resObject.has("discount_amount")) {
                 String discountAmount = resObject.getString("discount_amount").replace("$", "");
                 payableAmount = Double.parseDouble(finalAmout) - Double.parseDouble(discountAmount.trim());
                 if (payableAmount <= 0.00) {
                     payableAmount = 0.00;
                     finalAmout = String.format("%.2f", payableAmount);
                     storePayableAmount(finalAmout);
-                   /* Delete it
-                    doConfirmAppointment();*///Call the  confirm Appointment service if the user is Zero Dollar
+                   *//* Delete it
+                    doConfirmAppointment();*//*//Call the  confirm Appointment service if the user is Zero Dollar
                     CheckdoconfirmAppointment(true);
 
                 } else {
@@ -694,7 +714,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     storePayableAmount(finalAmout);
                 }
                 ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -753,6 +773,82 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void applyOfferCode(View offerCodeView) {
         showDialog();
     }
+
+
+
+
+
+
+    /**
+     * This method handles checks user insurance eligibility and return the final amount for the user.
+     * successListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * PharmacyService-Class will send the request to the server and get the responses
+     * doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
+     */
+
+    public void checkInsuranceEligibility(String promocode) {
+        showProgress();
+        NetworkSuccessListener successListener = new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgress();
+                Log.e("Zero Dollar Insurance", response.toString());
+                try {
+                    JSONObject jobj = new JSONObject(response.toString());
+                    if (jobj.has("final_amount")) {
+                        String discountAmount = jobj.getString("final_amount").replace("$", "");
+                        payableAmount = Double.parseDouble(discountAmount);
+                        if (payableAmount <= 0.00) {
+                            finalAmout = String.format("%.2f", Double.parseDouble(jobj.getString("final_amount")));
+                            storePayableAmount(finalAmout);
+                            CheckdoconfirmAppointment(true);
+
+                        }
+                        else{
+                            finalAmout = String.format("%.2f", payableAmount);
+                            storePayableAmount(finalAmout);
+
+                        }
+                    }
+                    ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, null);
+            }
+        };
+        PharmacyService insuranceService = new PharmacyService(MDLivePayment.this, null);
+        insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(promocode), successListener, errorListener);
+    }
+
+    /**
+     * This function is used to get post body content for Check Insurance Eligibility
+     * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
+     */
+
+    public String formPostInsuranceParams(String promoCode) {
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        HashMap<String, String> insuranceMap = new HashMap<>();
+        insuranceMap.put("appointment_method", "1");
+        insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        insuranceMap.put("timeslot", "Now");
+        insuranceMap.put("provider_type_id", "3");
+        insuranceMap.put("promocode", promoCode);
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        return new Gson().toJson(insuranceMap);
+    }
+
+
 
 
 }
