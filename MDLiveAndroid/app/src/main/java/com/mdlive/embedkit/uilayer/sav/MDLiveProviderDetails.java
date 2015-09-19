@@ -705,6 +705,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
         tapSeetheDoctorTxt.setVisibility(View.GONE);
         reqfutureapptBtnLayout.setVisibility(View.GONE);
+        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+        byvideoBtn.setTextColor(Color.WHITE);
+        byphoneBtn.setTextColor(Color.WHITE);
         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -979,8 +983,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                             if(layout.getChildCount() > 0)
                                 layout.removeAllViews();
-                            if(previousSelectedTv != null)
-                                layout.addView(previousSelectedTv);
+                            /*if(previousSelectedTv != null)
+                                layout.addView(previousSelectedTv);*/
                             for(TextView tv : videoList){
                                 layout.addView(tv);
                             }
@@ -1014,8 +1018,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                             if(layout.getChildCount() > 0)
                                 layout.removeAllViews();
-                            if(previousSelectedTv != null)
-                                layout.addView(previousSelectedTv);
+                            /*if(previousSelectedTv != null)
+                                layout.addView(previousSelectedTv);*/
                             for(TextView tv : phoneList){
 
                                 layout.addView(tv);
