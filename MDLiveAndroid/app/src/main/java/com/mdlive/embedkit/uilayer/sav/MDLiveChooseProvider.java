@@ -191,6 +191,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void ChooseProviderResponseList() {
+        if (getProgressDialog().isShowing()) {
+            return;
+        }
+
         setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
