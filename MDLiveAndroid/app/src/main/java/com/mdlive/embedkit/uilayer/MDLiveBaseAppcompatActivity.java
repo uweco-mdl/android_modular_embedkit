@@ -221,6 +221,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             ((MDLiveDashBoardFragment) fragment).hideNotification();
         }
 
+        fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
         }
@@ -233,7 +234,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             return;
         }
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).hideNotification();
+        }
+
+        fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
         }
