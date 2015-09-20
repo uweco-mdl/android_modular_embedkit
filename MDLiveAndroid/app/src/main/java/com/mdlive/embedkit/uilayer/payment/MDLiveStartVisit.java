@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -40,8 +39,8 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+//        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+//        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_time_for_visit_txt).toUpperCase());
 
 
