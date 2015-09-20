@@ -934,8 +934,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     break;
                 }
             }
-            ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(id));
-            strProviderId=providerTypeIdList.get(id);
+            ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+            strProviderId=providerTypeIdList.get(0);
 
 
         } catch (Exception e) {
