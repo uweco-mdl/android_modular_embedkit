@@ -70,8 +70,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        MdliveUtils.closingActivityAnimation(MDLiveStartVisit.this);
+        return;
     }
 
     public void rightBtnOnClick(View v) {
