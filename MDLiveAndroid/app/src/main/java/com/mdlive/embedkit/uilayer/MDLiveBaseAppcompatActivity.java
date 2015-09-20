@@ -216,7 +216,11 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             return;
         }
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).hideNotification();
+        }
+
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
         }
