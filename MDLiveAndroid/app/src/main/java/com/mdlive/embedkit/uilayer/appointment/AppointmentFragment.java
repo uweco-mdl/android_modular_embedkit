@@ -107,6 +107,10 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                             view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
                             view.findViewById(R.id.help).setVisibility(View.VISIBLE);
                         }
+                    } else {
+                        view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                        view.findViewById(R.id.help).setVisibility(View.GONE);
                     }
                 }
                 break;
