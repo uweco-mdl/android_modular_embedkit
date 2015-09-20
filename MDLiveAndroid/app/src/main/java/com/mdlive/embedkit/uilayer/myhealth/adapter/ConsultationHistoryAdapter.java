@@ -68,13 +68,13 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());
         viewHolder.reasonForVisitTv.setText(" " + getItem(position).getChiefComplaint());
         if (getItem(position).getPrimaryDiagnosis().isEmpty()) {
-            viewHolder.primaryDiagnosisTv.setText(context.getResources().getString(R.string.mdl_no_diagnosis));
+            viewHolder.primaryDiagnosisTv.setText(" " + context.getResources().getString(R.string.mdl_no_diagnosis));
         } else {
             String diagnosisText = "";
             for (String item : getItem(position).getPrimaryDiagnosis()) {
                 diagnosisText += "," + item;
             }
-            viewHolder.primaryDiagnosisTv.setText(diagnosisText.substring(1, diagnosisText.length()));
+            viewHolder.primaryDiagnosisTv.setText(" " + diagnosisText.substring(1, diagnosisText.length()));
         }
 
         viewHolder.sendMessageTv.setOnClickListener(new View.OnClickListener() {
