@@ -1063,7 +1063,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     Log.e("videoList",""+tv);
                                     layout.addView(tv);
                                 }
-                                saveConsultationType("video");
+                                saveConsultationType("Video");
                                 //Enable Request Appointment Button
                                 enableReqAppmtBtn();
                                 ((ImageView)findViewById(R.id.videoicon)).setBackgroundResource(R.drawable.video_icon_white);
@@ -1097,7 +1097,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 for (TextView tv : phoneList) {
                                     layout.addView(tv);
                                 }
-                                saveConsultationType("phone");
+                                saveConsultationType("Phone");
                                 //Enable Request Appointment Button
                                 enableReqAppmtBtn();
                                 ((ImageView)findViewById(R.id.phoneicon)).setBackgroundResource(R.drawable.phone_icon_white);
