@@ -397,7 +397,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
     @Override
     public void onBackPressed() {
-
+        return;
     }
 
     /**
