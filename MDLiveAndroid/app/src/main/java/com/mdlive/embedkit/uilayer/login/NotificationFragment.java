@@ -233,6 +233,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
                                 (getActivity() != null && !(getActivity() instanceof AppointmentActivity))) {
                             mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
                         }
+
+                        if (mOnAppointmentClicked != null) {
+                            mOnAppointmentClicked.onCloseDrawer();
+                        }
                     }
                 });
 
@@ -263,6 +267,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     public interface OnAppointmentClicked {
         void onAppointmentClicked(final Appointment appointment);
+        void onCloseDrawer();
     }
 
     public interface NotifyDashboard {

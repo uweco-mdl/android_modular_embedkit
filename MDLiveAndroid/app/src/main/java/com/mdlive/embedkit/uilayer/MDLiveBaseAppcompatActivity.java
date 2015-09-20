@@ -304,6 +304,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         startActivity(AppointmentActivity.getAppointmentIntent(getBaseContext(), appointment));
     }
 
+    @Override
+    public void onCloseDrawer() {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+    }
+
     private void onAddChildSelcted(final User user, final int dependentUserSize) {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
 
