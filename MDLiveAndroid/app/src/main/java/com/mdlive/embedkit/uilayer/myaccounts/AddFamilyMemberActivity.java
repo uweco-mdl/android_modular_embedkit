@@ -133,8 +133,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 String erg = "";
-                                erg += dayOfMonth;
-                                erg += "/" + String.valueOf(monthOfYear + 1);
+                                erg += String.valueOf(monthOfYear + 1);
+                                erg += "/" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth);
                                 erg += "/" + year;
 
                                 mDOB.setText(erg);
