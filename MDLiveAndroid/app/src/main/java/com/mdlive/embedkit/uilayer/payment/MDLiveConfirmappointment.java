@@ -56,6 +56,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

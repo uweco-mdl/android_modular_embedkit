@@ -34,14 +34,16 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
+
+//            ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+//            ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_time_for_visit_txt).toUpperCase());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-//        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-//        ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_time_for_visit_txt).toUpperCase());
 
 
         if (savedInstanceState == null) {

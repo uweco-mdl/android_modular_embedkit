@@ -39,6 +39,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_family_history).toUpperCase());
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

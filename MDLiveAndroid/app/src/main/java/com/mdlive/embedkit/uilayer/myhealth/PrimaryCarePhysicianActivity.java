@@ -42,6 +42,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

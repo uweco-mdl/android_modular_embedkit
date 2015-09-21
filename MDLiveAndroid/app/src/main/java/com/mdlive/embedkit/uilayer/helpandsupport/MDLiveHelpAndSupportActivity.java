@@ -33,6 +33,7 @@ public class MDLiveHelpAndSupportActivity extends MDLiveBaseAppcompatActivity im
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             showHamburgerBell();
+            elevateToolbar(toolbar);
         }
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);

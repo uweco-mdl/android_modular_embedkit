@@ -2,11 +2,13 @@ package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -427,5 +429,13 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
     }
 
+
+    public void elevateToolbar(final Toolbar toolbar) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (toolbar != null) {
+                toolbar.setElevation(7 * getResources().getDisplayMetrics().density);
+            }
+        }
+    }
 
 }

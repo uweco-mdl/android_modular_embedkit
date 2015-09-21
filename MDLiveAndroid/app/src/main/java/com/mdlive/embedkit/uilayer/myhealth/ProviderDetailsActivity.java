@@ -45,6 +45,7 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_provider));
+            elevateToolbar(toolbar);
         }
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

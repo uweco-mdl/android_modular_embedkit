@@ -36,6 +36,7 @@ public class MDLiveMyPharmacyActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            elevateToolbar(toolbar);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_pharmacy).toUpperCase());
         }
 

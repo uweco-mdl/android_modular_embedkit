@@ -104,6 +104,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     toolbar.setElevation(4 * toolbar.getResources().getDisplayMetrics().density);
                 }

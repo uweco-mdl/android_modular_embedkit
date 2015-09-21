@@ -33,6 +33,7 @@ public class MDLiveSymptomCheckerActivity extends MDLiveBaseAppcompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             showHamburgerBell();
+            elevateToolbar(toolbar);
         }
 
         if (savedInstanceState == null) {

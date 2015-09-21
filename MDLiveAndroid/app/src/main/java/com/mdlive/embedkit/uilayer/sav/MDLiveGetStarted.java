@@ -112,6 +112,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 showHamburgerTick();
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

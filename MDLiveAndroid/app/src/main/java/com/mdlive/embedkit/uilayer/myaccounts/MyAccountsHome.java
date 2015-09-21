@@ -43,6 +43,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -53,6 +53,7 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity im
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            elevateToolbar(toolbar);
             setTitle("");
             if (getIntent().getExtras() != null && getIntent().hasExtra(HEADING_TAG)) {
                 ((TextView) findViewById(R.id.headerTxt)).setText(getIntent().getStringExtra(HEADING_TAG).toUpperCase());
