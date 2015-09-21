@@ -179,11 +179,11 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             public void afterTextChanged(Editable s) {
                 if (mayIAllowToEdit) {
                     try {
-                            String formattedString = MdliveUtils.formatDualString(mPhone.getText().toString());
-                            mayIAllowToEdit = false;
-                            mPhone.setText(formattedString);
-                            mPhone.setSelection(mPhone.getText().toString().length());
-                            mayIAllowToEdit = true;
+                        String formattedString = MdliveUtils.formatDualString(mPhone.getText().toString());
+                        mayIAllowToEdit = false;
+                        mPhone.setText(formattedString);
+                        mPhone.setSelection(mPhone.getText().toString().length());
+                        mayIAllowToEdit = true;
                     } catch (Exception e) {
                     }
                 }

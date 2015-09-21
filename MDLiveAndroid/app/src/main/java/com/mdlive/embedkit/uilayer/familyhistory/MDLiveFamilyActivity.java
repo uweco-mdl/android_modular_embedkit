@@ -34,10 +34,14 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_family_history).toUpperCase());
+        try {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_family_history).toUpperCase());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         User user = null;

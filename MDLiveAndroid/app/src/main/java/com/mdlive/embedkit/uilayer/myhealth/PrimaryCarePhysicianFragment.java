@@ -39,13 +39,14 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     private EditText mFirstName = null;
     private EditText mLastName = null;
     private EditText mAddress1 = null;
-    private EditText mCountry = null;
+    private TextView mCountry = null;
     private EditText mZip = null;
     private EditText mPracticeName = null;
     private EditText mPhoneNumber = null;
     private TextView mState = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
+    private List<String> countryList = new ArrayList<String>();
 
 
     public static PrimaryCarePhysicianFragment newInstance(final PrimaryCarePhysician primaryCarePhysician) {
@@ -97,9 +98,15 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
             mAddress1.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).address1);
         }
 
-        mCountry = (EditText) view.findViewById(R.id.country);
+        mCountry = (TextView) view.findViewById(R.id.country);
         if (mCountry != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mCountry.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).country);
+            mCountry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    initializeCountryDialog();
+                }
+            });
         }
 
         mState = (TextView) view.findViewById(R.id.state);
@@ -151,6 +158,22 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         builder.show();
     }
 
+    private void initializeCountryDialog() {
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        countryList = Arrays.asList(getResources().getStringArray(R.array.mdl_countries_array));
+        final String[] stringArray = countryList.toArray(new String[countryList.size()]);
+        builder.setItems(stringArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String SelectedText = countryList.get(i);
+                mCountry.setText(SelectedText);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+
     public void uploadPCP() {
 
         if (isEmpty(mFirstName.getText().toString().trim()) &&
@@ -169,7 +192,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 jsonObject.put("last_name", mLastName.getText().toString());
                 jsonObject.put("email", mEmail.getText().toString());
                 jsonObject.put("address1", mAddress1.getText().toString());
-                jsonObject.put("country_id", mCountry.getText().toString());
+                jsonObject.put("country_id", countryList.indexOf(mCountry.getText().toString()) > 0 ? countryList.indexOf(mCountry.getText().toString()) + 1 : 1);
                 jsonObject.put("state", mState.getText().toString());
                 jsonObject.put("zip", mZip.getText().toString());
                 jsonObject.put("phone", mPhoneNumber.getText().toString());
