@@ -35,6 +35,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -420,21 +421,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObj = new JSONObject(billingDetails);
             Log.e("success res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
-
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
-            cardInfo.put("billing_address1", "test1");
-            cardInfo.put("billing_address2", "test");
+            cardInfo.put("billing_address1", userBasicInfo.getPersonalInfo().getAddress1());
+            cardInfo.put("billing_address2", userBasicInfo.getPersonalInfo().getAddress2());
             cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
-            cardInfo.put("billing_city", "Test");
+            cardInfo.put("billing_city", userBasicInfo.getPersonalInfo().getCity());
             cardInfo.put("billing_country_id", "1");
             cardInfo.put("cc_num", billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
             cardInfo.put("cc_expyear", new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth", String.valueOf(month + 1));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            cardInfo.put("billing_zip5", "92111");
+            cardInfo.put("billing_zip5", userBasicInfo.getPersonalInfo().getZipcode());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -450,21 +451,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObj = new JSONObject(billingDetails);
             Log.e("payment res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
-
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
-            cardInfo.put("billing_address1", "test1");
-            cardInfo.put("billing_address2", "test");
+            cardInfo.put("billing_address1",userBasicInfo.getPersonalInfo().getAddress1() );
+            cardInfo.put("billing_address2",userBasicInfo.getPersonalInfo().getAddress1());
             cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
-            cardInfo.put("billing_city", "Test");
+            cardInfo.put("billing_city", userBasicInfo.getPersonalInfo().getCity());
             cardInfo.put("billing_country_id", "1");
             cardInfo.put("cc_num", billingObj.getString("cc_number"));
             cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
             cardInfo.put("cc_expyear", billingObj.getString("cc_expyear"));
             cardInfo.put("cc_expmonth", billingObj.getString("cc_expmonth"));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            cardInfo.put("billing_zip5", "92111");
+            cardInfo.put("billing_zip5", userBasicInfo.getPersonalInfo().getZipcode());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -540,85 +541,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
         });
     }
 
-
-   /* private void doConfirmAppointment() {
-        showProgressDialog();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.e("confirm appmt res---->",response.toString());
-                dismissDialog();
-                try {
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putString(PreferenceConstants.APPT_ID, apptId);
-                            editor.commit();
-                            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
-                            startActivity(i);
-                            MdliveUtils.startActivityAnimation(MDLivePayment.this);
-
-                    } else {
-                        final String resumeScreen = response.getString("resume_screen");
-
-                        MdliveUtils.showDialog(MDLivePayment.this,response.getString("message"),new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(resumeScreen.equalsIgnoreCase("Get Started")) {
-                                Intent getStartedIntent = new Intent(MDLivePayment.this, MDLiveGetStarted.class);
-                                startActivity(getStartedIntent);
-                                MdliveUtils.startActivityAnimation(MDLivePayment.this);
-                                finish();
-                            }
-                        }
-                    });
-
-//                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-
-                } catch (Exception e) {
-                    dismissDialog();
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject errorObj = new JSONObject(responseBody);
-                    dismissDialog();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
-                } catch (Exception e) {
-                    dismissDialog();
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("alternate_visit_option", "No Answer");
-        params.put("phys_availability_id", "");
-        params.put("timeslot", "Now");
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("do_you_have_primary_care_physician", "No");
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-        if (promoCode != null && !promoCode.isEmpty()) {
-            params.put("promocode", promoCode);
-        }
-
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePayment.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
-    }*/
 
 
     public void showDialog() {

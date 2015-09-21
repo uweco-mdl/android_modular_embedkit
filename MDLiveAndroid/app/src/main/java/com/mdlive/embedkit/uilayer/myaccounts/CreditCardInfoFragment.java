@@ -159,19 +159,19 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
-                if (getArguments().getString("View").equalsIgnoreCase("view")) {
-                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
-                        ((MyAccountsHome) getActivity()).hideTick();
-                    }
-                    mCardExpirationMonth.setEnabled(false);
-                    mNameOnCard.setEnabled(false);
-                    mAddress1.setEnabled(false);
-                    mAddress2.setEnabled(false);
-                    mCity.setEnabled(false);
-                    mStateLayout.setEnabled(false);
-                    mZip.setEnabled(false);
-                    changeAddress.setEnabled(false);
-                }
+//                if (getArguments().getString("View").equalsIgnoreCase("view")) {
+//                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+//                        ((MyAccountsHome) getActivity()).hideTick();
+//                    }
+//                    mCardExpirationMonth.setEnabled(false);
+//                    mNameOnCard.setEnabled(false);
+//                    mAddress1.setEnabled(false);
+//                    mAddress2.setEnabled(false);
+//                    mCity.setEnabled(false);
+//                    mStateLayout.setEnabled(false);
+//                    mZip.setEnabled(false);
+//                    changeAddress.setEnabled(false);
+//                }
 
                 try {
                     Log.i("response", response);

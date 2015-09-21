@@ -41,6 +41,8 @@ import java.util.HashMap;
 public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     private String providerName,providerType,consultationType,consultationDate,Time,phone,doctorEVisit;
     private String promoCode = null;
+    private String appointmentMethodType;
+    private String timeStamp;
     private boolean CheckdoconfirmAppmt = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
+
+        params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
         params.put("phys_availability_id", "");
         params.put("timeslot", "Now");
@@ -228,7 +231,17 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType+" Consultation");
         consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-
+if(consultationType.equalsIgnoreCase("Video"))
+{
+    appointmentMethodType="1";
+}else if(consultationType.equalsIgnoreCase("Phone"))
+{
+    appointmentMethodType="2";
+    Log.e("Phone","Am in Phone");
+}else
+{
+    appointmentMethodType="1";
+}
 
         if(!consultationDate.isEmpty()&&!Time.isEmpty())
         {
