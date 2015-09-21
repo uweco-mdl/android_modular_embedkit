@@ -73,7 +73,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     protected boolean isPerformingAutoSuggestion, mayIShowSuggestions = true;
     protected static String previousSearch = "";
     private IntentFilter intentFilter;
-
+    private boolean isFromPharmacyResult = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +125,12 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         String hasErrorMessage = hasValidationMessage();
         if (hasErrorMessage == null) {
             addExtrasInIntent();
-            startActivity(sendingIntent);
-            MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+            if(isFromPharmacyResult){
+                setResult(RESULT_OK, sendingIntent);
+            }else{
+                startActivity(sendingIntent);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+            }
             finish();
         } else {
             MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
@@ -159,6 +163,10 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             sendingIntent.putExtra("FROM_MY_HEALTH",getIntent().getBooleanExtra("FROM_MY_HEALTH",false));
             sendingIntent.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED",false));
         }
+        if(getIntent().hasExtra("FROM_MY_RESULT")){
+            isFromPharmacyResult = true;
+        }
+
         pharmacy_search_name.addTextChangedListener(pharmacySearchNameTextWatcher());
         adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
         pharmacy_search_name.setThreshold(3);
@@ -268,9 +276,13 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         String hasErrorMessage = hasValidationMessage();
         if (hasErrorMessage == null) {
             addExtrasInIntent();
-            startActivity(sendingIntent);
-            MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-            finish();
+            if(isFromPharmacyResult){
+                setResult(RESULT_OK, sendingIntent);
+            }else{
+                startActivity(sendingIntent);
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                finish();
+            }
         } else {
             MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
         }
@@ -340,9 +352,13 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 loc.setLongitude(lon);
                 addExtrasForLocationInIntent(loc);
                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                startActivity(sendingIntent);
+                if(isFromPharmacyResult){
+                    MDLivePharmacyChange.this.setResult(RESULT_OK, sendingIntent);
+                }else{
+                    startActivity(sendingIntent);
+                    MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                }
                 finish();
-                MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
             }else{
                 Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
             }

@@ -152,7 +152,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
     public void onChangePinClicked() {
         getSupportFragmentManager().
                 beginTransaction().
-                replace(R.id.main_content, OldPinFragment.newInstance(), MY_ACCOUNT_TAG).
+                replace(R.id.main_content, OldPinFragment.newInstance(true), MY_ACCOUNT_TAG).
                 addToBackStack(MY_ACCOUNT_TAG).
                 commit();
     }

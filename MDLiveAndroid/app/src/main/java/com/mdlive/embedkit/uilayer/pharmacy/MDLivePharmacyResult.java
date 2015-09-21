@@ -145,10 +145,11 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         if(getIntent().hasExtra("PHARMACY_SELECTED")){
             i.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED", false));
         }
+        i.putExtra("FROM_MY_RESULT", "");
 
-        startActivity(i);
+        startActivityForResult(i, IntegerConstants.PHARMACY_REQUEST_CODE);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
-        finish();
+        //finish();
     }
 
     @Override
@@ -168,6 +169,13 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             if(data != null){
                 getPharmacySearchResults(getPostBody(data));
             }
+        }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.PHARMACY_REQUEST_CODE){
+                list.clear();
+                markerIdCollection.clear();
+                expandgoogleMap.clear();
+                googleMap.clear();
+                adaper.notifyDataSetChanged();
+                getPharmacySearchResults(getPostBody(data));
         }
     }
 
@@ -477,6 +485,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 if(getIntent().hasExtra("PHARMACY_SELECTED")){
                                     i.putExtra("PHARMACY_SELECTED",getIntent().getBooleanExtra("PHARMACY_SELECTED", false));
                                 }
+                                //i.putExtra("FROM_MY_RESULT", "");
                                 startActivity(i);
                                 finish();
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
