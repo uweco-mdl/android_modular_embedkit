@@ -289,6 +289,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                         } else {
                             Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
                             pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                            pharmacyintent.putExtra("PHARMACY_SELECTED",false);
                             startActivity(pharmacyintent);
                         }
                     }else {
@@ -360,17 +361,20 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     i.putExtra("longitude", lat + "");
                     i.putExtra("latitude", lon + "");
                     i.putExtra("FROM_MY_HEALTH", true);
+                    i.putExtra("PHARMACY_SELECTED",false);
                     i.putExtra("errorMesssage", "No Pharmacies listed in your location");
                     startActivity(i);
                     MdliveUtils.startActivityAnimation(getActivity());
                 } else{
                     Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
                     pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
                     startActivity(pharmacyintent);
                 }
             } else {
                 Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
                 pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
                 startActivity(pharmacyintent);
             }
         }

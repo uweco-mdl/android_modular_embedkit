@@ -111,7 +111,16 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.container, OldPinFragment.newInstance(), "Old Pin").
+                    add(R.id.container, OldPinFragment.newInstance(false), "Old Pin").
+                    commit();
+        }
+
+        if(fragment.equals("Old Pin Second")){
+            title.setText("CHANGE PIN");
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.container, MyAccountNewPinFragment.newInstance("", true), "Old Pin").
                     commit();
         }
 

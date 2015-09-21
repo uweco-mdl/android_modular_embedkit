@@ -143,9 +143,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         mChangePin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changePin = new Intent(getActivity(),MyAccountsHome.class);
-                changePin.putExtra("Fragment_Name","Old Pin");
-                startActivity(changePin);
+                gotoPinCreateion();
             }
         });
 
@@ -161,7 +159,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
         mPreferredSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 final CharSequence[] items = view.getContext().getResources().getStringArray(R.array.mdl_lock_types);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -169,8 +167,12 @@ public class MyProfileFragment extends MDLiveBaseFragment {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mPreferredSignIn.setText(items[item]);
-                        MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
-
+                        // If Selected Password, then simply save type as Password
+                        if (view.getResources().getString(R.string.mdl_password).equalsIgnoreCase(String.valueOf(items[item]))) {
+                            MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
+                        } else { // Shows the Create PIN
+                            gotoPinCreationSecond();
+                        }
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -495,6 +497,8 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
         getProfileInfoService();
     }
     public void changePhoneNumberInfo() {
@@ -556,5 +560,17 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
         EditMyProfileService service = new EditMyProfileService(getActivity(), null);
         service.editMyProfile(successCallBackListener, errorListener, params);
+    }
+
+    private void gotoPinCreateion() {
+        Intent changePin = new Intent(getActivity(),MyAccountsHome.class);
+        changePin.putExtra("Fragment_Name","Old Pin");
+        startActivity(changePin);
+    }
+
+    private void gotoPinCreationSecond() {
+        Intent changePin = new Intent(getActivity(),MyAccountsHome.class);
+        changePin.putExtra("Fragment_Name","Old Pin Second");
+        startActivity(changePin);
     }
 }
