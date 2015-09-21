@@ -1123,6 +1123,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         final AlertDialog dialog = alertDialog.create();
+        dialog.setCancelable(false);
         dialog.show();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

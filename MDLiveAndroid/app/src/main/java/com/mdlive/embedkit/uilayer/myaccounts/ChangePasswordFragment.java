@@ -39,13 +39,16 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         final ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
         return changePasswordFragment;
     }
-
     private EditText mCurrentPassword = null;
     private EditText mNewPassword = null;
     private EditText mConfirmPassword = null;
     private TextView mPasswordLength = null;
     private TextView mPasswordConfirmCheck = null;
     private TextView mPasswordAlphaNumericCheck = null;
+    private TextView passworddiffName = null;
+    private TextView passwordspecialChars = null;
+    private TextView passwordtwoRepeatChars = null;
+    private ImageButton selectedImageIcon = null;
     private ImageButton mCurrentPasswordShow = null;
     private ImageButton mNewPasswordShow = null;
     private ImageButton mConfirmPasswordShow = null;
@@ -67,11 +70,15 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         mNewPassword = (EditText) changePasswordView.findViewById(R.id.NewPassword);
         mConfirmPassword = (EditText) changePasswordView.findViewById(R.id.confirmPassword);
         mPasswordLength = (TextView) changePasswordView.findViewById(R.id.passwordLength);
+        passworddiffName  = (TextView) changePasswordView.findViewById(R.id.passworddiffName);
+        passwordspecialChars  = (TextView) changePasswordView.findViewById(R.id.passwordspecialChars);
+        passwordtwoRepeatChars = (TextView) changePasswordView.findViewById(R.id.passwordtwoRepeatChars);
         mPasswordConfirmCheck = (TextView) changePasswordView.findViewById(R.id.passwordConfirmCheck);
         mPasswordAlphaNumericCheck = (TextView) changePasswordView.findViewById(R.id.passwordAlphaNumericCheck);
         mCurrentPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.currentPasswordShow);
         mNewPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.newPasswordShow);
         mConfirmPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.confirmPasswordShow);
+
 
         mCurrentPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -80,16 +87,10 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 if (view.hasFocus()) {
                     if (mCurrentPassword.getText().length() == 0) {
                         mCurrentPasswordShow.setVisibility(View.GONE);
-                        mPasswordLength.setVisibility(View.GONE);
-                        mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                        mPasswordConfirmCheck.setVisibility(View.GONE);
                     } else {
                         mCurrentPasswordShow.setVisibility(View.VISIBLE);
-                        mPasswordLength.setVisibility(View.VISIBLE);
-                        mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
                     }
-
-                    if (mCurrentPassword.getText().length() > 6 && mCurrentPassword.getText().length() < 16) {
+                    if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
                         mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     } else {
@@ -104,6 +105,8 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                         mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     }
+                }else{
+                    mCurrentPasswordShow.setVisibility(View.GONE);
                 }
             }
         });
@@ -111,141 +114,168 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         mNewPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (mNewPassword.getText().length() == 0) {
+                if(view.hasFocus()){
+                    if (mNewPassword.getText().length() == 0) {
+                        mNewPasswordShow.setVisibility(View.GONE);
+                    } else {
+                        mNewPasswordShow.setVisibility(View.VISIBLE);
+                    }
+
+                    if (mNewPassword.getText().length() >= 8 && mNewPassword.getText().length() <= 15) {
+                        mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                        passwordLength =true;
+                    } else {
+                        mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                        passwordLength =false;
+                    }
+                    if (mNewPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                        mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                        passwordAlphaNumericCheck = true;
+
+                    } else {
+                        mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                        passwordAlphaNumericCheck = false;
+                    }
+                }else{
                     mNewPasswordShow.setVisibility(View.GONE);
-                    mPasswordLength.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                } else {
-                    mNewPasswordShow.setVisibility(View.VISIBLE);
-                    mPasswordLength.setVisibility(View.VISIBLE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
-                }
-
-                if (mNewPassword.getText().length() > 6 && mNewPassword.getText().length() < 16) {
-                    mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                    mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
-                    passwordLength =true;
-                } else {
-                    mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                    mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    passwordLength =false;
-                }
-                if (mNewPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
-                    mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                    mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
-                    passwordAlphaNumericCheck = true;
-
-                } else {
-                    mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                    mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    passwordAlphaNumericCheck = false;
                 }
             }
         });
+
 
         mConfirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (mConfirmPassword.getText().length() == 0) {
+
+                if(view.hasFocus()){
+                    if (mConfirmPassword.getText().length() == 0) {
+                        mConfirmPasswordShow.setVisibility(View.GONE);
+                    } else {
+                        mConfirmPasswordShow.setVisibility(View.VISIBLE);
+                    }
+
+                    if (mConfirmPassword.getText().length() >= 8 && mConfirmPassword.getText().length() <= 15) {
+                        mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                        confirmPasswordLength =true;
+                    } else {
+                        mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                        confirmPasswordLength =false;
+                    }
+                    if (mConfirmPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                        mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                        confirmPasswordAlphaNumericCheck = true;
+
+                    } else {
+                        mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                        confirmPasswordAlphaNumericCheck = false;
+                    }
+
+                    if (mConfirmPassword.getText().toString().equals(mNewPassword.getText().toString())) {
+                        mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                        passwordConfirmCheck = true;
+                    } else {
+                        mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                        passwordConfirmCheck = false;
+                    }
+                }else{
                     mConfirmPasswordShow.setVisibility(View.GONE);
-                    mPasswordLength.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                } else {
-                    mConfirmPasswordShow.setVisibility(View.VISIBLE);
-                    mPasswordLength.setVisibility(View.VISIBLE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
-                    mPasswordConfirmCheck.setVisibility(View.VISIBLE);
                 }
-
-                if (mConfirmPassword.getText().length() > 6 && mConfirmPassword.getText().length() < 16) {
-                    mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                    mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
-                    confirmPasswordLength =true;
-                } else {
-                    mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                    mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    confirmPasswordLength =false;
-                }
-                if (mConfirmPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
-                    mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                    mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
-                    confirmPasswordAlphaNumericCheck = true;
-
-                } else {
-                    mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                    mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    confirmPasswordAlphaNumericCheck = false;
-                }
-
-                if (mConfirmPassword.getText().toString().equals(mNewPassword.getText().toString())) {
-                    mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                    mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
-                    passwordConfirmCheck = true;
-                } else {
-                    mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                    mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    passwordConfirmCheck = false;
-                }
-
             }
         });
 
-        mCurrentPasswordShow.setOnTouchListener(new View.OnTouchListener() {
+        mCurrentPasswordShow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            public void onClick(View v) {
+                if(mCurrentPasswordShow.getTag() == null){
+                    mCurrentPasswordShow.setTag("eye_on");
                     mCurrentPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     mCurrentPasswordShow.setImageResource(R.drawable.eye_on);
-                    mCurrentPassword.setSelection(mCurrentPassword.getText().length());
-                    return true;
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                }else if(mCurrentPasswordShow.getTag().equals("eye_on")){
+                    mCurrentPasswordShow.setTag("eye_off");
                     mCurrentPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     mCurrentPasswordShow.setImageResource(R.drawable.eye_off);
-                    mCurrentPassword.setSelection(mCurrentPassword.getText().length());
-                    return true;
+                }else{
+                    mCurrentPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mCurrentPasswordShow.setTag("eye_on");
+                    mCurrentPasswordShow.setImageResource(R.drawable.eye_on);
                 }
-                return false;
+                mCurrentPassword.setSelection(mCurrentPassword.getText().length());
             }
         });
 
-        mNewPasswordShow.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        mNewPasswordShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mNewPasswordShow.getTag() == null){
+                    mNewPasswordShow.setTag("eye_on");
                     mNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     mNewPasswordShow.setImageResource(R.drawable.eye_on);
-                    mNewPassword.setSelection(mNewPassword.getText().length());
-                    return true;
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                }else if(mNewPasswordShow.getTag().equals("eye_on")){
                     mNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mNewPasswordShow.setTag("eye_off");
                     mNewPasswordShow.setImageResource(R.drawable.eye_off);
-                    mNewPassword.setSelection(mNewPassword.getText().length());
-                    return true;
+                }else{
+                    mNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mNewPasswordShow.setTag("eye_on");
+                    mNewPasswordShow.setImageResource(R.drawable.eye_on);
                 }
+                mNewPassword.setSelection(mNewPassword.getText().length());
+            }
+        });
+
+
+        mConfirmPasswordShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mConfirmPasswordShow.getTag() == null){
+                    mConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mConfirmPasswordShow.setTag("eye_on");
+                    mConfirmPasswordShow.setImageResource(R.drawable.eye_on);
+                }else if(mConfirmPasswordShow.getTag().equals("eye_on")){
+                    mConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mConfirmPasswordShow.setTag("eye_off");
+                    mConfirmPasswordShow.setImageResource(R.drawable.eye_off);
+                }else{
+                    mConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mConfirmPasswordShow.setTag("eye_on");
+                    mConfirmPasswordShow.setImageResource(R.drawable.eye_on);
+                }
+                mConfirmPassword.setSelection(mConfirmPassword.getText().length());
+            }
+        });
+
+
+        mCurrentPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                changeVisibilityOfImageButton(mCurrentPasswordShow, mCurrentPassword);
                 return false;
             }
         });
 
-        mConfirmPasswordShow.setOnTouchListener(new View.OnTouchListener() {
+        mNewPassword.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(View v, MotionEvent event) {
+                changeVisibilityOfImageButton(mNewPasswordShow, mNewPassword);
+                return false;
+            }
+        });
 
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    mConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    mConfirmPasswordShow.setImageResource(R.drawable.eye_on);
-                    mConfirmPassword.setSelection(mConfirmPassword.getText().length());
-                    return true;
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    mConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    mConfirmPasswordShow.setImageResource(R.drawable.eye_off);
-                    mConfirmPassword.setSelection(mConfirmPassword.getText().length());
-                    return true;
-                }
+        mConfirmPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                changeVisibilityOfImageButton(mConfirmPasswordShow, mConfirmPassword);
                 return false;
             }
         });
@@ -258,21 +288,10 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkThatUserEnteredPassword();
+                changeVisibilityOfImageButton(mCurrentPasswordShow, mCurrentPassword);
 
-                if (mCurrentPassword.getText().length() == 0) {
-                    mCurrentPasswordShow.setVisibility(View.GONE);
-                    mPasswordLength.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                } else {
-                    mCurrentPasswordShow.setVisibility(View.VISIBLE);
-                    mPasswordLength.setVisibility(View.VISIBLE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                }
-
-
-                if (mCurrentPassword.getText().length() > 6 && mCurrentPassword.getText().length() < 16) {
+                if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
                     mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
 
@@ -302,25 +321,12 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         mNewPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                if (mNewPassword.getText().length() == 0) {
-                    mNewPasswordShow.setVisibility(View.GONE);
-                    mPasswordLength.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                } else {
-                    mNewPasswordShow.setVisibility(View.VISIBLE);
-                    mPasswordLength.setVisibility(View.VISIBLE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                }
-
-                if (mNewPassword.getText().length() > 6 && mNewPassword.getText().length() < 16) {
+                checkThatUserEnteredPassword();
+                changeVisibilityOfImageButton(mNewPasswordShow, mNewPassword);
+                if (mNewPassword.getText().length() >= 8 && mNewPassword.getText().length() <= 15) {
                     mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     passwordLength =true;
@@ -333,46 +339,27 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     passwordAlphaNumericCheck = true;
-
                 } else {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     passwordAlphaNumericCheck = false;
-
                 }
-
-
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
-
-
             }
         });
 
         mConfirmPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkThatUserEnteredPassword();
+                changeVisibilityOfImageButton(mConfirmPasswordShow, mConfirmPassword);
 
-                if (mConfirmPassword.getText().length() == 0) {
-                    mConfirmPasswordShow.setVisibility(View.GONE);
-                    mPasswordLength.setVisibility(View.GONE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.GONE);
-                    mPasswordConfirmCheck.setVisibility(View.GONE);
-                } else {
-                    mConfirmPasswordShow.setVisibility(View.VISIBLE);
-                    mPasswordLength.setVisibility(View.VISIBLE);
-                    mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
-                    mPasswordConfirmCheck.setVisibility(View.VISIBLE);
-                }
-
-                if (mConfirmPassword.getText().length() > 6 && mConfirmPassword.getText().length() < 16) {
+                if (mConfirmPassword.getText().length() >= 8 && mConfirmPassword.getText().length() <= 15) {
                     mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     confirmPasswordLength =true;
@@ -389,10 +376,19 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     confirmPasswordAlphaNumericCheck = false;
-
                 }
-
-                if ((mConfirmPassword.getText().toString()).equals(mNewPassword.getText().toString())) {
+                if(charSequence != null && charSequence.length() != 0){
+                    if(frequencyCount(charSequence.toString())){
+                        passwordtwoRepeatChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        passwordtwoRepeatChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                    }else{
+                        passwordtwoRepeatChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                        passwordtwoRepeatChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                    }
+                }
+                if (mConfirmPassword.getText() != null && !TextUtils.isEmpty(mConfirmPassword.getText().toString())
+                        && mNewPassword.getText() != null && !TextUtils.isEmpty(mNewPassword.getText().toString())
+                        && (mConfirmPassword.getText().toString()).equals(mNewPassword.getText().toString())) {
                     mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     passwordConfirmCheck = true;
@@ -412,6 +408,64 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         });
 
         return changePasswordView;
+    }
+
+
+    public static boolean frequencyCount(String userText) {
+        int count = 0 ;
+        for (int i = 0; i < userText.length(); i++) {
+            for (int j = 0; j < userText.length(); j++) {
+                if(userText.charAt(i)==userText.charAt(j)){
+                    count++;
+                }
+            }
+            if(count>2){
+                System.out.println(userText.charAt(i)+"--"+count);
+                return true;
+            }
+            count = 0;
+        }
+        return false;
+    }
+
+    private void changeVisibilityOfImageButton(ImageButton newSelectedImageIcon, TextView selectedTv){
+        if(selectedImageIcon == null){
+            selectedImageIcon = newSelectedImageIcon;
+            selectedImageIcon.setTag("eye_on");
+        }else{
+            selectedImageIcon.setVisibility(View.GONE);
+            selectedImageIcon = newSelectedImageIcon;
+            if(selectedImageIcon.getTag() == null){
+                selectedImageIcon.setTag("eye_on");
+            }
+        }
+        if(selectedTv.getText() == null || selectedTv.getText().toString().length() == 0){
+            selectedImageIcon.setVisibility(View.GONE);
+        }else{
+            selectedImageIcon.setVisibility(View.VISIBLE);
+        }
+        if(selectedImageIcon.getTag() != null && selectedImageIcon.getTag().equals("eye_on")) {
+            selectedImageIcon.setImageResource(R.drawable.eye_on);
+        }else{
+            selectedImageIcon.setImageResource(R.drawable.eye_off);
+            selectedImageIcon.setTag("eye_off");
+        }
+    }
+
+    private void checkThatUserEnteredPassword(){
+        if((mCurrentPassword.getText() != null && mCurrentPassword.getText().toString().length() != 0) ||
+                (mConfirmPassword.getText() != null && mConfirmPassword.getText().toString().length() != 0) ||
+                    (mNewPassword.getText() != null && mNewPassword.getText().toString().length() != 0)){
+                passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                passwordspecialChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                passwordspecialChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+        }else{
+            passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+            passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+            passwordspecialChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+            passwordspecialChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+        }
     }
 
     private void loadChangePasswordService(String params) {
