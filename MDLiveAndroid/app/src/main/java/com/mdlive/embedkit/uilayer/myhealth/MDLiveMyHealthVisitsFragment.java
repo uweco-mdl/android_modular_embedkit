@@ -90,13 +90,17 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                    mProviderAdapter.setSelectedPosition(i-1);
-                    if (getActivity() != null && getActivity() instanceof MedicalHistoryActivity) {
+                    try {
+                        if (getActivity() != null && getActivity() instanceof MedicalHistoryActivity) {
 
-                        if(((ConsultationHistoryAdapter)((HeaderViewListAdapter)adapterView.getAdapter()).getWrappedAdapter()).getSelectedView()!=null){
-                            ((ConsultationHistoryAdapter)((HeaderViewListAdapter)adapterView.getAdapter()).getWrappedAdapter()).getSelectedView().findViewById(R.id.history_details_ll).setVisibility(View.GONE);
+                            if (((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).getSelectedView() != null) {
+                                ((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).getSelectedView().findViewById(R.id.history_details_ll).setVisibility(View.GONE);
+                            }
+                            view.findViewById(R.id.history_details_ll).setVisibility(View.VISIBLE);
+                            ((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).setSelectedView(view);
                         }
-                        view.findViewById(R.id.history_details_ll).setVisibility(View.VISIBLE);
-                        ((ConsultationHistoryAdapter)((HeaderViewListAdapter)adapterView.getAdapter()).getWrappedAdapter()).setSelectedView(view);
+                    } catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
             });
