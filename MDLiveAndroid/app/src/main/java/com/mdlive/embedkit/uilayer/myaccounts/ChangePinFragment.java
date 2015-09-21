@@ -398,7 +398,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             }
         }
         else {
-            MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_application_pin_mismatch));
+            MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_pin_mismatch));
         }
     }
 
