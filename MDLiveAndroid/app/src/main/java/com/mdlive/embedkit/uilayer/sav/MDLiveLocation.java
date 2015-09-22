@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -48,6 +49,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInstance;
 
 /**
  * This Class defines the location.That is the user can select the location
@@ -164,7 +167,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
         ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, newInstance(), LEFT_MENU).
+                    commit();
 
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
     }
 
     public void leftBtnOnClick(View v){
