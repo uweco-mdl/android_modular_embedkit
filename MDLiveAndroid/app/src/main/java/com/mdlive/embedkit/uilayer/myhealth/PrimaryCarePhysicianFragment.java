@@ -3,12 +3,14 @@ package com.mdlive.embedkit.uilayer.myhealth;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +42,12 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     private EditText mLastName = null;
     private EditText mAddress1 = null;
     private TextView mCountry = null;
+    private RelativeLayout mCountryLayout = null;
     private EditText mZip = null;
     private EditText mPracticeName = null;
     private EditText mPhoneNumber = null;
     private TextView mState = null;
+    private RelativeLayout mStateLayout = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private List<String> countryList = new ArrayList<String>();
@@ -99,27 +103,29 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         }
 
         mCountry = (TextView) view.findViewById(R.id.country);
+        mCountryLayout = (RelativeLayout) view.findViewById(R.id.countryLayout);
         if (mCountry != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mCountry.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).country);
-            mCountry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    initializeCountryDialog();
-                }
-            });
         }
+        mCountryLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Clicked..", "Clicked");
+                initializeCountryDialog();
+            }
+        });
 
         mState = (TextView) view.findViewById(R.id.state);
+        mStateLayout = (RelativeLayout) view.findViewById(R.id.stateLayout);
         if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
-            mState.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    initializeStateDialog();
-                }
-            });
         }
-
+        mStateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initializeStateDialog();
+            }
+        });
         mZip = (EditText) view.findViewById(R.id.zip);
         if (mZip != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mZip.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).zip);
@@ -155,7 +161,8 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 dialogInterface.dismiss();
             }
         });
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void initializeCountryDialog() {

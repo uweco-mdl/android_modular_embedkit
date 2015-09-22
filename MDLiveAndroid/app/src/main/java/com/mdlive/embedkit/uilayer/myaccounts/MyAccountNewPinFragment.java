@@ -168,7 +168,7 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
             });
         }
 
-        mButton6 = (Button) changePin.findViewById(R.id.num_pad_7);
+        mButton6 = (Button) changePin.findViewById(R.id.num_pad_6);
         if (mButton6 != null) {
             mButton6.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -179,7 +179,7 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
             });
         }
 
-        mButton7 = (Button) changePin.findViewById(R.id.num_pad_8);
+        mButton7 = (Button) changePin.findViewById(R.id.num_pad_7);
         if (mButton7 != null) {
             mButton7.setOnClickListener(new View.OnClickListener() {
                 @Override
