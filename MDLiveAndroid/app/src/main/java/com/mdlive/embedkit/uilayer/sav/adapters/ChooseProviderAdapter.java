@@ -65,7 +65,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
-        TextView PatientNmaeTxt, SPecialistTxt, group_affiliations;
+        TextView PatientNameTxt, SpecialistTxt, group_affiliations;
         TextView withPatientTxt;
         ImageButton video_call_icon;
         final CircularNetworkImageView ProfileImg;
@@ -97,13 +97,13 @@ public class ChooseProviderAdapter extends BaseAdapter {
             if (row == null)
                 inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.chooseprovider_listitem, parent, false);
-            PatientNmaeTxt = (TextView) row.findViewById(R.id.PatientName);
+            PatientNameTxt = (TextView) row.findViewById(R.id.PatientName);
 
-            PatientNmaeTxt.setText(array.get(pos).get("name"));
+            PatientNameTxt.setText(array.get(pos).get("name"));
             group_affiliations = (TextView) row.findViewById(R.id.group_affiliations);
             group_affiliations.setText(array.get(pos).get("group_name"));
-//            SPecialistTxt = (TextView) row.findViewById(R.id.specalist);
-//            SPecialistTxt.setText(array.get(pos).get("speciality"));
+            SpecialistTxt = (TextView) row.findViewById(R.id.specalist);
+            SpecialistTxt.setText(array.get(pos).get("specialty"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
             Log.e("AvailableNowStatus", array.get(pos).get("available_now_status"));

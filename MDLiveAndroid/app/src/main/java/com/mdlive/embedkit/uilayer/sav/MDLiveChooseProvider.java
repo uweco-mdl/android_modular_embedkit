@@ -55,14 +55,14 @@ import java.util.TimeZone;
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private static final long THIRTY_SECONDS = 30 * 1000;
     private ListView listView;
-    private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
+    private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false,available_now_status;
     private FrameLayout filterMainRl;
     private RelativeLayout docOnCalLinLay;
-    private Button seenextAvailableBtn;
+    private Button seeNextAvailableBtn;
     private TextView loadingTxt;
 
     private Handler mHandler;
@@ -147,7 +147,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
         //setProgressBar(findViewById(R.id.progressDialog));
-        seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
+        seeNextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
 //        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
@@ -328,7 +328,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *  Set the ListView values.Here the Listview is populated with two list values
      *  the flag value for the header will ba added for displaying the DoctorOnCall
      *  and the doctor's list will be added in the other list.The doctor name and
-     *  the speciality will be displayed here
+     *  the specialty will be displayed here
      *
      */
     private void setListViews() {
@@ -385,10 +385,26 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         for(int i=0;i<responArray.size();i++) {
             try {
                  providerName = responArray.get(i).getAsJsonObject().get("name").getAsString();
-
+/*
                 doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
 
                 imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+*/
+                if (responArray.get(i).getAsJsonObject().get("speciality").isJsonNull()){
+                    specialty="";
+                }else{
+                    specialty = responArray.get(i).getAsJsonObject().get("speciality").getAsString();
+                }
+                if (responArray.get(i).getAsJsonObject().get("id").isJsonNull()){
+                    doctorId ="" ;
+                }else{
+                    doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
+                }
+                if (responArray.get(i).getAsJsonObject().get("provider_image_url").isJsonNull()){
+                    imageUrl = "";
+                }else{
+                    imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -419,7 +435,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
-//            map.put("speciality", speciality);
+            map.put("specialty", specialty);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
@@ -447,7 +463,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
-//            map.put("speciality", speciality);
+            map.put("specialty", specialty);
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
