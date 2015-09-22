@@ -657,18 +657,18 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent startMyPharmacyIntent = new Intent(getApplicationContext(), MDLivePharmacy.class);
-        startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         try {
             if (getIntent() != null && getIntent().hasExtra("redirect_mypharmacy")) {
+                Intent startMyPharmacyIntent = new Intent(getApplicationContext(), MDLivePharmacy.class);
+                    startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if ((getIntent().getBooleanExtra("redirect_mypharmacy", false))) {
                     startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
+                startActivity(startMyPharmacyIntent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        startActivity(startMyPharmacyIntent);
         finish();
         MdliveUtils.closingActivityAnimation(this);
     }
