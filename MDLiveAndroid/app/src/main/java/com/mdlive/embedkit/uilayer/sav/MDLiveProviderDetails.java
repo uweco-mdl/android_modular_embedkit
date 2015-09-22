@@ -62,7 +62,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private Button myText;
     private CircularNetworkImageView ProfileImg;
-    public String DoctorId,str_ProfileImg="",str_Availability_Type = "";
+    public String DoctorId,str_ProfileImg="",str_Availability_Type = "",selectedTimestamp,str_phys_avail_id;
     private TextView tapSeetheDoctorTxt, byvideoBtn,byphoneBtn,reqfutureapptBtn;
     private LinearLayout tapSeetheDoctorTxtLayout, byvideoBtnLayout, byphoneBtnLayout,videophoneparentLl;
     private RelativeLayout reqfutureapptBtnLayout;
@@ -318,19 +318,20 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
                             str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                             str_timeslot = timeSlotObj.get("timeslot").getAsString();
+                            selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
 
-                                /*if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
-                                    str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
-                                }*/
+
+                                    str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+
 
                             Log.e("General Check timeslot", str_timeslot+"");
-                            //Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
+                            Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
                             Log.e("General Check appointment_type", str_appointmenttype+"");
 
 
                             HashMap<String, String> map = new HashMap<String, String>();
                             map.put("timeslot", str_timeslot);
-                            map.put("phys_id", "");
+                            map.put("phys_id", str_phys_avail_id);
                             map.put("appointment_type", str_appointmenttype);
                             videophoneparentLl.setVisibility(View.VISIBLE);
                             Log.e("nothing","having");
@@ -442,6 +443,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
                 str_Availability_Type = providerdetObj.get("availability_type").getAsString();
             }
+
             if (layout.getChildCount() > 0) {
                 layout.removeAllViews();
             }
@@ -463,19 +465,21 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "appointment_type") && MdliveUtils.checkJSONResponseHasString(timeSlotObj, "timeslot")) {
                                 str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
+                                selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
 
-                                /*if (MdliveUtils.checkJSONResponseHasString(timeSlotObj, "physician_type_id")) {
-                                    str_phys_avail_id = timeSlotObj.get("physician_type_id").getAsString();
-                                }*/
+
+                                    str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+
+
 
                                 Log.e("General Check timeslot", str_timeslot+"");
-                                //Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
+                                Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
                                 Log.e("General Check appointment_type", str_appointmenttype+"");
 
 
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("timeslot", str_timeslot);
-                                map.put("phys_id", "");
+                                map.put("phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
                                 map.put("appointment_type", str_appointmenttype);
 
                                 timeSlotListMap.add(map);
@@ -534,7 +538,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             try {
 //               saveConsultationType(str_Availability_Type);
-                saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+                saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -587,7 +591,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             //part 2 available ly later
             //Part2 ----> timeslot not zero followed by many timeslots
             else if (!isDoctorAvailableNow && layout.getChildCount() >=1) {
-                enableOrdisableProviderDetails(str_Availability_Type);
+                availableOnlyLater(str_Availability_Type);
 
             }
 
@@ -954,6 +958,64 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
     }
 
+    //This is For only Future Appointments..That is available only later
+
+    private void availableOnlyLater(String str_Availability_Type) {
+        if(str_Availability_Type.equalsIgnoreCase("video"))
+        {
+            horizontalscrollview.setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+            tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+            videophoneparentLl.setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setClickable(false);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            tapReqFutureBtnAction();
+
+        }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
+        {
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+            videophoneparentLl.setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setVisibility(View.GONE);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+            tapReqFutureBtnAction();
+        }
+        else  if(str_Availability_Type.equalsIgnoreCase("phone")){
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
+            videophoneparentLl.setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            tapReqFutureBtnAction();
+        }
+        else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
+            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
+            horizontalscrollview.setVisibility(View.GONE);
+            tapSeetheDoctorTxt.setText("Currently with patient");
+            tapSeetheDoctorTxt.setClickable(false);
+            tapSeetheDoctorTxtLayout.setBackgroundResource(R.color.choose_pro_orange_color);
+            ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.clock_icon);
+            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            videophoneparentLl.setVisibility(View.GONE);
+            byvideoBtnLayout.setVisibility(View.GONE);
+            byphoneBtnLayout.setVisibility(View.GONE);
+//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+
+            tapReqFutureBtnAction();
+        }
+        else
+        {
+            notAvailable();
+        }
+    }
+
     private void tapReqFutureBtnAction() {
         reqfutureapptBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1292,7 +1354,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         selectedTimeslot=true;
         Log.e("check now", timeslotTxt.getText().toString());
         //saveConsultationType(appointmentType);
-        saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+        saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
         //This is to select and Unselect the Timeslot
         if(previousSelectedTv == null){
             previousSelectedTv = timeslotTxt;
@@ -1321,7 +1383,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 String appointmentType = (String) v.getTag();
                 Log.e("check now", timeslotTxt.getText().toString());
                 //saveConsultationType(appointmentType);
-                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg);
+                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
                 //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
                     Log.e("Crash","if");
@@ -1479,13 +1541,15 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
     }
     //Save to preferences for the Confirm appointment screen
-    public void saveProviderDetailsForConFirmAppmt(String selectedTime,String datteText,String providerProfile)
+    public void saveProviderDetailsForConFirmAppmt(String selectedTime,String datteText,String providerProfile,String selectedTimestamp,String phys_Id)
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
         editor.putString(PreferenceConstants.SELECTED_TIMESLOT, selectedTime);
+        editor.putString(PreferenceConstants.SELECTED_TIMESTAMP, selectedTimestamp);
         editor.putString(PreferenceConstants.SELECTED_DATE, datteText);
+        editor.putString(PreferenceConstants.SELECTED_PHYSID, phys_Id);
         editor.putString(PreferenceConstants.PROVIDER_PROFILE, providerProfile);
         editor.commit();
 

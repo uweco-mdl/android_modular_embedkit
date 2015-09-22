@@ -25,6 +25,7 @@ import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -39,10 +40,10 @@ import java.util.HashMap;
  * Created by sudha_s on 8/22/2015.
  */
 public class MDLiveConfirmappointment extends MDLiveBaseActivity {
-    private String providerName,providerType,consultationType,consultationDate,Time,phone,doctorEVisit;
+    private String providerName,providerType,consultationType,consultationDate,Time,TimeStamp,phone,doctorEVisit;
     private String promoCode = null;
     private String appointmentMethodType;
-    private String timeStamp;
+    private String timeStamp,phys_ID;
     private boolean CheckdoconfirmAppmt = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,21 +162,28 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
-
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+Log.e("PostValue confirmTimeStamp",TimeStamp);
+Log.e("PostValue phys",phys_ID);
         params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
-        params.put("phys_availability_id", "");
-        params.put("timeslot", "Now");
+        params.put("phys_availability_id", phys_ID);
+        if(TimeStamp.equalsIgnoreCase("Now"))
+        {
+            params.put("timeslot","Now");
+        }else {
+            params.put("timeslot", Long.parseLong(TimeStamp));
+        }
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("do_you_have_primary_care_physician", "No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         SharedPreferences promocodePreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-//        if (promoCode != null && !promoCode.isEmpty()) {
+        if (promoCode != null && !promoCode.isEmpty()) {
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE,""));
 
-//        }
+        }
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
@@ -232,6 +240,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType+" Consultation");
         consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+        TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
+        phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
 if(consultationType.equalsIgnoreCase("Video"))
 {
     appointmentMethodType="1";

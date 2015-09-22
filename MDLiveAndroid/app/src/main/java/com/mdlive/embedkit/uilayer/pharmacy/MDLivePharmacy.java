@@ -37,6 +37,7 @@ import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -312,19 +313,53 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
-
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("do_you_have_primary_care_physician", "No");
-        params.put("phys_availability_id", "");
+       String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+        Log.e("ConsultationType",consultationType);
+        String appointmentMethodType="";
+        if(consultationType.equalsIgnoreCase("Video"))
+        {
+            appointmentMethodType="1";
+        }else if(consultationType.equalsIgnoreCase("Phone"))
+        {
+            appointmentMethodType="2";
+            Log.e("Phone","Am in Phone");
+        }else
+        {
+            appointmentMethodType="1";
+        }
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        Log.e("PostValue confirmTimeStamp",settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, ""));
+        Log.e("PostValue phys",settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
+        params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
-        params.put("timeslot", "Now");
+        params.put("phys_availability_id", settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
+        if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
+        {
+            params.put("timeslot","Now");
+        }else {
+            params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
+        }
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+        params.put("do_you_have_primary_care_physician", "No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+//
+//        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+//        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+//        HashMap<String, Object> params = new HashMap<String, Object>();
+//        params.put("appointment_method", "1");
+//        params.put("do_you_have_primary_care_physician", "No");
+//        params.put("phys_availability_id", "");
+//        params.put("alternate_visit_option", "No Answer");
+//        params.put("timeslot", "Now");
+//        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+//        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
+//        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+//        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);

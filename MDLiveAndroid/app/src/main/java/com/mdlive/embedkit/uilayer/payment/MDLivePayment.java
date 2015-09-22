@@ -158,10 +158,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (finalAmout.equals("0.00")) {
             //Remove this..it is in next screen
              //* doConfirmAppointment();*//*
-            CheckdoconfirmAppointment(true);
-            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
-            startActivity(i);
-            MdliveUtils.startActivityAnimation(MDLivePayment.this);
+            moveToNextPage();
         } else {
             HostedPCI.loadUrl("javascript:tokenizeForm()");
         }
@@ -735,7 +732,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         if (payableAmount <= 0.00) {
                             finalAmout = String.format("%.2f", Double.parseDouble(jobj.getString("final_amount")));
                             storePayableAmount(finalAmout);
-                            CheckdoconfirmAppointment(true);
+                            moveToNextPage();
 
                         }
                         else{
@@ -752,6 +749,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 }
 
             }
+
+
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
@@ -762,6 +761,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
         };
         PharmacyService insuranceService = new PharmacyService(MDLivePayment.this, null);
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(promocode), successListener, errorListener);
+    }
+    // This is For navigating to the next Screen
+
+    private void moveToNextPage() {
+        CheckdoconfirmAppointment(true);
+        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MDLivePayment.this);
     }
 
     /**

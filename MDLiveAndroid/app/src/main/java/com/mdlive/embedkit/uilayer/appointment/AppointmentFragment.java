@@ -58,6 +58,9 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
         final Appointment appointment = getArguments().getParcelable(APPOINTMENT_TAG);
         logD("Appointment", appointment.toString());
+        logD("AppointmentType", appointment.getApptType());
+        logD("AppointmentTime", appointment.getStartTime());
+        logD("AppointmentMilli", appointment.getInMilliseconds()+"");
 
         final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.doctor_image_view);
         if (circularNetworkImageView != null) {
