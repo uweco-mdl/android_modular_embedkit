@@ -210,7 +210,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     //the corresponding date from the picker and set it to the corresponding label
     public void onclickDate(View v)
     {
-        GetCurrentDate((TextView) findViewById(R.id.appointmentIdealDate));
         // On button click show datepicker dialog
         showDialog(DATE_PICKER_ID);
     }

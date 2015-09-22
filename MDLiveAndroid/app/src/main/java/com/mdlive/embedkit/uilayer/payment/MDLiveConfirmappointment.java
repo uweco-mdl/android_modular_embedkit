@@ -40,11 +40,12 @@ import java.util.HashMap;
  * Created by sudha_s on 8/22/2015.
  */
 public class MDLiveConfirmappointment extends MDLiveBaseActivity {
-    private String providerName,providerType,consultationType,consultationDate,Time,TimeStamp,phone,doctorEVisit;
+    private String providerName, providerType, consultationType, consultationDate, Time, TimeStamp, phone, doctorEVisit;
     private String promoCode = null;
     private String appointmentMethodType;
-    private String timeStamp,phys_ID;
+    private String timeStamp, phys_ID;
     private boolean CheckdoconfirmAppmt = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +69,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_confirm_appointment_txt).toUpperCase());
 
 
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().
                     beginTransaction().
@@ -82,6 +82,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
 
     }
+
     //do confirm appointment service
     private void doConfirmAppointment() {
         showProgress();
@@ -108,24 +109,20 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 //                        {
 //                            movetostartVisit();
 //                        }
-                        else if(!Time.equalsIgnoreCase("Now"))
-                        {
+                        else if (!Time.equalsIgnoreCase("Now")) {
 
                             movetothankyou();
-                        }
-
-                        else
-                        {
+                        } else {
                             movetostartVisit();
                         }
 
                     } else {
                         final String resumeScreen = response.getString("resume_screen");
 
-                        MdliveUtils.showDialog(MDLiveConfirmappointment.this,response.getString("message"),new DialogInterface.OnClickListener(){
+                        MdliveUtils.showDialog(MDLiveConfirmappointment.this, response.getString("message"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(resumeScreen.equalsIgnoreCase("Get Started")) {
+                                if (resumeScreen.equalsIgnoreCase("Get Started")) {
                                     Intent getStartedIntent = new Intent(MDLiveConfirmappointment.this, MDLiveGetStarted.class);
                                     startActivity(getStartedIntent);
                                     MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
@@ -150,10 +147,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
-                   hideProgress();
+                    hideProgress();
                     MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
                 } catch (Exception e) {
-                   hideProgress();
+                    hideProgress();
                     e.printStackTrace();
                 }
             }
@@ -163,27 +160,40 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-Log.e("PostValue confirmTimeStamp",TimeStamp);
-Log.e("PostValue phys",phys_ID);
+        Log.e("PostValue confirmTimeStamp", TimeStamp);
+        Log.e("PostValue phys", phys_ID);
         params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
-        params.put("phys_availability_id", phys_ID);
-        if(TimeStamp.equalsIgnoreCase("Now"))
+        if(phys_ID==null)
+        {
+            params.put("phys_availability_id", "");
+        }else
+        {
+            params.put("phys_availability_id", phys_ID);
+        }
+
+        if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
         {
             params.put("timeslot","Now");
-        }else {
-            params.put("timeslot", Long.parseLong(TimeStamp));
+        }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
+        {
+            params.put("timeslot","Now");
         }
+
+        else {
+            params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
+        }
+
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("do_you_have_primary_care_physician", "No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-        SharedPreferences promocodePreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-        if (promoCode != null && !promoCode.isEmpty()) {
-            params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE,""));
+        SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+//        if (promoCode != null && !promoCode.isEmpty()) {
+            params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
 
-        }
+//        }
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
@@ -191,7 +201,7 @@ Log.e("PostValue phys",phys_ID);
     }
 
 
-    public void leftBtnOnClick(View v){
+    public void leftBtnOnClick(View v) {
         MdliveUtils.hideSoftKeyboard(MDLiveConfirmappointment.this);
         onBackPressed();
 
@@ -204,12 +214,10 @@ Log.e("PostValue phys",phys_ID);
     }
 
     public void rightBtnOnClick(View v) {
-        if(CheckdoconfirmAppmt)
-        {
-            Log.e("Am","Am in rightbtnClick");
+        if (CheckdoconfirmAppmt) {
+            Log.e("Am", "Am in rightbtnClick");
             doConfirmAppointment();
         }
-
 
 
     }
@@ -219,6 +227,7 @@ Log.e("PostValue phys",phys_ID);
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
     }
+
     private void movetothankyou() {
         Intent intent = new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
         startActivity(intent);
@@ -226,75 +235,69 @@ Log.e("PostValue phys",phys_ID);
     }
 
 
-
-    public void getPreferenceValue()
-    {
+    public void getPreferenceValue() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK,true);
-        Log.e("CheckdoconfirmAppmt",CheckdoconfirmAppmt+"");
+        CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
+        Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
         providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
-        ((TextView)findViewById(R.id.txtProfileName)).setText(providerName);
+        ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
-        ((TextView)findViewById(R.id.txtproviderType)).setText(providerType);
+        ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
         consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        ((TextView)findViewById(R.id.txtConsultationtype)).setText(consultationType+" Consultation");
+        ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationType + " Consultation");
         consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
         Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
         TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
         phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
-if(consultationType.equalsIgnoreCase("Video"))
-{
-    appointmentMethodType="1";
-}else if(consultationType.equalsIgnoreCase("Phone"))
-{
-    appointmentMethodType="2";
-    Log.e("Phone","Am in Phone");
-}else
-{
-    appointmentMethodType="1";
-}
+        if (consultationType.equalsIgnoreCase("Video")) {
+            appointmentMethodType = "1";
+        } else if (consultationType.equalsIgnoreCase("Phone")) {
+            appointmentMethodType = "2";
+            Log.e("Phone", "Am in Phone");
+        } else {
+            appointmentMethodType = "1";
+        }
 
-        if(!consultationDate.isEmpty()&&!Time.isEmpty())
-        {
-            ((TextView)findViewById(R.id.txtDate)).setText(consultationDate);
-            ((TextView)findViewById(R.id.txtTime)).setText(Time);
-        }else
-        {
+        if (!consultationDate.isEmpty() && !Time.isEmpty()) {
+            ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+            ((TextView) findViewById(R.id.txtTime)).setText(Time);
+        } else {
             Calendar calendar = Calendar.getInstance();
             String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
-            ((TextView)findViewById(R.id.txtDate)).setText(format);
+            ((TextView) findViewById(R.id.txtDate)).setText(format);
             SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
-            String  currentTime = df.format(calendar.getTime());
-            ((TextView)findViewById(R.id.txtTime)).setText(currentTime);
+            String currentTime = df.format(calendar.getTime());
+            ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
         }
 
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         formatDualString(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        SharedPreferences amountPreferences =this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-        ((TextView)findViewById(R.id.amountInDollar)).setText(getString(R.string.mdl_dollar)+amountPreferences.getString(PreferenceConstants.AMOUNT,"0.00"));
-        String str_ProfileImg= sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
-        ((CircularNetworkImageView)findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
+        SharedPreferences amountPreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView) findViewById(R.id.amountInDollar)).setText(getString(R.string.mdl_dollar) + amountPreferences.getString(PreferenceConstants.AMOUNT, "0.00"));
+        String str_ProfileImg = sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");
+        ((CircularNetworkImageView) findViewById(R.id.imgProfilePic)).setImageUrl(str_ProfileImg, ApplicationController.getInstance().getImageLoader(this));
     }
-    public void formatDualString(String formatText){
+
+    public void formatDualString(String formatText) {
         boolean hasParenthesis = false;
-        if(formatText.indexOf(")") > 0){
+        if (formatText.indexOf(")") > 0) {
             hasParenthesis = true;
         }
-        formatText= formatText.replace("(", "");
-        formatText= formatText.replace(")", "");
-        formatText= formatText.replace(" ", "");
-        if(formatText.length() > 10){
+        formatText = formatText.replace("(", "");
+        formatText = formatText.replace(")", "");
+        formatText = formatText.replace(" ", "");
+        if (formatText.length() > 10) {
             formatText = formatText.substring(0, formatText.length());
         }
-        if(formatText.length() >= 7){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+formatText.substring(6, formatText.length());
-        }else if(formatText.length() >= 4){
-            formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
-        }else if(formatText.length() == 3 && hasParenthesis){
-            formatText = "("+formatText.substring(0, formatText.length())+")";
+        if (formatText.length() >= 7) {
+            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, 6) + formatText.substring(6, formatText.length());
+        } else if (formatText.length() >= 4) {
+            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, formatText.length());
+        } else if (formatText.length() == 3 && hasParenthesis) {
+            formatText = "(" + formatText.substring(0, formatText.length()) + ")";
         }
-        ((TextView)findViewById(R.id.phoneNumber)).setText(MdliveUtils.formatDualString(formatText));
+        ((TextView) findViewById(R.id.phoneNumber)).setText(MdliveUtils.formatDualString(formatText));
 
     }
 }

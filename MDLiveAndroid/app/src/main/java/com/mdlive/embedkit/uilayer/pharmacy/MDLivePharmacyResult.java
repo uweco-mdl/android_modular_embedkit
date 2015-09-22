@@ -646,7 +646,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                             finish();
                             MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
                         }else{
-                            doConfirmAppointment();
+                            moveToNextPage();
                         }
 
                     }
@@ -666,6 +666,23 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         };
         PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,null);
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(),successListener,errorListener);
+    }
+
+
+    // This is For navigating to the next Screen
+    //if the amount has been deducted then it should go to the Confirm Appointment Screen
+
+    private void moveToNextPage() {
+        CheckdoconfirmAppointment(true);
+        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+    }
+    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.commit();
     }
 
     /**

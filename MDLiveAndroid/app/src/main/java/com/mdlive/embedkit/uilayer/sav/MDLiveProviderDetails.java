@@ -321,7 +321,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
 
 
-                                    str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+                            if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "phys_availability_id")){
+                                str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+                            }else{
+                                str_phys_avail_id = null;
+                            }
 
 
                             Log.e("General Check timeslot", str_timeslot+"");
@@ -468,7 +472,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
 
 
+                                if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "phys_availability_id")){
                                     str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
+                                }else{
+                                    str_phys_avail_id = null;
+                                }
+
 
 
 
@@ -1603,6 +1612,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             if(!specialities.equals("")||specialities.length()!=0)
             {
                 specialities_txt.setText(specialities);
+                ((TextView)findViewById(R.id.specalist)).setText(specialityArray.get(0).toString().replace("\"", ""));
             }else
             {
                 specialities_txt.setVisibility(View.GONE);

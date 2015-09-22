@@ -236,7 +236,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                             startActivity(i);
                             MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                         } else {
-                            doConfirmAppointment();
+                            moveToNextPage();
                         }
                     }
                 } catch (Exception e) {
@@ -255,6 +255,22 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         };
         PharmacyService insuranceService = new PharmacyService(MDLivePharmacy.this, null);
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(), successListener, errorListener);
+    }
+
+    // This is For navigating to the next Screen
+    //if the amount has been deducted then it should go to the Confirm Appointment Screen
+
+    private void moveToNextPage() {
+        CheckdoconfirmAppointment(true);
+        Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+    }
+    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.commit();
     }
 
     /**
@@ -339,7 +355,12 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
         {
             params.put("timeslot","Now");
-        }else {
+        }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
+        {
+            params.put("timeslot","Now");
+        }
+
+        else {
             params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
         }
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));

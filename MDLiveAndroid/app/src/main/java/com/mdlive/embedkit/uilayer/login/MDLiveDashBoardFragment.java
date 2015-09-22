@@ -248,6 +248,15 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
 
 
+            if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
+            {
+                firstTextView.setText("Your appointment has been started.");
+                secondTextView.setText("The provider will call you shortly at"+mUserBasicInfo.getAssistPhoneNumber());
+            }else
+            {
+                firstTextView.setText("Your appointment has started.");
+                secondTextView.setText("Tap here to enter");
+            }
             /**
              * This is for instant appointment
              * */
