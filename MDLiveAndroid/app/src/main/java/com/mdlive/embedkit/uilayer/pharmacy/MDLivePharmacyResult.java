@@ -101,7 +101,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 elevateToolbar(toolbar);
