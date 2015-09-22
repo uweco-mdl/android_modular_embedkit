@@ -58,7 +58,7 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity im
             if (getIntent().getExtras() != null && getIntent().hasExtra(HEADING_TAG)) {
                 ((TextView) findViewById(R.id.headerTxt)).setText(getIntent().getStringExtra(HEADING_TAG).toUpperCase());
             } else {
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_compose_message).toUpperCase());
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_send_message_caps));
             }
         }
 
