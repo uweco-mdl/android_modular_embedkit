@@ -136,7 +136,7 @@ public class HelpAndSupportFragment extends MDLiveBaseFragment {
             final View view = inflater.inflate(R.layout.include_help_support, null, false);
             try {
                 String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-                ((TextView) view.findViewById(R.id.mdlVersionNumber)).setText("V " + versionName + AppSpecificConfig.URL_ENVIRONMENT);
+                ((TextView) view.findViewById(R.id.mdlVersionNumber)).setText("v " + versionName + AppSpecificConfig.URL_ENVIRONMENT);
             }catch (Exception e){
                 e.printStackTrace();
             }
