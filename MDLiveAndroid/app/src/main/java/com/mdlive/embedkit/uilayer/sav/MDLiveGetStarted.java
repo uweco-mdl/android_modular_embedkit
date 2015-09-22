@@ -118,10 +118,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             e.printStackTrace();
         }
 
-        //((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        //((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_get_started_txt));
-
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
         loadProviderType();
@@ -1174,10 +1170,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         onHomeClicked();
     }
 
-    private void showHamburgerTick() {
-        findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
+    public void showHamburgerTick() {
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_get_started_txt));
+
+        findViewById(R.id.toolbar_cross).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.GONE);
         findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
     }
+
+    public void onCrossClicked(View v) {
+        onHomeClicked();
+    }
+
 
     @Override
     public void onUserChangedInGetStarted() {
