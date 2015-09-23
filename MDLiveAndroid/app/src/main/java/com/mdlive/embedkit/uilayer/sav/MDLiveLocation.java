@@ -91,7 +91,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
         StateTxt = (TextView) findViewById(R.id.StateTxt);
         setProgressBar(findViewById(R.id.progressDialog));
-        StateTxt.setOnClickListener( new View.OnClickListener() {
+        StateTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ZipcodeEditTxt.setText("");
@@ -104,6 +104,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         intentFilter.addAction(getClass().getSimpleName());
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
+        ZipcodeEditTxt.setTag(null);
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -116,12 +117,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(ZipcodeEditTxt.getText().toString().length()>= IntegerConstants.ZIPCODE_LENGTH){
-                    if(!ZipcodeEditTxt.getText().toString().contains("-")){
-                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
-                        ZipcodeEditTxt.setText(formattedString);
-                    }
-                }
+                MdliveUtils.validateZipcodeFormat(ZipcodeEditTxt);
             }
         });
         //TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
