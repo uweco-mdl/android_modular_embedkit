@@ -251,7 +251,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
             {
                 firstTextView.setText("Your appointment has been started.");
-                secondTextView.setText("The provider will call you shortly at"+mUserBasicInfo.getAssistPhoneNumber());
+                if (mUserBasicInfo == null) {
+                    mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                }
+                secondTextView.setText("The provider will call you shortly at"+ mUserBasicInfo == null ? "" : mUserBasicInfo.getAssistPhoneNumber());
             }else
             {
                 firstTextView.setText("Your appointment has started.");

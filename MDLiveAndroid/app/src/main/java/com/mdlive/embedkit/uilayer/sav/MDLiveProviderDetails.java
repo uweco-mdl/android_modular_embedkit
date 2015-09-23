@@ -46,9 +46,11 @@ import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import static java.util.Calendar.MONTH;
@@ -105,8 +107,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         getPreferenceDetails();
         //Service call Method
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        final Calendar calendar = Calendar.getInstance();
-        AppointmentDate = format.format(calendar.getTime());
+//        final Calendar calendar = Calendar.getInstance();
+//        AppointmentDate = format.format(calendar.getTime());
         loadProviderDetails(AppointmentDate);
 
         if (savedInstanceState == null) {
@@ -138,14 +140,24 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
-        AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
+       String Shared_AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
         groupAffiliations = settings.getString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, null);
         detailsGroupAffiliations.setText(groupAffiliations);
         AppointmentType = StringConstants.APPOINTMENT_TYPE;
 
         try {
-            if(AppointmentDate!=null && AppointmentDate.length() != 0){
-                AppointmentDate = MdliveUtils.getFormattedDate(AppointmentDate);
+            if(Shared_AppointmentDate!=null && Shared_AppointmentDate.length() != 0){
+                Log.e("Check timestamp",Shared_AppointmentDate);
+                final Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(Long.parseLong(Shared_AppointmentDate) * 1000);
+                Log.d("Time - ", cal.getTime().toString() + " - ");
+                final Date date = cal.getTime();
+                final Format format = new SimpleDateFormat("MM/dd/yyyy");
+                String convertedTime =  format.format(date);
+                Log.e("convertedtime", convertedTime);
+                Log.e("ProviderDate",convertedTime);
+                AppointmentDate = convertedTime;
+//
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,6 +288,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     public void handleDateResponse(JSONObject response){
         hideProgress();
+        horizontalscrollview.setVisibility(View.GONE);
         //Fetch Data From the Services
         Log.e("Response Date pdetails", response.toString());
         JsonParser parser = new JsonParser();
@@ -1131,7 +1144,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     if(str_Availability_Type.equalsIgnoreCase("phone"))
                     {
                         byvideoBtnLayout.setVisibility(View.VISIBLE);
-                        byvideoBtnLayout.setClickable(false);
+//                        byvideoBtnLayout.setClickable(false);
                         byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                         byvideoBtn.setTextColor(Color.GRAY);
                         byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
@@ -1182,7 +1195,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         byphoneBtn.setTextColor(Color.GRAY);
                         byvideoBtnLayout.setVisibility(View.VISIBLE);
                         byphoneBtnLayout.setVisibility(View.VISIBLE);
-                        byphoneBtnLayout.setClickable(false);
+//                        byphoneBtnLayout.setClickable(false);
                         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1238,6 +1251,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     selectedAppmtTypeVideoOrPhone = "video";
                                     byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                     byvideoBtn.setTextColor(Color.WHITE);
+                                    byvideoBtn.setClickable(true);
                                     ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                                     ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
                                     byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
@@ -1275,6 +1289,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                     selectedAppmtTypeVideoOrPhone = "phone";
                                     byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                     byphoneBtn.setTextColor(Color.WHITE);
+                                    byphoneBtn.setClickable(true);
                                     ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                                     ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
                                     byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);

@@ -213,6 +213,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 setInfoVisibilty();
                 docOnCalLinLay.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
+                ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                 ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
@@ -224,6 +225,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {
                                 public void run() {
+                                    filterMainRl.setVisibility(View.GONE);
+                                    ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                                     MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -239,6 +242,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                         }
                     } else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
+                        filterMainRl.setVisibility(View.GONE);
+                        ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                     }
                 }catch(Exception e){
                     setInfoVisibilty();
@@ -281,7 +286,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    finish();
+                                    filterMainRl.setVisibility(View.GONE);
+                                            ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                                    filterMainRl.setVisibility(View.GONE);
+                                             finish();
                                 }
                             });
                         }
@@ -309,6 +317,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                                    filterMainRl.setVisibility(View.GONE);
                                     finish();
                                 }
                             });
@@ -415,6 +425,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Log.e("affiliationsArray-->", groupAffiliations);
             }
             try {
+                long nextAvailabilityTimeStamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
                 if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
                     strDate = IntegerConstants.DATE_FLAG;
