@@ -62,6 +62,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -931,6 +932,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     break;
                 }
             }
+            Collections.reverse(providerTypeArrayList);
             ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId=providerTypeIdList.get(0);
 
