@@ -29,12 +29,14 @@ public class MDLiveMyPharmacyActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            elevateToolbar(toolbar);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_pharmacy).toUpperCase());
         }
 

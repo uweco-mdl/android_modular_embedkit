@@ -42,6 +42,7 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_inbox_details);
+        clearMinimizedTime();
 
         final Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {

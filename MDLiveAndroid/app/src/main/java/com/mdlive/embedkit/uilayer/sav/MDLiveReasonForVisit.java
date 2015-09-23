@@ -110,6 +110,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 if (toolbar != null) {
                     setSupportActionBar(toolbar);
+                    elevateToolbar(toolbar);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -218,8 +219,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
 
                 Log.e("Hello", mBehavioralHistory.toString());
-                Log.e("mBehavioralHistory.behavioralHealthReasons", mBehavioralHistory.behavioralHealthReasons.toString());
-                Log.e("mBehavioralHistory.behavioralHealthDescription ", mBehavioralHistory.behavioralHealthDescription.toString());
 
                 LinearLayout behaviourHolder = (LinearLayout) findViewById(R.id.behaviourHolder);
                 if(behaviourHolder.getChildCount() > 0){
@@ -284,6 +283,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public void updateBehaviourHealthService() {
             showProgress();
             final Gson gson = new Gson();
+            mBehavioralHistory.familyHospitalized = "Yes";
             String request = gson.toJson(mBehavioralHistory);
             NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
                 @Override

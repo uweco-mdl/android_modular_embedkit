@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -36,11 +37,13 @@ import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -67,11 +70,13 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy);
+        clearMinimizedTime();
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,6 +208,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
         addressline3 = ((TextView) findViewById(R.id.addressline3));
+
         //progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
     }
 
@@ -230,7 +236,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                             startActivity(i);
                             MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
                         } else {
-                            doConfirmAppointment();
+                            moveToNextPage();
                         }
                     }
                 } catch (Exception e) {
@@ -251,6 +257,22 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(), successListener, errorListener);
     }
 
+    // This is For navigating to the next Screen
+    //if the amount has been deducted then it should go to the Confirm Appointment Screen
+
+    private void moveToNextPage() {
+        CheckdoconfirmAppointment(true);
+        Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+    }
+    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.commit();
+    }
+
     /**
      * This function is used to get post body content for Check Insurance Eligibility
      * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
@@ -262,7 +284,8 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method", "1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot", "Now");
-        insuranceMap.put("provider_type_id", "3");
+        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID,""));
+
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
     }
@@ -306,19 +329,58 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
-
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("do_you_have_primary_care_physician", "No");
-        params.put("phys_availability_id", "");
+       String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+        Log.e("ConsultationType",consultationType);
+        String appointmentMethodType="";
+        if(consultationType.equalsIgnoreCase("Video"))
+        {
+            appointmentMethodType="1";
+        }else if(consultationType.equalsIgnoreCase("Phone"))
+        {
+            appointmentMethodType="2";
+            Log.e("Phone","Am in Phone");
+        }else
+        {
+            appointmentMethodType="1";
+        }
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        Log.e("PostValue confirmTimeStamp",settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, ""));
+        Log.e("PostValue phys",settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
+        params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
-        params.put("timeslot", "Now");
+        params.put("phys_availability_id", settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
+        if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
+        {
+            params.put("timeslot","Now");
+        }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
+        {
+            params.put("timeslot","Now");
+        }
+
+        else {
+            params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
+        }
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+        params.put("do_you_have_primary_care_physician", "No");
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+//
+//        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+//        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+//        HashMap<String, Object> params = new HashMap<String, Object>();
+//        params.put("appointment_method", "1");
+//        params.put("do_you_have_primary_care_physician", "No");
+//        params.put("phys_availability_id", "");
+//        params.put("alternate_visit_option", "No Answer");
+//        params.put("timeslot", "Now");
+//        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+//        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
+//        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+//        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
@@ -441,7 +503,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             hideProgress();
-            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+            final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name") + " "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
                     pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
@@ -454,6 +516,18 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:" + MdliveUtils.formatDualString(pharmacyDatas.getString("phone"))));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                });
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));
@@ -490,7 +564,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     public void loadDatas(String response) {
         try {
             JSONObject jobj = new JSONObject(response);
-            JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
+            final JSONObject pharmacyDatas = jobj.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name")+" "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
                             pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
@@ -502,6 +576,18 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
+                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:" + MdliveUtils.formatDualString(pharmacyDatas.getString("phone"))));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                });
             }
             bundletoSend.putDouble("longitude", coordinates.getDouble("longitude"));
             bundletoSend.putDouble("latitude", coordinates.getDouble("latitude"));

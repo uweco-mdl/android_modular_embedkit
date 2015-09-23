@@ -4,9 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +24,6 @@ import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -303,11 +300,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     MdliveUtils.handelVolleyErrorResponseForDependentChild(getActivity(), error, getProgressDialog(), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (getActivity() != null) {
-                                final SharedPreferences prefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                                prefs.edit().clear().commit();
-                            }
-
                             loadUserInformationDetails(true);
                             if (mOnUserInformationLoaded != null) {
                                 mOnUserInformationLoaded.setPrimaryUserSelected();
@@ -327,6 +319,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private void updateList() {
         if (mOnUserInformationLoaded != null) {
             mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
+        }
+
+        if (getActivity() == null) {
+            return;
         }
 
         if (mSelectedUserLinearLayout != null) {
@@ -506,7 +502,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     public void reload() {
         mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
 
-        if (mUserBasicInfo.getPrimaryUser()) {
+        if (mUserBasicInfo != null && mUserBasicInfo.getPrimaryUser()) {
             loadUserInformationDetails(true);
         } else {
             final User user = User.getSelectedUser(getActivity());

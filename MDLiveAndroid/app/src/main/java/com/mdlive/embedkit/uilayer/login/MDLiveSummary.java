@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -32,17 +31,19 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
+        clearMinimizedTime();
+
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ((ImageView) findViewById(R.id.backImg)).setVisibility(View.INVISIBLE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_summary).toUpperCase());
 

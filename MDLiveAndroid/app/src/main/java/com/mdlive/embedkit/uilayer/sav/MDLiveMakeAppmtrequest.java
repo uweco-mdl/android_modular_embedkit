@@ -66,12 +66,14 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_appointment_request_form);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,20 +167,24 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     public void onclickVideo(View v)
     {
         selectedvideo = 1;
-        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
         ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
         ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
 
     }
     public void onclickPhone(View v)
     {
 
         selectedvideo=2;
-        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
         ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
         ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
     }
 
     /**
@@ -204,7 +210,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     //the corresponding date from the picker and set it to the corresponding label
     public void onclickDate(View v)
     {
-        GetCurrentDate((TextView) findViewById(R.id.appointmentIdealDate));
         // On button click show datepicker dialog
         showDialog(DATE_PICKER_ID);
     }

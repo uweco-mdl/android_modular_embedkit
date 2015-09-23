@@ -54,16 +54,15 @@ import java.util.TimeZone;
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private static final long THIRTY_SECONDS = 30 * 1000;
-
     private ListView listView;
-    private String providerName,speciality,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
+    private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
     private boolean isDoctorOnCallReady = false,available_now_status;
     private FrameLayout filterMainRl;
     private RelativeLayout docOnCalLinLay;
-    private Button seenextAvailableBtn;
+    private Button seeNextAvailableBtn;
     private TextView loadingTxt;
 
     private Handler mHandler;
@@ -79,21 +78,24 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chooseprovider);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+       /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider).toUpperCase());
 
         Initailization();
+        ChooseProviderResponseList();
 
 
 
@@ -110,19 +112,18 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }
 
         mHandler = new Handler();
+        setListViews();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         mHandler.post(mRunnable);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -146,7 +147,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
         //setProgressBar(findViewById(R.id.progressDialog));
-        seenextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
+        seeNextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
 //        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
@@ -173,7 +174,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 //
 //            }
 //        });
-        ((TextView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+        ((ImageView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
@@ -191,10 +192,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void ChooseProviderResponseList() {
+        if (getProgressDialog().isShowing()) {
+            return;
+        }
+
         setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
+
             public void onResponse(JSONObject response) {
                 handleSuccessResponse(response.toString());
             }
@@ -268,8 +274,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     JsonArray responseArray = responObj.get("physicians").getAsJsonArray();
                     if (responseArray.size() != 0) {
                         if (responseArray.get(0).isJsonObject()) {
+                            providerListMap.clear();
                             setBodyContent(responseArray);
-                            setListView();
+                            //setListView();
                         } else {
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
@@ -293,9 +300,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             }else{
                                 StrDoctorOnCall = false;
                             }
+                            providerListMap.clear();
                             setHeaderContent(StrDoctorOnCall);
                             setBodyContent(responArray);
-                            setListView();
+                            //setListView();
                         }else{
                             showOrHideFooter();
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
@@ -312,17 +320,18 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
-        setListView();
+        baseadapter.notifyDataSetChanged();
+        //setListView();
     }
     /**
      *
      *  Set the ListView values.Here the Listview is populated with two list values
      *  the flag value for the header will ba added for displaying the DoctorOnCall
      *  and the doctor's list will be added in the other list.The doctor name and
-     *  the speciality will be displayed here
+     *  the specialty will be displayed here
      *
      */
-    private void setListView() {
+    private void setListViews() {
         showOrHideFooter();
         Log.e("List","Am in SetListview");
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
@@ -374,10 +383,32 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private void setBodyContent(JsonArray responArray) {
         doctorOnCallButtonClick();
         for(int i=0;i<responArray.size();i++) {
-            providerName =  responArray.get(i).getAsJsonObject().get("name").getAsString();
-            speciality =  responArray.get(i).getAsJsonObject().get("speciality").getAsString();
-            doctorId =  responArray.get(i).getAsJsonObject().get("id").getAsString();
-            imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+            try {
+                 providerName = responArray.get(i).getAsJsonObject().get("name").getAsString();
+/*
+                doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
+
+                imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+*/
+                if (responArray.get(i).getAsJsonObject().get("speciality").isJsonNull()){
+                    specialty="";
+                }else{
+                    specialty = responArray.get(i).getAsJsonObject().get("speciality").getAsString();
+                }
+                if (responArray.get(i).getAsJsonObject().get("id").isJsonNull()){
+                    doctorId ="" ;
+                }else{
+                    doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
+                }
+                if (responArray.get(i).getAsJsonObject().get("provider_image_url").isJsonNull()){
+                    imageUrl = "";
+                }else{
+                    imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             JsonArray  affiliationsArray = responArray.get(i).getAsJsonObject().get("provider_groups").getAsJsonArray();
             for(int j=0;j<affiliationsArray.size();j++) {
                 groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
@@ -400,19 +431,20 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
              available_now_status =  responArray.get(i).getAsJsonObject().get("available_now_status").getAsBoolean();
-            appointmentDate = getDateCurrentTimeZone(strDate);
+            appointmentDate = MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
-            map.put("speciality", speciality);
+            map.put("specialty", specialty);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
             map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
-            map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
+            Log.e("check providerlist",providerListMap.toString());
         }
     }
     /**
@@ -431,10 +463,11 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
-            map.put("speciality", speciality);
+            map.put("specialty", specialty);
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
+            map.put("group_name", groupAffiliations);
             map.put("available_now_status", available_now_status+"");
             map.put("next_availability",getDateCurrentTimeZone(strDate));
             providerListMap.add(map);
@@ -479,14 +512,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 TimeZone tz = TimeZone.getDefault();
                 calendar.setTimeInMillis(timestamp * 1000);
                 calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("EDT"));
 
 
                 Calendar today = Calendar.getInstance();
                 today.set(Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
                         Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+                          Calendar.getInstance().get(Calendar.AM_PM);
+
 
                 Calendar tomorrow = Calendar.getInstance();
                 tomorrow.add(Calendar.DATE, 1);  // number of days to add

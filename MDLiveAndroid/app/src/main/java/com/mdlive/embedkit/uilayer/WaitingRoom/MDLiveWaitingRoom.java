@@ -90,7 +90,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
         pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
         pager.setClipToPadding(false);
-        pager.setPageMargin(12);
+        pager.setPageMargin(44);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getWaitWatingRoomTips()));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -397,7 +397,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
     @Override
     public void onBackPressed() {
-
+        return;
     }
 
     /**
@@ -413,13 +413,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onDestroy() {
         super.onDestroy();
         clearMinimizedTime();
-    }
-
-    private void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
     }
 
     private WatingRoomTips getWaitWatingRoomTips() {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -30,6 +31,8 @@ import org.json.JSONObject;
  */
 public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     private ListView mListView;
+
+    private View mHeaderView;
     private ConsultationHistoryAdapter mProviderAdapter;
 
     /**
@@ -72,17 +75,32 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mHeaderView = LayoutInflater.from(view.getContext()).inflate(R.layout.mdlive_my_health_visits_header, null);
+        if (mListView != null && mListView.getHeaderViewsCount() > 0 && mHeaderView != null) {
+            mListView.removeHeaderView(mHeaderView);
+        }
+
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
         if (mListView != null) {
+            mListView.addHeaderView(mHeaderView);
+
             mProviderAdapter = new ConsultationHistoryAdapter(view.getContext(), R.layout.consultation_history_adapter_layout, android.R.id.text1);
             mListView.setAdapter(mProviderAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (getActivity() != null && getActivity() instanceof MedicalHistoryActivity) {
-//                        ((MedicalHistoryActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i));
-                        ((ConsultationHistoryAdapter) adapterView.getAdapter()).setSelectedPosition(i);
+//                    mProviderAdapter.setSelectedPosition(i-1);
+                    try {
+                        if (getActivity() != null && getActivity() instanceof MedicalHistoryActivity) {
 
+                            if (((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).getSelectedView() != null) {
+                                ((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).getSelectedView().findViewById(R.id.history_details_ll).setVisibility(View.GONE);
+                            }
+                            view.findViewById(R.id.history_details_ll).setVisibility(View.VISIBLE);
+                            ((ConsultationHistoryAdapter) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter()).setSelectedView(view);
+                        }
+                    } catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
             });

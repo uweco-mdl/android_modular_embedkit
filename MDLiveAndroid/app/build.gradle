@@ -37,12 +37,14 @@ android {
     }
     buildTypes {
         release {
+            //*
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+           // */
+            //consumerProguardFiles 'proguard-project.txt'
         }
     }
 }
-
 
 // VSee integration:
 // If you don't include this section you will get errors due to duplicate files in

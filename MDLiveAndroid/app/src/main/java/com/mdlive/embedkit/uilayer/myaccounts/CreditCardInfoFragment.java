@@ -159,19 +159,19 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
-                if (getArguments().getString("View").equalsIgnoreCase("view")) {
-                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
-                        ((MyAccountsHome) getActivity()).hideTick();
-                    }
-                    mCardExpirationMonth.setEnabled(false);
-                    mNameOnCard.setEnabled(false);
-                    mAddress1.setEnabled(false);
-                    mAddress2.setEnabled(false);
-                    mCity.setEnabled(false);
-                    mStateLayout.setEnabled(false);
-                    mZip.setEnabled(false);
-                    changeAddress.setEnabled(false);
-                }
+//                if (getArguments().getString("View").equalsIgnoreCase("view")) {
+//                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
+//                        ((MyAccountsHome) getActivity()).hideTick();
+//                    }
+//                    mCardExpirationMonth.setEnabled(false);
+//                    mNameOnCard.setEnabled(false);
+//                    mAddress1.setEnabled(false);
+//                    mAddress2.setEnabled(false);
+//                    mCity.setEnabled(false);
+//                    mStateLayout.setEnabled(false);
+//                    mZip.setEnabled(false);
+//                    changeAddress.setEnabled(false);
+//                }
 
                 try {
                     Log.i("response", response);
@@ -293,11 +293,16 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     }
 
                 } else {
-                    mAddress1.setText(address1);
-                    mAddress2.setText(address2);
-                    mCity.setText(city);
-                    mState.setText(state);
-                    mZip.setText(zip);
+//                    mAddress1.setText(address1);
+//                    mAddress2.setText(address2);
+//                    mCity.setText(city);
+//                    mState.setText(state);
+//                    mZip.setText(zip);
+                    mAddress1.setText("");
+                    mAddress2.setText("");
+                    mCity.setText("");
+                    mState.setText("");
+                    mZip.setText("");
                 }
             }
         });

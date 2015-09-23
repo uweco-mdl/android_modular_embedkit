@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,12 +85,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_provider);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,10 +128,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     private void initialiseData() {
         AppointmentTxtView = (TextView) findViewById(R.id.DateTxtView);
-        Calendar now = Calendar.getInstance();
-        int month = now.get(Calendar.MONTH) + 1;
-        String currentDate = now.get(Calendar.YEAR) + "/" + month + "/" + now.get(Calendar.DAY_OF_MONTH);
-        AppointmentTxtView.setText(currentDate);
+       GetCurrentDate((TextView) findViewById(R.id.DateTxtView));
         LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch = (EditText) findViewById(R.id.edt_searchProvider);
@@ -334,7 +334,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
-        services.getsearchdetails(successCallBackListener, errorListener);
+        services.getSearchDetails(successCallBackListener, errorListener);
     }
     /**
      *
@@ -663,11 +663,12 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         day = c.get(Calendar.DAY_OF_MONTH);
 
         // Show current date
-
-        selectedText.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(month + 1).append("/").append(day).append("/")
-                .append(year).append(" "));
+        String format = new SimpleDateFormat("MMM d, yyyy").format(c.getTime());
+        selectedText.setText(format);
+//        selectedText.setText(new StringBuilder()
+//                // Month is 0 based, just add 1
+//                .append(month + 1).append("/").append(day).append("/")
+//                .append(year).append(" "));
     }
 
 
@@ -696,11 +697,13 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
-
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, selectedYear);
+            cal.set(Calendar.DAY_OF_MONTH, selectedDay);
+            cal.set(Calendar.MONTH, selectedMonth);
+            String format = new SimpleDateFormat("MMM d, yyyy").format(cal.getTime());
             // Show selected date
-            AppointmentTxtView.setText(new StringBuilder().append(year).append("/").append(month + 1)
-                    .append("/").append(day)
-                    .append(" "));
+            AppointmentTxtView.setText(format);
 
         }
     };

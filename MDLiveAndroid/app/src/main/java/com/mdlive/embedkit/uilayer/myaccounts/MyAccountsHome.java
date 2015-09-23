@@ -30,6 +30,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
@@ -42,6 +43,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +111,16 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
             getSupportFragmentManager().
                     beginTransaction().
-                    add(R.id.container, OldPinFragment.newInstance(), "Old Pin").
+                    add(R.id.container, OldPinFragment.newInstance(false), "Old Pin").
+                    commit();
+        }
+
+        if(fragment.equals("Old Pin Second")){
+            title.setText("CHANGE PIN");
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.container, MyAccountNewPinFragment.newInstance("", true), "Old Pin").
                     commit();
         }
 

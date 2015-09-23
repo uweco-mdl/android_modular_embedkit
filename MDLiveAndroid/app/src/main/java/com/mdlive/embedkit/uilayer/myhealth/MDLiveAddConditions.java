@@ -43,6 +43,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,6 +142,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
+                    conditionsCollection = getRefreshedNameList();
                     ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
                 }
             }

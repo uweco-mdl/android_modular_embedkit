@@ -73,6 +73,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
@@ -89,9 +90,10 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         }
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL | TabLayout.GRAVITY_CENTER);
+        //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL | TabLayout.GRAVITY_CENTER);
         tabLayout.setupWithViewPager(viewPager);
+
         if (getIntent().getExtras() != null && getIntent().hasExtra(SELECTED_TAB)) {
             viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_TAB, 0));
             viewPager.invalidate();
@@ -282,7 +284,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     public void changePharmacyButtonOnClick(View view) {
         Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
         i.putExtra("FROM_MY_HEALTH",true);
-        i.putExtra("FROM_MY_HEALTH_STATUS","true");
+        i.putExtra("PHARMACY_SELECTED", true);
         startActivity(i);
     }
 
@@ -292,6 +294,11 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         if(getIntent().hasExtra("FROM_PHARMACY")){
             Log.d("On Resume - ", "From Pharmacy");
             getViewPager().setCurrentItem(0);
+        }
+        if(getIntent().hasExtra("FROM_SELECTION")){
+            Log.d("On Resume - ", "From Pharmacy");
+            getViewPager().setCurrentItem(1);
+            reloadSlidingMenu();
         }
     }
 }

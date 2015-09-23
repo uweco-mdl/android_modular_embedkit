@@ -30,13 +30,19 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_family_history).toUpperCase());
+        try {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_family_history).toUpperCase());
+                elevateToolbar(toolbar);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         User user = null;
@@ -168,6 +174,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
 
     public void addAction (View view) {
         mdLiveFamilyFragment.addNewHistoryData();
+        MdliveUtils.hideSoftKeyboard(this);
     }
 
 

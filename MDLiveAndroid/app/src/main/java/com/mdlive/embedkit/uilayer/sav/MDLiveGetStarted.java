@@ -53,6 +53,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
+import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
 import org.apache.http.HttpStatus;
@@ -105,20 +106,18 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
+        clearMinimizedTime();
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 showHamburgerTick();
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        //((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_get_started_txt));
 
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
@@ -467,6 +466,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                         if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
 
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
+                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                            SharedPreferences.Editor sharedEditor = sharedpreferences.edit();
+                            sharedEditor.putString(PreferenceConstants.DEPENDENT_USER_ID,tmpMap.get("id"));
+                            sharedEditor.commit();
                             loadDependentProviderTypeDetails(tmpMap.get("id"));
                             //Method call to load the selected dependent details.
                             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -605,19 +608,31 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     private void loadProviderType() {
         showProgress();
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
+        editor.commit();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                try {
                 hideProgress();
-                if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                    Log.d("Hello", "Selected User : " + user.toString());
-                    Log.d("Hello", "Selected User : " + "Dependent is called");
-                    loadDependentUserInformationDetails(user.mId);
-                } else {
-                    Log.d("Hello", "Selected User : " + "Parent is called");
-                    loadUserInformationDetails();
+                    if (response.has("located_in")) {
+                        editor.putString(PreferenceConstants.USER_STATE_LIST, response.getJSONArray("located_in").toString()).commit();
+                        Log.d("Shared List", sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "No List"));
+                    }
+                    if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                        Log.d("Hello", "Selected User : " + user.toString());
+                        Log.d("Hello", "Selected User : " + "Dependent is called");
+                        loadDependentUserInformationDetails(user.mId);
+                    } else {
+                        Log.d("Hello", "Selected User : " + "Parent is called");
+                        loadUserInformationDetails();
+                    }
+                    handleproviderTypeSuccessResponse(response);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                handleproviderTypeSuccessResponse(response);
             }
         };
 
@@ -628,8 +643,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
-        ProviderTypeList services = new ProviderTypeList(MDLiveGetStarted.this, null);
-        services.getProviderType("", successCallBackListener, errorListener);
+        SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
+        ptypeservices.getSearchDetails(successCallBackListener, errorListener);
     }
     /**
      * Load Family Member Type Details.
@@ -666,9 +681,19 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("ptype Response", response.toString());
-                hideProgress();
-                handleproviderTypeSuccessResponse(response);
+                try {
+                    Log.e("ptype Response", response.toString());
+                    hideProgress();
+                    if (response.has("located_in")) {
+                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(PreferenceConstants.USER_STATE_LIST, response.getJSONArray("located_in").toString()).commit();
+                        Log.d("Shared List", sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "No List"));
+                    }
+                    handleproviderTypeSuccessResponse(response);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -679,8 +704,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
-        ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
-        ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
+        SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
+        ptypeservices.getSearchDetails(successCallBackListener, errorListener);
     }
 
 
@@ -905,29 +930,15 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
-            JSONObject providertype = response.getJSONObject("provider_types");
             providerTypeArrayList.clear();
             providerTypeIdList.clear();
-
-            Iterator<String> iter = providertype.keys();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                try {
-                    Object value = providertype.get(key);
-                    providerTypeArrayList.add(value.toString());
-                    providerTypeIdList.add(key);
-
-
-                    Log.e("ptype keys",key);
-                } catch (JSONException e) {
-                    // Something went wrong!
-                }
-                //Default first item coming from the service will set here.it will change into dynamic
-                // when we click the other items in the dialog.
-                ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
-                strProviderId=providerTypeIdList.get(0);
+            JSONArray provider_array = response.getJSONArray("provider_type");
+            for (int i = 0; i < provider_array.length(); i++) {
+                providerTypeIdList.add(provider_array.getJSONObject(i).getInt("id") + "");
+                providerTypeArrayList.add(provider_array.getJSONObject(i).getString(provider_array.getJSONObject(i).keys().next()));
             }
-
+            ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+            strProviderId = providerTypeIdList.get(0);
         } catch (Exception e) {
 
         }
@@ -1113,6 +1124,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         final AlertDialog dialog = alertDialog.create();
+        dialog.setCancelable(false);
         dialog.show();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1162,10 +1174,20 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         onHomeClicked();
     }
 
-    private void showHamburgerTick() {
-        findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
+    public void showHamburgerTick() {
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_get_started_txt));
+
+        findViewById(R.id.toolbar_cross).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.GONE);
         findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
     }
+
+    public void onCrossClicked(View v) {
+        onHomeClicked();
+    }
+
 
     @Override
     public void onUserChangedInGetStarted() {

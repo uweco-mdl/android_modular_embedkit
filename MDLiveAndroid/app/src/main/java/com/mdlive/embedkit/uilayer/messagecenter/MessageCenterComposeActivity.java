@@ -27,6 +27,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
  */
 public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity implements OnBothTextEntered {
     public static final String DATA_TAG = "data";
+    public static final String HEADING_TAG = "heading";
 
     public static Intent getMessageComposeDetailsIntent(final Context context, final Parcelable parcelable) {
         final Intent intent = new Intent(context, MessageCenterComposeActivity.class);
@@ -34,18 +35,31 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity im
         return intent;
     }
 
+    public static Intent getMessageComposeDetailsIntentWithHeading(final Context context, final Parcelable parcelable, final String heading) {
+        final Intent intent = new Intent(context, MessageCenterComposeActivity.class);
+        intent.putExtra(DATA_TAG, parcelable);
+        intent.putExtra(HEADING_TAG, heading);
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
+        clearMinimizedTime();
 
         showRight(false);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            elevateToolbar(toolbar);
             setTitle("");
-            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_compose_message).toUpperCase());
+            if (getIntent().getExtras() != null && getIntent().hasExtra(HEADING_TAG)) {
+                ((TextView) findViewById(R.id.headerTxt)).setText(getIntent().getStringExtra(HEADING_TAG).toUpperCase());
+            } else {
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_send_message_caps));
+            }
         }
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

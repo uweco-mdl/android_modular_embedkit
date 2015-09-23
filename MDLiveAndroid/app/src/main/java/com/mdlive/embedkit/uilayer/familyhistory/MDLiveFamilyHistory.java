@@ -59,6 +59,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_family_histroy);
+        clearMinimizedTime();
 
         findWidgetId();
         getFamilyHistoryServiceData();
@@ -126,7 +127,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
 
     private void findWidgetId() {
         mFamilyHistoryOtherEditText = (EditText)findViewById(R.id.my_family_history_other_editText);
-
+        MdliveUtils.hideKeyboard(getBaseContext(), mFamilyHistoryOtherEditText);
     }
 
     @Override
@@ -311,6 +312,8 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
         if(mFamilyHistoryOtherEditText.getText().length() != 0) {
             mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
             Log.d("FamilyHistoryOtherValue",mFamilyHistoryOtherEditTextValue.toString());
+            mFamilyHistoryOtherEditText.setText("");
+            MdliveUtils.hideKeyboard(getBaseContext(), mFamilyHistoryOtherEditText);
         }
         else {
             mFamilyHistoryOtherEditTextValue = "";

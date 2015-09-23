@@ -26,6 +26,7 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
+        clearMinimizedTime();
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 
@@ -33,6 +34,7 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_mylifestyle).toUpperCase());
+            elevateToolbar(toolbar);
         }
 
         User user = null;

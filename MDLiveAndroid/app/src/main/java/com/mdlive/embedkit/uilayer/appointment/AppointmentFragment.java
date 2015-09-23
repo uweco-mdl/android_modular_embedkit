@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,9 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
         final Appointment appointment = getArguments().getParcelable(APPOINTMENT_TAG);
         logD("Appointment", appointment.toString());
+        logD("AppointmentType", appointment.getApptType());
+        logD("AppointmentTime", appointment.getStartTime());
+        logD("AppointmentMilli", appointment.getInMilliseconds()+"");
 
         final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.doctor_image_view);
         if (circularNetworkImageView != null) {
@@ -69,31 +73,59 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
         ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), appointment.getTimeZone()));
 
-        final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EST");
+        final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
 
         switch (type) {
 
             case 0 :
+                // Ten minutes case
                 SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-               String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+                String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+                Log.e("Print Time",Time);
+                String consultationType =  sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
                 view.findViewById(R.id.help).setVisibility(View.GONE);
-                if(appointment.getApptType().equalsIgnoreCase("phone")) {
-                view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                }else if(Time.isEmpty())
-                {
+
+                // For Phone Do not show Start Button
+                if(consultationType.equalsIgnoreCase("phone")) {
                     view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                    view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+
+                    ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(consultationType + " " + getString(R.string.mdl_consultation));
                 } else{
-            view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
-        }
-                view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                    final SharedPreferences preferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                    final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(getActivity()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
+                    if (timestampString != null) {
+                        final long timestamp = Long.parseLong(timestampString) * 1000;
+                        final long now = System.currentTimeMillis();
+                        final long difference = timestamp - now;
+
+                        // Real Ten minute check
+                        if (difference < 10 * 60 * 1000) {
+                            view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                            view.findViewById(R.id.help).setVisibility(View.GONE);
+                        } else {
+                            view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                            view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                            view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                        view.findViewById(R.id.help).setVisibility(View.GONE);
+                    }
+                }
                 break;
 
+            // 24 hours
             case 1 :
                 view.findViewById(R.id.help).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
                 view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
                 break;
 
+            // More than 24 hours
             case 2 :
                 view.findViewById(R.id.help).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.start_appointment).setVisibility(View.GONE);

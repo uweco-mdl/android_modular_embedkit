@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -28,18 +29,18 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
-import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
+import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
 import org.json.JSONObject;
 
@@ -65,12 +66,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,11 +93,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExistingCardDetailUser=true;
+                //Delete
+               setExistingCardDetailUser=true;
                 getCreditCardInfoService();
 
             }
         });
+
 
 
 
@@ -148,12 +153,17 @@ public class MDLivePayment extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View view){
+     //Delete
 
         if (finalAmout.equals("0.00")) {
-            doConfirmAppointment();
+            //Remove this..it is in next screen
+             //* doConfirmAppointment();*//*
+            moveToNextPage();
         } else {
             HostedPCI.loadUrl("javascript:tokenizeForm()");
         }
+
+
 
     }
 
@@ -206,6 +216,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
                 } else {
                     Log.e("inside","Am not in Null");
+                    ((TextView)findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details)+" "+myProfile.getString("cc_number"));
                     ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);
                 }
@@ -363,12 +374,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     JSONObject resObj = new JSONObject(response.toString());
                     Log.e("billing success res-->",response.toString());
                     if (resObj.has("message")) {
-//                        if(setExistingCardDetailUser) {
-//                            getExistingBillingPutParams(params);
-//                        }else
-//                        {
-                            doConfirmAppointment();
-//                        }
+                //Remove this..it is in next screen
+                           /* doConfirmAppointment();*/
+                        CheckdoconfirmAppointment(true);
+                        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+                        startActivity(i);
+                        MdliveUtils.startActivityAnimation(MDLivePayment.this);
 
 
                     }
@@ -408,21 +419,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObj = new JSONObject(billingDetails);
             Log.e("success res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
-
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
-            cardInfo.put("billing_address1", "test1");
-            cardInfo.put("billing_address2", "test");
+            cardInfo.put("billing_address1", userBasicInfo.getPersonalInfo().getAddress1());
+            cardInfo.put("billing_address2", userBasicInfo.getPersonalInfo().getAddress2());
             cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
-            cardInfo.put("billing_city", "Test");
+            cardInfo.put("billing_city", userBasicInfo.getPersonalInfo().getCity());
             cardInfo.put("billing_country_id", "1");
             cardInfo.put("cc_num", billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
             cardInfo.put("cc_expyear", new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth", String.valueOf(month + 1));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            cardInfo.put("billing_zip5", "92111");
+            cardInfo.put("billing_zip5", userBasicInfo.getPersonalInfo().getZipcode());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -438,21 +449,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
             JSONObject resObj = new JSONObject(billingDetails);
             Log.e("payment res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
-
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             cardInfo.put("billing_name", settings.getString(PreferenceConstants.PATIENT_NAME, ""));
-            cardInfo.put("billing_address1", "test1");
-            cardInfo.put("billing_address2", "test");
+            cardInfo.put("billing_address1",userBasicInfo.getPersonalInfo().getAddress1() );
+            cardInfo.put("billing_address2",userBasicInfo.getPersonalInfo().getAddress1());
             cardInfo.put("billing_state_id", settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, "FL"));
-            cardInfo.put("billing_city", "Test");
+            cardInfo.put("billing_city", userBasicInfo.getPersonalInfo().getCity());
             cardInfo.put("billing_country_id", "1");
             cardInfo.put("cc_num", billingObj.getString("cc_number"));
             cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
             cardInfo.put("cc_expyear", billingObj.getString("cc_expyear"));
             cardInfo.put("cc_expmonth", billingObj.getString("cc_expmonth"));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
-            //cardInfo.put("billing_zip5", edtZipCode.getText().toString());
+            cardInfo.put("billing_zip5", userBasicInfo.getPersonalInfo().getZipcode());
             cardInfo.put("cc_type_id", billingObj.getString("cc_type_id"));
             billingParams.put("billing_information", cardInfo);
 
@@ -463,13 +474,25 @@ public class MDLivePayment extends MDLiveBaseActivity {
         return new Gson().toJson(billingParams);
     }
 
-
+    public void storeOfferCode(String offercode) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.OFFER_CODE, offercode);
+        editor.commit();
+    }
     public void storePayableAmount(String amount) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.AMOUNT, amount);
         editor.commit();
     }
+    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.commit();
+    }
+
 
     private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
@@ -517,85 +540,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
     }
 
 
-    private void doConfirmAppointment() {
-        showProgressDialog();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.e("confirm appmt res---->",response.toString());
-                dismissDialog();
-                try {
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putString(PreferenceConstants.APPT_ID, apptId);
-                            editor.commit();
-                            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
-                            startActivity(i);
-                            MdliveUtils.startActivityAnimation(MDLivePayment.this);
-
-                    } else {
-                        final String resumeScreen = response.getString("resume_screen");
-
-                        MdliveUtils.showDialog(MDLivePayment.this,response.getString("message"),new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(resumeScreen.equalsIgnoreCase("Get Started")) {
-                                Intent getStartedIntent = new Intent(MDLivePayment.this, MDLiveProviderDetails.class);
-                                startActivity(getStartedIntent);
-                                MdliveUtils.startActivityAnimation(MDLivePayment.this);
-                                finish();
-                            }
-                        }
-                    });
-
-//                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-
-                } catch (Exception e) {
-                    dismissDialog();
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject errorObj = new JSONObject(responseBody);
-                    dismissDialog();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
-                } catch (Exception e) {
-                    dismissDialog();
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("alternate_visit_option", "No Answer");
-        params.put("phys_availability_id", "");
-        params.put("timeslot", "Now");
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("do_you_have_primary_care_physician", "No");
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-        if (promoCode != null && !promoCode.isEmpty()) {
-            params.put("promocode", promoCode);
-        }
-
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePayment.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
-    }
-
 
     public void showDialog() {
 
@@ -607,11 +551,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
         final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
         // set dialog message
 
+
+
+
         alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                     applyPromoCode(editText.getText().toString());
                     promoCode = editText.getText().toString();
+                    storeOfferCode(promoCode);
                 }
 
 
@@ -625,6 +573,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
         // create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (editText.hasFocus()) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
@@ -637,13 +594,14 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     }
 
-    public void applyPromoCode(String promoCode) {
+    public void applyPromoCode(final String promoCode) {
         showProgressDialog();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
                 dismissDialog();
-                handlePromocodeResponse(response.toString());
+                handlePromocodeResponse(response.toString(),promoCode);
+
 
             }
         };
@@ -663,24 +621,30 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     }
 
-    public void handlePromocodeResponse(String response) {
+    public void handlePromocodeResponse(String response,String promoCode) {
         try {
             JSONObject resObject = new JSONObject(response);
-            if (resObject.has("discount_amount")) {
+            if (resObject.has("discount_amount")){
+                checkInsuranceEligibility(promoCode);
+            }
+
+           /* if (resObject.has("discount_amount")) {
                 String discountAmount = resObject.getString("discount_amount").replace("$", "");
                 payableAmount = Double.parseDouble(finalAmout) - Double.parseDouble(discountAmount.trim());
                 if (payableAmount <= 0.00) {
                     payableAmount = 0.00;
                     finalAmout = String.format("%.2f", payableAmount);
                     storePayableAmount(finalAmout);
-                    doConfirmAppointment();//Call the  confirm Appointment service if the user is Zero Dollar
+                   *//* Delete it
+                    doConfirmAppointment();*//*//Call the  confirm Appointment service if the user is Zero Dollar
+                    CheckdoconfirmAppointment(true);
 
                 } else {
                     finalAmout = String.format("%.2f", payableAmount);
                     storePayableAmount(finalAmout);
                 }
                 ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -693,18 +657,18 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent startMyPharmacyIntent = new Intent(getApplicationContext(), MDLivePharmacy.class);
-        startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         try {
             if (getIntent() != null && getIntent().hasExtra("redirect_mypharmacy")) {
+                Intent startMyPharmacyIntent = new Intent(getApplicationContext(), MDLivePharmacy.class);
+                    startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if ((getIntent().getBooleanExtra("redirect_mypharmacy", false))) {
                     startMyPharmacyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
+                startActivity(startMyPharmacyIntent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        startActivity(startMyPharmacyIntent);
         finish();
         MdliveUtils.closingActivityAnimation(this);
     }
@@ -718,7 +682,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     public void payNow(View paymentButton) {
         if (finalAmout.equals("0.00")) {
-            doConfirmAppointment();
+            //Remove this..it is in next screen
+                           /* doConfirmAppointment();*/;
+            CheckdoconfirmAppointment(true);
         } else {
             if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
                 HostedPCI.loadUrl("javascript:tokenizeForm()");
@@ -737,6 +703,92 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void applyOfferCode(View offerCodeView) {
         showDialog();
     }
+
+
+
+
+
+
+    /**
+     * This method handles checks user insurance eligibility and return the final amount for the user.
+     * successListener-Listner to handle success response.
+     * errorListener -Listner to handle failed response.
+     * PharmacyService-Class will send the request to the server and get the responses
+     * doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
+     */
+
+    public void checkInsuranceEligibility(String promocode) {
+        showProgress();
+        NetworkSuccessListener successListener = new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgress();
+                Log.e("Zero Dollar Insurance", response.toString());
+                try {
+                    JSONObject jobj = new JSONObject(response.toString());
+                    if (jobj.has("final_amount")) {
+                        String discountAmount = jobj.getString("final_amount").replace("$", "");
+                        payableAmount = Double.parseDouble(discountAmount);
+                        if (payableAmount <= 0.00) {
+                            finalAmout = String.format("%.2f", Double.parseDouble(jobj.getString("final_amount")));
+                            storePayableAmount(finalAmout);
+                            moveToNextPage();
+
+                        }
+                        else{
+                            finalAmout = String.format("%.2f", payableAmount);
+                            storePayableAmount(finalAmout);
+
+                        }
+                    }
+                    ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, null);
+            }
+        };
+        PharmacyService insuranceService = new PharmacyService(MDLivePayment.this, null);
+        insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(promocode), successListener, errorListener);
+    }
+    // This is For navigating to the next Screen
+
+    private void moveToNextPage() {
+        CheckdoconfirmAppointment(true);
+        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+        startActivity(i);
+        MdliveUtils.startActivityAnimation(MDLivePayment.this);
+    }
+
+    /**
+     * This function is used to get post body content for Check Insurance Eligibility
+     * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
+     */
+
+    public String formPostInsuranceParams(String promoCode) {
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        HashMap<String, String> insuranceMap = new HashMap<>();
+        insuranceMap.put("appointment_method", "1");
+        insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+        insuranceMap.put("timeslot", "Now");
+        insuranceMap.put("provider_type_id", "3");
+        insuranceMap.put("promocode", promoCode);
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        return new Gson().toJson(insuranceMap);
+    }
+
+
 
 
 }

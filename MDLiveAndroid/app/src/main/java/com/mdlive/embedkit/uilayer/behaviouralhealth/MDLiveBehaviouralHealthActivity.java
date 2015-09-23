@@ -31,6 +31,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_history_layout);
+        clearMinimizedTime();
 
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
@@ -40,6 +41,7 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
             setSupportActionBar(toolbar);
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_behaviouralhealthhistory).toUpperCase());
             ((TextView) findViewById(R.id.headerTxt)).setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+            elevateToolbar(toolbar);
         }
         User user = null;
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {

@@ -40,6 +40,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_activity_dashboard);
+        clearMinimizedTime();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -47,6 +48,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,11 +2,13 @@ package com.mdlive.embedkit.uilayer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -216,7 +218,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             return;
         }
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).hideNotification();
+        }
+
+        fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
         }
@@ -229,7 +236,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             return;
         }
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).hideNotification();
+        }
+
+        fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
         }
@@ -294,6 +306,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         startActivity(AppointmentActivity.getAppointmentIntent(getBaseContext(), appointment));
     }
 
+    @Override
+    public void onCloseDrawer() {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+    }
+
     private void onAddChildSelcted(final User user, final int dependentUserSize) {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
 
@@ -312,7 +330,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
     }
 
-    private void clearMinimizedTime() {
+    public void clearMinimizedTime() {
         final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
@@ -402,4 +420,22 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         return intent;
     }
+
+
+    public void reloadSlidingMenu() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
+            ((NavigationDrawerFragment) fragment).reload();
+        }
+    }
+
+
+    public void elevateToolbar(final Toolbar toolbar) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (toolbar != null) {
+                toolbar.setElevation(7 * getResources().getDisplayMetrics().density);
+            }
+        }
+    }
+
 }

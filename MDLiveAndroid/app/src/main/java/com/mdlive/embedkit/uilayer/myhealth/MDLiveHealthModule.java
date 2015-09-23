@@ -75,7 +75,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public boolean isUpdateMode = false;
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
-    public AlertDialog procedureNameDialog, procedureYearDialog, dosageDialog, timesDialog, modeDialog;
+    public AlertDialog procedureNameDialog, procedureYearDialog, timesDialog, modeDialog;
     public TextView surgeryName, surgeryYear;
     public EditText dosageTxt;
     String[] timesList = new String[]{
@@ -89,6 +89,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_add_health);
+        clearMinimizedTime();
 
         //existingConditions = new ArrayList<>();
 
@@ -119,6 +120,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -384,46 +386,6 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         }
     }
 
-    public void initializeSearchViews() {
-
-        surgeryName = ((TextView) findViewById(R.id.surgeryName));
-        surgeryYear = ((TextView) findViewById(R.id.surgeryYear));
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
-        LayoutInflater inflater = getLayoutInflater();
-
-        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
-        alertDialog.setView(nameView);
-        ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
-        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureNameList);
-        nameListView.setAdapter(nameAdapter);
-        nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        procedureNameDialog = alertDialog.create();
-
-        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
-        alertDialog.setView(yearView);
-        ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
-        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureYearList);
-        yearListView.setAdapter(yearAdapter);
-        yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        procedureYearDialog = alertDialog.create();
-
-        nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView)findViewById(R.id.surgeryName)).setText(procedureNameList.get(position));
-                procedureNameDialog.dismiss();
-            }
-        });
-
-        yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView)findViewById(R.id.surgeryYear)).setText(procedureYearList.get(position));
-                procedureYearDialog.dismiss();
-            }
-        });
-
-    }
 
 
 

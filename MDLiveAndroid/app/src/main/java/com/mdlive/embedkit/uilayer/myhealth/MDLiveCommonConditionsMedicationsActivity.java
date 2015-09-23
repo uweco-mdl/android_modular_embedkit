@@ -62,6 +62,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_view_health);
+        clearMinimizedTime();
         conditionsList = new ArrayList<>();
         adapter = new ConditionsAdapter();
         conditionsCollection = new ArrayList<>();
@@ -199,6 +200,14 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      */
     protected abstract void getConditionsOrAllergiesData();
 
+    public ArrayList<String> getRefreshedNameList(){
+        ArrayList<String> conditionNameList = new ArrayList<>();
+        for(Model nameList : duplicateList){
+            conditionNameList.add(nameList.getConditionName());
+        }
+        return conditionNameList;
+    }
+
 
     public boolean isEditCalled = false;
 
@@ -254,30 +263,30 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), MDLiveHealthModule.class);
                     i.putExtra("Id", getItem(position).getConditionId());
-                    if(type == TYPE_CONSTANT.PROCEDURE){
+                    if (type == TYPE_CONSTANT.PROCEDURE) {
                         i.putExtra("type", "procedure");
                         i.putExtra("Name", getItem(position).getConditionName());
                         i.putExtra("Year", getItem(position).getConditionSubName());
-                    }else{
+                    } else {
                         i.putExtra("Content", getItem(position).getConditionName());
-                        if(type == TYPE_CONSTANT.CONDITION){
+                        if (type == TYPE_CONSTANT.CONDITION) {
                             i.putExtra("type", "condition");
-                        }else if(type == TYPE_CONSTANT.ALLERGY){
+                        } else if (type == TYPE_CONSTANT.ALLERGY) {
                             i.putExtra("type", "allergy");
-                        }else if(type == TYPE_CONSTANT.MEDICATION){
+                        } else if (type == TYPE_CONSTANT.MEDICATION) {
                             i.putExtra("type", "medication");
                             i.putExtra("Name", getItem(position).getConditionName());
-                            if(getItem(position).getDosage() != null &&
-                                    getItem(position).getDosage().length() != 0){
+                            if (getItem(position).getDosage() != null &&
+                                    getItem(position).getDosage().length() != 0) {
                                 i.putExtra("Dosage", getItem(position).getDosage());
                             }
-                            if(getItem(position).getFrequency() != null &&
-                                    getItem(position).getFrequency().length() != 0){
+                            if (getItem(position).getFrequency() != null &&
+                                    getItem(position).getFrequency().length() != 0) {
                                 i.putExtra("Frequency", getItem(position).getFrequency());
                             }
                         }
                     }
-                    if(getItem(position).isAllowToEdit()){
+                    if (getItem(position).isAllowToEdit()) {
                         startActivityForResult(i, UPDATE_CODE);
                         MdliveUtils.startActivityAnimation(MDLiveCommonConditionsMedicationsActivity.this);
                     }

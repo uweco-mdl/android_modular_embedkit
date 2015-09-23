@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -43,6 +44,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private View mEmailConfirmationView;
 
     private View mNotificationView;
+
+    private TextView mMessageCountTextView;
 
     private UserBasicInfo mUserBasicInfo;
     private AdapterView.OnItemSelectedListener mOnItemSelectedListenerUserInfo = new AdapterView.OnItemSelectedListener() {
@@ -131,6 +134,11 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         if (mNotificationView != null) {
             mNotificationView.setVisibility(View.GONE);
         }
+
+        mMessageCountTextView = (TextView) view.findViewById(R.id.message_count);
+        if (mMessageCountTextView != null) {
+            mMessageCountTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -173,6 +181,14 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             } else {
                 mEmailConfirmationView.setVisibility(View.VISIBLE);
             }
+
+            if (mMessageCountTextView != null) {
+                if (userBasicInfo.getNotifications().getMessages() > 0) {
+                    mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
+                    mMessageCountTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor1 = sharedPref.edit();
             editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
@@ -223,15 +239,68 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
     public void showNotification(final Appointment appointment) {
         if (mNotificationView != null) {
+            logD("Appointment", appointment.toString());
+
+            final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
+            final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
+
+            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+
+
+            if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
+            {
+                firstTextView.setText("Your appointment has been started.");
+                secondTextView.setText("The provider will call you shortly at"+mUserBasicInfo.getAssistPhoneNumber());
+            }else
+            {
+                firstTextView.setText("Your appointment has started.");
+                secondTextView.setText("Tap here to enter");
+            }
+            /**
+             * This is for instant appointment
+             * */
+            if ("Now".equalsIgnoreCase(time)) {
+                firstTextView.setText("Your appointment has started.");
+                secondTextView.setText("Tap here to enter");
+            } else {
+                final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
+
+                 /*
+                * Will return 0 if less than 10 minutes
+                * Will return 1 if less than 24 hours
+                * Will return 2 in other cases.
+                * */
+                    switch (type) {
+                        // Ten minutes case
+                        case 0 :
+                            final SharedPreferences preferences = firstTextView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                            final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
+                            if (timestampString != null) {
+                                final long timestamp = Long.parseLong(timestampString);
+                                firstTextView.setText("Your next appointment less than  " + MdliveUtils.getRemainigTimeToAppointmentString(timestamp, "EDT") + " minute(s)");
+                                secondTextView.setText("Click here to start Appointment.");
+                            }
+                            break;
+
+                        default:
+                            firstTextView.setText("Your next appointment is  " + appointment.getStartTime());
+                            secondTextView.setText("Click here for details.");
+                            break;
+                    }
+            }
+
             mNotificationView.setTag(appointment);
             mNotificationView.setVisibility(View.VISIBLE);
             mNotificationView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        final Appointment appo = (Appointment) v.getTag();
-                        if (appo != null && mOnNotificationCliked != null) {
-                            mOnNotificationCliked.onNotificationClicked(appo);
+                        if (v.getTag() != null) {
+                            final Appointment appo = (Appointment) v.getTag();
+                            if (appo != null && mOnNotificationCliked != null) {
+                                mOnNotificationCliked.onNotificationClicked(appo);
+                            }
                         }
                     } catch (Exception e) {
 

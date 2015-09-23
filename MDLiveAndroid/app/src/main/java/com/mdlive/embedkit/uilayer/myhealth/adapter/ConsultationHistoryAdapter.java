@@ -19,8 +19,9 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHist
  * Created by unnikrishnan_b on 8/22/2015.
  */
 public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory> {
-    Context context;
-    int selectedPosition = -1;
+    private Context context;
+    private int selectedPosition = -1;
+    private View selectedView;
 
     public void setSelectedPosition(int selectedPosition) {
         this.selectedPosition = selectedPosition;
@@ -33,6 +34,13 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         this.context = context;
     }
 
+    public View getSelectedView(){
+        return selectedView;
+    }
+
+    public void setSelectedView(View view){
+        selectedView = view;
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
@@ -57,16 +65,16 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         //}
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).getProviderImageUrl(), ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).getProviderName());
-        viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());
-        viewHolder.reasonForVisitTv.setText(getItem(position).getChiefComplaint());
+        viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());
+        viewHolder.reasonForVisitTv.setText(" " + getItem(position).getChiefComplaint());
         if (getItem(position).getPrimaryDiagnosis().isEmpty()) {
-            viewHolder.primaryDiagnosisTv.setText(context.getResources().getString(R.string.mdl_no_diagnosis));
+            viewHolder.primaryDiagnosisTv.setText(" " + context.getResources().getString(R.string.mdl_no_diagnosis));
         } else {
             String diagnosisText = "";
             for (String item : getItem(position).getPrimaryDiagnosis()) {
                 diagnosisText += "," + item;
             }
-            viewHolder.primaryDiagnosisTv.setText(diagnosisText.substring(1, diagnosisText.length()));
+            viewHolder.primaryDiagnosisTv.setText(" " + diagnosisText.substring(1, diagnosisText.length()));
         }
 
         viewHolder.sendMessageTv.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +125,7 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     }
 
     private void launchComposeMessage(ConsultationHistory consultationHistory){
-        context.startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(context, consultationHistory));
+        context.startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntentWithHeading(context, consultationHistory, context.getString(R.string.mdl_send_message_caps)));
     }
 }
 

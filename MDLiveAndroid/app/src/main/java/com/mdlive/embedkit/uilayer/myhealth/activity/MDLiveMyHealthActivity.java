@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.myhealth.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTabHost;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.mdliveassist.MDLiveAssistFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 /**
  * Created by sanjibkumar_p on 7/28/2015.
@@ -29,6 +31,7 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_my_health_activity);
+        clearMinimizedTime();
 
 //        if (savedInstanceState == null) {
 //            getSupportFragmentManager().beginTransaction().add(R.id.mdlive_my_health_activity, MDLiveMyHealthListFragment.newInstance(), TAG).commit();
@@ -67,4 +70,10 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
         return spec.setIndicator(v);
     }
 
+    public void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

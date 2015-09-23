@@ -38,9 +38,12 @@ import org.json.JSONObject;
  */
 public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     private ListView mListView;
+    private View mNoProvidersView;
     private ProviderAdapter mProviderAdapter;
     private boolean isFirstTime = true;
     private View mHeaderView;
+
+    private PrimaryCarePhysician primaryCarePhysician;
 
     /**
      * Use this factory method to create a new instance of
@@ -87,11 +90,10 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
         mHeaderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent PrimaryCarePhysician =new Intent(getActivity(),PrimaryCarePhysicianActivity.class);
-                startActivity(PrimaryCarePhysician);
+                startActivity(PrimaryCarePhysicianActivity.getPCPIntent(getActivity(), primaryCarePhysician));
             }
         });
-        view.findViewById(R.id.health_no_provider_container).setVisibility(View.GONE);
+        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);;
     }
 
     @Override
@@ -166,6 +168,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
 
+                primaryCarePhysician = null;
 
         /*
         * This is a work around, as for new user rather sending on blank Json object
@@ -173,7 +176,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
         * */
                 try {
                     JSONObject primaryPhysicianJSONObject = response.getJSONObject("primary_care_physician");
-                    final PrimaryCarePhysician primaryCarePhysician = new PrimaryCarePhysician();
+                    primaryCarePhysician = new PrimaryCarePhysician();
                     primaryCarePhysician.zip = primaryPhysicianJSONObject.getString("zip");
                     primaryCarePhysician.phone = primaryPhysicianJSONObject.getString("phone");
                     primaryCarePhysician.fax = primaryPhysicianJSONObject.getString("fax");
@@ -230,6 +233,8 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
                     mProviderAdapter.notifyDataSetChanged();
+
+                    mNoProvidersView.setVisibility(View.GONE);
                 }
                 Log.e("Response - ", provider.toString());
             }

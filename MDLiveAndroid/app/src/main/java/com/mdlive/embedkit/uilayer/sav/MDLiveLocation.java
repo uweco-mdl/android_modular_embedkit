@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -43,11 +44,14 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.location.ZipCodeServices;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInstance;
 
 /**
  * This Class defines the location.That is the user can select the location
@@ -70,11 +74,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_location);
+        clearMinimizedTime();
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,10 +165,39 @@ public class MDLiveLocation extends MDLiveBaseActivity {
          * of the state from the localisation
          */
 
-        LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
-        ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        try {
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            String stateJson = sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "[]");
+            JSONArray stateJsonArray = new JSONArray(stateJson);
+            Log.d("JSON Count", stateJsonArray.length() + "");
+            if(stateJsonArray.length()>0){
+                for(int i = 0; i<stateJsonArray.length();i++){
+                    ShortNameList.add(stateJsonArray.getJSONObject(i).keys().next());
+                    LongNameList.add(stateJsonArray.getJSONObject(i).getString(ShortNameList.get(i)));
+                }
+                Log.d("stateList->",LongNameList.toString());
+                Log.d("stateList->",ShortNameList.toString());
+            } else {
+                LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+                ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+            }
+        } catch (Exception e) {
+            LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+            ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        }
 
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
     }
 
     public void leftBtnOnClick(View v){

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,12 +59,14 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     public HashMap<String, Object> postParams;
     private TextView lasShotLabel;
     private RelativeLayout birthComplicationLayout;
+    CardView dietLayout;
 
     Activity cxt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        clearMinimizedTime();
         cxt = this;
         initializeUI();
         touchHandlers();
@@ -112,10 +115,12 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        dietLayout= (CardView) findViewById(R.id.diet_layout);
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
@@ -164,20 +169,15 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             txtAge.setText(getString(R.string.mdl_AgeUnder13));
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
             edtBirthComplications.setVisibility(View.GONE);
+            dietLayout.setVisibility(View.GONE);
             txtDietType.setVisibility(View.GONE);
             txtDietTypeHeader.setVisibility(View.GONE);
-            findViewById(R.id.separator).setVisibility(View.GONE);
-            View edtLastShot_view = (View) findViewById(R.id.edt_lastshot_view);
-            edtLastShot_view.setVisibility(View.GONE);
-            findViewById(R.id.separator).setVisibility(View.GONE);
         } else {
             txtAge.setText(getString(R.string.mdl_AgeUnder2));
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
+            dietLayout.setVisibility(View.VISIBLE);
             txtDietType.setVisibility(View.VISIBLE);
             txtDietTypeHeader.setVisibility(View.VISIBLE);
-            findViewById(R.id.separator).setVisibility(View.GONE);
-            View edtLastShot_view = (View) findViewById(R.id.edt_lastshot_view);
-            edtLastShot_view.setVisibility(View.GONE);
         }
         explanationListners();
         dietList = new ArrayList<>();

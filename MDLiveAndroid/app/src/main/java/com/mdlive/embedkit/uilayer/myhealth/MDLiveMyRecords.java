@@ -28,6 +28,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
+        clearMinimizedTime();
 
         try {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -37,6 +38,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
                 ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
                 ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();

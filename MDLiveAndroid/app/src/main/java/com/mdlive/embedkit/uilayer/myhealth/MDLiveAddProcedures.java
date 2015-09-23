@@ -31,12 +31,14 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         //Setting up type in parent class for Conditions
         type = TYPE_CONSTANT.PROCEDURE;
         super.onCreate(savedInstanceState);
+        clearMinimizedTime();
         IsThisPageEdited = false;
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,6 +135,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();
+                    conditionsCollection = getRefreshedNameList();
                     ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
                 }
             }

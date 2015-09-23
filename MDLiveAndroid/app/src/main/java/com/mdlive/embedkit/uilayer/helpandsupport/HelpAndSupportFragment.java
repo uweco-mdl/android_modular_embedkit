@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -132,7 +134,12 @@ public class HelpAndSupportFragment extends MDLiveBaseFragment {
         if (listView.getFooterViewsCount() == 0) {
             final LayoutInflater inflater = LayoutInflater.from(listView.getContext());
             final View view = inflater.inflate(R.layout.include_help_support, null, false);
-
+            try {
+                String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+                ((TextView) view.findViewById(R.id.mdlVersionNumber)).setText("v " + versionName + AppSpecificConfig.URL_ENVIRONMENT);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             listView.addFooterView(view);
         }
     }

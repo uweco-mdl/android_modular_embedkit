@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -41,6 +42,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private PendingAppointment mPendingAppointment;
 
     private View mMessagesLinearLayout;
+    private View mNoAppointmentLinearLayout;
     private TextView mMessagesTextView;
     private TextView mPersonalInfoTextView;
     private TextView mPreferedStoreTextView;
@@ -100,6 +102,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mMessagesLinearLayout = view.findViewById(R.id.notification_fragment_messages_linear_layout);
+        mNoAppointmentLinearLayout = view.findViewById(R.id.notification_fragment_upcoming_appoinment_linear_layout);
         mMessagesTextView = (TextView) view.findViewById(R.id.notification_fragment_messages_text_view);
         mPersonalInfoTextView = (TextView) view.findViewById(R.id.notification_fragment_personal_text_view);
         mPreferedStoreTextView = (TextView) view.findViewById(R.id.notification_fragment_prefered_store_text_view);
@@ -215,6 +218,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
         if (mPendingAppointment.getAppointments() != null &&
                 mPendingAppointment.getAppointments().size() > 0) {
             mUpcomingAppoinmantTextView.setVisibility(View.GONE);
+            mNoAppointmentLinearLayout.setVisibility(View.GONE);
             mUpcomingAppoinmantListView.setVisibility(View.VISIBLE);
 
             if (mUpcomingAppoinmantListView != null) {
@@ -225,25 +229,37 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 mUpcomingAppoinmantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (mOnAppointmentClicked != null) {
+                        if (mOnAppointmentClicked != null &&
+                                (getActivity() != null && !(getActivity() instanceof AppointmentActivity))) {
                             mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
+                        }
+
+                        if (mOnAppointmentClicked != null) {
+                            mOnAppointmentClicked.onCloseDrawer();
                         }
                     }
                 });
 
                 // For Showing Dashboard Notification
                 if (mNotifyDashboard != null) {
-                    for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
+                    if ( mPendingAppointment.getAppointments().size() > 0) {
+                        mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(0));
+                    } else {
+                        mNotifyDashboard.onHideNotifyDashboard();
+                    }
+                    /*for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
                         final int type = MdliveUtils.getRemainigTimeToAppointment(mPendingAppointment.getAppointments().get(i).getInMilliseconds(), "EST");
                         if (type == 0) {
                             mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(i));
                         } else {
                             mNotifyDashboard.onHideNotifyDashboard();
                         }
-                    }
+                    }*/
                 }
             }
         } else {
+            mUpcomingAppoinmantTextView.setVisibility(View.VISIBLE);
+            mNoAppointmentLinearLayout.setVisibility(View.VISIBLE);
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
         }
@@ -251,6 +267,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     public interface OnAppointmentClicked {
         void onAppointmentClicked(final Appointment appointment);
+        void onCloseDrawer();
     }
 
     public interface NotifyDashboard {

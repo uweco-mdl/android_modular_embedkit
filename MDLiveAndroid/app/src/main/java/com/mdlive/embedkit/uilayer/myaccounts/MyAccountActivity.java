@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerA
 import com.mdlive.embedkit.uilayer.myaccounts.GetFamilyMemberFragment.OnChildAdded;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -154,7 +152,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
     public void onChangePinClicked() {
         getSupportFragmentManager().
                 beginTransaction().
-                replace(R.id.main_content, OldPinFragment.newInstance(), MY_ACCOUNT_TAG).
+                replace(R.id.main_content, OldPinFragment.newInstance(true), MY_ACCOUNT_TAG).
                 addToBackStack(MY_ACCOUNT_TAG).
                 commit();
     }
@@ -165,13 +163,6 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
                 replace(R.id.main_content, new SecurityQuestionsFragment(), MY_ACCOUNT_TAG).
                 addToBackStack(MY_ACCOUNT_TAG).
                 commit();
-    }
-
-    private void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
     }
 
     @Override
