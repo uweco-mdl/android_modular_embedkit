@@ -64,12 +64,17 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private RelativeLayout docOnCalLinLay;
     private Button seeNextAvailableBtn;
     private TextView loadingTxt;
+    private boolean flag = false;
 
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            ChooseProviderResponseList();
+            if(flag){
+                ChooseProviderResponseList();
+            }else{
+                flag = true;
+            }
             mHandler.postDelayed(this, THIRTY_SECONDS);
         }
     };
@@ -113,6 +118,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         mHandler = new Handler();
         setListViews();
+        mHandler.post(mRunnable);
     }
 
     @Override
@@ -125,6 +131,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
+        flag = false;
     }
 
     public void leftBtnOnClick(View v){
