@@ -57,7 +57,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private WebView HostedPCI;
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
-    private String finalAmout = "";
+    private String finalAmount = "";
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
@@ -85,9 +85,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
-            finalAmout = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
-            storePayableAmount(finalAmout);
-            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+            finalAmount = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
+            storePayableAmount(finalAmount);
+            ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
         }
         getCreditCardInfoService();
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
@@ -155,7 +155,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void rightBtnOnClick(View view){
      //Delete
 
-        if (finalAmout.equals("0.00")) {
+        if (finalAmount.equals("0.00")) {
             //Remove this..it is in next screen
              //* doConfirmAppointment();*//*
             moveToNextPage();
@@ -681,7 +681,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
     public void payNow(View paymentButton) {
-        if (finalAmout.equals("0.00")) {
+        if (finalAmount.equals("0.00")) {
             //Remove this..it is in next screen
                            /* doConfirmAppointment();*/;
             CheckdoconfirmAppointment(true);
@@ -730,18 +730,18 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         String discountAmount = jobj.getString("final_amount").replace("$", "");
                         payableAmount = Double.parseDouble(discountAmount);
                         if (payableAmount <= 0.00) {
-                            finalAmout = String.format("%.2f", Double.parseDouble(jobj.getString("final_amount")));
-                            storePayableAmount(finalAmout);
+                            finalAmount = String.format("%.2f", Double.parseDouble(jobj.getString("final_amount")));
+                            storePayableAmount(finalAmount);
                             moveToNextPage();
 
                         }
                         else{
-                            finalAmout = String.format("%.2f", payableAmount);
-                            storePayableAmount(finalAmout);
+                            finalAmount = String.format("%.2f", payableAmount);
+                            storePayableAmount(finalAmount);
 
                         }
                     }
-                    ((TextView) findViewById(R.id.cost)).setText("$" + finalAmout);
+                    ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
 
 
                 } catch (Exception e) {
