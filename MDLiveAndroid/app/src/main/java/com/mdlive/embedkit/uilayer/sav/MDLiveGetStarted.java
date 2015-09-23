@@ -933,6 +933,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 }
             }
             Collections.reverse(providerTypeArrayList);
+            Collections.reverse(providerTypeIdList);
             ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId=providerTypeIdList.get(0);
 
