@@ -46,6 +46,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -183,6 +184,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void providerTypeAction(View v) {
 
+        Collections.sort(ProviderTypeArrayList);
         showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
     }
 
