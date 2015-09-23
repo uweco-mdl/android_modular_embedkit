@@ -216,7 +216,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
                 } else {
                     Log.e("inside","Am not in Null");
-                    ((TextView)findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details)+" "+myProfile.getString("cc_number"));
+                    if(myProfile.getString("cc_type_id").equalsIgnoreCase("1")) {
+
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                    }else
+                    {
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                    }
                     ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);
                 }
