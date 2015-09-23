@@ -44,6 +44,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.location.ZipCodeServices;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -164,8 +165,27 @@ public class MDLiveLocation extends MDLiveBaseActivity {
          * of the state from the localisation
          */
 
-        LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
-        ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        try {
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            String stateJson = sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "[]");
+            JSONArray stateJsonArray = new JSONArray(stateJson);
+            Log.d("JSON Count", stateJsonArray.length() + "");
+            if(stateJsonArray.length()>0){
+                for(int i = 0; i<stateJsonArray.length();i++){
+                    ShortNameList.add(stateJsonArray.getJSONObject(i).keys().next());
+                    LongNameList.add(stateJsonArray.getJSONObject(i).getString(ShortNameList.get(i)));
+                }
+                Log.d("stateList->",LongNameList.toString());
+                Log.d("stateList->",ShortNameList.toString());
+            } else {
+                LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+                ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+            }
+        } catch (Exception e) {
+            LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+            ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        }
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().

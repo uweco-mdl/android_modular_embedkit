@@ -334,7 +334,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
-        services.getsearchdetails(successCallBackListener, errorListener);
+        services.getSearchDetails(successCallBackListener, errorListener);
     }
     /**
      *
