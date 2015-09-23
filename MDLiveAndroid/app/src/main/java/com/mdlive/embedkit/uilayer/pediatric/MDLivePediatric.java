@@ -58,7 +58,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     public HashMap<String, ArrayList<HashMap<String, String>>> questionsMap;
     public HashMap<String, Object> postParams;
     private TextView lasShotLabel;
-    private RelativeLayout birthComplicationLayout;
+    private LinearLayout birthComplicationLayout;
     CardView dietLayout;
 
     Activity cxt;
@@ -164,7 +164,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         edtBirthComplications = (EditText) findViewById(R.id.edt_pleaseDescribe);
         edtLastShot = (EditText) findViewById(R.id.edt_lastshot);
         lasShotLabel = (TextView) findViewById(R.id.txt_lastShot_label);
-        birthComplicationLayout = (RelativeLayout) findViewById(R.id.layout_birthComplications);
+        birthComplicationLayout = (LinearLayout) findViewById(R.id.layout_birthComplications);
         if (checkPerdiatricAge()) {
             txtAge.setText(getString(R.string.mdl_AgeUnder13));
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
