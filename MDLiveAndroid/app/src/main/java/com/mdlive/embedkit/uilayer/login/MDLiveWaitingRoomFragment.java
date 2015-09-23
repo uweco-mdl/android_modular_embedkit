@@ -2,7 +2,9 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -48,5 +50,14 @@ public class MDLiveWaitingRoomFragment extends MDLiveBaseFragment {
         ((TextView) view.findViewById(R.id.header_text_view)).setText(getArguments().getString(HEADER));
         ((TextView) view.findViewById(R.id.header_text_view)).setBackgroundColor(getArguments().getInt(COLOR));
         ((TextView) view.findViewById(R.id.body_text_view)).setBackgroundColor(getArguments().getInt(BODY));
+
+        ((TextView) view.findViewById(R.id.body_text_view)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        ((TextView) view.findViewById(R.id.body_text_view)).setMovementMethod(new ScrollingMovementMethod());
     }
 }

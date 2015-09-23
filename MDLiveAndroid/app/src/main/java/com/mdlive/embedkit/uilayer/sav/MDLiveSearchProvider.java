@@ -185,7 +185,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void providerTypeAction(View v) {
 
-        Collections.sort(ProviderTypeArrayList);
         showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
     }
 

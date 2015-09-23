@@ -283,13 +283,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             setBodyContent(responseArray);
                             //setListView();
                         } else {
+                            filterMainRl.setVisibility(View.GONE);
+                           ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    filterMainRl.setVisibility(View.GONE);
-                                            ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
-                                    filterMainRl.setVisibility(View.GONE);
-                                             finish();
+                                    finish();
                                 }
                             });
                         }
@@ -314,11 +313,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             //setListView();
                         }else{
                             showOrHideFooter();
+                            ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                            filterMainRl.setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
-                                    filterMainRl.setVisibility(View.GONE);
+
                                     finish();
                                 }
                             });
