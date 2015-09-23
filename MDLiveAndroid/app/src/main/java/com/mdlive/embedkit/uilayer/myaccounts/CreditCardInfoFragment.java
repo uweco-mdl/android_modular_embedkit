@@ -306,6 +306,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         });
+
+        mAddress1.setText("");
+        mAddress2.setText("");
+        mCity.setText("");
+        mState.setText("");
+        mZip.setText("");
     }
     private void showDatePicker() {
         final Dialog d = new Dialog(getActivity());
