@@ -647,9 +647,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
             if(gender.equalsIgnoreCase("Female")){
+                JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
+                if(healthHistory.has("female_questions")){
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
+                }
             }else{
                 hasFemaleAttribute = false;
             }

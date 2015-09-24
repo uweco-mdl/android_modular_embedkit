@@ -81,7 +81,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     if (getActivity() != null && getActivity() instanceof MessageCenterActivity) {
-                        ((MessageCenterActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i));
+                        ((MessageCenterActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i - 1));
                     }
                 }
             });
