@@ -329,6 +329,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         public void rightBtnOnClick(View v){
             try {
+                if (!MdliveUtils.isNetworkAvailable(this)) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), this);
+                    return;
+                }
+
                 if(isTherapistUser){
                     updateBehaviourHealthService();
                 }else{

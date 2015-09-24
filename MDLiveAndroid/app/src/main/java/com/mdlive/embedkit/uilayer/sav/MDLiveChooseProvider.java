@@ -412,21 +412,17 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }else{
                     specialty = responArray.get(i).getAsJsonObject().get("speciality").getAsString();
                 }
-                if (responArray.get(i).getAsJsonObject().get("id").isJsonNull()){
-                    doctorId ="" ;
-                }else{
+
                     doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
-                }
-                if (responArray.get(i).getAsJsonObject().get("provider_image_url").isJsonNull()){
-                    imageUrl = "";
-                }else{
+
                     imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
-                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
             JsonArray  affiliationsArray = responArray.get(i).getAsJsonObject().get("provider_groups").getAsJsonArray();
+            String nxtavaildate="";
             for(int j=0;j<affiliationsArray.size();j++) {
                 groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
                 Log.e("affiliationsArray-->", groupAffiliations);
@@ -434,13 +430,17 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             try {
                 long nextAvailabilityTimeStamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
-                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
-                    strDate = IntegerConstants.DATE_FLAG;
-                else
-                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+//                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
+//                    strDate = IntegerConstants.DATE_FLAG;
+//                else
+//                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+
                 if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull()){
                     shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                    nxtavaildate= MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
                 }else{
+                    nxtavaildate=null;
                     shared_timestamp = 0;
                 }
             } catch (Exception e) {
@@ -453,13 +453,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
-            map.put("specialty", specialty);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
             map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
-            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",strDate+"");
+            map.put("next_availability",nxtavaildate);
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
             Log.e("check providerlist",providerListMap.toString());
@@ -481,13 +482,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
-            map.put("specialty", specialty);
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
             map.put("group_name", groupAffiliations);
             map.put("available_now_status", available_now_status+"");
-            map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",strDate+"");
             providerListMap.add(map);
             filterMainRl.setVisibility(View.GONE);
         }
@@ -508,8 +509,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e("List","Am in ListItem Click Listener");
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
+                Log.e("Provider availabilityType",providerListMap.get(position).get("availability_type"));
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
-                        providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"));
+                        providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"),providerListMap.get(position).get("availability_type"),providerListMap.get(position).get("available_now_status"));
                 Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
@@ -581,7 +583,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *      triggerred in the Requird places.
      *
      */
-    public void saveDoctorId(String DocorId, String AppointmentDate, String docName ,String groupAffiliations)
+    public void saveDoctorId(String DocorId, String AppointmentDate, String docName ,String groupAffiliations,String availability_type,String availability_status)
     {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -589,6 +591,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, docName);
         editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, AppointmentDate);
         editor.putString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, groupAffiliations);
+        editor.putString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES, availability_type);
+        editor.putString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES, availability_status);
         editor.commit();
     }
     /**
