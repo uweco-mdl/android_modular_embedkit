@@ -8,7 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +99,23 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View billingInformation = inflater.inflate(R.layout.fragments_billing_info, null);
+        mZip = (EditText) billingInformation.findViewById(R.id.zip);
+        mZip.setTag(null);
+        mZip.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MdliveUtils.validateZipcodeFormat(mZip);
+            }
+        });
 
         init(billingInformation);
         myAccountHostedPCI.getSettings().setJavaScriptEnabled(true);
@@ -379,8 +398,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         d.show();
     }
     public void addCreditCardInfo() {
-//        cardNumber = mCardNumber.getText().toString();
-//        securityCode = mSecurityCode.getText().toString();
         nameOnCard = mNameOnCard.getText().toString().trim();
         address1 = mAddress1.getText().toString().trim();
         address2 = mAddress2.getText().toString().trim();
@@ -389,30 +406,33 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         cardExpirationMonth = mCardExpirationMonth.getText().toString();
         country = "1";
         zip = mZip.getText().toString().trim();
-
         if (isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
-            try {
-                JSONObject parent = new JSONObject();
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("cc_type_id", 2);
-                jsonObject.put("billing_address1", address1);
-                jsonObject.put("billing_zip5", zip);
-                jsonObject.put("billing_address2", address2);
-                jsonObject.put("cc_hsa", true);
-                jsonObject.put("cc_expyear", cardExpirationYear);
-                jsonObject.put("billing_name", nameOnCard);
-                jsonObject.put("billing_city", city);
-                jsonObject.put("billing_state_id", state);
-                jsonObject.put("cc_expmonth", cardExpirationMonth);
-                jsonObject.put("cc_cvv2", "123");
-                jsonObject.put("cc_num", "4111111111111111");
-                jsonObject.put("billing_country_id", country);
+            if(!MdliveUtils.validateZipCode(zip)){
+                Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
+            }else {
+                try {
+                    JSONObject parent = new JSONObject();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("cc_type_id", 2);
+                    jsonObject.put("billing_address1", address1);
+                    jsonObject.put("billing_zip5", zip.replace("-", ""));
+                    jsonObject.put("billing_address2", address2);
+                    jsonObject.put("cc_hsa", true);
+                    jsonObject.put("cc_expyear", cardExpirationYear);
+                    jsonObject.put("billing_name", nameOnCard);
+                    jsonObject.put("billing_city", city);
+                    jsonObject.put("billing_state_id", state);
+                    jsonObject.put("cc_expmonth", cardExpirationMonth);
+                    jsonObject.put("cc_cvv2", "123");
+                    jsonObject.put("cc_num", "4111111111111111");
+                    jsonObject.put("billing_country_id", country);
 
-                parent.put("billing_information", jsonObject);
-                loadBillingInfo(parent.toString());
-                Log.i("ADD Credit Card", parent.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    parent.put("billing_information", jsonObject);
+                    loadBillingInfo(parent.toString());
+                    Log.i("ADD Credit Card", parent.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();

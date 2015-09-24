@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +72,26 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_primary_care_physician, container, false);
+
+        View primaryCarePhysician = inflater.inflate(R.layout.activity_primary_care_physician, container, false);
+        mZip = (EditText) primaryCarePhysician.findViewById(R.id.zip);
+        mZip.setTag(null);
+        mZip.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MdliveUtils.validateZipcodeFormat(mZip);
+            }
+        });
+        return primaryCarePhysician;
     }
 
     @Override
@@ -201,7 +222,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 jsonObject.put("address1", mAddress1.getText().toString());
                 jsonObject.put("country_id", countryList.indexOf(mCountry.getText().toString()) > 0 ? countryList.indexOf(mCountry.getText().toString()) + 1 : 1);
                 jsonObject.put("state", mState.getText().toString());
-                jsonObject.put("zip", mZip.getText().toString());
+                jsonObject.put("zip", mZip.getText().toString().replace("-", ""));
                 jsonObject.put("phone", mPhoneNumber.getText().toString());
 
                 parent.put("primary_care_physician", jsonObject);
