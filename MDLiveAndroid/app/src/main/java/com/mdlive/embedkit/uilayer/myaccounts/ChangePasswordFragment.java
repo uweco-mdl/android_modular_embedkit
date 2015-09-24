@@ -90,7 +90,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     } else {
                         mCurrentPasswordShow.setVisibility(View.VISIBLE);
                     }
-                    if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
+                    /*if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
                         mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     } else {
@@ -104,7 +104,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     } else {
                         mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    }
+                    }*/
                 }else{
                     mCurrentPasswordShow.setVisibility(View.GONE);
                 }
@@ -115,6 +115,9 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(view.hasFocus()){
+
+                    showViewsOnCondition();
+
                     if (mNewPassword.getText().length() == 0) {
                         mNewPasswordShow.setVisibility(View.GONE);
                     } else {
@@ -152,6 +155,9 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             public void onFocusChange(View view, boolean b) {
 
                 if(view.hasFocus()){
+
+                    showViewsOnCondition();
+
                     if (mConfirmPassword.getText().length() == 0) {
                         mConfirmPasswordShow.setVisibility(View.GONE);
                     } else {
@@ -291,7 +297,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 checkThatUserEnteredPassword();
                 changeVisibilityOfImageButton(mCurrentPasswordShow, mCurrentPassword);
 
-                if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
+                /*if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
                     mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
 
@@ -309,7 +315,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
 
-                }
+                }*/
             }
 
             @Override
@@ -344,6 +350,8 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     passwordAlphaNumericCheck = false;
                 }
+                showViewsOnCondition();
+
             }
             @Override
             public void afterTextChanged(Editable editable) {
@@ -377,15 +385,17 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     confirmPasswordAlphaNumericCheck = false;
                 }
-                if(charSequence != null && charSequence.length() != 0){
-                    if(frequencyCount(charSequence.toString())){
+                if(charSequence != null && charSequence.length() != 0) {
+                    if (frequencyCount(charSequence.toString())) {
                         passwordtwoRepeatChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         passwordtwoRepeatChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
-                    }else{
+                    } else {
                         passwordtwoRepeatChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         passwordtwoRepeatChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     }
                 }
+                showViewsOnCondition();
+
                 if (mConfirmPassword.getText() != null && !TextUtils.isEmpty(mConfirmPassword.getText().toString())
                         && mNewPassword.getText() != null && !TextUtils.isEmpty(mNewPassword.getText().toString())
                         && (mConfirmPassword.getText().toString()).equals(mNewPassword.getText().toString())) {
@@ -410,6 +420,28 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         return changePasswordView;
     }
 
+    public void showViewsOnCondition(){
+        try {
+            if(mNewPassword.getText().toString().length() == 0
+                    && mConfirmPassword.getText().toString().length() == 0){
+                passworddiffName.setVisibility(View.GONE);
+                mPasswordLength.setVisibility(View.GONE);
+                mPasswordAlphaNumericCheck.setVisibility(View.GONE);
+                mPasswordConfirmCheck.setVisibility(View.GONE);
+                passwordtwoRepeatChars.setVisibility(View.GONE);
+                passwordspecialChars.setVisibility(View.GONE);
+            }else{
+                passworddiffName.setVisibility(View.VISIBLE);
+                mPasswordLength.setVisibility(View.VISIBLE);
+                mPasswordAlphaNumericCheck.setVisibility(View.VISIBLE);
+                mPasswordConfirmCheck.setVisibility(View.VISIBLE);
+                passwordtwoRepeatChars.setVisibility(View.VISIBLE);
+                passwordspecialChars.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static boolean frequencyCount(String userText) {
         int count = 0 ;
