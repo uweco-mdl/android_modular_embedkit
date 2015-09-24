@@ -97,6 +97,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         private ArrayList<String> ReasonList;
         private ReasonForVisitAdapter baseadapter;
         public static Uri fileUri;
+        public EditText behaviour_reason;
         public ImageView takePhoto, takeGallery;
         public RelativeLayout photosContainer;
         public boolean isTherapistUser = false;
@@ -217,7 +218,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 Log.e("Provider Mode Response ", response.toString());
                 final Gson gson = new Gson();
                 mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
-
+                behaviour_reason = ((EditText) findViewById(R.id.behaviour_reason));
                 Log.e("Hello", mBehavioralHistory.toString());
 
                 LinearLayout behaviourHolder = (LinearLayout) findViewById(R.id.behaviourHolder);
@@ -225,32 +226,42 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     behaviourHolder.removeAllViews();
                 }
                 if (mBehavioralHistory.behavioralHealthReasons != null && mBehavioralHistory.behavioralHealthReasons.size() > 0) {
-                    for (int i = 0; i < mBehavioralHistory.behavioralHealthReasons.size(); i++) {
-                        final int position = i;
-                        final View child = getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
-                        final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
-                        checkBox.setText(mBehavioralHistory.behavioralHealthReasons.get(position).condition);
-                        if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralHealthReasons.get(position).active)) {
-                            checkBox.setChecked(true);
-                        } else {
-                            checkBox.setChecked(false);
-                        }
-                        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.YES;
-                                } else {
-                                    mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.NO;
+                    try {
+                        for (int i = 0; i < mBehavioralHistory.behavioralHealthReasons.size(); i++) {
+                            final int position = i;
+                            final View child = getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
+                            final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
+                            checkBox.setText(mBehavioralHistory.behavioralHealthReasons.get(position).condition);
+
+                            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.YES;
+                                    } else {
+                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.NO;
+                                    }
+                                    if(buttonView.getText() != null && buttonView.getText().toString().toLowerCase().contains("other")){
+                                        if(isChecked){
+                                            behaviour_reason.setVisibility(View.VISIBLE);
+                                        }else{
+                                            behaviour_reason.setVisibility(View.GONE);
+                                        }
+                                    }
                                 }
+                            });
+                            if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralHealthReasons.get(position).active)) {
+                                checkBox.setChecked(true);
+                            } else {
+                                checkBox.setChecked(false);
                             }
-                        });
-                        behaviourHolder.addView(child);
-                        Log.e("Child Added", i+"");
+                            behaviourHolder.addView(child);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
-                EditText behaviour_reason = ((EditText) findViewById(R.id.behaviour_reason));
                 if(mBehavioralHistory.behavioralHealthDescription != null && mBehavioralHistory.behavioralHealthDescription.length() != 0){
                     behaviour_reason.setText(mBehavioralHistory.behavioralHealthDescription);
                 }

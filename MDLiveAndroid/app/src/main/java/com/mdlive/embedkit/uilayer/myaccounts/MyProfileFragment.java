@@ -28,8 +28,10 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.sav.adapters.PickImagePlugin;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -43,14 +45,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by venkataraman_r on 6/18/2015.
  */
-public class MyProfileFragment extends MDLiveBaseFragment {
+public class MyProfileFragment extends MDLiveBaseFragment  implements PickImagePlugin.UploadRecordInterface{
 
     private CircularNetworkImageView mProfileImage = null;
     private CircularNetworkImageView mCircularNetworkImageView;
@@ -73,6 +75,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null, prefLanguage;
     private JSONObject myProfile;
     SharedPreferences sharedPref;
+    public static PickImagePlugin cameraPlugIn;
+
+    private boolean mFromResult = false;
+
     public static MyProfileFragment newInstance() {
         final MyProfileFragment myProfileFragment = new MyProfileFragment();
         return myProfileFragment;
@@ -217,9 +223,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        cameraPlugIn = new PickImagePlugin(getActivity(), this);
         getProfileInfoService();
     }
 
@@ -253,7 +259,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     }
 
     public void handlegetProfileInfoSuccessResponse(JSONObject response) {
-        hideProgressDialog();
+        if(!mFromResult){
+            hideProgressDialog();
+        }
         Log.i("response", response.toString());
         try {
             myProfile = response.getJSONObject("personal_info");
@@ -379,12 +387,23 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 2);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraPlugIn.fileUri = cameraPlugIn.getOutputMediaFileUri();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPlugIn.fileUri);
+                    startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+                    /*Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 2);*/
                 } else if (items[item].equals("Choose from Library")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 1);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            IntegerConstants.PICK_IMAGE_REQUEST_CODE);
+                    /*Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, 1);*/
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -396,6 +415,22 @@ public class MyProfileFragment extends MDLiveBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
+        // if the result is capturing Image
+        if (requestCode == IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // successfully captured the image
+                cameraPlugIn.handleCapturedImageRequest();
+            }
+        }
+        if (requestCode == IntegerConstants.PICK_IMAGE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                cameraPlugIn.handlePickedImageRequest(imageReturnedIntent);
+            }
+        }
+        if(requestCode == 3){
+            getProfileInfoService();
+        }
+    /*
         Bitmap bitmap = null;
         switch (requestCode) {
 
@@ -423,7 +458,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             case 3:
                 getProfileInfoService();
                 break;
-        }
+        }*/
     }
 
     public void convertToBase64(Bitmap selectedImage){
@@ -449,7 +484,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
     private void loadChangeProfilePicService(String params) {
      showProgressDialog();
-
+        mFromResult = true;
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -464,6 +499,7 @@ public class MyProfileFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
 
                 hideProgressDialog();
+                mFromResult = false;
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
                         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -486,8 +522,10 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
     private void handleChangeProfilePicSuccessResponse(JSONObject response) {
         try {
+            mFromResult = false;
             hideProgressDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            getProfileInfoService();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -536,7 +574,9 @@ public class MyProfileFragment extends MDLiveBaseFragment {
 
             @Override
             public void onResponse(JSONObject response) {
-                hideProgressDialog();
+                if(!mFromResult){
+                    hideProgressDialog();
+                }
             }
         };
 
@@ -572,5 +612,22 @@ public class MyProfileFragment extends MDLiveBaseFragment {
         Intent changePin = new Intent(getActivity(),MyAccountsHome.class);
         changePin.putExtra("Fragment_Name","Old Pin Second");
         startActivity(changePin);
+    }
+
+    @Override
+    public void uploadMedicalRecordService(String filePath, boolean capturedInCamera) {
+        final File file = new File(filePath);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        String  currentTimeStamp = dateFormat.format(new Date());
+        try {
+            JSONObject parent = new JSONObject();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("file_name", currentTimeStamp+".jpg");
+            jsonObject.put("photo",  MdliveUtils.encodeFileToBase64Binary(file, MdliveUtils.getFileExtention(file)));
+            parent.put("personal_information", jsonObject);
+            loadChangeProfilePicService(parent.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
