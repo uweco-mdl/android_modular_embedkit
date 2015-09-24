@@ -206,8 +206,12 @@ public class MessageSentFragment extends MDLiveBaseFragment {
             mListView.setVisibility(View.VISIBLE);
             mBlankLayout.setVisibility(View.GONE);
         } else {
-            mListView.setVisibility(View.GONE);
-            mBlankLayout.setVisibility(View.VISIBLE);
+            if (mMessageSentAdapter.getCount() >= 0) {
+                // Do nothing for this case
+            } else {
+                mListView.setVisibility(View.GONE);
+                mBlankLayout.setVisibility(View.VISIBLE);
+            }
         }
     }
 
