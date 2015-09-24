@@ -78,7 +78,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private RelativeLayout rl_footer;
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
     private HashMap<Marker, Integer> markerIdCollection = new HashMap<Marker, Integer>();
-    private RelativeLayout progressBar;
+    //private RelativeLayout progressBar;
     private SupportMapFragment mapView, expandmapView;
     private GoogleMap googleMap, expandgoogleMap;
     private ListView pharmList;
@@ -156,9 +156,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         if(!MdliveUtils.isNetworkAvailable(MDLivePharmacyResult.this)){
-            if(progressBar!=null&&progressBar.getVisibility()== View.VISIBLE){
-                progressBar.setVisibility(View.GONE);
-            }
+            hideProgress();
         }
     }
 
@@ -186,7 +184,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         rl_footer = (RelativeLayout) findViewById(R.id.rl_footer);
         expandableMapViewContainer = (RelativeLayout) findViewById(R.id.expandableMapViewContainer);
         keyParams = new HashMap<String, Object>();
-        progressBar = (RelativeLayout)findViewById(R.id.progressDialog);
         bottomLoder = (ProgressBar)findViewById(R.id.bottomLoader);
         errorMesssage = getString(R.string.mdl_no_pharmacies_listed);
     }
@@ -296,15 +293,15 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 if(bottomLoder.getVisibility()==View.VISIBLE){
                     bottomLoder.setVisibility(View.GONE);
                 }
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 resetLoadingViews();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         if(bottomLoder.getVisibility()==View.VISIBLE){
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
         }else {
-            progressBar.setVisibility(View.VISIBLE);
+            showProgress();
         }
         ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
         services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
@@ -317,7 +314,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void resetLoadingViews() {
         isLoading = false;
         pharmList.setEnabled(true);
-        progressBar.setVisibility(View.GONE);
+        hideProgress();
     }
 
     /**
@@ -384,7 +381,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void handleListSuccessResponse(JSONObject response) {
         JsonObject responObj = null;
         try {
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             JsonParser parser = new JsonParser();
             responObj = (JsonObject) parser.parse(response.toString());
             int total_pages = responObj.get("total_pages").getAsInt();
@@ -511,7 +508,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 pharmList.setEnabled(false);
                                 isLoading = true;
                                 bottomLoder.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.GONE);
+                                hideProgress();
                                 keyParams.put("page", ((int) keyParams.get("page")) + 1);
                                 keyParams.put("per_page", 10);
                                 Gson gson = new Gson();
@@ -577,7 +574,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      * While user clicks on the usePharmacy button which will set pharmacy as a user's default.
      */
     public void setPharmacyAsADefault(int pharmacyId) {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -587,7 +584,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
@@ -604,7 +601,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
     private void handleSuccessResponse(JSONObject response) {
         try {
-            progressBar.setVisibility(View.GONE);
+            hideProgress();
             reloadSlidingMenu();
             if(getIntent().hasExtra("FROM_MY_HEALTH")){
                 Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
@@ -630,11 +627,11 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
 
     public void checkInsuranceEligibility(){
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 try{
                     JSONObject jobj=new JSONObject(response.toString());
                     if(jobj.has("final_amount")){
@@ -660,7 +657,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
@@ -708,12 +705,12 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      *
      */
     private void doConfirmAppointment() {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    progressBar.setVisibility(View.GONE);
+                    hideProgress();
                     String apptId = response.getString("appointment_id");
                     if (apptId != null) {
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -735,7 +732,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
