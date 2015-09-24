@@ -39,7 +39,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
 
         try {
-            Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar  = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -92,13 +92,13 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
         if(fragment.equals("REPLACE CREDIT CARD")){
             if(getIntent().getStringExtra("Fragment_Name1").equals("ADD CREDIT CARD")){
-                title.setText(getString(R.string.mdl_add_card));
+                title.setText(getString(R.string.mdl_add_card).toUpperCase());
             }
             else if(getIntent().getStringExtra("Fragment_Name1").equals("VIEW CREDIT CARD")){
-                title.setText(getString(R.string.mdl_view_card));
+                title.setText(getString(R.string.mdl_view_card).toUpperCase());
             }
             else{
-            title.setText(getString(R.string.mdl_replace_card));}
+            title.setText(getString(R.string.mdl_replace_card).toUpperCase());}
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().
