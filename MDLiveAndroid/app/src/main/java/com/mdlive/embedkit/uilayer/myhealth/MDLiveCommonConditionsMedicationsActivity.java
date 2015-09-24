@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -101,7 +102,10 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 adapter.notifyDataSetChanged();
                 ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
             }
+            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.VISIBLE);
+
         }else{
+            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.GONE);
             isEditCalled = true;
             adapter.notifyDataSetChanged();
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
