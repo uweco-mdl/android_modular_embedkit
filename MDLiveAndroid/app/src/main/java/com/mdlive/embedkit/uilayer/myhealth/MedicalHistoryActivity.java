@@ -294,11 +294,10 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         if(getIntent().hasExtra("FROM_PHARMACY")){
             Log.d("On Resume - ", "From Pharmacy");
             getViewPager().setCurrentItem(0);
-        }
-        if(getIntent().hasExtra("FROM_SELECTION")){
+        }else if(getIntent().hasExtra("FROM_SELECTION")){
             Log.d("On Resume - ", "From Pharmacy");
-            getViewPager().setCurrentItem(1);
             reloadSlidingMenu();
+            getViewPager().setCurrentItem(1);
         }
     }
 }
