@@ -152,13 +152,72 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
-        changeAddress.setChecked(false);
 
 
+        mAddress1.setText("");
+        mAddress2.setText("");
+        mCity.setText("");
+        mState.setText("");
+        mZip.setText("");
+
+        changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+
+                    String name = prefs.getString("Profile_Address", "");
+                    try {
+                        JSONObject myProfile = new JSONObject(name);
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
+                            mAddress1.setText("");
+                        } else {
+                            mAddress1.setText(myProfile.getString("address1").trim());
+                        }
+
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
+                            mAddress2.setText("");
+                        } else {
+                            mAddress2.setText(myProfile.getString("address2").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
+                            mState.setText("");
+                        } else {
+                            mState.setText(myProfile.getString("state").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
+                            mCity.setText("");
+                        } else {
+                            mCity.setText(myProfile.getString("city").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
+                            mZip.setText("");
+                        } else {
+                            mZip.setText(myProfile.getString("zipcode").trim());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+//                    mAddress1.setText(address1);
+//                    mAddress2.setText(address2);
+//                    mCity.setText(city);
+//                    mState.setText(state);
+//                    mZip.setText(zip);
+                    mAddress1.setText("");
+                    mAddress2.setText("");
+                    mCity.setText("");
+                    mState.setText("");
+                    mZip.setText("");
+                }
+            }
+        });
 
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
+                 changeAddress.setChecked(false);
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
 //                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
 //                        ((MyAccountsHome) getActivity()).hideTick();
@@ -234,8 +293,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
+        }else{
+
+            changeAddress.setChecked(true);
         }
 
 
@@ -253,65 +314,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             }
         });
 
-        changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
 
-                    SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
-
-                    String name = prefs.getString("Profile_Address", "");
-                    try {
-                        JSONObject myProfile = new JSONObject(name);
-                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
-                            mAddress1.setText("");
-                        } else {
-                            mAddress1.setText(myProfile.getString("address1").trim());
-                        }
-
-                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
-                            mAddress2.setText("");
-                        } else {
-                            mAddress2.setText(myProfile.getString("address2").trim());
-                        }
-                        if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
-                            mState.setText("");
-                        } else {
-                            mState.setText(myProfile.getString("state").trim());
-                        }
-                        if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
-                            mCity.setText("");
-                        } else {
-                            mCity.setText(myProfile.getString("city").trim());
-                        }
-                        if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
-                            mZip.setText("");
-                        } else {
-                            mZip.setText(myProfile.getString("zipcode").trim());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-//                    mAddress1.setText(address1);
-//                    mAddress2.setText(address2);
-//                    mCity.setText(city);
-//                    mState.setText(state);
-//                    mZip.setText(zip);
-                    mAddress1.setText("");
-                    mAddress2.setText("");
-                    mCity.setText("");
-                    mState.setText("");
-                    mZip.setText("");
-                }
-            }
-        });
-
-        mAddress1.setText("");
-        mAddress2.setText("");
-        mCity.setText("");
-        mState.setText("");
-        mZip.setText("");
     }
     private void showDatePicker() {
         final Dialog d = new Dialog(getActivity());
@@ -384,6 +387,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         d.show();
     }
+
     public void addCreditCardInfo() {
 //        cardNumber = mCardNumber.getText().toString();
 //        securityCode = mSecurityCode.getText().toString();
@@ -474,6 +478,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
+
     private void initializeStateDialog() {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
