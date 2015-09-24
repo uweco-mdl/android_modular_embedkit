@@ -101,7 +101,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
 
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
-        mTitle.setText("Please enter your PIN");
+        mTitle.setText(changePin.getResources().getString(R.string.mdl_please_confirm_your_pin));
 
                mPassCode7.addTextChangedListener(this);
         mPassCode7.requestFocus();
@@ -345,7 +345,14 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    Log.e("responseBody",responseBody);
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                    } else {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                    }
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -432,7 +439,15 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    Log.e("responseBody",responseBody);
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                    } else {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                    }
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
