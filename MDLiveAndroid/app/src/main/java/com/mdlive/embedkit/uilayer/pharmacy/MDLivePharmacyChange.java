@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,7 +183,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         });
 
         //validation for Zip code
-        zipcodeText.setTag(null);
         zipcodeText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -196,9 +194,13 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                MdliveUtils.validateZipcodeFormat(zipcodeText);
+                if (zipcodeText.getText().toString().length() >= 9) {
+                    if (!zipcodeText.getText().toString().contains("-")) {
+                        String formattedString = MdliveUtils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
+                        zipcodeText.setText(formattedString);
+                    }
+                }
             }
-
         });
         cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
