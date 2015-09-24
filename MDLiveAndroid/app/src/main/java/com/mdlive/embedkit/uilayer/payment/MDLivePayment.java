@@ -51,7 +51,7 @@ import java.util.HashMap;
 
 public class MDLivePayment extends MDLiveBaseActivity {
 
-    private EditText dateView;/*edtZipCode*/
+    private TextView dateView;/*edtZipCode*/
     private int year, month;
     private String promoCode = null;
     private WebView HostedPCI;
@@ -105,7 +105,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
-        dateView = (EditText) findViewById(R.id.edtExpiryDate);
+        dateView = (TextView) findViewById(R.id.edtExpiryDate);
         setProgressBar(findViewById(R.id.progressDialog));
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
