@@ -173,7 +173,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-", "")));
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber().replaceAll("-", "")));
                                 startActivity(intent);
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
@@ -348,7 +348,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));
+                                    UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveGetStarted.this);
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber()));
                                     startActivity(intent);
                                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
