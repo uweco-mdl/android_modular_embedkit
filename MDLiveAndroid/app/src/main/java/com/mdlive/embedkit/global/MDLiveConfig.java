@@ -127,10 +127,10 @@ public class MDLiveConfig {
 
     // URL for NotificationService
     public static final String URL_NOTIFICATION = "/notifications";
-
     public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
-
     public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
+    public static final String GEOCODE_API_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/";
+    public static final String GEO_TARGET_DETAILS = "/geolocations/geo_target_details?ip_address=";
 
     static {
         System.loadLibrary("app");
@@ -290,25 +290,19 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_GET_FAMILY_MEMBER_INFO=URL_GET_FAMILY_MEMBER_INFO;
         AppSpecificConfig.URL_EDIT_PROFILE_INFO=URL_EDIT_PROFILE_INFO;
         AppSpecificConfig.URL_CHANGE_PROFILE_PIC=URL_CHANGE_PROFILE_PIC;
-
-
         AppSpecificConfig.URL_LIFE_STYLE = URL_LIFE_STYLE;
         AppSpecificConfig.URL_UPDATE_LIFE_STYLE = URL_UPDATE_LIFE_STYLE;
-
         AppSpecificConfig.URL_HELP_AND_SUPPORT = URL_HELP_AND_SUPPORT;
         AppSpecificConfig.URL_ASK_A_QUESTION = URL_ASK_A_QUESTION;
-
         AppSpecificConfig.URL_FAMILY_HISTORY = URL_FAMILY_HISTORY;
         AppSpecificConfig.URL_UPDATE_FAMILY_HISTORY = URL_UPDATE_FAMILY_HISTORY;
-
         AppSpecificConfig.URL_BEHAVIOURAL_HISTORY = URL_BEHAVIOURAL_HISTORY;
         AppSpecificConfig.URL_UPDATE_BEHAVIOURAL_HISTORY = URL_UPDATE_BEHAVIOURAL_HISTORY;
-
         AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
-
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
-
         AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
+        AppSpecificConfig.GEOCODE_API_ENDPOINT = GEOCODE_API_ENDPOINT;
+        AppSpecificConfig.GEO_TARGET_DETAILS = GEO_TARGET_DETAILS;
     }
 
     static native String getProdApiKeyFromNative();

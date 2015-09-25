@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,11 +43,12 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private Spinner mSpinner;
     private DashBoardSpinnerAdapter mAdapter;
 
-    private View mEmailConfirmationView;
+    private View mEmailConfirmationView,mDashBoardEmailLl;
 
-    private View mNotificationView;
+    private View mNotificationView, mEmailConfirmationIv;
 
-    private TextView mMessageCountTextView;
+    private TextView mMessageCountTextView,mEmailConfirmationTv;
+    private WebView mWebView;
 
     private UserBasicInfo mUserBasicInfo;
     private AdapterView.OnItemSelectedListener mOnItemSelectedListenerUserInfo = new AdapterView.OnItemSelectedListener() {
@@ -128,6 +131,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         mSpinner = (Spinner) view.findViewById(R.id.dash_board_spinner);
         mEmailConfirmationView = view.findViewById(R.id.dash_board_email_text_view);
+        mEmailConfirmationTv = (TextView) view.findViewById(R.id.email_confirmation_tv);
+        mEmailConfirmationIv = view.findViewById(R.id.email_confirmation_iv);
+        mDashBoardEmailLl = view.findViewById(R.id.dash_board_email_ll);
+        mWebView = (WebView)view.findViewById(R.id.webView);
         mEmailConfirmationView.setVisibility(View.GONE);
 
         mNotificationView = view.findViewById(R.id.dash_board_notification_layout);
@@ -159,49 +166,72 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     }
 
     public void onUserInformationLoaded(final UserBasicInfo userBasicInfo) {
-        if (mSpinner != null) {
-            mUserBasicInfo = userBasicInfo;
-            List<User> users = null;
+        try {
+            if (mSpinner != null) {
+                mUserBasicInfo = userBasicInfo;
+                List<User> users = null;
 
-            if (mUserBasicInfo.getPrimaryUser()) {
-                users = UserBasicInfo.getUsersAsPrimaryUser(getActivity());
-            } else {
-                users = UserBasicInfo.getUsersAsDependentUser(getActivity());
-            }
-
-            if (mAdapter != null) {
-                mAdapter.clear();
-                mAdapter.addAll(users);
-            } else {
-                mAdapter = new DashBoardSpinnerAdapter(getActivity(), android.R.layout.simple_list_item_1, users);
-            }
-
-            if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-                mEmailConfirmationView.setVisibility(View.GONE);
-            } else {
-                mEmailConfirmationView.setVisibility(View.VISIBLE);
-            }
-
-            if (mMessageCountTextView != null) {
-                if (userBasicInfo.getNotifications().getMessages() > 0) {
-                    mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
-                    mMessageCountTextView.setVisibility(View.VISIBLE);
+                if (mUserBasicInfo.getPrimaryUser()) {
+                    users = UserBasicInfo.getUsersAsPrimaryUser(getActivity());
+                } else {
+                    users = UserBasicInfo.getUsersAsDependentUser(getActivity());
                 }
-            }
 
-            SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor1 = sharedPref.edit();
-            editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
-            editor1.commit();
-            mSpinner.setOnItemSelectedListener(null);
-            mSpinner.setAdapter(mAdapter);
-            // Preventing  onItemSeleection to get callied
-            mSpinner.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSpinner.setOnItemSelectedListener(mOnItemSelectedListenerUserInfo);
+                if (mAdapter != null) {
+                    mAdapter.clear();
+                    mAdapter.addAll(users);
+                } else {
+                    mAdapter = new DashBoardSpinnerAdapter(getActivity(), android.R.layout.simple_list_item_1, users);
                 }
-            }, 100);
+
+                if (mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+                    mEmailConfirmationView.setVisibility(View.GONE);
+                } else {
+                    mEmailConfirmationView.setVisibility(View.VISIBLE);
+                }
+                if (mMessageCountTextView != null) {
+                    if (userBasicInfo.getNotifications().getMessages() > 0) {
+                        mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
+                        mMessageCountTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = sharedPref.edit();
+                editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
+                editor1.commit();
+                final JSONObject obj = new JSONObject(sharedPref.getString(PreferenceConstants.HEALTH_SYSTEM_PREFERENCES, "{}"));
+                if (obj.length() > 0){
+                    mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
+                    mEmailConfirmationView.setVisibility(View.VISIBLE);
+                    mEmailConfirmationIv.setVisibility(View.VISIBLE);
+                    mEmailConfirmationTv.setText(obj.optString("footer_text"));
+                    mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.darkgreyTextColor));
+                    mEmailConfirmationTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    mDashBoardEmailLl.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mWebView.setVisibility(View.VISIBLE);
+                            mWebView.loadUrl(obj.optString("iframe_url"));
+                            mWebView.getSettings().setLoadWithOverviewMode(true);
+                            mWebView.getSettings().setUseWideViewPort(true);
+                            mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+                            mWebView.getSettings().setBuiltInZoomControls(true);
+                        }
+                    });
+                }
+                mSpinner.setOnItemSelectedListener(null);
+                mSpinner.setAdapter(mAdapter);
+                // Preventing  onItemSeleection to get callied
+                mSpinner.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSpinner.setOnItemSelectedListener(mOnItemSelectedListenerUserInfo);
+                    }
+                }, 100);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 
