@@ -64,7 +64,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private Button myText;
     private CircularNetworkImageView ProfileImg;
-    public String DoctorId,str_ProfileImg="",str_Availability_Type = "",selectedTimestamp,str_phys_avail_id;
+    public String DoctorId,str_ProfileImg="",str_Availability_Type = "",selectedTimestamp,str_phys_avail_id,str_appointmenttype = "";
     private TextView tapSeetheDoctorTxt, byvideoBtn,byphoneBtn,reqfutureapptBtn;
     private LinearLayout tapSeetheDoctorTxtLayout, byvideoBtnLayout, byphoneBtnLayout,videophoneparentLl;
     private RelativeLayout reqfutureapptBtnLayout;
@@ -301,7 +301,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         boolean isDoctorAvailableNow = false, isDoctorWithPatient = false;
         LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-        String str_appointmenttype = "", str_timeslot = "", str_phys_avail_id = "", str_Availability_Type = "";
+        String  str_timeslot = "", str_phys_avail_id = "", str_Availability_Type = "";
         if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
             str_Availability_Type = providerdetObj.get("availability_type").getAsString();
         }
@@ -1112,6 +1112,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         horizontalscrollview.setVisibility(View.GONE);
         //This condition is only for PHS Users
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        //PHS user
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
         {
 
@@ -1210,8 +1211,9 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
             // If Appointmne type is only video
 
-            if(str_Availability_Type.equalsIgnoreCase("phone"))
-            {
+//            if(str_Availability_Type.equalsIgnoreCase("phone"))
+            if(str_appointmenttype.equalsIgnoreCase("phone"))
+            {   Log.e("Phone List",phoneList.size()+"");
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtn.setTextColor(Color.GRAY);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
@@ -1255,9 +1257,9 @@ if(str_avail_status.equalsIgnoreCase("true"))
                     }
                 });
 
-            }else
-            if(str_Availability_Type.equalsIgnoreCase("video"))
+            }else  if(str_appointmenttype.equalsIgnoreCase("video"))
             {
+                Log.e("Video List",videoList.size()+"");
 
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtn.setTextColor(Color.GRAY);
@@ -1450,12 +1452,16 @@ if(str_avail_status.equalsIgnoreCase("true"))
             Log.e("appoint video", timeSlotListMap.get(position).get("appointment_type"));
             Log.e("video_timeslot", str_timeslot);
 
+            Log.e("video_count timeslott", myText.getText().toString());
+
             videoList.add(myText);
+            Log.e("videoList", ""+videoList.size());
         }
 
         if(timeSlotListMap.get(position).get("appointment_type").contains("phone") && str_timeslot != null && !str_timeslot.equals("0")){
             Log.e("appoint phone", timeSlotListMap.get(position).get("appointment_type"));
             Log.e("phone_timeslot", str_timeslot);
+            Log.e("phone_count timeslott", myText.toString());
             phoneList.add(myText);
         }
 
