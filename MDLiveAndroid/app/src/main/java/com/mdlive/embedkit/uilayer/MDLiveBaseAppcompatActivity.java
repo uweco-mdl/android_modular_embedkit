@@ -372,7 +372,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        MdliveUtils.showDialog(getBaseContext(), getString(R.string.mdl_app_name), response.getString("message"));
+                        MdliveUtils.showDialog(MDLiveBaseAppcompatActivity.this, getString(R.string.mdl_app_name), response.getString("message"));
                     } catch (JSONException e) {
                     }
                 }
