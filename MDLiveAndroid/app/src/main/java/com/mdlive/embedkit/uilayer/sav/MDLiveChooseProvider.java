@@ -53,7 +53,7 @@ import java.util.TimeZone;
  * and Doctor on call will be hidden when the response is false.
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
-    private static final long THIRTY_SECONDS = 30 * 1000;
+    private static final long THIRTY_SECONDS = 60 * 1000;
     private ListView listView;
     private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
