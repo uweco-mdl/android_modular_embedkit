@@ -205,6 +205,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
                     mEmailConfirmationView.setVisibility(View.VISIBLE);
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
+                    mEmailConfirmationTv.setClickable(false);
                     mEmailConfirmationTv.setText(obj.optString("footer_text"));
                     mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.darkgreyTextColor));
                     mEmailConfirmationTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
