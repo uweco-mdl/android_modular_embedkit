@@ -101,7 +101,8 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
         final StringBuilder builder = new StringBuilder();
         builder.append(appointment.getPhysicianName() + "\n");
-        builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "EDT") + "\n");
+        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "EDT") + "\n");
+        builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "EDT") + "\n");
         builder.append(appointment.getApptType());
 
         viewHolder.mTextView.setText(builder.toString());
