@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
-//    private EditText mCardNumber = null;
+    //    private EditText mCardNumber = null;
 //    private EditText mSecurityCode = null;
     private TextView mCardExpirationMonth = null;
     private EditText mNameOnCard = null;
@@ -122,7 +122,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
                 if (jobj.getString("status").equals("success")) {
-                    addCreditCardInfo();
+                    JSONObject billingObj = jobj.getJSONObject("billing_information");
+                    addCreditCardInfo(billingObj.getString("cc_num"),billingObj.getString("cc_cvv2"),billingObj.getString("cc_hsa"),billingObj.getString("cc_type_id"));
                 } else {
                     MdliveUtils.alert(getProgressDialog(), getActivity(), jobj.getString("status"));
                 }
@@ -136,6 +137,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         @JavascriptInterface
         public void scanCreditCard() {
         }
+    }
+
+    public void callHpci() {
+        myAccountHostedPCI.loadUrl("javascript:tokenizeForm()");
     }
 
     public void init(View billingInformation) {
@@ -217,7 +222,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
-                 changeAddress.setChecked(false);
+                changeAddress.setChecked(false);
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
 //                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
 //                        ((MyAccountsHome) getActivity()).hideTick();
@@ -246,6 +251,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
+
+
 
 //                    mCardNumber.setText(cardNumber);
 //                    mSecurityCode.setText(securityCode);
@@ -388,7 +395,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         d.show();
     }
 
-    public void addCreditCardInfo() {
+    public void addCreditCardInfo(String cardNumber,String cvv,String isHSA,String ccTypeId) {
 //        cardNumber = mCardNumber.getText().toString();
 //        securityCode = mSecurityCode.getText().toString();
         nameOnCard = mNameOnCard.getText().toString().trim();
@@ -404,18 +411,19 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("cc_type_id", 2);
+                jsonObject.put("cc_type_id", ccTypeId);
                 jsonObject.put("billing_address1", address1);
                 jsonObject.put("billing_zip5", zip);
                 jsonObject.put("billing_address2", address2);
-                jsonObject.put("cc_hsa", true);
+                jsonObject.put("cc_hsa", Boolean.valueOf(isHSA));
                 jsonObject.put("cc_expyear", cardExpirationYear);
                 jsonObject.put("billing_name", nameOnCard);
                 jsonObject.put("billing_city", city);
                 jsonObject.put("billing_state_id", state);
                 jsonObject.put("cc_expmonth", cardExpirationMonth);
-                jsonObject.put("cc_cvv2", "123");
-                jsonObject.put("cc_num", "4111111111111111");
+                jsonObject.put("cc_cvv2", cvv);
+                Log.i("cvv", "" + cvv);
+                jsonObject.put("cc_num", cardNumber);
                 jsonObject.put("billing_country_id", country);
 
                 parent.put("billing_information", jsonObject);
@@ -436,7 +444,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
 
     private void loadBillingInfo(String params) {
-        showProgressDialog();
+        showDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -450,7 +458,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
+                dismissDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
@@ -470,8 +478,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
-            hideProgressDialog();
-
+            dismissDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {
@@ -495,9 +502,34 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 String SelectedText = stateIds.get(i);
                 mState.setText(SelectedText);
                 dialogInterface.dismiss();
+
             }
         });
         builder.show();
     }
+
+    private void dismissDialog() {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    hideProgressDialog();
+                } catch (final Exception ex) {
+                }
+            }
+        });
+    }
+
+    public void showDialog() {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    showProgressDialog();
+                } catch (final Exception ex) {
+
+                }
+            }
+        });
+    }
+
 
 }

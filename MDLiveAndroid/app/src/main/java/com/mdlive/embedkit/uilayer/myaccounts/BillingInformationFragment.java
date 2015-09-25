@@ -34,6 +34,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
     private String cardExpirationMonth = null;
     private String cardExpirationYear = null;
     private String nameOnCard = null;
+    private String mobile = null;
     private String address1 = null;
     private String address2 = null;
     private String city = null;
@@ -161,8 +162,9 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
                 securityCode = myProfile.getString("cc_cvv2");
                 cardNumber = myProfile.getString("cc_number");
                 state = myProfile.getString("billing_state");
-//            mobile = myProfile.getString("cc_type_id");
+                mobile = myProfile.getString("cc_type_id");
                 address2 = myProfile.getString("billing_address2");
+
                 if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
                     address2="";
                 }
@@ -176,7 +178,22 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
                     mReplaceCreditCard.setText(getResources().getString(R.string.mdl_add_card));
                     mviewCreditCard.setVisibility(View.GONE);
                 } else {
-                    mCreditCardDate.setText("Mastercard ending in " + cardNumber);
+//                    mCreditCardDate.setText("Mastercard ending in " + cardNumber);
+                    if(mobile.equalsIgnoreCase("1")) {
+
+                      mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                    }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
+
+                        mCreditCardDate.setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
+                    }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
+
+                        mCreditCardDate.setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
+                    }
+
+                    else
+                    {
+                        mCreditCardDate.setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                    }
 
                     mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
                             city + ", " + state + "\n" + country);

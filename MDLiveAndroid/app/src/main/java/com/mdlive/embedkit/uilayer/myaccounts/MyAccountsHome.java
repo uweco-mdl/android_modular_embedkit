@@ -184,7 +184,8 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if (fragment!= null && fragment instanceof CreditCardInfoFragment) {
-            ((CreditCardInfoFragment) fragment).addCreditCardInfo();
+            ((CreditCardInfoFragment) fragment).callHpci();//Calling Hpci to validate the card details.
+
         }
 
         if (fragment!= null && fragment instanceof AddFamilyMemberFragment) {

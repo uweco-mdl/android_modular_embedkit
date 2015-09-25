@@ -224,7 +224,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
                     }
                     else if(myProfile.getString("cc_type_id").equalsIgnoreCase("5")) {
-
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
                     }
 
