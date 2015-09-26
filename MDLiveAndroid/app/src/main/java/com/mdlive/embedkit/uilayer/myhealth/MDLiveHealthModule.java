@@ -136,8 +136,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             initializeViews();
             if(getIntent() != null && getIntent().hasExtra("Name")){
-                procedureNameList.add(getIntent().getStringExtra("Name"));
-                procedureYearList.add(getIntent().getStringExtra("Year"));
+                /*procedureNameList.add(getIntent().getStringExtra("Name"));
+                procedureYearList.add(getIntent().getStringExtra("Year"));*/
                 surgeryName.setText(getIntent().getStringExtra("Name"));
                 surgeryYear.setText(getIntent().getStringExtra("Year"));
                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
@@ -319,6 +319,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             String dateofBirth =userBasicInfo.getPersonalInfo().getBirthdate();
 //            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
+            procedureYearList.clear();
+            Log.e("dateofBirth", dateofBirth);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
@@ -326,6 +328,9 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 for(int i = years; i <= Calendar.getInstance().get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
                     Log.e("Years--->", i+"");
+                }
+                if(procedureYearList.size() == 0){
+                    procedureYearList.add(Calendar.getInstance().get(Calendar.YEAR)+"");
                 }
             }
             yearAdapter.notifyDataSetChanged();
@@ -379,8 +384,6 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         }
         nameAdapter.notifyDataSetChanged();
         if(getIntent() != null && getIntent().hasExtra("Name")){
-            procedureNameList.add(getIntent().getStringExtra("Name"));
-            procedureYearList.add(getIntent().getStringExtra("Year"));
             surgeryName.setText(getIntent().getStringExtra("Name"));
             surgeryYear.setText(getIntent().getStringExtra("Year"));
         }

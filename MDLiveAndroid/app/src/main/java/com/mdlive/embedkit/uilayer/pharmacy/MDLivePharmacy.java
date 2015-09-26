@@ -366,7 +366,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("do_you_have_primary_care_physician", "No");
+        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
 //
 //        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
