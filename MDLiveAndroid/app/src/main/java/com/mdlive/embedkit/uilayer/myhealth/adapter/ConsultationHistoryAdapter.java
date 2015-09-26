@@ -13,6 +13,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterComposeActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
 
 /**
@@ -120,8 +121,16 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     }
 
     private void launchBrowserIntent(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        context.startActivity(browserIntent);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            if (browserIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                context.startActivity(browserIntent);
+            } else {
+                MdliveUtils.showDialog(context, context.getString(R.string.mdl_app_name), context.getString(R.string.mdl_no_compitable_app));
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private void launchComposeMessage(ConsultationHistory consultationHistory){
