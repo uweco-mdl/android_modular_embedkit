@@ -77,6 +77,12 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+
+        if (DeepLinkUtils.DEEPLINK_DATA != null
+                && DeepLinkUtils.DEEPLINK_DATA.getPage() != null
+                && DeepLinkUtils.DEEPLINK_DATA.getPage().length() > 0) {
+            findViewById(R.id.drawer_layout).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -269,6 +275,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
             }
 
             DeepLinkUtils.DEEPLINK_DATA.setPage("");
+            findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
         }
     }
 }

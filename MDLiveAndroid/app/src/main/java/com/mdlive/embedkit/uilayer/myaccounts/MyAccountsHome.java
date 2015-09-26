@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
@@ -39,7 +41,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
 
         try {
-            Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar  = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -92,13 +94,13 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
 
         if(fragment.equals("REPLACE CREDIT CARD")){
             if(getIntent().getStringExtra("Fragment_Name1").equals("ADD CREDIT CARD")){
-                title.setText(getString(R.string.mdl_add_card));
+                title.setText(getString(R.string.mdl_add_card).toUpperCase());
             }
             else if(getIntent().getStringExtra("Fragment_Name1").equals("VIEW CREDIT CARD")){
-                title.setText(getString(R.string.mdl_view_card));
+                title.setText(getString(R.string.mdl_view_card).toUpperCase());
             }
             else{
-            title.setText(getString(R.string.mdl_replace_card));}
+            title.setText(getString(R.string.mdl_replace_card).toUpperCase());}
             response = getIntent().getStringExtra("Credit_Card_Response");
             getSupportFragmentManager().
                     beginTransaction().
@@ -182,7 +184,8 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if (fragment!= null && fragment instanceof CreditCardInfoFragment) {
-            ((CreditCardInfoFragment) fragment).addCreditCardInfo();
+            ((CreditCardInfoFragment) fragment).callHpci();//Calling Hpci to validate the card details.
+
         }
 
         if (fragment!= null && fragment instanceof AddFamilyMemberFragment) {
@@ -256,4 +259,10 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
     }
 
+    public void clearMinimizedTime() {
+        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

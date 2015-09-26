@@ -137,6 +137,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         txtDietTypeHeader = (TextView) findViewById(R.id.txt_dietTypeHeader);
         TextView txtAge = (TextView) findViewById(R.id.ageTxt);
         edtCurrentWeight = (EditText) findViewById(R.id.edt_currentweight);
+
         setProgressBar(findViewById(R.id.progressDialog));
 
         edtCurrentWeight.addTextChangedListener(new TextWatcher() {
@@ -165,9 +166,11 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         edtLastShot = (EditText) findViewById(R.id.edt_lastshot);
         lasShotLabel = (TextView) findViewById(R.id.txt_lastShot_label);
         birthComplicationLayout = (RelativeLayout) findViewById(R.id.layout_birthComplications);
+        View birthCompView=findViewById(R.id.birth_complication_view);
         if (checkPerdiatricAge()) {
             txtAge.setText(getString(R.string.mdl_AgeUnder13));
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
+            birthCompView.setVisibility(View.GONE);
             edtBirthComplications.setVisibility(View.GONE);
             dietLayout.setVisibility(View.GONE);
             txtDietType.setVisibility(View.GONE);
@@ -175,6 +178,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         } else {
             txtAge.setText(getString(R.string.mdl_AgeUnder2));
             birthComplicationLayout.setVisibility(View.VISIBLE);//view  this layout for adult users
+            birthCompView.setVisibility(View.VISIBLE);
             dietLayout.setVisibility(View.VISIBLE);
             txtDietType.setVisibility(View.VISIBLE);
             txtDietTypeHeader.setVisibility(View.VISIBLE);

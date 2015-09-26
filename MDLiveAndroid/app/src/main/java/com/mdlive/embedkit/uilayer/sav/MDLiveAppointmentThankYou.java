@@ -18,7 +18,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
  * Created by sudha_s on 8/23/2015.
  */
 public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
-    private String providerName,providerType,consultationType,consultationDate,Time,phone,doctorEVisit;
+    private String providerName,consultationDate,Time;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +75,6 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
         ((TextView)findViewById(R.id.provider)).setText(providerName);
-        providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
-        consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-
-        phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
-        doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         String activityCaller = null;
         if(getIntent().hasExtra("activitycaller")){
             activityCaller  = getIntent().getStringExtra("activitycaller");

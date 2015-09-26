@@ -51,7 +51,7 @@ import java.util.HashMap;
 
 public class MDLivePayment extends MDLiveBaseActivity {
 
-    private EditText dateView;/*edtZipCode*/
+    private TextView dateView;/*edtZipCode*/
     private int year, month;
     private String promoCode = null;
     private WebView HostedPCI;
@@ -105,7 +105,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
 
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
-        dateView = (EditText) findViewById(R.id.edtExpiryDate);
+        dateView = (TextView) findViewById(R.id.edtExpiryDate);
         setProgressBar(findViewById(R.id.progressDialog));
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,7 +216,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
                 } else {
                     Log.e("inside","Am not in Null");
-                    ((TextView)findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details)+" "+myProfile.getString("cc_number"));
+                    if(myProfile.getString("cc_type_id").equalsIgnoreCase("1")) {
+
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                    }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
+
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
+                    }
+                    else if(myProfile.getString("cc_type_id").equalsIgnoreCase("5")) {
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
+                    }
+
+                    else
+                    {
+                        ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                    }
                     ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);
                 }

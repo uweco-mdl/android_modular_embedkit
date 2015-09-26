@@ -66,7 +66,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.txt_phone_summary)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-", "")));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber().replaceAll("-", "")));
                 startActivity(intent);
                 MdliveUtils.startActivityAnimation(MDLiveSummary.this);
             }

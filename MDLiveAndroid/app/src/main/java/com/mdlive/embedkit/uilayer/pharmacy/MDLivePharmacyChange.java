@@ -134,7 +134,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
             finish();
         } else {
-            MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
+            MdliveUtils.showDialog(MDLivePharmacyChange.this, "MDLIVE", hasErrorMessage);
         }
     }
 
@@ -282,7 +282,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 finish();
             }
         } else {
-            MdliveUtils.showDialog(MDLivePharmacyChange.this, "Alert", hasErrorMessage);
+            MdliveUtils.showDialog(MDLivePharmacyChange.this, "MDLIVE", hasErrorMessage);
         }
     }
 

@@ -53,7 +53,7 @@ import java.util.TimeZone;
  * and Doctor on call will be hidden when the response is false.
  */
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
-    private static final long THIRTY_SECONDS = 30 * 1000;
+    private static final long THIRTY_SECONDS = 60 * 1000;
     private ListView listView;
     private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
     private long strDate,shared_timestamp;
@@ -64,12 +64,17 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private RelativeLayout docOnCalLinLay;
     private Button seeNextAvailableBtn;
     private TextView loadingTxt;
+    private boolean flag = false;
 
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            ChooseProviderResponseList();
+            if(flag){
+                ChooseProviderResponseList();
+            }else{
+                flag = true;
+            }
             mHandler.postDelayed(this, THIRTY_SECONDS);
         }
     };
@@ -113,6 +118,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         mHandler = new Handler();
         setListViews();
+        mHandler.post(mRunnable);
     }
 
     @Override
@@ -125,6 +131,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
+        flag = false;
     }
 
     public void leftBtnOnClick(View v){
@@ -213,6 +220,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 setInfoVisibilty();
                 docOnCalLinLay.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
+                ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                 ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
@@ -224,6 +232,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {
                                 public void run() {
+                                    filterMainRl.setVisibility(View.GONE);
+                                    ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                                     MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -239,6 +249,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                         }
                     } else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
+                        filterMainRl.setVisibility(View.GONE);
+                        ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                     }
                 }catch(Exception e){
                     setInfoVisibilty();
@@ -278,6 +290,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             setBodyContent(responseArray);
                             //setListView();
                         } else {
+                            filterMainRl.setVisibility(View.GONE);
+                           ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -306,9 +320,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             //setListView();
                         }else{
                             showOrHideFooter();
+                            ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                            filterMainRl.setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
                                     finish();
                                 }
                             });
@@ -395,34 +412,35 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }else{
                     specialty = responArray.get(i).getAsJsonObject().get("speciality").getAsString();
                 }
-                if (responArray.get(i).getAsJsonObject().get("id").isJsonNull()){
-                    doctorId ="" ;
-                }else{
+
                     doctorId = responArray.get(i).getAsJsonObject().get("id").getAsString();
-                }
-                if (responArray.get(i).getAsJsonObject().get("provider_image_url").isJsonNull()){
-                    imageUrl = "";
-                }else{
+
                     imageUrl = responArray.get(i).getAsJsonObject().get("provider_image_url").getAsString();
-                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
             JsonArray  affiliationsArray = responArray.get(i).getAsJsonObject().get("provider_groups").getAsJsonArray();
+            String nxtavaildate="";
             for(int j=0;j<affiliationsArray.size();j++) {
                 groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
                 Log.e("affiliationsArray-->", groupAffiliations);
             }
             try {
+                long nextAvailabilityTimeStamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
-                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
-                    strDate = IntegerConstants.DATE_FLAG;
-                else
-                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+//                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
+//                    strDate = IntegerConstants.DATE_FLAG;
+//                else
+//                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+
                 if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull()){
                     shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
+                    nxtavaildate= MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
                 }else{
+                    nxtavaildate=null;
                     shared_timestamp = 0;
                 }
             } catch (Exception e) {
@@ -435,13 +453,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
-            map.put("specialty", specialty);
             map.put("id", doctorId);
             map.put("provider_image_url", imageUrl);
             map.put("availability_type", availabilityType);
             map.put("available_now_status", available_now_status+"");
             map.put("group_name", groupAffiliations);
-            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",strDate+"");
+            map.put("next_availability",nxtavaildate);
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
             Log.e("check providerlist",providerListMap.toString());
@@ -463,13 +482,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_TRUE);
-            map.put("specialty", specialty);
             map.put("provider_image_url", imageUrl);
             map.put("id", doctorId);
             map.put("availability_type", availabilityType);
             map.put("group_name", groupAffiliations);
             map.put("available_now_status", available_now_status+"");
-            map.put("next_availability",getDateCurrentTimeZone(strDate));
+            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+//            map.put("next_availability",strDate+"");
             providerListMap.add(map);
             filterMainRl.setVisibility(View.GONE);
         }
@@ -490,8 +509,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e("List","Am in ListItem Click Listener");
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
+                Log.e("Provider availabilityType",providerListMap.get(position).get("availability_type"));
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
-                        providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"));
+                        providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"),providerListMap.get(position).get("availability_type"),providerListMap.get(position).get("available_now_status"));
                 Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
@@ -563,7 +583,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *      triggerred in the Requird places.
      *
      */
-    public void saveDoctorId(String DocorId, String AppointmentDate, String docName ,String groupAffiliations)
+    public void saveDoctorId(String DocorId, String AppointmentDate, String docName ,String groupAffiliations,String availability_type,String availability_status)
     {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -571,6 +591,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, docName);
         editor.putString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, AppointmentDate);
         editor.putString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, groupAffiliations);
+        editor.putString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES, availability_type);
+        editor.putString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES, availability_status);
         editor.commit();
     }
     /**

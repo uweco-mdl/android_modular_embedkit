@@ -207,23 +207,33 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                         mListView.setAdapter(null);
                     }
 
-                    mProviderAdapter = new ProviderAdapter(getView().getContext(), R.layout.new_adapter_layout, android.R.id.text1);
+                    if (getActivity() == null) {
+                        return;
+                    }
+                    mProviderAdapter = new ProviderAdapter(getActivity(), R.layout.new_adapter_layout, android.R.id.text1);
 
                     if(provider.primaryCarePhysician!=null && provider.primaryCarePhysician.firstName!=null && provider.primaryCarePhysician.lastName!=null){
-                        mHeaderView.findViewById(R.id.AddPcpText).setVisibility(View.GONE);
-                        mHeaderView.findViewById(R.id.PcpValueLl).setVisibility(View.VISIBLE);
-                        ((TextView)mHeaderView.findViewById(R.id.ProviderName)).setText(provider.primaryCarePhysician.firstName + " " + provider.primaryCarePhysician.lastName);
+                        if (mHeaderView != null && mHeaderView.findViewById(R.id.AddPcpText) != null) {
+                            mHeaderView.findViewById(R.id.AddPcpText).setVisibility(View.GONE);
+                        }
+                        if (mHeaderView != null && mHeaderView.findViewById(R.id.PcpValueLl) != null) {
+                            mHeaderView.findViewById(R.id.PcpValueLl).setVisibility(View.VISIBLE);
+                        }
+                        if (mHeaderView != null && mHeaderView.findViewById(R.id.ProviderName) != null) {
+                            ((TextView) mHeaderView.findViewById(R.id.ProviderName)).setText(provider.primaryCarePhysician.firstName + " " + provider.primaryCarePhysician.lastName);
+                        }
                     }
 
-
-                    mListView.addHeaderView(mHeaderView);
+                    if (mHeaderView != null) {
+                        mListView.addHeaderView(mHeaderView);
+                    }
                     mListView.setAdapter(mProviderAdapter);
                     mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             i -= mListView.getHeaderViewsCount();
                             final MyProvider provider = mProviderAdapter.getItem(i);
-                            Intent intent = new Intent(getActivity(),ProviderDetailsActivity.class);
+                            Intent intent = new Intent(getActivity(), ProviderDetailsActivity.class);
                             intent.putExtra("ProviderID", String.valueOf(provider.providerId));
                             getActivity().startActivity(intent);
                         }

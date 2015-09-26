@@ -1,5 +1,7 @@
 package com.mdlive.embedkit.uilayer.login.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 
@@ -94,9 +97,11 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         }
 
         final Appointment appointment = mAppointments.get(position);
-
+        SharedPreferences sharedpreferences = convertView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
         final StringBuilder builder = new StringBuilder();
         builder.append(appointment.getPhysicianName() + "\n");
+        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "EDT") + "\n");
         builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "EDT") + "\n");
         builder.append(appointment.getApptType());
 

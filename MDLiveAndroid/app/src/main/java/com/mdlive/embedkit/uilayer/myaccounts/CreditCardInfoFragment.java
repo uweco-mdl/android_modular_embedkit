@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
-//    private EditText mCardNumber = null;
+    //    private EditText mCardNumber = null;
 //    private EditText mSecurityCode = null;
     private TextView mCardExpirationMonth = null;
     private EditText mNameOnCard = null;
@@ -141,7 +141,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
                 if (jobj.getString("status").equals("success")) {
-                    addCreditCardInfo();
+                    JSONObject billingObj = jobj.getJSONObject("billing_information");
+                    addCreditCardInfo(billingObj.getString("cc_num"),billingObj.getString("cc_cvv2"),billingObj.getString("cc_hsa"),billingObj.getString("cc_type_id"));
                 } else {
                     MdliveUtils.alert(getProgressDialog(), getActivity(), jobj.getString("status"));
                 }
@@ -155,6 +156,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         @JavascriptInterface
         public void scanCreditCard() {
         }
+    }
+
+    public void callHpci() {
+        myAccountHostedPCI.loadUrl("javascript:tokenizeForm()");
     }
 
     public void init(View billingInformation) {
@@ -171,13 +176,72 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
-        changeAddress.setChecked(false);
 
 
+        mAddress1.setText("");
+        mAddress2.setText("");
+        mCity.setText("");
+        mState.setText("");
+        mZip.setText("");
+
+        changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+
+                    String name = prefs.getString("Profile_Address", "");
+                    try {
+                        JSONObject myProfile = new JSONObject(name);
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
+                            mAddress1.setText("");
+                        } else {
+                            mAddress1.setText(myProfile.getString("address1").trim());
+                        }
+
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
+                            mAddress2.setText("");
+                        } else {
+                            mAddress2.setText(myProfile.getString("address2").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
+                            mState.setText("");
+                        } else {
+                            mState.setText(myProfile.getString("state").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
+                            mCity.setText("");
+                        } else {
+                            mCity.setText(myProfile.getString("city").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
+                            mZip.setText("");
+                        } else {
+                            mZip.setText(myProfile.getString("zipcode").trim());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+//                    mAddress1.setText(address1);
+//                    mAddress2.setText(address2);
+//                    mCity.setText(city);
+//                    mState.setText(state);
+//                    mZip.setText(zip);
+                    mAddress1.setText("");
+                    mAddress2.setText("");
+                    mCity.setText("");
+                    mState.setText("");
+                    mZip.setText("");
+                }
+            }
+        });
 
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
+                changeAddress.setChecked(false);
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
 //                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
 //                        ((MyAccountsHome) getActivity()).hideTick();
@@ -206,6 +270,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
+
+
 
 //                    mCardNumber.setText(cardNumber);
 //                    mSecurityCode.setText(securityCode);
@@ -253,8 +319,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
+        }else{
+
+            changeAddress.setChecked(true);
         }
 
 
@@ -446,7 +514,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
 
     private void loadBillingInfo(String params) {
-        showProgressDialog();
+        showDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -460,7 +528,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                hideProgressDialog();
+                dismissDialog();
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
@@ -480,14 +548,14 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
-            hideProgressDialog();
-
+            dismissDialog();
             Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private void initializeStateDialog() {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
@@ -504,9 +572,34 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 String SelectedText = stateIds.get(i);
                 mState.setText(SelectedText);
                 dialogInterface.dismiss();
+
             }
         });
         builder.show();
     }
+
+    private void dismissDialog() {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    hideProgressDialog();
+                } catch (final Exception ex) {
+                }
+            }
+        });
+    }
+
+    public void showDialog() {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    showProgressDialog();
+                } catch (final Exception ex) {
+
+                }
+            }
+        });
+    }
+
 
 }

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
@@ -46,6 +47,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -79,7 +81,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String, String> postParams = new HashMap<>();
-    public String filter_SavedLocation, SavedLocation,postProviderId;
+    public String filter_SavedLocation, SavedLocation,postProviderId,serverDateFormat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +102,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provicer));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider_caps));
 
 
         initialiseData();
@@ -255,7 +257,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         postParams.put("located_in", filter_SavedLocation);
         postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
 
-        postParams.put("appointment_date", AppointmentTxtView.getText().toString());
+        postParams.put("appointment_date", serverDateFormat);//date needs to be sent in (yyyy/MM/dd)this format to server.
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
         postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
@@ -646,11 +648,29 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             hideProgress();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
-            Intent intent = new Intent();
-            intent.putExtra("Response", response.toString());
-            setResult(1, intent);
-            MdliveUtils.hideSoftKeyboard(MDLiveSearchProvider.this);
-            finish();
+            if(!responObj.isJsonNull()){
+                JsonArray responArray = responObj.get("physicians").getAsJsonArray();
+                if (responArray.size() != 0) {
+                    if (responArray.get(0).isJsonObject()) {
+                        Intent intent = new Intent();
+                        intent.putExtra("Response", response.toString());
+                        setResult(1, intent);
+                        finish();
+                        MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
+                    }else{
+                        MdliveUtils.showDialog(MDLiveSearchProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                    }
+                }
+            }
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -665,6 +685,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         // Show current date
         String format = new SimpleDateFormat("MMM d, yyyy").format(c.getTime());
         selectedText.setText(format);
+        serverDateFormat=new SimpleDateFormat("yyyy/MM/dd").format(c.getTime());
 //        selectedText.setText(new StringBuilder()
 //                // Month is 0 based, just add 1
 //                .append(month + 1).append("/").append(day).append("/")
@@ -702,6 +723,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
             String format = new SimpleDateFormat("MMM d, yyyy").format(cal.getTime());
+            serverDateFormat=new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime());
             // Show selected date
             AppointmentTxtView.setText(format);
 

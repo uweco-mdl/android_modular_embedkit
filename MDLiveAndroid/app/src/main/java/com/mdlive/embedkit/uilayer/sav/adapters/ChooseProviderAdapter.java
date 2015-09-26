@@ -1,23 +1,18 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
-import com.mdlive.embedkit.uilayer.sav.MDLiveSearchProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,10 +139,14 @@ public class ChooseProviderAdapter extends BaseAdapter {
             }
             else {
 
-                if(array.get(pos).get("availability_type").equals("not available"))
+//                if(array.get(pos).get("availability_type").equals("not available"))
+                Log.e("nulldate",array.get(pos).get("next_availability").toString());
+                if(array.get(pos).get("next_availability").toString()==null)
                 {
+                    Log.e("nullcheck","Am in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText("");
                 }else {
+                    Log.e("nullcheck","Am not in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("next_availability"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
                 }

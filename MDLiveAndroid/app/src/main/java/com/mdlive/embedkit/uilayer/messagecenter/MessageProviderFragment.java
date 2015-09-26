@@ -37,6 +37,8 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
     private View mListLayout;
     private View mBlankLayout;
 
+    View header;
+
     public static MessageProviderFragment newInstance() {
         final MessageProviderFragment messageProviderFragment = new MessageProviderFragment();
         return messageProviderFragment;
@@ -67,6 +69,11 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.fragment_message_provider_list_view);
+
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        header = inflater.inflate(R.layout.fragment_compose_list_header, null);
+        mListView.addHeaderView(header);
+
         if (mListView != null) {
             mProviderAdapter = new ProviderAdapter(view.getContext(), R.layout.adapter_provider, android.R.id.text1);
             mListView.setAdapter(mProviderAdapter);
@@ -74,7 +81,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     if (getActivity() != null && getActivity() instanceof MessageCenterActivity) {
-                        ((MessageCenterActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i));
+                        ((MessageCenterActivity) getActivity()).onMyProviderClicked(mProviderAdapter.getItem(i - 1));
                     }
                 }
             });

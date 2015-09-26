@@ -300,12 +300,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     MdliveUtils.handelVolleyErrorResponseForDependentChild(getActivity(), error, getProgressDialog(), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            loadUserInformationDetails(true);
-                            if (mOnUserInformationLoaded != null) {
-                                mOnUserInformationLoaded.setPrimaryUserSelected();
-                            }
+                            //loadUserInformationDetails(true);
+
                         }
                     });
+
+                    if (mOnUserInformationLoaded != null) {
+                        mOnUserInformationLoaded.setPrimaryUserSelected();
+                    }
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
