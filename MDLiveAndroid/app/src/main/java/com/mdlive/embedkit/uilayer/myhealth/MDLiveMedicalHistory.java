@@ -39,6 +39,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
@@ -71,10 +72,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
     public static ProgressDialog pDialog;
     private JSONObject medicalAggregationJsonObject;
-    private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false;
+    private boolean isPregnant, isBreastfeeding, hasFemaleAttribute = false, isTherapiestUser = false;
     private boolean  isNewUser = false;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
-            MedicationsGroup, AllergiesGroup, ProceduresGroup;
+            MedicationsGroup, AllergiesGroup, ProceduresGroup, primaryCareGroup;
     private LocationCooridnates locationService;
     private LatLng currentLocation;
     private IntentFilter intentFilter;
@@ -106,6 +107,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         PediatricAgeCheckGroup_2 = ((RadioGroup) findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) findViewById(R.id.conditionsGroup));
         ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
+        primaryCareGroup = ((RadioGroup) findViewById(R.id.primaryCareGroup));
         setProgressBar(findViewById(R.id.progressDialog));
         MedicationsGroup = ((RadioGroup) findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
@@ -312,12 +314,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
 
         // Provider mode
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
         if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
+            isTherapiestUser = true;
             ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.VISIBLE);
         }else{
+            isTherapiestUser = false;
             ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.GONE);
         }
 
@@ -335,6 +339,19 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 }
             }
         });
+
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        primaryCareGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.primaryCareYesButton) {
+                    editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "Yes");
+                }else{
+                    editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
+                }
+            }
+        });
+
     }
 
 
@@ -602,11 +619,28 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkPediatricCompletion(historyPercentageArray);
             checkMyHealthBehaviouralHistory(historyPercentageArray);
             checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
+            checkPrimaryCarePhysicianHistory();
             ValidateModuleFields();
             checkAgeAndFemale();
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void checkPrimaryCarePhysicianHistory(){
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo != null){
+            String primaryPhyTxt = userBasicInfo.getPersonalInfo().getDoYouHavePrimaryCarePhysician();
+            if(primaryPhyTxt != null && primaryPhyTxt.toLowerCase().contains("yes")){
+                ((RadioButton)findViewById(R.id.primaryCareYesButton)).setChecked(true);
+                editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "Yes");
+            }else{
+                ((RadioButton)findViewById(R.id.primaryCareYesButton)).setChecked(false);
+                editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
+            }
         }
     }
 
@@ -706,7 +740,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
             findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
         }
+        if(isTherapiestUser){
+            if(isNewUser){
 
+            }else{
+
+            }
+        }
     }
 
     /**

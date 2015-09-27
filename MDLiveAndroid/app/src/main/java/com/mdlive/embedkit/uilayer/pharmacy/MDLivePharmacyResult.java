@@ -742,7 +742,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         params.put("appointment_method", "1");
         params.put("phys_availability_id", "");
         params.put("alternate_visit_option", "No Answer");
-        params.put("do_you_have_primary_care_physician","No");
+        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
         params.put("timeslot", "Now");
         params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
