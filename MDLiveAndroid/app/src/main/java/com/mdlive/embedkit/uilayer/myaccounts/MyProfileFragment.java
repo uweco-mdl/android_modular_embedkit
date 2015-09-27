@@ -176,7 +176,9 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                         // If Selected Password, then simply save type as Password
                         if (view.getResources().getString(R.string.mdl_password).equalsIgnoreCase(String.valueOf(items[item]))) {
                             MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
+                            mChangePin.setVisibility(View.GONE);
                         } else { // Shows the Create PIN
+                            mChangePin.setVisibility(View.VISIBLE);
                             gotoPinCreationSecond();
                         }
                     }
@@ -186,6 +188,13 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
             }
         });
+
+        if(view.getResources().getString(R.string.mdl_password).equalsIgnoreCase(MdliveUtils.getLockType(getActivity()))){
+            mChangePin.setVisibility(View.GONE);
+        } else {
+            mChangePin.setVisibility(View.VISIBLE);
+        }
+
         mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
 
         changeLangTv.setOnClickListener(new View.OnClickListener() {
