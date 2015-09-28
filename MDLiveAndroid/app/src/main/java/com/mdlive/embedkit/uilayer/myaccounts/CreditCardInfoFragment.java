@@ -143,7 +143,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 JSONObject jobj = new JSONObject(billingResponse);
                 if (jobj.getString("status").equals("success")) {
                     JSONObject billingObj = jobj.getJSONObject("billing_information");
-                    addCreditCardInfo(billingObj.getString("cc_num"),billingObj.getString("cc_cvv2"),billingObj.getString("cc_hsa"),billingObj.getString("cc_type_id"));
+//                    addCreditCardInfo(billingObj.getString("cc_num"),billingObj.getString("cc_cvv2"),billingObj.getString("cc_hsa"),billingObj.getString("cc_type_id"));
+                    addCreditCardInfo();
                 } else {
                     MdliveUtils.alert(getProgressDialog(), getActivity(), jobj.getString("status"));
                 }
