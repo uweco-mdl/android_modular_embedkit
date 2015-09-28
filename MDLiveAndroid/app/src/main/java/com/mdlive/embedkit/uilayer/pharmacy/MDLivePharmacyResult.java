@@ -78,6 +78,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private RelativeLayout rl_footer;
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
     private HashMap<Marker, Integer> markerIdCollection = new HashMap<Marker, Integer>();
+    private HashMap<Marker, Integer> markerExpandIdCollection = new HashMap<Marker, Integer>();
     //private RelativeLayout progressBar;
     private SupportMapFragment mapView, expandmapView;
     private GoogleMap googleMap, expandgoogleMap;
@@ -170,6 +171,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.PHARMACY_REQUEST_CODE){
                 list.clear();
                 markerIdCollection.clear();
+                markerExpandIdCollection.clear();
                 expandgoogleMap.clear();
                 googleMap.clear();
                 adaper.notifyDataSetChanged();
@@ -225,11 +227,11 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         googleMap = mapView.getMap();
         googleMap.getUiSettings().setAllGesturesEnabled(false);
         expandgoogleMap = mapView.getMap();
-        if (googleMap != null) {
+        /*if (googleMap != null) {
             if (googleMap != null) {
                 googleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
-        }
+        }*/
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -244,10 +246,23 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 expandgoogleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
         }
+
+
+
         /*expandgoogleMap.getUiSettings().setScrollGesturesEnabled(false);
         googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
+    /*GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+            try {
+                setPharmacyAsADefault((int) list.get(markerExpandIdCollection.get(marker)).get("pharmacy_id"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };*/
 
 
 
@@ -450,6 +465,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
             }
             adaper.notifyDataSetChanged();
+            //expandgoogleMap.setOnInfoWindowClickListener(infoWindowClickListener);
             setListViewHeightBasedOnChildren(pharmList);
             //For Google map initialize view
             if (markerPoint != null && googleMap != null)
@@ -545,7 +561,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      * @param twenty_four_hours - twenty_four_hours of pharmacy
      * @param zipcode - zipcode of pharmacy
      */
-    private void addResultsDatasInMap(int pharmacy_id, double longitude, double latitude, boolean twenty_four_hours, boolean active, boolean is_preferred, String store_name, String phone, String address1, String address2, String zipcode, String fax, String city, String distance, String state, LatLng markerPoint, int i) {
+    private void addResultsDatasInMap(int pharmacy_id, double longitude, double latitude, boolean twenty_four_hours,
+                                      boolean active, boolean is_preferred, String store_name, String phone, String address1,
+                                      String address2, String zipcode, String fax, String city, String distance,
+                                      String state, LatLng markerPoint, int i) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("state", state);
         map.put("is_preferred", is_preferred);
@@ -564,8 +583,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         map.put("distance", distance);
         map.put("active", active);
         Marker marker = googleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
-        expandgoogleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
         markerIdCollection.put(marker, i);
+        Marker expandmarker = expandgoogleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
+        markerExpandIdCollection.put(expandmarker, i);
         list.add(map);
     }
 

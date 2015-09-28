@@ -492,6 +492,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             });
 
             map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
 

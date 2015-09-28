@@ -67,8 +67,7 @@ public class MDLiveMyHealthListFragment extends MDLiveBaseFragment {
                         intent = new Intent(view.getContext(), MDLiveBehaviouralHealthActivity.class);
                     } else if (item.mString.equals(view.getContext().getString(R.string.mdl_LifeStyle))) {
                         intent = new Intent(view.getContext(), MDLiveLifestyleActivity.class);
-                    }
-                    else if (item.mString.equals(view.getContext().getString(R.string.mdl_spinnerdisplay))) {
+                    }else if (item.mString.equals(view.getContext().getString(R.string.mdl_spinnerdisplay))) {
                         //intent = new Intent(view.getContext(), SpinnerDropDownActivity.class);
                     }
                     else {

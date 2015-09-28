@@ -230,6 +230,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     private void movetothankyou() {
         Intent intent = new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+        intent.putExtra("activitycaller", getString(R.string.mdl_appointment_details));
         startActivity(intent);
         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
     }
@@ -268,6 +269,24 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
             String currentTime = df.format(calendar.getTime());
             ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+        }
+        //This is for Now Scenario
+
+        String str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
+        String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
+        Log.e("CheckAvailabilityType",str_Availability_Type);
+        try {
+            if(str_avail_status.equalsIgnoreCase("true")) {
+                if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
+                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
+                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+                } else if (str_Availability_Type.equalsIgnoreCase("video")) {
+                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
