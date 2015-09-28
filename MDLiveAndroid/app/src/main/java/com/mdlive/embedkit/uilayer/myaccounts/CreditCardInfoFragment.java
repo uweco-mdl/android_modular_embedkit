@@ -17,6 +17,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -384,6 +385,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         });
+
+        monthPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
+        yearPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
 
         d.findViewById(R.id.CancelBtn).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -360,6 +360,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
+        monthPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
+        yearPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
+
         d.findViewById(R.id.CancelBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
