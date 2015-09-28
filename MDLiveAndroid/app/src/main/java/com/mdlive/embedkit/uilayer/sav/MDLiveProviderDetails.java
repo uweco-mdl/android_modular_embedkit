@@ -440,7 +440,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            hideProgress();
+//            hideProgress();
             //Fetch Data From the Services
             Log.e("Response pdetails", response.toString());
             JsonParser parser = new JsonParser();
@@ -573,7 +573,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                     }
                 }
             }
-
+            hideProgress();
 
             try {
 //               saveConsultationType(str_Availability_Type);
@@ -714,7 +714,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         tapSeetheDoctorTxt.setText("Currently with patient");
         tapSeetheDoctorTxt.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
-        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
+        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icin_white);
         reqfutureapptBtn.setText("Make an appointment request");
         tapReqFutureBtnAction();
         videophoneparentLl.setVisibility(View.GONE);
@@ -990,7 +990,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             clickForVideoOrPhoneTapReqFutureAction();
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon);
+            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icin_white);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
 
@@ -1056,7 +1056,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             clickForVideoOrPhoneTapReqFutureAction();
             tapSeetheDoctorTxt.setClickable(false);
             tapSeetheDoctorTxtLayout.setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
+            ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icin_white);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
 //            videophoneparentLl.setVisibility(View.GONE);
 //            byvideoBtnLayout.setVisibility(View.GONE);
@@ -1334,6 +1334,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.APPOINTMENT_TYPE, appmtType);
+        Log.e("appmtType",appmtType);
         editor.commit();
     }
 

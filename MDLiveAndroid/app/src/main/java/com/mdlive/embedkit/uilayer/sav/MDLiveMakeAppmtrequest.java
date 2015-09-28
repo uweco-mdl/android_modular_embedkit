@@ -117,13 +117,12 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 findViewById(R.id.phone_ll).setVisibility(View.INVISIBLE);
                 ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-        }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texax")) {
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-            findViewById(R.id.phone_ll).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+        }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
+            findViewById(R.id.video_ll).setVisibility(View.INVISIBLE);
+            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.video_icon_white);
         }
 
         if (savedInstanceState == null) {
