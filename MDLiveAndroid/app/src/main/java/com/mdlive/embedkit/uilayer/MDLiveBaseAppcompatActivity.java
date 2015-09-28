@@ -261,6 +261,9 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (userBasicInfo != null && userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
             startActivityWithClassName(MessageCenterActivity.class);
         } else {
+            if(findViewById(R.id.drawer_layout) != null) {
+                findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
+            }
             showEmailConfirmationDialog();
         }
     }
