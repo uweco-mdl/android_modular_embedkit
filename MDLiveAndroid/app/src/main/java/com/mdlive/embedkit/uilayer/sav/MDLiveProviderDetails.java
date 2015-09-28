@@ -80,6 +80,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
     private ArrayList<String> timeSlotList = new ArrayList<>();
     private boolean isNowAvailable=false;
+    boolean isDoctorAvailableNow = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -452,7 +453,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
 
             Log.e("Stage 1..", response.toString());
-            boolean isDoctorAvailableNow = false, isDoctorWithPatient = false;
+            boolean isDoctorWithPatient = false;
             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
           String str_timeslot = "" /*str_phys_avail_id = "",*/;
 //            if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
@@ -711,10 +712,11 @@ if(str_avail_status.equalsIgnoreCase("true"))
     }
 
     private void onlyWithPatient() {
+        isDoctorAvailableNow=false;
         tapSeetheDoctorTxt.setText("Currently with patient");
         tapSeetheDoctorTxt.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
-        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icin_white);
+        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
         reqfutureapptBtn.setText("Make an appointment request");
         tapReqFutureBtnAction();
         videophoneparentLl.setVisibility(View.GONE);
@@ -984,13 +986,14 @@ if(str_avail_status.equalsIgnoreCase("true"))
             tapReqFutureBtnAction();
         }
         else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
+            isDoctorAvailableNow=false;
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
             Log.e("where","Amin with patient");
             ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
             clickForVideoOrPhoneTapReqFutureAction();
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icin_white);
+            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
 
@@ -1056,7 +1059,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             clickForVideoOrPhoneTapReqFutureAction();
             tapSeetheDoctorTxt.setClickable(false);
             tapSeetheDoctorTxtLayout.setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icin_white);
+            ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
 //            videophoneparentLl.setVisibility(View.GONE);
 //            byvideoBtnLayout.setVisibility(View.GONE);
@@ -1218,8 +1221,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
         //Vido or Phone Button on Click listener for Blue color
         else
         {
-
-
                 //Disabling the Video or Phone Based on the Phone list and video list
                 //if the phone list is empty we should not shown the Phone Layout
                 //if the video list is empty then we should not show the Video Layout.
