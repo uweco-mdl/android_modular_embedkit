@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.adapter.ProviderAdapter;
+import com.mdlive.embedkit.uilayer.myhealth.adapter.MyHealthProviderAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
@@ -39,7 +39,7 @@ import org.json.JSONObject;
 public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     private ListView mListView;
     private View mNoProvidersView;
-    private ProviderAdapter mProviderAdapter;
+    private MyHealthProviderAdapter mProviderAdapter;
     private boolean isFirstTime = true;
     private View mHeaderView;
 
@@ -210,7 +210,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                     if (getActivity() == null) {
                         return;
                     }
-                    mProviderAdapter = new ProviderAdapter(getActivity(), R.layout.new_adapter_layout, android.R.id.text1);
+                    mProviderAdapter = new MyHealthProviderAdapter(getActivity(), R.layout.new_adapter_layout, android.R.id.text1);
 
                     if(provider.primaryCarePhysician!=null && provider.primaryCarePhysician.firstName!=null && provider.primaryCarePhysician.lastName!=null){
                         if (mHeaderView != null && mHeaderView.findViewById(R.id.AddPcpText) != null) {
