@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -201,7 +202,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
                 editor1.commit();
                 final JSONObject obj = new JSONObject(sharedPref.getString(PreferenceConstants.HEALTH_SYSTEM_PREFERENCES, "{}"));
-                if (obj.length() > 0){
+                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false)){
                     mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
                     mEmailConfirmationView.setVisibility(View.VISIBLE);
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
