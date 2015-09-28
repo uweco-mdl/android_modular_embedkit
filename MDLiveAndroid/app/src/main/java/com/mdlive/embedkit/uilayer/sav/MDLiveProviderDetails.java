@@ -525,43 +525,44 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
                                 timeSlotListMap.add(map);
                                 if (str_timeslot.equals("0")) {
+                                    if(!str_Availability_Type.equalsIgnoreCase("With Patient")) {
+                                        final int density = (int) getBaseContext().getResources().getDisplayMetrics().density;
 
-                                    final int density = (int) getBaseContext().getResources().getDisplayMetrics().density;
-
-                                    final Button myText = new Button(MDLiveProviderDetails.this);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        myText.setElevation(0f);
+                                        final Button myText = new Button(MDLiveProviderDetails.this);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            myText.setElevation(0f);
+                                        }
+                                        isDoctorAvailableNow = true;
+                                        LinearLayout.LayoutParams params = new
+                                                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        params.setMargins(4 * density, 4 * density, 4 * density, 4 * density);
+                                        myText.setLayoutParams(params);
+                                        myText.setGravity(Gravity.CENTER);
+                                        myText.setTextColor(Color.WHITE);
+                                        myText.setTextSize(16);
+                                        myText.setPadding(8 * density, 4 * density, 8 * density, 4 * density);
+                                        myText.setBackgroundResource(R.drawable.edittext_bg);
+                                        myText.setText("Now");
+                                        myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                                        myText.setClickable(true);
+                                        previousSelectedTv = myText;
+                                        if (str_appointmenttype.toLowerCase().contains("video")) {
+                                            videoList.add(myText);
+                                        }
+                                        if (str_appointmenttype.toLowerCase().contains("phone")) {
+                                            phoneList.add(myText);
+                                        }
+                                        LinearLayout.LayoutParams lp = new
+                                                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        lp.setMargins(4 * density, 4 * density, 4 * density, 4 * density);
+                                        myText.setLayoutParams(lp);
+                                        myText.setTag("Now");
+                                        defaultNowTextPreferences(myText, str_appointmenttype);
+                                        selectedTimeslot = true;
+                                        clickEventForHorizontalText(myText);
+                                        layout.addView(myText);
+                                        //layout.addView(line, 1);
                                     }
-                                    isDoctorAvailableNow = true;
-                                    LinearLayout.LayoutParams params = new
-                                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                    params.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
-                                    myText.setLayoutParams(params);
-                                    myText.setGravity(Gravity.CENTER);
-                                    myText.setTextColor(Color.WHITE);
-                                    myText.setTextSize(16);
-                                    myText.setPadding(8 * density ,4 * density, 8 * density, 4 * density);
-                                    myText.setBackgroundResource(R.drawable.edittext_bg);
-                                    myText.setText("Now");
-                                    myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                                    myText.setClickable(true);
-                                    previousSelectedTv = myText;
-                                    if(str_appointmenttype.toLowerCase().contains("video")){
-                                        videoList.add(myText);
-                                    }
-                                    if(str_appointmenttype.toLowerCase().contains("phone")){
-                                        phoneList.add(myText);
-                                    }
-                                    LinearLayout.LayoutParams lp = new
-                                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                    lp.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
-                                    myText.setLayoutParams(lp);
-                                    myText.setTag("Now");
-                                    defaultNowTextPreferences(myText, str_appointmenttype);
-                                    selectedTimeslot=true;
-                                    clickEventForHorizontalText(myText);
-                                    layout.addView(myText);
-                                    //layout.addView(line, 1);
                                 } else {
                                     setHorizontalScrollviewTimeslots(layout, str_timeslot, j);
                                 }
@@ -1055,18 +1056,15 @@ if(str_avail_status.equalsIgnoreCase("true"))
 //            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
 //            horizontalscrollview.setVisibility(View.GONE);
             Log.e("where","part1 with patient");
-            tapSeetheDoctorTxt.setText("Currently with patient");
+            ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
             clickForVideoOrPhoneTapReqFutureAction();
-            tapSeetheDoctorTxt.setClickable(false);
-            tapSeetheDoctorTxtLayout.setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
-            tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
-//            videophoneparentLl.setVisibility(View.GONE);
-//            byvideoBtnLayout.setVisibility(View.GONE);
-//            byphoneBtnLayout.setVisibility(View.GONE);
-//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+            ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
+            ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
+            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon);
+            ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
-//            tapReqFutureBtnAction();
+
         }else if(str_Availability_Type.equalsIgnoreCase("not available")&&layout.getChildCount()>=1)
         {
 
