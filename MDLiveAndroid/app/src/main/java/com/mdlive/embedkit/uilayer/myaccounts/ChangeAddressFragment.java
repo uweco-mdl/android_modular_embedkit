@@ -167,10 +167,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                         parent.put("member", jsonObject);
                         Log.i("request:", jsonObject.toString());
                         loadProfileInfo(parent.toString());
-                    }
-                }
-
-                else
+                    }else
                 {
                     Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
                 }
