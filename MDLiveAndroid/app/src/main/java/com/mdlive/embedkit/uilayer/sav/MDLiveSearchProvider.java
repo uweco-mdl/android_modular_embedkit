@@ -47,8 +47,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -130,7 +128,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     private void initialiseData() {
         AppointmentTxtView = (TextView) findViewById(R.id.DateTxtView);
-       GetCurrentDate((TextView) findViewById(R.id.DateTxtView));
+        GetCurrentDate((TextView) findViewById(R.id.DateTxtView));
         LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch = (EditText) findViewById(R.id.edt_searchProvider);
@@ -173,7 +171,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * the required date.
      */
     public void appointmentAction(View v) {
-        GetCurrentDate((TextView) findViewById(R.id.DateTxtView));
+        //GetCurrentDate((TextView) findViewById(R.id.DateTxtView));
         // On button click show datepicker dialog
         showDialog(DATE_PICKER_ID);
 
@@ -261,7 +259,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         postParams.put("gender", genderTxtView.getText().toString());
         postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
         postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-            postParams.put("provider_name",edtSearch.getText().toString() );
+        postParams.put("provider_name",edtSearch.getText().toString() );
         if (postParams.get("provider_type") != null) {
             postParams.put("provider_type", postParams.get("provider_type"));
 
@@ -701,8 +699,9 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = Calendar.getInstance();
+
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(new Date().getTime());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 return dialog;
         }
         return null;
