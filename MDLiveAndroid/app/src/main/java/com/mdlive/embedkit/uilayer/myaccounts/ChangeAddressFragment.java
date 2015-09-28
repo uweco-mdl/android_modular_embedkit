@@ -134,7 +134,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", mState.getText().toString().trim());
                     jsonObject.put("city", mCity.getText().toString().trim());
-                    jsonObject.put("zipcode", mZip.getText().toString().trim());
+                    jsonObject.put("zip", mZip.getText().toString().trim());
                     jsonObject.put("first_name", responseDetail.getString("first_name"));
                     jsonObject.put("address1", mAddressLine1.getText().toString().trim());
                     jsonObject.put("address2", mAddressLine2.getText().toString().trim());
