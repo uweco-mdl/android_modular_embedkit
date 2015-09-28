@@ -68,13 +68,19 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         }
 
         ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
-        ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());
+
+        if(appointment.getRole()!=null){
+        ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());}
+        else
+        {
+            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
+        }
 
         ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
         ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), appointment.getTimeZone()));
 
         final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
-
+        Log.e("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
         switch (type) {
 
             case 0 :

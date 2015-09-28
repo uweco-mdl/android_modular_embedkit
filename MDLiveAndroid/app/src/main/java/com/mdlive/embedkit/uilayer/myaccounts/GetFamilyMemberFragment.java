@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,16 +79,27 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         footer = inflater.inflate(R.layout.add_family_footer, null);
         header = inflater.inflate(R.layout.add_family_header, null);
         CardView addFamilyMember1 = (CardView) footer.findViewById(R.id.addFamilyMember);
+        TextView callCustomer = (TextView) footer.findViewById(R.id.call_customer);
 
         TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
         lv.addFooterView(footer);
         lv.addHeaderView(header);
 
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
+
+        if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
+            addFamilyMember1.setVisibility(View.GONE);
+            callCustomer.setVisibility(View.VISIBLE);
+
+            Spannable word = new SpannableString(getString(R.string.mdl_please_call_customer));
+            word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 7, 28, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            callCustomer.setText(word);
+        }
+
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
                 if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
                     MdliveUtils.showAddChildExcededDialog(getActivity(), userBasicInfo.getAssistPhoneNumber());
