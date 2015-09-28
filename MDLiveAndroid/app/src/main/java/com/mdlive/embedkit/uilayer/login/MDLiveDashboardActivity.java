@@ -84,12 +84,15 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
             findViewById(R.id.drawer_layout).setVisibility(View.GONE);
         }
     }
-
+    private boolean isScreenLoaded = false;
     @Override
     public void onResume() {
         super.onResume();
-
+        if(isScreenLoaded && findViewById(R.id.drawer_layout) != null) {
+            findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
+        }
         MdliveUtils.hideSoftKeyboard(this);
+        isScreenLoaded = true;
     }
 
     @Override
@@ -249,6 +252,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     // Do nothing, already in Home
                     break;
                 case 1:
+                    findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
                     // Assist screen
                     MdliveUtils.showMDLiveAssistDialog(this);
                     break;
@@ -275,7 +279,6 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
             }
 
             DeepLinkUtils.DEEPLINK_DATA.setPage("");
-            findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
         }
     }
 }

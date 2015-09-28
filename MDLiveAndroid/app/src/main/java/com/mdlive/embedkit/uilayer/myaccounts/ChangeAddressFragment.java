@@ -148,24 +148,21 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                 if (isEmpty(mAddressLine1.getText().toString().trim())&& isEmpty(mState.getText().toString().trim())
                         && isEmpty(mCity.getText().toString().trim()) && isEmpty(mZip.getText().toString().trim())) {
 
-                    if (!MdliveUtils.validateZipCode(getEditTextValue)) {
-                        Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
-                    }else{
-                        JSONObject parent = new JSONObject();
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("email", responseDetail.getString("email"));
-                        jsonObject.put("phone", responseDetail.getString("phone"));
-                        jsonObject.put("birthdate", responseDetail.getString("birthdate"));
-                        jsonObject.put("state_id", mState.getText().toString().trim());
-                        jsonObject.put("city", mCity.getText().toString().trim());
-                        jsonObject.put("zipcode", mZip.getText().toString().trim().replace("-", ""));
-                        jsonObject.put("first_name", responseDetail.getString("first_name"));
-                        jsonObject.put("address1", mAddressLine1.getText().toString().trim());
-                        jsonObject.put("address2", mAddressLine2.getText().toString().trim());
-                        jsonObject.put("gender", responseDetail.getString("gender"));
-                        jsonObject.put("last_name", responseDetail.getString("last_name"));
-                        jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
-                        jsonObject.put("language_preference", "ko");
+                    JSONObject parent = new JSONObject();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("email", responseDetail.getString("email"));
+                    jsonObject.put("phone", responseDetail.getString("phone"));
+                    jsonObject.put("birthdate", responseDetail.getString("birthdate"));
+                    jsonObject.put("state_id", mState.getText().toString().trim());
+                    jsonObject.put("city", mCity.getText().toString().trim());
+                    jsonObject.put("zip", mZip.getText().toString().trim());
+                    jsonObject.put("first_name", responseDetail.getString("first_name"));
+                    jsonObject.put("address1", mAddressLine1.getText().toString().trim());
+                    jsonObject.put("address2", mAddressLine2.getText().toString().trim());
+                    jsonObject.put("gender", responseDetail.getString("gender"));
+                    jsonObject.put("last_name",  responseDetail.getString("last_name"));
+                    jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
+                    jsonObject.put("language_preference", "ko");
 
                         parent.put("member", jsonObject);
                         Log.i("request:", jsonObject.toString());

@@ -360,6 +360,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
+        monthPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
+        yearPicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
+
         d.findViewById(R.id.CancelBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -565,9 +568,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
         final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
         // set dialog message
 
-
-
-
         alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
@@ -596,13 +596,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+     /*   alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
                 alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
                 alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
-        });
+        });*/
         // show it
         alertDialog.show();
 
