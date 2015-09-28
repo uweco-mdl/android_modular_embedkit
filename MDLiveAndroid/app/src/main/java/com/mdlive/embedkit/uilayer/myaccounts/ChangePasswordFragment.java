@@ -364,7 +364,8 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 if (mNewPassword.getText().length() > 8 && mNewPassword.getText().toString().matches("^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
                     severityTv.setText("STRONG");
                     severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                } else if(mNewPassword.getText().length() >= 6 && mNewPassword.getText().toString().matches("^(\\w*(\\d+[a-zA-Z]|[a-zA-Z]+\\d)\\w*)+$")) {
+                } else if(mNewPassword.getText().length() >= 6 && (mNewPassword.getText().toString().matches("^(\\w*(\\d+[a-zA-Z]|[a-zA-Z]+\\d)\\w*)+$") ||
+                        mNewPassword.getText().toString().matches("^((.*?[0-9].*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*)|(.*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*?[0-9].*))$"))) {
                     severityTv.setText("MEDIUM");
                     severityTv.setTextColor(getResources().getColor(R.color.change_password_medium_text_color_yellow));
                 } else{
@@ -422,10 +423,11 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 if (mConfirmPassword.getText().length() > 8  && mConfirmPassword.getText().toString().matches("^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
                     confirmSeverityTv.setText("STRONG");
                     confirmSeverityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-                } else if (mConfirmPassword.getText().length() >= 6 && mConfirmPassword.getText().toString().matches("^(\\w*(\\d+[a-zA-Z]|[a-zA-Z]+\\d)\\w*)+$")) {
+                } else if (mConfirmPassword.getText().length() >= 6 && (mConfirmPassword.getText().toString().matches("^(\\w*(\\d+[a-zA-Z]|[a-zA-Z]+\\d)\\w*)+$") ||
+                        mConfirmPassword.getText().toString().matches("^((.*?[0-9].*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*)|(.*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*?[0-9].*))$"))) {
                     confirmSeverityTv.setText("MEDIUM");
                     confirmSeverityTv.setTextColor(getResources().getColor(R.color.change_password_medium_text_color_yellow));
-                } else {
+                }else {
                     confirmSeverityTv.setText("WEAK");
                     confirmSeverityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                 }
