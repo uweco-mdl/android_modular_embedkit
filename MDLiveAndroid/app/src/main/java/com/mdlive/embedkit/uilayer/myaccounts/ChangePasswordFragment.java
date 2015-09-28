@@ -48,6 +48,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
     private TextView passworddiffName = null;
     private TextView passwordspecialChars = null;
     private TextView passwordtwoRepeatChars = null;
+    private TextView severityTv = null;
     private ImageButton selectedImageIcon = null;
     private ImageButton mCurrentPasswordShow = null;
     private ImageButton mNewPasswordShow = null;
@@ -78,6 +79,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         mCurrentPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.currentPasswordShow);
         mNewPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.newPasswordShow);
         mConfirmPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.confirmPasswordShow);
+        severityTv = (TextView) changePasswordView.findViewById(R.id.severityTv);
 
 
         mCurrentPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -120,10 +122,23 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
                     if (mNewPassword.getText().length() == 0) {
                         mNewPasswordShow.setVisibility(View.GONE);
+                        severityTv.setVisibility(View.GONE);
                     } else {
                         mNewPasswordShow.setVisibility(View.VISIBLE);
+                        severityTv.setText("WEAK");
+                        severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                        severityTv.setVisibility(View.VISIBLE);
                     }
-
+                    if(mNewPassword.getText().length() <6 && mNewPassword.getText().toString().matches("\\d+")){
+                        severityTv.setText("WEAK");
+                        severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                    } else if(mNewPassword.getText().length() >= 6 && mNewPassword.getText().length() <9){
+                        severityTv.setText("MEDIUM");
+                        severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                    } else if(mNewPassword.getText().length() >8 && mNewPassword.getText().toString().matches("[^a-z0-9]")){
+                        severityTv.setText("STRONG");
+                        severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                    }
                     if (mNewPassword.getText().length() >= 8 && mNewPassword.getText().length() <= 15) {
                         mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
@@ -145,6 +160,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     }
                 }else{
                     mNewPasswordShow.setVisibility(View.GONE);
+                    severityTv.setVisibility(View.GONE);
                 }
             }
         });
