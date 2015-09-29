@@ -31,18 +31,19 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
         clearMinimizedTime();
 
         try {
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 setTitle("");
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
-                ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
                 elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

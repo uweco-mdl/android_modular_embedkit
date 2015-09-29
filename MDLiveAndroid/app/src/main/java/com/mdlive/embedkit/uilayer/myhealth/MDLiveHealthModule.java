@@ -77,7 +77,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public LinkedList<String> procedureYearList = new LinkedList<>();
     public AlertDialog procedureNameDialog, procedureYearDialog, timesDialog, modeDialog;
     public TextView surgeryName, surgeryYear;
-    public EditText dosageTxt;
+    public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
             "Once","Twice","Three times","Four times", "Five times", "Six times"
     };
@@ -132,7 +132,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
 
         conditionText = (AutoCompleteTextView) findViewById(R.id.conditionText);
-
+        otherProcedureTxt = (EditText) findViewById(R.id.otherProcedureTxt);
         if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             initializeViews();
             if(getIntent() != null && getIntent().hasExtra("Name")){
@@ -297,11 +297,57 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureNameDialog.dismiss();
                 if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                         && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                        if(otherProcedureTxt.getText() != null &&
+                                otherProcedureTxt.getText().toString().length() != 0){
+                            if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                    && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
+                                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                            }else{
+                                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                            }
+                        }else{
+                           ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                        }
+                    }else{
+                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    }
+                }
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    otherProcedureTxt.setVisibility(View.VISIBLE);
+                }else{
+                    otherProcedureTxt.setVisibility(View.GONE);
                 }
             }
         });
 
+        otherProcedureTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(otherProcedureTxt.getVisibility() == View.VISIBLE){
+                    if(s != null && s.length() > 0){
+                        if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
+                            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                        }else{
+                            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                        }
+                    }else{
+                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -309,9 +355,18 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureYearDialog.dismiss();
                 if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                         && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    if(otherProcedureTxt.getVisibility() == View.VISIBLE){
+                        if(otherProcedureTxt.getText() != null &&
+                            otherProcedureTxt.getText().toString().length() != 0){
+                                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                            } else {
+                                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                            }
+                        }
+                    }else{
+                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    }
                 }
-            }
         });
 
         try {
@@ -370,14 +425,25 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         try {
             hideProgress();
             procedureNameList.clear();
+            boolean isItemAvailableInList = false;
             if(response != null){
                 if(response.has("surgeries")){
                     JSONArray surgeriesArray = response.getJSONArray("surgeries");
                     for(int i = 1; i < surgeriesArray.length(); i++){
                         JSONObject item = surgeriesArray.getJSONObject(i);
                         procedureNameList.add(item.getString("name"));
+                        if(surgeryName.getText().toString().equals(item.getString("name"))){
+                            isItemAvailableInList = true;
+                        }
                     }
                 }
+                if(isUpdateMode){
+                    if(!isItemAvailableInList){
+                        procedureNameList.add(surgeryName.getText().toString());
+                    }
+                }
+
+                procedureNameList.add(getString(R.string.mdl_procedure_other_txt));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -442,7 +508,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     && surgeryYear.getText() != null && !surgeryYear.getText().toString().equals("Year")){
                 HashMap<String, HashMap<String, String>> allergies = new HashMap<>();
                 HashMap<String, String> map = new HashMap<>();
-                map.put("name", surgeryName.getText().toString());
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    map.put("name", otherProcedureTxt.getText().toString());
+                }else{
+                    map.put("name", surgeryName.getText().toString());
+                }
                 map.put("surgery_year", surgeryYear.getText().toString());
                 allergies.put("surgery", map);
                 Log.e("Post Body ", new Gson().toJson(allergies));
