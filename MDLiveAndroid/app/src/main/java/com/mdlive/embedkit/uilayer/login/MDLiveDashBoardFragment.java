@@ -391,7 +391,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             formatText = formatText.substring(0, formatText.length());
         }
         if (formatText.length() >= 7) {
-            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, 6) + " " + formatText.substring(6, formatText.length());
+            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, 6) + "-" + formatText.substring(6, formatText.length());
         } else if (formatText.length() >= 4) {
             formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, formatText.length());
         } else if (formatText.length() == 3 && hasParenthesis) {
