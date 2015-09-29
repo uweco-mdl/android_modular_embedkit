@@ -174,6 +174,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
         changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
+        changeAddress.setChecked(false);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
@@ -242,7 +243,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
             response = getArguments().getString("Response");
             if (response != null) {
-                changeAddress.setChecked(false);
+
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
 //                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
 //                        ((MyAccountsHome) getActivity()).hideTick();
@@ -321,10 +322,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     e.printStackTrace();
                 }
             }
-        }else{
+        }/*else{
 
             changeAddress.setChecked(true);
-        }
+        }*/
 
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {

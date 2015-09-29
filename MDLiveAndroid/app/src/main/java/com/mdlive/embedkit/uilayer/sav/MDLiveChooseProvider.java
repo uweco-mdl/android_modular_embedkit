@@ -125,6 +125,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         mHandler.post(mRunnable);
+        baseadapter.notifyDataSetChanged();
     }
 
     @Override
