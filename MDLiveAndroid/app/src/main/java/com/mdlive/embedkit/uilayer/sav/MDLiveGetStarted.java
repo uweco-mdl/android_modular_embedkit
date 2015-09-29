@@ -936,10 +936,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             providerTypeArrayList.clear();
             providerTypeIdList.clear();
             JSONArray provider_array = response.getJSONArray("provider_type");
+            Log.e("providerTypeArrayList", provider_array.toString());
             for (int i = 0; i < provider_array.length(); i++) {
                 providerTypeIdList.add(provider_array.getJSONObject(i).getInt("id") + "");
-                providerTypeArrayList.add(provider_array.getJSONObject(i).getString(provider_array.getJSONObject(i).keys().next()));
+                providerTypeArrayList.add(provider_array.getJSONObject(i).getString("provider_type"));
             }
+            Log.e("providerTypeArrayList", providerTypeArrayList.toString());
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
         } catch (Exception e) {
