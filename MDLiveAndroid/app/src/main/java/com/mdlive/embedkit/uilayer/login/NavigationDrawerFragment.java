@@ -64,22 +64,26 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private float mScrollHeight;
 
     private OnUserChangedInGetStarted mOnUserChangedInGetStarted;
-
+    public static NavigationDrawerFragment fragmentInstance;
     public NavigationDrawerFragment() {
+    }
+
+    public static NavigationDrawerFragment getInstance(){
+        return fragmentInstance;
     }
 
     public static NavigationDrawerFragment newInstance() {
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        fragmentInstance = fragment;
         return fragment;
     }
 
     public static NavigationDrawerFragment newInstance(final User user) {
         final Bundle args = new Bundle();
         args.putParcelable(USER_PASSED_FROM_ACTIVITY, user);
-
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        fragmentInstance = fragment;
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -201,29 +205,13 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 User.clearUser(getActivity());
-
-                /* Security JSON we need to read again, because of the web service issue..
-                * We are excluding the security tag to be parsed by GSON,
-                * then we are manually adding the Security JSON again
-                * */
-                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
-                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
-                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
-                try {
-                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
-                } catch (JSONException e) {
-                    mUserBasicInfo.setHealthLastUpdate(-1l);
-                }
-
-                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
-
-                updateList();
-
+                handleServiceResponseForParent(response);
                 if (showProgress) {
                     hideProgressDialog();
                 }
             }
+
+
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -242,6 +230,26 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
         final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
+    }
+
+    public void handleServiceResponseForParent(JSONObject response) {
+    /* Security JSON we need to read again, because of the web service issue..
+    * We are excluding the security tag to be parsed by GSON,
+    * then we are manually adding the Security JSON again
+    * */
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            mUserBasicInfo.setHealthLastUpdate(-1l);
+        }
+
+        mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
+
+        updateList();
     }
 
     /**
@@ -268,23 +276,13 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 * We are excluding the security tag to be parsed by GSON,
                 * then we are manually adding the Security JSON again
                 * */
-                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
-                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
-                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
-                try {
-                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
-                } catch (JSONException e) {
-                    mUserBasicInfo.setHealthLastUpdate(-1l);
-                }
-
-                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
-                updateList();
-
+                handleServiceResponseForDependent(response);
                 if (showProgress) {
                     hideProgressDialog();
                 }
             }
+
+
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -316,6 +314,20 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
         final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
         services.getUserBasicInfoRequest(user.mId, successCallBackListener, errorListener);
+    }
+
+    public void handleServiceResponseForDependent(JSONObject response) {
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            mUserBasicInfo.setHealthLastUpdate(-1l);
+        }
+        mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
+        updateList();
     }
 
     private void updateList() {

@@ -332,7 +332,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
-       String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+        String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
         Log.e("ConsultationType",consultationType);
         String appointmentMethodType="";
         if(consultationType.equalsIgnoreCase("Video"))
@@ -492,6 +492,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             });
 
             map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
 
@@ -506,7 +507,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name") + " "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
-                    pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
+                            pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
@@ -556,11 +557,11 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     }
 
 
-        /**
-         * This function is used for parse and update UI for server response.
-         *
-         * @param response - Response received from server.
-         */
+    /**
+     * This function is used for parse and update UI for server response.
+     *
+     * @param response - Response received from server.
+     */
     public void loadDatas(String response) {
         try {
             JSONObject jobj = new JSONObject(response);

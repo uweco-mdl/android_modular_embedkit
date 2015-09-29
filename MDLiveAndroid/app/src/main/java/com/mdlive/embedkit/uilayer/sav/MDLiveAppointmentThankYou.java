@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -10,8 +11,6 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
-import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 /**
@@ -36,29 +35,31 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
-                    commit();
-
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
-                    commit();
-        }
-
+        handleIntent();
         getPreferenceValue();
+    }
+
+    public void handleIntent(){
+        findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+        Intent receivingIntent = getIntent();
+        if(receivingIntent != null){
+            if(receivingIntent.hasExtra("activitycaller")
+                    && receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))){
+                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
+                findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
+                ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
+            }
+        }
     }
 
 
     public void showHamburgerBell() {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_thankyou_string).toUpperCase());
         findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
-        findViewById(R.id.toolbar_hamburger).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.GONE);
         findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
-        findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_tick).setVisibility(View.GONE);
     }
 
     @Override

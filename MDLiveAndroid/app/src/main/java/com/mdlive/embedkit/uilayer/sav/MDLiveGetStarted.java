@@ -51,7 +51,6 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
-import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
@@ -64,7 +63,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserChangedInGetStarted;
@@ -383,7 +381,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                         }else {
                             loadDependentInformationDetails(dependentName, position);
-
                         }
                     }
                 }
@@ -585,6 +582,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onResponse(JSONObject response) {
                 hideProgress();
                 handleSuccessResponse(response);
+                if(NavigationDrawerFragment.getInstance() != null){
+                    NavigationDrawerFragment.getInstance().handleServiceResponseForParent(response);
+                }
             }
         };
 
@@ -661,6 +661,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onResponse(JSONObject response) {
                 hideProgress();
                 handleDependentSuccessResponse(response);
+                if(NavigationDrawerFragment.getInstance() != null){
+                    NavigationDrawerFragment.getInstance().handleServiceResponseForDependent(response);
+                }
             }
         };
 

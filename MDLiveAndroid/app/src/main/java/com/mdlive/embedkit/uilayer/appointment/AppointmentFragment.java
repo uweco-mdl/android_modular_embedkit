@@ -70,7 +70,7 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
 
         if(appointment.getRole()!=null){
-        ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());}
+            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());}
         else
         {
             ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
@@ -96,7 +96,7 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                     view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
                     view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
                     view.findViewById(R.id.help).setVisibility(View.VISIBLE);
-
+                    view.findViewById(R.id.phoneHelplayout).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(consultationType + " " + getString(R.string.mdl_consultation));
                 } else{
                     final SharedPreferences preferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -163,6 +163,7 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                 }
             }
         };
+
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
