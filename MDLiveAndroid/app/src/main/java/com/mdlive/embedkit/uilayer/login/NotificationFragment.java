@@ -198,7 +198,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             public void onResponse(JSONObject response) {
                 logD("PendingAppoinments", response.toString().trim());
                 mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
-
+                mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
                 onNotificationLoaded();
             }
         };

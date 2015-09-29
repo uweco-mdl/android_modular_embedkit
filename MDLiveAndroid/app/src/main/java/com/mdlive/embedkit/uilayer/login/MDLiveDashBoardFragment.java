@@ -23,6 +23,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -40,6 +41,9 @@ import java.util.List;
 public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private OnUserSelectionChanged mOnUserSelectionChanged;
     private OnNotificationCliked mOnNotificationCliked;
+
+    private String mCustomerDefaultNumber;
+    private String mCustomerProvidedPhoneNumber;
 
     private Spinner mSpinner;
     private DashBoardSpinnerAdapter mAdapter;
@@ -280,24 +284,37 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
 
 
-//            if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
-//            {
-//                firstTextView.setText("Your appointment has been started.");
-//                if (mUserBasicInfo == null) {
-//                    mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-//                }
-//                secondTextView.setText("The provider will call you shortly at"+ mUserBasicInfo == null ? "" : mUserBasicInfo.getAssistPhoneNumber());
-//            }else
-//            {
-                firstTextView.setText("Your appointment has started.");
-                secondTextView.setText("Tap here to enter");
-//            }
             /**
              * This is for instant appointment
              * */
             if ("Now".equalsIgnoreCase(time)) {
-                firstTextView.setText("Your appointment has started.");
-                secondTextView.setText("Tap here to enter");
+//                firstTextView.setText("Your appointment has started.");
+//                secondTextView.setText("Tap here to enter");
+
+                if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
+                {
+                    if (mUserBasicInfo == null) {
+                        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                    }
+                    mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
+                    if(PendingAppointment.readFromSharedPreference(getActivity())!=null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments()!=null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size()>0
+                            && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber()!=null) {
+                        mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
+
+                    } else {
+                        mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
+                    }
+                    mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
+
+                    firstTextView.setText("The provider will call you shortly at \n"+ mCustomerProvidedPhoneNumber);
+
+                    secondTextView.setVisibility(View.GONE);
+                }else
+                {
+                    firstTextView.setText("Your appointment has started.");
+                    secondTextView.setText("Tap here to enter");
+                }
+
             } else {
                 final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
 
@@ -360,5 +377,29 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
     public interface OnNotificationCliked {
         void onNotificationClicked(final Appointment appointment);
+    }
+
+    public String formatDualString(String formatText) {
+        boolean hasParenthesis = false;
+        if (formatText.indexOf(")") > 0) {
+            hasParenthesis = true;
+        }
+        formatText = formatText.replace("(", "");
+        formatText = formatText.replace(")", "");
+        formatText = formatText.replace(" ", "");
+        if (formatText.length() > 10) {
+            formatText = formatText.substring(0, formatText.length());
+        }
+        if (formatText.length() >= 7) {
+            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, 6) + " " + formatText.substring(6, formatText.length());
+        } else if (formatText.length() >= 4) {
+            formatText = "(" + formatText.substring(0, 3) + ") " + formatText.substring(3, formatText.length());
+        } else if (formatText.length() == 3 && hasParenthesis) {
+            formatText = "(" + formatText.substring(0, formatText.length()) + ")";
+        }
+
+        return formatText;
+        //((TextView) findViewById(R.id.phoneNumber)).setText(MdliveUtils.formatDualString(formatText));
+
     }
 }
