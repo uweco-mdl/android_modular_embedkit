@@ -178,7 +178,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                     if (response.getString("health_last_update").length() == 0) {
                         isNewUser = true;
-                    } else {
+                    } /*else {
                         if (response.has("health_last_update")) {
                             long time = response.getLong("health_last_update");
                             if (time != 0) {
@@ -193,7 +193,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                                 isNewUser = false;
                             }
                         }
-                    }
+                    }*/
                 } catch (JSONException e) {
                     e.printStackTrace();
                     isNewUser = true;
