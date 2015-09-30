@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -585,6 +586,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 if(NavigationDrawerFragment.getInstance() != null){
                     NavigationDrawerFragment.getInstance().handleServiceResponseForParent(response);
                 }
+                createAndSaveUser(response, "");
+               // upldateUserData(response);
             }
         };
 
@@ -653,10 +656,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
 
-    private void loadDependentUserInformationDetails(String depenedentId) {
+    private void loadDependentUserInformationDetails(final String depenedentId) {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
@@ -664,6 +666,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 if(NavigationDrawerFragment.getInstance() != null){
                     NavigationDrawerFragment.getInstance().handleServiceResponseForDependent(response);
                 }
+                createAndSaveUser(response, depenedentId);
+                //((MDLiveDashBoardFragment.OnUserSelectionChanged).
+                //upldateUserData(response);
             }
         };
 
@@ -678,6 +683,32 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
     }
 
+    private void createAndSaveUser(final JSONObject response, final String dependentId) {
+        try {
+            JSONObject personalInfo = response.getJSONObject("personal_info");
+
+            final User user = new User();
+            user.mName = personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
+            user.mImageUrl = personalInfo.getString("image_url");
+
+            if (dependentId != null && !TextUtils.isEmpty(dependentId)) {
+
+                user.mId = dependentId;
+                user.mMode = User.MODE_DEPENDENT;
+            } else {
+                user.mId = "";
+                user.mMode = User.MODE_PRIMARY;
+            }
+
+            user.saveSelectedUser(getBaseContext());
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
     private void loadDependentProviderTypeDetails(String depenedentId) {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -685,6 +716,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onResponse(JSONObject response) {
                 try {
+
                     Log.e("ptype Response", response.toString());
                     hideProgress();
                     if (response.has("located_in")) {
@@ -1143,6 +1175,76 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }
         });
     }
+
+
+    private void upldateUserData(final JSONObject response) {
+    /* Security JSON we need to read again, because of the web service issue..
+            * We are excluding the security tag to be parsed by GSON,
+            * then we are manually adding the Security JSON again
+            * */
+
+        Log.e("upldateUserData", response.toString());
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        final UserBasicInfo userBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        userBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        userBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            userBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            userBasicInfo.setHealthLastUpdate(-1l);
+        }
+
+        userBasicInfo.saveToSharedPreference(getBaseContext(), response.toString().trim());
+
+        List<User> users = null;
+
+        Log.e("userBasicInfo.getPrimaryUser()", userBasicInfo.getPrimaryUser()+"");
+
+        if (userBasicInfo.getPrimaryUser()) {
+            users = UserBasicInfo.getUsersAsPrimaryUser(getBaseContext());
+        } else {
+            users = UserBasicInfo.getUsersAsDependentUser(getBaseContext());
+        }
+
+        /*MDLiveDashBoardFragment.OnUserSelectionChanged) mOnUserSelectionChanged;
+        MDLiveDashBoardFragment.OnNotificationCliked mOnNotificationCliked;
+
+        mOnUserSelectionChanged.onDependentSelected(selectedUser);
+
+        mOnUserSelectionChanged.onPrimarySelected(selectedUser);*/
+
+
+       /* if (userBasicInfo.getPrimaryUser()) {
+            users = UserBasicInfo.getUsersAsDependentUser(getBaseContext());
+        } else {
+            users = UserBasicInfo.getUsersAsPrimaryUser(getBaseContext());
+        }*/
+
+   /*     users.add(new User(userBasicInfo.getPersonalInfo().getFirstName() + " " + userBasicInfo.getPersonalInfo().getLastName(),
+                        userBasicInfo.getPersonalInfo().getImageUrl(),
+                        "", User.MODE_PRIMARY)*/
+
+        Log.e("Users", users.toString() + "");
+
+        if (users != null && users.size() > 0) {
+            final User user = users.get(0);
+
+            Log.e("users.get(0)", users.get(0).toString()+"");
+
+            Log.e("I am at ", "user 0");
+            if (user != null) {
+                user.saveSelectedUser(getBaseContext());
+                Log.e("I am at ", "user 2");
+                final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+                if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
+                    ((NavigationDrawerFragment) fragment).reload();
+                    Log.e("I am at ", "user 3");
+                }
+            }
+        }
+    }
+
     /**
      *
      *  Successful Response Handler for Load Basic Info.
