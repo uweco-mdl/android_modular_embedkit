@@ -35,6 +35,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.ChangeProfilePicService;
@@ -47,7 +49,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by venkataraman_r on 6/18/2015.
@@ -75,6 +78,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null, prefLanguage;
     private JSONObject myProfile;
     SharedPreferences sharedPref;
+    String[] timeZoneAbbr = {"CST","EST","MST","PST","AKST","HST","AMS","MIT","GST","PAT"};
     public static PickImagePlugin cameraPlugIn;
 
     private boolean mFromResult = false;
@@ -189,6 +193,25 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             }
         });
 
+        mTimeZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final CharSequence[] items = view.getContext().getResources().getStringArray(R.array.mdl_timezone);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Make your selection");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        mTimeZone.setText(items[item]);
+                        // If Selected Password, then simply save type as Password
+                        changePhoneNumberInfo(true);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+
         if(view.getResources().getString(R.string.mdl_password).equalsIgnoreCase(MdliveUtils.getLockType(getActivity()))){
             mChangePin.setVisibility(View.GONE);
         } else {
@@ -196,7 +219,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         }
 
         mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
-
+        Log.d("UserBasicinfo", UserBasicInfo.readFromSharedPreference(getActivity()).toString());
         changeLangTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,7 +237,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                         editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());
                         editor1.commit();
                         LocalizationSingleton.getInstance().setLanguage(getActivity(), changeLangTv.getText().toString().toLowerCase());
-                        changePhoneNumberInfo();
+                        changePhoneNumberInfo(false);
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -335,16 +358,12 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 editor.commit();
             }
 
-            try {
-                JSONObject securityQuestion = myProfile.getJSONObject("security");
-                securityQuestion1 = securityQuestion.getString("question1");
-                securityQuestion2 = securityQuestion.getString("question2");
-                answer1 = securityQuestion.getString("answer1");
-                answer2 = securityQuestion.getString("answer2");
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
+            JSONObject securityQuestion = myProfile.optJSONObject("security");
+            if(securityQuestion!=null && securityQuestion.has("question1") && securityQuestion.has("question2")) {
+                securityQuestion1 = securityQuestion.optString("question1");
+                securityQuestion2 = securityQuestion.optString("question2");
+                answer1 = securityQuestion.optString("answer1");
+                answer2 = securityQuestion.optString("answer2");
             }
             mProfileName.setText(profileName);
             mUserDOB.setText(userDOB);
@@ -354,8 +373,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
             String formattedString = MdliveUtils.formatDualString(mobile);
             mMobile.setText(formattedString);
-
-            mTimeZone.setText(timeZone);
+            List<String> tmpTimezoneAbbr = Arrays.asList(timeZoneAbbr);
+            final CharSequence[] items = getActivity().getResources().getStringArray(R.array.mdl_timezone);
+            CharSequence tmpTimeZone = items[tmpTimezoneAbbr.indexOf(timeZone) + 1];
+            mTimeZone.setText(tmpTimeZone);
             mEmail.setText(email);
 
             if (getActivity() != null) {
@@ -477,7 +498,8 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         String base64String = Base64.encodeToString(b, Base64.DEFAULT);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        String  currentTimeStamp = dateFormat.format(new Date());
+        dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
+        String  currentTimeStamp = dateFormat.format(TimeZoneUtils.getCalendarWithOffset(getActivity()).getTime());
 
         try {
             JSONObject parent = new JSONObject();
@@ -548,9 +570,11 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
         getProfileInfoService();
     }
-    public void changePhoneNumberInfo() {
+    public void changePhoneNumberInfo(boolean fromTimezone) {
 
             try {
+                final CharSequence[] items = getActivity().getResources().getStringArray(R.array.mdl_timezone);
+                final List<CharSequence> fullTimezone = Arrays.asList(items);
                     JSONObject parent = new JSONObject();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("email", myProfile.getString("email"));
@@ -565,10 +589,12 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                     jsonObject.put("gender", myProfile.getString("gender"));
                     jsonObject.put("last_name", myProfile.getString("last_name"));
                     jsonObject.put("language_preference", changeLangTv.getText().toString());
-                    jsonObject.put("", mPreferredSignIn.getText().toString());
+                    String timeZone = fullTimezone.indexOf(mTimeZone.getText()) == 0 ? TimeZoneUtils.getDeviceTimeZone() : timeZoneAbbr[fullTimezone.indexOf(mTimeZone.getText()) - 1];
+                    jsonObject.put("timezone", timeZone);
+//                    jsonObject.put("", mPreferredSignIn.getText().toString());
 
                     parent.put("member", jsonObject);
-                    loadProfileInfo(parent.toString());
+                    loadProfileInfo(parent.toString(),fromTimezone);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -576,13 +602,14 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         }
 
 
-    public void loadProfileInfo(String params) {
+    public void loadProfileInfo(String params, boolean fromTimezone) {
         showProgressDialog();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("Response - ", response.toString());
                 if(!mFromResult){
                     hideProgressDialog();
                 }
@@ -627,7 +654,8 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     public void uploadMedicalRecordService(String filePath, boolean capturedInCamera) {
         final File file = new File(filePath);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        String  currentTimeStamp = dateFormat.format(new Date());
+        dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
+        String  currentTimeStamp = dateFormat.format(TimeZoneUtils.getCalendarWithOffset(getActivity()).getTime());
         try {
             JSONObject parent = new JSONObject();
             JSONObject jsonObject = new JSONObject();
