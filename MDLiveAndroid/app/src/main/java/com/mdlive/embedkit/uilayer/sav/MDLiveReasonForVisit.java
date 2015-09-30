@@ -620,9 +620,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 }
             }
             // Create a media file name
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault());
-            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
-            String timeStamp = sdf.format(TimeZoneUtils.getCalendarWithOffset(context).getTime());
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                    Locale.getDefault()).format(new Date());
             File mediaFile;
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
                     + "IMG_" + timeStamp + ".jpg");
