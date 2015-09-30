@@ -184,7 +184,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                             if (time != 0) {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTimeInMillis(time * 1000);
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
                                 ((LinearLayout) view.findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
                                 ((TextView) view.findViewById(R.id.updateInfoText)).setText(
                                         getResources().getString(R.string.mdl_last_update_txt) +
