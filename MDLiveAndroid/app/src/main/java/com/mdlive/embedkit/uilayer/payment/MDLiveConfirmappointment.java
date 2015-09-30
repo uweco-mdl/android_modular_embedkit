@@ -275,19 +275,19 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         String str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
         String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
         Log.e("CheckAvailabilityType",str_Availability_Type);
-        try {
-            if(str_avail_status.equalsIgnoreCase("true")) {
-                if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
-                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-                } else if (str_Availability_Type.equalsIgnoreCase("video")) {
-                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(str_avail_status.equalsIgnoreCase("true")) {
+//                if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
+//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+//                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
+//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+//                } else if (str_Availability_Type.equalsIgnoreCase("video")) {
+//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         formatDualString(phone);

@@ -268,7 +268,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response",error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
+//                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
+                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      dialog.dismiss();
+                    }
+                });
 
             }
         };
