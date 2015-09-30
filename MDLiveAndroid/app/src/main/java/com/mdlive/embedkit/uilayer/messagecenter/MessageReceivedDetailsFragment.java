@@ -21,6 +21,12 @@ import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
 import org.json.JSONObject;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by dhiman_da on 6/27/2015.
  */
@@ -84,7 +90,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
 
         final TextView timeTextView = (TextView) view.findViewById(R.id.fragment_message_received_date_text_view);
         if (timeTextView != null) {
-            timeTextView.setText(MdliveUtils.getReceivedSentTimeInDetails(receivedMessage.inMilliseconds, receivedMessage.timeZone));
+            timeTextView.setText(getReceivedSentTimeInDetails(receivedMessage.inMilliseconds, receivedMessage.timeZone));
         }
 
         final View replyView = view.findViewById(R.id.fragment_message_reply_image_view);
@@ -189,5 +195,18 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
 
     public interface ReloadMessageCount {
         void reloadMessageCount();
+    }
+
+    private static String getReceivedSentTimeInDetails(final long milis, final String timeZone) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+
+        final Date now = cal.getTime();
+        cal.setTimeInMillis(milis * 1000);
+
+        final Date date = cal.getTime();
+
+        final Format format = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
+        return format.format(date);
     }
 }
