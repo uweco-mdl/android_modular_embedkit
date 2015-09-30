@@ -12,15 +12,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
 import com.mdlive.embedkit.uilayer.sav.MDLiveAppointmentThankYou;
+import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -30,6 +34,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -216,9 +221,15 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void rightBtnOnClick(View v) {
         if (CheckdoconfirmAppmt) {
             Log.e("Am", "Am in rightbtnClick");
-            doConfirmAppointment();
-        }
+            if(MDLiveChooseProvider.isDoctorOnCall){
+                doOnCallConsultaion();
+            }else if(MDLiveChooseProvider.isDoctorOnVideo){
+                doOnVideoConsultaion();
+            }else{
+                doConfirmAppointment();
+            }
 
+        }
 
     }
 
@@ -318,5 +329,223 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
         ((TextView) findViewById(R.id.phoneNumber)).setText(MdliveUtils.formatDualString(formatText));
 
+    }
+
+
+
+    /***
+     * This method will be called when doctor on call by Video is available
+     * On successful response it will return an appointment ID which will saved in shared Preference for future use.
+     * On Error respose the corresponding message will be notified to the user.
+     */
+
+
+    private void doOnVideoConsultaion() {
+        showProgressDialog();
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                dismissDialog();
+                try {
+                    Log.e("Response",response.toString());
+                    if(response.has("id")){
+                        String callConsultationId=response.getString("id");
+                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(PreferenceConstants.APPT_ID, callConsultationId);
+                        editor.commit();
+                        movetostartVisit();
+                       /* Intent onCallVideoIntent = new Intent(MDLiveConfirmappointment.this, MDLiveWaitingRoom.class);
+                        startActivity(onCallVideoIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);*/
+                    }
+                } catch (Exception e) {
+                    dismissDialog();
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    Log.e("Error Response", error.toString());
+                    dismissDialog();
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
+                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        Log.e("responseBody",responseBody);
+                        JSONObject errorObj = new JSONObject(responseBody);
+                      /*  if (errorObj.has("message")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("message"));
+                        } else if (errorObj.has("error")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("error"));
+                        }*/
+
+                    }else{
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
+                    }
+
+                } catch (Exception e) {
+                    dismissDialog();
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        SharedPreferences settings =   getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+        HashMap<String, HashMap<String, Object>> onCallParams=new HashMap<>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("consultation_method", "Video");
+        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
+        params.put("call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+        params.put("do_you_have_primary_care_physician", "No");
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+
+        onCallParams.put("user", params);
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
+        services.doOnCallAppointment(gson.toJson(onCallParams), responseListener, errorListener);
+    }
+
+
+
+    /***
+     * This method will be called when doctor on call by Phone is available
+     * On Success response it will be taken to the thank you screen.
+     */
+
+
+    private void doOnCallConsultaion() {
+        showProgressDialog();
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                dismissDialog();
+                try {
+                    Log.e("Response",response.toString());
+                    if(response.has("message")){
+                        Intent thankYouIntent=new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+                        startActivity(thankYouIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                    }
+
+                } catch (Exception e) {
+                    dismissDialog();
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    Log.e("Error Response", error.toString());
+                    NetworkResponse errorResponse = error.networkResponse;
+                    dismissDialog();
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
+                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        Log.e("responseBody",responseBody);
+                        /*JSONObject errorObj = new JSONObject(responseBody);
+                        if (errorObj.has("message")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("message"));
+                        } else if (errorObj.has("error")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("error"));
+                        }*/
+
+                    }else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
+                    }
+                } catch (Exception e) {
+                    dismissDialog();
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
+        SharedPreferences settings =   getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+        HashMap<String, HashMap<String, Object>> onCallParams=new HashMap<>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("consultation_method", "Phone");
+        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
+        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
+        params.put("call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
+        params.put("do_you_have_primary_care_physician", "No");
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+
+        onCallParams.put("user",params);
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
+        services.doOnCallAppointment(gson.toJson(onCallParams), responseListener, errorListener);
+    }
+
+
+
+
+    private void dismissDialog() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    hideProgress();
+                } catch (final Exception ex) {
+                }
+            }
+        });
+    }
+
+    private void showProgressDialog() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    showProgress();
+                } catch (final Exception ex) {
+
+                }
+            }
+        });
     }
 }

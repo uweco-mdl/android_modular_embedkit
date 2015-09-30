@@ -280,6 +280,11 @@
             android:name=".uilayer.myhealth.PrimaryCarePhysicianActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
+        <activity
+            android:name=".uilayer.sav.MDLiveDoctorOnCall"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>

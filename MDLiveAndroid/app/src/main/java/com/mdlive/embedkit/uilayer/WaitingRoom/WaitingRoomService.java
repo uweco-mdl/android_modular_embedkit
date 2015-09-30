@@ -31,7 +31,18 @@ public class WaitingRoomService extends BaseServicesPlugin {
     public void doPostVseeCredentials(String postBody,Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
         SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         String apptId = sharedpreferences.getString(PreferenceConstants.APPT_ID, "");
-        jsonObjectPostRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_WAITING_ROOM_VSEE+apptId,postBody,responseListener,errorListener);
+        jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_WAITING_ROOM_VSEE + apptId, postBody, responseListener, errorListener);
 
+    }
+
+    public void doPutCallBackRequest(String url,Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
+        jsonObjectPutRequest(url, null, responseListener, errorListener);
+
+    }
+    public void doGetOnCallProviderStatus(Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
+        SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        String apptId = sharedpreferences.getString(PreferenceConstants.APPT_ID, "");
+        String jointUrl=AppSpecificConfig.URL_WAITING_ONCALL_STATUS.replace(":id",apptId);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + jointUrl, null, responseListener, errorListener);
     }
 }

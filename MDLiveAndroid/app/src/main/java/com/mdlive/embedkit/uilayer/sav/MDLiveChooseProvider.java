@@ -65,6 +65,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private Button seeNextAvailableBtn;
     private TextView loadingTxt;
     private boolean flag = false;
+    public static boolean isDoctorOnCall,isDoctorOnVideo;
+
+    private Button seeFirstAvailDoctor;
 
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
@@ -156,7 +159,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
         //setProgressBar(findViewById(R.id.progressDialog));
         seeNextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
+        seeFirstAvailDoctor= (Button) findViewById(R.id.btn_see_first_available_doctor);
         listView = (ListView) findViewById(R.id.chooseProviderList);
+
+        seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent seeFirstAvailableDocIntent=new Intent(MDLiveChooseProvider.this,MDLiveDoctorOnCall.class);
+                startActivity(seeFirstAvailableDocIntent);
+            }
+        });
 
 //        ((ImageView)findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -185,8 +197,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         ((ImageView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent  = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
+                startActivityForResult(intent, 1);
                 MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
             }
         });
@@ -261,7 +273,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }};
         ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, getProgressDialog());
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID,""), successCallBackListener, errorListener);
+        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""), successCallBackListener, errorListener);
     }
     /**
      *
@@ -280,6 +292,27 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             boolean StrDoctorOnCall = false;
+            JSONObject resObject=new JSONObject(response.toString());
+
+            //Doctor call Validation
+            if(resObject.has("doctor_on_call_video") || resObject.has("doctor_on_call")){
+                if(resObject.isNull("doctor_on_call_video")||resObject.isNull("doctor_on_call")) {
+                    isDoctorOnCall=false;
+                    isDoctorOnVideo=false;
+                }else if(resObject.getBoolean("doctor_on_call_video")) {
+                    isDoctorOnVideo=true;
+                    isDoctorOnCall=false;
+                } else if(resObject.getBoolean("doctor_on_call")) {
+                    isDoctorOnVideo=false;
+                    isDoctorOnCall=true;
+                }
+
+                Log.d("Doc On call",""+resObject.getBoolean("doctor_on_call_video"));
+                Log.d("Doc On Video",""+resObject.getBoolean("doctor_on_call"));
+
+            }
+
+
             if(responObj.get("doctor_on_call").isJsonNull())
             {
 
@@ -511,6 +544,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Log.e("List","Am in ListItem Click Listener");
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
                 Log.e("Provider availabilityType",providerListMap.get(position).get("availability_type"));
+                isDoctorOnCall=false;
+                isDoctorOnVideo=false;
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
                         providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"),providerListMap.get(position).get("availability_type"),providerListMap.get(position).get("available_now_status"));
                 Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);

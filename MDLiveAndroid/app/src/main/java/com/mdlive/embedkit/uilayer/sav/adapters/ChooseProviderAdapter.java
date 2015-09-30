@@ -1,16 +1,20 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
+import com.mdlive.embedkit.uilayer.sav.MDLiveDoctorOnCall;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 
@@ -71,6 +75,17 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 inflate = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent, false);
+
+            Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
+
+
+            seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent seeFirstAvailableDocIntent=new Intent(context,MDLiveDoctorOnCall.class);
+                    context.startActivity(seeFirstAvailableDocIntent);
+                }
+            });
            /* ((ImageView) row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

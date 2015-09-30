@@ -26,7 +26,10 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
+import com.mdlive.embedkit.uilayer.sav.MDLiveAppointmentThankYou;
+import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -34,6 +37,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +61,11 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
     WaitingRoomViewPager pager;
     int viewPagerCurrentItem = 0;
+    private String positiveCallBackUrl,negativCallBackUrl;
+    public static boolean isEscalated;
+    private Handler handler,providerStatusHandler;
+    private Runnable runnable,providerStatusRunnable;
+    public static int providerStatusDelay=15000,docOnCallDelay=30000;
 
     private Handler mHandler = new Handler();
     private Runnable mRunnable = new Runnable() {
@@ -80,7 +89,37 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         clearMinimizedTime();
 
         isReturning = getIntent().getBooleanExtra("isReturning",false);
-        getProviderStatus();
+
+
+
+        isEscalated=false;
+        Log.e("IsDoctorOnCall",""+ MDLiveChooseProvider.isDoctorOnVideo);
+        handler=new Handler();
+        setProgressBar(findViewById(R.id.progressDialog));
+        providerStatusHandler=new Handler();
+        providerStatusRunnable=new Runnable() {
+            @Override
+            public void run() {
+                getProviderStatus();
+            }
+        };
+        providerStatusRunnable.run();
+
+        if(MDLiveChooseProvider.isDoctorOnVideo){//if true getOnCallProviderStatus() method to be executed synchronously
+            Log.e("Run","Run Strart");
+            runnable=new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("Run","Run Inside");
+                    getOnCallProviderStatus();
+                }
+            };
+            runnable.run();
+        }
+
+
+
+        //getProviderStatus();
         ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,6 +452,9 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onDestroy() {
         super.onDestroy();
         clearMinimizedTime();
+        handler.removeCallbacks(runnable);
+        providerStatusHandler.removeCallbacks(providerStatusRunnable);
+        Log.e("Test", "Destroy Coming");
     }
 
     private WatingRoomTips getWaitWatingRoomTips() {
@@ -446,4 +488,237 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         public int[] mColors;
         public String[] mBodyText;
     }
+
+    /***
+     *This function will retrieve user Provider status from the server on for oncall video consultation.
+     *@Listner-successListner will  handles the success response from server.
+     *@Listner-errorListener will handles error response from server.
+     *WaitingRoomService class will send the get request to the server and receives the corresponding response
+     */
+
+    public void getOnCallProviderStatus() {
+        Log.e("Coming", "Called");
+        NetworkSuccessListener successListener = new NetworkSuccessListener() {
+
+            @Override
+            public void onResponse(Object response) {
+                Log.e("Response", response.toString());
+
+                if (!response.toString().equals("{}")) {
+                    handler.removeCallbacks(runnable);
+                    handleOnCallVideoResponse(response.toString());//Method to handle the response from Server
+                } else {
+                    Log.e("NEgative Response", "Called");
+                    handler.postDelayed(runnable, 30000);//Method to call the method with 30s delay
+                }
+
+            }
+        }
+
+                ;
+        NetworkErrorListener errorListner = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Provider Status Inside","error Response"+"--"+error.toString());
+                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+            }
+        };
+
+        waitingService=new WaitingRoomService(MDLiveWaitingRoom.this, null);
+        waitingService.doGetOnCallProviderStatus(successListener,errorListner);
+    }
+
+
+    public void handleOnCallVideoResponse(String response){
+        try{
+            if(!response.isEmpty()) {
+                JSONObject resObj = new JSONObject(response);
+                if (resObj.has("message")) {
+                    showAlertPopup(resObj.getString("message"),resObj);
+                }
+            }
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * This method will be used to show the alert based on service response.
+     * @param errorMessage--The error message to be shown to the user is received from the server.
+     * @param resObj-Response object which is received from the server contains callback url as Json Array
+     */
+
+    public void showAlertPopup(String errorMessage,JSONObject resObj){
+        try {
+            JSONArray responseArray= resObj.getJSONArray("actions");
+            JSONObject negativeObject=responseArray.getJSONObject(0);
+            JSONObject positiveObject=responseArray.getJSONObject(1);
+            String baseUrl= AppSpecificConfig.BASE_URL.replace("/services", "");
+            positiveCallBackUrl=baseUrl+positiveObject.getString("callback_url");
+            negativCallBackUrl=baseUrl+negativeObject.getString("callback_url");
+            if(positiveObject.has("phone")){
+                positiveCallBackUrl=positiveCallBackUrl+positiveObject.getString("phone");
+            }
+            final String positiveLabel=positiveObject.getString("label");
+            final String negativeLabel=negativeObject.getString("label");
+
+
+
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveWaitingRoom.this);
+
+            alertDialogBuilder
+                    .setTitle("")
+                    .setMessage(errorMessage)
+                    .setCancelable(false)
+                    .setPositiveButton(positiveObject.getString("label").trim(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            yesCallBackServerRequest(positiveCallBackUrl);
+                            //Need to make Call me by Phone", callback_url: "/services/waiting_room/:id/switch_to_phone?phone=", phone: "555555555"
+                        }
+                    }).setNegativeButton(negativeObject.getString("label").trim(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    noCallBackServerRequest(negativCallBackUrl);
+                }
+            });
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface arg0) {
+                  /*  if(negativeLabel.length()>5&& positiveLabel.length()>5){
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) 25);
+                        alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) 25);
+                    }*/
+                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+
+
+                }
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * This method will be when user click on yes.
+     * doPutCallBackRequest Method send the request to the server and get the corresponding response back.
+     * @param url--Call Url from the response
+     */
+    public void yesCallBackServerRequest(String url){
+        showProgress();
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgress();
+                Log.e("YEsCallBackResponse", "" + response.toString());
+                try{
+
+                    JSONObject yesResObj=new JSONObject(response.toString());
+                    if(yesResObj.has("keep_waiting")){
+                        if(!yesResObj.getBoolean("keep_waiting")){
+                            Intent thankYouIntent=new Intent(MDLiveWaitingRoom.this, MDLiveAppointmentThankYou.class);
+                            handler.removeCallbacks(runnable);
+                            providerStatusHandler.removeCallbacks(providerStatusRunnable);
+                            if(yesResObj.has("message")){
+                                if(yesResObj.getString("message").contains("escalated")){
+                                    isEscalated=true;
+                                }else{
+                                    isEscalated=false;
+                                }
+                            }
+                            thankYouIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+                            startActivity(thankYouIntent);
+                            MdliveUtils.startActivityAnimation(MDLiveWaitingRoom.this);
+
+
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+                //To do: Need to handle the success response
+            }
+        };NetworkErrorListener errorListener=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                hideProgress();
+                //To do: Need to handle the Error response
+                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
+            }
+        };
+        waitingService=new WaitingRoomService(MDLiveWaitingRoom.this,null);
+        waitingService.doPutCallBackRequest(url,successListener,errorListener);
+    }
+
+
+
+    /**
+     * This method will be when user click on No.
+     * doPutCallBackRequest Method send the request to the server and get the corresponding response back from the server.
+     * @param url--Call back Url from the response
+     */
+
+    public void noCallBackServerRequest(String url){
+        showProgress();
+        NetworkSuccessListener successListener=new NetworkSuccessListener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgress();
+                Log.e("NoCallBackResponse", "" + response.toString());
+                try{
+                    JSONObject noResObj=new JSONObject(response.toString());
+                    if(noResObj.has("keep_waiting")){
+                        if(noResObj.getBoolean("keep_waiting")){
+                            handler.postDelayed(runnable,docOnCallDelay);
+                        }else if(!noResObj.getBoolean("keep_waiting")){
+                            Intent thankYouIntent=new Intent(MDLiveWaitingRoom.this, MDLiveAppointmentThankYou.class);
+                            handler.removeCallbacks(runnable);
+                            providerStatusHandler.removeCallbacks(providerStatusRunnable);
+                            if(noResObj.has("message")){
+                                if(noResObj.getString("message").contains("escalated")){
+                                    isEscalated=true;
+                                }else{
+                                    isEscalated=false;
+                                }
+                            }
+                            ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
+                            startActivity(thankYouIntent);
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        };NetworkErrorListener errorListener=new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //To do: Need to handle the Error response
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
+            }
+        };
+        waitingService=new WaitingRoomService(MDLiveWaitingRoom.this,null);
+        waitingService.doPutCallBackRequest(url, successListener, errorListener);
+    }
+
+
+
+
+
 }
