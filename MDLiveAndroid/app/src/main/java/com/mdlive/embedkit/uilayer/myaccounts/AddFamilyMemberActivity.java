@@ -301,10 +301,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent upIntent = new Intent(this, MyAccountActivity.class);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(upIntent);
+        if(!getIntent().hasExtra("user_info")){
+            Intent upIntent = new Intent(this, MyAccountActivity.class);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(upIntent);
+        }
         finish();
     }
 
@@ -435,12 +437,15 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
 
             final User user = User.getSelectedUser(getBaseContext());
-            if (user == null) {
-                final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+            if(getIntent().hasExtra("user_info")){
+                setResult(RESULT_OK);
                 finish();
+            }else if (user == null) {
+                    final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
             } else {
                 startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
             }
