@@ -253,16 +253,17 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
-    /*GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+    GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
             try {
+                Toast.makeText(getApplicationContext(), "storeName "+list.get(markerExpandIdCollection.get(marker)).get("store_name"), Toast.LENGTH_SHORT).show();
                 setPharmacyAsADefault((int) list.get(markerExpandIdCollection.get(marker)).get("pharmacy_id"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    };*/
+    };
 
 
 
@@ -465,7 +466,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
             }
             adaper.notifyDataSetChanged();
-            //expandgoogleMap.setOnInfoWindowClickListener(infoWindowClickListener);
+            expandgoogleMap.setOnInfoWindowClickListener(infoWindowClickListener);
             setListViewHeightBasedOnChildren(pharmList);
             //For Google map initialize view
             if (markerPoint != null && googleMap != null)
@@ -583,9 +584,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         map.put("distance", distance);
         map.put("active", active);
         Marker marker = googleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
-        markerIdCollection.put(marker, i);
+        markerIdCollection.put(marker, list.size());
         Marker expandmarker = expandgoogleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
-        markerExpandIdCollection.put(expandmarker, i);
+        markerExpandIdCollection.put(expandmarker, list.size());
         list.add(map);
     }
 
