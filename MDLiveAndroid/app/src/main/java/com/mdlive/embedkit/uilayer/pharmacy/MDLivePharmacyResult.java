@@ -257,7 +257,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         @Override
         public void onInfoWindowClick(Marker marker) {
             try {
-                Toast.makeText(getApplicationContext(), "storeName "+list.get(markerExpandIdCollection.get(marker)).get("store_name"), Toast.LENGTH_SHORT).show();
                 setPharmacyAsADefault((int) list.get(markerExpandIdCollection.get(marker)).get("pharmacy_id"));
             } catch (Exception e) {
                 e.printStackTrace();

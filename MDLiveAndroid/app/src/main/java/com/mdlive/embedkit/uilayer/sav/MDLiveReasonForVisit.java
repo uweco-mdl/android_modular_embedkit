@@ -758,7 +758,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
                             int width = dm.widthPixels;
                             gridview.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    (width / 2) + 150));
+                                    (width / 2) + 200));
                         } else if (recordsArray.length() > 0) {
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
