@@ -161,8 +161,8 @@ public class MDLiveConfig {
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 AppSpecificConfig.URL_ENVIRONMENT = "q";
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
-                AppSpecificConfig.URL_FORGOT_USERNAME = "http://www.mdlive.com/mobile/forgotusername";
-                AppSpecificConfig.URL_FORGOT_PASSWORD = "http://www.mdlive.com/mobile/forgotpassword";
+                AppSpecificConfig.URL_FORGOT_USERNAME = "https://pluto-members.mdtestsite.net/forgot_username";
+                AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://stage-symptomchecker.mdlive.com/sc/html/index.html";
                 break;
             case STAGE:
