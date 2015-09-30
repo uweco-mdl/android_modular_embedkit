@@ -38,6 +38,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -45,7 +46,6 @@ import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,11 +147,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         try {
             if(Shared_AppointmentDate!=null && Shared_AppointmentDate.length() != 0){
                 Log.e("Check timestamp",Shared_AppointmentDate);
-                final Calendar cal = Calendar.getInstance();
+                final Calendar cal = TimeZoneUtils.getCalendarWithOffset(this);
                 cal.setTimeInMillis(Long.parseLong(Shared_AppointmentDate) * 1000);
                 Log.d("Time - ", cal.getTime().toString() + " - ");
                 final Date date = cal.getTime();
-                final Format format = new SimpleDateFormat("yyyy/MM/dd");
+                final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                format.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String convertedTime =  format.format(date);
                 Log.e("convertedtime", convertedTime);
                 Log.e("ProviderDate",convertedTime);
@@ -1360,7 +1361,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         myText.setClickable(true);
         myText.setTag(timeSlotListMap.get(position).get("appointment_type"));
         myText.setPadding(8 * density ,4 * density, 8 * density, 4 * density);
-        myText.setText(MdliveUtils.getTimeFromTimestamp(str_timeslot));
+        myText.setText(TimeZoneUtils.getTimeFromTimestamp(str_timeslot, this));
 //        LinearLayout.LayoutParams lp = new
 //        LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //        lp.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
@@ -1730,7 +1731,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
     }
 
     public void GetCurrentDate(TextView selectedText) {
-        final Calendar c = Calendar.getInstance();
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
@@ -1742,13 +1743,14 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 Log.e("Check timestamp",Shared_AppointmentDate);
                 c.setTimeInMillis(Long.parseLong(Shared_AppointmentDate) * 1000);
                 final Date date = c.getTime();
-                final Format format = new SimpleDateFormat("yyyy/MM/dd");
-
+                final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                format.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String convertedTime =  format.format(date);
                 Log.e("getCurrentDate",convertedTime);
 //                AppointmentDate = convertedTime;
 
-                final Format format1 = new SimpleDateFormat("E, MMM dd, yyyy");
+                final SimpleDateFormat format1 = new SimpleDateFormat("E, MMM dd, yyyy");
+                format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 selectedText.setText(format1.format(date));
 //
             }
@@ -1783,11 +1785,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 String format = new SimpleDateFormat("E, MMM dd, yyyy").format(calendar.getTime());
 //                ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                Log.d("TImeZone - ", calendar.getTimeInMillis() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 return dialog;
         }
         return null;
@@ -1809,13 +1812,16 @@ if(str_avail_status.equalsIgnoreCase("true"))
 //                    .append("-").append(day).append("-").append(year)
 //                    .append(" "));
             // Show selected date
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = TimeZoneUtils.getCalendarWithOffset(MDLiveProviderDetails.this);
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            String format = new SimpleDateFormat("E, MMM dd, yyyy").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveProviderDetails.this));
+            String format = sdf.format(cal.getTime());
             ((TextView)findViewById(R.id.dateTxt)).setText(format);
-            DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+            format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveProviderDetails.this));
             updatedAppointmentDate = format1.format(cal.getTime());
             loadProviderDetails(updatedAppointmentDate);
 

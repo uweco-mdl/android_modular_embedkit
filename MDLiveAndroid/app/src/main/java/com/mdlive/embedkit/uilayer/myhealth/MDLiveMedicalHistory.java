@@ -39,6 +39,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -301,13 +302,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
         });
 
-        if (MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
         }
 
-        if (MdliveUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
@@ -448,9 +449,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                         if(response.has("health_last_update")){
                             long time = response.getLong("health_last_update");
                             if(time != 0){
-                                Calendar calendar = Calendar.getInstance();
+                                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(MDLiveMedicalHistory.this);
                                 calendar.setTimeInMillis(time * 1000);
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                                dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMedicalHistory.this));
                                 ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.updateInfoText)).setText(
                                         getResources().getString(R.string.mdl_last_update_txt)+

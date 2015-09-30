@@ -30,6 +30,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -378,14 +379,15 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             Log.e("dateofBirth", dateofBirth);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
-                years = Calendar.getInstance().get(Calendar.YEAR) - years;
-                for(int i = years; i <= Calendar.getInstance().get(Calendar.YEAR); i++){
+                sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth),this);
+                years = TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR) - years;
+                for(int i = years; i <= TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
                     Log.e("Years--->", i+"");
                 }
                 if(procedureYearList.size() == 0){
-                    procedureYearList.add(Calendar.getInstance().get(Calendar.YEAR)+"");
+                    procedureYearList.add(TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR)+"");
                 }
             }
             yearAdapter.notifyDataSetChanged();

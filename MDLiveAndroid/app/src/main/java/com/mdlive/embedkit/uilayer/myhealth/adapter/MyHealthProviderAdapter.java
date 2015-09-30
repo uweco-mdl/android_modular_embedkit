@@ -42,7 +42,7 @@ public class MyHealthProviderAdapter extends ArrayAdapter<MyProvider> {
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
         viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdli_provider_since) + getItem(position).providerSince);
-//        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + MdliveUtils.getReceivedSentTime(getItem(position).lastAppointment, "EDT"));
+//        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + MdliveUtils.getReceivedSentTime(getItem(position).lastAppointment, ""));
         return convertView;
     }
 

@@ -35,6 +35,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -313,7 +314,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 Log.e("Values",""+newVal);
                 Log.e("OldValues",""+oldVal);
-                Calendar c = Calendar.getInstance();
+                Calendar c = TimeZoneUtils.getCalendarWithOffset(MDLivePayment.this);
                 int minimumYear = c.get(Calendar.YEAR);
                 if(newVal!=minimumYear){
                     monthPicker.setMaxValue(12);
@@ -329,7 +330,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
         monthPicker.setWrapSelectorWheel(true);
         try {
-            Calendar c = Calendar.getInstance();
+            Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
             Date mDate = new Date();
             c.setTime(mDate);
             monthPicker.setMaxValue(12);
@@ -338,7 +339,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Calendar c = Calendar.getInstance();
+        Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         int minimumYear = c.get(Calendar.YEAR);
         yearPicker.setMaxValue(9999);
         yearPicker.setMinValue(minimumYear);
@@ -350,6 +351,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 try {
                     year = yearPicker.getValue();
                     month = monthPicker.getValue() - 1;
+                    expiryDate = TimeZoneUtils.getCalendarWithOffset(MDLivePayment.this);
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
                     dateView.setText(dateFormat.format(expiryDate.getTime()));
@@ -447,7 +449,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             cardInfo.put("billing_country_id", "1");
             cardInfo.put("cc_num", billingObj.getString("cc_num"));
             cardInfo.put("cc_cvv2", billingObj.getString("cc_cvv2"));
-            cardInfo.put("cc_expyear", new SimpleDateFormat("yyyy").format(expiryDate.getTime()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+            cardInfo.put("cc_expyear", sdf.format(expiryDate.getTime()));
             cardInfo.put("cc_expmonth", String.valueOf(month + 1));
             cardInfo.put("cc_hsa", billingObj.getString("cc_hsa"));
             cardInfo.put("billing_zip5", userBasicInfo.getPersonalInfo().getZipcode());
@@ -520,10 +524,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
             try {
                 year = selectedYear;
                 month = selectedMonth;
-                Calendar c = Calendar.getInstance();
+                Calendar c = TimeZoneUtils.getCalendarWithOffset(MDLivePayment.this);
                 c.set(selectedYear, selectedMonth, 1);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
-                new SimpleDateFormat("MM/yyyy").parse(dateFormat.format(c.getTime())).compareTo(new Date());
+                dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLivePayment.this));
+
+                SimpleDateFormat tmpDateFormat = new SimpleDateFormat("MM/yyyy");
+                tmpDateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLivePayment.this));
+
+                tmpDateFormat.parse(dateFormat.format(c.getTime())).compareTo(TimeZoneUtils.getCalendarWithOffset(MDLivePayment.this).getTime());
                 dateView.setText(dateFormat.format(c.getTime()));
             } catch (Exception e) {
 

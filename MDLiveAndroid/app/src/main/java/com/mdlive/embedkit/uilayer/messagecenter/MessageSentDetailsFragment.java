@@ -14,6 +14,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -80,7 +81,7 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
 
         final TextView timeTextView = (TextView) view.findViewById(R.id.fragment_message_received_date_text_view);
         if (timeTextView != null) {
-            timeTextView.setText(MdliveUtils.getReceivedSentTimeInDetails(sentMessage.inMilliseconds, sentMessage.timeZone));
+            timeTextView.setText(TimeZoneUtils.getReceivedSentTimeInDetails(sentMessage.inMilliseconds, sentMessage.timeZone, getActivity()));
         }
 
         final View replyView = view.findViewById(R.id.fragment_message_reply_image_view);

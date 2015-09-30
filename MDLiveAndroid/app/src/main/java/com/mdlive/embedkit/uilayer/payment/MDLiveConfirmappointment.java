@@ -29,6 +29,7 @@ import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -274,8 +275,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
             ((TextView) findViewById(R.id.txtTime)).setText(Time);
         } else {
-            Calendar calendar = Calendar.getInstance();
-            String format = new SimpleDateFormat("E, MMM d, yyyy").format(calendar.getTime());
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+            String format = sdf.format(calendar.getTime());
             ((TextView) findViewById(R.id.txtDate)).setText(format);
             SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
             String currentTime = df.format(calendar.getTime());

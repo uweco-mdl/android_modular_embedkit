@@ -21,6 +21,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
@@ -441,7 +442,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(MdliveUtils.calculteAgeFromPrefs(getActivity())>=10) {
+            if(TimeZoneUtils.calculteAgeFromPrefs(getActivity())>=10) {
                 if(gender.equalsIgnoreCase("Female")){
                     hasFemaleAttribute = true;
                 }

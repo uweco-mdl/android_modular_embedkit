@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddCreditCardInfoService;
@@ -408,7 +409,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 Log.e("Values",""+newVal);
                 Log.e("OldValues",""+oldVal);
-                Calendar c = Calendar.getInstance();
+                Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
+//                c.setTimeZone("");
                 int minimumYear = c.get(Calendar.YEAR);
                 if(newVal!=minimumYear){
                     monthPicker.setMaxValue(12);
@@ -424,8 +426,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         monthPicker.setWrapSelectorWheel(true);
         try {
-            Calendar c = Calendar.getInstance();
-            Date mDate = new Date();
+            Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
+            Date mDate = c.getTime();
             c.setTime(mDate);
             monthPicker.setMaxValue(12);
             monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
@@ -433,7 +435,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Calendar c = Calendar.getInstance();
+        Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
         int minimumYear = c.get(Calendar.YEAR);
         yearPicker.setMaxValue(9999);
         yearPicker.setMinValue(minimumYear);
@@ -446,8 +448,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 try {
                     year = yearPicker.getValue();
                     month = monthPicker.getValue() - 1;
+                    expiryDate = TimeZoneUtils.getCalendarWithOffset(getActivity());
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
                     cardExpirationMonth = String.valueOf(month);
                     cardExpirationYear = String.valueOf(year);
                     mCardExpirationMonth.setText(dateFormat.format(expiryDate.getTime()));

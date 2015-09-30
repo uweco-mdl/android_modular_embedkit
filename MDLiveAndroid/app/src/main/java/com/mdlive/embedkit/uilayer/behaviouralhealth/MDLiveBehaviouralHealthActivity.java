@@ -20,10 +20,10 @@ import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity {
@@ -165,12 +165,12 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     }
 
     public void chooseStateOnClick(View view){
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveBehaviouralHealthFragment) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, ((MDLiveBehaviouralHealthFragment) fragment).pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+            datePickerDialog.getDatePicker().setMaxDate(TimeZoneUtils.getCalendarWithOffset(this).getTime().getTime());
             datePickerDialog.show();
         }
     }

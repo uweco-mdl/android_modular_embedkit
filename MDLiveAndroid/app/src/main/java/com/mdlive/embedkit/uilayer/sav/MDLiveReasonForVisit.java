@@ -54,6 +54,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationControl
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
@@ -356,7 +357,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         }
 
         public void startNextActivity(){
-            if (MdliveUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+            if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
                 checkMedicalCompletion();
             }else{
                 Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
@@ -619,8 +620,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 }
             }
             // Create a media file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                    Locale.getDefault()).format(new Date());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault());
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
+            String timeStamp = sdf.format(TimeZoneUtils.getCalendarWithOffset(context).getTime());
             File mediaFile;
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
                     + "IMG_" + timeStamp + ".jpg");

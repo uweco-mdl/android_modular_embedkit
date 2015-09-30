@@ -30,6 +30,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.AddChildServices;
@@ -232,17 +233,18 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     public boolean checkPerdiatricAge(){
-        if(calculteAgeFromPrefs(strDate)<IntegerConstants.ADD_CHILD_AGELIMIT){
+        if(calculteAgeFromPrefs(strDate, this)<IntegerConstants.ADD_CHILD_AGELIMIT){
             return true;
         }
         return false;
     }
 
-    public static int calculteAgeFromPrefs(String strDate){
+    public static int calculteAgeFromPrefs(String strDate, Context context){
         try {
             DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            format.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
             Date date = format.parse(strDate);
-            return MdliveUtils.calculateAge(date);
+            return MdliveUtils.calculateAge(date,context);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -328,11 +330,11 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      * for the particular native date picker.
      */
     private void getDateOfBirth() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
         datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
-        datePickerDialog.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
-        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+        datePickerDialog.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, this));
+        datePickerDialog.getDatePicker().setMaxDate(TimeZoneUtils.getCalendarWithOffset(this).getTime().getTime());
     }
     /**
      * The Current date and time will be retrieved by using this method.
@@ -343,7 +345,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     public void GetCurrentDate(TextView selectedText)
     {
         // Get current date by calender
-        final Calendar c = Calendar.getInstance();
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day   = c.get(Calendar.DAY_OF_MONTH);
@@ -356,14 +358,14 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         @Override
         public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(MDLiveFamilymember.this);
             calendar.set(selectedYear, selectedMonth, selectedDay);
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
 
-            Calendar currendDate = Calendar.getInstance();
-            currendDate.setTime(new Date());
+            Calendar currendDate = TimeZoneUtils.getCalendarWithOffset(MDLiveFamilymember.this);
+            currendDate.setTime(calendar.getTime());
             strDate = (new StringBuilder().append(((month+1) > 10) ? month+1:"0"+(month+1))
                     .append("/").append((day > 9) ? day :"0"+(day))
                     .append("/").append(year)

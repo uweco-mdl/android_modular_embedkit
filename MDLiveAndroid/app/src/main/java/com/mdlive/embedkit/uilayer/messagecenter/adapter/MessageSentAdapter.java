@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
 
 /**
@@ -49,7 +49,7 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).to);
         viewHolder.mTextViewBottom.setText(getItem(position).subject);
-        viewHolder.mTextViewTime.setText(MdliveUtils.getReceivedSentTime(getItem(position).inMilliseconds, getItem(position).timeZone));
+        viewHolder.mTextViewTime.setText(TimeZoneUtils.getReceivedSentTime(getItem(position).inMilliseconds, getItem(position).timeZone, getContext()));
 
         return convertView;
     }

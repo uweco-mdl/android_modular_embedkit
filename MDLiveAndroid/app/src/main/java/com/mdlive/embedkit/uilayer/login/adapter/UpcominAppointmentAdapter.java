@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 
 import java.util.List;
@@ -101,9 +101,9 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
         String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
         final StringBuilder builder = new StringBuilder();
         builder.append(appointment.getPhysicianName() + "\n");
-        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "EDT") + "\n");
-        builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "EDT") + "\n");
-        builder.append(appointment.getApptType());
+        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "") + "\n");
+        builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "", parent.getContext()) + "\n");
+        builder.append(appointment.getApptType() + " " + convertView.getContext().getResources().getString(R.string.mdl_consultation));
 
         viewHolder.mTextView.setText(builder.toString());
         viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));

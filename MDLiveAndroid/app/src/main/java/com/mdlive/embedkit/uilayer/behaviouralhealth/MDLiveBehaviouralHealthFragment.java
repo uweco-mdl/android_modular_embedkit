@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralService;
@@ -340,9 +341,10 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         // when dialog box is closed, below method will be called.
         @Override
         public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(getActivity());
             calendar.set(selectedYear, selectedMonth, selectedDay);
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
             mWhenTextView.setText(sdf.format(calendar.getTime()));
             mBehavioralHistory.hospitalizedDate = sdf.format(calendar.getTime());
         }

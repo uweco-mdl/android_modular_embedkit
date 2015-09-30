@@ -22,6 +22,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoService;
@@ -92,7 +93,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mDOBLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
+                final Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
 
                 int y = c.get(Calendar.YEAR) + 4;
                 int m = c.get(Calendar.MONTH) - 2;
@@ -116,7 +117,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         }, y, m, d);
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dp.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
+                dp.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, getActivity()));
                 dp.show();
             }
         });

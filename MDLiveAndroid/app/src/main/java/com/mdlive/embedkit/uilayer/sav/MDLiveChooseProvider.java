@@ -31,6 +31,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
@@ -472,7 +473,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull()){
                     shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
                     strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
-                    nxtavaildate= MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
+                    nxtavaildate= TimeZoneUtils.getReceivedTimeForProvider(strDate, "", this);
                 }else{
                     nxtavaildate=null;
                     shared_timestamp = 0;
@@ -483,7 +484,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }
             availabilityType =  responArray.get(i).getAsJsonObject().get("availability_type").getAsString();
              available_now_status =  responArray.get(i).getAsJsonObject().get("available_now_status").getAsBoolean();
-            appointmentDate = MdliveUtils.getReceivedTimeForProvider(strDate,"EST");
+            appointmentDate = TimeZoneUtils.getReceivedTimeForProvider(strDate, "", this);
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("name", providerName);
             map.put("isheader",StringConstants.ISHEADER_FALSE);
@@ -521,7 +522,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("availability_type", availabilityType);
             map.put("group_name", groupAffiliations);
             map.put("available_now_status", available_now_status+"");
-            map.put("next_availability",MdliveUtils.getReceivedTimeForProvider(strDate,"EST"));
+            map.put("next_availability", TimeZoneUtils.getReceivedTimeForProvider(strDate, "", this));
 //            map.put("next_availability",strDate+"");
             providerListMap.add(map);
             filterMainRl.setVisibility(View.GONE);

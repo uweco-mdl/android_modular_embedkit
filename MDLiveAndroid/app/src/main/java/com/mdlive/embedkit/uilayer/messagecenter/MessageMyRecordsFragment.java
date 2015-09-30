@@ -27,6 +27,7 @@ import com.mdlive.embedkit.uilayer.messagecenter.adapter.RecordAdapter;
 import com.mdlive.embedkit.uilayer.sav.adapters.PickImagePlugin;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Records;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -45,7 +46,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by dhiman_da on 6/24/2015.
@@ -283,7 +283,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
 
         final File file = new File(filePath);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        String currentTimeStamp = dateFormat.format(new Date());
+        String currentTimeStamp = dateFormat.format(TimeZoneUtils.getCalendarWithOffset(getActivity()).getTime());
         try {
             JSONObject parent = new JSONObject();
             JSONObject jsonObject = new JSONObject();

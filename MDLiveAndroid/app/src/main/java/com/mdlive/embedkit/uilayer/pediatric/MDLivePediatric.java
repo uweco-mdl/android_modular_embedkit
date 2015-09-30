@@ -35,6 +35,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.PediatricService;
@@ -198,14 +199,14 @@ public class MDLivePediatric extends MDLiveBaseActivity {
      */
 
     public boolean checkPerdiatricAge() {
-        if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_TWO && MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) < IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_TWO && TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) < IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             return true;
-        } else if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_TWO) {
-            if (MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO && MdliveUtils.daysFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO) {
+        } else if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_TWO) {
+            if (TimeZoneUtils.calculteMonthFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO && TimeZoneUtils.daysFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO) {
                 return true;
             }
-        } else if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-            if (MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO && MdliveUtils.daysFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO) {
+        } else if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+            if (TimeZoneUtils.calculteMonthFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO && TimeZoneUtils.daysFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO) {
                 return true;
             }
         }

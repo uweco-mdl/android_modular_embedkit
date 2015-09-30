@@ -36,6 +36,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -277,9 +278,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis()-10000);
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings() -10000);
                 return dialog;
         }
         return null;
@@ -297,13 +298,16 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             day = selectedDay;
 
             // Show selected date
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = TimeZoneUtils.getCalendarWithOffset(MDLiveMakeAppmtrequest.this);
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            String format = new SimpleDateFormat("E, MMM d, yyyy").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
+            String format = sdf.format(cal.getTime());
             ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
             DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+            format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
             postidealTime = format1.format(cal.getTime());
 
         }

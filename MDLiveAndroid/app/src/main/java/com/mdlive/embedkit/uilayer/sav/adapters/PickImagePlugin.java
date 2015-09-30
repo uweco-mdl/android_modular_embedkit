@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.sav.adapters;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,10 +14,10 @@ import android.provider.MediaStore;
 
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -84,7 +85,7 @@ public class PickImagePlugin {
      * Creating file uri to store image/video
      */
     public Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
+        return Uri.fromFile(getOutputMediaFile(parentActivity));
     }
 
     String lastFileNameId = "";
@@ -134,7 +135,7 @@ public class PickImagePlugin {
     /*
     * returning image / video
     */
-    public static File getOutputMediaFile() {
+    public static File getOutputMediaFile(Context context) {
         // External sdcard location
         File mediaStorageDir = new File(
                 Environment
@@ -147,8 +148,9 @@ public class PickImagePlugin {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault());
+        sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
+        String timeStamp = sdf.format(TimeZoneUtils.getCalendarWithOffset(context));
         File mediaFile;
         mediaFile = new File(mediaStorageDir.getPath() + File.separator
                 + "IMG_" + timeStamp + ".jpg");

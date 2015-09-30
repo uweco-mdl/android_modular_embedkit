@@ -32,6 +32,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -675,7 +676,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     }
 
     public void GetCurrentDate(TextView selectedText) {
-        final Calendar c = Calendar.getInstance();
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
@@ -698,10 +699,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
 
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 return dialog;
         }
         return null;
@@ -717,12 +718,16 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = TimeZoneUtils.getCalendarWithOffset(MDLiveSearchProvider.this);
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            String format = new SimpleDateFormat("MMM d, yyyy").format(cal.getTime());
-            serverDateFormat=new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveSearchProvider.this));
+            String format = sdf.format(cal.getTime());
+            sdf = new SimpleDateFormat("yyyy/MM/dd");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveSearchProvider.this));
+            serverDateFormat= sdf.format(cal.getTime());
             // Show selected date
             AppointmentTxtView.setText(format);
 

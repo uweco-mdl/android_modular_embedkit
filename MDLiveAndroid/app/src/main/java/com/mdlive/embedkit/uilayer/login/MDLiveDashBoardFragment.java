@@ -22,6 +22,7 @@ import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
@@ -316,7 +317,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 }
 
             } else {
-                final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
+                final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
                  /*
                 * Will return 0 if less than 10 minutes
@@ -330,13 +331,13 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                             final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
                             if (timestampString != null) {
                                 final long timestamp = Long.parseLong(timestampString);
-                                firstTextView.setText("Your next appointment less than  " + MdliveUtils.getRemainigTimeToAppointmentString(timestamp, "EDT") + " minute(s)");
+                                firstTextView.setText("Your next appointment less than  " + TimeZoneUtils.getRemainigTimeToAppointmentString(timestamp, "", getActivity()) + " minute(s)");
                                 secondTextView.setText("Click here to start Appointment.");
                             }
                             break;
 
                         default:
-                            firstTextView.setText("Your next appointment is  " + appointment.getStartTime());
+                            firstTextView.setText("Your next appointment is  " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
                             secondTextView.setText("Click here for details.");
                             break;
                     }

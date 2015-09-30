@@ -18,6 +18,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationControl
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -77,9 +78,9 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         }
 
         ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
-        ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), appointment.getTimeZone()));
+        ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(TimeZoneUtils.convertMiliSeconedsToStringMonthWithTimeZone(appointment.getInMilliseconds(), getActivity()));
 
-        final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
+        final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
         Log.e("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
         switch (type) {
 
