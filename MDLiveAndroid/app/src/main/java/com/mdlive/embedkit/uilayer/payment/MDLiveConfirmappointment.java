@@ -96,7 +96,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("confirm appmt res---->", response.toString());
+                Log.i("ConfirmAppmt Response",response.toString());
                 hideProgress();
                 try {
                     String apptId = response.getString("appointment_id");
@@ -153,6 +153,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
+                    Log.i("ConfirmAppmt Error",errorObj.toString());
                     hideProgress();
                     MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
                 } catch (Exception e) {
@@ -227,8 +228,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }else if(MDLiveChooseProvider.isDoctorOnVideo){
                 doOnVideoConsultaion();
             }else{
-                doConfirmAppointment();
-            }
+            doConfirmAppointment();
+        }
 
         }
 

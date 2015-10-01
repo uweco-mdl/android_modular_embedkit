@@ -376,6 +376,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     }else {
                         if (StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
+                            intent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +85,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 logE("User Type", "Expected Dependent");
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onDependentSelected(selectedUser);
+                    if(NotificationFragment.getInstance() != null) {
+                        NotificationFragment.getInstance().reloadPendingAppointment();
                 }
+            }
             }
             // The Parent User Selected
             else {
@@ -94,6 +96,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 logE("User Type", "Expected Primary");
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onPrimarySelected(selectedUser);
+                    if(NotificationFragment.getInstance() != null){
+                        NotificationFragment.getInstance().reloadPendingAppointment();}
                 }
             }
         }

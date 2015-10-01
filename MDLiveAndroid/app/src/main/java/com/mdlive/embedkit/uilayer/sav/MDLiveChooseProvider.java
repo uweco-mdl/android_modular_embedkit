@@ -758,13 +758,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 @Override
                 public void getOutline(View view, Outline outline) {
                     // Or read size directly from the view's width/height
-                    int size = (int) (7 * getResources().getDisplayMetrics().density);
+                    int size = (int) (16 * getResources().getDisplayMetrics().density);
                     outline.setOval(0, 0, size, size);
                 }
             };
 
-            view.setOutlineProvider(viewOutlineProvider);
-            view.setElevation(7 * getResources().getDisplayMetrics().density);
+//            view.setOutlineProvider(viewOutlineProvider);
+            view.setElevation(16 * getResources().getDisplayMetrics().density);
         }
     }
 }

@@ -62,7 +62,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     private HashMap<String,Object> params = new HashMap<>();
     private ArrayList<String> nextAvailableList = new ArrayList<>();
     private int month, day, year,selectedvideo=1;
-    private String DoctorId,postidealTime,appointmentType;
+    private String DoctorId,postidealTime,appointmentType,selectionType="";
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +112,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         //PHS user
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
+            selectionType="video";
             findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
                 ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -121,6 +122,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
         }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
+            selectionType="phone";
             findViewById(R.id.video_ll).setClickable(false);
             findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
             findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
@@ -166,7 +168,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
         if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
 
-                && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)) {
+                && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate) && !TextUtils.isEmpty(selectionType)) {
 
             HashMap params1 = new HashMap();
             params1.put("appointment_method", selectedvideo);
@@ -210,6 +212,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     public void onclickVideo(View v)
     {
         selectedvideo = 1;
+        selectionType="video";
         findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
         ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
         findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
@@ -222,6 +225,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     {
 
         selectedvideo=2;
+        selectionType="phone";
         findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
         ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
         findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);

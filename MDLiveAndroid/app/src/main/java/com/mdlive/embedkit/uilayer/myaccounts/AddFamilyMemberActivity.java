@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -437,17 +439,20 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
 
             final User user = User.getSelectedUser(getBaseContext());
-            if(getIntent().hasExtra("user_info")){
-                setResult(RESULT_OK);
+            if (user == null) {
+                final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 finish();
-            }else if (user == null) {
-                    final Intent intent = new Intent(this, MDLiveDashboardActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
             } else {
-                startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+                String activityCaller  = getIntent().getStringExtra("activitycaller");
+                Log.e("Caller bname", activityCaller);
+                if(activityCaller.equals("getstarted")){
+                    startActivity(MDLiveGetStarted.getGetStartedIntentWithUser(getBaseContext(), user));
+                }else {
+                    startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -61,8 +61,15 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     private Notification mNotification;
 
+    public static NotificationFragment instance;
+
+    public static NotificationFragment getInstance(){
+        return instance;
+    }
+
     public static NotificationFragment newInstance() {
         final NotificationFragment fragment = new NotificationFragment();
+        instance = fragment;
         return fragment;
     }
 
@@ -262,6 +269,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
             mNoAppointmentLinearLayout.setVisibility(View.VISIBLE);
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
+        }
+    }
+    public  void reloadPendingAppointment() {
+        if (mHandler != null && mRunnable != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.post(mRunnable);
         }
     }
 

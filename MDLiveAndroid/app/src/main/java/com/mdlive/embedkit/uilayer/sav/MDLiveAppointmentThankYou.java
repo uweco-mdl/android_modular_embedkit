@@ -75,7 +75,8 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
-        ((TextView)findViewById(R.id.provider)).setText(providerName);
+        ((TextView)findViewById(R.id.provider)).setText("\n" +
+                        "Provider: "+providerName);
         String activityCaller = null;
         if(getIntent().hasExtra("activitycaller")){
             activityCaller  = getIntent().getStringExtra("activitycaller");
@@ -83,17 +84,17 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
         if(activityCaller != null && activityCaller.equalsIgnoreCase(getString(R.string.mdl_makeAppmtRequest))){
             consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
-            ((TextView)findViewById(R.id.date)).setText(consultationDate);
+            ((TextView)findViewById(R.id.date)).setText("Date: "+consultationDate);
             Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
-            ((TextView)findViewById(R.id.time)).setText(Time);
+            ((TextView)findViewById(R.id.time)).setText("Time: "+Time);
 
         }else
         {
 
             consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
-            ((TextView)findViewById(R.id.date)).setText(consultationDate);
+            ((TextView)findViewById(R.id.date)).setText("Date: "+consultationDate);
             Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-            ((TextView)findViewById(R.id.time)).setText(Time);
+            ((TextView)findViewById(R.id.time)).setText("Time: "+Time);
         }
 
     }
