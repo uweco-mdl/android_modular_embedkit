@@ -302,17 +302,30 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             boolean StrDoctorOnCall = false;
             JSONObject resObject=new JSONObject(response.toString());
 
+            Log.e("Call", ""+responObj.get("doctor_on_call").getAsBoolean());
+            Log.e("Video", ""+responObj.get("doctor_on_call_video").getAsBoolean());
+
             //Doctor call Validation
             if(resObject.has("doctor_on_call_video") || resObject.has("doctor_on_call")){
-                if(resObject.isNull("doctor_on_call_video")||resObject.isNull("doctor_on_call")) {
+                if(resObject.isNull("doctor_on_call_video")&&resObject.isNull("doctor_on_call")) {
                     isDoctorOnCall=false;
                     isDoctorOnVideo=false;
+                    StrDoctorOnCall=false;
                 }else if(resObject.getBoolean("doctor_on_call_video")) {
                     isDoctorOnVideo=true;
                     isDoctorOnCall=false;
+                    StrDoctorOnCall=true;
                 } else if(resObject.getBoolean("doctor_on_call")) {
                     isDoctorOnVideo=false;
                     isDoctorOnCall=true;
+                    StrDoctorOnCall=true;
+
+                }
+                if(resObject.getBoolean("doctor_on_call")&&resObject.getBoolean("doctor_on_call_video")){
+                    isDoctorOnVideo=true;
+                    isDoctorOnCall=true;
+                    StrDoctorOnCall=true;
+
                 }
 
                 Log.d("Doc On call",""+resObject.getBoolean("doctor_on_call_video"));
@@ -352,9 +365,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     if(responArray.size()!=0){
                         if(responArray.get(0).isJsonObject()){
                             if(!responObj.get("doctor_on_call_video").isJsonNull()){
-                                StrDoctorOnCall =  responObj.get("doctor_on_call_video").getAsBoolean();
+                               // StrDoctorOnCall =  responObj.get("doctor_on_call_video").getAsBoolean();
+                                Log.i("StrDoctorOnCall video",""+StrDoctorOnCall);
+                               // setHeaderContent(StrDoctorOnCall);
+                            }else if(!responObj.get("doctor_on_call").isJsonNull()){
+                                //StrDoctorOnCall = responObj.get("doctor_on_call").getAsBoolean();
+                                Log.i("StrDoctorOnCall video",""+StrDoctorOnCall);
+                              //  setHeaderContent(StrDoctorOnCall);
                             }else{
-                                StrDoctorOnCall = false;
+                                //StrDoctorOnCall=false;
+                               // setHeaderContent(StrDoctorOnCall);
                             }
                             providerListMap.clear();
                             setHeaderContent(StrDoctorOnCall);

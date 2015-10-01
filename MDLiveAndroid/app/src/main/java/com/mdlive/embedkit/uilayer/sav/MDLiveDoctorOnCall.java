@@ -44,6 +44,11 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_first_available_doc).toUpperCase());
     }
+    public void leftBtnOnClick(View v) {
+        MdliveUtils.hideSoftKeyboard(MDLiveDoctorOnCall.this);
+        onBackPressed();
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -58,12 +63,23 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
 
         Log.d("Doc On call", "" + MDLiveChooseProvider.isDoctorOnCall);
-        Log.d("Doc On Video",""+MDLiveChooseProvider.isDoctorOnVideo);
+        Log.d("Doc On Video", "" + MDLiveChooseProvider.isDoctorOnVideo);
 
 
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                byphoneBtn.setTextColor(Color.WHITE);
+
+
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byvideoBtn.setTextColor(Color.GRAY);
+                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+
+                MDLiveChooseProvider.isDoctorOnVideo=false;
+                MDLiveChooseProvider.isDoctorOnCall=true;
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
@@ -71,14 +87,34 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                byvideoBtn.setTextColor(Color.WHITE);
+
+
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byphoneBtn.setTextColor(Color.GRAY);
+                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+
+
+                MDLiveChooseProvider.isDoctorOnVideo=true;
+                MDLiveChooseProvider.isDoctorOnCall=false;
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
         });
 
+        if(MDLiveChooseProvider.isDoctorOnCall && MDLiveChooseProvider.isDoctorOnVideo ){
+            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+            ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+            byphoneBtn.setTextColor(Color.WHITE);
+            byphoneBtnLayout.setClickable(true);
 
-
-        if(MDLiveChooseProvider.isDoctorOnCall){
+            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+            ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+            byvideoBtn.setTextColor(Color.WHITE);
+            byvideoBtnLayout.setClickable(true);
+        }else if(MDLiveChooseProvider.isDoctorOnCall){
             byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
             ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
             byphoneBtn.setTextColor(Color.WHITE);

@@ -1,9 +1,11 @@
 package com.mdlive.embedkit.uilayer.payment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
@@ -28,6 +31,7 @@ import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -51,6 +55,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     private String appointmentMethodType;
     private String timeStamp, phys_ID;
     private boolean CheckdoconfirmAppmt = false;
+    private static String errorPhoneNumber=null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.i("ConfirmAppmt Response",response.toString());
+                Log.e("confirm appmt res---->", response.toString());
                 hideProgress();
                 try {
                     String apptId = response.getString("appointment_id");
@@ -151,13 +156,43 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject errorObj = new JSONObject(responseBody);
-                    Log.i("ConfirmAppmt Error",errorObj.toString());
-                    hideProgress();
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
+                    Log.e("Error Response", error.toString());
+                    dismissDialog();
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        };
+                        // Show timeout error message
+                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveConfirmappointment.this);
+                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        Log.e("responseBody",responseBody);
+                        JSONObject errorObj = new JSONObject(responseBody);
+                        if (errorObj.has("message")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("message"));
+                        } else if (errorObj.has("error")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("error"));
+                        }
+
+                    }else{
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
+                    }
+
                 } catch (Exception e) {
-                    hideProgress();
+                    dismissDialog();
                     e.printStackTrace();
                 }
             }
@@ -228,8 +263,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }else if(MDLiveChooseProvider.isDoctorOnVideo){
                 doOnVideoConsultaion();
             }else{
-            doConfirmAppointment();
-        }
+                doConfirmAppointment();
+            }
 
         }
 
@@ -389,7 +424,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);
-                      /*  if (errorObj.has("message")) {
+                        if (errorObj.has("message")) {
                             if(errorObj.has("phone")){
                                 errorPhoneNumber=errorObj.getString("phone");
                             }else{
@@ -403,7 +438,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                                 errorPhoneNumber=null;
                             }
                             showAlertPopup(errorObj.getString("error"));
-                        }*/
+                        }
 
                     }else{
                         MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
@@ -481,7 +516,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
-                        /*JSONObject errorObj = new JSONObject(responseBody);
+                        JSONObject errorObj = new JSONObject(responseBody);
                         if (errorObj.has("message")) {
                             if(errorObj.has("phone")){
                                 errorPhoneNumber=errorObj.getString("phone");
@@ -496,7 +531,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                                 errorPhoneNumber=null;
                             }
                             showAlertPopup(errorObj.getString("error"));
-                        }*/
+                        }
 
                     }else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
@@ -552,4 +587,75 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         });
     }
+
+    public void showAlertPopup(String errorMessage){
+        try {
+            Log.e("Alert","Cominr Alert");
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveConfirmappointment.this);
+            if(errorPhoneNumber==null){
+                alertDialogBuilder
+                        .setTitle("")
+                        .setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.mdl_Ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+            }else{
+                alertDialogBuilder
+                        .setTitle("")
+                        .setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setPositiveButton(StringConstants.ALERT_CALLNOW, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e("Phone Inside",errorPhoneNumber);
+                                if (errorPhoneNumber != null) {
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + errorPhoneNumber.replaceAll("-", "")));
+                                    startActivity(intent);
+                                    MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                                }else{
+                                    dialog.dismiss();
+                                }
+
+
+                            }
+                        }).setNegativeButton(StringConstants.ALERT_DISMISS, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MDLiveChooseProvider.isDoctorOnCall=false;
+                        MDLiveChooseProvider.isDoctorOnVideo=false;
+                        dialog.dismiss();
+                       /* Intent intent = new Intent();
+                        intent.setAction("com.mdlive.embedkit.HOME_PRESSED");
+                        sendBroadcast(intent);*/
+                    }
+                });
+            }
+
+
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface arg0) {
+                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    if(errorPhoneNumber!=null){
+                        alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    }
+                }
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

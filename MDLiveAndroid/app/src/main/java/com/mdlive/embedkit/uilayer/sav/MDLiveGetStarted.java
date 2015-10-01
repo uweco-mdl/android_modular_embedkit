@@ -1,12 +1,15 @@
 package com.mdlive.embedkit.uilayer.sav;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -52,6 +55,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
@@ -101,11 +105,24 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     ArrayAdapter<String> dataAdapter;
     User user = null;
 
+    //Location Services
+
+    private LocationCooridnates locationService;
+    private IntentFilter intentFilter;
+    private String selectedCity, locationServiceText, shortNameText;
+    private boolean isLocationFetched;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         clearMinimizedTime();
+        locationService = new LocationCooridnates(MDLiveGetStarted.this);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+
+
+
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -262,20 +279,28 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
 
 
-    public void goToLocation(View v){
-        Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
-        LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
-        startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
-        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
-        SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
-        Log.e("Long Location Nmae-->", longLocation);
-        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
+    public void goToLocation(View v) {
+        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+            findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+            Intent LocationIntent = new Intent(MDLiveGetStarted.this, MDLiveLocation.class);
+            LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
+            startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
+            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+            SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+            Log.e("Long Location Nmae-->", longLocation);
+            SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 
-        if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
-            locationTxt.setText(longLocation);
+            if (longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
+                locationTxt.setText(longLocation);
+        } else {
+            findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+            showSettingsAlert();
+        }
+
 
     }
+
     /**
      *
      * The Click event for the Provider Type will be showing the dialog which
@@ -1325,6 +1350,177 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             ((NotificationFragment) fragment).setNotification(userBasicInfo);
         }
     }
+
+
+    //Location Fetched class
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            hideProgress();
+            unregisterReceiver(locationReceiver);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            if (locationService != null && locationService.isTrackingLocation()) {
+                locationService.stopListners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void getCurrentLocation() {
+        showProgress();
+        Log.e("Location ", "Sta");
+        try {
+            registerReceiver(locationReceiver, intentFilter);
+            isLocationFetched = true;
+            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+                locationService.setBroadCastData(getClass().getSimpleName());
+                locationService.startTrackingLocation(MDLiveGetStarted.this);
+                findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+            } else {
+                hideProgress();
+                showSettingsAlert();
+                findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                hideProgress();
+                Log.e("Location ", "ended");
+                if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                    double lat = intent.getDoubleExtra("Latitude", 0d);
+                    double lon = intent.getDoubleExtra("Longitude", 0d);
+                    loadCurrentLocation(lat + "", lon + "");
+                } else {
+
+                    // locationTxt.setText(serverUserLocation);
+                    //Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+
+        }
+    };
+
+    /**
+     * Load Current location.
+     * Class : CurrentLocationServices - Service class used to fetch the current latitude and longitude
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     */
+    private void loadCurrentLocation(String latitude, String longitude) {
+        showProgress();
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("Location Response", response.toString());
+                hideProgress();
+                CurrentLocationResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response", error.toString());
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+
+            }
+        };
+
+        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveGetStarted.this, getProgressDialog());
+        currentlocationservices.getCurrentLocation(latitude, longitude, responseListener, errorListener);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+                findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Successful Response Handler for getting Current Location
+     */
+
+
+    private void CurrentLocationResponse(JSONObject response) {
+        try {
+            hideProgress();
+            //Fetch Data From the Services
+            if (response.has("state")) {
+                selectedCity = response.getString("state");
+                for (int l = 0; l < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); l++) {
+                    if (selectedCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
+                        locationServiceText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
+                        shortNameText = selectedCity;
+                        break;
+                    }
+                }
+                SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+                editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, locationServiceText);
+                editor.commit();
+                locationTxt.setText(locationServiceText);
+            }/*else{
+                locationTxt.setText(serverUserLocation);
+            }*/
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
+        // Setting Dialog Title
+        alertDialog.setTitle("");
+        // Setting Dialog Message
+        alertDialog.setMessage("We need access to your GPS to determine your location.");
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 }
 
 
