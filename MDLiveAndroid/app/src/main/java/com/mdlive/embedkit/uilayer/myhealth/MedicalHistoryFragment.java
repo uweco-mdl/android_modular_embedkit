@@ -19,6 +19,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
@@ -33,14 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MedicalHistoryFragment.OnMedicalHistoryResponse} interface
+ * {@link com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryFragment.OnGoogleFitSyncResponse} interface
  * to handle interaction events.
  * Use the {@link MedicalHistoryFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -64,8 +62,9 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     private String mParam1;
     private String mParam2;
     private boolean isFirstTime = true;
+    View healthSyncContainerLayout ,healthSyncCv;
 
-    private OnMedicalHistoryResponse mListener;
+    private OnGoogleFitSyncResponse mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -109,13 +108,28 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        if (!userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true)) {
+            view.findViewById(R.id.HealthSyncContainer).setVisibility(View.GONE);
+        } else if(dependentId != null){
+            view.findViewById(R.id.HealthSyncContainer).setVisibility(View.GONE);
+        }
+
+        if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false) || dependentId != null) {
+            view.findViewById(R.id.HealthSyncCv).setVisibility(View.GONE);
+        }
+
+        healthSyncContainerLayout = view.findViewById(R.id.HealthSyncContainer);
+        healthSyncCv = view.findViewById(R.id.HealthSyncCv);
         view.findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         PediatricAgeCheckGroup_1 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup2));
         PreExisitingGroup = ((RadioGroup) view.findViewById(R.id.conditionsGroup));
         MedicationsGroup = ((RadioGroup) view.findViewById(R.id.medicationsGroup));
         AllergiesGroup = ((RadioGroup) view.findViewById(R.id.allergiesGroup));
-        if(view!=null) {
+        if (view != null) {
             checkMedicalDateHistory(view);
         }
 
@@ -125,7 +139,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnMedicalHistoryResponse) activity;
+            mListener = (OnGoogleFitSyncResponse) activity;
 
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
@@ -149,12 +163,10 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     *
      */
-    public interface OnMedicalHistoryResponse {
+    public interface OnGoogleFitSyncResponse {
+        public void setHealthStatus(String data);
     }
-
-
 
 
     /**
@@ -291,7 +303,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                medicalCompletionHandleSuccessResponse(view,response);
+                medicalCompletionHandleSuccessResponse(view, response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -324,6 +336,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     "Server Response : " + message);
         }
     }
+
     /**
      * Successful Response Handler for Medical History Completion.
      */
@@ -351,34 +364,32 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * display the layouts accordingly.
      *
      * @param historyPercentageArray - The history percentage JSONArray
-     * @param view - The layout view
-     *
+     * @param view                   - The layout view
      */
-    private void checkMyHealthLifestyleAndFamilyHistory(View view,JSONArray historyPercentageArray) {
+    private void checkMyHealthLifestyleAndFamilyHistory(View view, JSONArray historyPercentageArray) {
         try {
-            for(int i =0; i<historyPercentageArray.length();i++){
-                if(historyPercentageArray.getJSONObject(i).has("life_style")){
-                    if(historyPercentageArray.getJSONObject(i).optInt("life_style",0) == 40){
-                        ((TextView)view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+            for (int i = 0; i < historyPercentageArray.length(); i++) {
+                if (historyPercentageArray.getJSONObject(i).has("life_style")) {
+                    if (historyPercentageArray.getJSONObject(i).optInt("life_style", 0) == 40) {
+                        ((TextView) view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                 }
             }
 
-            if(medicalAggregationJsonObject.has("family_history")){
-                if(medicalAggregationJsonObject.getJSONArray("family_history").length()>0){
-                    ((TextView)view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+            if (medicalAggregationJsonObject.has("family_history")) {
+                if (medicalAggregationJsonObject.getJSONArray("family_history").length() > 0) {
+                    ((TextView) view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
-                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+        if (PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton) {
             ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
         }
     }
-
 
 
     /**
@@ -387,13 +398,13 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      *
      * @param historyPercentageArray - The history percentage JSONArray
      */
-    private void checkMyHealthBehaviouralHistory(View view,JSONArray historyPercentageArray) {
+    private void checkMyHealthBehaviouralHistory(View view, JSONArray historyPercentageArray) {
         try {
-            for(int i =0; i<historyPercentageArray.length();i++){
-                if(historyPercentageArray.getJSONObject(i).has("behavioral")){
+            for (int i = 0; i < historyPercentageArray.length(); i++) {
+                if (historyPercentageArray.getJSONObject(i).has("behavioral")) {
                     view.findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
-                    if(historyPercentageArray.getJSONObject(i).getInt("behavioral")!=0){
-                        ((TextView)view.findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+                    if (historyPercentageArray.getJSONObject(i).getInt("behavioral") != 0) {
+                        ((TextView) view.findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                     break;
                 }
@@ -402,8 +413,8 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
 
-        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
-                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+        if (PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton) {
             ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
         }
     }
@@ -417,15 +428,15 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     private void checkPediatricCompletion(View view, JSONArray historyPercentageArray) {
         try {
             int pediatricPercentage = 0;
-            for(int i = 0; i < historyPercentageArray.length(); i++){
-                if(historyPercentageArray.getJSONObject(i).has("pediatric")){
+            for (int i = 0; i < historyPercentageArray.length(); i++) {
+                if (historyPercentageArray.getJSONObject(i).has("pediatric")) {
                     view.findViewById(R.id.pediatric_cardview).setVisibility(View.VISIBLE);
                     pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
                 }
             }
-            if(pediatricPercentage != 0){
+            if (pediatricPercentage != 0) {
                 ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_completed_txt));
-            }else{
+            } else {
                 ((TextView) view.findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_notcompleted_txt));
             }
         } catch (Exception e) {
@@ -442,11 +453,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
 
-            if(TimeZoneUtils.calculteAgeFromPrefs(getActivity())>=10) {
-                if(gender.equalsIgnoreCase("Female")){
+            if (TimeZoneUtils.calculteAgeFromPrefs(getActivity()) >= 10) {
+                if (gender.equalsIgnoreCase("Female")) {
                     hasFemaleAttribute = true;
                 }
-            }else{
+            } else {
                 hasFemaleAttribute = false;
             }
 
@@ -532,8 +543,8 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
 
-        if(MedicationsGroup.getCheckedRadioButtonId() > 0 &&
-                MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton){
+        if (MedicationsGroup.getCheckedRadioButtonId() > 0 &&
+                MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton) {
             ((RadioButton) view.findViewById(R.id.medicationsYesButton)).setChecked(false);
         }
 
@@ -574,8 +585,8 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
 
-        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
-                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
+        if (PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+                PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton) {
             ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
         }
     }
@@ -590,13 +601,13 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         try {
             JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
             String myHealthPercentage = historyPercentageArray.getJSONObject(0).getString("health");
-            if (myHealthPercentage!=null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("surgeries").length() == 0)){
+            if (myHealthPercentage != null && !"0".equals(myHealthPercentage) && !(healthHistory.getJSONArray("surgeries").length() == 0)) {
                 view.findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
                 String conditonsNames = "";
                 JSONArray conditonsArray = healthHistory.getJSONArray("surgeries");
-                for(int i = 0;i<conditonsArray.length();i++){
+                for (int i = 0; i < conditonsArray.length(); i++) {
                     conditonsNames += conditonsArray.getJSONObject(i).getString("name");
-                    if(i!=conditonsArray.length() - 1){
+                    if (i != conditonsArray.length() - 1) {
                         conditonsNames += ", ";
                     }
                 }
@@ -614,16 +625,28 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     }
 
     /**
-     *
      * Update the screen on returning back to the screen.
-     *
      */
     @Override
     public void onResume() {
         super.onResume();
-        if(getView()!=null  && !isFirstTime) {
+        if (getView() != null && !isFirstTime) {
             checkMedicalDateHistory(getView());
         }
         isFirstTime = false;
+    }
+
+    public void setFitStatus(String data) {
+        healthSyncContainerLayout.setVisibility(View.GONE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPrefs.edit();
+        editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+        editor.commit();
+        if (data.equalsIgnoreCase("success")) {
+            healthSyncCv.setVisibility(View.GONE);
+            editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
+            editor.commit();
+        }
     }
 }

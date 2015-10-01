@@ -10,9 +10,11 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +31,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryFragment;
 import com.mdlive.embedkit.uilayer.sav.adapters.PickImagePlugin;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
@@ -82,7 +87,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     public static PickImagePlugin cameraPlugIn;
 
     private boolean mFromResult = false;
-
+    private SwitchCompat mSwitchCompat;
     public static MyProfileFragment newInstance() {
         final MyProfileFragment myProfileFragment = new MyProfileFragment();
         return myProfileFragment;
@@ -118,7 +123,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         mChangeSecurityQuestions = (CardView)view.findViewById(R.id.changeSecurityQuestion);
         mAddressClickListener = (LinearLayout)view.findViewById(R.id.addressView);
         mPhoneNumberClickListener = (LinearLayout)view.findViewById(R.id.phoneNumberView);
-
+        mSwitchCompat = (SwitchCompat)view.findViewById(R.id.SyncHealthSwitch);
         mAddressClickListener.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,6 +133,15 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 startActivityForResult(changeAddress, 3);
             }
         });
+
+
+        SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+            mSwitchCompat.setChecked(true);
+        } else {
+            mSwitchCompat.setChecked(false);
+        }
 
         mPhoneNumberClickListener.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,7 +259,19 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
             }
         });
-
+        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(compoundButton.isChecked()){
+                    SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = userPrefs.edit();
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true);
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false);
+                    editor.commit();
+                }
+            }
+        });
         mProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

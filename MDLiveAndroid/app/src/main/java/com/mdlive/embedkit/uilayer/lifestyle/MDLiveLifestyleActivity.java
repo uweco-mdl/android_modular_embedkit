@@ -20,7 +20,7 @@ import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
-public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
+public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity implements MDLiveLifeStyleFragment.OnGoogleFitGetData {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -160,6 +160,14 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveLifeStyleFragment) {
             ((MDLiveLifeStyleFragment) fragment).lifeStyleSaveButtonEvent();
+        }
+    }
+
+    @Override
+    public void getGoogleFitData(String data) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveLifeStyleFragment) {
+            ((MDLiveLifeStyleFragment) fragment).setFitDataEvent(data);
         }
     }
 }

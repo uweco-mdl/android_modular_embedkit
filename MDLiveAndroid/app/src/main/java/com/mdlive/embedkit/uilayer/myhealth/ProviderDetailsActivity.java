@@ -24,7 +24,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnMedicalHistoryResponse{
+public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnGoogleFitSyncResponse {
 
     public static final String TAG = "ProviderDetails";
 
@@ -131,6 +131,11 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(ProviderDetailsFragment.newInstance(getIntent().getStringExtra("ProviderID")), getString(R.string.mdl_providers));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void setHealthStatus(String xyz) {
+        //Nothing
     }
 
     static class Adapter extends FragmentPagerAdapter {

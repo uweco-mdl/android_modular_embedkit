@@ -18,6 +18,7 @@ package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,9 @@ import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 import java.util.ArrayList;
@@ -52,7 +56,7 @@ import java.util.List;
 /**
  * TODO
  */
-public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnMedicalHistoryResponse{
+public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnGoogleFitSyncResponse {
 
     public static final String TAG = "MYHEALTH";
     private static final String SELECTED_TAB = "slected_tab";
@@ -84,6 +88,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setId(R.id.pager);
         if (viewPager != null) {
             setupViewPager(viewPager);
 
@@ -276,6 +281,32 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         startActivity(i);
     }
 
+    public void SyncAction(View view){
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).healthSyncContainerLayout != null){
+            ((MedicalHistoryFragment)frag).healthSyncContainerLayout.setVisibility(View.GONE);
+        }
+        SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPrefs.edit();
+        editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+        editor.commit();
+        GoogleFitUtils.getInstance().buildFitnessClient(false,null,this);
+    }
+
+    public void SyncNotNowAction(View view){
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).healthSyncContainerLayout != null){
+            ((MedicalHistoryFragment)frag).healthSyncContainerLayout.setVisibility(View.GONE);
+        }
+
+        SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPrefs.edit();
+        editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+        editor.commit();
+    }
+
     /**
      * This function handles click listener of changePharmacyButton
      *
@@ -298,6 +329,21 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
             Log.d("On Resume - ", "From Pharmacy");
             reloadSlidingMenu();
             getViewPager().setCurrentItem(1);
+        }
+    }
+
+    public void setHealthStatus(String data){
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+        if(frag!=null && frag instanceof MedicalHistoryFragment){
+            ((MedicalHistoryFragment)frag).setFitStatus(data);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == GoogleFitUtils.getInstance().REQUEST_OAUTH){
+            GoogleFitUtils.getInstance().buildFitnessClient(false,null,this);
         }
     }
 }
