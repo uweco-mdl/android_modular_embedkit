@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,8 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -62,6 +65,7 @@ import static java.util.Calendar.MONTH;
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private Button myText;
+    private ImageView providerGroupAffiliation;
     private CircularNetworkImageView ProfileImg;
     public String DoctorId,str_ProfileImg="",str_Availability_Type = "",selectedTimestamp,str_phys_avail_id,str_appointmenttype = "";
     private TextView tapSeetheDoctorTxt, byvideoBtn,byphoneBtn,reqfutureapptBtn;
@@ -70,7 +74,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private boolean firstClick=false,selectedTimeslot=false,selectedVideoOrPhone=false;
     private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations,updatedAppointmentDate,selectedAppmtTypeVideoOrPhone;
     private String Shared_AppointmentDate;
-    private LinearLayout providerImageHolder,detailsLl;
+    private LinearLayout providerImageHolder,detailsLl, providerImageCollectionHolder;
     private HorizontalScrollView horizontalscrollview;
     private int month, day, year;
     private  LinearLayout layout;
@@ -192,6 +196,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         doctorNameTv = (TextView)findViewById(R.id.DoctorName);
         ProfileImg = (CircularNetworkImageView)findViewById(R.id.ProfileImg1);
         providerImageHolder = (LinearLayout) findViewById(R.id.providerImageHolder);
+        providerImageCollectionHolder = (LinearLayout) findViewById(R.id.providerImageCollectionHolder);
         detailsGroupAffiliations = (TextView) findViewById(R.id.detailsGroupAffiliations);
         detailsLl = (LinearLayout) findViewById(R.id.detailsLl);
 
@@ -910,6 +915,10 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         //Provider Image Array
         getProviderImageArrayResponse(providerdetObj);
+
+        //Provider affiliation Logo
+
+        getProviderImageArrayResponse(providerdetObj);
     }
 
     private void enableOrdisableProviderDetails(String str_Availability_Type) {
@@ -1530,6 +1539,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
     }
 
+    public void providerGroupDetailsAffiliation(View view){
+        Intent intent = new Intent(MDLiveProviderDetails.this,MDLiveProviderGroupDetailsAffiliations.class);
+        startActivity(intent);
+        MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+    }
+
     public void saveConsultationType(String consultationType){
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -1546,21 +1561,47 @@ if(str_avail_status.equalsIgnoreCase("true"))
      *
      */
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
-//        String ProviderImage = "";
-//        JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
-//        Log.e("Size", ProviderImageArray.size() + "");
-////        providerImageHolder.removeAllViews();
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        params.setMargins(5,5,5,5);
-//        for(int i=0;i<ProviderImageArray.size();i++)
-//        {
-//            NetworkImageView imageView = new NetworkImageView(getApplicationContext());
-//            imageView.setImageUrl(ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString(),
-//                    ApplicationController.getInstance().getImageLoader(getApplicationContext()));
-//            imageView.setLayoutParams(params);
-//            providerImageHolder.addView(imageView);
-//
-//        }
+        String ProviderImage = "";
+        JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
+        Log.e("ProviderImageArray Size", ProviderImageArray.size() + "");
+        providerImageCollectionHolder.removeAllViews();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(5, 10, 5, 10);
+        for(int i=0;i<ProviderImageArray.size();i++)
+        {
+            try {
+                Log.e("Logo url ", ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString());
+                if(!ProviderImageArray.get(i).getAsJsonObject().get("logo").isJsonNull()){
+                final ImageView imageView = new ImageView(MDLiveProviderDetails.this);
+                    imageView.setLayoutParams(params);
+                    ImageRequest request = new ImageRequest(ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString(),
+                            new Response.Listener<Bitmap>() {
+                                @Override
+                                public void onResponse(Bitmap bitmap) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
+                            }, 0, 0, null,
+                            new Response.ErrorListener() {
+                                public void onErrorResponse(VolleyError error) {
+                                }
+                            });
+                    ApplicationController.getInstance().getRequestQueue(this).add(request);
+                    imageView.setTag(ProviderImageArray.get(i).getAsJsonObject().get("url").getAsString());
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MDLiveProviderDetails.this,MDLiveProviderGroupDetailsAffiliations.class);
+                            intent.putExtra("affurl", (imageView.getTag() != null) ? imageView.getTag().toString() : "");
+                            startActivity(intent);
+                            MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                        }
+                    });
+                    providerImageCollectionHolder.addView(imageView);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     /**
      *  Response Handler for getting the Speciality and this is completely depend upon the provider type.
