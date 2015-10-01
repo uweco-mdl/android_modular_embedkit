@@ -39,6 +39,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -137,7 +138,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
         SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
-        if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+        if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false)){
             mSwitchCompat.setChecked(true);
         } else {
             mSwitchCompat.setChecked(false);
@@ -266,9 +267,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                     SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = userPrefs.edit();
-                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true);
-                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false);
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
                     editor.commit();
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,null,getActivity());
                 }
             }
         });
