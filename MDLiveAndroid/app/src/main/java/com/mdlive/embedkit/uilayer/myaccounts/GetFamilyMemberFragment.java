@@ -35,6 +35,7 @@ import java.util.HashMap;
  */
 public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     private OnChildAdded mOnChildAdded;
+    private UserBasicInfo userBasicInfo;
 
     private ListView lv;
     private HashMap<String, ArrayList<String>> values;
@@ -86,7 +87,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         lv.addFooterView(footer);
         lv.addHeaderView(header);
 
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
+        userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
         if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
             addFamilyMember1.setVisibility(View.GONE);
@@ -161,6 +162,11 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     public void handleFamilyMemberAddedSucessResponse(JSONObject response) {
         hideProgressDialog();
         try {
+            String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName().toString() + " " + userBasicInfo.getPersonalInfo().getLastName().toString();
+
+            nameList.add(primaryUserName);
+            urlList.add(userBasicInfo.getPersonalInfo().getImageUrl());
+
             if((response.get("primary_user").toString())== "false")
             {
                 lv.removeFooterView(footer);
