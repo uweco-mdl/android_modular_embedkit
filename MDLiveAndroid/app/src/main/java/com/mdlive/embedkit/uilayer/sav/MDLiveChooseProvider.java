@@ -1,14 +1,18 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Outline;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -154,6 +158,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * **/
 
     private void Initailization() {
+        elevateCircularImage((CircularNetworkImageView) findViewById(R.id.ProfileImg));
+
         providerListMap = new  ArrayList<HashMap<String, String>>();
         docOnCalLinLay = (RelativeLayout)findViewById(R.id.docOnCalLinLay);
         filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
@@ -161,6 +167,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         //setProgressBar(findViewById(R.id.progressDialog));
         seeNextAvailableBtn = (Button) findViewById(R.id.seenextAvailableBtn);
         seeFirstAvailDoctor= (Button) findViewById(R.id.btn_see_first_available_doctor);
+        elevateButton(seeFirstAvailDoctor);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
         seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
@@ -727,5 +734,37 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void elevateButton(final Button button) {
+        if (button == null) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            button.setElevation(7 * getResources().getDisplayMetrics().density);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void elevateCircularImage(final CircularNetworkImageView view) {
+        if (view == null) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    // Or read size directly from the view's width/height
+                    int size = (int) (7 * getResources().getDisplayMetrics().density);
+                    outline.setOval(0, 0, size, size);
+                }
+            };
+
+            view.setOutlineProvider(viewOutlineProvider);
+            view.setElevation(7 * getResources().getDisplayMetrics().density);
+        }
     }
 }
