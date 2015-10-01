@@ -263,14 +263,18 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = userPrefs.edit();
                 if(compoundButton.isChecked()){
-                    SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                    SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = userPrefs.edit();
                     editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
                     editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
                     editor.commit();
                     GoogleFitUtils.getInstance().buildFitnessClient(false,null,getActivity());
+                } else {
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true);
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false);
+                    editor.commit();
                 }
             }
         });

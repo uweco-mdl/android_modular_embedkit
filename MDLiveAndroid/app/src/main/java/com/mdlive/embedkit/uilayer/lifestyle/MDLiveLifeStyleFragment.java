@@ -174,13 +174,13 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
             if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
                 if((!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0")) && mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(true,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "","0"},getActivity());
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "","0"},getActivity());
                     hideProgressDialog();
                 } else if((mHeightFtEditText.getText().toString().equals("0") || mHeightFtEditText.getText().toString().equals("0")) && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(true,new String[]{"0",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
                     hideProgressDialog();
                 } else if(!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0") && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(true,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
                     hideProgressDialog();
                 } else {
                     GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
