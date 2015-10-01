@@ -387,7 +387,9 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         try {
             hideProgress();
             //Fetch Data From the Services
+            Log.i("UseCurrentLocation Response",response.toString());
             selectedCity = response.getString("state");
+            SavecurrentLocation(selectedCity);
             finish();
         } catch (Exception e) {
             e.printStackTrace();
@@ -421,6 +423,18 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }
         }
     };
+
+
+    public void SavecurrentLocation(String ZipCodeCity) {
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        String activityCaller = getIntent().getStringExtra("activitycaller");
+        Log.e("Caller bname", activityCaller);
+        if (activityCaller.equals("getstarted")) {
+            editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, ZipCodeCity);
+            editor.commit();
+        }
+    }
 
     /**
      * @param ZipCodeCity : Pass the selected zipcode String
