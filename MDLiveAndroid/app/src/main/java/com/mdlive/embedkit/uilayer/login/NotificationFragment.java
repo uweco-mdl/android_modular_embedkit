@@ -175,20 +175,22 @@ public class NotificationFragment extends MDLiveBaseFragment {
             final Notifications notification = userBasicInfo.getNotifications();
 
             if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
+                mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()) + ".");
             } else {
                 //mMessagesTextView.setVisibility(View.GONE);
                 mMessagesLinearLayout.setVisibility(View.GONE);
             }
 
-            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
+            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage()  + ".");
 
             final StringBuilder store = new StringBuilder();
 
             if (notification.getPharmacyDetails() != null) {
                 store.append(notification.getPharmacyDetails().getStoreName() + "\n");
                 store.append(notification.getPharmacyDetails().getAddress1() + ",\n");
-                store.append(notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
+                store.append(notification.getPharmacyDetails().getCity() + ", " +
+                        notification.getPharmacyDetails().getState() + " " +
+                        notification.getPharmacyDetails().getZipcode()  + ".");
             } else {
                 store.append(getActivity().getString(R.string.mdl_no_prefered_store));
             }
