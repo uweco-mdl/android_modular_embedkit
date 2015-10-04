@@ -233,7 +233,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             unregisterReceiver(locationReceiver);

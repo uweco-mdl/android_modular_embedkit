@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -79,6 +80,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private boolean mayIAllowToEdit = true;
     private ProgressDialog pDialog;
 
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,6 +304,15 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if(!getIntent().hasExtra("user_info")){
             Intent upIntent = new Intent(this, MyAccountActivity.class);
@@ -481,10 +492,20 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     }
 
     private void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Log.d("Timer", "clear called");
+            }
+        }, 100);
     }
 
     private boolean validEmail(String email) {

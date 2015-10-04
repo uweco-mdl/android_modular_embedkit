@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -58,6 +60,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     private DrawerLayout mDrawerLayout;
 
+    private Handler mHandler;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,15 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         if (showPinScreen() && MdliveUtils.getLockType(getBaseContext()).equals("Pin")) {
             sendBroadcast(getUnlockBroadcast());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
         }
     }
 
@@ -334,15 +347,30 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Log.d("Timer", "clear called");
+            }
+        }, 100);
     }
 
     private boolean showPinScreen() {
+        Log.d("Timer", "show pin called");
         final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final long lastTime = preferences.getLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
+        final long lastTime = preferences.getLong(PreferenceConstants.TIME_KEY, -1l);
+
+        if (lastTime < 0) {
+            return false;
+        }
 
         final long difference = System.currentTimeMillis() - lastTime;
         if (difference > 60 * 1000) {
@@ -357,6 +385,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
         editor.commit();
+        Log.d("Timer", "save last min called");
     }
 
     public void showEmailConfirmationDialog() {

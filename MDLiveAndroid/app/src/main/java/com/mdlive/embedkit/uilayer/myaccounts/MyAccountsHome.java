@@ -3,9 +3,11 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
  * Created by venkataraman_r on 7/26/2015.
  */
 public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
+    private Handler mHandler;
 
     String fragment,response;
     public static String TAG = "CHANGE SECURITY QUESTION";
@@ -147,6 +150,15 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
     public void leftBtnOnClick(View v) {
         finish();
 
@@ -260,9 +272,19 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     }
 
     public void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Log.d("Timer", "clear called");
+            }
+        }, 100);
     }
 }

@@ -223,7 +223,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             locationService.setBroadCastData(StringConstants.DEFAULT);

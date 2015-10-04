@@ -2,9 +2,11 @@ package com.mdlive.embedkit.uilayer.myhealth.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
     private static final String PROVIDERS = "Providers";
     private static final String VISITS = "Visits";
 
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,15 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
     public void onTabChanged(String s) {
         final int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
 
@@ -71,9 +83,19 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
     }
 
     public void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Log.d("Timer", "clear called");
+            }
+        }, 100);
     }
 }

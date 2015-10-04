@@ -1356,7 +1356,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             hideProgress();
