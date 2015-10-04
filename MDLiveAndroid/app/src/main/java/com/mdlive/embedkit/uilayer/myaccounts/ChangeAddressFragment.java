@@ -166,7 +166,13 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
                         parent.put("member", jsonObject);
                         Log.i("request:", jsonObject.toString());
-                        loadProfileInfo(parent.toString());
+                        String errorMessage = ValidateForm();
+                        if(errorMessage == null){
+                            loadProfileInfo(parent.toString());
+                        }else{
+                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+
                     }else
                 {
                     Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
@@ -178,6 +184,24 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
         }
 
     }
+
+    public String ValidateForm(){
+        if(mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0){
+            return "Please Enter All Fields";
+        }else if(mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0){
+            return "Please Enter All Fields";
+        }else if(mState.getText() == null && mState.getText().toString().trim().length() == 0){
+            return "Please Enter All Fields";
+        }else if(mZip.getText() == null && mZip.getText().toString().trim().length() == 0){
+            return "Please Enter All Fields";
+        }else if(mCity.getText() == null && mCity.getText().toString().trim().length() == 0){
+            return "Please Enter All Fields";
+        }else if(!MdliveUtils.validateZipCode(mZip.getText().toString())){
+            return "Please Enter Valid Zip Code.";
+        }
+        return null;
+    }
+
     public Boolean isEmpty(String cardInfo)
     {
         if(!TextUtils.isEmpty(cardInfo))
