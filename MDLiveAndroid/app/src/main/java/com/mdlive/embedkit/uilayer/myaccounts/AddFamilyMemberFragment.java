@@ -3,11 +3,13 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,10 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoService;
@@ -42,6 +46,7 @@ import java.util.regex.Pattern;
  */
 public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
+    private UserBasicInfo mUserBasicInfo;
     private EditText mUsername = null;
     private EditText mEmail = null;
     private EditText mFirstName = null;
@@ -52,6 +57,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private EditText mPhone = null;
     private TextView mDOB = null;
     private TextView mGender = null;
+    private EditText mZip = null;
     private TextView mValidEmailText = null;
     private TextView mValidationEmail = null;
     private TextView mUsernameLength = null;
@@ -67,6 +73,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private String Phone = null;
     private String DOB = null;
     private String Gender = null;
+    private String Zipcode = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
@@ -75,6 +82,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     public static AddFamilyMemberFragment newInstance() {
 
         final AddFamilyMemberFragment addFamilyMember = new AddFamilyMemberFragment();
+
         return addFamilyMember;
     }
 
@@ -88,7 +96,51 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
         View addFamilyMember = inflater.inflate(R.layout.fragment_add_familymember, null);
 
+        mZip = (EditText) addFamilyMember.findViewById(R.id.zipcodeEditText);
+        mZip.setTag(null);
+        mZip.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MdliveUtils.validateZipcodeFormat(mZip);
+            }
+        });
+
         init(addFamilyMember);
+
+        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+        mAddress1 = (EditText) addFamilyMember.findViewById(R.id.streetAddress);
+        mCity = (EditText) addFamilyMember.findViewById(R.id.city);
+        mState = (TextView) addFamilyMember.findViewById(R.id.state);
+
+        if(mUserBasicInfo  != null){
+            if(mUserBasicInfo.getPersonalInfo().getZipcode() != null){
+                mZip.setText(mUserBasicInfo.getPersonalInfo().getZipcode());
+            }
+            if(mUserBasicInfo.getPersonalInfo().getAddress1() != null){
+                mAddress1.setText(mUserBasicInfo.getPersonalInfo().getAddress1());
+            }
+            if(mUserBasicInfo.getPersonalInfo().getCity() != null){
+                mCity.setText(mUserBasicInfo.getPersonalInfo().getCity());
+            }
+            if(mUserBasicInfo.getPersonalInfo().getState() != null){
+                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
+                    if(mUserBasicInfo.getPersonalInfo().getState().equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
+                        mState.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
+                    }
+                }
+                mState.setText(mUserBasicInfo.getPersonalInfo().getState());
+            }
+        }
+
 
         mDOBLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,6 +345,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mUsernameSpecialCharactersCheck = (TextView) addFamilyMember.findViewById(R.id.userNameSpecialCharactersCheck);
         mGender = (TextView) addFamilyMember.findViewById(R.id.gender);
         mDOBLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.DOBLayout);
+        mZip = (EditText) addFamilyMember.findViewById(R.id.zipcodeEditText);
         mStateLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.stateLayout);
         mGenderLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.genderLayout);
     }
@@ -307,34 +360,40 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         State = mState.getText().toString().trim();
         Phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
         DOB = mDOB.getText().toString().trim();
+        Zipcode = mZip.getText().toString();
         Gender = mGender.getText().toString().trim();
 
         if (isEmpty(Username) && isEmpty(Email) && isEmpty(FirstName) && isEmpty(LastName) && isEmpty(Address1) && isEmpty(City)
-                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender)) {
+                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender) && isEmpty(Zipcode)) {
             if (validEmail(Email)) {
-                try {
-                    JSONObject parent = new JSONObject();
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("computer", "MAC");
-                    JSONObject jsonObject1 = new JSONObject();
-                    jsonObject1.put("username", Username);
-                    jsonObject1.put("first_name", FirstName);
-                    jsonObject1.put("last_name", LastName);
-                    jsonObject1.put("gender", Gender);
-                    jsonObject1.put("email", Email);
-                    jsonObject1.put("phone", Phone);
-                    jsonObject1.put("address1", Address1);
-                    jsonObject1.put("city", City);
-                    jsonObject1.put("state_id", State);
-                    jsonObject1.put("birthdate", DOB);
-                    jsonObject1.put("answer", "idontknow");
+                if (!MdliveUtils.validateZipCode(Zipcode)) {
+                    Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        JSONObject parent = new JSONObject();
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("computer", "MAC");
+                        JSONObject jsonObject1 = new JSONObject();
+                        jsonObject1.put("username", Username);
+                        jsonObject1.put("first_name", FirstName);
+                        jsonObject1.put("last_name", LastName);
+                        jsonObject1.put("gender", Gender);
+                        jsonObject1.put("email", Email);
+                        jsonObject1.put("phone", Phone);
+                        jsonObject1.put("address1", Address1);
+                        jsonObject1.put("city", City);
+                        jsonObject1.put("state_id", State);
+                        jsonObject1.put("zip", Zipcode.replace("-", ""));
+                        jsonObject1.put("birthdate", DOB);
+                        jsonObject1.put("answer", "idontknow");
 
-                    parent.put("member", jsonObject1);
-                    parent.put("camera", jsonObject);
-                    addFamilyMember(parent.toString());
+                        parent.put("member", jsonObject1);
+                        parent.put("camera", jsonObject);
+                        addFamilyMember(parent.toString());
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 Toast.makeText(getActivity(), "Email id is invalid", Toast.LENGTH_SHORT).show();
