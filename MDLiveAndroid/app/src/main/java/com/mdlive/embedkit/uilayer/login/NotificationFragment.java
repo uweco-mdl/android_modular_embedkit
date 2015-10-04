@@ -187,8 +187,8 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
             if (notification.getPharmacyDetails() != null) {
                 store.append(notification.getPharmacyDetails().getStoreName() + "\n");
-                store.append(notification.getPharmacyDetails().getAddress1() + "\n");
-                store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
+                store.append(notification.getPharmacyDetails().getAddress1() + ",\n");
+                store.append(notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
             } else {
                 store.append(getActivity().getString(R.string.mdl_no_prefered_store));
             }
