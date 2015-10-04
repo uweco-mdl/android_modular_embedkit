@@ -125,11 +125,9 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             if (browserIntent.resolveActivity(getContext().getPackageManager()) != null) {
                 context.startActivity(browserIntent);
-            } else {
-                MdliveUtils.showDialog(context, context.getString(R.string.mdl_app_name), context.getString(R.string.mdl_no_compitable_app));
             }
         } catch (Exception e) {
-
+            MdliveUtils.showDialog(context, context.getString(R.string.mdl_app_name), context.getString(R.string.mdl_no_compitable_app));
         }
     }
 
