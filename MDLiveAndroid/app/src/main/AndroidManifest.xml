@@ -100,8 +100,7 @@
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacyChange"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/MDLive_Red_Theme" />
 
         <!--
              <activity
