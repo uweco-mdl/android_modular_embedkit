@@ -14,10 +14,10 @@ import android.provider.MediaStore;
 
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -148,9 +148,9 @@ public class PickImagePlugin {
             }
         }
         // Create a media file name
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault());
-        sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
-        String timeStamp = sdf.format(TimeZoneUtils.getCalendarWithOffset(context));
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+
         File mediaFile;
         mediaFile = new File(mediaStorageDir.getPath() + File.separator
                 + "IMG_" + timeStamp + ".jpg");
