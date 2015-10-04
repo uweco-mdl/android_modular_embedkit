@@ -155,6 +155,5 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
 
     public void onReplyClicked(final Parcelable parcelable) {
         startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(getBaseContext(), parcelable));
-        finish();
     }
 }
