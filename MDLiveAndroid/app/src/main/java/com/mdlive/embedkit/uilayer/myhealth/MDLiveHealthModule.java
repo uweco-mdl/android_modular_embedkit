@@ -356,18 +356,31 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureYearDialog.dismiss();
                 if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                         && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
-                    if(otherProcedureTxt.getVisibility() == View.VISIBLE){
-                        if(otherProcedureTxt.getText() != null &&
-                            otherProcedureTxt.getText().toString().length() != 0){
+
+                    if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))) {
+                        if (otherProcedureTxt.getText() != null &&
+                                otherProcedureTxt.getText().toString().length() != 0) {
+                            if (!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                    && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))) {
                                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                             } else {
                                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
                             }
+                        } else {
+                            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
                         }
-                    }else{
+                }
+                else{
                         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                     }
                 }
+
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    otherProcedureTxt.setVisibility(View.VISIBLE);
+                }else{
+                    otherProcedureTxt.setVisibility(View.GONE);
+                }
+            }
         });
 
         try {
