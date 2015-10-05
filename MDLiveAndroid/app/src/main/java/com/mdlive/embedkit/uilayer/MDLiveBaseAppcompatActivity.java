@@ -360,7 +360,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 editor.commit();
                 Log.d("Timer", "clear called");
             }
-        }, 100);
+        }, 1000);
     }
 
     private boolean showPinScreen() {

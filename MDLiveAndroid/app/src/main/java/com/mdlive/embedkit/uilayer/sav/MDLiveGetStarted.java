@@ -613,6 +613,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     NavigationDrawerFragment.getInstance().handleServiceResponseForParent(response);
                 }
                 createAndSaveUser(response, "");
+                getCurrentLocation();
                // upldateUserData(response);
             }
         };
@@ -1224,8 +1225,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         userBasicInfo.saveToSharedPreference(getBaseContext(), response.toString().trim());
 
         List<User> users = null;
-
-        Log.e("userBasicInfo.getPrimaryUser()", userBasicInfo.getPrimaryUser()+"");
 
         if (userBasicInfo.getPrimaryUser()) {
             users = UserBasicInfo.getUsersAsPrimaryUser(getBaseContext());

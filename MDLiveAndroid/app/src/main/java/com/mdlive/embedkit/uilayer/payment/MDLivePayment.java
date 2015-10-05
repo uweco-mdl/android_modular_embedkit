@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -27,13 +28,16 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
+import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -43,6 +47,7 @@ import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -62,6 +67,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
+
+    private static String errorPhoneNumber=null;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -412,6 +419,29 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 try {
                     dismissDialog();
+                    Log.e("error", error.toString());
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        Log.e("responseBody",responseBody);
+                        JSONObject errorObj = new JSONObject(responseBody);
+                        if (errorObj.has("message")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("message"));
+                        } else if (errorObj.has("error")) {
+                            if(errorObj.has("phone")){
+                                errorPhoneNumber=errorObj.getString("phone");
+                            }else{
+                                errorPhoneNumber=null;
+                            }
+                            showAlertPopup(errorObj.getString("error"));
+                        }
+                    }
+
                     MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
 
                 } catch (Exception e) {
@@ -809,6 +839,76 @@ public class MDLivePayment extends MDLiveBaseActivity {
         insuranceMap.put("promocode", promoCode);
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
+    }
+
+
+    public void showAlertPopup(String errorMessage){
+        try {
+            Log.e("Alert","Cominr Alert");
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLivePayment.this);
+            if(errorPhoneNumber==null){
+                alertDialogBuilder
+                        .setTitle("")
+                        .setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.mdl_Ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+            }else{
+                alertDialogBuilder
+                        .setTitle("")
+                        .setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setPositiveButton(StringConstants.ALERT_CALLNOW, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e("Phone Inside",errorPhoneNumber);
+                                if (errorPhoneNumber != null) {
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + errorPhoneNumber.replaceAll("-", "")));
+                                    startActivity(intent);
+                                    MdliveUtils.startActivityAnimation(MDLivePayment.this);
+                                }else{
+                                    dialog.dismiss();
+                                }
+
+
+                            }
+                        }).setNegativeButton(StringConstants.ALERT_DISMISS, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MDLiveChooseProvider.isDoctorOnCall=false;
+                        MDLiveChooseProvider.isDoctorOnVideo=false;
+                        dialog.dismiss();
+                       /* Intent intent = new Intent();
+                        intent.setAction("com.mdlive.embedkit.HOME_PRESSED");
+                        sendBroadcast(intent);*/
+                    }
+                });
+            }
+
+
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface arg0) {
+                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    if(errorPhoneNumber!=null){
+                        alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    }
+                }
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

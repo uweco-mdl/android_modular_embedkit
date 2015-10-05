@@ -386,10 +386,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private void CurrentLocationResponse(JSONObject response) {
         try {
             hideProgress();
-            //Fetch Data From the Services
-            Log.i("UseCurrentLocation Response",response.toString());
+            //Fetch Data From the Serviceservices
+            Log.i("UseCurrentLocation",response.toString());
             selectedCity = response.getString("state");
-            SavecurrentLocation(selectedCity);
+            for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();l++) {
+                if (selectedCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
+                    longNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
+                    shortNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l);
+                    SaveZipCodeCity(longNameText);
+                    break;
+                }
+            };
             finish();
         } catch (Exception e) {
             e.printStackTrace();

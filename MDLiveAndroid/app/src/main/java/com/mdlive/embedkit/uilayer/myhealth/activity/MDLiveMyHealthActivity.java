@@ -96,6 +96,6 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
                 editor.commit();
                 Log.d("Timer", "clear called");
             }
-        }, 100);
+        }, 1000);
     }
 }

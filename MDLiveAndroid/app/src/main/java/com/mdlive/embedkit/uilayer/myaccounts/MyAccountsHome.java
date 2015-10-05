@@ -285,6 +285,6 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
                 editor.commit();
                 Log.d("Timer", "clear called");
             }
-        }, 100);
+        }, 1000);
     }
 }
