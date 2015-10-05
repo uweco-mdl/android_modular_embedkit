@@ -53,7 +53,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private List<String> countryList = new ArrayList<String>();
-
+    private boolean mayIallowtoEdit = true;
 
     public static PrimaryCarePhysicianFragment newInstance(final PrimaryCarePhysician primaryCarePhysician) {
         final Bundle args = new Bundle();
@@ -153,6 +153,29 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         }
 
         mPhoneNumber = (EditText) view.findViewById(R.id.phoneNumber);
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mayIallowtoEdit) {
+                    mayIallowtoEdit=false;
+                    mPhoneNumber.setText(MdliveUtils.formatDualString(s.toString()));
+                    mPhoneNumber.setSelection(mPhoneNumber.getText().toString().length());
+                    mayIallowtoEdit = true;
+                }
+
+            }
+        });
+
         if (mPhoneNumber != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mPhoneNumber.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).phone);
         }
