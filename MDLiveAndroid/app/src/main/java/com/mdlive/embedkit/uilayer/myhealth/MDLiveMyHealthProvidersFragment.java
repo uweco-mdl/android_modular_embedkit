@@ -28,6 +28,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -167,9 +168,21 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
-
                 primaryCarePhysician = null;
+                try {
+                    if(response.has("primary_care_physician")){
+                        if(response.opt("primary_care_physician") instanceof JSONArray){
+                            if(response.optJSONArray("primary_care_physician").length() == 0){
+                                ((TextView) mHeaderView.findViewById(R.id.statusMessage))
+                                        .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records_empty));
 
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
         /*
         * This is a work around, as for new user rather sending on blank Json object
         * It sends a empty JSON Array
@@ -197,6 +210,11 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                     provider.primaryCarePhysician = primaryCarePhysician;
                 } catch (JSONException e) {
                     provider.primaryCarePhysician = null;
+                }
+
+                if(provider.primaryCarePhysician != null){
+                    ((TextView) mHeaderView.findViewById(R.id.statusMessage))
+                            .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records));
                 }
 
                 if (mListView != null) {
