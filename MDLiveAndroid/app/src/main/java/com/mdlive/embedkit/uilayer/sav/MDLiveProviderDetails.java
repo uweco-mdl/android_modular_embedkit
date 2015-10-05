@@ -1615,7 +1615,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
         JsonArray specialityArray = providerdetObj.get("speciality_qualifications").getAsJsonArray();
         for(int i=0;i<specialityArray.size();i++)
         {
-            specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
+            if(i == specialityArray.size()-1){
+                specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1);
+            } else {
+                specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
+            }
+
             if(!specialities.equals("")||specialities.length()!=0)
             {
                 specialities_txt.setText(specialities);
@@ -1640,7 +1645,11 @@ if(str_avail_status.equalsIgnoreCase("true"))
         JsonArray langArray = providerdetObj.get("Language").getAsJsonArray();
         for(int i=0;i<langArray.size();i++)
         {
-            lang+="\u2022"+" "+langArray.get(i).toString().substring(1,langArray.get(i).toString().length()-1)+"\n";
+            if(i == langArray.size()-1) {
+                lang += "\u2022" + " " + langArray.get(i).toString().substring(1, langArray.get(i).toString().length() - 1);
+            } else {
+                lang += "\u2022" + " " + langArray.get(i).toString().substring(1, langArray.get(i).toString().length() - 1) + "\n";
+            }
             if(!lang.equals("")&& !lang.isEmpty()||lang.length()!=IntegerConstants.NUMBER_ZERO)
             {
                 lang_txt.setText(lang);
@@ -1666,8 +1675,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
         {
 //            JsonObject licenseObject = responArray.get(i).getAsJsonObject();
 //            license_state +=licenseObject.get("state").getAsString()+"\n";
+            if(i == responArray.size()-1){
+                hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1);
+            } else {
+                hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1)+"\n";
+            }
 
-            hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1)+"\n";
             if(!hospitalAffilations.equals("")|| !hospitalAffilations.isEmpty()||hospitalAffilations.length()!=0)
             {
                 hospitalAffilations_txt.setText(hospitalAffilations);
