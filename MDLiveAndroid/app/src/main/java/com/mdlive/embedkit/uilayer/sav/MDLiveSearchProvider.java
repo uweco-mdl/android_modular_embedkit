@@ -50,7 +50,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static java.util.Calendar.MONTH;
 
@@ -443,14 +445,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             JSONObject licenseObject = provider_type_array.getJSONObject(i);
             String str_provider_type = licenseObject.getString("provider_type");
             String str_provider_type_id = licenseObject.getString("id");
-            HashMap<String, String> map = new HashMap<String, String>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             map.put(str_provider_type_id, str_provider_type);
             searchArrayListProviderId.add(map);
             ProviderTypeArrayList.add(str_provider_type);
-            HashMap<String, String> specialitymap = null;
+            LinkedHashMap<String, String> specialitymap = null;
             JSONArray speciality_array = licenseObject.getJSONArray("speciality");
             SpecialityArrayList.clear();
-            specialitymap = new HashMap<String, String>();
+            specialitymap = new LinkedHashMap<String, String>();
             for (int j = 0; j < speciality_array.length(); j++) {
                 JSONObject specialityObj = speciality_array.getJSONObject(j);
                 specialitymap.put(specialityObj.getString("name"), specialityObj.getString("id"));
@@ -460,6 +462,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             tempmap.put(str_provider_type, specialitymap);
 
         }
+
 
     }
 
@@ -496,7 +499,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         JSONArray Speaks_array = response.getJSONArray("speaks");
         ArrayList<String> keysList = new ArrayList<String>();
         for (int i = 0; i < Speaks_array.length(); i++) {
-            HashMap<String, String> map = new HashMap<String, String>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             JSONObject itemObj = Speaks_array.getJSONObject(i);
 
             Iterator<String> iter = itemObj.keys();//Logic to get the keys form Json Object

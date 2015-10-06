@@ -397,6 +397,15 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     passwordLength = false;
                 }
+                if (mConfirmPassword.getText().toString().equals(mNewPassword.getText().toString())) {
+                    mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+                    mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+                    passwordConfirmCheck = true;
+                } else {
+                    mPasswordConfirmCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+                    mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+                    passwordConfirmCheck = false;
+                }
                 if (hasAleastOnCharAndNumberCheck(mNewPassword.getText().toString())) {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
