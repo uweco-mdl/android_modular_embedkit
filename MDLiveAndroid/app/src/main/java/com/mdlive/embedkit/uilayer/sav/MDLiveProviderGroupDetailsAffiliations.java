@@ -1,21 +1,21 @@
 package com.mdlive.embedkit.uilayer.sav;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
@@ -24,11 +24,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.sav.adapters.AffiliationAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailsAffiliationServices;
 
 import org.json.JSONObject;
@@ -60,7 +61,6 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MDLiveProviderGroupDetailsAffiliations.this, "Hellow12", Toast.LENGTH_SHORT).show();
                 MdliveUtils.hideSoftKeyboard(MDLiveProviderGroupDetailsAffiliations.this);
                 onBackPressed();
             }
@@ -147,34 +147,70 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
 
             JsonArray providerArray = responObj.getAsJsonArray("providers_list");
 
-            LinearLayout providerScrollView = (LinearLayout) findViewById(R.id.providerScrollView);
+            AffiliationAdapter mAdapter=new AffiliationAdapter(MDLiveProviderGroupDetailsAffiliations.this,providerArray);
+            GridView gridView= (GridView) findViewById(R.id.affliationView);
+            gridView.setAdapter(mAdapter);
+            setGridViewHeightBasedOnChildren(gridView,3);
+            mAdapter.notifyDataSetChanged();
 
-            for(int i = 0; i<providerArray.size(); i++){
-                JsonObject providerItem = providerArray.get(i).getAsJsonObject();
-                final View view = View.inflate(this, R.layout.mdlive_affliation_details, null);
-                // Retrieves an image specified by the URL, displays it in the UI.
-                ImageRequest request = new ImageRequest(providerItem.get("provider_image_url").getAsString(),
-                        new Response.Listener<Bitmap>() {
-                            @Override
-                            public void onResponse(Bitmap bitmap) {
-                                ((NetworkImageView) view.findViewById(R.id.providerImg)).setImageBitmap(bitmap);
-                            }
-                        }, 0, 0, null,
-                        new ErrorListener() {
-                            public void onErrorResponse(VolleyError error) {
-                                ((NetworkImageView) view.findViewById(R.id.providerImg)).setImageResource(R.drawable.doctor_icon);
-                            }
-                        });
-                ApplicationController.getInstance().getRequestQueue(this).add(request);
-               ((TextView) view.findViewById(R.id.providerName)).setText(providerItem.get("name").getAsString());
-                providerScrollView.addView(view);
-            }
+            LinearLayout providerVerticalScrollView = (LinearLayout) findViewById(R.id.providerVertical);
 
         }catch (Exception e) {
             e.printStackTrace();
         }
 
         hideProgress();
+    }
+
+
+    public void setGridViewHeightBasedOnChildren(GridView gridView, int columns) {
+        ListAdapter listAdapter = gridView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        int items = listAdapter.getCount();
+        int rows = 0;
+
+        View listItem = listAdapter.getView(0, null, gridView);
+        listItem.measure(0, 0);
+        totalHeight = listItem.getMeasuredHeight();
+
+        float x = 1;
+        if( items > columns ){
+            x = items/columns;
+            rows = (int) (x + 1);
+            totalHeight *= rows;
+        }
+
+        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+        params.height = totalHeight;
+        gridView.setLayoutParams(params);
+
+    }
+
+
+
+    public LinearLayout createLayout(){
+        LinearLayout linearItemLayout = new LinearLayout(this);
+        linearItemLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearItemLayout.setLayoutParams(LLParams);
+        return linearItemLayout;
+    }
+
+
+
+    //Saving Doctor details in shared Pref
+
+    public void saveDoctorId(String DocorId)
+    {
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES,DocorId);
+        editor.commit();
     }
 
     private void applyActionListner(final JsonObject linkItem, NetworkImageView imageView) {

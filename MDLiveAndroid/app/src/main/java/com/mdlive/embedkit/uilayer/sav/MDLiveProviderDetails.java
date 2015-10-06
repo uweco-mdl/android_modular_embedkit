@@ -1564,43 +1564,46 @@ if(str_avail_status.equalsIgnoreCase("true"))
         String ProviderImage = "";
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
         Log.e("ProviderImageArray Size", ProviderImageArray.size() + "");
-        providerImageCollectionHolder.removeAllViews();
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(5, 10, 5, 10);
-        for(int i=0;i<ProviderImageArray.size();i++)
-        {
-            try {
-                Log.e("Logo url ", ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString());
-                if(!ProviderImageArray.get(i).getAsJsonObject().get("logo").isJsonNull()){
-                final ImageView imageView = new ImageView(MDLiveProviderDetails.this);
-                    imageView.setLayoutParams(params);
-                    ImageRequest request = new ImageRequest(ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString(),
-                            new Response.Listener<Bitmap>() {
-                                @Override
-                                public void onResponse(Bitmap bitmap) {
-                                    imageView.setImageBitmap(bitmap);
-                                }
-                            }, 0, 0, null,
-                            new Response.ErrorListener() {
-                                public void onErrorResponse(VolleyError error) {
-                                }
-                            });
-                    ApplicationController.getInstance().getRequestQueue(this).add(request);
-                    imageView.setTag(ProviderImageArray.get(i).getAsJsonObject().get("url").getAsString());
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MDLiveProviderDetails.this,MDLiveProviderGroupDetailsAffiliations.class);
-                            intent.putExtra("affurl", (imageView.getTag() != null) ? imageView.getTag().toString() : "");
-                            startActivity(intent);
-                            MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-                        }
-                    });
-                    providerImageCollectionHolder.addView(imageView);
+        if(ProviderImageArray.size() != 0) {
+            providerImageCollectionHolder.removeAllViews();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(5, 10, 5, 10);
+            for (int i = 0; i < ProviderImageArray.size(); i++) {
+                try {
+                    Log.e("Logo url ", ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString());
+                    if (!ProviderImageArray.get(i).getAsJsonObject().get("logo").isJsonNull()) {
+                        final ImageView imageView = new ImageView(MDLiveProviderDetails.this);
+                        imageView.setLayoutParams(params);
+                        ImageRequest request = new ImageRequest(ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString(),
+                                new Response.Listener<Bitmap>() {
+                                    @Override
+                                    public void onResponse(Bitmap bitmap) {
+                                        imageView.setImageBitmap(bitmap);
+                                    }
+                                }, 0, 0, null,
+                                new Response.ErrorListener() {
+                                    public void onErrorResponse(VolleyError error) {
+                                    }
+                                });
+                        ApplicationController.getInstance().getRequestQueue(this).add(request);
+                        imageView.setTag(ProviderImageArray.get(i).getAsJsonObject().get("url").getAsString());
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(MDLiveProviderDetails.this, MDLiveProviderGroupDetailsAffiliations.class);
+                                intent.putExtra("affurl", (imageView.getTag() != null) ? imageView.getTag().toString() : "");
+                                startActivity(intent);
+                                MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                            }
+                        });
+                        providerImageCollectionHolder.addView(imageView);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        }else{
+            ((LinearLayout)findViewById(R.id.providerGroupAffiliation)).setVisibility(View.GONE);
         }
     }
     /**
