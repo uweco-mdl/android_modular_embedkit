@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.pharmacy;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -366,16 +367,30 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     startActivity(i);
                     MdliveUtils.startActivityAnimation(getActivity());
                 } else{
-                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                    startActivity(pharmacyintent);
+                    MdliveUtils.showGPSFailureDialog(getActivity(),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
+                                    startActivity(pharmacyintent);
+                                }
+                            });
                 }
             } else {
-                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                startActivity(pharmacyintent);
+                MdliveUtils.showGPSFailureDialog(getActivity(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
+                                startActivity(pharmacyintent);
+                            }
+                        });
             }
         }
     };

@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -345,20 +343,24 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
                 double lat = intent.getDoubleExtra("Latitude", 0d);
                 double lon = intent.getDoubleExtra("Longitude", 0d);
-                Location loc = new Location("dummyprovider");
-                loc.setLatitude(lat);
-                loc.setLongitude(lon);
-                addExtrasForLocationInIntent(loc);
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                if(isFromPharmacyResult){
-                    MDLivePharmacyChange.this.setResult(RESULT_OK, sendingIntent);
+                if(lat!=0 && lon!=0){
+                    Location loc = new Location("dummyprovider");
+                    loc.setLatitude(lat);
+                    loc.setLongitude(lon);
+                    addExtrasForLocationInIntent(loc);
+                    MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                    if(isFromPharmacyResult){
+                        MDLivePharmacyChange.this.setResult(RESULT_OK, sendingIntent);
+                    }else{
+                        startActivity(sendingIntent);
+                        MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                    }
+                    finish();
                 }else{
-                    startActivity(sendingIntent);
-                    MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                    MdliveUtils.showGPSFailureDialog(MDLivePharmacyChange.this,null);
                 }
-                finish();
             }else{
-                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                MdliveUtils.showGPSFailureDialog(MDLivePharmacyChange.this,null);
             }
         }
     };
