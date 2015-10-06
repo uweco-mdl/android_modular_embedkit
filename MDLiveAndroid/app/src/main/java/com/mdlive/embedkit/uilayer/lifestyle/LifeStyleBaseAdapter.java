@@ -100,9 +100,12 @@ public class LifeStyleBaseAdapter extends BaseAdapter {
         if (Model.YES.toString().equalsIgnoreCase(model.active)) {
             viewHolder.mYesRadioButton.setChecked(true);
             viewHolder.mNoRadioButton.setChecked(false);
-        } else {
+        } else if(Model.NO.toString().equalsIgnoreCase(model.active)) {
             viewHolder.mYesRadioButton.setChecked(false);
             viewHolder.mNoRadioButton.setChecked(true);
+        } else {
+            viewHolder.mYesRadioButton.setChecked(false);
+            viewHolder.mNoRadioButton.setChecked(false);
         }
 
         return convertView;
