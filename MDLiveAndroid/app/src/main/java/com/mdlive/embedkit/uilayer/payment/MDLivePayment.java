@@ -75,7 +75,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
         clearMinimizedTime();
-
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,32 +85,25 @@ public class MDLivePayment extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_payment_txt));
-
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             finalAmount = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
             storePayableAmount(finalAmount);
             ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
         }
-        getCreditCardInfoService();
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                moveToNextPage();
                 //Delete
                setExistingCardDetailUser=true;
                 getCreditCardInfoService();
 
             }
         });
-
-
-
-
-
         HostedPCI = (WebView) findViewById(R.id.HostedPCI);
         dateView = (TextView) findViewById(R.id.edtExpiryDate);
         setProgressBar(findViewById(R.id.progressDialog));
@@ -143,10 +135,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 }
             }
         });*/
-
-
         HostedPCI.getSettings().setJavaScriptEnabled(true);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
@@ -157,7 +146,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
 //        }
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-
+        getCreditCardInfoService();
     }
 
     public void rightBtnOnClick(View view){
@@ -245,19 +234,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
                 //this is called when master card image view is clicked
                 if(setExistingCardDetailUser) {
+                    setExistingCardDetailUser=false;
                     String params = getExistingBillingPutParams(response.toString());
                     updateCardDetails(params);
-                    setExistingCardDetailUser=false;
 //                    HostedPCI.loadUrl("javascript:tokenizeForm()");
                 }
 //                getBillingPutParams(response.toString());
             }else
             {
                 Log.e("inside","Am in main  Null");
-
-
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
