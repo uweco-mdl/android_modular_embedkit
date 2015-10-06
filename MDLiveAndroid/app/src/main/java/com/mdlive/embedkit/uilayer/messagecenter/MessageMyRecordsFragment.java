@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -99,13 +100,9 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
                 dataDir = new File(Environment.getExternalStorageDirectory(), "Download");
                 if (!dataDir.isDirectory()) {
                     dataDir.mkdirs();
+                    dataDir = getActivity().getFilesDir();
                 }
             }
-
-            if (!dataDir.isDirectory()) {
-                dataDir = getActivity().getFilesDir();
-            }
-
 
             final File finalDataDir = dataDir;
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
