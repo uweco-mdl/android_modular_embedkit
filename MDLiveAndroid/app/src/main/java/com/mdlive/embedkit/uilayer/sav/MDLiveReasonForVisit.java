@@ -69,7 +69,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -101,6 +104,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public ImageView takePhoto, takeGallery;
         public RelativeLayout photosContainer;
         public boolean isTherapistUser = false;
+        public static String photoId;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -793,6 +797,20 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         private void uploadMedicalRecordService(final String filePath, final boolean capturedInCamera) {
             showProgress();
             try {
+                File file = new File(filePath);
+                int size = (int) file.length();
+                byte[] bytes = new byte[(int) file.length()];
+                try {
+                    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+                    buf.read(bytes, 0, bytes.length);
+                    buf.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //Base64.decode(response.getString("file_stream").getBytes("UTF-8"), Base64.DEFAULT);
+                feedDatasInVolleyCache("temp", bytes);
                 if(loadImageService != null){
                     loadImageService.cancel(true);
                     loadImageService = null;
@@ -803,6 +821,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    Log.d("Response",response.toString());
                     if(capturedInCamera){
                         checkOutLastFileInGallery();
                         File file = new File(filePath);
@@ -815,6 +834,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         if(response!= null){
                             if(response.has("message")){
                                 if(response.getString("message").equals("Document uploaded successfully")){
+                                    if(response.has("id")){
+                                        photoId = response.getString("id");
+                                        replaceWithDefaultInVolleyCache(photoId);
+                                    }
                                     downloadMedicalRecordService();
                                 }
                             }else{
@@ -1150,6 +1173,14 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public void onBackPressed() {
             super.onBackPressed();
             MdliveUtils.closingActivityAnimation(MDLiveReasonForVisit.this);
+        }
+        public void replaceWithDefaultInVolleyCache(String photoId) {
+            Cache cache = ApplicationController.getInstance().getRequestQueue(MDLiveReasonForVisit.this).getCache();
+            Cache.Entry entry = new Cache.Entry();
+            entry.etag = photoId + "";
+            entry.data =  cache.get("temp").data;
+            cache.put(photoId + "", entry);
+            cache.remove("temp");
         }
     }
 
