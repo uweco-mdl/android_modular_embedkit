@@ -250,7 +250,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
             if(response != null)
             {
-                Toast.makeText(getActivity(),"Update address successfully",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Updated address successfully",Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 
