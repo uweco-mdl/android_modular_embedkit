@@ -158,6 +158,18 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+
+        findViewById(R.id.txt_alert_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+                    findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+                } else {
+                    findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+                    showSettingsAlert();
+                }
+            }
+        });
     }
 
 
@@ -282,21 +294,23 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void goToLocation(View v) {
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
             findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
-            Intent LocationIntent = new Intent(MDLiveGetStarted.this, MDLiveLocation.class);
-            LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
-            startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
-            MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
-            SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
-            Log.e("Long Location Nmae-->", longLocation);
-            SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
-
-            if (longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
-                locationTxt.setText(longLocation);
         } else {
             findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
-            showSettingsAlert();
         }
+        Intent LocationIntent = new Intent(MDLiveGetStarted.this, MDLiveLocation.class);
+        LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
+        startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
+        MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
+        SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+        Log.e("Long Location Nmae-->", longLocation);
+        SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
+
+        if (longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO){
+            locationTxt.setText(longLocation);
+        }
+
+
 
 
     }
