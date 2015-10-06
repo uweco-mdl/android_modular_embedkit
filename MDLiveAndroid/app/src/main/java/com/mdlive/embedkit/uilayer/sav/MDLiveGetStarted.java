@@ -1414,12 +1414,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     double lat = intent.getDoubleExtra("Latitude", 0d);
                     double lon = intent.getDoubleExtra("Longitude", 0d);
                     loadCurrentLocation(lat + "", lon + "");
-                } else {
-
-                    // locationTxt.setText(serverUserLocation);
-                    //Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                }else{
+                    MdliveUtils.showGPSFailureDialog(MDLiveGetStarted.this,null);
                 }
-            } catch (Exception e) {
+            }
+             catch (Exception e) {
                 e.printStackTrace();
             }
             locationService.setBroadCastData(StringConstants.DEFAULT);

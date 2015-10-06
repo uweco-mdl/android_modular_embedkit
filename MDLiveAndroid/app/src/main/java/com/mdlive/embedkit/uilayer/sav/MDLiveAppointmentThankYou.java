@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -18,6 +19,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
  */
 public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     private String providerName,consultationDate,Time;
+    LinearLayout thankYouLayout,onCallThankYouLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +45,26 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
         Intent receivingIntent = getIntent();
         if(receivingIntent != null){
-            if(receivingIntent.hasExtra("activitycaller")
-                    && receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))){
+            if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))){
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
                 findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
                 ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
+            }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("OnCall")){
+                findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtThanksMsg).setVisibility(View.GONE);
+                ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_Oncall_Summary));
+                findViewById(R.id.emailLayout).setVisibility(View.VISIBLE);
+
+            }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("escalated")){
+
+                findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
+                ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
+                findViewById(R.id.emailLayout).setVisibility(View.GONE);
             }
         }
     }

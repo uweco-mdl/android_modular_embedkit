@@ -366,7 +366,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
 
             Calendar currendDate = TimeZoneUtils.getCalendarWithOffset(MDLiveFamilymember.this);
             currendDate.setTime(calendar.getTime());
-            strDate = (new StringBuilder().append(((month+1) > 10) ? month+1:"0"+(month+1))
+            strDate = (new StringBuilder().append(((month+1) > 9) ? month+1:"0"+(month+1))
                     .append("/").append((day > 9) ? day :"0"+(day))
                     .append("/").append(year)
                     .append(" ")+"");

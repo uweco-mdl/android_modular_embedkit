@@ -1,6 +1,8 @@
 package com.mdlive.embedkit.uilayer.sav;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
@@ -69,17 +72,19 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
+                saveConsultationType("Phone");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                 byphoneBtn.setTextColor(Color.WHITE);
 
 
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byvideoBtn.setTextColor(Color.GRAY);
-                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
 
-                MDLiveChooseProvider.isDoctorOnVideo=false;
-                MDLiveChooseProvider.isDoctorOnCall=true;
+                MDLiveChooseProvider.isDoctorOnVideo = false;
+                MDLiveChooseProvider.isDoctorOnCall = true;
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
@@ -87,18 +92,20 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
+                saveConsultationType("Video");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
-                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 byvideoBtn.setTextColor(Color.WHITE);
 
 
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byphoneBtn.setTextColor(Color.GRAY);
-                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
 
 
-                MDLiveChooseProvider.isDoctorOnVideo=true;
-                MDLiveChooseProvider.isDoctorOnCall=false;
+                MDLiveChooseProvider.isDoctorOnVideo = true;
+                MDLiveChooseProvider.isDoctorOnCall = false;
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
@@ -150,6 +157,22 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
 
 
 
+    }
+
+    public void saveConsultationType(String consultationType){
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        if(consultationType != null){
+            editor.putString(PreferenceConstants.CONSULTATION_TYPE,consultationType);
+        }
+        editor.commit();
+    }
+
+    public void saveDoctorName(String docName){
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, docName);
+        editor.commit();
     }
 
 

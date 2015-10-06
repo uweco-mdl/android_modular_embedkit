@@ -638,6 +638,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                                     isEscalated=false;
                                 }
                             }
+                            thankYouIntent.putExtra("activitycaller","OnCall");
                             thankYouIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
                             startActivity(thankYouIntent);
@@ -692,6 +693,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                             if(noResObj.has("message")){
                                 if(noResObj.getString("message").contains("escalated")){
                                     isEscalated=true;
+                                    thankYouIntent.putExtra("activitycaller","escalated");
                                 }else{
                                     isEscalated=false;
                                 }

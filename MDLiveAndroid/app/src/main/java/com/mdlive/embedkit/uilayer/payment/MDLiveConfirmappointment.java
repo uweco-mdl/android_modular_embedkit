@@ -307,7 +307,16 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             appointmentMethodType = "1";
         }
 
-        if (!consultationDate.isEmpty() && !Time.isEmpty()) {
+
+        //If Provider name is equal to Doctor on call Time field visibility should be gone.
+        if(providerName.equalsIgnoreCase("Doctor On Call")){
+            ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+            String format = sdf.format(calendar.getTime());
+            ((TextView) findViewById(R.id.txtDate)).setText(format);
+        }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
             ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
             ((TextView) findViewById(R.id.txtTime)).setText(Time);
         } else {
@@ -320,6 +329,21 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             String currentTime = df.format(calendar.getTime());
             ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
         }
+
+        /*   if (!consultationDate.isEmpty() && !Time.isEmpty()) {
+         ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+            ((TextView) findViewById(R.id.txtTime)).setText(Time);
+        }
+        else {
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+            String format = sdf.format(calendar.getTime());
+            ((TextView) findViewById(R.id.txtDate)).setText(format);
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
+            String currentTime = df.format(calendar.getTime());
+            ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+        }*/
         //This is for Now Scenario
 
         String str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
@@ -487,6 +511,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     Log.e("Response",response.toString());
                     if(response.has("message")){
                         Intent thankYouIntent=new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+                        thankYouIntent.putExtra("activitycaller","OnCall");
                         startActivity(thankYouIntent);
                         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
                     }
