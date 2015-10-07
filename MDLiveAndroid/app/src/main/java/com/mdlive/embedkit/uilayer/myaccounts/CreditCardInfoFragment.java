@@ -31,6 +31,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
+import com.mdlive.unifiedmiddleware.plugins.CardIOPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddCreditCardInfoService;
@@ -77,6 +78,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private WebView myAccountHostedPCI;
+    private Button mScanCardBtn;
 
     private int year, month;
     Calendar expiryDate = Calendar.getInstance();
@@ -127,7 +129,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         }
         myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-
+        mScanCardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CardIOPlugin.scanCard(getActivity());
+            }
+        });
         return billingInformation;
 
     }
@@ -179,7 +186,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
-
+        mScanCardBtn = (Button)billingInformation.findViewById(R.id.ScanCardBtn);
 
         mAddress1.setText("");
         mAddress2.setText("");
@@ -273,6 +280,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
+                    if (myProfile.optBoolean("allow_cc_scan", false)){
+                        mScanCardBtn.setVisibility(View.VISIBLE);
+                    }
 
 
 
@@ -614,5 +624,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         });
     }
 
-
+    protected void setCardNumber(String number){
+        myAccountHostedPCI.evaluateJavascript("javascript:setCardNumber('"+ number + "');",null);
+    }
 }
