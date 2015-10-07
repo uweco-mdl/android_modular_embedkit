@@ -617,11 +617,9 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      * @param url--Call Url from the response
      */
     public void yesCallBackServerRequest(String url){
-        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                hideProgress();
                 Log.e("YEsCallBackResponse", "" + response.toString());
                 try{
 
@@ -657,7 +655,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         };NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                hideProgress();
                 //To do: Need to handle the Error response
                 MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
             }
@@ -675,7 +672,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
      */
 
     public void noCallBackServerRequest(String url){
-        showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
@@ -711,7 +707,6 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 //To do: Need to handle the Error response
-                hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
             }
         };
