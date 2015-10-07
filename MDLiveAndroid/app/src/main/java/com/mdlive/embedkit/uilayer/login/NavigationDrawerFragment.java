@@ -346,6 +346,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
         }
 
+        if(NotificationFragment.getInstance() != null) {
+            NotificationFragment.getInstance().reloadPendingAppointment();
+        }
+
         if (getActivity() == null) {
             return;
         }
@@ -487,17 +491,34 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 if (load) {
                     if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
                         if (user.mMode == User.MODE_PRIMARY) {
+                            if(NotificationFragment.getInstance() != null) {
+                                NotificationFragment.getInstance().reloadPendingAppointment();
+                            }
                             loadUserInformationDetails(true);
                         } else {
+
+                            if(NotificationFragment.getInstance() != null) {
+                                NotificationFragment.getInstance().reloadPendingAppointment();
+
+                            }
+                            if(MDLiveDashBoardFragment.getUserSelectionInstance() != null){
+                                MDLiveDashBoardFragment.getUserSelectionInstance().onDependentSelected(user);
+                            }
                             loadDependendUserDetails(user, true);
                         }
                     } else {
                         if (mOnUserInformationLoaded != null) {
                             mOnUserInformationLoaded.reloadApplicationForUser(user);
                         }
+                        if(NotificationFragment.getInstance() != null) {
+                            NotificationFragment.getInstance().reloadPendingAppointment();
+                        }
                     }
                 } else {
                     // No need to load new data
+                    if(NotificationFragment.getInstance() != null) {
+                        NotificationFragment.getInstance().reloadPendingAppointment();
+                    }
                 }
 
                 setMaxWidthForLeftText(mSelectedUserLinearLayout,

@@ -39,8 +39,8 @@ import java.util.List;
  * Created by dhiman_da on 8/6/2015.
  */
 public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
-    private OnUserSelectionChanged mOnUserSelectionChanged;
-    private OnNotificationCliked mOnNotificationCliked;
+    public static OnUserSelectionChanged mOnUserSelectionChanged;
+    public static OnNotificationCliked mOnNotificationCliked;
 
     private String mCustomerDefaultNumber;
     private String mCustomerProvidedPhoneNumber;
@@ -56,6 +56,11 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private WebView mWebView;
 
     private UserBasicInfo mUserBasicInfo;
+
+    public static OnUserSelectionChanged getUserSelectionInstance(){
+        return mOnUserSelectionChanged;
+    }
+
     private AdapterView.OnItemSelectedListener mOnItemSelectedListenerUserInfo = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -78,6 +83,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mOnUserSelectionChanged.onAddChildSelectedFromDashboard(selectedUser,
                             mUserBasicInfo.getDependantUsers() == null ? 0 : mUserBasicInfo.getDependantUsers().size());
                 }
+                if(NotificationFragment.getInstance() != null) {
+                    NotificationFragment.getInstance().reloadPendingAppointment();
+                }
             }
             // Dependent User selected
             else if (User.MODE_DEPENDENT == selectedUser.mMode) {
@@ -97,6 +105,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onPrimarySelected(selectedUser);
                     if(NotificationFragment.getInstance() != null){
+
                         NotificationFragment.getInstance().reloadPendingAppointment();}
                 }
             }

@@ -411,6 +411,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose Photo");
+        builder.setCancelable(false);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
