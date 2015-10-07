@@ -134,9 +134,10 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
             // More than 24 hours
             case 2 :
-                view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.help).setVisibility(View.GONE);
                 view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                view.findViewById(R.id.phoneHelplayout).setVisibility(View.GONE);
+                view.findViewById(R.id.cancel_appointment).setVisibility(View.VISIBLE);
                 break;
         }
     }
