@@ -434,6 +434,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
                 }
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 
