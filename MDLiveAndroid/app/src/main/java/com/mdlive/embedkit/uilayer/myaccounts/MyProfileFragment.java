@@ -286,6 +286,13 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 selectImage();
             }
         });
+
+        String dependentId = sharedPrefs.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        if(dependentId!=null){
+                view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
