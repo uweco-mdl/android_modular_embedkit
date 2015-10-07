@@ -1118,9 +1118,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-            if(notiObj.getInt("upcoming_appointments")>=1){
+            /*if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
-            }
+            }*/
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
             for(int i=0;i<conditionsSearch.size();i++) {
                 strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
