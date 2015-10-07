@@ -42,7 +42,11 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
         //viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdli_provider_since) + getItem(position).providerSince);
-        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + TimeZoneUtils.getReceivedSentTime(getItem(position).lastAppointment, "", getContext()));
+        if(getItem(position).lastAppointment!=0) {
+            viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + TimeZoneUtils.getReceivedSentTime(getItem(position).lastAppointment, "", getContext()));
+        } else {
+            viewHolder.mTextViewBottom.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
