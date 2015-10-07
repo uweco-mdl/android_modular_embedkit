@@ -293,7 +293,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private void handleSuccessResponse(String response) {
         try {
             Log.e("Response--->", response.toString());
-            setInfoVisibilty();
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
             ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
@@ -400,7 +399,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             e.printStackTrace();
         }
         baseadapter.notifyDataSetChanged();
-        //setListView();
+        setInfoVisibilty();
     }
     /**
      *
@@ -569,9 +568,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("List","Am in ListItem Click Listener");
+
                 Log.e("Provider Id",providerListMap.get(position).get("id"));
-                Log.e("Provider availabilityType",providerListMap.get(position).get("availability_type"));
                 isDoctorOnCall=false;
                 isDoctorOnVideo=false;
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
