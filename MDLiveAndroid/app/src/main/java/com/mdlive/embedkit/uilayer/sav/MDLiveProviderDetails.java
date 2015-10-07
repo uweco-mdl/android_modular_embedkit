@@ -690,7 +690,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         tapSeetheDoctorTxt.setText("Currently with patient");
         tapSeetheDoctorTxt.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
-        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
+        ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon_white);
         reqfutureapptBtn.setText("Make an appointment request");
         tapReqFutureBtnAction();
         videophoneparentLl.setVisibility(View.GONE);
@@ -859,7 +859,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             tapSeetheDoctorTxtLayout.setClickable(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 tapSeetheDoctorTxtLayout.setBackground(getResources().getDrawable(R.drawable.searchpvr_orange_rounded_corner));
-                ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon);
+                ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon_white);
             }
         }
 
@@ -970,7 +970,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             clickForVideoOrPhoneTapReqFutureAction();
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon);
+            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon_white);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
 
@@ -1034,7 +1034,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             clickForVideoOrPhoneTapReqFutureAction();
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
-            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon);
+            ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon_white);
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
 

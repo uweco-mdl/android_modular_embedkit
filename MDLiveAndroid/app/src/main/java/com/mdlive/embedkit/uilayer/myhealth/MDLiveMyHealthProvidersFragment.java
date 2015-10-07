@@ -94,7 +94,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 startActivity(PrimaryCarePhysicianActivity.getPCPIntent(getActivity(), primaryCarePhysician));
             }
         });
-        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);;
+        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);
     }
 
     @Override
@@ -172,11 +172,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 try {
                     if(response.has("primary_care_physician")){
                         if(response.opt("primary_care_physician") instanceof JSONArray){
-                            if(response.optJSONArray("primary_care_physician").length() == 0){
-                                ((TextView) mHeaderView.findViewById(R.id.statusMessage))
-                                        .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records_empty));
 
-                            }
                         }
                     }
                 } catch (Exception e) {
@@ -260,8 +256,12 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
 
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
-                    mProviderAdapter.notifyDataSetChanged();
+                    if(mProviderAdapter.getCount() == 0){
+                        ((TextView) mHeaderView.findViewById(R.id.statusMessage))
+                                .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records_empty));
 
+                    }
+                    mProviderAdapter.notifyDataSetChanged();
                     mNoProvidersView.setVisibility(View.GONE);
                 }
                 Log.e("Response - ", provider.toString());

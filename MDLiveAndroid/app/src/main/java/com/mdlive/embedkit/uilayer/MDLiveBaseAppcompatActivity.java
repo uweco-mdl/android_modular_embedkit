@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -30,7 +31,9 @@ import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
@@ -73,8 +76,21 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onStart() {
         super.onStart();
 
-        if (showPinScreen() && MdliveUtils.getLockType(getBaseContext()).equals("Pin")) {
-            sendBroadcast(getUnlockBroadcast());
+        if (showPinScreen()) {
+            if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
+            {
+                Log.e("mdlive baylor", "session time out");
+                DialogInterface.OnClickListener backToBaylor = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackToBaylorClicked(null);
+                    }
+                };
+                MdliveUtils.showDialog(this,getString(R.string.mdl_app_name),getString(R.string.mdl_baylor_session_expired),getString(R.string.mdl_Ok),null,backToBaylor,null);
+            }else if (MdliveUtils.getLockType(getBaseContext()).equals("Pin")){
+                Log.e("mdlive :: mdlive", "session time out");
+                sendBroadcast(getUnlockBroadcast());
+            }
         }
     }
 
@@ -188,6 +204,11 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         finish();
     }
 
+    public void onBackToBaylorClicked(View view) {
+        MdliveUtils.clearNecessarySharedPrefernces(getApplicationContext());
+        DeepLinkUtils.openBaylorApp(this);
+        finish();
+    }
     @Override
     public void sendUserInformation(UserBasicInfo userBasicInfo) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(RIGHT_MENU);
@@ -373,7 +394,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
 
         final long difference = System.currentTimeMillis() - lastTime;
-        if (difference > 60 * 1000) {
+        if (difference > IntegerConstants.SESSION_TIMEOUT) {
             return true;
         } else {
             return false;
@@ -469,5 +490,4 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
         }
     }
-
 }

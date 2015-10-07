@@ -26,6 +26,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PharmacyDetails;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Security;
@@ -129,8 +130,17 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 selectItem(position);
             }
         });
-
         ArrayList<String> drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
+        if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
+        {
+            view.findViewById(R.id.BacktoBaylor).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.LogoutUser).setVisibility(View.GONE);
+            drawerItems.remove(drawerItems.size()-1);
+        }else{
+            view.findViewById(R.id.BacktoBaylor).setVisibility(View.GONE);
+            view.findViewById(R.id.LogoutUser).setVisibility(View.VISIBLE);
+        }
+
         TypedArray imgs = getResources().obtainTypedArray(R.array.left_navigation_items_image);
 
         mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(), drawerItems, imgs));
@@ -144,6 +154,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 return false;
             }
         });
+
     }
 
     @Override

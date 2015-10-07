@@ -140,8 +140,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false)){
             mSwitchCompat.setChecked(true);
+            mSwitchCompat.setEnabled(true);
         } else {
             mSwitchCompat.setChecked(false);
+            mSwitchCompat.setEnabled(false);
         }
 
         mPhoneNumberClickListener.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +286,13 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 selectImage();
             }
         });
+
+        String dependentId = sharedPrefs.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        if(dependentId!=null){
+                view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
