@@ -77,7 +77,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
     public AlertDialog procedureNameDialog, procedureYearDialog, timesDialog, modeDialog;
-    public TextView surgeryName, surgeryYear;
+    public TextView surgeryName, surgeryYear, errorText;
     public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
             "Once","Twice","Three times","Four times", "Five times", "Six times"
@@ -133,7 +133,20 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
 
         conditionText = (AutoCompleteTextView) findViewById(R.id.conditionText);
+        errorText = (TextView) findViewById(R.id.errorText);
         otherProcedureTxt = (EditText) findViewById(R.id.otherProcedureTxt);
+
+        //Setting error Text for conditions/allergies/medications
+        if(type.equals(TYPE_CONSTANT.CONDITION)){
+            errorText.setText(getString(R.string.mdl_condition_not_found_txt));
+        }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
+            errorText.setText(getString(R.string.mdl_medication_not_found_txt));
+        }else if(type.equals(TYPE_CONSTANT.ALLERGY)){
+            errorText.setText(getString(R.string.mdl_allergy_not_found_txt));
+        }else{
+            errorText.setText("");
+        }
+
         if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             initializeViews();
             if(getIntent() != null && getIntent().hasExtra("Name")){
@@ -644,6 +657,13 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 atv.setDropDownVerticalOffset(0);
                 MdliveUtils.showSoftKeyboard(this, atv);
             }
+            if(errorText.getText() != null && errorText.getText().toString().length() != 0){
+                if(conditionArray.length() == 0 && !atv.isPopupShowing()){
+                    errorText.setVisibility(View.VISIBLE);
+                }else{
+                    errorText.setVisibility(View.GONE);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -682,6 +702,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 if (text.length() >= 3) {
                     getAutoCompleteData((AutoCompleteTextView) conditonEt, text);
                 } else {
+                    errorText.setVisibility(View.GONE);
                     // Need to clear the data or hide the auto compleete text dropdown
                     if (((AutoCompleteTextView) conditonEt).getAdapter() != null) {
                         ((ArrayAdapter<String>) ((AutoCompleteTextView) conditonEt).getAdapter()).clear();
