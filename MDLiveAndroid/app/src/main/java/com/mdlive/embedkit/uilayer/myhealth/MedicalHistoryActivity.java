@@ -291,7 +291,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         SharedPreferences.Editor editor = userPrefs.edit();
         editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
         editor.commit();
-        GoogleFitUtils.getInstance().buildFitnessClient(true,null,this);
+        GoogleFitUtils.getInstance().buildFitnessClient(false,null,this);
     }
 
     public void SyncNotNowAction(View view){
