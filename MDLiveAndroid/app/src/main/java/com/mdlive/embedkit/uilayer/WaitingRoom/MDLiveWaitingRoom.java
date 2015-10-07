@@ -51,8 +51,8 @@ import java.util.Random;
  *
  */
 public class MDLiveWaitingRoom extends MDLiveBaseActivity{
-    private static final long DELAY = 5000;
-    private static final int MAX_TIPS = 10;
+    private static final long DELAY = 15000;
+    private static final int MAX_TIPS = 29;
 
     private WaitingRoomService waitingService;
     public static String OPEN_URI = "mdlive://mdlivemobile/vsee?result=thankyou";
