@@ -250,6 +250,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 case 0:
                     // Home screen
                     // Do nothing, already in Home
+                    findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
                     break;
                 case 1:
                     findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
