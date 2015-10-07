@@ -258,12 +258,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     }
                 }
             }
-            // Check if no view has focus:
-            View view = this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+            HideKeyboard();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -278,7 +273,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *
      * **/
 
-
+    private void HideKeyboard(){
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
@@ -1218,7 +1220,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 String SelectedText = list.get(position);
                 selectedText.setText(SelectedText);
                 strProviderId = providerTypeIdList.get(position);
-                Log.e("selected pos pID",strProviderId);
+                Log.e("selected pos pID", strProviderId);
                 dialog.dismiss();
             }
         });
@@ -1325,6 +1327,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     @Override
     public void onBackPressed() {
         onHomeClicked();
+        HideKeyboard();
     }
 
     public void showHamburgerTick() {
@@ -1339,6 +1342,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     public void onCrossClicked(View v) {
         onHomeClicked();
+        HideKeyboard();
     }
 
 
@@ -1385,6 +1389,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             if (locationService != null && locationService.isTrackingLocation()) {
                 locationService.stopListners();
             }
+            HideKeyboard();
         } catch (Exception e) {
             e.printStackTrace();
         }
