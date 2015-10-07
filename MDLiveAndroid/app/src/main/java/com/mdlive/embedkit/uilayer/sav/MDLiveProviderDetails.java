@@ -288,7 +288,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     //This respose is for while updating the daye response
 
     public void handleDateResponse(JSONObject response){
-
+        hideProgress();
         horizontalscrollview.setVisibility(View.GONE);
         //Fetch Data From the Services
         Log.i("Date Response", response.toString());
@@ -415,7 +415,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 }
             }
         }
-        hideProgress();
+
     }
 
     /**
@@ -441,32 +441,33 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             boolean isDoctorWithPatient = false;
             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-            String str_timeslot = "" /*str_phys_avail_id = "",*/;
+          String str_timeslot = "" /*str_phys_avail_id = "",*/;
 //            if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "availability_type")) {
 //                str_Availability_Type = providerdetObj.get("availability_type").getAsString();
 //            }
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
-            String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
-            if(str_avail_status.equalsIgnoreCase("true"))
-            {
-                if(str_Availability_Type.equalsIgnoreCase("video or phone"))
-                {   isDoctorAvailableNow=true;
-                }else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-                    isDoctorAvailableNow=true;
-                }else if (str_Availability_Type.equalsIgnoreCase("video")) {
-                    isDoctorAvailableNow=true;
-                }
-
-                else if (str_Availability_Type.equalsIgnoreCase("With Patient")) {
-                    isDoctorAvailableNow=false;
-                }else
-                {
-                    isDoctorAvailableNow=false;
-                }
-            } else {
-                isDoctorAvailableNow=false;
+          String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
+if(str_avail_status.equalsIgnoreCase("true"))
+{
+            if(str_Availability_Type.equalsIgnoreCase("video or phone"))
+            {   isDoctorAvailableNow=true;
+            }else if (str_Availability_Type.equalsIgnoreCase("phone")) {
+                isDoctorAvailableNow=true;
+            }else if (str_Availability_Type.equalsIgnoreCase("video")) {
+                isDoctorAvailableNow=true;
             }
+
+            else if (str_Availability_Type.equalsIgnoreCase("With Patient")) {
+                isDoctorAvailableNow=false;
+            }else
+            {
+                isDoctorAvailableNow=false;
+            }}
+            else
+{
+    isDoctorAvailableNow=false;
+}
 
             if (layout.getChildCount() > 0) {
                 layout.removeAllViews();
@@ -554,8 +555,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                 }
             }
+            hideProgress();
 
             try {
+//               saveConsultationType(str_Availability_Type);
                 saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -652,7 +655,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }catch(Exception e){
             e.printStackTrace();
         }
-        hideProgress();
+
     }
 
     private void enableReqAppmtBtn() {

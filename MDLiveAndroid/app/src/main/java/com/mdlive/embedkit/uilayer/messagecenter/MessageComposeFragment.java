@@ -226,7 +226,7 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
                     MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            getActivity().finish();
+//                            getActivity().finish();
                         }
                     });
                 }

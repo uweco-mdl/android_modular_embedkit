@@ -20,9 +20,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
@@ -97,149 +95,153 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     //do confirm appointment service
     private void doConfirmAppointment() {
         showProgress();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+        try {
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.e("confirm appmt res---->", response.toString());
-                hideProgress();
-                try {
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.APPT_ID, apptId);
-                        editor.commit();
-//                        Intent i = new Intent(MDLiveConfirmappointment.this, MDLiveConfirmappointment.class);
-//                        startActivity(i);
-//                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
-                        if (consultationType.equalsIgnoreCase("phone")) {
-                            movetothankyou();
-                        }
-//                        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
-//                        {
-//                            movetostartVisit();
-//                        }
-                        else if (!Time.equalsIgnoreCase("Now")) {
-
-                            movetothankyou();
-                        } else {
-                            movetostartVisit();
-                        }
-
-                    } else {
-                        final String resumeScreen = response.getString("resume_screen");
-
-                        MdliveUtils.showDialog(MDLiveConfirmappointment.this, response.getString("message"), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (resumeScreen.equalsIgnoreCase("Get Started")) {
-                                    Intent getStartedIntent = new Intent(MDLiveConfirmappointment.this, MDLiveGetStarted.class);
-                                    startActivity(getStartedIntent);
-                                    MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
-                                    finish();
-                                }
-                            }
-                        });
-
-//                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.e("confirm appmt res---->", response.toString());
                     hideProgress();
-                    e.printStackTrace();
-                }
-            }
-        };
+                    try {
+                        String apptId = response.getString("appointment_id");
+                        if (apptId != null) {
+                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(PreferenceConstants.APPT_ID, apptId);
+                            editor.commit();
+    //                        Intent i = new Intent(MDLiveConfirmappointment.this, MDLiveConfirmappointment.class);
+    //                        startActivity(i);
+    //                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                            if (consultationType.equalsIgnoreCase("phone")) {
+                                movetothankyou();
+                            }
+    //                        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
+    //                        {
+    //                            movetostartVisit();
+    //                        }
+                            else if (!Time.equalsIgnoreCase("Now")) {
 
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    Log.e("Error Response", error.toString());
-                    dismissDialog();
-                    NetworkResponse errorResponse = error.networkResponse;
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                                movetothankyou();
+                            } else {
+                                movetostartVisit();
                             }
-                        };
-                        // Show timeout error message
-                        MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveConfirmappointment.this);
-                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
-                        String responseBody = new String(error.networkResponse.data, "utf-8");
-                        Log.e("responseBody",responseBody);
-                        JSONObject errorObj = new JSONObject(responseBody);
-                        if (errorObj.has("message")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
-                            }
-                            showAlertPopup(errorObj.getString("message"));
-                        } else if (errorObj.has("error")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
-                            }
-                            showAlertPopup(errorObj.getString("error"));
+
+                        } else {
+                            final String resumeScreen = response.getString("resume_screen");
+
+                            MdliveUtils.showDialog(MDLiveConfirmappointment.this, response.getString("message"), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (resumeScreen.equalsIgnoreCase("Get Started")) {
+                                        Intent getStartedIntent = new Intent(MDLiveConfirmappointment.this, MDLiveGetStarted.class);
+                                        startActivity(getStartedIntent);
+                                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                                        finish();
+                                    }
+                                }
+                            });
+
+    //                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
+                    } catch (Exception e) {
+                        hideProgress();
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e) {
-                    dismissDialog();
-                    e.printStackTrace();
                 }
+            };
+
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        Log.e("Error Response", error.toString());
+                        dismissDialog();
+                        NetworkResponse errorResponse = error.networkResponse;
+                        if (error.getClass().equals(TimeoutError.class)) {
+                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            };
+                            // Show timeout error message
+                            MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveConfirmappointment.this);
+                        }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            Log.e("responseBody",responseBody);
+                            JSONObject errorObj = new JSONObject(responseBody);
+                            if (errorObj.has("message")) {
+                                if(errorObj.has("phone")){
+                                    errorPhoneNumber=errorObj.getString("phone");
+                                }else{
+                                    errorPhoneNumber=null;
+                                }
+                                showAlertPopup(errorObj.getString("message"));
+                            } else if (errorObj.has("error")) {
+                                if(errorObj.has("phone")){
+                                    errorPhoneNumber=errorObj.getString("phone");
+                                }else{
+                                    errorPhoneNumber=null;
+                                }
+                                showAlertPopup(errorObj.getString("error"));
+                            }
+
+                        }else{
+                            MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
+                        }
+
+                    } catch (Exception e) {
+                        dismissDialog();
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+            HashMap<String, Object> params = new HashMap<String, Object>();
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+            Log.e("PostValue confirmTimeStamp", TimeStamp);
+            Log.e("PostValue phys", phys_ID);
+            params.put("appointment_method", appointmentMethodType);
+            params.put("alternate_visit_option", "No Answer");
+            if(phys_ID==null)
+            {
+                params.put("phys_availability_id", "");
+            }else
+            {
+                params.put("phys_availability_id", phys_ID);
             }
-        };
 
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        Log.e("PostValue confirmTimeStamp", TimeStamp);
-        Log.e("PostValue phys", phys_ID);
-        params.put("appointment_method", appointmentMethodType);
-        params.put("alternate_visit_option", "No Answer");
-        if(phys_ID==null)
-        {
-            params.put("phys_availability_id", "");
-        }else
-        {
-            params.put("phys_availability_id", phys_ID);
-        }
+            if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
+            {
+                params.put("timeslot","Now");
+            }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
+            {
+                params.put("timeslot","Now");
+            }
 
-        if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
-        {
-            params.put("timeslot","Now");
-        }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
-        {
-            params.put("timeslot","Now");
-        }
+            else {
+                params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
+            }
 
-        else {
-            params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
-        }
+            params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
+            params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
+            params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
 
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-
-        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-        SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+            params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
+            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+            SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
 //        if (promoCode != null && !promoCode.isEmpty()) {
-        params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
+            params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
 
 //        }
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
+            services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -285,49 +287,58 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
 
     public void getPreferenceValue() {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
-        Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
-        providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
-        ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
-        providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
-        ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
-        consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationType + " Consultation");
-        consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
-        Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-        TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
-        phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
-        if (consultationType.equalsIgnoreCase("Video")) {
-            appointmentMethodType = "1";
-        } else if (consultationType.equalsIgnoreCase("Phone")) {
-            appointmentMethodType = "2";
-            Log.e("Phone", "Am in Phone");
-        } else {
-            appointmentMethodType = "1";
+        SharedPreferences sharedpreferences = null;
+        try {
+            sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
+            Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
+            providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
+            ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
+            providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
+            ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
+            consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+            ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationType + " Consultation");
+            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+            Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+            TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
+            phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
+            if (consultationType.equalsIgnoreCase("Video")) {
+                appointmentMethodType = "1";
+            } else if (consultationType.equalsIgnoreCase("Phone")) {
+                appointmentMethodType = "2";
+                Log.e("Phone", "Am in Phone");
+            } else {
+                appointmentMethodType = "1";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
         //If Provider name is equal to Doctor on call Time field visibility should be gone.
-        if(providerName.equalsIgnoreCase("Doctor On Call")){
-            ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
-            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
-            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-            String format = sdf.format(calendar.getTime());
-            ((TextView) findViewById(R.id.txtDate)).setText(format);
-        }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
-            ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
-            ((TextView) findViewById(R.id.txtTime)).setText(Time);
-        } else {
-            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
-            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-            String format = sdf.format(calendar.getTime());
-            ((TextView) findViewById(R.id.txtDate)).setText(format);
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
-            String currentTime = df.format(calendar.getTime());
-            ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+        try {
+            if(providerName.equalsIgnoreCase("Doctor On Call")){
+                ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+                SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+                sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                String format = sdf.format(calendar.getTime());
+                ((TextView) findViewById(R.id.txtDate)).setText(format);
+            }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
+                ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+                ((TextView) findViewById(R.id.txtTime)).setText(Time);
+            } else {
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+                SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+                sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                String format = sdf.format(calendar.getTime());
+                ((TextView) findViewById(R.id.txtDate)).setText(format);
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
+                String currentTime = df.format(calendar.getTime());
+                ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         /*   if (!consultationDate.isEmpty() && !Time.isEmpty()) {
