@@ -9,12 +9,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -102,26 +106,19 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
 
 
-     /*   TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
-        Spannable word = new SpannableString(getString(R.string.mdl_terms_consent));
-        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 51, 91, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mdlTermsConsent.setText(word);*/
-
-        SpannableString termText = new SpannableString(getString(R.string.mdl_terms_consent));
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                Uri uri = Uri.parse("https://www.mdlive.com/consumer/informed_consent_medicalgroup.html"); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        };
-        termText.setSpan(clickableSpan, 51, 90, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
-        mdlTermsConsent.setText(termText);
+        String str_termsConsent = "I certify that I have read and accstyleept the terms of <a href='https://www.mdlive.com/consumer/informed_consent_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">MDLIVE Medical Group\'s Informed Consent</a>. ";
+
+        Spannable underLinedString = (Spannable) Html.fromHtml(str_termsConsent);
+        for (URLSpan u: underLinedString.getSpans(0, underLinedString.length(), URLSpan.class)) {
+            underLinedString.setSpan(new UnderlineSpan() {
+                public void updateDrawState(TextPaint tp) {
+                    tp.setUnderlineText(false);
+                }
+            }, underLinedString.getSpanStart(u), underLinedString.getSpanEnd(u), 0);
+        }
+        mdlTermsConsent.setText(underLinedString);
         mdlTermsConsent.setMovementMethod(LinkMovementMethod.getInstance());
-        mdlTermsConsent.setHighlightColor(getResources().getColor(R.color.search_pvr_txt_blue_color));
 
 
         final CheckBox ConsentCheckbox = (CheckBox) findViewById(R.id.mdl_terms_consent_checkbox);
@@ -143,28 +140,21 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         });
 
-
-
-    /* TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
-        Spannable text = new SpannableString(getString(R.string.mdl_privacy_policy));
-        text.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 34, 50, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mdlPrivacyPolicy.setText(text);*/
-
-        SpannableString privacyPolicy = new SpannableString(getString(R.string.mdl_privacy_policy));
-        ClickableSpan clickablePolicy = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                Uri uri = Uri.parse("https://www.mdlive.com/consumer/privacy_medicalgroup.html"); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        };
-        termText.setSpan(clickablePolicy, 34, 50, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
-        mdlPrivacyPolicy.setText(privacyPolicy);
+
+        String str_privacy_policy = "I have read MDLIVE Medical Group's Privacy Policy and I acknowledge that I have the ability to print a hard copy of the <a href='https://www.mdlive.com/consumer/privacy_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">Privacy Policy </a>for my records.";
+
+        Spannable underLinedStringPolicy = (Spannable) Html.fromHtml(str_privacy_policy);
+        for (URLSpan u: underLinedStringPolicy.getSpans(0, underLinedStringPolicy.length(), URLSpan.class)) {
+        underLinedStringPolicy.setSpan(new UnderlineSpan() {
+            public void updateDrawState(TextPaint tP) {
+                tP.setUnderlineText(false);
+            }
+        }, underLinedStringPolicy.getSpanStart(u), underLinedStringPolicy.getSpanEnd(u), 0);
+        }
+        mdlPrivacyPolicy.setText(underLinedStringPolicy);
         mdlPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-        mdlPrivacyPolicy.setHighlightColor(getResources().getColor(R.color.search_pvr_txt_blue_color));
+
     }
 
     public void enableConfirmAppt(){
