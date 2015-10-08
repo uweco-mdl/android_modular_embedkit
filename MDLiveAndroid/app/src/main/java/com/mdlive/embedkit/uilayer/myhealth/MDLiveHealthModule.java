@@ -80,7 +80,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public TextView surgeryName, surgeryYear, errorText;
     public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
-            "once","twice","three times","four times", "five times", "six times"
+            "Once","Twice","Three times","Four times", "Five times", "Six times"
     };
     String[] modesList =  new String[]{
             "Daily", "Hourly", "Weekly","Monthly"
@@ -174,11 +174,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             if(getIntent() != null && getIntent().hasExtra("Frequency")){
                 for(String times : timesList){
                     if(getIntent().getStringExtra("Frequency").toLowerCase().contains(times.toLowerCase())){
-                        ((TextView) findViewById(R.id.timesTxt)).setText(times);
+                        ((TextView) findViewById(R.id.timesTxt)).setText(times.toLowerCase());
                     }
                 }
                 for(String modes : modesList){
-                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(modes.toLowerCase())){
+                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(modes)){
                         ((TextView) findViewById(R.id.modeTxt)).setText(modes);
                     }
                 }
