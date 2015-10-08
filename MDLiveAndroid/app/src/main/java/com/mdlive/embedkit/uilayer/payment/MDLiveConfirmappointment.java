@@ -9,8 +9,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,6 +63,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     private String timeStamp, phys_ID;
     private boolean CheckdoconfirmAppmt = false;
     private static String errorPhoneNumber=null;
+    private boolean CheckTermsConsent = false;
+    private boolean CheckPrivacyPolicy = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +101,78 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     commit();
         }
 
+
+     /*   TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
+        Spannable word = new SpannableString(getString(R.string.mdl_terms_consent));
+        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 51, 91, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mdlTermsConsent.setText(word);*/
+
+        SpannableString termText = new SpannableString(getString(R.string.mdl_terms_consent));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Uri uri = Uri.parse("https://www.mdlive.com/consumer/informed_consent_medicalgroup.html"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        };
+        termText.setSpan(clickableSpan, 51, 90, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
+        mdlTermsConsent.setText(termText);
+        mdlTermsConsent.setMovementMethod(LinkMovementMethod.getInstance());
+        mdlTermsConsent.setHighlightColor(getResources().getColor(R.color.search_pvr_txt_blue_color));
+
+
+        final CheckBox ConsentCheckbox = (CheckBox) findViewById(R.id.mdl_terms_consent_checkbox);
+        final CheckBox PrivacyPolicy = (CheckBox) findViewById(R.id.mdl_privacy_policy_checkbox);
+
+        // Set Checkbox values & check changed listener
+        ConsentCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CheckTermsConsent = (isChecked) ? true : false;
+                enableConfirmAppt();
+            }
+        });
+        PrivacyPolicy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isCheckbox) {
+                CheckPrivacyPolicy = (isCheckbox) ? true : false;
+                enableConfirmAppt();
+            }
+        });
+
+
+
+    /* TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
+        Spannable text = new SpannableString(getString(R.string.mdl_privacy_policy));
+        text.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 34, 50, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mdlPrivacyPolicy.setText(text);*/
+
+        SpannableString privacyPolicy = new SpannableString(getString(R.string.mdl_privacy_policy));
+        ClickableSpan clickablePolicy = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Uri uri = Uri.parse("https://www.mdlive.com/consumer/privacy_medicalgroup.html"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        };
+        termText.setSpan(clickablePolicy, 34, 50, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
+        mdlPrivacyPolicy.setText(privacyPolicy);
+        mdlPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+        mdlPrivacyPolicy.setHighlightColor(getResources().getColor(R.color.search_pvr_txt_blue_color));
+    }
+
+    public void enableConfirmAppt(){
+        if(CheckTermsConsent && CheckPrivacyPolicy){
+            ((Button) findViewById(R.id.start_visit)).setVisibility(View.VISIBLE);
+        }else{
+            ((Button) findViewById(R.id.start_visit)).setVisibility(View.GONE);
+        }
     }
 
     //do confirm appointment service
