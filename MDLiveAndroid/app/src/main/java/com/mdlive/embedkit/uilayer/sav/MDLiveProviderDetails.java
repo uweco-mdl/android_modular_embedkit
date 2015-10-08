@@ -1726,7 +1726,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 String convertedTime =  format.format(date);
 //                AppointmentDate = convertedTime;
 
-                final SimpleDateFormat format1 = new SimpleDateFormat("E, MMM dd, yyyy");
+                final SimpleDateFormat format1 = new SimpleDateFormat("EEEE,  MMM dd  yyyy");
                 format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 selectedText.setText(format1.format(date));
 //
@@ -1744,7 +1744,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                String format = new SimpleDateFormat("E, MMM dd, yyyy").format(calendar.getTime());
+                String format = new SimpleDateFormat("EEEE,  MMM dd  yyyy").format(calendar.getTime());
 //                ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 Log.d("TImeZone - ", calendar.getTimeInMillis() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
@@ -1774,7 +1774,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd, yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE,  MMM dd  yyyy");
             sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveProviderDetails.this));
             String format = sdf.format(cal.getTime());
             ((TextView)findViewById(R.id.dateTxt)).setText(format);
