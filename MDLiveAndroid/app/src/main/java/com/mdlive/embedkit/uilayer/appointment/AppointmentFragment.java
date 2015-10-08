@@ -69,13 +69,14 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         }
 
         ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
+        Log.e("Role",appointment.getRole());
 
-        if(appointment.getRole()!=null){
-            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());}
-        else
-        {
+        if(appointment.getRole().equalsIgnoreCase("null")){
             ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
+        }else{
+            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());
         }
+
 
         ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
 
