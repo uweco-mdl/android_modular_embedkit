@@ -99,9 +99,9 @@ public class ChooseProviderAdapter extends BaseAdapter {
             SpecialistTxt.setText(array.get(pos).get("specialty"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
-            Log.e("AvailableNowStatus", array.get(pos).get("available_now_status"));
+
             if (array.get(pos).get("available_now_status").equals("true")) {
-                Log.e("AvailableNowStatus", "Am in True");
+
                 if(array.get(pos).get("availability_type").equalsIgnoreCase("with patient")) {
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
@@ -134,17 +134,12 @@ public class ChooseProviderAdapter extends BaseAdapter {
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }
 
-            }
-            else {
+            } else {
 
-//                if(array.get(pos).get("availability_type").equals("not available"))
-                Log.e("nulldate",array.get(pos).get("next_availability").toString());
-                if(array.get(pos).get("next_availability").toString()==null)
+                if(array.get(pos).get("next_availability") == null)
                 {
-                    Log.e("nullcheck","Am in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText("");
                 }else {
-                    Log.e("nullcheck","Am not in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("next_availability"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
                 }
@@ -155,9 +150,6 @@ public class ChooseProviderAdapter extends BaseAdapter {
                This is to Check the availability of the Doctor is through either by phone or video
                if it is through phone calling icon should be visible or if it is either through
                video then the video icon should be visible .*/
-
-//            withPatientTxt = (TextView) row.findViewById(R.id.callImg);
-//
 
             }
 
