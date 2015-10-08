@@ -33,14 +33,17 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.CreditCardInfoFragment;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+import com.mdlive.unifiedmiddleware.plugins.CardIOPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
@@ -55,6 +58,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+
 public class MDLivePayment extends MDLiveBaseActivity {
 
     private TextView dateView;/*edtZipCode*/
@@ -67,7 +73,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
-
+    private Button mScanCardBtn;
     private static String errorPhoneNumber=null;
 
 
@@ -88,6 +94,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_payment_txt));
+        mScanCardBtn = (Button)findViewById(R.id.ScanCardBtn);
         if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             finalAmount = String.format("%.2f", Double.parseDouble(extras.getString("final_amount")));
@@ -146,6 +153,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
 //        }
         HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
+        mScanCardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CardIOPlugin.scanCard(MDLivePayment.this);
+            }
+        });
         getCreditCardInfoService();
     }
 
@@ -206,6 +219,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 Log.e("inside","Am not in main Null");
                 myProfile = response.getJSONObject("billing_information");
                 Log.e("inside",myProfile.getString("cc_number"));
+                if (myProfile.optBoolean("allow_cc_scan",false)){
+                    mScanCardBtn.setVisibility(View.VISIBLE);
+                }
                 if (myProfile.getString("cc_number").equals(null)||myProfile.getString("cc_number").equals("null")||myProfile.getString("cc_number").equals("")||myProfile.getString("cc_number").isEmpty()
                         ) {
                     Log.e("inside","Am in Null");
@@ -896,7 +912,27 @@ public class MDLivePayment extends MDLiveBaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == IdConstants.CREDITCARD_SCAN) {
+            String resultStr;
+            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+                resultStr = scanResult.cardNumber;
+                   /* if (scanResult.isExpiryValid()) {
+                        resultStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
+                    }
+*/
 
+            } else {
+                resultStr = "";
+            }
+            HostedPCI.evaluateJavascript("javascript:setCardNumber('"+ resultStr + "');",null);
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
 
 
 }
