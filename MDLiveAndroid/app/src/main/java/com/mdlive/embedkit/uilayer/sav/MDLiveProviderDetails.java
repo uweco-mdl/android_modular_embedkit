@@ -389,7 +389,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 myText.setTag("Now");
                                 defaultNowTextPreferences(myText, str_appointmenttype);
                                 selectedTimeslot=true;
-                                clickEventForHorizontalText(myText);
+                                clickEventForHorizontalText(myText,str_timeslot);
                                 layout.addView(myText);
                             } else {
                                 setHorizontalScrollviewTimeslots(layout, str_timeslot, j);
@@ -539,7 +539,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                         myText.setTag("Now");
                                         defaultNowTextPreferences(myText, str_appointmenttype);
                                         selectedTimeslot = true;
-                                        clickEventForHorizontalText(myText);
+                                        clickEventForHorizontalText(myText,str_timeslot);
                                         layout.addView(myText);
                                         //layout.addView(line, 1);
                                     }
@@ -1339,7 +1339,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         firstClick=true;
         clickForVideoOrPhoneTapReqFutureAction();
-        clickEventForHorizontalText(myText);
+        clickEventForHorizontalText(myText,str_timeslot);
 
     }
 
@@ -1362,14 +1362,14 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
     }
 
-    private void clickEventForHorizontalText(final Button timeslotTxt) {
+    private void clickEventForHorizontalText(final Button timeslotTxt,final String Timestamp) {
         timeslotTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedTimeslot=true;
                 String appointmentType = (String) v.getTag();
                 //saveConsultationType(appointmentType);
-                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
+                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,Timestamp,str_phys_avail_id);
                 //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
                     previousSelectedTv = timeslotTxt;
