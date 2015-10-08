@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -426,7 +425,12 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 double lon = intent.getDoubleExtra("Longitude", 0d);
                 loadCurrentLocation(lat + "", lon + "");
             }else{
-                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
             }
         }
     };
