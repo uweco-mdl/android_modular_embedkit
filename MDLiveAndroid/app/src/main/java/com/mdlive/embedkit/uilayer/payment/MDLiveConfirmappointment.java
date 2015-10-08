@@ -59,8 +59,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_appointment);
-        getPreferenceValue();
         clearMinimizedTime();
+        getPreferenceValue();
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -100,6 +100,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
                 @Override
                 public void onResponse(JSONObject response) {
+                    Log.e("Highlight ---> 6", "********");
                     Log.e("confirm appmt res---->", response.toString());
                     hideProgress();
                     try {
@@ -201,10 +202,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
             HashMap<String, Object> params = new HashMap<String, Object>();
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-            Log.e("PostValue confirmTimeStamp", TimeStamp);
-            Log.e("PostValue phys", phys_ID);
+            //Log.e("PostValue confirmTimeStamp", TimeStamp);
+            //Log.e("PostValue phys", phys_ID);
             params.put("appointment_method", appointmentMethodType);
             params.put("alternate_visit_option", "No Answer");
+
             if(phys_ID==null)
             {
                 params.put("phys_availability_id", "");
@@ -212,19 +214,18 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             {
                 params.put("phys_availability_id", phys_ID);
             }
-
-            if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
+            String TimeStamp = settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
+            if(TimeStamp == null ||
+                    TimeStamp.trim().length() == 0 ||
+                    settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
             {
                 params.put("timeslot","Now");
             }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
             {
                 params.put("timeslot","Now");
-            }
-
-            else {
+            }else {
                 params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
             }
-
             params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
             params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
             params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
@@ -234,7 +235,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
 //        if (promoCode != null && !promoCode.isEmpty()) {
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
-
 //        }
             Gson gson = new GsonBuilder().serializeNulls().create();
             ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
@@ -313,7 +313,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Log.e("Step 2", "11111");
 
         //If Provider name is equal to Doctor on call Time field visibility should be gone.
         try {
@@ -324,9 +324,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
+                Log.e("Step 2 A", "11111");
             }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
                 ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
                 ((TextView) findViewById(R.id.txtTime)).setText(Time);
+                Log.e("Step 2 B", "11111");
             } else {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
@@ -336,11 +338,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
                 String currentTime = df.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+                Log.e("Step 2 C", "11111");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Log.e("Step 3", "11111");
         /*   if (!consultationDate.isEmpty() && !Time.isEmpty()) {
          ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
             ((TextView) findViewById(R.id.txtTime)).setText(Time);

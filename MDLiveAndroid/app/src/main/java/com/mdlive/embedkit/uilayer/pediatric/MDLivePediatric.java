@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,8 +30,9 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.MedicalHistoryPluginActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -49,7 +51,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class MDLivePediatric extends MDLiveBaseActivity {
+public class MDLivePediatric extends MedicalHistoryPluginActivity {
     private RadioGroup birthComplicationGroup, lastShotGroup, smokingGroup, childOutGroup, siblingsGroup;
     public EditText edtBirthComplications, edtLastShot, edtCurrentWeight;
     private List<String> dietList;
@@ -121,6 +123,11 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        locationService = new LocationCooridnates(getApplicationContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+
         dietLayout= (CardView) findViewById(R.id.diet_layout);
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
@@ -568,9 +575,13 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             public void onResponse(Object response) {
                 hideProgress();
                 if(getIntent() != null && getIntent().hasExtra("firstTimeUser")){
-                    Intent medicalIntent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
-                    startActivity(medicalIntent);
-                    MdliveUtils.startActivityAnimation(MDLivePediatric.this);
+                    if(getIntent().hasExtra("theraphyFlow")){
+                        checkMedicalAggregation();
+                    }else{
+                        Intent medicalIntent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLivePediatric.this);
+                    }
                 }else{
                     setResult(RESULT_OK);
                     finish();

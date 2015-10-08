@@ -97,6 +97,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
@@ -620,7 +621,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkAllergies(historyPercentageArray);
             checkPediatricCompletion(historyPercentageArray);
             checkMyHealthBehaviouralHistory(historyPercentageArray);
-            checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
+            //checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
             checkPrimaryCarePhysicianHistory();
             ValidateModuleFields();
             checkAgeAndFemale();
@@ -684,7 +685,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
             if(gender.equalsIgnoreCase("Female")){
                 JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
-                if(healthHistory.has("female_questions")){
+                if(healthHistory.has("female_questions") && !isTherapiestUser){
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
@@ -734,19 +735,16 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(isNewUser){
-            findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
+        if(isTherapiestUser) {
             findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
-        }else{
             findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
-            findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
-        }
-        if(isTherapiestUser){
-            if(isNewUser){
-
-            }else{
-
+        }else{
+            if (isNewUser) {
+                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.AllergiesLl).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.MyHealthAllergiesLl).setVisibility(View.GONE);
+                findViewById(R.id.AllergiesLl).setVisibility(View.VISIBLE);
             }
         }
     }
@@ -785,15 +783,18 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(isNewUser){
-            findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
+        if(isTherapiestUser) {
             findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
-        }else{
             findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
-            findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
+        }else {
+            if (isNewUser) {
+                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.MedicationsLl).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.MyHealthMedicationsLl).setVisibility(View.GONE);
+                findViewById(R.id.MedicationsLl).setVisibility(View.VISIBLE);
+            }
         }
-
 
         if(MedicationsGroup.getCheckedRadioButtonId() > 0 &&
                 MedicationsGroup.getCheckedRadioButtonId() == R.id.medicationsYesButton){
@@ -834,14 +835,18 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 ((TextView) findViewById(R.id.MyHealthConditionsNameTv)).setText(getString(R.string.mdl_no_condition_reported));
             }
 
-            if(isNewUser){
-                findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
+            if(isTherapiestUser) {
+                findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
                 findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
             }else{
-                findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
-                findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
+                if(isNewUser){
+                    findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.VISIBLE);
+                    findViewById(R.id.MyHealthConditionsLl).setVisibility(View.GONE);
+                }else{
+                    findViewById(R.id.MyHealthConditionChoiceLl).setVisibility(View.GONE);
+                    findViewById(R.id.MyHealthConditionsLl).setVisibility(View.VISIBLE);
+                }
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -948,12 +953,17 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(isNewUser){
-            findViewById(R.id.MyHealthProceduresLl).setVisibility(View.VISIBLE);
+        if(isTherapiestUser) {
             findViewById(R.id.ProcedureLl).setVisibility(View.GONE);
-        }else{
             findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
-            findViewById(R.id.ProcedureLl).setVisibility(View.VISIBLE);
+        }else{
+            if(isNewUser){
+                findViewById(R.id.MyHealthProceduresLl).setVisibility(View.VISIBLE);
+                findViewById(R.id.ProcedureLl).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.MyHealthProceduresLl).setVisibility(View.GONE);
+                findViewById(R.id.ProcedureLl).setVisibility(View.VISIBLE);
+            }
         }
     }
 

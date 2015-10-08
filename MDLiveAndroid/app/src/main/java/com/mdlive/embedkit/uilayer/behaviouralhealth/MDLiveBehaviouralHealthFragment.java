@@ -1,6 +1,8 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -55,13 +59,28 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     private RadioButton mFamilyYesRadioButton;
     private RadioButton mFamilyNoRadioButton;
     private Spinner mCounsellingSpinner;
-
+    private static boolean isFromSav = false, isNewUser = false;
     List<String> relationShpList;
+    private MDLiveBehaviouralHealthActivity parentActivity;
+
+    public static MDLiveBehaviouralHealthFragment newInstance(boolean isFromSAVs, boolean isNewUSER) {
+        final MDLiveBehaviouralHealthFragment fragment = new MDLiveBehaviouralHealthFragment();
+        isFromSav = isFromSAVs;
+        isNewUser = isNewUSER;
+        return fragment;
+    }
 
 
     public static MDLiveBehaviouralHealthFragment newInstance() {
         final MDLiveBehaviouralHealthFragment fragment = new MDLiveBehaviouralHealthFragment();
+        isFromSav = false;
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        parentActivity = (MDLiveBehaviouralHealthActivity) activity;
     }
 
     public MDLiveBehaviouralHealthFragment() {
@@ -80,6 +99,20 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
         mConditionLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_histroy_conditions);
         mHospitalizedRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_hospitalized_radio_group);
+
+
+        mHospitalizedYesRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_yes_radio_button);
+        mHospitalizedNoRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_no_radio_button);
+        mWhenLl = (LinearLayout)view.findViewById(R.id.behavoural_when_ll);
+        mhowLongLl = (LinearLayout)view.findViewById(R.id.behavoural_how_long_ll);
+
+        mWhenTextView = (TextView) view.findViewById(R.id.mdlive_behavioural_histroy_when_text_view);
+        mHowLongTextView = (EditText) view.findViewById(R.id.mdlive_behavioural_histroy_how_long_text_view);
+
+        mFamilyHistoryLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_family_histroy);
+
+        mFamilyRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_question_family_radio_group);
+
         if (mHospitalizedRadioGroup != null) {
             mHospitalizedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -99,17 +132,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
             });
         }
 
-        mHospitalizedYesRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_yes_radio_button);
-        mHospitalizedNoRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_no_radio_button);
-        mWhenLl = (LinearLayout)view.findViewById(R.id.behavoural_when_ll);
-        mhowLongLl = (LinearLayout)view.findViewById(R.id.behavoural_how_long_ll);
-
-        mWhenTextView = (TextView) view.findViewById(R.id.mdlive_behavioural_histroy_when_text_view);
-        mHowLongTextView = (EditText) view.findViewById(R.id.mdlive_behavioural_histroy_how_long_text_view);
-
-        mFamilyHistoryLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_family_histroy);
-
-        mFamilyRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_question_family_radio_group);
         if (mFamilyRadioGroup != null) {
             mFamilyRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -252,7 +274,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         };
 
@@ -295,21 +316,17 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         mBehavioralHistory.counselingPreference = mCounsellingSpinner.getSelectedItem().toString();
         final Gson gson = new Gson();
         String request = gson.toJson(mBehavioralHistory);
-
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    handleUpdateSuccessResponse(response);
+                    handleUpdateSuccessResponse();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         };
-
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -327,15 +344,30 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     }
 
-    private void handleUpdateSuccessResponse(JSONObject response) {
+    private void handleUpdateSuccessResponse() {
         try {
             hideProgressDialog();
-            getActivity().finish();
+            if(isFromSav){
+                if (TimeZoneUtils.calculteAgeFromPrefs(getActivity()) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+                    Intent medicalIntent = new Intent(parentActivity, MDLivePediatric.class);
+                    medicalIntent.putExtra("firstTimeUser", "true");
+                    medicalIntent.putExtra("theraphyFlow", "true");
+                    startActivity(medicalIntent);
+                    MdliveUtils.startActivityAnimation(parentActivity);
+                }else{
+                    //parentActivity.getUserPharmacyDetails();
+                    parentActivity.checkMedicalAggregation();
+
+                }
+            }else{
+                getActivity().finish();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
+
+
     DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
 
         // when dialog box is closed, below method will be called.

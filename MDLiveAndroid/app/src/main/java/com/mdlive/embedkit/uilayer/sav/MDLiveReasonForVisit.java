@@ -43,6 +43,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.BehavioralHistory;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.ConditionAndActive;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
@@ -62,6 +63,7 @@ import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralService;
 import com.mdlive.unifiedmiddleware.services.behavioural.BehaviouralUpdateService;
 import com.mdlive.unifiedmiddleware.services.myhealth.DownloadMedicalService;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 
 import org.apache.http.HttpStatus;
@@ -80,6 +82,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -105,6 +108,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public RelativeLayout photosContainer;
         public boolean isTherapistUser = false;
         public static String photoId;
+        public boolean isNewUser = false;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -304,7 +309,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     hideProgress();
-                    startNextActivity();
+                    checkMedicalDateHistory();
                 }
             };
             NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -337,7 +342,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), this);
                     return;
                 }
-
                 if(isTherapistUser){
                     updateBehaviourHealthService();
                 }else{
@@ -361,12 +365,79 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         public void startNextActivity(){
             if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveReasonForVisit.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-                checkMedicalCompletion();
+                Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLivePediatric.class);
+                medicalIntent.putExtra("firstTimeUser", "true");
+                startActivity(medicalIntent);
+                MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
             }else{
                 Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                 startActivity(medicalIntent);
                 MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
             }
+        }
+
+        /**
+         * Checks user medical history aggregation details.
+         * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
+         * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+         * Based on the server response the corresponding action will be triggered.
+         */
+
+        private void checkMedicalDateHistory() {
+            showProgress();
+            NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    hideProgress();
+                    if(response != null){
+                        Log.e("Server response", response.toString());
+                    }
+                    try {
+                        if(response.get("health_last_update") instanceof Number){
+                            long num=response.getLong("health_last_update");
+                            int length = (int) Math.log10(num) + 1;
+                            System.out.println(length);
+                        }else if(response.get("health_last_update") instanceof CharSequence){
+                            if(response.getString("health_last_update").equals("")){
+                            }
+                        }
+                        if(response.getString("health_last_update").length() == 0){
+                            isNewUser = true;
+                        }else{
+                            if(response.has("health_last_update")){
+                                long time = response.getLong("health_last_update");
+                                if(time != 0){
+                                    Calendar calendar = TimeZoneUtils.getCalendarWithOffset(MDLiveReasonForVisit.this);
+                                    calendar.setTimeInMillis(time * 1000);
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                                    dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveReasonForVisit.this));
+                                    isNewUser = false;
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        isNewUser = true;
+                    }
+                    if(isNewUser){
+                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveBehaviouralHealthActivity.class);
+                        medicalIntent.putExtra("from_sav", true);
+                        medicalIntent.putExtra("isNewUser", true);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    }else{
+                        startNextActivity();
+                    }
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    medicalCommonErrorResponseHandler(error);
+                }
+            };
+            MedicalHistoryLastUpdateServices services = new MedicalHistoryLastUpdateServices(MDLiveReasonForVisit.this, null);
+            services.getMedicalHistoryLastUpdateRequest(successCallBackListener, errorListener);
         }
 
 

@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
 import android.app.DatePickerDialog;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -9,9 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
-
+import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -26,13 +26,21 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import java.util.Calendar;
 
 
-public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity {
+public class MDLiveBehaviouralHealthActivity extends MedicalHistoryPluginActivity {
+    boolean isFromSAVflow = false, isNewUser = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_history_layout);
         clearMinimizedTime();
 
+        locationService = new LocationCooridnates(getApplicationContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+        if(getIntent() != null && getIntent().hasExtra("from_sav")){
+            isFromSAVflow = true;
+            isNewUser = true;
+        }
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 
@@ -49,10 +57,21 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         }
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(com.mdlive.embedkit.R.id.dash_board__main_container, MDLiveBehaviouralHealthFragment.newInstance(), MAIN_CONTENT).
-                    commit();
+            if(isFromSAVflow){
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(com.mdlive.embedkit.R.id.dash_board__main_container,
+                                MDLiveBehaviouralHealthFragment.newInstance(isFromSAVflow, isNewUser), MAIN_CONTENT).
+                        commit();
+
+            }else{
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(com.mdlive.embedkit.R.id.dash_board__main_container,
+                                MDLiveBehaviouralHealthFragment.newInstance(), MAIN_CONTENT).
+                        commit();
+
+            }
 
             getSupportFragmentManager().
                     beginTransaction().
@@ -74,6 +93,64 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveBehaviouralHealthFragment) {
             ((MDLiveBehaviouralHealthFragment) fragment).updateBehaviourHealthService();
+        }
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+
+        switch (position) {
+            // Home
+            case 0:
+                onHomeClicked();
+                break;
+
+            // See a Doctor
+            case 1:
+                onSeeADoctorClicked();
+                break;
+
+            // MDLive My Health
+            case 2:
+                startActivityWithClassName(MedicalHistoryActivity.class);
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                onMessageClicked();
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 7:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share
+            case 8:
+                shareApplication();
+                break;
         }
     }
 
