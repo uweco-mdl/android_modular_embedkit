@@ -28,7 +28,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,6 +36,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
+import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifeStyleFragment;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * TODO
  */
-public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnGoogleFitSyncResponse {
+public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnGoogleFitSyncResponse, MedicalHistoryFragment.OnGoogleFitGetData {
 
     public static final String TAG = "MYHEALTH";
     private static final String SELECTED_TAB = "slected_tab";
@@ -136,6 +136,14 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    public void getGoogleFitData(String data) {
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).mHealthSyncContainer != null){
+            ((MedicalHistoryFragment)frag).setFitDataEvent(data);
+        }
+    }
+
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
@@ -175,6 +183,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
      */
     public void pediatricOnClick(View view) {
         Intent i = new Intent(getBaseContext(), MDLivePediatric.class);
+        i.putExtra("FROM_MEDICAL_HISTORY",true);
         startActivity(i);
         MdliveUtils.startActivityAnimation(MedicalHistoryActivity.this);
     }
@@ -225,8 +234,8 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     public void SyncAction(View view){
         Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
-        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).healthSyncContainerLayout != null){
-            ((MedicalHistoryFragment)frag).healthSyncContainerLayout.setVisibility(View.GONE);
+        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).mHealthSyncContainer != null){
+            ((MedicalHistoryFragment)frag).mHealthSyncContainer.setVisibility(View.GONE);
         }
         SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
@@ -238,8 +247,8 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
     public void SyncNotNowAction(View view){
         Fragment frag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
-        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).healthSyncContainerLayout != null){
-            ((MedicalHistoryFragment)frag).healthSyncContainerLayout.setVisibility(View.GONE);
+        if(frag!=null && frag instanceof MedicalHistoryFragment && ((MedicalHistoryFragment)frag).mHealthSyncContainer != null){
+            ((MedicalHistoryFragment)frag).mHealthSyncContainer.setVisibility(View.GONE);
         }
 
         SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -265,10 +274,8 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     protected void onResume() {
         super.onResume();
         if(getIntent().hasExtra("FROM_PHARMACY")){
-            Log.d("On Resume - ", "From Pharmacy");
             getViewPager().setCurrentItem(0);
         }else if(getIntent().hasExtra("FROM_SELECTION")){
-            Log.d("On Resume - ", "From Pharmacy");
             reloadSlidingMenu();
             getViewPager().setCurrentItem(1);
         }
@@ -285,7 +292,13 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == GoogleFitUtils.getInstance().REQUEST_OAUTH){
-            GoogleFitUtils.getInstance().buildFitnessClient(false,null,this);
+            GoogleFitUtils.getInstance().authInProgress = false;
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (! GoogleFitUtils.getInstance().mClient.isConnecting() && ! GoogleFitUtils.getInstance().mClient.isConnected()) {
+                    GoogleFitUtils.getInstance().mClient.connect();
+                }
+            }
         }
     }
 }

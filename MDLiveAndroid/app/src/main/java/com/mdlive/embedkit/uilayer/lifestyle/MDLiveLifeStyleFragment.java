@@ -170,24 +170,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             mHeightInEditText.setText(response.optInt("height_inches", 0) + "");
             mWeightLbsEditText.setText(response.optInt("weight", 0) + "");
             setBMIText();
-            SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
-            if(userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
-                if((!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0")) && mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "","0"},getActivity());
-                    hideProgressDialog();
-                } else if((mHeightFtEditText.getText().toString().equals("0") || mHeightFtEditText.getText().toString().equals("0")) && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
-                    hideProgressDialog();
-                } else if(!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0") && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
-                    hideProgressDialog();
-                } else {
-                    GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
-                }
-            } else {
-                hideProgressDialog();
-            }
+            hideProgressDialog();
 
             JSONArray lifestyleConditionArray = response.getJSONArray("life_style_conditions");
             JSONObject jsonObject;
@@ -214,11 +197,9 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
 
         try {
             final JSONObject personalInfoJSONObject = new JSONObject();
-
             personalInfoJSONObject.put("height_feet", mHeightFtEditText.getText().toString().trim());
             personalInfoJSONObject.put("height_inches", mHeightInEditText.getText().toString().trim());
             personalInfoJSONObject.put("weight", mWeightLbsEditText.getText().toString().trim());
-
             requestJSON.put("personal_info", personalInfoJSONObject);
 
             final JSONArray lifeStyleConditionJSONArray = new JSONArray();
@@ -232,6 +213,21 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             }
 
             requestJSON.put("life_style_conditions", lifeStyleConditionJSONArray);
+            SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+            String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+            if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+                if((!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0")) && mWeightLbsEditText.getText().toString().equals("0")){
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "","0"},getActivity());
+                    hideProgressDialog();
+                } else if((mHeightFtEditText.getText().toString().equals("0") || mHeightFtEditText.getText().toString().equals("0")) && !mWeightLbsEditText.getText().toString().equals("0")){
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                    hideProgressDialog();
+                } else if(!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0") && !mWeightLbsEditText.getText().toString().equals("0")){
+                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                    hideProgressDialog();
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -316,8 +312,10 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                     heightInches = Float.parseFloat(heightInValue);
                 }
                 float feetValue = Float.parseFloat(heightFtValue) + (heightInches / 12);
-                bmiValue = (Float.parseFloat(weightValue) * 4.88) / (feetValue * feetValue);
-                mBmiText.setText(Math.round(bmiValue) + "");
+                if((int)feetValue != 0) {
+                    bmiValue = (Float.parseFloat(weightValue) * 4.88) / (feetValue * feetValue);
+                    mBmiText.setText(Math.round(bmiValue) + "");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -375,8 +373,11 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
 
                     if(obj.has("height") && !obj.getString("height").equals("0")){
                         double[] heightValue = GoogleFitUtils.convertMetersToFeet(Double.parseDouble(obj.getString("height")));
-                        mHeightFtEditText.setText((int) heightValue[0]+ "");
-                        mHeightInEditText.setText((int) heightValue[1]+ "");
+                        if((int) heightValue[0]>0) {
+                            mHeightFtEditText.setText((int) heightValue[0] + "");
+                        }
+                        mHeightInEditText.setText((int) heightValue[1] + "");
+
                     }
                 } catch (JSONException e) {
                     hideProgressDialog();

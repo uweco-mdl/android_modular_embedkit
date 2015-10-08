@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,16 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.lifestyle.Model;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.lifestyle.LifeStyleUpdateServices;
+import com.mdlive.unifiedmiddleware.services.myhealth.HealthKitServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
@@ -57,12 +62,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     private Button btnSaveContinue;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup;
-
+    public View mHealthSyncContainer, mHealthSyncCv;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private boolean isFirstTime = true;
-    View healthSyncContainerLayout ,healthSyncCv;
 
     private OnGoogleFitSyncResponse mListener;
 
@@ -109,20 +113,16 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-        if (!userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true)) {
-            view.findViewById(R.id.HealthSyncContainer).setVisibility(View.GONE);
-        } else if(dependentId != null){
-            view.findViewById(R.id.HealthSyncContainer).setVisibility(View.GONE);
+        mHealthSyncContainer = view.findViewById(R.id.HealthSyncContainer);
+        mHealthSyncCv = view.findViewById(R.id.HealthSyncCv);
+        if(dependentId == null){
+            getHealthKitSyncStatus();
+        } else {
+            mHealthSyncCv.setVisibility(View.GONE);
+            mHealthSyncContainer.setVisibility(View.GONE);
         }
 
-        if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false) || dependentId != null) {
-            view.findViewById(R.id.HealthSyncCv).setVisibility(View.GONE);
-        }
-
-        healthSyncContainerLayout = view.findViewById(R.id.HealthSyncContainer);
-        healthSyncCv = view.findViewById(R.id.HealthSyncCv);
         view.findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
         PediatricAgeCheckGroup_1 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup1));
         PediatricAgeCheckGroup_2 = ((RadioGroup) view.findViewById(R.id.pediatricAgeGroup2));
@@ -133,6 +133,51 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             checkMedicalDateHistory(view);
         }
 
+    }
+
+    private void getHealthKitSyncStatus() {
+        showProgressDialog();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    Log.d("HealthKit Response", response.toString());
+                    if(response.optString("message").contains("never synced") || response.optString("message").contains("synced with this")){
+                        SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+                        String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+                        if (!userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true)) {
+                            Log.d("HealthKit Response", "Health Kit Called---");
+                            GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
+                            mHealthSyncContainer.setVisibility(View.GONE);
+                        } else if(dependentId != null){
+                            mHealthSyncContainer.setVisibility(View.GONE);
+                        } else {
+                            mHealthSyncContainer.setVisibility(View.VISIBLE);
+                        }
+
+                        if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false) || dependentId != null) {
+                            mHealthSyncCv.setVisibility(View.GONE);
+                        } else {
+                            mHealthSyncCv.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("HealthKit Response", error.networkResponse.toString() + " -- ");
+                mHealthSyncCv.setVisibility(View.GONE);
+                mHealthSyncContainer.setVisibility(View.GONE);
+            }
+        };
+        HealthKitServices services = new HealthKitServices(getActivity(), getProgressDialog());
+        services.registerHealthKitSync(successCallBackListener, errorListener);
     }
 
     @Override
@@ -191,22 +236,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                     }
                     if (response.getString("health_last_update").length() == 0) {
                         isNewUser = true;
-                    } /*else {
-                        if (response.has("health_last_update")) {
-                            long time = response.getLong("health_last_update");
-                            if (time != 0) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTimeInMillis(time * 1000);
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
-                                ((LinearLayout) view.findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
-                                ((TextView) view.findViewById(R.id.updateInfoText)).setText(
-                                        getResources().getString(R.string.mdl_last_update_txt) +
-                                                dateFormat.format(calendar.getTime())
-                                );
-                                isNewUser = false;
-                            }
-                        }
-                    }*/
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     isNewUser = true;
@@ -389,6 +419,18 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton) {
             ((RadioButton) view.findViewById(R.id.conditionYesButton)).setChecked(false);
         }
+    }
+
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     *
+     */
+    public interface OnGoogleFitGetData {
+        public void getGoogleFitData(String data);
     }
 
 
@@ -637,16 +679,99 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     }
 
     public void setFitStatus(String data) {
-        healthSyncContainerLayout.setVisibility(View.GONE);
+        mHealthSyncContainer.setVisibility(View.GONE);
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userPrefs.edit();
         editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
         editor.commit();
         if (data.equalsIgnoreCase("success")) {
-            healthSyncCv.setVisibility(View.GONE);
+            mHealthSyncCv.setVisibility(View.GONE);
             editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
             editor.commit();
+            GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
+            updateHealthSyncStatus();
         }
+    }
+
+    private void updateLifeStyleWithHealthKitData(int weight, int heightFt, int heightIn) {
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+            }
+        };
+        final JSONObject requestJSON = new JSONObject();
+
+        try {
+            final JSONObject personalInfoJSONObject = new JSONObject();
+            if(heightFt != 0) {
+                personalInfoJSONObject.put("height_feet", heightFt + "");
+            }
+            if(heightIn != 0){
+                personalInfoJSONObject.put("height_inches", heightIn + "");
+            }
+            if(weight != 0){
+                personalInfoJSONObject.put("weight", weight + "");
+            }
+            requestJSON.put("personal_info", personalInfoJSONObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        LifeStyleUpdateServices lifeStyleUpdateServices = new LifeStyleUpdateServices(getActivity(), getProgressDialog());
+        lifeStyleUpdateServices.postLifeStyleServices(requestJSON, responseListener, errorListener);
+    }
+
+    private void updateHealthSyncStatus() {
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        };
+        HealthKitServices services = new HealthKitServices(getActivity(), getProgressDialog());
+        services.addHealthKitSync(successCallBackListener, errorListener);
+    }
+
+    public void setFitDataEvent(final String data){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    int weight = 0, heightFt = 0, heightIn = 0;
+                    hideProgressDialog();
+                    JSONObject obj = new JSONObject(data);
+                    if(obj.has("weight") && !obj.getString("weight").equals("0")){
+                        weight = (int) Math.floor(Double.parseDouble(obj.getString("weight")));
+                    }
+
+                    if(obj.has("height") && !obj.getString("height").equals("0")){
+                        double[] heightValue = GoogleFitUtils.convertMetersToFeet(Double.parseDouble(obj.getString("height")));
+                        if((int) heightValue[0]>0) {
+                            heightFt = (int) heightValue[0];
+                        }
+                        heightIn = (int) heightValue[1];
+                    }
+                    updateLifeStyleWithHealthKitData(weight,heightFt,heightIn);
+                } catch (JSONException e) {
+                    hideProgressDialog();
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
     }
 }

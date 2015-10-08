@@ -33,9 +33,11 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MedicalHistoryPluginActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -594,6 +596,15 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
             }
         };
+        SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        EditText weightEt = (EditText) findViewById(R.id.edt_birthweight);
+        if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+            if((weightEt.getText().toString().equals("0"))){
+                GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(weightEt.getText().toString()) + ""},this);
+            }
+        }
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
         getProfileData.doPostPediatricBelowTwo(new Gson().toJson(postParams), successListener, errorListener);
     }

@@ -46,6 +46,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.ChangeProfilePicService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
+import com.mdlive.unifiedmiddleware.services.myhealth.HealthKitServices;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -267,15 +268,11 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 SharedPreferences sharedPrefs = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPrefs.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = userPrefs.edit();
-                if(compoundButton.isChecked()){
-                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
-                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
-                    editor.commit();
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,null,getActivity());
-                } else {
+                if(!compoundButton.isChecked()){
                     editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true);
                     editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false);
                     editor.commit();
+                    deleteHealthKitData();
                 }
             }
         });
@@ -292,6 +289,21 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         } else {
             view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.VISIBLE);
         }
+    }
+
+    private void deleteHealthKitData() {
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        };
+        HealthKitServices services = new HealthKitServices(getActivity(), getProgressDialog());
+        services.deleteHealthKitSync(successCallBackListener, errorListener);
     }
 
     @Override
