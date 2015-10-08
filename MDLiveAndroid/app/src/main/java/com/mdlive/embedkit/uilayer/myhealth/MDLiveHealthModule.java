@@ -80,7 +80,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public TextView surgeryName, surgeryYear, errorText;
     public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
-            "Once","Twice","Three times","Four times", "Five times", "Six times"
+            "once","twice","three times","four times", "five times", "six times"
     };
     String[] modesList =  new String[]{
             "Daily", "Hourly", "Weekly","Monthly"
