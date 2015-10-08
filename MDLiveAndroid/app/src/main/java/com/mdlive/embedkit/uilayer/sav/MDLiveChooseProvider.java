@@ -105,7 +105,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
        /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider).toUpperCase());
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
 
         Initailization();
         ChooseProviderResponseList();

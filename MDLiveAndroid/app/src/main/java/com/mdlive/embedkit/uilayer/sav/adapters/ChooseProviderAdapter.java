@@ -86,23 +86,6 @@ public class ChooseProviderAdapter extends BaseAdapter {
                     context.startActivity(seeFirstAvailableDocIntent);
                 }
             });
-           /* ((ImageView) row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, MDLiveSearchProvider.class);
-                    ((Activity) context).startActivityForResult(intent, 1);
-                    MdliveUtils.hideSoftKeyboard(((Activity) context));
-                }
-            });*/
-//            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    context.getApplicationContext().startActivity(intent);
-//                    MdliveUtils.hideSoftKeyboard(((Activity) context));
-//                }
-//            });
         } else {
             if (row == null)
                 inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
