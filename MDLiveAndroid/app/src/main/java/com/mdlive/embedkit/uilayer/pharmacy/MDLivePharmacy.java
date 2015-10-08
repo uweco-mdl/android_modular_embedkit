@@ -230,7 +230,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
                     if (jobj.has("final_amount")) {
-                        if (Integer.parseInt(jobj.getString("final_amount")) > 0) {
+                        if (!jobj.getString("final_amount").equals("0") && !jobj.getString("final_amount").equals("0.00")) {
                             Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
                             i.putExtra("final_amount", jobj.getString("final_amount"));
                             startActivity(i);

@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -247,9 +246,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         });
-
+        response = getArguments().getString("Response");
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
-            response = getArguments().getString("Response");
             if (response != null) {
 
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
@@ -333,10 +331,17 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     e.printStackTrace();
                 }
             }
-        }/*else{
 
-            changeAddress.setChecked(true);
-        }*/
+        }else if(response!=null){
+            try {
+                JSONObject myProfile = new JSONObject(response);
+                if (myProfile.optBoolean("allow_cc_scan", false)) {
+                    mScanCardBtn.setVisibility(View.VISIBLE);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
@@ -498,7 +503,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         if (isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
             if(!MdliveUtils.validateZipCode(zip)){
-                Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_valid_zip), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
             }else {
             try {
                 JSONObject parent = new JSONObject();
@@ -526,7 +536,13 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            MdliveUtils.showDialog(getActivity(), "All fields are required", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
         }
     }
 
@@ -572,8 +588,13 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
             dismissDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+//            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            MdliveUtils.showDialog(getActivity(), response.getString("message"), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -625,6 +646,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
 
     protected void setCardNumber(String number){
-        myAccountHostedPCI.evaluateJavascript("javascript:setCardNumber('"+ number + "');",null);
+        String javascriptString = "javascript:setCardNumber('"+ number + "');";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            myAccountHostedPCI.evaluateJavascript(javascriptString,null);
+        } else {
+            myAccountHostedPCI.loadUrl(javascriptString);
+        }
     }
 }

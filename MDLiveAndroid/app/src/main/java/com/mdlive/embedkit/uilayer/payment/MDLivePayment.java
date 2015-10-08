@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.payment;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -33,7 +34,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.myaccounts.CreditCardInfoFragment;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
@@ -898,9 +898,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface arg0) {
-                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                    alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
                     if(errorPhoneNumber!=null){
-                        alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                        alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
                     }
                 }
             });
@@ -915,23 +915,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == IdConstants.CREDITCARD_SCAN) {
-            String resultStr;
-            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+            String resultStr = "";
+            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT) && requestCode != Activity.RESULT_CANCELED) {
                 CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 resultStr = scanResult.cardNumber;
-                   /* if (scanResult.isExpiryValid()) {
-                        resultStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                    }
-*/
+                String javascriptString = "javascript:setCardNumber('" + resultStr + "');";
 
-            } else {
-                resultStr = "";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    HostedPCI.evaluateJavascript(javascriptString, null);
+                } else {
+                    HostedPCI.loadUrl(javascriptString);
+                }
             }
-            HostedPCI.evaluateJavascript("javascript:setCardNumber('"+ resultStr + "');",null);
-
         }
-
         super.onActivityResult(requestCode, resultCode, intent);
+
     }
 
 

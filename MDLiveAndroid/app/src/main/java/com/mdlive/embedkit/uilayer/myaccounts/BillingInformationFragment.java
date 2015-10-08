@@ -78,7 +78,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
 
                     changePhone.putExtra("Fragment_Name1", "ADD CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View", "Add");
-                    changePhone.putExtra("Credit_Card_Response", "Add_New");
+                    changePhone.putExtra("Credit_Card_Response", myProfile.toString());
                 } else {
                     changePhone.putExtra("Fragment_Name1", "REPLACE CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View", "replace");

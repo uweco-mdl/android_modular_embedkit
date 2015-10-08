@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -241,20 +242,13 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == IdConstants.CREDITCARD_SCAN) {
             String resultStr;
-            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT) && resultCode != Activity.RESULT_CANCELED) {
                 CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 resultStr = scanResult.cardNumber;
-                   /* if (scanResult.isExpiryValid()) {
-                        resultStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                    }
-*/
-
-            } else {
-                resultStr = "";
-            }
-            android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
-            if(fragment!=null && fragment instanceof CreditCardInfoFragment){
-                ((CreditCardInfoFragment) fragment).setCardNumber(resultStr);
+                android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
+                if(fragment!=null && fragment instanceof CreditCardInfoFragment){
+                    ((CreditCardInfoFragment) fragment).setCardNumber(resultStr);
+                }
             }
 
         }

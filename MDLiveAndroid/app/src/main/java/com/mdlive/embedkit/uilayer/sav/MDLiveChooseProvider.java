@@ -489,12 +489,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Log.e("affiliationsArray-->", groupAffiliations);
             }
             try {
-                long nextAvailabilityTimeStamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
-
-//                if(responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull())
-//                    strDate = IntegerConstants.DATE_FLAG;
-//                else
-//                    strDate = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
 
                 if(!responArray.get(i).getAsJsonObject().get("next_availability").isJsonNull()){
                     shared_timestamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
