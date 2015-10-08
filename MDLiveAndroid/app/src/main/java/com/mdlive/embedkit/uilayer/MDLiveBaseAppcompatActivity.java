@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
+import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
@@ -28,8 +29,10 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
+import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -196,7 +199,57 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
      * @param position
      */
     @Override
-    public abstract void onNavigationDrawerItemSelected(int position);
+    public void onNavigationDrawerItemSelected(int position) {
+        getDrawerLayout().closeDrawer(GravityCompat.START);
+        getDrawerLayout().closeDrawer(GravityCompat.END);
+
+        switch (position) {
+            // Home
+            case 0:
+                onHomeClicked();
+                break;
+
+            // See a Doctor
+            case 1:
+                onSeeADoctorClicked();
+                break;
+
+            // MDLive My Health
+            case 2:
+                startActivityWithClassName(MedicalHistoryActivity.class);
+                break;
+
+            // MDLIVE Assist
+            case 3:
+                MdliveUtils.showMDLiveAssistDialog(this);
+                break;
+
+            // Message Center
+            case 4:
+                onMessageClicked();
+                break;
+
+            // Symptom Checker
+            case 5:
+                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                break;
+
+            // My Accounts
+            case 6:
+                startActivityWithClassName(MyAccountActivity.class);
+                break;
+
+            // Support
+            case 7:
+                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
+                break;
+
+            // Share
+            case 8:
+                shareApplication();
+                break;
+        }
+    }
 
     public void onSignoutClicked(View view) {
         MdliveUtils.clearNecessarySharedPrefernces(getApplicationContext());
