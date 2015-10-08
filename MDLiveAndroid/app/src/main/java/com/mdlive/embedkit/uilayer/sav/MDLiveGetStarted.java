@@ -123,8 +123,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
-
-
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -164,12 +162,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         findViewById(R.id.txt_alert_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-                    findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
-                } else {
-                    findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
-                    showSettingsAlert();
-                }
+                showSettingsAlert();
             }
         });
     }
@@ -718,8 +711,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     NavigationDrawerFragment.getInstance().handleServiceResponseForDependent(response);
                 }
                 createAndSaveUser(response, depenedentId);
-                //((MDLiveDashBoardFragment.OnUserSelectionChanged).
-                //upldateUserData(response);
+                getCurrentLocation();
             }
         };
 
@@ -1262,39 +1254,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             users = UserBasicInfo.getUsersAsDependentUser(getBaseContext());
         }
 
-        /*MDLiveDashBoardFragment.OnUserSelectionChanged) mOnUserSelectionChanged;
-        MDLiveDashBoardFragment.OnNotificationCliked mOnNotificationCliked;
-
-        mOnUserSelectionChanged.onDependentSelected(selectedUser);
-
-        mOnUserSelectionChanged.onPrimarySelected(selectedUser);*/
-
-
-       /* if (userBasicInfo.getPrimaryUser()) {
-            users = UserBasicInfo.getUsersAsDependentUser(getBaseContext());
-        } else {
-            users = UserBasicInfo.getUsersAsPrimaryUser(getBaseContext());
-        }*/
-
-   /*     users.add(new User(userBasicInfo.getPersonalInfo().getFirstName() + " " + userBasicInfo.getPersonalInfo().getLastName(),
-                        userBasicInfo.getPersonalInfo().getImageUrl(),
-                        "", User.MODE_PRIMARY)*/
-
-        Log.e("Users", users.toString() + "");
-
         if (users != null && users.size() > 0) {
             final User user = users.get(0);
-
-            Log.e("users.get(0)", users.get(0).toString()+"");
-
-            Log.e("I am at ", "user 0");
             if (user != null) {
                 user.saveSelectedUser(getBaseContext());
-                Log.e("I am at ", "user 2");
                 final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
                 if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
                     ((NavigationDrawerFragment) fragment).reload();
-                    Log.e("I am at ", "user 3");
                 }
             }
         }
@@ -1414,9 +1380,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 locationService.startTrackingLocation(MDLiveGetStarted.this);
                 findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
             } else {
-                hideProgress();
                 showSettingsAlert();
                 findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+                hideProgress();
             }
         } catch (Exception e) {
             e.printStackTrace();
