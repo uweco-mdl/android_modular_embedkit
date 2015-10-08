@@ -131,6 +131,7 @@ public class MDLiveConfig {
     public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
     public static final String GEOCODE_API_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/";
     public static final String GEO_TARGET_DETAILS = "/geolocations/geo_target_details?ip_address=";
+    public static final String URL_HEALTH_KIT_SYNC = "/healthkit_registrations/";
 
     static {
         System.loadLibrary("app");
@@ -303,6 +304,7 @@ public class MDLiveConfig {
         AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
         AppSpecificConfig.GEOCODE_API_ENDPOINT = GEOCODE_API_ENDPOINT;
         AppSpecificConfig.GEO_TARGET_DETAILS = GEO_TARGET_DETAILS;
+        AppSpecificConfig.URL_HEALTH_KIT_SYNC = URL_HEALTH_KIT_SYNC;
     }
 
     static native String getProdApiKeyFromNative();
