@@ -750,6 +750,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
                 accessModeCall("video");
                 saveConsultationType("Video");
+                saveTimeSlotToNowMode();
             }
 
 
@@ -770,6 +771,14 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 saveConsultationType("Phone");
             }
         });
+    }
+
+
+    private void saveTimeSlotToNowMode() {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.SELECTED_TIMESLOT, "Now");
+        editor.commit();
     }
 
     private void accessModeCall(String accessType) {
@@ -805,6 +814,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                saveTimeSlotToNowMode();
             }
         });
 
