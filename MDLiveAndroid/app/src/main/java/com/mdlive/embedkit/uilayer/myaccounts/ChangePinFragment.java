@@ -371,7 +371,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             hideProgressDialog();
 
             MdliveUtils.setLockType(getActivity(), getActivity().getString(R.string.mdl_pin));
-            Toast.makeText(getActivity(),"Pin Changed Successfully",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(),"Pin Changed Successfully",Toast.LENGTH_SHORT).show();
             getActivity().finish();
 
         } catch (Exception e) {
@@ -393,10 +393,10 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("passcode", oldPin);
                 jsonObject.put("new_passcode", confirmPin);
-                jsonObject.put("device_token", sharedPref.getString("Device_Token", "0") );
+                jsonObject.put("device_token", MdliveUtils.getDeviceToken(getActivity()));
                 Log.i("params", jsonObject.toString());
                 if (update) {
-                    loadConfirmPin(confirmPin);
+                    createPinForAccount(confirmPin);
                 } else {
                     loadPinService(jsonObject.toString());
                 }
@@ -409,7 +409,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
         }
     }
 
-    public void loadConfirmPin(final String confirmPin) {
+    public void createPinForAccount(final String confirmPin) {
         try {
             //final SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
             final JSONObject jsonObject = new JSONObject();
