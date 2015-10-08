@@ -40,60 +40,6 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        getDrawerLayout().closeDrawer(GravityCompat.START);
-        getDrawerLayout().closeDrawer(GravityCompat.END);
-
-        switch (position) {
-            // Home
-            case 0:
-                onHomeClicked();
-                break;
-
-            // See a Doctor
-            case 1:
-                //startActivityWithClassName(MDLiveGetStarted.class);
-                onSeeADoctorClicked();
-                break;
-
-            // MDLive My Health
-            case 2:
-                startActivityWithClassName(MedicalHistoryActivity.class);
-                break;
-
-            // MDLIVE Assist
-            case 3:
-                MdliveUtils.showMDLiveAssistDialog(this);
-                break;
-
-            // Message Center
-            case 4:
-                onMessageClicked();
-                break;
-
-            // Symptom Checker
-            case 5:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 6:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 7:
-                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
-                break;
-
-            // Share
-            case 8:
-                shareApplication();
-                break;
-        }
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         LocalizationSingleton.localiseLayout(this, (ViewGroup) ((ViewGroup) this

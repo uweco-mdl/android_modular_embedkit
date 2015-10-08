@@ -66,61 +66,6 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
         }
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        getDrawerLayout().closeDrawer(GravityCompat.START);
-        getDrawerLayout().closeDrawer(GravityCompat.END);
-
-        switch (position) {
-            // Home
-            case 0:
-                onHomeClicked();
-                break;
-
-            // See a Doctor
-            case 1:
-                onSeeADoctorClicked();
-                break;
-
-            // MDLive My Health
-            case 2:
-                startActivityWithClassName(MedicalHistoryActivity.class);
-                break;
-
-            // MDLIVE Assist
-            case 3:
-                MdliveUtils.showMDLiveAssistDialog(this);
-                break;
-
-            // Message Center
-            case 4:
-                onMessageClicked();
-                break;
-
-            // Symptom Checker
-            case 5:
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 6:
-                startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 7:
-                startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
-                break;
-
-            // Share
-            case 8:
-                shareApplication();
-                break;
-        }
-    }
-
-
-
     /**
      *
      * The fragments are added into viewpager.
