@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.payment;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -916,7 +917,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == IdConstants.CREDITCARD_SCAN) {
             String resultStr = "";
-            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+            if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT) && requestCode != Activity.RESULT_CANCELED) {
                 CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 resultStr = scanResult.cardNumber;
                 String javascriptString = "javascript:setCardNumber('" + resultStr + "');";
