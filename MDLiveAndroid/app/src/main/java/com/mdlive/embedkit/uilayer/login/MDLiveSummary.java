@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -26,7 +27,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.SummaryService;
 
 public class MDLiveSummary extends MDLiveBaseActivity {
-
+    EditText mFeedbackSummaryEt;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_summary).toUpperCase());
-
+        mFeedbackSummaryEt = ((EditText) findViewById(R.id.txt_feedback_summary));
         setProgressBar(findViewById(R.id.progressBar));
         TextView txtDocName=(TextView)findViewById(R.id.txtDoctorName);
 
@@ -90,6 +91,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     public void rightBtnOnClick(View view){
         showProgress();
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
+        String feedbackSummaryTxt = mFeedbackSummaryEt.getText().toString() + "";
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
@@ -106,7 +108,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             }
         };
         SummaryService summaryService = new SummaryService(this, getProgressDialog());
-        summaryService.sendRating(rating,successListener,errorListner );
+        summaryService.sendRating(rating,feedbackSummaryTxt,successListener,errorListner );
     }
 
     /**
@@ -130,6 +132,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     public void sendRating(View view){
         showProgress();
         String rating = ((int)((RatingBar)findViewById(R.id.ratingBar)).getRating()) + "";
+        String feedbackSummaryTxt = mFeedbackSummaryEt.getText().toString() + "";
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
@@ -146,6 +149,6 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             }
         };
         SummaryService summaryService = new SummaryService(this, getProgressDialog());
-        summaryService.sendRating(rating,successListener,errorListner );
+        summaryService.sendRating(rating,feedbackSummaryTxt,successListener,errorListner );
     }
 }
