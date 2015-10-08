@@ -416,7 +416,12 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             List<String> tmpTimezoneAbbr = Arrays.asList(timeZoneAbbr);
             final CharSequence[] items = getActivity().getResources().getStringArray(R.array.mdl_timezone);
             CharSequence tmpTimeZone = items[tmpTimezoneAbbr.indexOf(timeZone) + 1];
-            mTimeZone.setText(tmpTimeZone);
+            SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            if(sharedPref.getBoolean(PreferenceConstants.TIMEZONE_SET_AUTOMATIC, false)){
+                mTimeZone.setText(items[0]);
+            }else {
+                mTimeZone.setText(tmpTimeZone);
+            }
             mEmail.setText(email);
 
             if (getActivity() != null) {
@@ -631,7 +636,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                     jsonObject.put("language_preference", changeLangTv.getText().toString());
                     String timeZone = fullTimezone.indexOf(mTimeZone.getText()) == 0 ? TimeZoneUtils.getDeviceTimeZone() : timeZoneAbbr[fullTimezone.indexOf(mTimeZone.getText()) - 1];
                     jsonObject.put("timezone", timeZone);
-//                    jsonObject.put("", mPreferredSignIn.getText().toString());
+                    // Set Automatic timezone fix
+                    SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                    sharedPref.edit().putBoolean(PreferenceConstants.TIMEZONE_SET_AUTOMATIC, fullTimezone.indexOf(mTimeZone.getText()) == 0).commit();
+
 
                     parent.put("member", jsonObject);
                     loadProfileInfo(parent.toString(),fromTimezone);
