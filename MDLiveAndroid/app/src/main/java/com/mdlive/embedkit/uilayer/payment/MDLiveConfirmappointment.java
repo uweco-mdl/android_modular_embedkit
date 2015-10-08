@@ -100,7 +100,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.e("Highlight ---> 6", "********");
                     Log.e("confirm appmt res---->", response.toString());
                     hideProgress();
                     try {
@@ -230,7 +229,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
             params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
 
-            params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
+            params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
             params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
 //        if (promoCode != null && !promoCode.isEmpty()) {

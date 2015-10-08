@@ -351,6 +351,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 }else{
                     editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
                 }
+                editor.commit();
             }
         });
 
@@ -645,6 +646,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
             }
         }
+        editor.commit();
     }
 
     /**

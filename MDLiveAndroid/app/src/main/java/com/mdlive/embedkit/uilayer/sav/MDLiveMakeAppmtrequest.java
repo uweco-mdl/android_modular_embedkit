@@ -163,7 +163,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             params1.put("preferred_time", strnxtavailable);//
             params.put("alternate_visit_option","No Answer");
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            params.put("do_you_have_primary_care_physician",settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
+            params.put("do_you_have_primary_care_physician",settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
             params.put("appointment",params1);
             LoadappmtRequest();
             saveDateAndTime();
