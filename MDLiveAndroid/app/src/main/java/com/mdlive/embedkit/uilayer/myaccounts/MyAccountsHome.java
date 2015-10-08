@@ -302,17 +302,10 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
             if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 resultStr = scanResult.cardNumber;
-                   /* if (scanResult.isExpiryValid()) {
-                        resultStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                    }
-*/
-
-            } else {
-                resultStr = "";
-            }
-            android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
-            if(fragment!=null && fragment instanceof CreditCardInfoFragment){
-                ((CreditCardInfoFragment) fragment).setCardNumber(resultStr);
+                android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
+                if(fragment!=null && fragment instanceof CreditCardInfoFragment){
+                    ((CreditCardInfoFragment) fragment).setCardNumber(resultStr);
+                }
             }
 
         }

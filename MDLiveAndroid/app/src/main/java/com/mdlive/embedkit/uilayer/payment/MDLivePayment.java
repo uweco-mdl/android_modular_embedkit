@@ -915,23 +915,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == IdConstants.CREDITCARD_SCAN) {
-            String resultStr;
+            String resultStr = "";
             if (intent != null && intent.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 CreditCard scanResult = intent.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 resultStr = scanResult.cardNumber;
-                   /* if (scanResult.isExpiryValid()) {
-                        resultStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                    }
-*/
+                String javascriptString = "javascript:setCardNumber('" + resultStr + "');";
 
-            } else {
-                resultStr = "";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    HostedPCI.evaluateJavascript(javascriptString, null);
+                } else {
+                    HostedPCI.loadUrl(javascriptString);
+                }
             }
-            HostedPCI.evaluateJavascript("javascript:setCardNumber('"+ resultStr + "');",null);
-
         }
-
         super.onActivityResult(requestCode, resultCode, intent);
+
     }
 
 

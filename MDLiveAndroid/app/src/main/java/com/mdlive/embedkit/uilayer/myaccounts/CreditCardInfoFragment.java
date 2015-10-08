@@ -247,9 +247,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         });
-
+        response = getArguments().getString("Response");
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
-            response = getArguments().getString("Response");
             if (response != null) {
 
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
@@ -333,10 +332,17 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     e.printStackTrace();
                 }
             }
-        }/*else{
 
-            changeAddress.setChecked(true);
-        }*/
+        }else if(response!=null){
+            try {
+                JSONObject myProfile = new JSONObject(response);
+                if (myProfile.optBoolean("allow_cc_scan", false)) {
+                    mScanCardBtn.setVisibility(View.VISIBLE);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
 
         mCardExpirationMonth.setOnClickListener(new View.OnClickListener() {
@@ -625,6 +631,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
 
     protected void setCardNumber(String number){
-        myAccountHostedPCI.evaluateJavascript("javascript:setCardNumber('"+ number + "');",null);
+        String javascriptString = "javascript:setCardNumber('"+ number + "');";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            myAccountHostedPCI.evaluateJavascript(javascriptString,null);
+        } else {
+            myAccountHostedPCI.loadUrl(javascriptString);
+        }
     }
 }
