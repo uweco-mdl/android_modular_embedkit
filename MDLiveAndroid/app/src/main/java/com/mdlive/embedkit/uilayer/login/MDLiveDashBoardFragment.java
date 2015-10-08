@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,11 +19,13 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
+import com.mdlive.embedkit.uilayer.payment.MDLiveStartVisit;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.OncallAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -286,6 +289,42 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         EmailConfirmationService service = new EmailConfirmationService(getActivity(), null);
         service.emailConfirmation(successCallBackListener, errorListener, null);
     }
+
+
+    /***
+     * This method will be invoked to show the notification in dashboard only for oncall Pending visits.
+     * @param appointment--Object carries appointment details.
+     */
+
+    public void showOnCallNotification(final OncallAppointment appointment){
+        logD("Appointment", appointment.toString());
+        final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
+        final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
+        firstTextView.setText("Your appointment has started.");
+        secondTextView.setText("Tap here to enter");
+
+        mNotificationView.setTag(appointment);
+        mNotificationView.setVisibility(View.VISIBLE);
+        mNotificationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (v.getTag() != null) {
+                        Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
+                        startActivity(intent);
+                        MdliveUtils.startActivityAnimation(getActivity());
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        });
+    }
+
+
+
+
+
 
     public void showNotification(final Appointment appointment) {
         if (mNotificationView != null) {

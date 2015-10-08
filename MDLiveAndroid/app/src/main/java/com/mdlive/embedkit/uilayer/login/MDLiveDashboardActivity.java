@@ -21,6 +21,7 @@ import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.OncallAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
@@ -157,6 +158,14 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).showNotification(appointment);
+        }
+    }
+
+    @Override
+    public void onShowNotifyOnCallDashBorad(OncallAppointment appointment) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).showOnCallNotification(appointment);
         }
     }
 
