@@ -143,7 +143,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                         mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                         passwordLength = false;
                     }
-                    if (mNewPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                    if (mNewPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9@#$%^&+=]*$")) {
                         mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                         passwordAlphaNumericCheck = true;
@@ -199,7 +199,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                         mPasswordLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                         confirmPasswordLength = false;
                     }
-                    if (mConfirmPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                    if (mConfirmPassword.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9@#$%^&+=]*$")) {
                         mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                         confirmPasswordAlphaNumericCheck = true;
