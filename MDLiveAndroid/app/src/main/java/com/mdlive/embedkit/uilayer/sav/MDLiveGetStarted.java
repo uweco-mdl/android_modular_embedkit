@@ -68,6 +68,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -1019,13 +1020,19 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             providerTypeIdList.clear();
             JSONArray provider_array = response.getJSONArray("provider_type");
             Log.e("providerTypeArrayList", provider_array.toString());
-            for (int i = 0; i < provider_array.length(); i++) {
+            for (int i = 0; i < provider_array.length(); i++)
+            {
                 providerTypeIdList.add(provider_array.getJSONObject(i).getInt("id") + "");
                 providerTypeArrayList.add(provider_array.getJSONObject(i).getString("provider_type"));
             }
             Log.e("providerTypeArrayList", providerTypeArrayList.toString());
+            Collections.reverse(providerTypeArrayList);
+            Collections.reverse(providerTypeIdList);
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
+
+
+
         } catch (Exception e) {
 
         }

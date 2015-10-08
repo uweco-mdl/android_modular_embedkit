@@ -90,24 +90,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         appointmentType = settings.getString(PreferenceConstants.APPOINTMENT_TYPE, null);
-//        if(appointmentType!=null) {
-//            if (appointmentType.equalsIgnoreCase("video")) {
-//                findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-//                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-//                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-//                findViewById(R.id.phone_ll).setVisibility(View.INVISIBLE);
-//                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
-//                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-//            } else if (appointmentType.equalsIgnoreCase("phone")) {
-//                selectedvideo = 2;
-//                findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-//                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-//                findViewById(R.id.video_ll).setVisibility(View.INVISIBLE);
-//                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
-//                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-//                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-//            }
-//        }
         String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         //PHS user
