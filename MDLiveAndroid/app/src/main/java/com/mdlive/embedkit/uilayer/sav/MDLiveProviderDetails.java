@@ -538,7 +538,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                 }
             }
-            hideProgress();
 
             //with patient
             if (isDoctorWithPatient) {
@@ -1711,7 +1710,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgress();
             displayProviderDetailonUI(response);
         }
 

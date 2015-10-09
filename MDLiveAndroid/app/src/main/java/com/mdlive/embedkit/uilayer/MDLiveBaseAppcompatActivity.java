@@ -1,11 +1,14 @@
 package com.mdlive.embedkit.uilayer;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -45,11 +48,13 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.plugins.SocialSharingHandler;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+import com.mdlive.unifiedmiddleware.services.login.SSOBaylorService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
@@ -85,7 +90,6 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (showPinScreen()) {
             if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
             {
-                Log.e("mdlive baylor", "session time out");
                 DialogInterface.OnClickListener backToBaylor = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -94,10 +98,65 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 };
                 MdliveUtils.showDialog(this,getString(R.string.mdl_app_name),getString(R.string.mdl_baylor_session_expired),getString(R.string.mdl_Ok),null,backToBaylor,null);
             }else if (MdliveUtils.getLockType(getBaseContext()).equals("Pin")){
-                Log.e("mdlive :: mdlive", "session time out");
                 sendBroadcast(getUnlockBroadcast());
             }
+        }else if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name())){
+            MakeBaylorSSOLogin();
         }
+    }
+    /**
+     * Call the SSO service to auto login user if they come through baylor application
+     * For baylor user the login and pin creation screens are not applicable
+     * The user will be directed to destination screen without any interruption
+     */
+    private void MakeBaylorSSOLogin() {
+        try {
+//            final ProgressDialog pDialog = MdliveUtils.getFullScreenProgressDialog(this);
+            final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (response.has("error")) {
+                        BaylorSSOError();
+                    }
+                }
+            };
+            final NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    try {
+                        BaylorSSOError();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            SSOBaylorService service = new SSOBaylorService(this, null);
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String guid = sharedPref.getString(PreferenceConstants.BAYLOR_GUID, null);
+            HashMap<String, String> postParam = new HashMap<>();
+            postParam.put("user_guid", guid);
+            postParam.put("affiliation_id", DeepLinkUtils.DEEPLINK_DATA.getAffiliationId() + "");
+
+            service.BaylorSSO(successCallBackListener, errorListener, (new JSONObject(postParam)).toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * When the baylor sso integration fails to login then display this error and ask your to login again from baylor app
+     * This current activity will be closed once the user hits ok button
+     */
+    private void BaylorSSOError(){
+        DialogInterface.OnClickListener backToBaylor = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onBackToBaylorClicked(null);
+            }
+        };
+        MdliveUtils.showDialog(this, getString(com.mdlive.embedkit.R.string.mdl_app_name), getString(com.mdlive.embedkit.R.string.mdl_failed_baylor_login), getString(com.mdlive.embedkit.R.string.mdl_Ok), null, backToBaylor, null);
     }
 
     @Override
