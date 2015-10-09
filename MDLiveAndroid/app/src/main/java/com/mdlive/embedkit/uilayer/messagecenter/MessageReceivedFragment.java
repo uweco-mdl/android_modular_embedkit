@@ -68,6 +68,8 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.fragment_message_received_list_view);
+        mBlankLayout = view.findViewById(R.id.blank_layout);
+        mBlankLayout.setVisibility(View.GONE);
         if (mListView != null) {
             mMessageReceivedAdapter = new MessageReceivedAdapter(view.getContext(), R.layout.adapter_message_received, android.R.id.text1);
             mListView.setAdapter(mMessageReceivedAdapter);
@@ -89,8 +91,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
                 }
             });
         }
-
-        mBlankLayout = view.findViewById(R.id.blank_layout);
 
         final ImageView image = (ImageView) view.findViewById(R.id.message_center_empty_image_view);
         if (image != null) {
