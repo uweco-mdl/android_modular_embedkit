@@ -73,7 +73,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private RelativeLayout reqfutureapptBtnLayout;
     private boolean firstClick=false,selectedTimeslot=false,selectedVideoOrPhone=false;
     private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations,updatedAppointmentDate,selectedAppmtTypeVideoOrPhone;
-    private String Shared_AppointmentDate;
+    private String Shared_AppointmentDate,longLocation;
     private LinearLayout providerImageHolder,detailsLl, providerImageCollectionHolder;
     private HorizontalScrollView horizontalscrollview;
     private int month, day, year;
@@ -146,6 +146,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         groupAffiliations = settings.getString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, null);
         detailsGroupAffiliations.setText(groupAffiliations);
         AppointmentType = StringConstants.APPOINTMENT_TYPE;
+        longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
 
         try {
             if(Shared_AppointmentDate!=null && Shared_AppointmentDate.length() != 0){
@@ -389,10 +390,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 myText.setTag("Now");
                                 defaultNowTextPreferences(myText, str_appointmenttype);
                                 selectedTimeslot=true;
-                                clickEventForHorizontalText(myText,str_timeslot);
+                                clickEventForHorizontalText(myText,str_timeslot,str_phys_avail_id);
                                 layout.addView(myText);
                             } else {
-                                setHorizontalScrollviewTimeslots(layout, str_timeslot, j);
+                                setHorizontalScrollviewTimeslots(layout, str_timeslot, j,str_phys_avail_id);
 
                             }
 
@@ -539,12 +540,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                         myText.setTag("Now");
                                         defaultNowTextPreferences(myText, str_appointmenttype);
                                         selectedTimeslot = true;
-                                        clickEventForHorizontalText(myText,str_timeslot);
+                                        clickEventForHorizontalText(myText,str_timeslot,str_phys_avail_id);
                                         layout.addView(myText);
                                         //layout.addView(line, 1);
                                     }
                                 } else {
-                                    setHorizontalScrollviewTimeslots(layout, str_timeslot, j);
+                                    setHorizontalScrollviewTimeslots(layout, str_timeslot, j,str_phys_avail_id);
                                 }
 
                             }
@@ -1064,9 +1065,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         }
 
-
-
-
         else
         {
             notAvailable();
@@ -1108,13 +1106,26 @@ if(str_avail_status.equalsIgnoreCase("true"))
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
         {
 
+            if(longLocation.equalsIgnoreCase("idaho"))
+            {
+                byphoneBtnLayout.setVisibility(View.INVISIBLE);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+                byphoneBtnLayout.setClickable(false);
+            }else{
+                byphoneBtnLayout.setVisibility(View.VISIBLE);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+                byphoneBtnLayout.setClickable(false);
+            }
+
+
+
             saveAppmtType("video");
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
             byvideoBtn.setTextColor(Color.GRAY);
-            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-            byphoneBtn.setTextColor(Color.GRAY);
-            byphoneBtnLayout.setVisibility(View.INVISIBLE);
-            byphoneBtnLayout.setClickable(false);
             byvideoBtn.setTextColor(Color.GRAY);
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
@@ -1126,9 +1137,10 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         byvideoBtn.setTextColor(Color.WHITE);
                         ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                         ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-                        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        byphoneBtn.setTextColor(Color.GRAY);
-                        byphoneBtnLayout.setVisibility(View.INVISIBLE);
+                        byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                        byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                        byphoneBtnLayout.setVisibility(View.VISIBLE);
+                        byphoneBtnLayout.setClickable(false);
 
                         horizontalscrollview.setVisibility(View.VISIBLE);
 //                            visibilityBasedOnHorizontalTextView("video");
@@ -1170,10 +1182,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         byphoneBtn.setTextColor(Color.WHITE);
                         ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                         ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-                        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                        byvideoBtn.setTextColor(Color.GRAY);
                         horizontalscrollview.setVisibility(View.VISIBLE);
-                        byvideoBtnLayout.setVisibility(View.INVISIBLE);
+                        byvideoBtnLayout.setVisibility(View.VISIBLE);
+                        byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                        byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+                        byvideoBtnLayout.setClickable(false);
 
                         //visibilityBasedOnHorizontalTextView("phone");
                         selectedVideoOrPhone = true;
@@ -1213,9 +1227,9 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 {
                     saveAppmtType("phone");
                     byvideoBtnLayout.setVisibility(View.VISIBLE);
-                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                    byvideoBtn.setTextColor(Color.GRAY);
-                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                    byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
                     byvideoBtnLayout.setClickable(false);
                 }else {
                     byvideoBtnLayout.setVisibility(View.VISIBLE);
@@ -1223,14 +1237,15 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         @Override
                         public void onClick(View v) {
                             try {
-                                Log.e("withinElse", "video");
                                 selectedAppmtTypeVideoOrPhone = "video";
                                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byvideoBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-                                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                                byphoneBtn.setTextColor(Color.GRAY);
+//                                byphoneBtnLayout.setVisibility(View.VISIBLE);
+//                                byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+//                                byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+//                                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+//                                byphoneBtnLayout.setClickable(false);
 
                                 horizontalscrollview.setVisibility(View.VISIBLE);
 //                            visibilityBasedOnHorizontalTextView("video");
@@ -1258,10 +1273,10 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 if(phoneList.size()==0)
                 {
                     saveAppmtType("video");
-                    byphoneBtnLayout.setVisibility(View.INVISIBLE);
-                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                    byphoneBtn.setTextColor(Color.GRAY);
-                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                    byphoneBtnLayout.setVisibility(View.VISIBLE);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                    byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
                     byphoneBtnLayout.setClickable(false);
                 }else {
                     byphoneBtnLayout.setVisibility(View.VISIBLE);
@@ -1269,16 +1284,17 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         @Override
                         public void onClick(View v) {
                             try {
-                                Log.e("withinElse", "Phone");
                                 selectedAppmtTypeVideoOrPhone = "phone";
                                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byphoneBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-                                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-                                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                                byvideoBtn.setTextColor(Color.GRAY);
-                                horizontalscrollview.setVisibility(View.VISIBLE);
 
+//                                byvideoBtnLayout.setVisibility(View.VISIBLE);
+//                                byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+//                                byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+//                                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+//                                byvideoBtnLayout.setClickable(false);
+                                horizontalscrollview.setVisibility(View.VISIBLE);
                                 //visibilityBasedOnHorizontalTextView("phone");
                                 selectedVideoOrPhone = true;
                                 LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
@@ -1317,7 +1333,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
     ArrayList<TextView> videoList = new ArrayList<>();
     ArrayList<TextView> phoneList = new ArrayList<>();
 
-    private void setHorizontalScrollviewTimeslots(LinearLayout layout, String str_timeslot,int position) {
+    private void setHorizontalScrollviewTimeslots(LinearLayout layout, String str_timeslot,int position,String physId) {
 
         final int density = (int) getBaseContext().getResources().getDisplayMetrics().density;
 
@@ -1349,7 +1365,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         firstClick=true;
         clickForVideoOrPhoneTapReqFutureAction();
-        clickEventForHorizontalText(myText,str_timeslot);
+        clickEventForHorizontalText(myText,str_timeslot,physId);
 
     }
 
@@ -1372,14 +1388,14 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
     }
 
-    private void clickEventForHorizontalText(final Button timeslotTxt,final String Timestamp) {
+    private void clickEventForHorizontalText(final Button timeslotTxt,final String Timestamp,final String phys_avail_id) {
         timeslotTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedTimeslot=true;
                 String appointmentType = (String) v.getTag();
                 //saveConsultationType(appointmentType);
-                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,Timestamp,str_phys_avail_id);
+                saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,Timestamp,phys_avail_id);
                 //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
                     previousSelectedTv = timeslotTxt;
@@ -1393,9 +1409,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                     timeslotTxt.setTextColor(Color.WHITE);
                 }
                 //Enabling or Disabling the Request Appointment Button.
-
                 enableReqAppmtBtn();
-
 //                visibilityBasedOnHorizontalTextView(appointmentType);
             }
 
@@ -1456,63 +1470,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
                     byvideoBtn.setTextColor(Color.GRAY);
                 }
             });
-//            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-//            byvideoBtn.setTextColor(Color.GRAY);
-//            byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-//            byphoneBtn.setTextColor(Color.GRAY);
-//            byvideoBtnLayout.setVisibility(View.VISIBLE);
-//            byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    selectedAppmtTypeVideoOrPhone="video";
-//                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-//                    byvideoBtn.setTextColor(Color.WHITE);
-//                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-//                    byphoneBtn.setTextColor(Color.GRAY);
-//                    horizontalscrollview.setVisibility(View.VISIBLE);
-////                            visibilityBasedOnHorizontalTextView("video");
-//                    selectedVideoOrPhone=true;
-//                    LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-//                    if(layout.getChildCount() > 0)
-//                        layout.removeAllViews();
-//                    if(previousSelectedTv != null)
-//                        layout.addView(previousSelectedTv);
-//                    for(TextView tv : videoList){
-//                        layout.addView(tv);
-//                    }
-//                    saveConsultationType("video");
-//                    //Enable Request Appointment Button
-//                    enableReqAppmtBtn();
-//
-//                    horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
-//                }
-//            });
-//            byphoneBtnLayout.setVisibility(View.VISIBLE);
-//            byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    selectedAppmtTypeVideoOrPhone="phone";
-//                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-//                    byphoneBtn.setTextColor(Color.WHITE);
-//                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-//                    byvideoBtn.setTextColor(Color.GRAY);
-//                    horizontalscrollview.setVisibility(View.VISIBLE);
-////                            visibilityBasedOnHorizontalTextView("phone");
-//                    selectedVideoOrPhone=true;
-//                    LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-//                    if(layout.getChildCount() > 0)
-//                        layout.removeAllViews();
-//                    if(previousSelectedTv != null)
-//                        layout.addView(previousSelectedTv);
-//                    for(TextView tv : phoneList){
-//                        layout.addView(tv);
-//                    }
-//                    saveConsultationType("phone");
-//                    //Enable Request Appointment Button
-//                    enableReqAppmtBtn();
-//                    horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
-//                }
-//            });
         }
         else  if(position.equalsIgnoreCase("phone")){
             saveConsultationType("Phone");
@@ -1573,14 +1530,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
         String ProviderImage = "";
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
-        Log.e("ProviderImageArray Size", ProviderImageArray.size() + "");
         if(ProviderImageArray.size() != 0) {
             providerImageCollectionHolder.removeAllViews();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(5, 10, 5, 10);
             for (int i = 0; i < ProviderImageArray.size(); i++) {
                 try {
-                    Log.e("Logo url ", ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString());
                     if (!ProviderImageArray.get(i).getAsJsonObject().get("logo").isJsonNull()) {
                         final ImageView imageView = new ImageView(MDLiveProviderDetails.this);
                         imageView.setLayoutParams(params);
@@ -1757,7 +1712,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 String format = new SimpleDateFormat("EEEE,  MMM dd  yyyy").format(calendar.getTime());
 //                ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                Log.d("TImeZone - ", calendar.getTimeInMillis() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + " :: "+TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 return dialog;
         }

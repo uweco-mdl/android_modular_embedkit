@@ -190,6 +190,13 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         //formatDualString(appointmentContactNumber.getText().toString().trim());
         MdliveUtils.formatDualString(appointmentContactNumber.getText().toString().trim());
         appointmentContactNumber.addTextChangedListener(watcher);
+        GetCurrentDate((TextView) findViewById(R.id.appointmentNextAvailable));
+        nextAvailableList.clear();
+        nextAvailableList.add("morning");
+        nextAvailableList.add("afternoon");
+        nextAvailableList.add("evening");
+
+        ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 
 
     }
@@ -228,10 +235,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
      *
      */
     public void onclickNxtAvailable(View v) {
-        nextAvailableList.clear();
-        nextAvailableList.add("morning");
-        nextAvailableList.add("afternoon");
-        nextAvailableList.add("evening");
 
         showListViewDialog(nextAvailableList,(TextView)findViewById(R.id.appointmentNextAvailable));
 
@@ -246,17 +249,17 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     }
 
     public void GetCurrentDate(TextView selectedText) {
-        final Calendar c = Calendar.getInstance();
+
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
         // Show current date
+        String format = new SimpleDateFormat("E, MMM d, yyyy").format(c.getTime());
+        Log.e("chk date",format);
+        ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
 
-        selectedText.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(month + 1).append("/").append(day).append("/")
-                .append(year).append(" "));
     }
 
     @Override
