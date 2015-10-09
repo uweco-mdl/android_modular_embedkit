@@ -146,7 +146,6 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
     public void onCancelAppointmentClicked() {
         showProgressDialog();
-
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -154,8 +153,15 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
 
                 try {
-                    if (response.getInt("success") == 200) {
+                    if (response.has("message")) {
                         MdliveUtils.showDialog(getActivity(), response.getString("message"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().finish();
+                            }
+                        });
+                    }else{
+                        MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_cancel_appointment_error), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getActivity().finish();
@@ -173,7 +179,6 @@ public class AppointmentFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
-
                 try {
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
