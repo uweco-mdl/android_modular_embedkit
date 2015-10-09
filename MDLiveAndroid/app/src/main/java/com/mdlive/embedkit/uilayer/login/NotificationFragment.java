@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -190,6 +189,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
             if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
+                mMessagesLinearLayout.setVisibility(View.VISIBLE);
             } else {
                 //mMessagesTextView.setVisibility(View.GONE);
                 mMessagesLinearLayout.setVisibility(View.GONE);
