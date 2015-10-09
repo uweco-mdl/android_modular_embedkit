@@ -63,24 +63,21 @@ import java.util.List;
 public class MyProfileFragment extends MDLiveBaseFragment  implements PickImagePlugin.UploadRecordInterface{
 
     private CircularNetworkImageView mProfileImage = null;
-    private CircularNetworkImageView mCircularNetworkImageView;
     private TextView mProfileName = null;
     private LinearLayout mAddressClickListener = null;
-    private LinearLayout mPhoneNumberClickListener = null;
     private TextView mUserDOB = null;
     private TextView mGender = null;
     private TextView mUserName = null;
     private TextView mPreferredSignIn = null, changeLangTv;
     private TextView mEmail = null;
     private TextView mAddress = null;
-    private TextView mMobile = null;
+    private TextView mMobile = null, emergencyNumber = null;
     private TextView mTimeZone = null;
     private CardView mChangePassword = null;
     private CardView mChangePin = null;
     private CardView mChangeSecurityQuestions = null;
-    private Button mSave = null;
     private String profileImageURL = null,profileName = null,userDOB = null,gender = null,username = null,address = null,prefferedPhone = null,mobile = null,emergencyContactPhone = null,
-    timeZone = null,securityQuestion1 = null,securityQuestion2 = null,answer1 = null,answer2 = null,email = null, prefLanguage;
+    timeZone = null,email = null;
     private JSONObject myProfile;
     SharedPreferences sharedPref;
     String[] timeZoneAbbr = {"CST","EST","MST","PST","AKST","HST","AMS","MIT","GST","PAT"};
@@ -117,12 +114,12 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         mEmail = (TextView)view.findViewById(R.id.email);
         mAddress = (TextView)view.findViewById(R.id.address);
         mMobile = (TextView)view.findViewById(R.id.phoneNumber);
+        emergencyNumber = (TextView) view.findViewById(R.id.emergencyContactNumber);
         mTimeZone = (TextView)view.findViewById(R.id.timeZone);
         mChangePassword = (CardView)view.findViewById(R.id.changePassword);
         mChangePin = (CardView)view.findViewById(R.id.changePin);
         mChangeSecurityQuestions = (CardView)view.findViewById(R.id.changeSecurityQuestion);
         mAddressClickListener = (LinearLayout)view.findViewById(R.id.addressView);
-        mPhoneNumberClickListener = (LinearLayout)view.findViewById(R.id.phoneNumberView);
         mSwitchCompat = (SwitchCompat)view.findViewById(R.id.SyncHealthSwitch);
         mAddressClickListener.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,13 +142,24 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             mSwitchCompat.setEnabled(false);
         }
 
-        mPhoneNumberClickListener.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.phoneNumberView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent changePhone = new Intent(getActivity(),MyAccountsHome.class);
-                changePhone.putExtra("Fragment_Name","CHANGE PHONE NUMBER");
-                changePhone.putExtra("Address_Response",myProfile.toString());
+                Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name", "CHANGE PHONE NUMBER");
+                changePhone.putExtra("Address_Response", myProfile.toString());
+                startActivityForResult(changePhone, 3);
+
+            }
+        });
+        view.findViewById(R.id.emergencyNumberView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent changePhone = new Intent(getActivity(), MyAccountsHome.class);
+                changePhone.putExtra("Fragment_Name", "CHANGE PHONE NUMBER");
+                changePhone.putExtra("Address_Response", myProfile.toString());
                 startActivityForResult(changePhone, 3);
 
             }
@@ -350,7 +358,8 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         try {
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
-            profileName = myProfile.getString("first_name"); /*+" "+ myProfile.getString("last_name")*/;
+            profileName = myProfile.getString("first_name"); /*+" "+ myProfile.getString("last_name")*/
+            ;
             email = myProfile.getString("email");
             userDOB = myProfile.getString("birthdate");
             gender = myProfile.getString("gender");
@@ -363,45 +372,44 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             String zip;
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
-                address2="";
+                address2 = "";
             } else {
                 address2 = myProfile.getString("address2");
             }
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
-                address1="";
+                address1 = "";
             } else {
                 address1 = myProfile.getString("address1");
             }
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
-                state="";
+                state = "";
             } else {
-                state = myProfile.getString("state")+" ";
+                state = myProfile.getString("state") + " ";
             }
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
-                city="";
+                city = "";
             } else {
                 city = myProfile.getString("city");
             }
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("country"))) {
-                country="";
+                country = "";
             } else {
                 country = myProfile.getString("country");
             }
 
             if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
-                zip="";
+                zip = "";
             } else {
                 zip = myProfile.getString("zipcode");
             }
 
-            address = address1 +" "+address2+"\n"+city+"\n"+state + country+"\n"+zip;
+            address = address1 + " " + address2 + "\n" + city + "\n" + state + country + "\n" + zip;
             mobile = myProfile.getString("phone");
             timeZone = myProfile.getString("timezone");
-            prefLanguage = myProfile.getString("language_preference");
 
             if (getActivity() != null) {
                 sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
@@ -411,12 +419,6 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             }
 
             JSONObject securityQuestion = myProfile.optJSONObject("security");
-            if(securityQuestion!=null && securityQuestion.has("question1") && securityQuestion.has("question2")) {
-                securityQuestion1 = securityQuestion.optString("question1");
-                securityQuestion2 = securityQuestion.optString("question2");
-                answer1 = securityQuestion.optString("answer1");
-                answer2 = securityQuestion.optString("answer2");
-            }
             mProfileName.setText(profileName);
             mUserDOB.setText(userDOB);
             mGender.setText(gender);
@@ -425,6 +427,9 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
             String formattedString = MdliveUtils.formatDualString(mobile);
             mMobile.setText(formattedString);
+            if (!myProfile.getString("emergency_contact_number").equals("")){
+                emergencyNumber.setText(MdliveUtils.formatDualString(myProfile.getString("emergency_contact_number")));
+            }
             List<String> tmpTimezoneAbbr = Arrays.asList(timeZoneAbbr);
             final CharSequence[] items = getActivity().getResources().getStringArray(R.array.mdl_timezone);
             CharSequence tmpTimeZone = items[tmpTimezoneAbbr.indexOf(timeZone) + 1];
