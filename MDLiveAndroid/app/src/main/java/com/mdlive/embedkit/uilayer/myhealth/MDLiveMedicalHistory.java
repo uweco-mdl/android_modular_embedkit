@@ -621,9 +621,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
             checkPediatricCompletion(historyPercentageArray);
+            checkPrimaryCarePhysicianHistory();
             checkMyHealthBehaviouralHistory(historyPercentageArray);
             //checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
-            checkPrimaryCarePhysicianHistory();
             ValidateModuleFields();
             checkAgeAndFemale();
 
@@ -639,13 +639,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         if(userBasicInfo != null){
             String primaryPhyTxt = userBasicInfo.getPersonalInfo().getDoYouHavePrimaryCarePhysician();
             if(primaryPhyTxt != null && primaryPhyTxt.equalsIgnoreCase("yes")){
-                Log.e("primaryPhyTxt", primaryPhyTxt);
                 ((RadioButton)findViewById(R.id.primaryCareYesButton)).setChecked(true);
                 editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "Yes");
             }else if(primaryPhyTxt != null && primaryPhyTxt.equalsIgnoreCase("no")){
-                Log.e("primaryPhyTxt", primaryPhyTxt);
                 ((RadioButton)findViewById(R.id.primaryCareNoButton)).setChecked(true);
                 editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
+            }else{
+                editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "");
             }
         }
         editor.commit();
