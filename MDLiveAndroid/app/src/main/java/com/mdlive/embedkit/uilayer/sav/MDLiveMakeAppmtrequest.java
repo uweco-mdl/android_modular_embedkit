@@ -17,8 +17,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -40,9 +43,11 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
 import com.mdlive.unifiedmiddleware.services.provider.MakeanappmtServices;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -58,12 +63,15 @@ import static java.util.Calendar.MONTH;
  */
 public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     private TextView appointmentIdealDate,appointmentNextAvailable;
-    private EditText appointmentContactNumber,appointmentReason,appointmentComment;
+    private EditText appointmentContactNumber,appointmentComment;
+    private AutoCompleteTextView appointmentReason;
     private HashMap<String,Object> params = new HashMap<>();
     private ArrayList<String> nextAvailableList = new ArrayList<>();
     private int month, day, year,selectedvideo=1;
     private String DoctorId,postidealTime,appointmentType,selectionType="",longLocation;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
+    private ArrayList<String> reasonList;
+    private ReasonForVisitAdapter baseadapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,13 +134,12 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
-
+        ReasonForVisit();
     }
 
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLiveMakeAppmtrequest.this);
         onBackPressed();
-
     }
 
     @Override
@@ -140,6 +147,78 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(MDLiveMakeAppmtrequest.this);
     }
+
+
+    /**
+     * Reason for Visit List Details.
+     * Class : ReasonForVisitServices - Service class used to fetch the List information
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     */
+    private void ReasonForVisit() {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleSuccessListener(response);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
+            }
+        };
+        ReasonForVisitServices services = new ReasonForVisitServices(MDLiveMakeAppmtrequest.this, null);
+        services.getReasonList(successCallBackListener, errorListener);
+    }
+
+    /**
+     * Successful Response Handler for Provider Request.
+     * The response will provide the list of symptoms.If there is no symptoms the user can
+     * create the new symptom and add the symptom.
+     */
+    private void handleSuccessListener(JSONObject response) {
+        try {
+            hideProgress();
+            JSONArray arr = response.getJSONArray("chief_complaint");
+            for (int i = 0; i < arr.length(); i++) {
+                reasonList.add(arr.getJSONObject(i).getString(arr.getJSONObject(i).keys().next()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        appointmentReason.setAdapter(getAutoCompletionArrayAdapter());
+        appointmentReason.setDropDownVerticalOffset(0);
+    }
+
+    /**
+     Setting adapter value to appointment
+     */
+    private ArrayAdapter<String> getAutoCompletionArrayAdapter() {
+        return new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reasonList) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                parent.setBackgroundColor(Color.WHITE);
+                final TextView text = (TextView) view.findViewById(android.R.id.text1);
+                text.setTextColor(Color.BLACK);
+                text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        appointmentReason.setText(text.getText().toString());
+                        appointmentReason.dismissDropDown();
+                    }
+                });
+                return view;
+            }
+        };
+    }
+
+
+
 
     public void rightBtnOnClick(View v){
         String strappmtreason = appointmentReason.getText().toString().trim();
@@ -184,7 +263,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         appointmentIdealDate = (TextView) findViewById(R.id.appointmentIdealDate);
         appointmentNextAvailable = (TextView) findViewById(R.id.appointmentNextAvailable);
         appointmentContactNumber = (EditText) findViewById(R.id.appointmentContactNumber);
-        appointmentReason = (EditText) findViewById(R.id.appointmentReason);
+        appointmentReason = (AutoCompleteTextView) findViewById(R.id.appointmentReason);
         appointmentComment = (EditText) findViewById(R.id.appointmentComment);
         //formatDualString(appointmentContactNumber.getText().toString().trim());
         MdliveUtils.formatDualString(appointmentContactNumber.getText().toString().trim());
@@ -194,7 +273,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         nextAvailableList.add("morning");
         nextAvailableList.add("afternoon");
         nextAvailableList.add("evening");
-
+        reasonList  = new ArrayList<>();
         ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 
 
