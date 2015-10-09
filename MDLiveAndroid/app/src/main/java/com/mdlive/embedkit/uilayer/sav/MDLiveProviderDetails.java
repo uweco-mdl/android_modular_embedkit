@@ -1105,21 +1105,11 @@ if(str_avail_status.equalsIgnoreCase("true"))
         //PHS user
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
         {
-
-            if(longLocation.equalsIgnoreCase("idaho"))
-            {
                 byphoneBtnLayout.setVisibility(View.INVISIBLE);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
                 byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-                byphoneBtnLayout.setClickable(false);
-            }else{
-                byphoneBtnLayout.setVisibility(View.VISIBLE);
-                byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-                byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
-                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-                byphoneBtnLayout.setClickable(false);
-            }
+                byphoneBtnLayout.setClickable(false);//
 
 
 
@@ -1132,14 +1122,15 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 @Override
                 public void onClick(View v) {
                     try {
+
                         selectedAppmtTypeVideoOrPhone = "video";
                         byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                         byvideoBtn.setTextColor(Color.WHITE);
                         ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                        ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                        ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
                         byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
                         byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
-                        byphoneBtnLayout.setVisibility(View.VISIBLE);
+                        byphoneBtnLayout.setVisibility(View.INVISIBLE);
                         byphoneBtnLayout.setClickable(false);
 
                         horizontalscrollview.setVisibility(View.VISIBLE);
@@ -1157,7 +1148,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         //Enable Request Appointment Button
                         enableReqAppmtBtn();
                         ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+//                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1167,48 +1158,17 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         }else if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone"))
         {
-            saveAppmtType("phone");
-            byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-            byvideoBtn.setTextColor(Color.GRAY);
-            byvideoBtnLayout.setVisibility(View.INVISIBLE);
-            byvideoBtnLayout.setClickable(false);
-            byphoneBtnLayout.setVisibility(View.VISIBLE);
-            byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        selectedAppmtTypeVideoOrPhone = "phone";
-                        byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
-                        byphoneBtn.setTextColor(Color.WHITE);
-                        ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-                        ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-                        horizontalscrollview.setVisibility(View.VISIBLE);
-                        byvideoBtnLayout.setVisibility(View.VISIBLE);
-                        byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-                        byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
-                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-                        byvideoBtnLayout.setClickable(false);
-
-                        //visibilityBasedOnHorizontalTextView("phone");
-                        selectedVideoOrPhone = true;
-                        LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
-                        if (layout.getChildCount() > 0) {
-                            layout.removeAllViews();
-                        }
-                        for (TextView tv : phoneList) {
-                            layout.addView(tv);
-                        }
-                        saveConsultationType("Phone");
-                        //Enable Request Appointment Button
-                        enableReqAppmtBtn();
-                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-                        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-                        horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            phsOnlyForPhone();
+        }
+//Only For idaho
+        else if(longLocation.equalsIgnoreCase("idaho"))
+        {
+            onlyForIdaho();
+        }
+//Only For Texas
+        else if(longLocation.equalsIgnoreCase("texas"))
+        {
+            phsOnlyForPhone();
         }
         //Vido or Phone Button on Click listener for Blue color
         else
@@ -1241,10 +1201,10 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byvideoBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-//                                byphoneBtnLayout.setVisibility(View.VISIBLE);
-//                                byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-//                                byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
-//                                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+                                byphoneBtnLayout.setVisibility(View.VISIBLE);
+                                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                                byphoneBtn.setTextColor(Color.GRAY);
+                                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
 //                                byphoneBtnLayout.setClickable(false);
 
                                 horizontalscrollview.setVisibility(View.VISIBLE);
@@ -1289,10 +1249,10 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                 byphoneBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
 
-//                                byvideoBtnLayout.setVisibility(View.VISIBLE);
-//                                byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-//                                byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
-//                                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+                                byvideoBtnLayout.setVisibility(View.VISIBLE);
+                                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                                byvideoBtn.setTextColor(Color.GRAY);
+                                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
 //                                byvideoBtnLayout.setClickable(false);
                                 horizontalscrollview.setVisibility(View.VISIBLE);
                                 //visibilityBasedOnHorizontalTextView("phone");
@@ -1320,6 +1280,104 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
         }
 
+    }
+
+    private void onlyForIdaho() {
+        byphoneBtnLayout.setVisibility(View.VISIBLE);
+        byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+        byphoneBtnLayout.setClickable(false);
+        saveAppmtType("video");
+        byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        byvideoBtn.setTextColor(Color.GRAY);
+        byvideoBtn.setTextColor(Color.GRAY);
+        byvideoBtnLayout.setVisibility(View.VISIBLE);
+        byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+
+                    selectedAppmtTypeVideoOrPhone = "video";
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byvideoBtn.setTextColor(Color.WHITE);
+                    ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                    ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                    byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                    byphoneBtnLayout.setVisibility(View.VISIBLE);
+                    byphoneBtnLayout.setClickable(false);
+
+                    horizontalscrollview.setVisibility(View.VISIBLE);
+//                            visibilityBasedOnHorizontalTextView("video");
+                    selectedVideoOrPhone = true;
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                    if (layout.getChildCount() > 0) {
+                        layout.removeAllViews();
+                    }
+
+                    for (TextView tv : videoList) {
+                        layout.addView(tv);
+                    }
+                    saveConsultationType("Video");
+                    //Enable Request Appointment Button
+                    enableReqAppmtBtn();
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+//                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                    horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    //This method will show only the Phone icon and it will disable the Video Icon
+    //This is applicable for the PHS Users that is the consult method is phone and
+    //also for the texas.
+
+    private void phsOnlyForPhone() {
+        saveAppmtType("phone");
+        byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+        byvideoBtnLayout.setVisibility(View.VISIBLE);
+        byvideoBtnLayout.setClickable(false);
+        byphoneBtnLayout.setVisibility(View.VISIBLE);
+        byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    selectedAppmtTypeVideoOrPhone = "phone";
+                    byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    byphoneBtn.setTextColor(Color.WHITE);
+                    ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                    ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+                    horizontalscrollview.setVisibility(View.VISIBLE);
+                    byvideoBtnLayout.setVisibility(View.VISIBLE);
+                    byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+                    byvideoBtn.setTextColor(getResources().getColor(R.color.disableBtn));
+                    byvideoBtnLayout.setClickable(false);
+
+                    //visibilityBasedOnHorizontalTextView("phone");
+                    selectedVideoOrPhone = true;
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                    if (layout.getChildCount() > 0) {
+                        layout.removeAllViews();
+                    }
+                    for (TextView tv : phoneList) {
+                        layout.addView(tv);
+                    }
+                    saveConsultationType("Phone");
+                    //Enable Request Appointment Button
+                    enableReqAppmtBtn();
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+//                        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                    horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void saveAppmtType(String appmtType) {
