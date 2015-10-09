@@ -638,11 +638,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo != null){
             String primaryPhyTxt = userBasicInfo.getPersonalInfo().getDoYouHavePrimaryCarePhysician();
-            if(primaryPhyTxt != null && primaryPhyTxt.toLowerCase().contains("yes")){
+            if(primaryPhyTxt != null && primaryPhyTxt.equalsIgnoreCase("yes")){
+                Log.e("primaryPhyTxt", primaryPhyTxt);
                 ((RadioButton)findViewById(R.id.primaryCareYesButton)).setChecked(true);
                 editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "Yes");
-            }else{
-                ((RadioButton)findViewById(R.id.primaryCareYesButton)).setChecked(false);
+            }else if(primaryPhyTxt != null && primaryPhyTxt.equalsIgnoreCase("no")){
+                Log.e("primaryPhyTxt", primaryPhyTxt);
+                ((RadioButton)findViewById(R.id.primaryCareNoButton)).setChecked(true);
                 editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
             }
         }
