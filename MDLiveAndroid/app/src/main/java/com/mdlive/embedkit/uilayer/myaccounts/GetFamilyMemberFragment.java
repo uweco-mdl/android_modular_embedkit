@@ -5,9 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,9 +101,22 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
             addFamilyMember1.setVisibility(View.GONE);
             callCustomer.setVisibility(View.VISIBLE);
 
-            Spannable word = new SpannableString(getString(R.string.mdl_please_call_customer));
-            word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 7, 28, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            callCustomer.setText(word);
+            SpannableString callCustomerService = new SpannableString(getString(R.string.mdl_please_call_customer));
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    MdliveUtils.showMDLiveAssistDialog(getActivity());
+                }
+
+                public void updateDrawState(TextPaint ds) {// override updateDrawState
+                    ds.setColor(getResources().getColor(R.color.search_pvr_txt_blue_color)); //set color for link
+                    ds.setUnderlineText(false); // set to false to remove underline
+                }
+            };
+
+            callCustomerService.setSpan(clickableSpan, 7, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            callCustomer.setText(callCustomerService);
+            callCustomer.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
@@ -160,12 +181,16 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     }
 
     public void handleFamilyMemberAddedSucessResponse(JSONObject response) {
+        Log.e("Response user ",response.toString());
         hideProgressDialog();
         try {
             String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName().toString() + " " + userBasicInfo.getPersonalInfo().getLastName().toString();
 
             nameList.add(primaryUserName);
             urlList.add(userBasicInfo.getPersonalInfo().getImageUrl());
+            boolean isPrimaryUser=response.getBoolean("primary_user");
+
+
 
             if((response.get("primary_user").toString())== "false")
             {
@@ -182,7 +207,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 urlList.add(url);
             }
 
-            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList));
+            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList,isPrimaryUser));
 
             if (mOnChildAdded != null) {
                 mOnChildAdded.reloadNavigartion();
