@@ -59,7 +59,6 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
 
-            Log.d("Hello", "Selected User : " + user.toString());
         }
 
         if (savedInstanceState == null) {
@@ -98,6 +97,10 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     @Override
     public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment && ((MDLiveDashBoardFragment) fragment).isWebView) {
+            ((MDLiveDashBoardFragment) fragment).mWebView.setVisibility(View.GONE);  // Since there is no further navigation from the webview
+        }
         return;
     }
 

@@ -43,10 +43,13 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.plugins.SocialSharingHandler;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
@@ -409,15 +412,17 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             MdliveUtils.showAddChildExcededDialog(this,userBasicInfo.getAssistPhoneNumber());
         } else {
             Intent addFamilyMember = new Intent(getBaseContext(), AddFamilyMemberActivity.class);
-            startActivity(addFamilyMember); ;
+            startActivity(addFamilyMember);
         }
     }
 
     public void shareApplication() {
-        final Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mdl_share_details_text));
-        startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
+        SocialSharingHandler sShare = new SocialSharingHandler();
+        try {
+            sShare.doSendIntent(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void clearMinimizedTime() {

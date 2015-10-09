@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private View mNotificationView, mEmailConfirmationIv;
 
     private TextView mMessageCountTextView,mEmailConfirmationTv;
-    private WebView mWebView;
+    public WebView mWebView;
+    public boolean isWebView;
 
     private UserBasicInfo mUserBasicInfo;
 
@@ -240,6 +242,17 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                             mWebView.getSettings().setUseWideViewPort(true);
                             mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
                             mWebView.getSettings().setBuiltInZoomControls(true);
+                            mWebView.setOnKeyListener(new View.OnKeyListener() {
+
+                                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                                    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+                                        mWebView.setVisibility(View.GONE);
+                                    }
+                                    return false;
+                                }
+
+                            });
+                            isWebView = true;
                         }
                     });
                 }
