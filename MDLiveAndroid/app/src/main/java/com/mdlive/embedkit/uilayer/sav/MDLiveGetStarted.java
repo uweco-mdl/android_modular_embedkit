@@ -666,14 +666,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 hideProgress();
                     if (response.has("located_in")) {
                         editor.putString(PreferenceConstants.USER_STATE_LIST, response.getJSONArray("located_in").toString()).commit();
-                        Log.d("Shared List", sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "No List"));
                     }
                     if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                        Log.d("Hello", "Selected User : " + user.toString());
-                        Log.d("Hello", "Selected User : " + "Dependent is called");
                         loadDependentUserInformationDetails(user.mId);
                     } else {
-                        Log.d("Hello", "Selected User : " + "Parent is called");
                         loadUserInformationDetails();
                     }
                     handleproviderTypeSuccessResponse(response);
@@ -686,7 +682,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};

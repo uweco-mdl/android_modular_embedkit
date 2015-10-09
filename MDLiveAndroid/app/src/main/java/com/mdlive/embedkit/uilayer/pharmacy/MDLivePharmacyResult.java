@@ -150,7 +150,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         startActivityForResult(i, IntegerConstants.PHARMACY_REQUEST_CODE);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
-        //finish();
     }
 
     @Override
@@ -227,11 +226,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         googleMap = mapView.getMap();
         googleMap.getUiSettings().setAllGesturesEnabled(false);
         expandgoogleMap = mapView.getMap();
-        /*if (googleMap != null) {
-            if (googleMap != null) {
-                googleMap.setInfoWindowAdapter(markerInfoAdapter);
-            }
-        }*/
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -246,11 +240,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 expandgoogleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
         }
-
-
-
-        /*expandgoogleMap.getUiSettings().setScrollGesturesEnabled(false);
-        googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
     GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
@@ -277,49 +266,55 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
 
     public void getPharmacySearchResults(String postBody) {
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if(bottomLoder.getVisibility()==View.VISIBLE){
-                    bottomLoder.setVisibility(View.GONE);
+        if (MdliveUtils.isNetworkAvailable(MDLivePharmacyResult.this)) {
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (bottomLoder.getVisibility() == View.VISIBLE) {
+                        bottomLoder.setVisibility(View.GONE);
+                    }
+                    try {
+                        Log.e("Pharmacy Response --> ", response.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handleListSuccessResponse(response);
+                    resetLoadingViews();
                 }
-                try {
-                    Log.e("Pharmacy Response --> ", response.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                handleListSuccessResponse(response);
-                resetLoadingViews();
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject errorObj = new JSONObject(responseBody);
-                    Log.e("Pharmacy Response ", errorObj.toString());
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        JSONObject errorObj = new JSONObject(responseBody);
+                        Log.e("Pharmacy Response ", errorObj.toString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                if(bottomLoder.getVisibility()==View.VISIBLE){
-                    bottomLoder.setVisibility(View.GONE);
+                    if (bottomLoder.getVisibility() == View.VISIBLE) {
+                        bottomLoder.setVisibility(View.GONE);
+                    }
+                    hideProgress();
+                    resetLoadingViews();
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
                 }
+            };
+            if (bottomLoder.getVisibility() == View.VISIBLE) {
                 hideProgress();
-                resetLoadingViews();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
+            } else {
+                showProgress();
             }
-        };
-        if(bottomLoder.getVisibility()==View.VISIBLE){
+            ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
+            services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
+        }else{
+            MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLivePharmacyResult.this);
             hideProgress();
-        }else {
-            showProgress();
+            bottomLoder.setVisibility(View.GONE);
         }
-        ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
-        services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
     }
 
 
@@ -715,63 +710,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         insuranceMap.put("provider_type_id","3");
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
-    }
-
-    /**
-     * This method handles appointment confirmation for zero dollar user
-     * responseListener-Listner to handle success response.
-     * errorListener -Listner to handle failed response.
-     * ConfirmAppointmentServices-Class will send the request to the server and get the responses
-     *
-     */
-    private void doConfirmAppointment() {
-        showProgress();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    hideProgress();
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.APPT_ID, apptId);
-                        editor.commit();
-                        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
-                        startActivity(i);
-                        finish();
-                        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
-                    } else {
-                        Toast.makeText(MDLivePharmacyResult.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
-            }
-        };
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("phys_availability_id", "");
-        params.put("alternate_visit_option", "No Answer");
-        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-        params.put("timeslot", "Now");
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
-        Log.e("ConfirmAPPT Params", params.toString());
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
     /**
