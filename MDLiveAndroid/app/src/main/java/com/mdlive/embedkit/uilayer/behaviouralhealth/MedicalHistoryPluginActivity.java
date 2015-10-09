@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -76,6 +77,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 // Log.e("error", error.getMessage());
                 hideProgress();
+                handleVollegyErrorResponse(error);
             }
         };
         MedicalHistoryAggregationServices services = new MedicalHistoryAggregationServices(MedicalHistoryPluginActivity.this, null);
@@ -138,6 +140,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
+                handleVollegyErrorResponse(error);
             }
         };
         UpdateFemaleAttributeServices services = new UpdateFemaleAttributeServices(MedicalHistoryPluginActivity.this, null);
@@ -164,6 +167,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
+                handleVollegyErrorResponse(error);
             }
         };
         try {
@@ -239,6 +243,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
+                handleVollegyErrorResponse(error);
             }
         };
         callPharmacyService(responseListener, errorListener);
@@ -367,6 +372,14 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             i.putExtra("Response",jsonResponse);
             startActivity(i);
             MdliveUtils.startActivityAnimation(MedicalHistoryPluginActivity.this);
+        }
+    }
+
+    public void handleVollegyErrorResponse(VolleyError error){
+        if (error.networkResponse == null) {
+            if (error.getClass().equals(TimeoutError.class)) {
+                MdliveUtils.connectionTimeoutError(getProgressDialog(), MedicalHistoryPluginActivity.this);
+            }
         }
     }
 }
