@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +161,14 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getActivity() != null && (getActivity() instanceof MDLiveDashboardActivity)) {
+            final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
+            if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                loadDependendUserDetails(user, true);
+            } else {
+                loadUserInformationDetails(true);
+            }
+        }
     }
 
     @Override
@@ -173,7 +182,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             } else {
                 loadUserInformationDetails(true);
             }
-        } else {
+        } else if(getActivity()!=null){
             mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
             updateList();
         }
