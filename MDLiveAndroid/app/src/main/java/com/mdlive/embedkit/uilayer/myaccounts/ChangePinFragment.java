@@ -371,7 +371,6 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             hideProgressDialog();
 
             MdliveUtils.setLockType(getActivity(), getActivity().getString(R.string.mdl_pin));
-//            Toast.makeText(getActivity(),"Pin Changed Successfully",Toast.LENGTH_SHORT).show();
             getActivity().finish();
 
         } catch (Exception e) {
