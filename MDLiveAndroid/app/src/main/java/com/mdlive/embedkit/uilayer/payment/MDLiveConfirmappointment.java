@@ -11,12 +11,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -107,7 +103,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
 
         TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
-        String str_termsConsent = "I certify that I have read and accstyleept the terms of <a href='https://www.mdlive.com/consumer/informed_consent_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">MDLIVE Medical Group\'s Informed Consent</a>. ";
+        String str_termsConsent = "I certify that I have read and accept the terms of <a href='https://www.mdlive.com/consumer/informed_consent_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">MDLIVE Medical Group\'s Informed Consent</a>. ";
 
         Spannable underLinedString = (Spannable) Html.fromHtml(str_termsConsent);
         for (URLSpan u: underLinedString.getSpans(0, underLinedString.length(), URLSpan.class)) {
@@ -142,7 +138,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
         TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
 
-        String str_privacy_policy = "I have read MDLIVE Medical Group's Privacy Policy and I acknowledge that I have the ability to print a hard copy of the <a href='https://www.mdlive.com/consumer/privacy_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">Privacy Policy </a>for my records.";
+        String str_privacy_policy = "I have read MDLIVE Medical Group's <a href='https://www.mdlive.com/consumer/privacy_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">Privacy Policy </a> and I acknowledge that I have the ability to print a hard copy of the Privacy Policy for my records.";
 
         Spannable underLinedStringPolicy = (Spannable) Html.fromHtml(str_privacy_policy);
         for (URLSpan u: underLinedStringPolicy.getSpans(0, underLinedStringPolicy.length(), URLSpan.class)) {
@@ -366,7 +362,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
             providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
             ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
-            providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
+            providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
             ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
             consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
             ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationType + " Consultation");
@@ -392,7 +388,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             if(providerName.equalsIgnoreCase("Doctor On Call")){
                 ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("E, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
@@ -403,11 +399,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 Log.e("Step 2 B", "11111");
             } else {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("E, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
-                SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm  a");
                 String currentTime = df.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
                 Log.e("Step 2 C", "11111");
