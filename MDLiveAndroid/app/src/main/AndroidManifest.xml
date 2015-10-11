@@ -291,6 +291,13 @@
             android:screenOrientation="portrait"
             >
         </activity>
+
+
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.plugins.FacebookShareUtil"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>
