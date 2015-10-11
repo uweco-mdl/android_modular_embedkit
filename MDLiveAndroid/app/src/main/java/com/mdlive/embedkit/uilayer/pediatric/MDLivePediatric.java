@@ -503,6 +503,11 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
 
                 postParams.put("personal_info", weightMap);
+                String weight = personalInfoObj.getString("weight");
+                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0")) {
+                    ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
+                }
+
                 enableSaveButton();
                 Gson gs = new Gson();
                 Log.e("Post Params", gs.toJson(postParams).toString());
@@ -547,8 +552,12 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             }
         } else if ("Birth complications explanation".equals(name)) {
             edtBirthComplications.setText(value);
-        } else if ("Current Diet".equals(name)) {
-            txtDietType.setText(StringConstants.DIET_TYPE);
+        } else if ("Current Diet".equalsIgnoreCase(name)) {
+            if(value != null && !value.isEmpty()) {
+                txtDietType.setText(value);
+            } else {
+                txtDietType.setText(StringConstants.DIET_TYPE);
+            }
         }
     }
 
@@ -599,7 +608,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-        EditText weightEt = (EditText) findViewById(R.id.edt_birthweight);
+        EditText weightEt = (EditText) findViewById(R.id.edt_currentweight);
         if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
             if((weightEt.getText().toString().equals("0"))){
                 GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(weightEt.getText().toString()) + ""},this);
