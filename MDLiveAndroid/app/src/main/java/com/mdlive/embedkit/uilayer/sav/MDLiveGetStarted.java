@@ -233,7 +233,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
                                 Log.e("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
-                                phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
+                                //phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
                                 if(((TextView)findViewById(R.id.providertypeTxt)).getText() != null)
