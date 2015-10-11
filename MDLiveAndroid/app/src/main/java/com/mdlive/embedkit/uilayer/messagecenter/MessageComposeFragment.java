@@ -40,7 +40,7 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
 
     private EditText mSubjectEditText;
     private EditText mBodyEditText;
-
+    private MessageCenterComposeActivity parentActivity;
     private OnBothTextEntered mOnBothTextEntered;
 
     public static MessageComposeFragment newInstance(final Parcelable parcelable) {
@@ -60,7 +60,9 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        if(activity instanceof MessageCenterComposeActivity){
+            parentActivity = (MessageCenterComposeActivity) activity;
+        }
         mOnBothTextEntered = (OnBothTextEntered) activity;
     }
 
@@ -86,12 +88,18 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
         if (parcelable instanceof ReceivedMessage) {
             url = ((ReceivedMessage) parcelable).providerImageUrl;
             to = ((ReceivedMessage) parcelable).from;
+            if(parentActivity != null){
+                parentActivity.isFromNewMessageCompose(false);
+            }
         } else if (parcelable instanceof SentMessage) {
             url = ((SentMessage) parcelable).providerImageUrl;
             to = ((SentMessage) parcelable).from;
         } else if (parcelable instanceof MyProvider) {
             url = ((MyProvider) parcelable).providerImageUrl;
             to = ((MyProvider) parcelable).name;
+            if(parentActivity != null){
+                parentActivity.isFromNewMessageCompose(true);
+            }
         } else {
             url = ((ConsultationHistory) parcelable).getProviderImageUrl();
             to = ((ConsultationHistory) parcelable).getProviderName();
