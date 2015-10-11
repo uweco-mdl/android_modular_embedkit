@@ -56,8 +56,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import static java.util.Calendar.MONTH;
-
 /**
  * This class returns the Provider profile for the corresponding providers.Along with that
  * the provider profile the details of the provider has also be defined.The Qualification of
@@ -914,8 +912,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             byphoneBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setClickable(false);
             accessModeCall("video");
+            saveTimeSlotToNowMode();
             tapReqFutureBtnAction();
-
         }else  if(str_Availability_Type.equalsIgnoreCase("video or phone"))
         {
             ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
