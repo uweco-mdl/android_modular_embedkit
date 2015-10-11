@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -286,6 +287,12 @@ public class NotificationFragment extends MDLiveBaseFragment {
             mUpcomingAppoinmantTextView.setVisibility(View.GONE);
             mNoAppointmentLinearLayout.setVisibility(View.GONE);
             onCallNotificationLayout.setVisibility(View.VISIBLE);
+            String apptId = mPendingAppointment.getOncallAppointments().get(0).getId();
+            Log.e("Appoint Ment Id Save",apptId);
+            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(PreferenceConstants.APPT_ID, apptId);
+            editor.commit();
             final StringBuilder builder = new StringBuilder();
             builder.append("Doctor On Call" + "\n");
             builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis(), "",getActivity()) + "\n");
@@ -296,11 +303,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
             onCallNotificationLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String apptId = mPendingAppointment.getOncallAppointments().get(0).getId();
-                    SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString(PreferenceConstants.APPT_ID, apptId);
-                    editor.commit();
                     Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
                     startActivity(intent);
                     MdliveUtils.startActivityAnimation(getActivity());
