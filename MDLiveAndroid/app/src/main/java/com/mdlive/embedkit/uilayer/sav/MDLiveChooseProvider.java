@@ -325,10 +325,16 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     isDoctorOnCall=true;
                     StrDoctorOnCall=true;
 
+                }else if(!resObject.getBoolean("doctor_on_call")&&!resObject.getBoolean("doctor_on_call_video"))
+                {
+                    isDoctorOnVideo=false;
+                    isDoctorOnCall=false;
+                    StrDoctorOnCall=false;
                 }
 
                 Log.d("Doc On call",""+resObject.getBoolean("doctor_on_call_video"));
                 Log.d("Doc On Video",""+resObject.getBoolean("doctor_on_call"));
+                Log.e("Doc On StrDoctorOnCall",""+StrDoctorOnCall);
 
             }
 

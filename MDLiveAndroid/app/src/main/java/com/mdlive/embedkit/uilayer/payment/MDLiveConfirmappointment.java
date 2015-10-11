@@ -388,7 +388,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             if(providerName.equalsIgnoreCase("Doctor On Call")){
                 ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                SimpleDateFormat sdf = new SimpleDateFormat("E, MMMM d");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
@@ -399,7 +399,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 Log.e("Step 2 B", "11111");
             } else {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                SimpleDateFormat sdf = new SimpleDateFormat("E, MMMM d");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);

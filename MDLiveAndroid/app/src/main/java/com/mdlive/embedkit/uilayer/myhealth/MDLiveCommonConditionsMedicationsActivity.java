@@ -157,7 +157,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("frequency")
                             && !((JSONObject) conditionsListJSONArray.get(i)).isNull("frequency")){
-                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("frequency");
+                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("frequency").toLowerCase();
                         data.setFrequency(((JSONObject) conditionsListJSONArray.get(i)).getString("frequency"));
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("source") &&

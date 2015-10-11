@@ -873,9 +873,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         try {
             for(int i =0; i<historyPercentageArray.length();i++){
                 if(historyPercentageArray.getJSONObject(i).has("behavioral")){
-                    findViewById(R.id.BehaviouralHealthCardView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.BehaviouralHealthLl).setVisibility(View.VISIBLE);
                     if(historyPercentageArray.getJSONObject(i).getInt("behavioral")!=0){
-                        ((TextView)findViewById(R.id.BehaviouralHealthTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+                        ((TextView)findViewById(R.id.BehavourNameTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }
                     break;
                 }
@@ -884,15 +884,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
-        if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
+     /*   if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
             ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
         }
-
+    */
         if(isNewUser){
             findViewById(R.id.BehaviouralHealthLl).setVisibility(View.GONE);
         }
-
     }
 
     /**

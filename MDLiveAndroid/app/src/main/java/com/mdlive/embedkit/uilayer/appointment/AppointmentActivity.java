@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.appointment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -86,7 +87,20 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
     public void onCancelAppointmentClicked(View view) {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof  AppointmentFragment) {
-            ((AppointmentFragment) fragment).onCancelAppointmentClicked();
+            DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ((AppointmentFragment) fragment).onCancelAppointmentClicked();
+                }
+            };
+            DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+            MdliveUtils.showDialog(this, getString(R.string.mdl_Cancel_apt_title), getString(R.string.mdl_Cancel_apt_msg),
+                    getString(R.string.mdl_yes), getString(R.string.mdl_no), positive, negative);
         }
     }
 }
