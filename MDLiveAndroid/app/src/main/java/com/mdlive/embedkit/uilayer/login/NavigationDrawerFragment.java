@@ -161,14 +161,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() != null && (getActivity() instanceof MDLiveDashboardActivity)) {
-            final User user = getArguments().getParcelable(USER_PASSED_FROM_ACTIVITY);
-            if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                loadDependendUserDetails(user, true);
-            } else {
-                loadUserInformationDetails(true);
-            }
-        }
     }
 
     @Override
