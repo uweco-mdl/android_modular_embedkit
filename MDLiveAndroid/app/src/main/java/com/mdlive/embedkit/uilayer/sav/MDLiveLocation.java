@@ -125,6 +125,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                StateTxt.setText(getString(R.string.mdl_select_state));
                 MdliveUtils.validateZipcodeFormat(ZipcodeEditTxt);
             }
         });

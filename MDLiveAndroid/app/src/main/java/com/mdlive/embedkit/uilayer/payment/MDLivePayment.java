@@ -104,10 +104,10 @@ public class MDLivePayment extends MDLiveBaseActivity {
         ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToNextPage();
                 //Delete
-               setExistingCardDetailUser=true;
-                getCreditCardInfoService();
+                setExistingCardDetailUser=true;
+                moveToNextPage();
+//                getCreditCardInfoService();
 
             }
         });
