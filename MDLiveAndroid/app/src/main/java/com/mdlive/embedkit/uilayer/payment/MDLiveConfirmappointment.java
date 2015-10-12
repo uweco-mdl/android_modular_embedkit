@@ -178,17 +178,9 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString(PreferenceConstants.APPT_ID, apptId);
                             editor.commit();
-    //                        Intent i = new Intent(MDLiveConfirmappointment.this, MDLiveConfirmappointment.class);
-    //                        startActivity(i);
-    //                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
                             if (consultationType.equalsIgnoreCase("phone")) {
                                 movetothankyou();
-                            }
-    //                        else if(consultationType.equalsIgnoreCase("video")&&Time.isEmpty())
-    //                        {
-    //                            movetostartVisit();
-    //                        }
-                            else if (!Time.equalsIgnoreCase("Now")) {
+                            } else if (!Time.equalsIgnoreCase("Now")) {
 
                                 movetothankyou();
                             } else {
@@ -210,7 +202,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                                 }
                             });
 
-    //                        Toast.makeText(MDLivePayment.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (Exception e) {
@@ -270,8 +261,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
             HashMap<String, Object> params = new HashMap<String, Object>();
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-            //Log.e("PostValue confirmTimeStamp", TimeStamp);
-            //Log.e("PostValue phys", phys_ID);
             params.put("appointment_method", appointmentMethodType);
             params.put("alternate_visit_option", "No Answer");
 
@@ -301,9 +290,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
             params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
-//        if (promoCode != null && !promoCode.isEmpty()) {
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
-//        }
             Gson gson = new GsonBuilder().serializeNulls().create();
             ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
             services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
@@ -327,7 +314,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     public void rightBtnOnClick(View v) {
         if (CheckdoconfirmAppmt) {
-            Log.e("Am", "Am in rightbtnClick");
             if(MDLiveChooseProvider.isDoctorOnCall){
                 doOnCallConsultaion();
             }else if(MDLiveChooseProvider.isDoctorOnVideo){
@@ -359,7 +345,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         try {
             sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
-            Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
             providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
             ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
             providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
@@ -368,6 +353,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             String consultationTypeStr = getString(R.string.mdl_title_video_home);
             if (consultationType.equalsIgnoreCase("phone")){
                 consultationTypeStr = getString(R.string.mdl_phone_consultation);
+                findViewById(R.id.PhoneToCallNumberLayout).setVisibility(View.VISIBLE);
             }
             ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationTypeStr);
             consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
@@ -415,40 +401,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e("Step 3", "11111");
-        /*   if (!consultationDate.isEmpty() && !Time.isEmpty()) {
-         ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
-            ((TextView) findViewById(R.id.txtTime)).setText(Time);
-        }
-        else {
-            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
-            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-            String format = sdf.format(calendar.getTime());
-            ((TextView) findViewById(R.id.txtDate)).setText(format);
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
-            String currentTime = df.format(calendar.getTime());
-            ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
-        }*/
         //This is for Now Scenario
-
-        String str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
-        String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
-        Log.e("CheckAvailabilityType",str_Availability_Type);
-//        try {
-//            if(str_avail_status.equalsIgnoreCase("true")) {
-//                if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
-//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-//                } else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-//                } else if (str_Availability_Type.equalsIgnoreCase("video")) {
-//                    ((TextView) findViewById(R.id.txtTime)).setText("Now");
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
         phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         formatDualString(phone);
         doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
@@ -504,9 +457,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         editor.putString(PreferenceConstants.APPT_ID, callConsultationId);
                         editor.commit();
                         movetostartVisit();
-                       /* Intent onCallVideoIntent = new Intent(MDLiveConfirmappointment.this, MDLiveWaitingRoom.class);
-                        startActivity(onCallVideoIntent);
-                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);*/
                     }
                 } catch (Exception e) {
                     dismissDialog();
@@ -739,9 +689,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         MDLiveChooseProvider.isDoctorOnCall=false;
                         MDLiveChooseProvider.isDoctorOnVideo=false;
                         dialog.dismiss();
-                       /* Intent intent = new Intent();
-                        intent.setAction("com.mdlive.embedkit.HOME_PRESSED");
-                        sendBroadcast(intent);*/
                     }
                 });
             }
