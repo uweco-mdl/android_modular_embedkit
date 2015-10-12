@@ -217,9 +217,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         };
     }
 
-
-
-
     public void rightBtnOnClick(View v){
         String strappmtreason = appointmentReason.getText().toString().trim();
         String strappmtcomment = appointmentComment.getText().toString().trim();
@@ -230,7 +227,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
         if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
 
-                && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate) && !TextUtils.isEmpty(selectionType)) {
+               /* && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)*/ && !TextUtils.isEmpty(selectionType)) {
 
             HashMap params1 = new HashMap();
             params1.put("appointment_method", selectedvideo);
@@ -270,9 +267,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         appointmentContactNumber.addTextChangedListener(watcher);
         GetCurrentDate((TextView) findViewById(R.id.appointmentNextAvailable));
         nextAvailableList.clear();
-        nextAvailableList.add("morning");
-        nextAvailableList.add("afternoon");
-        nextAvailableList.add("evening");
+        nextAvailableList.add("Morning");
+        nextAvailableList.add("Afternoon");
+        nextAvailableList.add("Evening");
         reasonList  = new ArrayList<>();
         ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 
@@ -385,7 +382,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         day = c.get(Calendar.DAY_OF_MONTH);
 
         // Show current date
-        String format = new SimpleDateFormat("E, MMM d, yyyy").format(c.getTime());
+        String format = new SimpleDateFormat("EEEE  MMM d, yyyy").format(c.getTime());
         Log.e("chk date",format);
         ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
 
@@ -422,7 +419,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            SimpleDateFormat sdf = new SimpleDateFormat("E, MMM d, yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE  MMM d, yyyy");
             sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
             String format = sdf.format(cal.getTime());
             ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
