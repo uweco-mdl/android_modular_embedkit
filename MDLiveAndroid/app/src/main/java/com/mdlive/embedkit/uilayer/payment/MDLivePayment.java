@@ -33,6 +33,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
@@ -146,12 +147,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-//        if (MdliveUtils.ssoInstance.getCurrentEnvironment() == 4) {
-//            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
-//        } else {
-//            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
-//        }
-        HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
+        } else {
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        }
+
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         mScanCardBtn.setOnClickListener(new View.OnClickListener() {
             @Override

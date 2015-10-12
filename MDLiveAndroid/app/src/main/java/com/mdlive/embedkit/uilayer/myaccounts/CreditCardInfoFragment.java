@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
@@ -126,7 +127,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             myAccountHostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-        myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index_prod.html");
+        } else {
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index.html");
+        }
         myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         mScanCardBtn.setOnClickListener(new View.OnClickListener() {
             @Override

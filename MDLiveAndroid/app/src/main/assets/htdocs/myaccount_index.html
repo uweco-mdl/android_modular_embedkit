@@ -1,91 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery-1.4.1.min.js" charset="utf-8"></script>
-	<script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/hpci-cciframe-1.0.js"	charset="utf-8"></script>
-	<script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery.ba-postmessage.min.js"	charset="utf-8"></script>
+    <script type="text/javascript" src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery-1.4.1.min.js" charset="utf-8"></script>
+    <script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/hpci-cciframe-1.0.js"	charset="utf-8"></script>
+    <script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery.ba-postmessage.min.js"	charset="utf-8"></script>
 </head>
 <style>
-	html,body {
-	width: 100%;
-	margin: 0 0;
-	ping: 0;
-	}
+    html,body {
+    width: 100%;
+    margin: 0 0;
+    ping: 0;
+    }
 
-	@font-face {
-	font-family: helvetica neue ultra light;
-	src: url('font/ufonts.com_helvetica_neue_ultralight.ttf');
-	}
+    @font-face {
+    font-family: helvetica neue ultra light;
+    src: url('font/ufonts.com_helvetica_neue_ultralight.ttf');
+    }
 
-	@font-face {
-	font-family: helvetica neue thin;
-	src: url('font/ufonts.com_helveticaneue_thin_1_.ttf');
-	}
+    @font-face {
+    font-family: helvetica neue thin;
+    src: url('font/ufonts.com_helveticaneue_thin_1_.ttf');
+    }
 
-	@font-face {
-	font-family: helvetica neue light thin;
-	src: url('font/HelveticaNeue_Lt.ttf');
-	}
+    @font-face {
+    font-family: helvetica neue light thin;
+    src: url('font/HelveticaNeue_Lt.ttf');
+    }
 
-	@font-face {
-	font-family: noteworthy;
-	src: url('font/Noteworthy.ttc');
-	}
+    @font-face {
+    font-family: noteworthy;
+    src: url('font/Noteworthy.ttc');
+    }
 
-	.mdliveframe{
-	position: absolute;
-	overflow: hidden;
-	}
+    .mdliveframe{
+    position: absolute;
+    overflow: hidden;
+    }
 
-	.mdlive-default-font-family {
-	font-family: helvetica Neue;
-	}
+    .mdlive-default-font-family {
+    font-family: helvetica Neue;
+    }
 
-	.billing-save-button{
-	text-align: center;
-	line-height: 52px;
-	background: rgb(88, 119, 173);
-	cursor: pointer;
-	font-size: 22px !important;
-	font-family: helvetica neue;
-	border-radius: 5px;
-	color: white;
-	display: inline-block;
-	width: 90%;
-	}
-	#mdliveframe {
-	width:100%;
-	}
-	.ccv-camera-img-content {
-	position: absolute;
-	top: 55px;
-	width: 45px;
-	height: 30px;
-	right: 11px;
-	}
-	.scan-card-button {
-	width: 46px;
-	height: 27px;
-	margin: 0 0 0 10px;
-	}
-	.billing-page{
-	width: 100%;
-	float: left;
-	}
-	.billing-page-name{
-	width: 94%;
-	padding: 10px;
-	float: left;
-	background-color: #ECF5FA;
-	font-weight: bold;
-	}
+    .billing-save-button{
+    text-align: center;
+    line-height: 52px;
+    background: rgb(88, 119, 173);
+    cursor: pointer;
+    font-size: 22px !important;
+    font-family: helvetica neue;
+    border-radius: 5px;
+    color: white;
+    display: inline-block;
+    width: 90%;
+    }
+    #mdliveframe {
+    width:100%;
+    }
+    .ccv-camera-img-content {
+    position: absolute;
+    top: 55px;
+    width: 45px;
+    height: 30px;
+    right: 11px;
+    }
+    .scan-card-button {
+    width: 46px;
+    height: 27px;
+    margin: 0 0 0 10px;
+    }
+    .billing-page{
+    width: 100%;
+    float: left;
+    }
+    .billing-page-name{
+    width: 94%;
+    padding: 10px;
+    float: left;
+    background-color: #ECF5FA;
+    font-weight: bold;
+    }
 </style>
 <body>
 
 <script type="text/javascript">
 		var parent_host_url = encodeURIComponent("file:///android_asset/htdocs");
 		var hpciCCFrameHost = "https://cc.hostedpci.com";
-		var parent_host_query_string = encodeURIComponent("/hpci/index_prod.html");
+		var parent_host_query_string = encodeURIComponent("/hpci/myaccount_index.html");
 		var hpciCCFrameFullUrl = null;
 		var hpciCCFrameName = "mdliveframe";
 		var billingData = null;
@@ -180,7 +180,7 @@
             return false;
         }else if(!/^[0-9]+$/.test(ccNumValueCheck) || ccNumValueCheck.length>16 || ccNumValueCheck.length<16){
         	this.billingData = {
-                "status" : "Invalid Card Number"
+                "status" : "Invalid Credit Card Information"
             }
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
@@ -195,11 +195,11 @@
         setTimeout(
                 function() {
                     jQuery('input').blur();
-						//Set hostedPCI URL. This will be use to refresh the HPCI iframe when user failed to input correct cc number or cvv
-						this.hpciCCFrameFullUrl = "https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobileandroid&sid=527123&fullParentHost="
-								+ this.parent_host_url
-								+ "&fullParentQStr="
-								+ this.parent_host_query_string;
+                    //Set hostedPCI URL. This will be use to refresh the HPCI iframe when user failed to input correct cc number or cvv
+                    this.hpciCCFrameFullUrl = "https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=stag&locationName=mobileandroid&sid=527122&fullParentHost="
+                            + this.parent_host_url
+                            + "&fullParentQStr="
+                            + this.parent_host_query_string;
                     console.log("Tokenizing...hpciCCFrameFullUrl ===>>>>"+this.hpciCCFrameFullUrl);
 					return sendHPCIMsg();
                 }, 50);
@@ -215,24 +215,23 @@
 
 	</script>
 <div class="billing-page">
+    <form name="input" id="update_billing" class="form-frame" method="post">
 
-	<form name="input" id="update_billing" class="form-frame" method="post">
+        <!-- <iframe id="mdliveframe" name="mdliveframe" src="http://localhost:8087/hpci/templateindex.html" frameborder="0" height:"80">If you can see this, your browser doesn't understand IFRAME.</iframe> -->
 
-		<!-- <iframe id="mdliveframe" name="mdliveframe" src="http://localhost:8087/hpci/templateindex.html" frameborder="0" height:"80">If you can see this, your browser doesn't understand IFRAME.</iframe> -->
+        <!--QA HPCI iFrame-->
+        <iframe id="mdliveframe" name="mdliveframe"
+                src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=stag&locationName=embedaccountandroid&sid=527122&fullParentHost=file%3A%2F%2F&fullParentQStr=%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex.html&cvvValidate=Y"
+                frameborder="0" scrolling="no" onload="mdliveSetData();"> If you can see
+            this, your browser doesn't understand IFRAME. </iframe>
 
-		<!--Production HPCI iFrame -->
-		<iframe id="mdliveframe" name="mdliveframe"
-				src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=embedbillingandroid&sid=527123&fullParentHost=file%3A%2F%2F%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex_prod.html&cvvValidate=Y"
-				frameborder="0" scrolling="no" onload="mdliveSetData();"> If you can see
-			this, your browser doesn't understand IFRAME. </iframe>
+        <input type="hidden" id="ccNum" name="mdliveCCNum" value="" />
+        <input type="hidden" id="ccCVV" name="mdliveCCCVV" value="" />
 
-		<input type="hidden" id="ccNum" name="mdliveCCNum" value="" />
-		<input type="hidden" id="ccCVV" name="mdliveCCCVV" value="" />
-
-		<div style="margin-left: 7px; display:none;">
-			<div class="billing-save-button" onclick="tokenizeForm(); return false;">Save</div>
-		</div>
-	</form>
+        <div style="margin-left: 7px; display:none;">
+            <div class="billing-save-button" onclick="tokenizeForm(); return false;">Save</div>
+        </div>
+    </form>
 </div>
 </body>
 
