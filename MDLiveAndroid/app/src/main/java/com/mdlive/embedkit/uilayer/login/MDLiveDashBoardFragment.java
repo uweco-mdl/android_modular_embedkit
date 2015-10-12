@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -313,25 +314,36 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         logD("Appointment", appointment.toString());
         final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
         final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
-        firstTextView.setText("Your appointment has started.");
-        secondTextView.setText("Tap here to enter");
+
 
         mNotificationView.setTag(appointment);
         mNotificationView.setVisibility(View.VISIBLE);
-        mNotificationView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if (v.getTag() != null) {
-                        Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
-                        startActivity(intent);
-                        MdliveUtils.startActivityAnimation(getActivity());
-                    }
-                } catch (Exception e) {
+        Log.e("Appointment Dash",appointment.getApptType());
 
+        if(appointment.getApptType().equalsIgnoreCase("video")){
+            firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
+            secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
+            mNotificationView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (v.getTag() != null) {
+                            Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
+                            startActivity(intent);
+                            MdliveUtils.startActivityAnimation(getActivity());
+                        }
+                    } catch (Exception e) {
+
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            SharedPreferences phoneNumberPref = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            firstTextView.setText(getActivity().getString(R.string.mdl_oncall_dashboard_phone_text, phoneNumberPref.getString(PreferenceConstants.PHONE_NUMBER, "")));
+            secondTextView.setVisibility(View.GONE);
+        }
+
+
     }
 
 

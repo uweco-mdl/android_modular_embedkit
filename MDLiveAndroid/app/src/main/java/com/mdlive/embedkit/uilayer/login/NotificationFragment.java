@@ -288,26 +288,31 @@ public class NotificationFragment extends MDLiveBaseFragment {
             mNoAppointmentLinearLayout.setVisibility(View.GONE);
             onCallNotificationLayout.setVisibility(View.VISIBLE);
             String apptId = mPendingAppointment.getOncallAppointments().get(0).getId();
-            Log.e("Appoint Ment Id Save",apptId);
+            Log.e("Appoint Ment Id Save", apptId);
             SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.APPT_ID, apptId);
             editor.commit();
             final StringBuilder builder = new StringBuilder();
             builder.append("Doctor On Call" + "\n");
-            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis(), "",getActivity()) + "\n");
+            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis(), "", getActivity()) + "\n");
 
-            builder.append(mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " +getResources().getString(R.string.mdl_consultation)+ "\n");
+            builder.append(mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n");
 
             onCallNotifyTextview.setText(builder.toString());
-            onCallNotificationLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
-                    startActivity(intent);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                }
-            });
+
+            Log.e("Appointment Side", mPendingAppointment.getOncallAppointments().get(0).getApptType());
+            if(mPendingAppointment.getOncallAppointments().get(0).getApptType().equalsIgnoreCase("video")){
+                onCallNotificationLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), MDLiveStartVisit.class);
+                        startActivity(intent);
+                        MdliveUtils.startActivityAnimation(getActivity());
+                    }
+                });
+            }
+
 
 
 
