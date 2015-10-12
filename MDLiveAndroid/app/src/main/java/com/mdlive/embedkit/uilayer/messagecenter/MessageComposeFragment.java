@@ -83,6 +83,8 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
 
         String url = null;
         String to = null;
+        mSubjectEditText = (EditText) view.findViewById(R.id.fragment_message_compose_subject_edit_text);
+        mBodyEditText = (EditText) view.findViewById(R.id.fragment_message_compose_body_edit_text);
 
         final Parcelable parcelable = getArguments().getParcelable(TAG);
         if (parcelable instanceof ReceivedMessage) {
@@ -91,6 +93,8 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
             if(parentActivity != null){
                 parentActivity.isFromNewMessageCompose(false);
             }
+            mSubjectEditText.setText("Re: "+ ((mSubjectEditText.getText() == null ||
+                    mSubjectEditText.getText().toString().length() == 0) ? "" : mSubjectEditText.getText().toString()));
         } else if (parcelable instanceof SentMessage) {
             url = ((SentMessage) parcelable).providerImageUrl;
             to = ((SentMessage) parcelable).from;
@@ -115,8 +119,6 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
             toTextView.setText(to);
         }
 
-        mSubjectEditText = (EditText) view.findViewById(R.id.fragment_message_compose_subject_edit_text);
-        mBodyEditText = (EditText) view.findViewById(R.id.fragment_message_compose_body_edit_text);
 
         mSubjectEditText.addTextChangedListener(this);
         mBodyEditText.addTextChangedListener(this);
@@ -195,7 +197,6 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
 
             final JSONObject jsonObject = new JSONObject();
             final JSONObject jsonObjectMessage = new JSONObject();
-
             final Parcelable parcelable = getArguments().getParcelable(TAG);
             if (parcelable instanceof ReceivedMessage) {
                 jsonObjectMessage.put("destination_user_id", ((ReceivedMessage) parcelable).providerId);
@@ -234,7 +235,7 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
                     MdliveUtils.showDialog(getActivity(), message.message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            getActivity().finish();
+                            getActivity().finish();
                         }
                     });
                 }
