@@ -216,6 +216,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     private void loadPendingAppoinments() {
+        mUpcomingAppoinmantListView.setAdapter(null);
         if (MdliveUtils.isNetworkAvailable(getActivity())) {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override

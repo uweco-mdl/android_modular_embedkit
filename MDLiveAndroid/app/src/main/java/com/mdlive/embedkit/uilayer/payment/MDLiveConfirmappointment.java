@@ -407,7 +407,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
                     timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
                 }
-                ((TextView) findViewById(R.id.txtTime)).setText(Time);
+                if(Time != null && !Time.equalsIgnoreCase("Now")){
+                    ((TextView) findViewById(R.id.txtTime)).setText(Time +" "+ timeZoneValue);
+                }else if(Time!=null){
+                    ((TextView) findViewById(R.id.txtTime)).setText(Time);
+                }
                 Log.e("Step 2 B", "11111");
             } else {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);

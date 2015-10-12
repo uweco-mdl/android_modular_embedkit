@@ -186,7 +186,7 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
         }
 
         ViewGroup.LayoutParams params = gridView.getLayoutParams();
-        params.height = totalHeight;
+        params.height = totalHeight+50;
         gridView.setLayoutParams(params);
 
     }

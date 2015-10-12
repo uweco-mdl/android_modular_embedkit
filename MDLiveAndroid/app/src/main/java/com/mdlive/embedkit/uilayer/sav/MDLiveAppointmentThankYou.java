@@ -121,8 +121,11 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             if(UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo()!=null){
                 timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
             }
-            ((TextView)findViewById(R.id.time)).setText("Time: "+Time);
-
+            if(Time != null && !Time.equalsIgnoreCase("Now")){
+                ((TextView) findViewById(R.id.time)).setText(Time +" "+ timeZoneValue);
+            }else if(Time!=null){
+                ((TextView) findViewById(R.id.time)).setText(Time);
+            }
         }else
         {
 
@@ -133,7 +136,11 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             if(UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo()!=null){
                 timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
             }
-            ((TextView)findViewById(R.id.time)).setText("Time: "+Time+" "+timeZoneValue);
+            if(Time != null && !Time.equalsIgnoreCase("Now")){
+                ((TextView) findViewById(R.id.time)).setText(Time +" "+ timeZoneValue);
+            }else if(Time!=null){
+                ((TextView) findViewById(R.id.time)).setText(Time);
+            }
         }
 
     }
