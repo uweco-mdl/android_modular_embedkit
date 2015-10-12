@@ -295,7 +295,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             editor.commit();
             final StringBuilder builder = new StringBuilder();
             builder.append("Doctor On Call" + "\n");
-            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis(), "", getActivity()) + "\n");
+            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis()/1000, "", getActivity()) + "\n");//Sending Current time for Doctoro on call
 
             builder.append(mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n");
 
