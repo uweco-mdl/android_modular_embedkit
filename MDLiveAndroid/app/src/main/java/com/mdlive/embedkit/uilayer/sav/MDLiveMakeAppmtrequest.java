@@ -221,14 +221,12 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String stridealdate = appointmentIdealDate.getText().toString().trim();
         strappointmentContactNumber = MdliveUtils.getSpecialCaseRemovedNumber(strappointmentContactNumber);
         Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
-        if(TextUtils.isEmpty(strappointmentContactNumber)||appointmentContactNumber.getText().toString().length()<14)
-        {
+        if(TextUtils.isEmpty(strappointmentContactNumber)||appointmentContactNumber.getText().toString().length()<14){
+
             MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter a valid US phone number.");
-        }else if(TextUtils.isEmpty(strappmtreason))
-        {
+        } else if(TextUtils.isEmpty(strappmtreason)){
             MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter reason for your appointment.");
-        }else if(TextUtils.isEmpty(selectionType))
-        {
+        } else if(TextUtils.isEmpty(selectionType)){
             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {

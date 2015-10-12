@@ -684,6 +684,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byvideoBtnLayout.setBackgroundResource(R.drawable.btn_rounded_grey);
         byphoneBtnLayout.setVisibility(View.GONE);
         byphoneBtnLayout.setBackgroundResource(R.drawable.btn_rounded_bg);
+        saveTimeSlotToNowMode();
         accessModeCall("phone");
     }
 
@@ -935,6 +936,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
             accessModeCall("phone");
+            saveTimeSlotToNowMode();
             tapReqFutureBtnAction();
         } else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
             isDoctorAvailableNow=false;

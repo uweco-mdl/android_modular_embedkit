@@ -9,15 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -401,7 +397,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
                 Log.e("Step 2 A", "11111");
             }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
-                ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
+                sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                String format = sdf.format(calendar.getTime());
+                ((TextView) findViewById(R.id.txtDate)).setText(format);
+//                ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
                 ((TextView) findViewById(R.id.txtTime)).setText(Time);
                 Log.e("Step 2 B", "11111");
             } else {

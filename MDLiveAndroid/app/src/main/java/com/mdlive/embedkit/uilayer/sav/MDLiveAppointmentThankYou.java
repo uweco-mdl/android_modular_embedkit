@@ -68,6 +68,13 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                 ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
                 ((TextView)findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text,phoneNumberPref.getString(PreferenceConstants.PHONE_NUMBER, "")));
 
+            }else
+            {
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
+                findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
+                ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             }
         }
     }
