@@ -108,7 +108,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public RelativeLayout photosContainer;
         public boolean isTherapistUser = false;
         public static String photoId;
-        public boolean isNewUser = false;
+        public boolean isNewUser = false, isBehaviourHistoryCompleted = false;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -309,7 +309,8 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     hideProgress();
-                    checkMedicalDateHistory();
+                    checkBehaviourHistoryCompletion();
+                    //checkMedicalDateHistory();
                 }
             };
             NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -419,7 +420,12 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         e.printStackTrace();
                         isNewUser = true;
                     }
-                    if(isNewUser){
+                    if(!isBehaviourHistoryCompleted && !isNewUser){
+                        Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveBehaviouralHealthActivity.class);
+                        medicalIntent.putExtra("from_sav", true);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLiveReasonForVisit.this);
+                    }else if(isNewUser){
                         Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveBehaviouralHealthActivity.class);
                         medicalIntent.putExtra("from_sav", true);
                         medicalIntent.putExtra("isNewUser", true);
@@ -440,14 +446,13 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             services.getMedicalHistoryLastUpdateRequest(successCallBackListener, errorListener);
         }
 
-
         /**
          * Checks user medical history completion details.
          * Class : MedicalHistoryCompletionServices - Service class used to fetch the medical history completion deials.
          * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
          * Based on the server response the corresponding action will be triggered.
          */
-        private void checkMedicalCompletion() {
+        private void checkBehaviourHistoryCompletion() {
             showProgress();
             NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
@@ -455,10 +460,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     hideProgress();
                     try {
                         JSONArray historyPercentageArray = response.getJSONArray("history_percentage");
-                        checkPediatricCompletion(historyPercentageArray);
+                        checkMyHealthBehaviouralHistory(historyPercentageArray);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    checkMedicalDateHistory();
                 }
             };
             NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -471,6 +477,32 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             MedicalHistoryCompletionServices services = new MedicalHistoryCompletionServices(MDLiveReasonForVisit.this, null);
             services.getMedicalHistoryCompletionRequest(successCallBackListener, errorListener);
         }
+
+        /**
+         * This will check weather the user has completed the behavioural heaqalth history section and will hide and
+         * display teh layouts accordingly.
+         *
+         * @param historyPercentageArray - The history percentage JSONArray
+         */
+        private void checkMyHealthBehaviouralHistory(JSONArray historyPercentageArray) {
+            Log.d("BEHAVIOURAL --->", historyPercentageArray.toString());
+            try {
+                for(int i =0; i<historyPercentageArray.length();i++){
+                    if(historyPercentageArray.getJSONObject(i).has("behavioral")){
+                        if(historyPercentageArray.getJSONObject(i).getInt("behavioral") > 10){
+                            isBehaviourHistoryCompleted = true;
+                        }else{
+                            isBehaviourHistoryCompleted = false;
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
         /**
          * This will check weather the user has completed the allergy section and will hide and

@@ -39,6 +39,9 @@ public class MDLiveBehaviouralHealthActivity extends MedicalHistoryPluginActivit
         intentFilter.addAction(getClass().getSimpleName());
         if(getIntent() != null && getIntent().hasExtra("from_sav")){
             isFromSAVflow = true;
+            isNewUser = false;
+        }
+        if(getIntent() != null && getIntent().hasExtra("isNewUser")){
             isNewUser = true;
         }
 

@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -74,6 +75,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
     public static MDLiveBehaviouralHealthFragment newInstance() {
         final MDLiveBehaviouralHealthFragment fragment = new MDLiveBehaviouralHealthFragment();
         isFromSav = false;
+        isNewUser = false;
         return fragment;
     }
 
@@ -350,14 +352,21 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
             if(isFromSav){
                 if (TimeZoneUtils.calculteAgeFromPrefs(getActivity()) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
                     Intent medicalIntent = new Intent(parentActivity, MDLivePediatric.class);
+                    if(isNewUser){
+                        medicalIntent.putExtra("theraphyFlow", "true");
+                    }
                     medicalIntent.putExtra("firstTimeUser", "true");
-                    medicalIntent.putExtra("theraphyFlow", "true");
                     startActivity(medicalIntent);
                     MdliveUtils.startActivityAnimation(parentActivity);
                 }else{
                     //parentActivity.getUserPharmacyDetails();
-                    parentActivity.checkMedicalAggregation();
-
+                    if(!isNewUser){
+                        Intent medicalIntent = new Intent(getActivity(), MDLiveMedicalHistory.class);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(getActivity());
+                    }else{
+                        parentActivity.checkMedicalAggregation();
+                    }
                 }
             }else{
                 getActivity().finish();
