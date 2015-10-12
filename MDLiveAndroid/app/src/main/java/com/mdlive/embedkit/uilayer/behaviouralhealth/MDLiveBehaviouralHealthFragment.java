@@ -181,14 +181,20 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         if(!mBehavioralHistory.hospitalizedDuration.isEmpty()) {
             mHowLongTextView.setText(mBehavioralHistory.hospitalizedDuration);
         }
-        int selectedPosition = 0;
+        int selectedPosition = -1;
+
         for (int j = 0; j < relationShpList.size(); j++) {
             if (mBehavioralHistory.counselingPreference!=null && mBehavioralHistory.counselingPreference.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
                         selectedPosition = j;
                 break;
             }
         }
-        mCounsellingSpinner.setSelection(selectedPosition);
+
+        if(selectedPosition >= 0){
+            mCounsellingSpinner.setSelection(selectedPosition);
+        }else{
+            mCounsellingSpinner.setSelection(relationShpList.size()-1);
+        }
 
         if (mBehavioralHistory.behavioralMconditions != null && mBehavioralHistory.behavioralMconditions.size() > 0 && mConditionLinearLayout != null) {
             for (int i = 0; i < mBehavioralHistory.behavioralMconditions.size(); i++) {
