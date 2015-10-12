@@ -442,6 +442,10 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
             DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
             format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
+            String timeZoneValue = "";
+            if(UserBasicInfo.readFromSharedPreference(MDLiveMakeAppmtrequest.this).getPersonalInfo()!=null){
+                timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveMakeAppmtrequest.this).getPersonalInfo().getTimezone();
+            }
             postidealTime = format1.format(cal.getTime());
 
         }

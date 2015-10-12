@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
  * Created by sudha_s on 8/23/2015.
@@ -54,28 +55,32 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                 findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
                 ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("OnCall")){
+                final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.txtThanksMsg).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_on_call_header));
-                ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_Oncall_Summary,phoneNumberPref.getString(PreferenceConstants.PHONE_NUMBER, "")));
+                ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_Oncall_Summary,userBasicInfo.getPersonalInfo().getPhone()));
                 ((TextView)findViewById(R.id.txt_escalate_phone)).setVisibility(View.GONE);
 
             }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("escalated")){
+                final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
                 ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
-                ((TextView)findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text,phoneNumberPref.getString(PreferenceConstants.PHONE_NUMBER, "")));
+                ((TextView)findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text,userBasicInfo.getPersonalInfo().getPhone()));
 
-            }else
-            {
-                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
-                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
-                findViewById(R.id.cencel_info).setVisibility(View.GONE);
-                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
-                ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             }
+            //This is oly for Phone
+//            else
+//            {
+//                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
+//                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
+//                findViewById(R.id.cencel_info).setVisibility(View.GONE);
+//                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
+//                ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
+//            }
         }
     }
 
@@ -112,6 +117,10 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
             ((TextView)findViewById(R.id.date)).setText("Date: "+consultationDate);
             Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
+            String timeZoneValue = "";
+            if(UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo()!=null){
+                timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
+            }
             ((TextView)findViewById(R.id.time)).setText("Time: "+Time);
 
         }else
@@ -120,7 +129,11 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
             ((TextView)findViewById(R.id.date)).setText("Date: "+consultationDate);
             Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-            ((TextView)findViewById(R.id.time)).setText("Time: "+Time);
+            String timeZoneValue = "";
+            if(UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo()!=null){
+                timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
+            }
+            ((TextView)findViewById(R.id.time)).setText("Time: "+Time+" "+timeZoneValue);
         }
 
     }

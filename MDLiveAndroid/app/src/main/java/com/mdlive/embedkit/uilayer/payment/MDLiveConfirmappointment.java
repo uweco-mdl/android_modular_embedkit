@@ -403,6 +403,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
 //                ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+                String timeZoneValue = "";
+                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
+                    timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
+                }
                 ((TextView) findViewById(R.id.txtTime)).setText(Time);
                 Log.e("Step 2 B", "11111");
             } else {
@@ -413,7 +417,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
                 SimpleDateFormat df = new SimpleDateFormat("HH:mm  a");
                 String currentTime = df.format(calendar.getTime());
-                ((TextView) findViewById(R.id.txtTime)).setText(currentTime);
+                String timeZoneValue = "";
+                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
+                    timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
+                }
+                ((TextView) findViewById(R.id.txtTime)).setText(currentTime+" "+timeZoneValue);
                 Log.e("Step 2 C", "11111");
             }
         } catch (Exception e) {
