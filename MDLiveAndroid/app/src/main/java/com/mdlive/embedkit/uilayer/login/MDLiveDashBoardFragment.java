@@ -338,7 +338,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 }
             });
         }else{
-            mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
+
+            mCustomerDefaultNumber = MdliveUtils.formatDualString(mUserBasicInfo.getPersonalInfo().getPhone());
             if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
                     && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
                 mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
