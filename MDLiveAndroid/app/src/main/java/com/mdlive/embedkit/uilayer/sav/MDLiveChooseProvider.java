@@ -64,13 +64,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
-    private boolean isDoctorOnCallReady = false,available_now_status;
+    private boolean isDoctorOnCallReady = false, available_now_status = false;
     private FrameLayout filterMainRl;
     private RelativeLayout docOnCalLinLay;
     private Button seeNextAvailableBtn;
     private TextView loadingTxt;
     private boolean flag = false;
-    public static boolean isDoctorOnCall,isDoctorOnVideo;
+    public static boolean isDoctorOnCall = false, isDoctorOnVideo = false;
 
     private Button seeFirstAvailDoctor;
 
