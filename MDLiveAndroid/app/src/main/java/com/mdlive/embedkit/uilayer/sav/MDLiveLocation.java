@@ -105,6 +105,14 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.setTag(null);
+        ZipcodeEditTxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    StateTxt.setText(getString(R.string.mdl_select_state));
+                }
+            }
+        });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,31 +128,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 MdliveUtils.validateZipcodeFormat(ZipcodeEditTxt);
             }
         });
-        //TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
-        /*SavContinueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                if(ZipcodeEditTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO||StateTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO){
-                    if(ZipcodeEditTxt.getText().length()!=IntegerConstants.NUMBER_ZERO){
-                        String getEditTextValue = ZipcodeEditTxt.getText().toString();
-                        if(MdliveUtils.validateZipCode(getEditTextValue)){
-                            loadZipCode(getEditTextValue);
-                        }else{
-                            MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip));
-                        }
-                    }else{
-                        SaveZipCodeCity(selectedCity);
-                        finish();
-                    }
-
-                }else{
-                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip_state));
-                }
-
-            }
-        });
-*/
         CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
