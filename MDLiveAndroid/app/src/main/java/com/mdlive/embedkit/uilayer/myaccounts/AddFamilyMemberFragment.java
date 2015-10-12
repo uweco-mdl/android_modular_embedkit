@@ -146,7 +146,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View v) {
                 final Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
-
+                Log.e("mDOBLayout", "mDOBLayout");
                 int y = c.get(Calendar.YEAR) + 4;
                 int m = c.get(Calendar.MONTH) - 2;
                 int d = c.get(Calendar.DAY_OF_MONTH);
@@ -169,7 +169,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         }, y, m, d);
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dp.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, getActivity()));
+//                dp.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, getActivity()));
                 dp.show();
             }
         });

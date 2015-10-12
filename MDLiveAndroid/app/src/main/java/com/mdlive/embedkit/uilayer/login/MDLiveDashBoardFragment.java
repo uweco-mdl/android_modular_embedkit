@@ -372,35 +372,33 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 /**
                  * This is for instant appointment
                  * */
-                if ("Now".equalsIgnoreCase(time)) {
-//                firstTextView.setText("Your appointment has started.");
-//                secondTextView.setText("Tap here to enter");
+                /*if ("Now".equalsIgnoreCase(time)) {
 
                     if (appointment.getApptType() != null && appointment.getApptType().equalsIgnoreCase("phone")) {
                         if (mUserBasicInfo == null) {
                             mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
                         }
                         if(mUserBasicInfo.getPersonalInfo()!=null){
-                        mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
-                        if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
-                                && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
-                            mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
+                            mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
+                            if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
+                                    && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
+                                mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
 
-                        } else {
-                            mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
+                            } else {
+                                mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
+                            }
+                            mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
+
+                            firstTextView.setText("The provider will call you shortly at \n" + mCustomerProvidedPhoneNumber);
+
+                            secondTextView.setVisibility(View.GONE);
                         }
-                        mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
-
-                        firstTextView.setText("The provider will call you shortly at \n" + mCustomerProvidedPhoneNumber);
-
-                        secondTextView.setVisibility(View.GONE);
-                    }
                     } else {
-                        firstTextView.setText("Your appointment has started.");
-                        secondTextView.setText("Tap here to enter");
+                        firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
+                        secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
                     }
 
-                } else {
+                } else { */
                     final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
                  /*
@@ -425,7 +423,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                             secondTextView.setText("Click here for details.");
                             break;
                     }
-                }
+//                }
             }catch (Exception e){
                 e.printStackTrace();
             }

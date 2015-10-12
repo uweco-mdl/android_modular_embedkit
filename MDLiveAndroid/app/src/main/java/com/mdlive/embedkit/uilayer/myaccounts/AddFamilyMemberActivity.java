@@ -193,7 +193,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         }, y, m, d);
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dp.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
+//                dp.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
                 dp.show();
             }
         });
