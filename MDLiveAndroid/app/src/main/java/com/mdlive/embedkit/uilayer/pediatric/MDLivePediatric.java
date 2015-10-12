@@ -504,7 +504,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
                 postParams.put("personal_info", weightMap);
                 String weight = personalInfoObj.getString("weight");
-                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0")) {
+                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0") && !weight.startsWith("nul")) {
                     ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
                 }
 
