@@ -427,8 +427,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
             String formattedString = MdliveUtils.formatDualString(mobile);
             mMobile.setText(formattedString);
-            if (!myProfile.getString("emergency_contact_number").equals("")){
+            if (!myProfile.getString("emergency_contact_number").equals("") && !myProfile.getString("emergency_contact_number").equals("null")){
                 emergencyNumber.setText(MdliveUtils.formatDualString(myProfile.getString("emergency_contact_number")));
+            }else {
+                emergencyNumber.setText("");
             }
             List<String> tmpTimezoneAbbr = Arrays.asList(timeZoneAbbr);
             final CharSequence[] items = getActivity().getResources().getStringArray(R.array.mdl_timezone);
