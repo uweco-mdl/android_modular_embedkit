@@ -365,7 +365,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
             ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
             consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-            ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationType + " Consultation");
+            String consultationTypeStr = getString(R.string.mdl_title_video_home);
+            if (consultationType.equalsIgnoreCase("phone")){
+                consultationTypeStr = getString(R.string.mdl_phone_consultation);
+            }
+            ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationTypeStr);
             consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
             Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
             TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
