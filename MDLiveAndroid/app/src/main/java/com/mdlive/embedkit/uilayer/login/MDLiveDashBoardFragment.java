@@ -361,40 +361,40 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
 
-
-            /**
-             * This is for instant appointment
-             * */
-            if ("Now".equalsIgnoreCase(time)) {
+            try {
+                /**
+                 * This is for instant appointment
+                 * */
+                if ("Now".equalsIgnoreCase(time)) {
 //                firstTextView.setText("Your appointment has started.");
 //                secondTextView.setText("Tap here to enter");
 
-                if(appointment.getApptType()!= null && appointment.getApptType().equalsIgnoreCase("phone"))
-                {
-                    if (mUserBasicInfo == null) {
-                        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-                    }
-                    mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
-                    if(PendingAppointment.readFromSharedPreference(getActivity())!=null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments()!=null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size()>0
-                            && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber()!=null) {
-                        mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
+                    if (appointment.getApptType() != null && appointment.getApptType().equalsIgnoreCase("phone")) {
+                        if (mUserBasicInfo == null) {
+                            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                        }
+                        if(mUserBasicInfo.getPersonalInfo()!=null){
+                        mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
+                        if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
+                                && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
+                            mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
 
+                        } else {
+                            mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
+                        }
+                        mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
+
+                        firstTextView.setText("The provider will call you shortly at \n" + mCustomerProvidedPhoneNumber);
+
+                        secondTextView.setVisibility(View.GONE);
+                    }
                     } else {
-                        mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
+                        firstTextView.setText("Your appointment has started.");
+                        secondTextView.setText("Tap here to enter");
                     }
-                    mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
 
-                    firstTextView.setText("The provider will call you shortly at \n"+ mCustomerProvidedPhoneNumber);
-
-                    secondTextView.setVisibility(View.GONE);
-                }else
-                {
-                    firstTextView.setText("Your appointment has started.");
-                    secondTextView.setText("Tap here to enter");
-                }
-
-            } else {
-                final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
+                } else {
+                    final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
                  /*
                 * Will return 0 if less than 10 minutes
@@ -403,7 +403,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 * */
                     switch (type) {
                         // Ten minutes case
-                        case 0 :
+                        case 0:
                             final SharedPreferences preferences = firstTextView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                             final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
                             if (timestampString != null) {
@@ -418,6 +418,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                             secondTextView.setText("Click here for details.");
                             break;
                     }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
             mNotificationView.setTag(appointment);
