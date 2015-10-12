@@ -311,7 +311,6 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
      */
 
     public void showOnCallNotification(final OncallAppointment appointment){
-        logD("Appointment", appointment.toString());
         final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
         final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
 
@@ -339,10 +338,16 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             });
         }else{
 
-            mCustomerDefaultNumber = MdliveUtils.formatDualString(mUserBasicInfo.getPersonalInfo().getPhone());
+
+            if(mUserBasicInfo!=null){
+                mCustomerDefaultNumber = MdliveUtils.formatDualString(mUserBasicInfo.getPersonalInfo().getPhone());
+            }else{
+                mCustomerDefaultNumber="";
+            }
             if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
                     && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
-                mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
+                mCustomerProvidedPhoneNumber = MdliveUtils.formatDualString(PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber());
+
             }else{
                 mCustomerProvidedPhoneNumber=mCustomerDefaultNumber;
             }
