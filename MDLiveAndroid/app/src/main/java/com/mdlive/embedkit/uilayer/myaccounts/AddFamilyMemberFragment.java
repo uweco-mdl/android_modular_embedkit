@@ -266,7 +266,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
                     }
-                    if (mUsername.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                    if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 
@@ -307,7 +307,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
                 }
-                if (mUsername.getText().toString().matches("^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]*$")) {
+                if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                     mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 

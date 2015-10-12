@@ -102,25 +102,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         //PHS user
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
-            selectionType="video";
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                findViewById(R.id.phone_ll).setVisibility(View.VISIBLE);
-            findViewById(R.id.phone_ll).setClickable(false);
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
+            highlightVideo();
         }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
-            selectionType="phone";
-            findViewById(R.id.video_ll).setClickable(false);
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+            highlightPhone();
         }
 
         if (savedInstanceState == null) {
@@ -135,6 +119,18 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                     commit();
         }
         ReasonForVisit();
+    }
+
+    private void highlightVideo() {
+        selectionType="video";
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+        ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+        findViewById(R.id.phone_ll).setVisibility(View.VISIBLE);
+        findViewById(R.id.phone_ll).setClickable(false);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+        ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
     }
 
     public void leftBtnOnClick(View v){
@@ -225,16 +221,59 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String stridealdate = appointmentIdealDate.getText().toString().trim();
         strappointmentContactNumber = MdliveUtils.getSpecialCaseRemovedNumber(strappointmentContactNumber);
         Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
-        if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
+        if(TextUtils.isEmpty(strappointmentContactNumber)||appointmentContactNumber.getText().toString().length()<14)
+        {
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter a valid US phone number.");
+        }else if(TextUtils.isEmpty(strappmtreason))
+        {
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter reason for your appointment.");
+        }else if(TextUtils.isEmpty(selectionType))
+        {
+            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    selectedvideo = 1;
+                    selectionType = "video";
+                    findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+                    ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+                    findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+                    ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                    dialogInterface.dismiss();
 
-               /* && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)*/ && !TextUtils.isEmpty(selectionType)) {
+                }
+            };
 
+            DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    selectedvideo = 2;
+                    selectionType = "phone";
+                    findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+                    ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+                    findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+                    ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                    dialogInterface.dismiss();
+
+                }
+            };
+
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this,"Appointment Type", "Would you like this appointment by phone or video?", "Phone", "Video",
+                    negativeOnClickListener, positiveOnClickListener);
+        }
+       else if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
+               /* && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)*/ && !TextUtils.isEmpty(selectionType))
+        {
             HashMap params1 = new HashMap();
             params1.put("appointment_method", selectedvideo);
             params1.put("contact_number",strappointmentContactNumber);
             params1.put("chief_complaint", "Tendinitis");
             params1.put("physician_id", DoctorId);
-            params1.put("appointment_date",postidealTime);
+            params1.put("appointment_date",appointmentIdealDate.getText().toString().trim());
             params1.put("preferred_time", strnxtavailable);//
             params.put("alternate_visit_option","No Answer");
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -280,26 +319,10 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
             selectedvideo = 1;
-            selectionType = "video";
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-            findViewById(R.id.phone_ll).setVisibility(View.VISIBLE);
-            findViewById(R.id.phone_ll).setClickable(false);
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
+            highlightVideo();
         }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
             selectedvideo = 2;
-            selectionType = "phone";
-            findViewById(R.id.video_ll).setClickable(false);
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+            highlightPhone();
         }else {
             selectedvideo = 1;
             selectionType = "video";
@@ -317,27 +340,11 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
             selectedvideo = 1;
-            selectionType = "video";
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-            findViewById(R.id.phone_ll).setVisibility(View.VISIBLE);
-            findViewById(R.id.phone_ll).setClickable(false);
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
+            highlightVideo();
             ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
         }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
             selectedvideo = 2;
-            selectionType = "phone";
-            findViewById(R.id.video_ll).setClickable(false);
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
-            findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
+            highlightPhone();
         }else {
 
             selectedvideo = 2;
@@ -349,6 +356,18 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
             ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
         }
+    }
+
+    private void highlightPhone() {
+        selectionType = "phone";
+        findViewById(R.id.video_ll).setClickable(false);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.videoBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+        ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
     }
 
     /**

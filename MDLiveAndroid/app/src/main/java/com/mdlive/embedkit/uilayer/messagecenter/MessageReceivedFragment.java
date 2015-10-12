@@ -187,8 +187,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     }
 
     private void handleSucess(final JSONObject response) {
-        logD("Hello", "Page Number : " + mPageCount);
-        logD("Hello", response.toString());
         final Gson gson = new Gson();
         final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
         if (newReceivedMessages.receivedMessages != null && newReceivedMessages.receivedMessages.size() > 0) {

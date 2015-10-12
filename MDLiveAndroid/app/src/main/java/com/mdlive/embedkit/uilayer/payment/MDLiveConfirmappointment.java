@@ -11,8 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -103,17 +106,24 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
 
         TextView mdlTermsConsent = (TextView) findViewById(R.id.mdl_terms_consent);
-        String str_termsConsent = "I certify that I have read and accept the terms of <a href='https://www.mdlive.com/consumer/informed_consent_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">MDLIVE Medical Group\'s Informed Consent</a>. ";
 
-        Spannable underLinedString = (Spannable) Html.fromHtml(str_termsConsent);
-        for (URLSpan u: underLinedString.getSpans(0, underLinedString.length(), URLSpan.class)) {
-            underLinedString.setSpan(new UnderlineSpan() {
-                public void updateDrawState(TextPaint tp) {
-                    tp.setUnderlineText(false);
-                }
-            }, underLinedString.getSpanStart(u), underLinedString.getSpanEnd(u), 0);
-        }
-        mdlTermsConsent.setText(underLinedString);
+        SpannableString str_termsConsent = new SpannableString(getString(R.string.mdl_terms_consent));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Uri uri = Uri.parse("https://www.mdlive.com/consumer/informed_consent_medicalgroup.html"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+
+            public void updateDrawState(TextPaint ds) {// override updateDrawState
+                ds.setColor(getResources().getColor(R.color.search_pvr_txt_blue_color)); //set color for link
+                ds.setUnderlineText(false); // set to false to remove underline
+            }
+        };
+
+        str_termsConsent.setSpan(clickableSpan, 55, 95, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mdlTermsConsent.setText(str_termsConsent);
         mdlTermsConsent.setMovementMethod(LinkMovementMethod.getInstance());
 
 
@@ -136,19 +146,26 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         });
 
+
         TextView mdlPrivacyPolicy = (TextView) findViewById(R.id.mdl_privacy_policy);
 
-        String str_privacy_policy = "I have read MDLIVE Medical Group's <a href='https://www.mdlive.com/consumer/privacy_medicalgroup.html' style=\"text-decoration:none; color:#257cfc;\">Privacy Policy </a> and I acknowledge that I have the ability to print a hard copy of the Privacy Policy for my records.";
-
-        Spannable underLinedStringPolicy = (Spannable) Html.fromHtml(str_privacy_policy);
-        for (URLSpan u: underLinedStringPolicy.getSpans(0, underLinedStringPolicy.length(), URLSpan.class)) {
-        underLinedStringPolicy.setSpan(new UnderlineSpan() {
-            public void updateDrawState(TextPaint tP) {
-                tP.setUnderlineText(false);
+        SpannableString str_privacy_policy = new SpannableString(getString(R.string.mdl_privacy_policy));
+        ClickableSpan clickableSpanPolicy = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Uri uri = Uri.parse("https://www.mdlive.com/consumer/privacy_medicalgroup.html"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
-        }, underLinedStringPolicy.getSpanStart(u), underLinedStringPolicy.getSpanEnd(u), 0);
-        }
-        mdlPrivacyPolicy.setText(underLinedStringPolicy);
+
+            public void updateDrawState(TextPaint ds) {// override updateDrawState
+                ds.setColor(getResources().getColor(R.color.search_pvr_txt_blue_color)); //set color for link
+                ds.setUnderlineText(false); // set to false to remove underline
+            }
+        };
+
+        str_privacy_policy.setSpan(clickableSpanPolicy, 34, 50, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mdlPrivacyPolicy.setText(str_privacy_policy);
         mdlPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
     }

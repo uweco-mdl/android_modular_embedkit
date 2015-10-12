@@ -504,7 +504,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
                 postParams.put("personal_info", weightMap);
                 String weight = personalInfoObj.getString("weight");
-                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0")) {
+                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight)) {
                     ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
                 }
 
@@ -731,5 +731,13 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         MdliveUtils.closingActivityAnimation(this);
     }
 
+    private boolean isInteger(String value){
+        try {
+            Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 
 }
