@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.myhealth.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterComposeActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 /**
  * Created by unnikrishnan_b on 8/22/2015.
@@ -81,7 +85,15 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         viewHolder.sendMessageTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchComposeMessage(getItem(position));
+                UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(context);
+                if(userBasicInfo.getPersonalInfo().getEmailConfirmed()){
+                    launchComposeMessage(getItem(position));
+                } else {
+                    final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
+                    if(context instanceof FragmentActivity) {
+                        dialogFragment.show(((FragmentActivity)context).getSupportFragmentManager(), MDLiveBaseAppcompatActivity.DIALOG_FRAGMENT);
+                    }
+                }
             }
         });
 
