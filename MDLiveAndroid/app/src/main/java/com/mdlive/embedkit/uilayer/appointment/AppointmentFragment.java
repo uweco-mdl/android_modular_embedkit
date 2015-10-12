@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.appointment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,12 +15,14 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
@@ -157,7 +160,15 @@ public class AppointmentFragment extends MDLiveBaseFragment {
                         MdliveUtils.showDialog(getActivity(), response.getString("message"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
+                                try {
+                                    final Intent intent = new Intent(getActivity(), MDLiveDashboardActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         });
                     }else{
