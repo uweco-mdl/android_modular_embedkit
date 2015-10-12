@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -404,7 +405,15 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             }
         }
         else {
-            MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_pin_mismatch));
+            MdliveUtils.alert(null, getActivity(),getString(R.string.mdl_pin_mismatch), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    MdliveUtils.DIALOG_SHOWN = false;
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container, MyAccountNewPinFragment.newInstance(mPassCode7.getText().toString(), true),"Old Pin").commit();
+                }
+            });
         }
     }
 
