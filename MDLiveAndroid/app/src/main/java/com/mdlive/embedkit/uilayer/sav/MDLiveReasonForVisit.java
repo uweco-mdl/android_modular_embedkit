@@ -109,6 +109,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public boolean isTherapistUser = false;
         public static String photoId;
         public boolean isNewUser = false, isBehaviourHistoryCompleted = false;
+        public int validateCount = 4;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -181,7 +182,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 isTherapistUser = true;
                 ((LinearLayout) findViewById(R.id.behaviourView)).setVisibility(View.VISIBLE);
                 ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.GONE);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                 getBehaviouralHealthServiceData();
             } else {
                 isTherapistUser = false;
@@ -189,6 +189,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.VISIBLE);
                 ReasonForVisit();
             }
+
         }
 
 
@@ -220,6 +221,26 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             services.doGetBehavioralHealthService(responseListener, errorListener);
         }
 
+        private void enableOrDisableNextStep(){
+            if(validateTherapyFields()){
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+            }else{
+                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+            }
+        }
+
+        private boolean validateTherapyFields(){
+            if(validateCount == 0){
+                return false;
+            }else if(validateCount == 1){
+                if(behaviour_reason.getVisibility()== View.VISIBLE){
+                    if(behaviour_reason.getText() == null || behaviour_reason.getText().toString().length() == 0){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
         private void handleSuccessResponse(JSONObject response) {
             //try {
@@ -245,11 +266,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                    if (isChecked) {
-                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.YES;
-                                    } else {
-                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.NO;
-                                    }
                                     if(buttonView.getText() != null && buttonView.getText().toString().toLowerCase().contains("other")){
                                         if(isChecked){
                                             behaviour_reason.setVisibility(View.VISIBLE);
@@ -257,6 +273,20 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                                             behaviour_reason.setVisibility(View.GONE);
                                         }
                                     }
+                                    if (isChecked) {
+                                        if(validateCount != 4){
+                                            validateCount++;
+                                        }
+                                        enableOrDisableNextStep();
+                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.YES;
+                                    } else {
+                                        if(validateCount != 0){
+                                            validateCount--;
+                                        }
+                                        enableOrDisableNextStep();
+                                        mBehavioralHistory.behavioralHealthReasons.get(position).active = ConditionAndActive.NO;
+                                    }
+
                                 }
                             });
                             if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralHealthReasons.get(position).active)) {
@@ -271,9 +301,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     }
                 }
 
-                if(mBehavioralHistory.behavioralHealthDescription != null && mBehavioralHistory.behavioralHealthDescription.length() != 0){
-                    behaviour_reason.setText(mBehavioralHistory.behavioralHealthDescription);
-                }
                 behaviour_reason.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -286,14 +313,20 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         }else{
                             mBehavioralHistory.behavioralHealthDescription = "";
                         }
+                        enableOrDisableNextStep();
                     }
-
                     @Override
                     public void afterTextChanged(Editable s) {
 
                     }
                 });
 
+                if(mBehavioralHistory.behavioralHealthDescription != null && mBehavioralHistory.behavioralHealthDescription.length() != 0){
+                    behaviour_reason.setText(mBehavioralHistory.behavioralHealthDescription);
+                }
+
+
+            enableOrDisableNextStep();
             //}catch(Exception e){
                 //e.printStackTrace();
             //}
@@ -305,6 +338,26 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             final Gson gson = new Gson();
             mBehavioralHistory.familyHospitalized = "Yes";
             String request = gson.toJson(mBehavioralHistory);
+            try{
+                String resonText = "";
+                for (int position = 0; position < mBehavioralHistory.behavioralHealthReasons.size(); position++) {
+                    if(mBehavioralHistory.behavioralHealthReasons.get(position).active == ConditionAndActive.YES){
+                        if(mBehavioralHistory.behavioralHealthReasons.get(position).condition.equalsIgnoreCase("Other")){
+                            resonText += ((behaviour_reason.getText() != null) ? behaviour_reason.getText().toString() : "")+", ";
+                        }else{
+                            resonText += mBehavioralHistory.behavioralHealthReasons.get(position).condition +", ";
+                        }
+                    }
+                }
+
+                resonText = resonText.trim().substring(0, resonText.length() - 2);
+
+                SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(PreferenceConstants.REASON, resonText.trim());
+                editor.commit();
+            }catch (Exception e){
+            }
             NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -327,9 +380,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             BehaviouralUpdateService behaviouralUpdateServices = new BehaviouralUpdateService(MDLiveReasonForVisit.this, getProgressDialog());
             behaviouralUpdateServices.postBehaviouralUpdateService(request, responseListener, errorListener);
         }
-
-
-
 
 
         public void leftBtnOnClick(View v){
@@ -485,7 +535,6 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
          * @param historyPercentageArray - The history percentage JSONArray
          */
         private void checkMyHealthBehaviouralHistory(JSONArray historyPercentageArray) {
-            Log.d("BEHAVIOURAL --->", historyPercentageArray.toString());
             try {
                 for(int i =0; i<historyPercentageArray.length();i++){
                     if(historyPercentageArray.getJSONObject(i).has("behavioral")){
