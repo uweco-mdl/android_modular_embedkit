@@ -1,1 +1,1 @@
-include  ':common', ':app', ':theming'
+include  ':app', ':theming'
