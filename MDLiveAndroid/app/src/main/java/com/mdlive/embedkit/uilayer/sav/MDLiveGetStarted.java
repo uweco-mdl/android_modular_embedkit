@@ -1013,8 +1013,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 providerTypeArrayList.add(provider_array.getJSONObject(i).getString("provider_type"));
             }
             Log.e("providerTypeArrayList", providerTypeArrayList.toString());
+
             Collections.reverse(providerTypeArrayList);
+
             Collections.reverse(providerTypeIdList);
+            Log.e("providerTypeIDList", providerTypeIdList.toString());
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
 
