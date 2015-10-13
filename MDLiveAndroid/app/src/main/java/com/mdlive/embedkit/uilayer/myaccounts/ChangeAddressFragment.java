@@ -55,7 +55,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout;
-
+    private String mtimeZone;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,7 +130,9 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                     mZip.setText(responseDetail.getString("zipcode"));
                 }
 
-
+                if(MdliveUtils.checkIsEmpty(responseDetail.getString("timezone"))){
+                    mtimeZone = responseDetail.getString("timezone");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -162,7 +164,10 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                     jsonObject.put("gender", responseDetail.getString("gender"));
                     jsonObject.put("last_name",  responseDetail.getString("last_name"));
                     jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
-                    jsonObject.put("language_preference", "ko");
+                    jsonObject.put("language_preference", "en");
+                    if(mtimeZone!=null) {
+                        jsonObject.put("timezone", mtimeZone);
+                    }
 
                         parent.put("member", jsonObject);
                         Log.i("request:", jsonObject.toString());
@@ -274,6 +279,14 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
                 String SelectedText = stateIds.get(i);
                 mState.setText(SelectedText);
+                if(MyProfileFragment.timeZoneByStateValue!=null){
+                    try{
+                        JSONObject stateTimezoneObj = new JSONObject(MyProfileFragment.timeZoneByStateValue);
+                        mtimeZone = stateTimezoneObj.getString(stateIds.get(i));
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
                 dialogInterface.dismiss();
             }
         });
