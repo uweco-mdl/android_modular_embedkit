@@ -118,7 +118,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         };
 
-        str_termsConsent.setSpan(clickableSpan, 55, 95, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        str_termsConsent.setSpan(clickableSpan, 57, 90, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mdlTermsConsent.setText(str_termsConsent);
         mdlTermsConsent.setMovementMethod(LinkMovementMethod.getInstance());
 
