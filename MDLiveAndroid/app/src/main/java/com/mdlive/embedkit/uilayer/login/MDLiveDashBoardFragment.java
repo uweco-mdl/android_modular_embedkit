@@ -237,23 +237,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mDashBoardEmailLl.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mWebView.setVisibility(View.VISIBLE);
-                            mWebView.loadUrl(obj.optString("iframe_url"));
-                            mWebView.getSettings().setLoadWithOverviewMode(true);
-                            mWebView.getSettings().setUseWideViewPort(true);
-                            mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-                            mWebView.getSettings().setBuiltInZoomControls(true);
-                            mWebView.setOnKeyListener(new View.OnKeyListener() {
-
-                                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-                                        mWebView.setVisibility(View.GONE);
-                                    }
-                                    return false;
-                                }
-
-                            });
-                            isWebView = true;
+                            Intent i = new Intent(getActivity(),HealthSystemsActivity.class);
+                            i.putExtra("URL", obj.optString("iframe_url"));
+                            startActivity(i);
                         }
                     });
                 }
