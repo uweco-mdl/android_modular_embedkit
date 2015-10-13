@@ -350,9 +350,27 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
                     Log.e("responseBody",responseBody);
                     JSONObject errorObj = new JSONObject(responseBody);
                     if (errorObj.has("message")) {
-                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                        MdliveUtils.alert(null, getActivity(),errorObj.getString("message"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MdliveUtils.DIALOG_SHOWN = false;
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container,OldPinFragment.newInstance(true), "Account").commit();
+                            }
+                        });
+
                     } else {
-                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                        MdliveUtils.alert(null, getActivity(),errorObj.getString("error"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MdliveUtils.DIALOG_SHOWN = false;
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container,OldPinFragment.newInstance(true), "Account").commit();
+                            }
+                        });
+
                     }
                 }
                 catch (Exception e) {
@@ -449,12 +467,30 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
                 try {
                     //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                     String responseBody = new String(error.networkResponse.data, "utf-8");
-                    Log.e("responseBody",responseBody);
+                    Log.e("responseBody --- ",responseBody);
                     JSONObject errorObj = new JSONObject(responseBody);
                     if (errorObj.has("message")) {
-                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                        MdliveUtils.alert(null, getActivity(),errorObj.getString("message"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MdliveUtils.DIALOG_SHOWN = false;
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container,OldPinFragment.newInstance(true), "Account").commit();
+                            }
+                        });
+
                     } else {
-                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                        MdliveUtils.alert(null, getActivity(),errorObj.getString("error"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MdliveUtils.DIALOG_SHOWN = false;
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container,OldPinFragment.newInstance(true), "Account").commit();
+                            }
+                        });
+
                     }
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
