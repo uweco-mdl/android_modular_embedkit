@@ -232,7 +232,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
                     mEmailConfirmationTv.setClickable(false);
                     mEmailConfirmationTv.setText(obj.optString("footer_text"));
-                    mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.darkgreyTextColor));
+                    mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.myTextPrimaryColor));
                     mEmailConfirmationTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mDashBoardEmailLl.setOnClickListener(new View.OnClickListener() {
                         @Override
