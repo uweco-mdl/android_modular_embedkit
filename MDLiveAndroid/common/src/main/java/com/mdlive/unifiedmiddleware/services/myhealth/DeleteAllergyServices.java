@@ -1,0 +1,25 @@
+package com.mdlive.unifiedmiddleware.services.myhealth;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+
+import org.json.JSONObject;
+
+
+public class DeleteAllergyServices extends BaseServicesPlugin {
+    public DeleteAllergyServices(Context context, ProgressDialog pDialog) {
+        super(context, pDialog);
+    }
+    public void deleteAllergyRequest(NetworkSuccessListener<JSONObject> responseListener, NetworkErrorListener errorListener, String id) {
+        try {
+            jsonObjectDeleteRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ALLERGY_LIST + "/"+id, null, responseListener, errorListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
