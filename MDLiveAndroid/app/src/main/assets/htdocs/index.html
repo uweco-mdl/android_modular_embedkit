@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery-1.4.1.min.js" charset="utf-8"></script>
+    <script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/hpci-cciframe-1.0.js"	charset="utf-8"></script>
+    <script type="text/javascript"	src="https://cc.hostedpci.com/WBSStatic/site60/proxy/js/jquery.ba-postmessage.min.js"	charset="utf-8"></script>
+</head>
+<style>
+    html,body {
+    width: 100%;
+    margin: 0 0;
+    ping: 0;
+    }
+
+    @font-face {
+    font-family: helvetica neue ultra light;
+    src: url('font/ufonts.com_helvetica_neue_ultralight.ttf');
+    }
+
+    @font-face {
+    font-family: helvetica neue thin;
+    src: url('font/ufonts.com_helveticaneue_thin_1_.ttf');
+    }
+
+    @font-face {
+    font-family: helvetica neue light thin;
+    src: url('font/HelveticaNeue_Lt.ttf');
+    }
+
+    @font-face {
+    font-family: noteworthy;
+    src: url('font/Noteworthy.ttc');
+    }
+
+    .mdliveframe{
+    position: absolute;
+    overflow: hidden;
+    }
+
+    .mdlive-default-font-family {
+    font-family: helvetica Neue;
+    }
+
+    .billing-save-button{
+    text-align: center;
+    line-height: 52px;
+    background: rgb(88, 119, 173);
+    cursor: pointer;
+    font-size: 22px !important;
+    font-family: helvetica neue;
+    border-radius: 5px;
+    color: white;
+    display: inline-block;
+    width: 90%;
+    }
+    #mdliveframe {
+    width:100%;
+    }
+    .ccv-camera-img-content {
+    position: absolute;
+    top: 55px;
+    width: 45px;
+    height: 30px;
+    right: 11px;
+    }
+    .scan-card-button {
+    width: 46px;
+    height: 27px;
+    margin: 0 0 0 10px;
+    }
+    .billing-page{
+    width: 100%;
+    float: left;
+    }
+    .billing-page-name{
+    width: 94%;
+    padding: 10px;
+    float: left;
+    background-color: #ECF5FA;
+    font-weight: bold;
+    }
+</style>
+<body>
+
+<script type="text/javascript">
+		var parent_host_url = encodeURIComponent("file:///android_asset/htdocs");
+		var hpciCCFrameHost = "https://cc.hostedpci.com";
+		var parent_host_query_string = encodeURIComponent("/hpci/index.html");
+		var hpciCCFrameFullUrl = null;
+		var hpciCCFrameName = "mdliveframe";
+		var billingData = null;
+		var tokenizeForm =null;
+		var setCardNumber = null;
+
+		var hpciSiteErrorHandler = function(errorCode, errorMsg) {
+			console.log("Tokenizing Failure : " + JSON.stringify(errorMsg));
+			this.billingData = {
+					"status" : "Invalid Credit Card Information"
+			};
+			//alert("Invalid Credit Card Information");
+			window.billing.sendToAndroid(JSON.stringify(this.billingData));
+			//Error result will be handled by main UI page, we just need to pass 0 here
+		};
+
+		var hpciSiteSuccessHandlerV2 = function(mappedCCValue, mappedCVVValue,ccBINValue) {
+			console.log("Tokenizing success!");
+			location.reload();
+			this.mergeDataBillingWithToken(mappedCCValue, mappedCVVValue,ccBINValue);
+			console.log("Tokenizing success!"+mappedCCValue+"    "+mappedCVVValue+"    "+ccBINValue);
+		};
+
+		var hpci3DSitePINSuccessHandler = function() {
+		};
+
+		var hpci3DSitePINErrorHandler = function() {
+			//alert("Could not verify PIN for the credit card");
+		};
+
+		var getCCTypeId = function(mappedCCValue) {
+			// 1    Visa
+			// 2    MasterCard
+			// 3    Discover
+			// 5    AMEX
+			// Using basic regex validation
+			var re = new RegExp("^4");
+			if (mappedCCValue.match(re) != null)
+				return 1; //VISA
+
+			re = new RegExp("^5[1-5]");
+			if (mappedCCValue.match(re) != null)
+				return 2; //MasterCard
+
+			re = new RegExp("^6011");
+			if (mappedCCValue.match(re) != null)
+				return 3; //Discover
+
+			re = new RegExp("^(34|37)");
+			if (mappedCCValue.match(re) != null)
+				return 5; //Amex
+			return 0;
+		};
+
+		var mergeDataBillingWithToken = function(mappedCCValue, mappedCVVValue,
+				ccBINValue) {
+				this.billingData = {
+					"billing_information" : {
+						"cc_num": 0,
+						"cc_cvv2" : 0,
+						"cc_hsa" : true,
+						"cc_type_id" : 0
+					},
+					"status" : "success"
+				}
+		    this.billingData.billing_information.cc_num = mappedCCValue;
+			this.billingData.billing_information.cc_cvv2 = mappedCVVValue;
+			this.billingData.billing_information.cc_type_id = this.getCCTypeId(mappedCCValue);
+			window.billing.sendToAndroid(JSON.stringify(this.billingData));
+		};
+        var scanCard = function(){
+           window.billing.scanCreditCard();
+        };
+        /*var setCardNumber = function(card_number){
+        alert("card_number  "+card_number);
+            var iframe = document.getElementById('mdliveframe');
+			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+			innerDoc.getElementById('ccNum').value= card_number;
+        };*/
+		var tokenizeForm = function() {
+		var iframe = document.getElementById('mdliveframe');
+        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        var cccvvValue = innerDoc.getElementById('ccCVV').value;
+        var ccNumValue = innerDoc.getElementById('ccNum').value;
+        var cccvvValueCheck = cccvvValue.toString();
+        var ccNumValueCheck = ccNumValue.toString();
+
+        if (cccvvValue.trim().length==0 || ccNumValue.trim().length==0 ) {
+        	this.billingData = {
+					"status" : "Please fill in all the required fields"
+				}
+        	window.billing.sendToAndroid(JSON.stringify(this.billingData));
+            return false;
+        }else if(!/^[0-9]+$/.test(ccNumValueCheck) || ccNumValueCheck.length>16 || ccNumValueCheck.length<16){
+        	this.billingData = {
+                "status" : "Invalid Credit Card Information"
+            }
+        	window.billing.sendToAndroid(JSON.stringify(this.billingData));
+            return false;
+        }else if(!/^[0-9]+$/.test(cccvvValueCheck) || cccvvValueCheck.length>4 || cccvvValueCheck.length<3){
+        	this.billingData = {
+                "status" : "Invalid Security Code"
+            }
+        	window.billing.sendToAndroid(JSON.stringify(this.billingData));
+            return false;
+        }
+
+        setTimeout(
+                function() {
+                    jQuery('input').blur();
+                    //Set hostedPCI URL. This will be use to refresh the HPCI iframe when user failed to input correct cc number or cvv
+                    this.hpciCCFrameFullUrl = "https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=stag&locationName=mobileandroid&sid=527122&fullParentHost="
+                            + this.parent_host_url
+                            + "&fullParentQStr="
+                            + this.parent_host_query_string;
+                    console.log("Tokenizing...hpciCCFrameFullUrl ===>>>>"+this.hpciCCFrameFullUrl);
+					return sendHPCIMsg();
+                }, 50);
+		};
+
+		var mdliveSetData = function(){
+			var iframe = document.getElementById('mdliveframe');
+			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+			innerDoc.getElementById('ccCVV').setAttribute("type","number");
+			innerDoc.getElementById('ccNum').setAttribute("type","number");
+
+		};
+
+	</script>
+<div class="billing-page">
+    <form name="input" id="update_billing" class="form-frame" method="post">
+
+        <!-- <iframe id="mdliveframe" name="mdliveframe" src="http://localhost:8087/hpci/templateindex.html" frameborder="0" height:"80">If you can see this, your browser doesn't understand IFRAME.</iframe> -->
+
+        <!--QA HPCI iFrame-->
+        <iframe id="mdliveframe" name="mdliveframe"
+                src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=stag&locationName=mobileandroid&sid=527122&fullParentHost=file%3A%2F%2F&fullParentQStr=%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex.html&cvvValidate=Y"
+                frameborder="0" scrolling="no" onload="mdliveSetData();"> If you can see
+            this, your browser doesn't understand IFRAME. </iframe>
+
+        <input type="hidden" id="ccNum" name="mdliveCCNum" value="" />
+        <input type="hidden" id="ccCVV" name="mdliveCCCVV" value="" />
+
+        <div style="margin-left: 7px; display:none;">
+            <div class="billing-save-button" onclick="tokenizeForm(); return false;">Save</div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
+<!--<div class="ccv-camera-img-content" onclick="scanCard(); return false;"><img class="scan-card-button" src="images/photo.svg"/></div>-->
+

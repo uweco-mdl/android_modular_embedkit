@@ -1,0 +1,76 @@
+apply plugin: 'com.android.library'
+
+// VSee integration:
+//
+// First repository is for VSee released artifacts.  Others pick up transitive dependencies.
+// To access the VSee bintray repo, you must create a bintray account (it is free) and have
+// us add you to our team.
+//
+repositories {
+    maven {
+        credentials {
+            username 'uweco'
+            password '903fdbf83488be99797a7757429240ca4f3a2619'
+        }
+        url 'http://dl.bintray.com/vsee/android'
+    }
+    maven {
+        url "https://repo.commonsware.com.s3.amazonaws.com"
+    }
+    maven {
+        url "http://dl.bintray.com/populov/maven"
+    }
+    jcenter()
+}
+
+android {
+
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+    defaultConfig {
+
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            //*
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+           // */
+            //consumerProguardFiles 'proguard-project.txt'
+        }
+    }
+}
+
+// VSee integration:
+// If you don't include this section you will get errors due to duplicate files in
+// 3rd party dependencies.
+android.packagingOptions {
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/NOTICE'
+    exclude 'version.properties'
+}
+
+dependencies {
+    compile project(':theming')
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v13:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.google.android.gms:play-services-maps:7.8.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+
+    //compile 'com.squareup.picasso:picasso:2.5.2'
+    compile('com.vsee:vsee-kit:0.3.20524@aar') {
+        transitive = true
+    }
+}
