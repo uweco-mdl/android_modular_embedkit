@@ -371,40 +371,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
             final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
 
-            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-
             try {
-                /**
-                 * This is for instant appointment
-                 * */
-                /*if ("Now".equalsIgnoreCase(time)) {
-
-                    if (appointment.getApptType() != null && appointment.getApptType().equalsIgnoreCase("phone")) {
-                        if (mUserBasicInfo == null) {
-                            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-                        }
-                        if(mUserBasicInfo.getPersonalInfo()!=null){
-                            mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
-                            if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
-                                    && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
-                                mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
-
-                            } else {
-                                mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
-                            }
-                            mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
-
-                            firstTextView.setText("The provider will call you shortly at \n" + mCustomerProvidedPhoneNumber);
-
-                            secondTextView.setVisibility(View.GONE);
-                        }
-                    } else {
-                        firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
-                        secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
-                    }
-
-                } else { */
                     final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
                  /*
@@ -419,17 +386,16 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                             final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
                             if (timestampString != null) {
                                 final long timestamp = Long.parseLong(timestampString);
-                                firstTextView.setText("Your next appointment less than  " + TimeZoneUtils.getRemainigTimeToAppointmentString(timestamp, "", getActivity()) + " minute(s)");
-                                secondTextView.setText("Click here to start Appointment.");
+                                firstTextView.setText(getString(R.string.mdl_appt_notification, TimeZoneUtils.getRemainigTimeToAppointmentString(timestamp, "", getActivity())));
+                                secondTextView.setText(getString(R.string.mdl_click_to_start));
                             }
                             break;
 
                         default:
-                            firstTextView.setText("Your next appointment is  " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
-                            secondTextView.setText("Click here for details.");
+                            firstTextView.setText(getString(R.string.mdl_next_appt) + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
+                            secondTextView.setText(getString(R.string.mdl_click_to_detail));
                             break;
                     }
-//                }
             }catch (Exception e){
                 e.printStackTrace();
             }
