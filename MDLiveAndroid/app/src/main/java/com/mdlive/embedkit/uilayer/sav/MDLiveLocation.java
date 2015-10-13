@@ -105,12 +105,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.setTag(null);
-        ZipcodeEditTxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        ZipcodeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    StateTxt.setText(getString(R.string.mdl_select_state));
-                }
+            public void onClick(View v) {
+                StateTxt.setText(getString(R.string.mdl_select_state));
             }
         });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
