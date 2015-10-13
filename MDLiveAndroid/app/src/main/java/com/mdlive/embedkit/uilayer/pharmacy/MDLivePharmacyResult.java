@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,7 +47,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
@@ -707,7 +704,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method","1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot","Now");
-        insuranceMap.put("provider_type_id","3");
+        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
     }

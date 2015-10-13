@@ -837,7 +837,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method", "1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot", "Now");
-        insuranceMap.put("provider_type_id", "3");
+        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
         insuranceMap.put("promocode", promoCode);
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
