@@ -206,6 +206,11 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 nameList.add(name);
                 urlList.add(url);
             }
+            
+            if(!isPrimaryUser){
+                nameList.remove(nameList.size() - 1);
+                urlList.remove(urlList.size() - 1);
+            }
 
             lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList,isPrimaryUser));
 
