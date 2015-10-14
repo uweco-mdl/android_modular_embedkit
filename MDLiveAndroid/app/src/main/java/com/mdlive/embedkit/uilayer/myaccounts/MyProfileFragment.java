@@ -36,6 +36,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -82,6 +83,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     String[] timeZoneAbbr = {"CST","EST","MST","PST","AKST","HST","AMS","MIT","GST","PAT"};
     public static PickImagePlugin cameraPlugIn;
     public static String timeZoneByStateValue;
+    private View SyncHealthSwitchContainer;
 
     private boolean mFromResult = false;
     private SwitchCompat mSwitchCompat;
@@ -293,10 +295,13 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         });
 
         String dependentId = sharedPrefs.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-        if(dependentId!=null){
-                view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.GONE);
+
+        SyncHealthSwitchContainer = view.findViewById(R.id.SyncHealthSwitchContainer);
+        SyncHealthSwitchContainer.setVisibility(View.GONE);
+        if(dependentId == null){
+            getHealthKitSyncStatus();
         } else {
-            view.findViewById(R.id.SyncHealthSwitchContainer).setVisibility(View.VISIBLE);
+            SyncHealthSwitchContainer.setVisibility(View.GONE);
         }
     }
 
@@ -556,59 +561,45 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         if(requestCode == 3){
             getProfileInfoService();
         }
-    /*
-        Bitmap bitmap = null;
-        switch (requestCode) {
 
-            case 1:
-                if(resultCode == Activity.RESULT_OK) {
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageReturnedIntent.getData());
+    }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+    private void getHealthKitSyncStatus() {
+        showProgressDialog();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    Log.d("HealthKit Response", response.toString());
+                    SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+                    String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+
+                    if(response.optString("message").contains("never synced") || response.optString("message").contains("synced with this") && dependentId == null){
+                        if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false) || dependentId != null) {
+                            SyncHealthSwitchContainer.setVisibility(View.VISIBLE);
+                        } else {
+                            SyncHealthSwitchContainer.setVisibility(View.GONE);
+                        }
+                    } else {
+                        SyncHealthSwitchContainer.setVisibility(View.GONE);
                     }
-                    mProfileImage.setImageBitmap(bitmap);
-                    convertToBase64(bitmap);
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                break;
-
-            case 2:
-                if(resultCode == Activity.RESULT_OK) {
-                    bitmap = (Bitmap) imageReturnedIntent.getExtras().get("data");
-                    mProfileImage.setImageBitmap(bitmap);
-                    convertToBase64(bitmap);
-                }
-
-            case 3:
-                getProfileInfoService();
-                break;
-        }*/
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("HealthKit Response", error.networkResponse.toString() + " -- ");
+                SyncHealthSwitchContainer.setVisibility(View.GONE);
+            }
+        };
+        HealthKitServices services = new HealthKitServices(getActivity(), getProgressDialog());
+        services.registerHealthKitSync(successCallBackListener, errorListener);
     }
-
-    public void convertToBase64(Bitmap selectedImage){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte b[] = baos.toByteArray();
-        String base64String = Base64.encodeToString(b, Base64.DEFAULT);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
-        String  currentTimeStamp = dateFormat.format(TimeZoneUtils.getCalendarWithOffset(getActivity()).getTime());
-
-        try {
-            JSONObject parent = new JSONObject();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("file_name", currentTimeStamp+".jpg");
-            jsonObject.put("photo", base64String);
-            parent.put("personal_information", jsonObject);
-            loadChangeProfilePicService(parent.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void loadChangeProfilePicService(String params) {
      showProgressDialog();
         mFromResult = true;
