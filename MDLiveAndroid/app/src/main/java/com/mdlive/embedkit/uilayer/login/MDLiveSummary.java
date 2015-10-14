@@ -33,6 +33,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_summary);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_summary));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

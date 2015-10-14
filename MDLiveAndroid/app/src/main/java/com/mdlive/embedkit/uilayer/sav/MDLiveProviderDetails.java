@@ -84,6 +84,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_doctor_details));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -1045,7 +1046,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         byphoneBtnLayout.setClickable(false);
 
                         horizontalscrollview.setVisibility(View.VISIBLE);
-                        LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
+                        final LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
                         if (layout.getChildCount() > 0) {
                             layout.removeAllViews();
                         }
@@ -1057,7 +1058,20 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         //Enable Request Appointment Button
                         enableReqAppmtBtn();
                         ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                        //horizontalscrollview.smoothScrollTo(0,0);
+
+                        horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
+
+
+                        horizontalscrollview.postDelayed(new Runnable() {
+                            public void run() {
+                                horizontalscrollview.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+                            }
+                        }, 100L);
+                        //horizontalscrollview.fullScroll(HorizontalScrollView.FOCUS_LEFT);
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1290,6 +1304,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             myText.setElevation(0f);
         }
+        horizontalscrollview.setContentDescription("Horizontal ScrollView");
         myText.setTextColor(Color.GRAY);
         myText.setTextSize(16);
         LinearLayout.LayoutParams params = new

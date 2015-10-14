@@ -84,6 +84,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_payment_activity);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_payment_txt));
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

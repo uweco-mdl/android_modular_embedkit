@@ -115,6 +115,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.mdlive_reason);
+            this.setTitle(getString(R.string.mdl_header_reason_txt));
 
             try {
                 setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

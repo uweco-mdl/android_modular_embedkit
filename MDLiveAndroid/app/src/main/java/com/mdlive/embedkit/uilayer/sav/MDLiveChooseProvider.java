@@ -93,6 +93,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chooseprovider);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_choose_provider));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

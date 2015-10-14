@@ -76,6 +76,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
+        this.setTitle(getString(R.string.mdl_search_pharm_txt));
         clearMinimizedTime();
 
         try {
@@ -90,6 +91,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
         ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));

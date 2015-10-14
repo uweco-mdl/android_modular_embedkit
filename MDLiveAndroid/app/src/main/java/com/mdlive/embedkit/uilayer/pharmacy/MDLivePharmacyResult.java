@@ -96,6 +96,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         setContentView(R.layout.mdlive_pharmacy_result);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_choose_phr_txt));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

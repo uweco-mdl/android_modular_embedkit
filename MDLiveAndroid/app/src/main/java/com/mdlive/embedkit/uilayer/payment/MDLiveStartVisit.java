@@ -28,6 +28,7 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_for_visit);
+        this.setTitle(getString(R.string.mdl_time_for_visit_txt));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

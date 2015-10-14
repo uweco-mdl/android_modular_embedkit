@@ -87,6 +87,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_waiting_room_title));
 
         isReturning = getIntent().getBooleanExtra("isReturning",false);
 

@@ -86,6 +86,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_medical_history);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_medical_history));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

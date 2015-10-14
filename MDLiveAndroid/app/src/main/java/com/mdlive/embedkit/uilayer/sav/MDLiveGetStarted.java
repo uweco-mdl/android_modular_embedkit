@@ -119,6 +119,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_getstarted));
         locationService = new LocationCooridnates(MDLiveGetStarted.this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());

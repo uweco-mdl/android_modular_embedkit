@@ -27,6 +27,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.thank_you);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_thankyou_string));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -45,6 +46,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
     public void handleIntent(){
         findViewById(R.id.toolbar_tick).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_tick).setContentDescription(getString(R.string.mdl_ada_tick_button));
         Intent receivingIntent = getIntent();
         if(receivingIntent != null){
             SharedPreferences phoneNumberPref = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
