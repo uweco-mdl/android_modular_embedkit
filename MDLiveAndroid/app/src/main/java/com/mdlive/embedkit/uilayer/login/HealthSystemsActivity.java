@@ -48,7 +48,10 @@ public class HealthSystemsActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

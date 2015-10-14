@@ -46,6 +46,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_summary).toUpperCase());
         mFeedbackSummaryEt = ((EditText) findViewById(R.id.txt_feedback_summary));
         setProgressBar(findViewById(R.id.progressBar));

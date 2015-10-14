@@ -93,7 +93,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_payment_txt));
         mScanCardBtn = (Button)findViewById(R.id.ScanCardBtn);
         if (getIntent() != null) {
