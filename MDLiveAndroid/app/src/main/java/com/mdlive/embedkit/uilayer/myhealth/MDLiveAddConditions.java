@@ -50,6 +50,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_edit));
         ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_condition_img);
 
         ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_conditions_reported));

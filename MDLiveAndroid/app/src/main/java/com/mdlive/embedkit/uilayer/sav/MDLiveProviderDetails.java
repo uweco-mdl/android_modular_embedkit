@@ -718,7 +718,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byphoneBtn.setTextColor(Color.GRAY);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-                byvideoBtnLayout.setContentDescription(getString(R.string.mdl_ada_video_btn_forward));
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -738,7 +737,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byphoneBtn.setTextColor(Color.WHITE);
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-                byphoneBtnLayout.setContentDescription(getString(R.string.mdl_ada_phone_btn_forward));
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -906,6 +904,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
             tapSeetheDoctorTxt.setText("See this doctor now");
+            tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_seethisdoctor_button));
             saveConsultationType("Video");
             ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.video_icon_white);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
@@ -930,6 +929,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
             tapSeetheDoctorTxt.setText("Talk to this doctor now");
+            tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_talktodoctor_button));
             saveConsultationType("Phone");
             ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.phone_icon_white);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
