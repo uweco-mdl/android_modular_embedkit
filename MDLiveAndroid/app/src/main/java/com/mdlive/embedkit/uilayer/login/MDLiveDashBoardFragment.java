@@ -38,7 +38,9 @@ import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -95,8 +97,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             }
             // Dependent User selected
             else if (User.MODE_DEPENDENT == selectedUser.mMode) {
-                logE("User Type", "" + selectedUser.mMode);
-                logE("User Type", "Expected Dependent");
+
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onDependentSelected(selectedUser);
                     if(NotificationFragment.getInstance() != null) {
@@ -106,8 +107,6 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             }
             // The Parent User Selected
             else {
-                logE("User Type", "" + selectedUser.mMode);
-                logE("User Type", "Expected Primary");
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onPrimarySelected(selectedUser);
                     if(NotificationFragment.getInstance() != null){
@@ -368,17 +367,24 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     switch (type) {
                         // Ten minutes case
                         case 0:
-                            final SharedPreferences preferences = firstTextView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-                            final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
-                            if (timestampString != null) {
-                                final long timestamp = Long.parseLong(timestampString);
-                                firstTextView.setText(getString(R.string.mdl_appt_notification, TimeZoneUtils.getRemainigTimeToAppointmentString(timestamp, "", getActivity())));
-                                secondTextView.setText(getString(R.string.mdl_click_to_start));
+                            final long now = System.currentTimeMillis();
+                            final Calendar myTime = TimeZoneUtils.getCalendarWithOffset(getActivity());
+                            myTime.setTimeInMillis(now);
+                            Log.e("now 2", myTime.getTimeInMillis() + "");
+                            final long difference = (appointment.getInMilliseconds() * 1000) - Calendar.getInstance().getTimeInMillis();
+                            if(difference > 0){
+                                String remainingMinute = Long.toString(TimeUnit.MILLISECONDS.toMinutes(difference));
+                                firstTextView.setText(getString(R.string.mdl_appt_notification, remainingMinute));
+                            }else{
+                                firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
+                                secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
                             }
+
+                            secondTextView.setText(getString(R.string.mdl_click_to_start));
                             break;
 
                         default:
-                            firstTextView.setText(getString(R.string.mdl_next_appt) + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
+                            firstTextView.setText(getString(R.string.mdl_next_appt) + " " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
                             secondTextView.setText(getString(R.string.mdl_click_to_detail));
                             break;
                     }
