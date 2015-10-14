@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.embedkit.uilayer.payment.MDLiveStartVisit;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -253,13 +252,9 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 mUpcomingAppoinmantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (mOnAppointmentClicked != null &&
-                                (getActivity() != null && !(getActivity() instanceof AppointmentActivity))) {
-                            mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
-                        }
-
                         if (mOnAppointmentClicked != null) {
                             mOnAppointmentClicked.onCloseDrawer();
+                            mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
                         }
                     }
                 });

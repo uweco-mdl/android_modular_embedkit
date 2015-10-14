@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,12 +13,8 @@ import android.widget.TextView;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 
@@ -32,6 +27,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
     public static Intent getAppointmentIntent(final Context context, final Appointment appointment) {
         final Intent intent = new Intent(context, AppointmentActivity.class);
         intent.putExtra(APPOINTMENT_TAG, appointment);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 
