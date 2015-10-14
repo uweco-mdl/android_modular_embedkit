@@ -444,7 +444,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         SharedPreferences.Editor editor = settings.edit();
         String activityCaller  = getIntent().getStringExtra("activitycaller");
         Log.e("Caller bname",activityCaller);
-        if(activityCaller.equals("getstarted")){
+        if(activityCaller.equals(getString(R.string.mdl_getstarted))){
             editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
             Log.e("print short name",shortNameText);
             editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
