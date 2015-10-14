@@ -199,7 +199,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     return true;
                 }
             });
+            map.setInfoWindowAdapter(null);
             map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
 

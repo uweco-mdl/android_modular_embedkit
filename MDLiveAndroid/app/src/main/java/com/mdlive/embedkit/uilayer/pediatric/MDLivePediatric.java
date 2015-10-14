@@ -544,6 +544,18 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
      */
 
     public void enableRadioButtons(String name, String value) {
+
+        boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY",false);
+
+        if(fromMedicalHistory){
+            if ("Immunization up to date?".equals(name)) {
+                if ("Yes".equals(value)) {
+                    ((RadioButton) findViewById(R.id.immunization_yesButton)).setChecked(true);
+                } else if ("No".equals(value)) {
+                    ((RadioButton) findViewById(R.id.immunization_noButton)).setChecked(true);
+                }
+            }
+        }
         if ("Smoking exposure".equals(name)) {
             if ("Yes".equals(value)) {
                 ((RadioButton) findViewById(R.id.smoking_yesButton)).setChecked(true);
