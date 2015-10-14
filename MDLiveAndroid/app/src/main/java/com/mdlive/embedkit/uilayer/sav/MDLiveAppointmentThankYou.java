@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +43,10 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        TextView mdlCancelInstruction = (TextView) findViewById(R.id.mdl_cancellation_instructions);
+        Spannable word = new SpannableString(getString(R.string.mdl_cancellation_instructions));
+        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.darkblack)), 39, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mdlCancelInstruction.setText(word);
         handleIntent();
         getPreferenceValue();
     }

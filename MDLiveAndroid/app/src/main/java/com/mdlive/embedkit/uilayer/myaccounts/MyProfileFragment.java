@@ -395,7 +395,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         try {
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
-            profileName = myProfile.getString("first_name"); /*+" "+ myProfile.getString("last_name")*/
+            profileName = myProfile.getString("first_name")+" "+ myProfile.getString("last_name");
             email = myProfile.getString("email");
             userDOB = myProfile.getString("birthdate");
             gender = myProfile.getString("gender");
