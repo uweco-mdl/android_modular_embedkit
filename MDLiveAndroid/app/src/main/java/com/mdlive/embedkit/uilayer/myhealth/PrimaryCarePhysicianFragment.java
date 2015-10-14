@@ -21,6 +21,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddPCP;
@@ -122,11 +123,13 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         if (mAddress1 != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mAddress1.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).address1);
         }
-
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
         mCountry = (TextView) view.findViewById(R.id.country);
         mCountryLayout = (RelativeLayout) view.findViewById(R.id.countryLayout);
         if (mCountry != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mCountry.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).country);
+        }else if(mCountry!=null){
+            mCountry.setText(userBasicInfo.getPersonalInfo().getCountry());
         }
         mCountryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +143,8 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         mStateLayout = (RelativeLayout) view.findViewById(R.id.stateLayout);
         if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
+        } else if(mState!=null){
+            mState.setText(userBasicInfo.getPersonalInfo().getState());
         }
         mStateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +189,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         if (mPracticeName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mPracticeName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).practice);
         }
+
     }
 
 
