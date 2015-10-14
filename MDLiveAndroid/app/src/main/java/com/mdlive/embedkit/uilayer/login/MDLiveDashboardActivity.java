@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -10,14 +11,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterInboxDetailsActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -82,6 +88,29 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 && DeepLinkUtils.DEEPLINK_DATA.getPage() != null
                 && DeepLinkUtils.DEEPLINK_DATA.getPage().length() > 0) {
             findViewById(R.id.drawer_layout).setVisibility(View.GONE);
+        }
+
+    }
+    private void checkNotification(){
+        try {
+            SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            if (settings.contains("has_push_notification")) {
+                String message = settings.getString("has_push_notification", "{}");
+                settings.edit().remove("has_push_notification").commit();
+                JsonParser parser = new JsonParser();
+                JsonObject originalPayload = parser.parse(message).getAsJsonObject();
+                Intent messageIntent = new Intent(this,
+                        originalPayload.get("acme").getAsJsonArray().get(0).getAsString().equalsIgnoreCase("message") ?
+                                MessageCenterInboxDetailsActivity.class : AppointmentActivity.class);
+
+                messageIntent.putExtra("notification_id", originalPayload.get("acme").getAsJsonArray().get(1).getAsInt());
+
+                messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(messageIntent);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     private boolean isScreenLoaded = false;
@@ -194,7 +223,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void checkDeeplink() {
         Log.d("DeepLink", "In Deeplink check");
-
+        checkNotification();
         if (DeepLinkUtils.DEEPLINK_DATA != null ) {
             Log.d("DeepLink", "Data : " + DeepLinkUtils.DEEPLINK_DATA);
 
