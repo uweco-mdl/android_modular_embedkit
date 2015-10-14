@@ -1035,7 +1035,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 @Override
                 public void onClick(View v) {
                     try {
-
+                        horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                         byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                         byvideoBtn.setTextColor(Color.WHITE);
                         ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -1061,8 +1061,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         //horizontalscrollview.smoothScrollTo(0,0);
 
                         horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
-
-
                         horizontalscrollview.postDelayed(new Runnable() {
                             public void run() {
                                 horizontalscrollview.fullScroll(HorizontalScrollView.FOCUS_LEFT);
@@ -1119,6 +1117,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         @Override
                         public void onClick(View v) {
                             try {
+                                horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byvideoBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -1139,6 +1138,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 saveConsultationType("Video");
                                 //Enable Request Appointment Button
                                 enableReqAppmtBtn();
+                                horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
                                 horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
@@ -1162,6 +1162,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         @Override
                         public void onClick(View v) {
                             try {
+                                horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byphoneBtn.setTextColor(Color.WHITE);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
@@ -1181,6 +1182,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 saveConsultationType("Phone");
                                 //Enable Request Appointment Button
                                 enableReqAppmtBtn();
+                                horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
                                 horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
@@ -1210,7 +1212,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onClick(View v) {
                 try {
-
+                    horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                     byvideoBtn.setTextColor(Color.WHITE);
                     ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -1232,6 +1234,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     saveConsultationType("Video");
                     //Enable Request Appointment Button
                     enableReqAppmtBtn();
+                    horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                     horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                 } catch (Exception e) {
@@ -1256,6 +1259,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             @Override
             public void onClick(View v) {
                 try {
+                    horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                     byphoneBtn.setTextColor(Color.WHITE);
                     ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
@@ -1276,6 +1280,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     saveConsultationType("Phone");
                     //Enable Request Appointment Button
                     enableReqAppmtBtn();
+                    horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                     horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                 } catch (Exception e) {
