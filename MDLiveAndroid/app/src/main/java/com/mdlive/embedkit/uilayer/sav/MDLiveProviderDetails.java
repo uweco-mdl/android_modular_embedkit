@@ -97,6 +97,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
@@ -717,6 +718,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byphoneBtn.setTextColor(Color.GRAY);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                byvideoBtnLayout.setContentDescription(getString(R.string.mdl_ada_video_btn_forward));
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -736,6 +738,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byphoneBtn.setTextColor(Color.WHITE);
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                byphoneBtnLayout.setContentDescription(getString(R.string.mdl_ada_phone_btn_forward));
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
