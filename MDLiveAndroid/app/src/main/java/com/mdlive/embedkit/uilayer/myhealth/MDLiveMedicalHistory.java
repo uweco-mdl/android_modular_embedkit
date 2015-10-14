@@ -884,6 +884,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             e.printStackTrace();
         }
 
+        if(isTherapiestUser){
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.GONE);
+        }
+
      /*   if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&
                 PreExisitingGroup.getCheckedRadioButtonId() == R.id.conditionYesButton){
             ((RadioButton) findViewById(R.id.conditionYesButton)).setChecked(false);
