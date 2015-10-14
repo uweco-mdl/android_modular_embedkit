@@ -26,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
@@ -146,8 +145,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        this.setTitle(getString(R.string.mdl_add_family_member));
         ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
+        back.setContentDescription(getString(R.string.mdl_ada_back_button));
         TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
         title.setText(getString(R.string.mdl_add_family_member).toUpperCase());
         ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);

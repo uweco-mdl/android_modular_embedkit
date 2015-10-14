@@ -3,17 +3,12 @@ package com.mdlive.embedkit.uilayer.myhealth;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
 
 /**
@@ -36,6 +31,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
         clearMinimizedTime();
+        this.setTitle(getResources().getString(R.string.mdl_pcp_title));
 
         try {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

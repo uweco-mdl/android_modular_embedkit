@@ -43,6 +43,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
         if (toolbar != null) {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             setSupportActionBar(toolbar);
+            this.setTitle(getString(R.string.mdl_appointment_details));
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_appointment_details).toUpperCase());
             elevateToolbar(toolbar);
         }

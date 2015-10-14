@@ -48,7 +48,9 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_edit));
         ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_allergies_img);
         ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_allergies_reported));
         ((TextView) findViewById(R.id.noConditionSubTitleTv)).setText(getResources().getString(R.string.mdl_empty_allergies_reported_msg));

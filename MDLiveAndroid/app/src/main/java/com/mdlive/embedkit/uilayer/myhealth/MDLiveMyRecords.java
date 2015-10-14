@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.myhealth;
 
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,13 +9,9 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.MessageMyRecordsFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by venkataraman_r on 8/31/2015.
@@ -29,6 +24,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_my_record));
 
         try {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
@@ -43,6 +39,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
 
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

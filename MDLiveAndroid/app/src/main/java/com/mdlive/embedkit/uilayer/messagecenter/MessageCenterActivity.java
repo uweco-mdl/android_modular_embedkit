@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -11,14 +10,9 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ReceivedMessage;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.SentMessage;
@@ -33,7 +27,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
         clearMinimizedTime();
-        setTitle("");
+        this.setTitle(getString(R.string.mdl_message_center));
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
