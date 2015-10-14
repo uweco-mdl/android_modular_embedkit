@@ -69,6 +69,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_appointment);
+        this.setTitle(getString(R.string.mdl_confirm_appointment_txt));//Title declared here for ada users,it will read out the screen title
+
         clearMinimizedTime();
         getPreferenceValue();
 
