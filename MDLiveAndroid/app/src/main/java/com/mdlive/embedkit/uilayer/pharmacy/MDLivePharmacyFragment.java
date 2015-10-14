@@ -193,32 +193,12 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         mapView = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView));
         map = mapView.getMap();
         if (map != null) {
-
-            /**
-             *  This adapter is used to display info window when users click on the marker on google map
-             *
-             *  It has a layout to show user when click on marker.
-             */
-            map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                // Use default InfoWindow frame
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    View v = getActivity().getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
-                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
-                    TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
-                    TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
-                    addressline1.setText(bundletoSend.get("store_name") + "");
-                    addressline2.setText(bundletoSend.get("address1") + "");
-                    addressline3.setText(bundletoSend.get("city") + "  " + (TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
-                    return v;
-                }
-
-                @Override
-                public View getInfoContents(Marker arg0) {
-                    return null;
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                public boolean onMarkerClick(Marker marker) {
+                    marker.hideInfoWindow();
+                    return true;
                 }
             });
-
             map.getUiSettings().setScrollGesturesEnabled(false);
         }
     }

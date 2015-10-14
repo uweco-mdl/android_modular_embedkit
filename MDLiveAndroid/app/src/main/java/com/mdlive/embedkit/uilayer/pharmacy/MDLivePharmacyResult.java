@@ -234,6 +234,13 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 expandableMapViewContainer.setVisibility(View.VISIBLE);
             }
         });
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            public boolean onMarkerClick(Marker marker) {
+                marker.hideInfoWindow();
+                expandableMapViewContainer.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
 
         if (expandgoogleMap != null) {
             if (expandgoogleMap != null) {
