@@ -128,8 +128,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             }
 
             ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+            ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
             ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+            ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_header_reason_txt).toUpperCase());
 
             setProgressBar(findViewById(R.id.progressDialog));
@@ -165,6 +167,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         findViewById(R.id.topContentHolder).setVisibility(View.GONE);
                         findViewById(R.id.photoLayout).setVisibility(View.VISIBLE);
                         ((ImageView) findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.down_arrow_icon_white);
+                        ((ImageView) findViewById(R.id.indicatorIcon)).setContentDescription(getString(R.string.mdl_ada_arrowdown_photo_button));
                     } else {
                         findViewById(R.id.topContentHolder).setVisibility(View.VISIBLE);
                         findViewById(R.id.photoLayout).setVisibility(View.GONE);
