@@ -143,8 +143,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         mStateLayout = (RelativeLayout) view.findViewById(R.id.stateLayout);
         if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
-        } else if(mState!=null){
-            mState.setText(userBasicInfo.getPersonalInfo().getState());
+            mState.setContentDescription(getString(R.string.mdl_ada_dropdown)+((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
         }
         mStateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,6 +224,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String SelectedText = countryList.get(i);
                 mCountry.setText(SelectedText);
+                mCountry.setContentDescription(getString(R.string.mdl_ada_dropdown)+SelectedText);
                 dialogInterface.dismiss();
             }
         });

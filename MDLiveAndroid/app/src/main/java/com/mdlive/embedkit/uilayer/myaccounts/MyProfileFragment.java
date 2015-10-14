@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -15,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +34,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingle
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -51,7 +48,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.HealthKitServices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -204,6 +200,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mPreferredSignIn.setText(items[item]);
+                        mPreferredSignIn.setContentDescription(getString(R.string.mdl_ada_dropdown)+items[item]);
                         // If Selected Password, then simply save type as Password
                         if (view.getResources().getString(R.string.mdl_password).equalsIgnoreCase(String.valueOf(items[item]))) {
                             MdliveUtils.setLockType(getActivity(), String.valueOf(items[item]));
@@ -231,6 +228,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mTimeZone.setText(items[item]);
+                        mTimeZone.setContentDescription(getString(R.string.mdl_ada_dropdown)+items[item]);
                         // If Selected Password, then simply save type as Password
                         changePhoneNumberInfo(true);
                     }
@@ -260,6 +258,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         changeLangTv.setText(items[item]);
+                        changeLangTv.setContentDescription(getString(R.string.mdl_ada_dropdown)+items[item]);
                         sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor1 = sharedPref.edit();
                         editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, changeLangTv.getText().toString().toLowerCase());

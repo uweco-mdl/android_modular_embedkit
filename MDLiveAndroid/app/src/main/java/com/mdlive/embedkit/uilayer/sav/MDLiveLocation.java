@@ -111,7 +111,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         ZipcodeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StateTxt.setText(getString(R.string.mdl_select_state));
+                StateTxt.setText(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_select_state));
             }
         });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {

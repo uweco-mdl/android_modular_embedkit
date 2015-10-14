@@ -257,7 +257,9 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         timesDialog = alertDialog.create();
         ((TextView)findViewById(R.id.timesTxt)).setText(timesList[0]);
+        ((TextView)findViewById(R.id.timesTxt)).setContentDescription(getString(R.string.mdl_ada_dropdown)+timesList[0]);
         ((TextView)findViewById(R.id.modeTxt)).setText(modesList[0]);
+        ((TextView)findViewById(R.id.modeTxt)).setContentDescription(getString(R.string.mdl_ada_dropdown)+modesList[0]);
         View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(yearView);
         ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
@@ -285,6 +287,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public void initializeViews() {
         surgeryName = ((TextView) findViewById(R.id.surgeryName));
         surgeryYear = ((TextView) findViewById(R.id.surgeryYear));
+        surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_select_surgery_txt));
+        surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_year_txt));
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
         LayoutInflater inflater = getLayoutInflater();
 
@@ -304,6 +308,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         procedureYearDialog = alertDialog.create();
 
+
         nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -316,6 +321,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                                 otherProcedureTxt.getText().toString().length() != 0){
                             if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                                     && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
+                                surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryName.getText().toString());
+                                surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryYear.getText().toString());
                                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                             }else{
                                 ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
@@ -324,6 +331,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
                         }
                     }else{
+                        surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryName.getText().toString());
+                        surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryYear.getText().toString());
                         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
                     }
                 }

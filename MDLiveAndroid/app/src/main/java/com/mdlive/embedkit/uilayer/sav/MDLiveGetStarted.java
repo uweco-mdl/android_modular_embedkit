@@ -1024,6 +1024,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             Collections.reverse(providerTypeIdList);
             Log.e("providerTypeIDList", providerTypeIdList.toString());
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+            ((TextView) findViewById(R.id.providertypeTxt)).setContentDescription(getString(R.string.mdl_ada_dropdown)+providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
 
 

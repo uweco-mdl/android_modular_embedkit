@@ -89,6 +89,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_provider);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_refine_search));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -102,7 +103,9 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_refine_search));
 
 

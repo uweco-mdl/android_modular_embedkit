@@ -652,6 +652,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String selectedType = list.get(which);
                 selectedText.setText(selectedType);
+                selectedText.setContentDescription(getString(R.string.mdl_ada_dropdown)+selectedType);
                 updateDropDownParams(typeName, selectedType);
                 enableSaveButton();
                 dialog.dismiss();
