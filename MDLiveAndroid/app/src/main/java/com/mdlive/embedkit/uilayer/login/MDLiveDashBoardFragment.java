@@ -225,7 +225,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
                 editor1.commit();
                 final JSONObject obj = new JSONObject(sharedPref.getString(PreferenceConstants.HEALTH_SYSTEM_PREFERENCES, "{}"));
-                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false)){
+                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false) && mUserBasicInfo.getPersonalInfo().getEmailConfirmed()){
                     mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
                     mEmailConfirmationView.setVisibility(View.VISIBLE);
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
