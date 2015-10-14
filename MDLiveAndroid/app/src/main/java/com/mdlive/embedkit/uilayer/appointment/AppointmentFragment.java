@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
@@ -55,96 +56,155 @@ public class AppointmentFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_appoinment_details, container, false);
     }
+    private void renderUI(View view, Appointment appointment){
+        try{
+            final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.doctor_image_view);
+            if (circularNetworkImageView != null) {
+                circularNetworkImageView.setImageUrl(appointment.getPhysicianImageUrl(), ApplicationController.getInstance().getImageLoader(view.getContext()));
+            }
 
+            ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
+            Log.e("pending Role",appointment.getRole()+"");
+
+            if(appointment.getRole().equalsIgnoreCase("null")){
+                ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
+            }else{
+                ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());
+            }
+
+
+            ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
+
+            ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(TimeZoneUtils.convertMiliSeconedsToStringMonthWithTimeZone(appointment.getInMilliseconds(), getActivity()));
+
+            final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
+            Log.e("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
+            switch (type) {
+
+                case 0 :
+                    // Ten minutes case
+                    SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                    String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+                    Log.e("Print Time",Time);
+                    String consultationType =  sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+                    view.findViewById(R.id.help).setVisibility(View.GONE);
+
+                    // For Phone Do not show Start Button
+                    if(consultationType.equalsIgnoreCase("phone")) {
+                        view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                        view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                        view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.phoneHelplayout).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(consultationType + " " + getString(R.string.mdl_consultation));
+                    } else{
+                        final SharedPreferences preferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                        final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(getActivity()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
+                        if (timestampString != null) {
+                            final long timestamp = Long.parseLong(timestampString) * 1000;
+                            final long now = System.currentTimeMillis();
+                            final long difference = timestamp - now;
+
+                            // Real Ten minute check
+                            if (difference < 10 * 60 * 1000) {
+                                view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                                view.findViewById(R.id.help).setVisibility(View.GONE);
+                            } else {
+                                view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                                view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                                view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                            view.findViewById(R.id.help).setVisibility(View.GONE);
+                        }
+                    }
+                    break;
+
+                // 24 hours
+                case 1 :
+                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                    view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
+                    break;
+
+                // More than 24 hours
+                case 2 :
+                    view.findViewById(R.id.help).setVisibility(View.GONE);
+                    view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
+                    view.findViewById(R.id.phoneHelplayout).setVisibility(View.GONE);
+                    view.findViewById(R.id.cancel_appointment).setVisibility(View.VISIBLE);
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         final Appointment appointment = getArguments().getParcelable(APPOINTMENT_TAG);
-        logD("Appointment", appointment.toString());
-        logD("AppointmentType", appointment.getApptType());
-        logD("AppointmentTime", appointment.getStartTime());
-        logD("AppointmentMilli", appointment.getInMilliseconds()+"");
 
-        final CircularNetworkImageView circularNetworkImageView = (CircularNetworkImageView) view.findViewById(R.id.doctor_image_view);
-        if (circularNetworkImageView != null) {
-            circularNetworkImageView.setImageUrl(appointment.getPhysicianImageUrl(), ApplicationController.getInstance().getImageLoader(view.getContext()));
-        }
-
-        ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
-        Log.e("Role",appointment.getRole());
-
-        if(appointment.getRole().equalsIgnoreCase("null")){
-            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
+        if(appointment.getApptType() != null && !appointment.getApptType().equalsIgnoreCase("null")) {
+            renderUI(view, appointment);
         }else{
-            ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText(appointment.getRole());
+            getAppointmentDetails(view, appointment.getStringID() == null ? (appointment.getId() + "") : appointment.getStringID());
         }
 
+    }
+    public void getAppointmentDetails(final View view, String id) {
+        showProgressDialog();
+        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("PendingAppoinments", response.toString());
+                try{
+                    if(response.has("appointment")){
+                        JSONObject apt = response.getJSONObject("appointment");
+                        Appointment appointment = new Appointment();
 
-        ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(appointment.getApptType() + " " + getString(R.string.mdl_consultation));
-
-        ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(TimeZoneUtils.convertMiliSeconedsToStringMonthWithTimeZone(appointment.getInMilliseconds(), getActivity()));
-
-        final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
-        Log.e("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
-        switch (type) {
-
-            case 0 :
-                // Ten minutes case
-                SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-                String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-                Log.e("Print Time",Time);
-                String consultationType =  sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-                view.findViewById(R.id.help).setVisibility(View.GONE);
-
-                // For Phone Do not show Start Button
-                if(consultationType.equalsIgnoreCase("phone")) {
-                    view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                    view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
-                    view.findViewById(R.id.help).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.phoneHelplayout).setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.consulatation_type_text_view)).setText(consultationType + " " + getString(R.string.mdl_consultation));
-                } else{
-                    final SharedPreferences preferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-                    final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(getActivity()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
-                    if (timestampString != null) {
-                        final long timestamp = Long.parseLong(timestampString) * 1000;
-                        final long now = System.currentTimeMillis();
-                        final long difference = timestamp - now;
-
-                        // Real Ten minute check
-                        if (difference < 10 * 60 * 1000) {
-                            view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
-                            view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
-                            view.findViewById(R.id.help).setVisibility(View.GONE);
-                        } else {
-                            view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                            view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
-                            view.findViewById(R.id.help).setVisibility(View.VISIBLE);
+                        appointment.setApptType(apt.getString("appt_type"));
+                        appointment.setChiefComplaint(apt.getString("chief_complaint"));
+                        appointment.setInMilliseconds(apt.getInt("in_milliseconds"));
+                        appointment.setPhysicianImageUrl(apt.getString("physician_image_url"));
+                        appointment.setPhysicianName(apt.getString("physician_name"));
+                        appointment.setProviderId(apt.getInt("provider_id"));
+                        appointment.setStartTime(apt.getString("start_time"));
+                        appointment.setTimeZone(apt.getString("time_zone"));
+                        appointment.setRole(apt.getString("role"));
+                        try{
+                            appointment.setId(apt.getInt("id"));
+                        }catch (Exception e){
+                            appointment.setStringID(apt.getString("id"));
                         }
-                    } else {
-                        view.findViewById(R.id.start_appointment).setVisibility(View.VISIBLE);
-                        view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
-                        view.findViewById(R.id.help).setVisibility(View.GONE);
+                        renderUI(view, appointment);
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                break;
+                hideProgressDialog();
 
-            // 24 hours
-            case 1 :
-                view.findViewById(R.id.help).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                view.findViewById(R.id.cancel_appointment).setVisibility(View.GONE);
-                break;
+            }
+        };
 
-            // More than 24 hours
-            case 2 :
-                view.findViewById(R.id.help).setVisibility(View.GONE);
-                view.findViewById(R.id.start_appointment).setVisibility(View.GONE);
-                view.findViewById(R.id.phoneHelplayout).setVisibility(View.GONE);
-                view.findViewById(R.id.cancel_appointment).setVisibility(View.VISIBLE);
-                break;
-        }
+
+        final NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+        service.getAppointment(id, successCallBackListener, errorListener);
     }
 
     public void onCancelAppointmentClicked() {
@@ -152,7 +212,6 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                logD("PendingAppoinments", response.toString().trim());
                 hideProgressDialog();
 
                 try {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -47,7 +48,20 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
         }
 
         if (savedInstanceState == null) {
-            if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(APPOINTMENT_TAG) != null) {
+            if (getIntent() != null && getIntent().hasExtra("notification_id")){
+                final Appointment appointment = new Appointment();
+                Log.d("pending appointment", getIntent().getStringExtra("notification_id") + "");
+                Log.e("pending apoointment 2", getIntent().getIntExtra("notification_id", 0) + "");
+                if(getIntent().getStringExtra("notification_id") == null){
+                    appointment.setId(getIntent().getIntExtra("notification_id", 0));
+                }else {
+                    appointment.setStringID(getIntent().getStringExtra("notification_id"));
+                }
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(R.id.main_container, AppointmentFragment.newInstance(appointment), MAIN_CONTENT).
+                        commit();
+            }else if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(APPOINTMENT_TAG) != null) {
                 final Appointment appointment = getIntent().getExtras().getParcelable(APPOINTMENT_TAG);
 
                 getSupportFragmentManager().

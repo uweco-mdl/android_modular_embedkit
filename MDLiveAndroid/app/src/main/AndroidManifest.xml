@@ -6,8 +6,7 @@
         android:allowBackup="true"
         android:label="@string/mdl_app_name"
         android:largeHeap="true"
-        android:theme="@style/CustomTheme"
-        android:name="android.support.multidex.MultiDexApplication">
+        android:theme="@style/CustomTheme">
 
         <activity
             android:name="com.mdlive.embedkit.uilayer.myhealth.MDLiveHealthModule"

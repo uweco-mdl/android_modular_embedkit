@@ -80,6 +80,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clearMinimizedTime();
+        MdliveUtils.activity = this;
         setTitle("");
     }
 
@@ -162,10 +163,16 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onPause() {
         super.onPause();
-
+        MdliveUtils.isAppInForground = false;
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MdliveUtils.isAppInForground = true;
     }
 
     @Override

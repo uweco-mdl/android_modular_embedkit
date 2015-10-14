@@ -3,12 +3,15 @@ package com.mdlive.embedkit.uilayer.messagecenter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
@@ -67,12 +70,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_message_received_details, container, false);
     }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        final ReceivedMessage receivedMessage = getArguments().getParcelable(RECEIVED_MESSAGE_TAG);
+    private void renderUI(View view, final ReceivedMessage receivedMessage){
 
         final TextView subjectTextView = (TextView) view.findViewById(R.id.fragment_message_received_subject_text_view);
         if (subjectTextView != null) {
@@ -110,6 +108,21 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
         if (detailsTextView != null) {
             detailsTextView.setText(receivedMessage.message);
         }
+        if(!receivedMessage.readStatus){
+            callReceivedMessageRead(view, receivedMessage.messageId+"");
+        }
+    }
+    @Override
+    public void onViewCreated(View uiView, Bundle savedInstanceState) {
+        super.onViewCreated(uiView, savedInstanceState);
+        final ReceivedMessage receivedMessage = getArguments().getParcelable(RECEIVED_MESSAGE_TAG);
+        Log.e("receivedMessage", receivedMessage.toString()+"");
+        if(receivedMessage.message != null && !receivedMessage.message.equalsIgnoreCase("null")) {
+            renderUI(uiView, receivedMessage);
+        }else{
+            callReceivedMessageRead(uiView, receivedMessage.messageId + "");
+        }
+
     }
 
     @Override
@@ -126,10 +139,10 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final ReceivedMessage receivedMessage = getArguments().getParcelable(RECEIVED_MESSAGE_TAG);
-        if (receivedMessage != null) {
-            callReceivedMessageRead(String.valueOf(receivedMessage.messageId));
-        }
+//        final ReceivedMessage receivedMessage = getArguments().getParcelable(RECEIVED_MESSAGE_TAG);
+//        if (receivedMessage != null) {
+//            callReceivedMessageRead(null, String.valueOf(receivedMessage.messageId));
+//        }
     }
 
     @Override
@@ -164,16 +177,25 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
         mReloadMessageCount = null;
     }
 
-    private void callReceivedMessageRead(final String id) {
+    private void callReceivedMessageRead(final View uiView, final String id) {
         showProgressDialog();
-
+        Log.e("receivedMessage response id", id+"");
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-
-                if (mReloadMessageCount != null) {
-                    mReloadMessageCount.reloadMessageCount();
+                try {
+                    Log.e("message response", response.toString());
+                    if (!response.has("error")) {
+                        JSONObject message = response.getJSONObject("message");
+                        ReceivedMessage receivedMessage = new Gson().fromJson(message.toString(), ReceivedMessage.class);
+                        renderUI(uiView, receivedMessage);
+                    }
+                    if (mReloadMessageCount != null) {
+                        mReloadMessageCount.reloadMessageCount();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         };
