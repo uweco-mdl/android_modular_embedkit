@@ -54,12 +54,12 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))){
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
-                findViewById(R.id.cencel_info).setVisibility(View.GONE);
                 findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
                 ((TextView)findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("OnCall")){
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.cencel_info).setVisibility(View.GONE);
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.txtThanksMsg).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_on_call_header));
@@ -69,6 +69,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
             }else if(receivingIntent.hasExtra("activitycaller")&& receivingIntent.getStringExtra("activitycaller").equals("escalated")){
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.cencel_info).setVisibility(View.GONE);
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
                 ((TextView)findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
