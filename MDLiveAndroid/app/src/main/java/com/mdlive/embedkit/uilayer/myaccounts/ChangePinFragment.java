@@ -79,7 +79,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePin = inflater.inflate(R.layout.fragments_pin_change, null);
-
+        MdliveUtils.DIALOG_SHOWN = false;
         init(changePin);
 
         return changePin;
