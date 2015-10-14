@@ -305,7 +305,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
         });
 
-        if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        /*if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
@@ -315,7 +315,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
-        }
+        }*/
 
         // Provider mode
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -622,7 +622,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
-            checkPediatricCompletion(historyPercentageArray);
+            //checkPediatricCompletion(historyPercentageArray);
             checkPrimaryCarePhysicianHistory();
             checkMyHealthBehaviouralHistory(historyPercentageArray);
             //checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
