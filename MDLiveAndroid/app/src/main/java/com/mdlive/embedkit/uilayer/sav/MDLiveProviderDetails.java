@@ -97,6 +97,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
@@ -259,7 +260,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
                 hideProgress();
                 tapSeetheDoctorTxtLayout.setClickable(false);
                 detailsLl.setVisibility(View.GONE);
@@ -287,7 +287,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     public void handleDateResponse(JSONObject response){
         horizontalscrollview.setVisibility(View.GONE);
         //Fetch Data From the Services
-        Log.i("Date Response", response.toString());
         JsonParser parser = new JsonParser();
         JsonObject responObj = (JsonObject) parser.parse(response.toString());
         JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -559,7 +558,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 horizontalscrollview.setVisibility(View.GONE);
                 ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
                 if (str_Availability_Type.equalsIgnoreCase("video")) {
-                    onlyvideo();
+                    onlyVideo();
 
                 } else if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
                     VideoOrPhoneNotAvailable();
@@ -606,7 +605,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 horizontalscrollview.setVisibility(View.GONE);
                 ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
                 if (str_Availability_Type.equalsIgnoreCase("video")) {
-                    onlyvideo();
+                    onlyVideo();
 
                 } else if (str_Availability_Type.equalsIgnoreCase("video or phone")) {
                     VideoOrPhoneNotAvailable();
@@ -645,7 +644,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     private void notAvailable() {
         tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
-        tapSeetheDoctorTxt.setText("Currently not available");
+        tapSeetheDoctorTxt.setText(getString(R.string.mdl_currently_unavail));
         tapSeetheDoctorTxtLayout.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource((R.color.darkgrey_background));
         ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
@@ -654,17 +653,17 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byphoneBtnLayout.setVisibility(View.GONE);
         reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
         reqfutureapptBtnLayout.setClickable(true);
-        reqfutureapptBtn.setText("Make an appointment request");
+        reqfutureapptBtn.setText(getString(R.string.mdl_make_appt));
         tapReqFutureBtnAction();
     }
 
     private void onlyWithPatient() {
         isDoctorAvailableNow=false;
-        tapSeetheDoctorTxt.setText("Currently with patient");
+        tapSeetheDoctorTxt.setText(getString(R.string.mdl_currently_with_patient));
         tapSeetheDoctorTxt.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource(R.drawable.searchpvr_orange_rounded_corner);
         ((ImageView)findViewById(R.id.see_icon)).setImageResource(R.drawable.clock_icon_white);
-        reqfutureapptBtn.setText("Make an appointment request");
+        reqfutureapptBtn.setText(getString(R.string.mdl_make_appt));
         tapReqFutureBtnAction();
         videophoneparentLl.setVisibility(View.GONE);
         ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
@@ -674,7 +673,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     }
 
     private void onlyPhone() {
-        tapSeetheDoctorTxt.setText("Talk to this doctor now");
+        tapSeetheDoctorTxt.setText(getString(R.string.mdl_talk_to_doctor));
         saveConsultationType("Phone");
         ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.phone_icon_white);
         reqfutureapptBtnLayout.setVisibility(View.GONE);
@@ -688,8 +687,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         accessModeCall("phone");
     }
 
-    private void onlyvideo() {
-        tapSeetheDoctorTxt.setText("See this doctor now");
+    private void onlyVideo() {
+        tapSeetheDoctorTxt.setText(getString(R.string.mdl_see_doc_now));
         saveConsultationType("Video");
         ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.video_icon_white);
         reqfutureapptBtnLayout.setVisibility(View.GONE);
@@ -905,6 +904,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
             tapSeetheDoctorTxt.setText("See this doctor now");
+            tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_seethisdoctor_button));
             saveConsultationType("Video");
             ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.video_icon_white);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
@@ -929,6 +929,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
             tapSeetheDoctorTxt.setText("Talk to this doctor now");
+            tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_talktodoctor_button));
             saveConsultationType("Phone");
             ((ImageView)findViewById(R.id.see_icon)).setBackgroundResource(R.drawable.phone_icon_white);
             reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
@@ -966,13 +967,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         } else  if(str_Availability_Type.equalsIgnoreCase("phone")){
             clickForVideoOrPhoneTapReqFutureAction();
         } else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
-            ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
             ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
             clickForVideoOrPhoneTapReqFutureAction();
-            ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
-            ((LinearLayout)findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
+            (findViewById(R.id.withpatineLayout)).setClickable(false);
+            (findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
             ((ImageView)findViewById(R.id.withpatient_icon)).setImageResource(R.drawable.clock_icon_white);
-            ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
 
 
         }else if(str_Availability_Type.equalsIgnoreCase("not available")&&layout.getChildCount()>=1) {
@@ -1020,7 +1021,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byphoneBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
                 byphoneBtn.setTextColor(getResources().getColor(R.color.disableBtn));
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
-                byphoneBtnLayout.setClickable(false);//
+                byphoneBtnLayout.setClickable(false);
 
 
 
@@ -1056,7 +1057,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         //Enable Request Appointment Button
                         enableReqAppmtBtn();
                         ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-//                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1219,7 +1219,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     //Enable Request Appointment Button
                     enableReqAppmtBtn();
                     ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-//                        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
                     horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1474,7 +1473,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      *
      */
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
-        String ProviderImage = "";
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
         if(ProviderImageArray.size() != 0) {
             providerImageCollectionHolder.removeAllViews();
@@ -1587,8 +1585,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         String hospitalAffilations = "";
         for(int i=0;i<responArray.size();i++)
         {
-//            JsonObject licenseObject = responArray.get(i).getAsJsonObject();
-//            license_state +=licenseObject.get("state").getAsString()+"\n";
             if(i == responArray.size()-1){
                 hospitalAffilations+= responArray.get(i).toString().substring(1,responArray.get(i).toString().length()-1);
             } else {
@@ -1612,7 +1608,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     /**
      * This method is to fetch the apoointment date and the native date picker is called for selecting
-     * the required date.
+     * the required
+     * .
      */
     public void appointmentAction(View v)
     {
@@ -1631,13 +1628,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 final Date date = c.getTime();
                 final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                 format.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-                String convertedTime =  format.format(date);
-//                AppointmentDate = convertedTime;
 
                 final SimpleDateFormat format1 = new SimpleDateFormat("EEEE,  MMM dd  yyyy");
                 format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 selectedText.setText(format1.format(date));
-//
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1652,8 +1646,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                String format = new SimpleDateFormat("EEEE,  MMM dd  yyyy").format(calendar.getTime());
-//                ((TextView)findViewById(R.id.dateTxt)).setText(format);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 return dialog;

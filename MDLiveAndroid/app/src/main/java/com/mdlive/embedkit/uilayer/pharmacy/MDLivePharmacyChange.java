@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -92,6 +91,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));
 
 

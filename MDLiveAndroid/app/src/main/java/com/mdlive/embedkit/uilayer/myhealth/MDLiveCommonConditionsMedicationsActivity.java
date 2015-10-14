@@ -101,6 +101,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 isEditCalled = false;
                 adapter.notifyDataSetChanged();
                 ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+                ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_edit));
             }
             ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.VISIBLE);
 
@@ -109,6 +110,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             isEditCalled = true;
             adapter.notifyDataSetChanged();
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+            ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
         }
     }
 
@@ -246,6 +248,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 convertView = getLayoutInflater().inflate(R.layout.mdlive_custom_addhealth, null);
                 holder = new ViewHolder();
                 holder.deleteIcon = (ImageView) convertView.findViewById(R.id.deleteIcon);
+                holder.deleteIcon.setContentDescription(getString(R.string.mdl_ada_delete));
                 holder.conditionName = (TextView) convertView.findViewById(R.id.conditionName);
                 holder.conditionSubName = (TextView) convertView.findViewById(R.id.conditionSubName);
                 convertView.setTag(holder);

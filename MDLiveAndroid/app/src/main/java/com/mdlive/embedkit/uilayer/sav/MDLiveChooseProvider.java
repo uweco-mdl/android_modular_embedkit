@@ -39,6 +39,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
+import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
@@ -60,7 +61,7 @@ import java.util.TimeZone;
 public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private static final long THIRTY_SECONDS = 60 * 1000;
     private ListView listView;
-    private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations;
+    private String providerName,specialty,availabilityType, imageUrl, doctorId, appointmentDate,groupAffiliations, postParams;
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
@@ -70,7 +71,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private Button seeNextAvailableBtn;
     private TextView loadingTxt;
     private boolean flag = false;
-    public static boolean isDoctorOnCall = false, isDoctorOnVideo = false;
+    public static boolean isDoctorOnCall = false, isDoctorOnVideo = false, fromGetSartedPage = true;
 
     private Button seeFirstAvailDoctor;
 
@@ -103,7 +104,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        fromGetSartedPage = true;
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
        /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
 
@@ -226,9 +229,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
-
             public void onResponse(JSONObject response) {
                 handleSuccessResponse(response.toString());
             }
@@ -279,9 +280,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     e.printStackTrace();
                 }
             }};
-        ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, getProgressDialog());
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""), successCallBackListener, errorListener);
+        if(fromGetSartedPage){
+            ChooseProviderServices services = new ChooseProviderServices(MDLiveChooseProvider.this, getProgressDialog());
+            SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            services.doChooseProviderRequest(settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl)), settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""), successCallBackListener, errorListener);
+        }else{
+            FilterSearchServices services = new FilterSearchServices(MDLiveChooseProvider.this, null);
+            services.getFilterSearch(postParams, successCallBackListener, errorListener);
+        }
+
     }
     /**
      *
@@ -669,14 +676,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
         if(resultCode==1){
             String response=data.getStringExtra("Response");
+            postParams = data.getStringExtra("postParams");
+            Log.e("postParams", postParams);
             try{
                 // Clear the ListView
+                fromGetSartedPage = false;
                 providerListMap.clear();
                 baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
                 listView.setAdapter(baseadapter);
                 handleSuccessResponse(response);
-
-
             }catch (Exception e){
                 e.printStackTrace();
             }

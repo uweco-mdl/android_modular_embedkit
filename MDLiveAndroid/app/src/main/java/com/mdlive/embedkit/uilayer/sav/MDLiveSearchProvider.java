@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -52,7 +53,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static java.util.Calendar.MONTH;
 
@@ -656,6 +656,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                     if (responArray.get(0).isJsonObject()) {
                         Intent intent = new Intent();
                         intent.putExtra("Response", response.toString());
+                        intent.putExtra("postParams", new Gson().toJson(postParams));
                         setResult(1, intent);
                         finish();
                         MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
@@ -670,8 +671,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                     }
                 }
             }
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -299,6 +299,11 @@
             android:screenOrientation="portrait"
             >
         </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.login.HealthSystemsActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

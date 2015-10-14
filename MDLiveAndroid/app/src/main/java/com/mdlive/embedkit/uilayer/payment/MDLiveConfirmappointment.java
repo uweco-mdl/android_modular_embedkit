@@ -50,6 +50,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -69,6 +70,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_appointment);
+        this.setTitle(getString(R.string.mdl_confirm_appointment_txt));//Title declared here for ada users,it will read out the screen title
+
         clearMinimizedTime();
         getPreferenceValue();
 
@@ -84,6 +87,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_confirm_appointment_txt).toUpperCase());
 
@@ -118,7 +122,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         };
 
-        str_termsConsent.setSpan(clickableSpan, 55, 95, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        str_termsConsent.setSpan(clickableSpan, 57, 90, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mdlTermsConsent.setText(str_termsConsent);
         mdlTermsConsent.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -395,14 +399,14 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
-                Log.e("Step 2 A", "11111");
-            }else if (!consultationDate.isEmpty() && !Time.isEmpty()) {
+            }else if (!TimeStamp.isEmpty() && !Time.isEmpty()) {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-                String format = sdf.format(calendar.getTime());
-                ((TextView) findViewById(R.id.txtDate)).setText(format);
-//                ((TextView) findViewById(R.id.txtDate)).setText(consultationDate);
+                calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
+                final Date date = calendar.getTime();
+//                ((TextView) findViewById(R.id.txtDate)).setText(format);
+                ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(date));
                 String timeZoneValue = "";
                 if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
                     timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();

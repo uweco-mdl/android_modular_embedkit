@@ -84,8 +84,11 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.setTitle(getString(R.string.mdl_update_location));
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_update_location));
 
 
@@ -105,12 +108,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
         ZipcodeEditTxt.setTag(null);
-        ZipcodeEditTxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        ZipcodeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    StateTxt.setText(getString(R.string.mdl_select_state));
-                }
+            public void onClick(View v) {
+                StateTxt.setText(getString(R.string.mdl_select_state));
             }
         });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {

@@ -182,6 +182,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void onTickClicked(View v){
         saveDateOfBirth();
         try{
+            SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+            SharedPreferences.Editor searchPrefEditor = searchPref.edit();
+            searchPrefEditor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, locationTxt.getText().toString());
+            searchPrefEditor.commit();
             Log.e("Arkansas",locationTxt.getText().toString());
             if(locationTxt.getText().toString().equals("Arkansas"))
             {
@@ -1013,8 +1017,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 providerTypeArrayList.add(provider_array.getJSONObject(i).getString("provider_type"));
             }
             Log.e("providerTypeArrayList", providerTypeArrayList.toString());
+
             Collections.reverse(providerTypeArrayList);
+
             Collections.reverse(providerTypeIdList);
+            Log.e("providerTypeIDList", providerTypeIdList.toString());
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
 

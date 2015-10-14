@@ -41,6 +41,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.LoadTimeZoneByState;
 import com.mdlive.unifiedmiddleware.services.myaccounts.ChangeProfilePicService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.EditMyProfileService;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
@@ -80,6 +81,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     SharedPreferences sharedPref;
     String[] timeZoneAbbr = {"CST","EST","MST","PST","AKST","HST","AMS","MIT","GST","PAT"};
     public static PickImagePlugin cameraPlugIn;
+    public static String timeZoneByStateValue;
 
     private boolean mFromResult = false;
     private SwitchCompat mSwitchCompat;
@@ -317,6 +319,9 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         cameraPlugIn = new PickImagePlugin(getActivity(), this);
+        if(timeZoneByStateValue == null){
+            getTimezonebyStateService();
+        }
         getProfileInfoService();
     }
 
@@ -349,6 +354,34 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         service.getProfileInfo(successCallBackListener, errorListener, null);
     }
 
+    private void getTimezonebyStateService() {
+        showProgressDialog();
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                timeZoneByStateValue = response.toString();
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        LoadTimeZoneByState service = new LoadTimeZoneByState(getActivity(), getProgressDialog());
+        service.getTimeZoneByState(successCallBackListener, errorListener);
+    }
+
     public void handlegetProfileInfoSuccessResponse(JSONObject response) {
         if(!mFromResult){
             hideProgressDialog();
@@ -358,7 +391,6 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");
             profileName = myProfile.getString("first_name"); /*+" "+ myProfile.getString("last_name")*/
-            ;
             email = myProfile.getString("email");
             userDOB = myProfile.getString("birthdate");
             gender = myProfile.getString("gender");

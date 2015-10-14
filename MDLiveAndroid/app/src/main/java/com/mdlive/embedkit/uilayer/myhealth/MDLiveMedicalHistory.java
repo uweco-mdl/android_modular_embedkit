@@ -99,7 +99,9 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_medical_history).toUpperCase());
 
@@ -303,7 +305,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
         });
 
-        if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        /*if (TimeZoneUtils.calculteAgeFromPrefs(MDLiveMedicalHistory.this) <= IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
@@ -313,7 +315,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.VISIBLE);
         }else{
             ((RelativeLayout)findViewById(R.id.PediatricLayoutLl)).setVisibility(View.GONE);
-        }
+        }*/
 
         // Provider mode
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -620,7 +622,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             checkProcedure(historyPercentageArray);
             checkMyMedications(historyPercentageArray);
             checkAllergies(historyPercentageArray);
-            checkPediatricCompletion(historyPercentageArray);
+            //checkPediatricCompletion(historyPercentageArray);
             checkPrimaryCarePhysicianHistory();
             checkMyHealthBehaviouralHistory(historyPercentageArray);
             //checkMyHealthLifestyleAndFamilyHistory(historyPercentageArray);
@@ -882,6 +884,12 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if(isTherapiestUser){
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.GONE);
         }
 
      /*   if(PreExisitingGroup.getCheckedRadioButtonId() > 0 &&

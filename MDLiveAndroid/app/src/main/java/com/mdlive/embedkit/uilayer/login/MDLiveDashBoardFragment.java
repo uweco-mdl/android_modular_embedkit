@@ -38,7 +38,9 @@ import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -95,8 +97,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             }
             // Dependent User selected
             else if (User.MODE_DEPENDENT == selectedUser.mMode) {
-                logE("User Type", "" + selectedUser.mMode);
-                logE("User Type", "Expected Dependent");
+
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onDependentSelected(selectedUser);
                     if(NotificationFragment.getInstance() != null) {
@@ -106,8 +107,6 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             }
             // The Parent User Selected
             else {
-                logE("User Type", "" + selectedUser.mMode);
-                logE("User Type", "Expected Primary");
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onPrimarySelected(selectedUser);
                     if(NotificationFragment.getInstance() != null){
@@ -226,34 +225,20 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
                 editor1.commit();
                 final JSONObject obj = new JSONObject(sharedPref.getString(PreferenceConstants.HEALTH_SYSTEM_PREFERENCES, "{}"));
-                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false)){
+                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false) && mUserBasicInfo.getPersonalInfo().getEmailConfirmed()){
                     mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
                     mEmailConfirmationView.setVisibility(View.VISIBLE);
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
                     mEmailConfirmationTv.setClickable(false);
                     mEmailConfirmationTv.setText(obj.optString("footer_text"));
-                    mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.darkgreyTextColor));
+                    mEmailConfirmationTv.setTextColor(getResources().getColor(R.color.myTextPrimaryColor));
                     mEmailConfirmationTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mDashBoardEmailLl.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mWebView.setVisibility(View.VISIBLE);
-                            mWebView.loadUrl(obj.optString("iframe_url"));
-                            mWebView.getSettings().setLoadWithOverviewMode(true);
-                            mWebView.getSettings().setUseWideViewPort(true);
-                            mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-                            mWebView.getSettings().setBuiltInZoomControls(true);
-                            mWebView.setOnKeyListener(new View.OnKeyListener() {
-
-                                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-                                        mWebView.setVisibility(View.GONE);
-                                    }
-                                    return false;
-                                }
-
-                            });
-                            isWebView = true;
+                            Intent i = new Intent(getActivity(),HealthSystemsActivity.class);
+                            i.putExtra("URL", obj.optString("iframe_url"));
+                            startActivity(i);
                         }
                     });
                 }
@@ -371,40 +356,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
             final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
 
-            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-
             try {
-                /**
-                 * This is for instant appointment
-                 * */
-                /*if ("Now".equalsIgnoreCase(time)) {
-
-                    if (appointment.getApptType() != null && appointment.getApptType().equalsIgnoreCase("phone")) {
-                        if (mUserBasicInfo == null) {
-                            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-                        }
-                        if(mUserBasicInfo.getPersonalInfo()!=null){
-                            mCustomerDefaultNumber = mUserBasicInfo.getPersonalInfo().getPhone();
-                            if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
-                                    && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
-                                mCustomerProvidedPhoneNumber = PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber();
-
-                            } else {
-                                mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
-                            }
-                            mCustomerProvidedPhoneNumber = formatDualString(mCustomerProvidedPhoneNumber);
-
-                            firstTextView.setText("The provider will call you shortly at \n" + mCustomerProvidedPhoneNumber);
-
-                            secondTextView.setVisibility(View.GONE);
-                        }
-                    } else {
-                        firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
-                        secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
-                    }
-
-                } else { */
                     final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
                  /*
@@ -415,21 +367,27 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     switch (type) {
                         // Ten minutes case
                         case 0:
-                            final SharedPreferences preferences = firstTextView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-                            final String timestampString = preferences.getString((MdliveUtils.getRemoteUserId(firstTextView.getContext()) + PreferenceConstants.SELECTED_TIMESTAMP), null);
-                            if (timestampString != null) {
-                                final long timestamp = Long.parseLong(timestampString);
-                                firstTextView.setText("Your next appointment less than  " + TimeZoneUtils.getRemainigTimeToAppointmentString(timestamp, "", getActivity()) + " minute(s)");
-                                secondTextView.setText("Click here to start Appointment.");
+                            final long now = System.currentTimeMillis();
+                            final Calendar myTime = TimeZoneUtils.getCalendarWithOffset(getActivity());
+                            myTime.setTimeInMillis(now);
+                            Log.e("now 2", myTime.getTimeInMillis() + "");
+                            final long difference = (appointment.getInMilliseconds() * 1000) - Calendar.getInstance().getTimeInMillis();
+                            if(difference > 0){
+                                String remainingMinute = Long.toString(TimeUnit.MILLISECONDS.toMinutes(difference));
+                                firstTextView.setText(getString(R.string.mdl_appt_notification, remainingMinute));
+                            }else{
+                                firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
+                                secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
                             }
+
+                            secondTextView.setText(getString(R.string.mdl_click_to_start));
                             break;
 
                         default:
-                            firstTextView.setText("Your next appointment is  " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
-                            secondTextView.setText("Click here for details.");
+                            firstTextView.setText(getString(R.string.mdl_next_appt) + " " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
+                            secondTextView.setText(getString(R.string.mdl_click_to_detail));
                             break;
                     }
-//                }
             }catch (Exception e){
                 e.printStackTrace();
             }
