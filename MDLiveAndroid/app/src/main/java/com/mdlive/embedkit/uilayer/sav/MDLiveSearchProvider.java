@@ -193,8 +193,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * Family Physician or Pediatrician.These things will be populated in the arraylist.
      */
     public void providerTypeAction(View v) {
+        ProviderTypeArrayList = MDLiveGetStarted.providerTypeArrayList;
+        ArrayList<HashMap<String,String>> providerIdArray = new ArrayList<HashMap<String,String>>();
 
-        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
+        for(int i = 0; i<ProviderTypeArrayList.size();i++){
+            HashMap<String,String> providerID = new HashMap<String,String>();
+            providerID.put(MDLiveGetStarted.providerTypeIdList.get(i),ProviderTypeArrayList.get(i));
+            providerIdArray.add(providerID);
+        }
+        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", providerIdArray);
     }
 
     /**
@@ -299,6 +306,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         if (postParams.get("provider_type") != null) {
             postParams.put("provider_type", postParams.get("provider_type"));
 
+
         }else
         {
             postParams.put("provider_type", "2");
@@ -320,7 +328,13 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
 
      //   Log.e("Post Params", new Gson().toJson(postParams));
-
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.PROVIDERTYPE_ID, postParams.get("provider_type"));
+        if(((TextView)findViewById(R.id.ProviderTypeTxtView)).getText() != null) {
+            editor.putString(PreferenceConstants.PROVIDER_MODE, ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString());
+        }
+        editor.commit();
        LoadFilterSearchServices();
     }
 
@@ -484,7 +498,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             map.put(str_provider_type_id, str_provider_type);
             searchArrayListProviderId.add(map);
-            ProviderTypeArrayList.add(str_provider_type);
+
+//            ProviderTypeArrayList.add(str_provider_type);
             LinkedHashMap<String, String> specialitymap = null;
             JSONArray speciality_array = licenseObject.getJSONArray("speciality");
             SpecialityArrayList.clear();
@@ -555,6 +570,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void getproviderType(JSONObject response) throws JSONException {
+        Log.d("Response", response.toString());
         JSONArray provider_array = response.getJSONArray("provider_type");
         ArrayList<String> keysList = new ArrayList<String>();
         for (int i = 0; i < provider_array.length(); i++) {
@@ -816,14 +832,18 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void specialityBasedOnProvider(String selectedText, String key) {
-        if ("provider_type".equalsIgnoreCase(key)) {
-            SpecialityArrayList.clear();
-            Map<String, String> speciality = tempmap.get(selectedText);
+        try {
+            if ("provider_type".equalsIgnoreCase(key)) {
+                SpecialityArrayList.clear();
+                Map<String, String> speciality = tempmap.get(selectedText);
 
-            for (Map.Entry<String, String> entry : speciality.entrySet()) {
-                SpecialityArrayList.add(entry.getKey());
+                for (Map.Entry<String, String> entry : speciality.entrySet()) {
+                    SpecialityArrayList.add(entry.getKey());
+                }
+
             }
-
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

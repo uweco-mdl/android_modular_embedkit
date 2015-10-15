@@ -97,8 +97,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     private int remainingFamilyMemberCount;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
-    private ArrayList<String> providerTypeArrayList;
-    private ArrayList<String> providerTypeIdList;
+    public static ArrayList<String> providerTypeArrayList;
+    public static ArrayList<String> providerTypeIdList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
     private EditText phonrNmberEditTxt;
