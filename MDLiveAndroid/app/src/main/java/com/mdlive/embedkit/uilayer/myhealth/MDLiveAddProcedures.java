@@ -32,6 +32,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         type = TYPE_CONSTANT.PROCEDURE;
         super.onCreate(savedInstanceState);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_add_procedure));
         IsThisPageEdited = false;
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));

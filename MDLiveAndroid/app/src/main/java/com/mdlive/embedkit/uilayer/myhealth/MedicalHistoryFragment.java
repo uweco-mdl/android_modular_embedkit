@@ -21,7 +21,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.lifestyle.Model;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
@@ -113,7 +112,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle(getString(R.string.mdl_medical_history));
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         mHealthSyncContainer = view.findViewById(R.id.HealthSyncContainer);

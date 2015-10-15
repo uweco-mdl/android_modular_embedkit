@@ -21,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
-import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -83,6 +82,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         view = inflater.inflate(R.layout.mdlive_life_style_fragment, container, false);
 
         setWidgetId();
+        getActivity().setTitle(getString(R.string.mdl_mylifestyle));
         return view;
     }
 

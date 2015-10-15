@@ -73,6 +73,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mdlive_my_health_providers, null, false);
+
     }
 
     @Override
@@ -85,7 +86,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle(getString(R.string.mdl_providers));
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
         mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
         mHeaderView.setOnClickListener(new View.OnClickListener() {

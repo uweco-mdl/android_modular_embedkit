@@ -280,6 +280,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
                 String SelectedText = stateIds.get(i);
                 mState.setText(SelectedText);
+                mState.setContentDescription(getString(R.string.mdl_ada_dropdown)+SelectedText);
                 if(MyProfileFragment.timeZoneByStateValue!=null){
                     try{
                         JSONObject stateTimezoneObj = new JSONObject(MyProfileFragment.timeZoneByStateValue);

@@ -38,6 +38,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         type = TYPE_CONSTANT.CONDITION;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
+        this.setTitle(getString(R.string.mdl_add_conditions_text));
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

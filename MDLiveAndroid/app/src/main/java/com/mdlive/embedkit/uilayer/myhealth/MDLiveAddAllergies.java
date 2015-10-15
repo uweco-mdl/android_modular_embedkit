@@ -37,6 +37,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
         type = TYPE_CONSTANT.ALLERGY;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
+        this.setTitle(getString(R.string.mdl_add_allergy));
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

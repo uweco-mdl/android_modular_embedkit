@@ -24,7 +24,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -35,16 +34,12 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity;
 import com.mdlive.embedkit.uilayer.familyhistory.MDLiveFamilyActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
-import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifeStyleFragment;
 import com.mdlive.embedkit.uilayer.lifestyle.MDLiveLifestyleActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
@@ -78,7 +73,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
         clearMinimizedTime();
-
+this.setTitle(getString(R.string.mdl_my_health));
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -81,8 +81,9 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.mdlive_family_histroy, container, false);
-
+        getActivity().getString(R.string.mdl_my_family_history);
         findWidgetId();
+
         getFamilyHistoryServiceData();
 
         return view;

@@ -76,6 +76,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         }
         try {
             view = inflater.inflate(R.layout.mdlive_pharmacy_fragment, container, false);
+            getActivity().setTitle(getString(R.string.mdl_pharmacy));
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
