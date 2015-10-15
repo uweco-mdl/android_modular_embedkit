@@ -46,7 +46,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     private static final long MILIS_IN_SECOND = 1000;
     private static final long DURATION = 30 * MILIS_IN_SECOND;
-
     private PendingAppointment mPendingAppointment;
 
     private View mMessagesLinearLayout;
@@ -55,7 +54,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private TextView mPersonalInfoTextView;
     private TextView mPreferedStoreTextView;
     private TextView mUpcomingAppoinmantTextView;
-    private ListView mUpcomingAppoinmantListView;
+    public ListView mUpcomingAppoinmantListView;
 
     private LinearLayout onCallNotificationLayout;
     private TextView onCallNotifyTextview;
@@ -65,7 +64,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
         @Override
         public void run() {
             loadPendingAppoinments();
-
             mHandler.postDelayed(mRunnable, DURATION);
         }
     };
@@ -220,10 +218,26 @@ public class NotificationFragment extends MDLiveBaseFragment {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                logD("PendingAppoinments", response.toString().trim());
                 mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
                 mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
                 onNotificationLoaded();
+
+                /*try {
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                    if(userBasicInfo != null && userBasicInfo.getPrimaryUser() && !MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED){
+                        logD("Parent Pending Appoinments", response.toString().trim());
+                        mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                        mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
+                        onNotificationLoaded();
+                    }else if(userBasicInfo != null && !userBasicInfo.getPrimaryUser() && MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED){
+                        logD("Dependent Pending Appoinments", response.toString().trim());
+                        mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                        mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
+                        onNotificationLoaded();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
             }
         };
 

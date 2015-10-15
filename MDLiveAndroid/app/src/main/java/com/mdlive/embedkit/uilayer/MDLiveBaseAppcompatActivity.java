@@ -1,7 +1,5 @@
 package com.mdlive.embedkit.uilayer;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,7 +69,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public static final String MAIN_CONTENT = "main_content";
     public static final String LEFT_MENU = "left_menu";
     public static final String RIGHT_MENU = "right_menu";
-
+    public static boolean IS_DEPENDENT_SELECTED;
     private DrawerLayout mDrawerLayout;
 
     private Handler mHandler;
@@ -373,12 +371,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
             return;
         }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).hideNotification();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
@@ -391,12 +387,14 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        IS_DEPENDENT_SELECTED = false;
+        /*if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+        }*/
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).hideNotification();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);

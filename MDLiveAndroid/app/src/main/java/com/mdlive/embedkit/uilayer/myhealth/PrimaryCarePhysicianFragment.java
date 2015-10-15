@@ -144,6 +144,8 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
             mState.setContentDescription(getString(R.string.mdl_ada_dropdown)+((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
+        } else if(mState!=null) {
+            mState.setText(userBasicInfo.getPersonalInfo().getState());
         }
         mStateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
