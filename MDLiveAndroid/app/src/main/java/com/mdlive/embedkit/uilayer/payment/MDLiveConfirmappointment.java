@@ -561,7 +561,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
-        params.put("do_you_have_primary_care_physician", "No");
+        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
 
         onCallParams.put("user", params);
@@ -655,7 +655,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
-        params.put("do_you_have_primary_care_physician", "No");
+        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
 
         onCallParams.put("user",params);
