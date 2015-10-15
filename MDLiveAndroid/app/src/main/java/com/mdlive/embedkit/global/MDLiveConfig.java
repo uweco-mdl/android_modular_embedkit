@@ -188,7 +188,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://stage-symptomchecker.mdlive.com/sc/html/index.html";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://symptomchecker.mdlive.com/sc/html/index.html";
                 break;
             case QAPL:
                 // QA Pluto URL
