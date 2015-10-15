@@ -399,11 +399,13 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 String format = sdf.format(calendar.getTime());
                 ((TextView) findViewById(R.id.txtDate)).setText(format);
-            }else if (!TimeStamp.isEmpty() && !Time.isEmpty()) {
+            }else if (!TimeStamp.isEmpty() && !Time.isEmpty() && !Time.equals("0")) {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
-                calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
+                if(!TimeStamp.equals("0")) {
+                    calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
+                }
                 final Date date = calendar.getTime();
 //                ((TextView) findViewById(R.id.txtDate)).setText(format);
                 ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(date));
@@ -413,6 +415,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 }
                 if(Time != null && !Time.equalsIgnoreCase("Now")){
                     ((TextView) findViewById(R.id.txtTime)).setText(Time +" "+ timeZoneValue);
+                    calendar = TimeZoneUtils.getCalendarWithOffset(this);
+                    SimpleDateFormat sdfNow = new SimpleDateFormat("EEEE, MMMM d");
+                    sdfNow.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                    Date dateNow = calendar.getTime();
+//                ((TextView) findViewById(R.id.txtDate)).setText(format);
+                    ((TextView) findViewById(R.id.txtDate)).setText(sdfNow.format(dateNow));
                 }else if(Time!=null){
                     ((TextView) findViewById(R.id.txtTime)).setText(Time);
                 }
