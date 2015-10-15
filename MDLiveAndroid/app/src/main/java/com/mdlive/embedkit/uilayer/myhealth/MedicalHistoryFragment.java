@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -112,11 +113,12 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         mHealthSyncContainer = view.findViewById(R.id.HealthSyncContainer);
         mHealthSyncCv = view.findViewById(R.id.HealthSyncCv);
-        if(dependentId == null){
+        if(dependentId == null && checkFitInstalled()){
             getHealthKitSyncStatus();
         } else {
             mHealthSyncCv.setVisibility(View.GONE);
@@ -743,7 +745,16 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         HealthKitServices services = new HealthKitServices(getActivity(), getProgressDialog());
         services.addHealthKitSync(successCallBackListener, errorListener);
     }
-
+    
+    private boolean checkFitInstalled(){
+        try {
+            getActivity().getPackageManager().getApplicationInfo("com.google.android.apps.fitness", 0);
+            return true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
     public void setFitDataEvent(final String data){
         getActivity().runOnUiThread(new Runnable() {
             @Override
