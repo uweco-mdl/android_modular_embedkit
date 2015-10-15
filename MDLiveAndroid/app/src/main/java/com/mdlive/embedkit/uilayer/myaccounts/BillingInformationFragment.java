@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,11 +25,12 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 6/22/2015.
  */
-public class BillingInformationFragment extends MDLiveBaseFragment  {
+public class  BillingInformationFragment extends MDLiveBaseFragment  {
 
     private TextView mCreditCardDate = null;
     private TextView mCreditCardAddress = null;
     private TextView mReplaceCreditCard = null;
+    private ImageView creditCardLogo = null;
     private String cardNumber = null;
     private String securityCode = null;
     private String cardExpirationMonth = null;
@@ -67,6 +69,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
         mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
         mReplaceCreditCard = (TextView) view.findViewById(R.id.addCreditCard);
         mviewCreditCard = (android.support.v7.widget.CardView) view.findViewById(R.id.viewCreditCard);
+        creditCardLogo = (ImageView) view.findViewById(R.id.imgCard);
 
         mReplaceCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,17 +185,21 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
                     if(mobile.equalsIgnoreCase("1")) {
 
                       mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.visa);
                     }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
 
                         mCreditCardDate.setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.discover);
                     }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
 
                         mCreditCardDate.setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.amex);
                     }
 
                     else
                     {
                         mCreditCardDate.setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.master);
                     }
 
                     mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +
