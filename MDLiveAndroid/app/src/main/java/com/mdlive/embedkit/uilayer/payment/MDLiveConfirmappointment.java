@@ -421,6 +421,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     Date dateNow = calendar.getTime();
 //                ((TextView) findViewById(R.id.txtDate)).setText(format);
                     ((TextView) findViewById(R.id.txtDate)).setText(sdfNow.format(dateNow));
+                    if(!TimeStamp.equals("0")) {
+                        calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
+                        final Date dateTime = calendar.getTime();
+//                ((TextView) findViewById(R.id.txtDate)).setText(format);
+                        ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(dateTime));
+                    }
                 }else if(Time!=null){
                     ((TextView) findViewById(R.id.txtTime)).setText(Time);
                 }
