@@ -251,17 +251,21 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     if(myProfile.getString("cc_type_id").equalsIgnoreCase("1")) {
 
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                        ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.visa);
                     }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
 
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
+                        ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.discover);
                     }
                     else if(myProfile.getString("cc_type_id").equalsIgnoreCase("5")) {
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
+                        ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.amex);
                     }
 
                     else
                     {
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                        ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.master);
                     }
                     ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);

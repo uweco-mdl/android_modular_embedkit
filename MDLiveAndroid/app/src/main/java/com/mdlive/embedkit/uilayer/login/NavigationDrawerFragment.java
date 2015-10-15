@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -211,7 +211,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         if (showProgress) {
             showProgressDialog();
         }
-
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+        }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
@@ -239,7 +242,6 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
-
         final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
@@ -278,7 +280,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         if (showProgress) {
             showProgressDialog();
         }
-
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+        }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
