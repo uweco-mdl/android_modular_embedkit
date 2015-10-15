@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,8 +60,47 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         if (receivingIntent != null) {
             SharedPreferences phoneNumberPref = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
 
-            if (getTimeSlotToNowMode() != null && getTimeSlotToNowMode().length() != 0 && getTimeSlotToNowMode().equalsIgnoreCase("Now")
+            Log.e("Print Doc On Call",receivingIntent.getStringExtra("activitycaller"));
+
+
+            if(MDLiveChooseProvider.isDoctorOnCall||MDLiveChooseProvider.isDoctorOnVideo){
+                if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals("OnCall")) {
+                    Log.e("Am in ","Prabhu");
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
+                    findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                    findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_on_call_header));
+                    ((TextView) findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_Oncall_Summary, MdliveUtils.formatDualString(userBasicInfo.getPersonalInfo().getPhone())));
+                } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals("escalated")) {
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
+                    findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                    findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
+                    ((TextView) findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
+                    ((TextView) findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text, MdliveUtils.formatDualString(userBasicInfo.getPersonalInfo().getPhone())));
+                }
+            }else{
+                if (getTimeSlotToNowMode() != null && getTimeSlotToNowMode().length() != 0 && getTimeSlotToNowMode().equalsIgnoreCase("Now")
+                        && getConsultationType() != null && getConsultationType().equalsIgnoreCase("phone")) {
+                    Log.e("Am in ","Sudha");
+                    findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                    findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_thankkyou_phone_appoint_txt, getProviderDoctorName()));
+                } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))) {
+                    findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                    findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
+                }
+            }
+
+
+           /* if (getTimeSlotToNowMode() != null && getTimeSlotToNowMode().length() != 0 && getTimeSlotToNowMode().equalsIgnoreCase("Now")
                     && getConsultationType() != null && getConsultationType().equalsIgnoreCase("phone")) {
+                Log.e("Am in ","Sudha");
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
@@ -71,6 +111,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
                 ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals("OnCall")) {
+                Log.e("Am in ","Prabhu");
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
                 findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
@@ -85,7 +126,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                 ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
                 ((TextView) findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
                 ((TextView) findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text, MdliveUtils.formatDualString(userBasicInfo.getPersonalInfo().getPhone())));
-            }
+            }*/
             //This is oly for Phone
 //            else
 //            {
