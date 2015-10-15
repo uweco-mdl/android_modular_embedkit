@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.sav;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -110,12 +111,16 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
 
         initialiseData();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView) findViewById(R.id.ProviderTypeTxtView)).setText(sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "Any"));
+
         //Load Services
-        loadSearchproviderDetails();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
+        loadSearchproviderDetails();
     }
 
     public void leftBtnOnClick(View v){
@@ -258,14 +263,39 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         //MDLive Embed Kit Implementtaions
 
-        postParams.put("located_in", filter_SavedLocation);
-        postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
 
-        postParams.put("appointment_date", serverDateFormat);//date needs to be sent in (yyyy/MM/dd)this format to server.
-        postParams.put("gender", genderTxtView.getText().toString());
-        postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
-        postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-        postParams.put("provider_name",edtSearch.getText().toString() );
+        if(filter_SavedLocation != null && !filter_SavedLocation.equalsIgnoreCase("Any")){
+            postParams.put("located_in", filter_SavedLocation);
+        }
+
+        if(((TextView)findViewById(R.id.SpeaksTxtView)).getText() != null && ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
+        }
+
+        if(serverDateFormat != null && !serverDateFormat.equalsIgnoreCase(("Any"))){
+            postParams.put("appointment_date", serverDateFormat);//date needs to be sent in (yyyy/MM/dd)this format to server.
+        }
+
+        if(genderTxtView.getText() != null && genderTxtView.getText().toString().length() != 0 &&
+                !genderTxtView.getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("gender", genderTxtView.getText().toString());
+        }
+        if(((TextView)findViewById(R.id.SortbyTxtView)).getText() != null && ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SortbyTxtView)).getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
+        }
+
+        if(((TextView)findViewById(R.id.SpecialityTxtView)).getText() != null && ((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
+        }
+
+        if(edtSearch.getText() != null && edtSearch.getText().toString().length() != 0 &&
+                !edtSearch.getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("provider_name",edtSearch.getText().toString());
+        }
+
         if (postParams.get("provider_type") != null) {
             postParams.put("provider_type", postParams.get("provider_type"));
 
@@ -289,7 +319,9 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         }
 
 
-        LoadFilterSearchServices();
+     //   Log.e("Post Params", new Gson().toJson(postParams));
+
+       LoadFilterSearchServices();
     }
 
 
@@ -299,6 +331,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
+        Log.e("filter_SavedLocation", filter_SavedLocation);
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -463,7 +496,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 SpecialityArrayList.add(specialityObj.getString("name"));
             }
             tempmap.put(str_provider_type, specialitymap);
-
         }
 
 
