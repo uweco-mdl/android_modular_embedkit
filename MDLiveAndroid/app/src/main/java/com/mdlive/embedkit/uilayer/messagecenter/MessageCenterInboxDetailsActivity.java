@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -100,6 +101,9 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
     }
 
     public void onBackClicked(View view) {
+        if(getIntent().getExtras() != null && getIntent().hasExtra("notification_id")){
+            onMessageClicked();
+        }
         finish();
     }
 

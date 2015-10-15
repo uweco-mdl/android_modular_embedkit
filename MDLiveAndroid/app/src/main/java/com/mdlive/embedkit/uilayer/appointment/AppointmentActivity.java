@@ -84,6 +84,9 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void onBackClicked(View view) {
+        if(getIntent().getExtras() != null && getIntent().hasExtra("notification_id")){
+            onHomeClicked();
+        }
         finish();
     }
 
