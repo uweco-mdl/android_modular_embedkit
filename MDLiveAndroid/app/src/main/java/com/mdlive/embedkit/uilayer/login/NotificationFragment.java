@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.embedkit.uilayer.payment.MDLiveStartVisit;
@@ -56,7 +57,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private TextView mUpcomingAppoinmantTextView;
     public ListView mUpcomingAppoinmantListView;
 
-    private LinearLayout onCallNotificationLayout;
+    public LinearLayout onCallNotificationLayout;
     private TextView onCallNotifyTextview;
 
     private Handler mHandler;
@@ -218,11 +219,11 @@ public class NotificationFragment extends MDLiveBaseFragment {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                /*mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
                 mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
-                onNotificationLoaded();
+                onNotificationLoaded();*/
 
-                /*try {
+                try {
                     final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
                     if(userBasicInfo != null && userBasicInfo.getPrimaryUser() && !MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED){
                         logD("Parent Pending Appoinments", response.toString().trim());
@@ -237,7 +238,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
             }
         };
 

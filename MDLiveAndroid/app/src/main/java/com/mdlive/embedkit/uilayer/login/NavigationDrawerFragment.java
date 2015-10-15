@@ -214,6 +214,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
         if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
             NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
         }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -283,6 +284,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
         if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
             NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
         }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
