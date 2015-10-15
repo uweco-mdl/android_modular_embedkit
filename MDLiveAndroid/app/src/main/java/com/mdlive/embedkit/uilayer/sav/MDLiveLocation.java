@@ -92,7 +92,9 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_update_location));
 
 
+
         StateTxt = (TextView) findViewById(R.id.StateTxt);
+
         setProgressBar(findViewById(R.id.progressDialog));
         StateTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +113,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         ZipcodeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StateTxt.setText(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_select_state));
+
             }
         });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
@@ -490,6 +492,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 shortNameText = ShortNameList.get(position);
                 longNameText = LongNameList.get(position);
                 SelectedText.setText(longNameText);
+                SelectedText.setContentDescription(getString(R.string.mdl_ada_dropdown)+longNameText);
                 selectedCity = shortNameText;
                 dialog.dismiss();
             }

@@ -245,6 +245,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         }
 
         mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
+        mPreferredSignIn.setContentDescription(getString(R.string.mdl_ada_dropdown)+MdliveUtils.getLockType(getActivity()));
         Log.d("UserBasicinfo", UserBasicInfo.readFromSharedPreference(getActivity()).toString());
         changeLangTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -473,8 +474,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             if(sharedPref.getBoolean(PreferenceConstants.TIMEZONE_SET_AUTOMATIC, false)){
                 mTimeZone.setText(items[0]);
+                mTimeZone.setContentDescription(getString(R.string.mdl_ada_dropdown)+items[0]);
             }else {
                 mTimeZone.setText(tmpTimeZone);
+                mTimeZone.setContentDescription(getString(R.string.mdl_ada_dropdown)+tmpTimeZone);
             }
             mEmail.setText(email);
 
@@ -482,6 +485,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                 String language = sharedPref.getString(PreferenceConstants.PREFFERED_LANGUAGE,getActivity().getString(R.string.mdl_language_english));
                 changeLangTv.setText(language.toUpperCase());
+                changeLangTv.setContentDescription(getString(R.string.mdl_ada_dropdown)+language);
                 mProfileImage.setImageUrl(profileImageURL, ApplicationController.getInstance().getImageLoader(getActivity()));
 
                 sharedPref = getActivity().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
@@ -490,6 +494,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 editor1.commit();
 
                 changeLangTv.setText(getActivity().getString(R.string.mdl_language_english));
+                changeLangTv.setContentDescription(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_language_english));
             }
         }
         catch(JSONException e)
@@ -654,6 +659,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         super.onResume();
 
         mPreferredSignIn.setText(MdliveUtils.getLockType(getActivity()));
+        mPreferredSignIn.setContentDescription(getString(R.string.mdl_ada_dropdown)+MdliveUtils.getLockType(getActivity()));
         getProfileInfoService();
     }
     public void changePhoneNumberInfo(boolean fromTimezone) {

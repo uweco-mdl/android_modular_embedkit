@@ -51,6 +51,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePhoneNumberView = inflater.inflate(R.layout.fragment_change_phonenumber, null);
+        getActivity().setTitle(getString(R.string.mdl_phone_number));
 
         mPhoneNumber = (EditText) changePhoneNumberView.findViewById(R.id.phoneNumber);
         mEmergencyContactNumber = (EditText) changePhoneNumberView.findViewById(R.id.emergencyContactNumber);

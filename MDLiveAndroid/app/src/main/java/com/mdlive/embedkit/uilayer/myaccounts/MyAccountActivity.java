@@ -32,7 +32,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
         setContentView(R.layout.mdlive_my_account_activity);
         clearMinimizedTime();
 
-        setTitle("");
+        this.setTitle(getString(R.string.mdl_account_details));
 //        adapter= new MyAdapter(getSupportFragmentManager());
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

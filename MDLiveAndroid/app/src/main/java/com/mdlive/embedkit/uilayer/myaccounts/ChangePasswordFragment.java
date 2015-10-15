@@ -69,6 +69,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePasswordView = inflater.inflate(R.layout.fragments_change_password, null);
+        getActivity().setTitle(getString(R.string.mdl_change_password));
 
         mCurrentPassword = (EditText) changePasswordView.findViewById(R.id.currentPassword);
         mNewPassword = (EditText) changePasswordView.findViewById(R.id.NewPassword);

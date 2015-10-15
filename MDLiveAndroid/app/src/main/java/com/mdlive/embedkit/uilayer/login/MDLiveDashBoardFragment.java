@@ -7,11 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -216,6 +214,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 if (mMessageCountTextView != null) {
                     if (userBasicInfo.getNotifications().getMessages() > 0) {
                         mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
+                        mMessageCountTextView.setContentDescription(String.valueOf(userBasicInfo.getNotifications().getMessages())+"unread Messages");
                         mMessageCountTextView.setVisibility(View.VISIBLE);
                     }
                 }

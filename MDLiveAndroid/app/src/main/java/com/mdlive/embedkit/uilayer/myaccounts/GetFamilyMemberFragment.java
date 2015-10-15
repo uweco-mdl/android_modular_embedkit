@@ -5,16 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
-import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +74,6 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         values = new HashMap<String, ArrayList<String>>();
 
         lv = (ListView) view.findViewById(R.id.listView);

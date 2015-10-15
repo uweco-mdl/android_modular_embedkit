@@ -61,6 +61,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changeAddressView = inflater.inflate(R.layout.fragment_change_address, null);
+        getActivity().setTitle(getString(R.string.mdl_current_address_caps));
 
         mAddressLine1 = (EditText) changeAddressView.findViewById(R.id.addressLine1);
         mAddressLine2 = (EditText) changeAddressView.findViewById(R.id.addressLine2);

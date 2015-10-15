@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.VolleyError;
@@ -79,6 +78,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePin = inflater.inflate(R.layout.fragments_pin_change, null);
+        getActivity().setTitle(getString(R.string.mdl_change_pin));
         MdliveUtils.DIALOG_SHOWN = false;
         init(changePin);
 
