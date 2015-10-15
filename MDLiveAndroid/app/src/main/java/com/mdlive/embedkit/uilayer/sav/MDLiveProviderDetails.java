@@ -805,6 +805,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                saveTimeSlotToNowMode();
             }
         });
     }

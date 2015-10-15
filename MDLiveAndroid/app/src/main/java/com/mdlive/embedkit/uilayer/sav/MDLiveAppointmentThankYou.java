@@ -48,8 +48,8 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         Spannable word = new SpannableString(getString(R.string.mdl_cancellation_instructions));
         word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.darkblack)), 39, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mdlCancelInstruction.setText(word);
-        handleIntent();
         getPreferenceValue();
+        handleIntent();
     }
 
     public void handleIntent() {
@@ -61,35 +61,30 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
             if (getTimeSlotToNowMode() != null && getTimeSlotToNowMode().length() != 0 && getTimeSlotToNowMode().equalsIgnoreCase("Now")
                     && getConsultationType() != null && getConsultationType().equalsIgnoreCase("phone")) {
-                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
-                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
-                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
-                ((TextView) findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_phone_appoint_txt, getProviderDoctorName()));
+                ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_thankkyou_phone_appoint_txt, getProviderDoctorName()));
             } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals(getString(R.string.mdl_makeAppmtRequest))) {
-                findViewById(R.id.onCallThankyouLayout).setVisibility(View.GONE);
-                findViewById(R.id.appoint_details_view).setVisibility(View.GONE);
-                findViewById(R.id.tick_circle_img).setVisibility(View.GONE);
-                ((TextView) findViewById(R.id.infoText)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
+                findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
+                findViewById(R.id.cencel_info).setVisibility(View.GONE);
+                ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_thankkyou_appoint_txt));
             } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals("OnCall")) {
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
-                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
-                findViewById(R.id.txtThanksMsg).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_on_call_header));
                 ((TextView) findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_Oncall_Summary, MdliveUtils.formatDualString(userBasicInfo.getPersonalInfo().getPhone())));
-                ((TextView) findViewById(R.id.txt_escalate_phone)).setVisibility(View.GONE);
-
             } else if (receivingIntent.hasExtra("activitycaller") && receivingIntent.getStringExtra("activitycaller").equals("escalated")) {
                 final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this);
+                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                 findViewById(R.id.cencel_info).setVisibility(View.GONE);
-                findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.txtThanksMsg)).setText(getString(R.string.mdl_escalate_header));
                 ((TextView) findViewById(R.id.txt_summary)).setText(getString(R.string.mdl_escalate_summary));
                 ((TextView) findViewById(R.id.txt_escalate_phone)).setText(getString(R.string.mdl_escalate_phone_text, MdliveUtils.formatDualString(userBasicInfo.getPersonalInfo().getPhone())));
-
             }
             //This is oly for Phone
 //            else
@@ -102,6 +97,14 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 //            }
         }
     }
+
+
+    // onCallThankyouLayout - Text Only
+            /** txtThanksMsg - first text
+            * txt_summary - second text=
+            * txt_escalate_phone - thrid txt */
+    // thankyouLayout - Picture Only
+
 
     private String getProviderDoctorName() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
