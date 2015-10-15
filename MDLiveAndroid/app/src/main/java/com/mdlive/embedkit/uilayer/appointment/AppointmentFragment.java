@@ -28,6 +28,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,8 +65,6 @@ public class AppointmentFragment extends MDLiveBaseFragment {
             }
 
             ((TextView) view.findViewById(R.id.doctor_name_text)).setText(appointment.getPhysicianName());
-            Log.e("pending Role",appointment.getRole()+"");
-
             if(appointment.getRole().equalsIgnoreCase("null")){
                 ((TextView) view.findViewById(R.id.doctor_degree_text_view)).setText("");
             }else{
@@ -195,6 +194,18 @@ public class AppointmentFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
+                    if(error.networkResponse.statusCode == HttpStatus.SC_NOT_FOUND){
+                        MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_appt_error), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    getActivity().finish();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
                     MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.messagecenter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
@@ -23,6 +25,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.Format;
@@ -109,7 +112,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
             detailsTextView.setText(receivedMessage.message);
         }
         if(!receivedMessage.readStatus){
-            callReceivedMessageRead(view, receivedMessage.messageId+"");
+            callReceivedMessageRead(view, receivedMessage.messageId+"", true);
         }
     }
     @Override
@@ -120,7 +123,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
         if(receivedMessage.message != null && !receivedMessage.message.equalsIgnoreCase("null")) {
             renderUI(uiView, receivedMessage);
         }else{
-            callReceivedMessageRead(uiView, receivedMessage.messageId + "");
+            callReceivedMessageRead(uiView, receivedMessage.messageId + "", false);
         }
 
     }
@@ -177,9 +180,8 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
         mReloadMessageCount = null;
     }
 
-    private void callReceivedMessageRead(final View uiView, final String id) {
+    private void callReceivedMessageRead(final View uiView, final String id, final boolean isMessageRendered) {
         showProgressDialog();
-        Log.e("receivedMessage response id", id+"");
         final NetworkSuccessListener<JSONObject> successListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -189,7 +191,9 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
                     if (!response.has("error")) {
                         JSONObject message = response.getJSONObject("message");
                         ReceivedMessage receivedMessage = new Gson().fromJson(message.toString(), ReceivedMessage.class);
-                        renderUI(uiView, receivedMessage);
+                        if(!isMessageRendered) {
+                            renderUI(uiView, receivedMessage);
+                        }
                     }
                     if (mReloadMessageCount != null) {
                         mReloadMessageCount.reloadMessageCount();
@@ -204,7 +208,21 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    if(error.networkResponse.statusCode == HttpStatus.SC_NOT_FOUND){
+                        MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_appt_error), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    ((MDLiveBaseAppcompatActivity)getActivity()).onMessageClicked();
+                                    getActivity().finish();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    }
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
