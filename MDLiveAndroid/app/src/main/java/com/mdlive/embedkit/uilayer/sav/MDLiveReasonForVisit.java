@@ -345,7 +345,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             try{
                 String resonText = "";
                 for (int position = 0; position < mBehavioralHistory.behavioralHealthReasons.size(); position++) {
-                    if(mBehavioralHistory.behavioralHealthReasons.get(position).active == ConditionAndActive.YES){
+                    if(mBehavioralHistory.behavioralHealthReasons.get(position).active.equals(ConditionAndActive.YES)){
                         if(mBehavioralHistory.behavioralHealthReasons.get(position).condition.equalsIgnoreCase("Other")){
                             resonText += ((behaviour_reason.getText() != null) ? behaviour_reason.getText().toString() : "")+", ";
                         }else{
@@ -353,9 +353,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         }
                     }
                 }
-
                 resonText = resonText.trim().substring(0, resonText.length() - 2);
-
                 SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(PreferenceConstants.REASON, resonText.trim());
