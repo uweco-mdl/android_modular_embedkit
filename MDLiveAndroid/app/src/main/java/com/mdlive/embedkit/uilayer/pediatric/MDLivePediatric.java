@@ -314,7 +314,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         birthComplicationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                MdliveUtils.hideSoftKeyboard(MDLivePediatric.this);
                 if (checkedId == R.id.birthComplications_yesButton) {
                     updateParams("Birth complications", "Yes");
                     edtBirthComplications.setVisibility(View.VISIBLE);
@@ -329,6 +329,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 }
             }
         });
+
         lastShotGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -664,7 +665,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String selectedType = list.get(which);
                 selectedText.setText(selectedType);
-                selectedText.setContentDescription(getString(R.string.mdl_ada_dropdown)+selectedType);
+                selectedText.setContentDescription(getString(R.string.mdl_ada_dropdown) + selectedType);
                 updateDropDownParams(typeName, selectedType);
                 enableSaveButton();
                 dialog.dismiss();
