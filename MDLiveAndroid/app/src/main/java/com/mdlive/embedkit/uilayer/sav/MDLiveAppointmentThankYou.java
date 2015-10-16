@@ -183,8 +183,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     public void getPreferenceValue() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
-        ((TextView) findViewById(R.id.provider)).setText("\n" +
-                "Provider: " + providerName);
+        ((TextView) findViewById(R.id.provider)).setText("Provider: " + providerName);
         String activityCaller = null;
         if (getIntent().hasExtra("activitycaller")) {
             activityCaller = getIntent().getStringExtra("activitycaller");
