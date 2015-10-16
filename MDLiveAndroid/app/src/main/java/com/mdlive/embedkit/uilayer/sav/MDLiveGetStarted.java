@@ -39,6 +39,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -626,6 +627,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     private void loadUserInformationDetails() {
         showProgress();
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -702,6 +708,11 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void loadDependentUserInformationDetails(final String depenedentId) {
         showProgress();
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

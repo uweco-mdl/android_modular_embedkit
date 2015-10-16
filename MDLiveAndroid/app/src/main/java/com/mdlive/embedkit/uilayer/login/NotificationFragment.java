@@ -160,7 +160,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -215,6 +214,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     private void loadPendingAppoinments() {
         mUpcomingAppoinmantListView.setAdapter(null);
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         if (MdliveUtils.isNetworkAvailable(getActivity())) {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override

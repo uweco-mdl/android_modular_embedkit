@@ -14,10 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -324,10 +322,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
         if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
             isTherapiestUser = true;
-            ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.VISIBLE);
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.VISIBLE);
         }else{
             isTherapiestUser = false;
-            ((RelativeLayout) findViewById(R.id.BehaviouralHealthLl)).setVisibility(View.GONE);
+            findViewById(R.id.BehaviouralHealthLl).setVisibility(View.GONE);
         }
 
         ProceduresGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -458,7 +456,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                                 calendar.setTimeInMillis(time * 1000);
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
                                 dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMedicalHistory.this));
-                                ((LinearLayout)findViewById(R.id.UpdateInfoWindow)).setVisibility(View.VISIBLE);
+                                findViewById(R.id.UpdateInfoWindow).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.updateInfoText)).setText(
                                         getResources().getString(R.string.mdl_last_update_txt)+
                                                 dateFormat.format(calendar.getTime())
@@ -536,20 +534,20 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 isAllFieldsfilled = false;
             }
         }
-        if (((LinearLayout) findViewById(R.id.MyHealthConditionChoiceLl)).getVisibility() == View.VISIBLE &&
+        if (findViewById(R.id.MyHealthConditionChoiceLl).getVisibility() == View.VISIBLE &&
                 PreExisitingGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
-        if (((LinearLayout) findViewById(R.id.MyHealthMedicationsLl)).getVisibility() == View.VISIBLE &&
+        if (findViewById(R.id.MyHealthMedicationsLl).getVisibility() == View.VISIBLE &&
                 MedicationsGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
-        if (((LinearLayout) findViewById(R.id.MyHealthAllergiesLl)).getVisibility() == View.VISIBLE &&
+        if (findViewById(R.id.MyHealthAllergiesLl).getVisibility() == View.VISIBLE &&
                 AllergiesGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
 
-        if (((LinearLayout) findViewById(R.id.MyHealthProceduresLl)).getVisibility() == View.VISIBLE &&
+        if (findViewById(R.id.MyHealthProceduresLl).getVisibility() == View.VISIBLE &&
                 ProceduresGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
@@ -693,8 +691,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             if(gender.equalsIgnoreCase("Female")){
                 JSONObject healthHistory = medicalAggregationJsonObject.getJSONObject("health_history");
                 if(healthHistory.has("female_questions") && !isTherapiestUser){
-                    ((LinearLayout) findViewById(R.id.PediatricAgeCheck1)).setVisibility(View.VISIBLE);
-                    ((LinearLayout) findViewById(R.id.PediatricAgeCheck2)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.PediatricAgeCheck1).setVisibility(View.VISIBLE);
+                    findViewById(R.id.PediatricAgeCheck2).setVisibility(View.VISIBLE);
                     hasFemaleAttribute = true;
                 }
             }else{
