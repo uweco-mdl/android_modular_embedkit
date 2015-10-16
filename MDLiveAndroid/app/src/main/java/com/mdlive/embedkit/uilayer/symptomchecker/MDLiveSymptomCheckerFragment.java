@@ -2,8 +2,11 @@ package com.mdlive.embedkit.uilayer.symptomchecker;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +14,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +59,16 @@ public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if(url.contains("location=SAV")){
+                    final Intent intent = new Intent(getActivity(), MDLiveGetStarted.class);
+                    startActivity(intent);
+                } else if (url.startsWith("tel:")) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL,
+                            Uri.parse(url));
+                    startActivity(intent);
+                }else if(url.startsWith("http:") || url.startsWith("https:")) {
+                    view.loadUrl(url);
+                }
                 return true;
             }
 
@@ -62,6 +77,7 @@ public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 super.onPageFinished(view, url);
             }
+
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
