@@ -508,6 +508,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 HashMap<String,String> tmpMap=PatientList.get(position-1);
                 if(!tmpMap.containsKey("authorized")){
                     loadUserInformationDetails();
+                    loadDependentProviderTypeDetails("");
                 }else{
                     if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
                         if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
