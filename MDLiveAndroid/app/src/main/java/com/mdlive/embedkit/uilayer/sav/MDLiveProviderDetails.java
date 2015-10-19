@@ -1068,6 +1068,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                             }
                         }, 100L);
                         //horizontalscrollview.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+                        selectedTimeslot = false;
+                        enableReqAppmtBtn();
+                        clearTimeSlotViews();
                         horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
 
 
@@ -1138,10 +1141,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 }
                                 saveConsultationType("Video");
                                 //Enable Request Appointment Button
-                                enableReqAppmtBtn();
+
                                 horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                                selectedTimeslot = false;
+                                enableReqAppmtBtn();
+                                clearTimeSlotViews();
                                 horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1182,10 +1188,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 }
                                 saveConsultationType("Phone");
                                 //Enable Request Appointment Button
-                                enableReqAppmtBtn();
+
                                 horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                                selectedTimeslot = false;
+                                enableReqAppmtBtn();
+                                clearTimeSlotViews();
                                 horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1196,6 +1205,14 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         }
 
+    }
+
+    private void clearTimeSlotViews(){
+        if(previousSelectedTv != null){
+            previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            previousSelectedTv.setTextColor(Color.GRAY);
+            previousSelectedTv = null;
+        }
     }
 
     private void onlyForIdaho() {
@@ -1234,9 +1251,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     }
                     saveConsultationType("Video");
                     //Enable Request Appointment Button
-                    enableReqAppmtBtn();
+
                     horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                    selectedTimeslot = false;
+                    enableReqAppmtBtn();
+                    clearTimeSlotViews();
                     horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1283,6 +1303,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                     enableReqAppmtBtn();
                     horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
                     ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                    selectedTimeslot = false;
+                    enableReqAppmtBtn();
+                    clearTimeSlotViews();
                     horizontalscrollview.startAnimation(AnimationUtils.loadAnimation(MDLiveProviderDetails.this, R.anim.mdlive_trans_left_in));
                 } catch (Exception e) {
                     e.printStackTrace();
