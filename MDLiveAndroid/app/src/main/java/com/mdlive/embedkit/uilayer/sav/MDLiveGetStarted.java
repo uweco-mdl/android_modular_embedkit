@@ -120,6 +120,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         clearMinimizedTime();
+        clearCacheInVolley();
         this.setTitle(getString(R.string.mdl_getstarted));
         locationService = new LocationCooridnates(MDLiveGetStarted.this);
         intentFilter = new IntentFilter();
@@ -142,11 +143,26 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         loadProviderType();
         clearCacheInVolley();
 
-
-        if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
-            user = getIntent().getExtras().getParcelable(User.USER_TAG);
-            Log.d("Hello", "Selected User : " + user.toString());
+        try {
+            if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
+                user = getIntent().getExtras().getParcelable(User.USER_TAG);
+                Log.d("Hello", "Selected User : " + user.toString());
+            }
+            if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(PreferenceConstants.DEPENDENT_USER_ID, user.mId);
+                editor.commit();
+                loadDependentUserInformationDetails(user.mId);
+                loadDependentProviderTypeDetails(user.mId);
+                Log.e("Mid", user.mId);
+            } else {
+                loadProviderType();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+//        loadProviderType();
 
 
         if (savedInstanceState == null) {
