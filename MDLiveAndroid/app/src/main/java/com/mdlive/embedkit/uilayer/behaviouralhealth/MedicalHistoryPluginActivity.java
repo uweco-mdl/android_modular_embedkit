@@ -348,7 +348,6 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             NetworkErrorListener errorListener = new NetworkErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    ;
 
                 }
             };

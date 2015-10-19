@@ -87,7 +87,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.fragment_message_my_records_list_view);
-        mEmptyView = (View) view.findViewById(R.id.emptyView);
+        mEmptyView = view.findViewById(R.id.emptyView);
         mEmptyView.setVisibility(View.GONE);
 
         if (mListView != null) {
@@ -418,8 +418,8 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
                 if (items[item].equals("Take Photo")) {
                     //cameraPlugIn.captureImage();
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraPlugIn.fileUri = cameraPlugIn.getOutputMediaFileUri();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPlugIn.fileUri);
+                    PickImagePlugin.fileUri = cameraPlugIn.getOutputMediaFileUri();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, PickImagePlugin.fileUri);
                     startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
                 } else if (items[item].equals("Choose from Library")) {
                     //cameraPlugIn.pickImage();

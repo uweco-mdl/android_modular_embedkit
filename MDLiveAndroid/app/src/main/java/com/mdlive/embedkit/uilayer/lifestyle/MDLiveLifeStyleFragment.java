@@ -114,7 +114,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
      *
      */
     public interface OnGoogleFitGetData {
-        public void getGoogleFitData(String data);
+        void getGoogleFitData(String data);
     }
 
     @Override

@@ -516,11 +516,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
 
         final long difference = System.currentTimeMillis() - lastTime;
-        if (difference > IntegerConstants.SESSION_TIMEOUT) {
-            return true;
-        } else {
-            return false;
-        }
+        return difference > IntegerConstants.SESSION_TIMEOUT;
     }
 
     private void saveLastMinimizedTime() {

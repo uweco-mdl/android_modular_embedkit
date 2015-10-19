@@ -37,7 +37,7 @@ public class LocationCooridnates {
     }
 
     public void setBroadCastData(String broadCastData){
-        this.broadCastData = broadCastData;
+        LocationCooridnates.broadCastData = broadCastData;
     }
 
     //Check whether GPS or PROVIDER enabled or not.
@@ -56,10 +56,7 @@ public class LocationCooridnates {
 
 
         //don't start listeners if no provider is enabled
-        if (!gps_enabled)
-            return false;
-        else
-            return true;
+        return gps_enabled;
     }
 
     /**

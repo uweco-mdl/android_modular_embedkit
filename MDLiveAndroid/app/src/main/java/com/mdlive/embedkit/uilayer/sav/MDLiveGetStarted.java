@@ -1035,7 +1035,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             Collections.reverse(providerTypeIdList);
             Log.e("providerTypeIDList", providerTypeIdList.toString());
             ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
-            ((TextView) findViewById(R.id.providertypeTxt)).setContentDescription(getString(R.string.mdl_ada_dropdown)+providerTypeArrayList.get(0));
+            findViewById(R.id.providertypeTxt).setContentDescription(getString(R.string.mdl_ada_dropdown) + providerTypeArrayList.get(0));
             strProviderId = providerTypeIdList.get(0);
 
 
@@ -1218,7 +1218,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);

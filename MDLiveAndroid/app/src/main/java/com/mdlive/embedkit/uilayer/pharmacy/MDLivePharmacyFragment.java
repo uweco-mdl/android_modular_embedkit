@@ -233,8 +233,8 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
                 if (pharmacyDatas.has("phone")) {
                     ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
-                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setClickable(true);
-                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    getView().findViewById(R.id.txt_my_pharmacy_addressline_four).setClickable(true);
+                    getView().findViewById(R.id.txt_my_pharmacy_addressline_four).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {

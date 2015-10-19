@@ -113,9 +113,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_filter_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_filter_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_phr_txt).toUpperCase());
 
         initializeViews();
@@ -440,10 +440,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
                 try {
                     if(responArray.get(i).getAsJsonObject().has("is_preferred")){
-                        if(responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean())
-                            is_preferred = true;
-                        else
-                            is_preferred = false;
+                        is_preferred = responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean();
                     }else{
                         is_preferred = false;
                     }
@@ -512,7 +509,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 mapscrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                     @Override
                     public void onScrollChanged() {
-                        View view = (View) mapscrollView.getChildAt(mapscrollView.getChildCount() - 1);
+                        View view = mapscrollView.getChildAt(mapscrollView.getChildCount() - 1);
                         int diff = (view.getBottom() - (mapscrollView.getHeight() + mapscrollView.getScrollY()));
                         if(((int) keyParams.get("page")) == 1 && isFirstItemDisplaying){
                             mapscrollView.scrollTo(0, 0);

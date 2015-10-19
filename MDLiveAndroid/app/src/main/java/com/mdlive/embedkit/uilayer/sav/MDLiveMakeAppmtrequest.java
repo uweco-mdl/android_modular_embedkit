@@ -91,9 +91,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt).toUpperCase());
 
 
@@ -563,7 +563,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveMakeAppmtrequest.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);

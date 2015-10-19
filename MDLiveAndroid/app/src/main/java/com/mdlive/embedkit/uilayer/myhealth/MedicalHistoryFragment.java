@@ -211,7 +211,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * activity.
      */
     public interface OnGoogleFitSyncResponse {
-        public void setHealthStatus(String data);
+        void setHealthStatus(String data);
     }
 
 
@@ -308,15 +308,15 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                 isAllFieldsfilled = false;
             }
         }
-        if (((LinearLayout) view.findViewById(R.id.MyHealthConditionChoiceLl)).getVisibility() == View.VISIBLE &&
+        if (view.findViewById(R.id.MyHealthConditionChoiceLl).getVisibility() == View.VISIBLE &&
                 PreExisitingGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
-        if (((LinearLayout) view.findViewById(R.id.MyHealthMedicationsLl)).getVisibility() == View.VISIBLE &&
+        if (view.findViewById(R.id.MyHealthMedicationsLl).getVisibility() == View.VISIBLE &&
                 MedicationsGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
-        if (((LinearLayout) view.findViewById(R.id.MyHealthAllergiesLl)).getVisibility() == View.VISIBLE &&
+        if (view.findViewById(R.id.MyHealthAllergiesLl).getVisibility() == View.VISIBLE &&
                 AllergiesGroup.getCheckedRadioButtonId() < 0) {
             isAllFieldsfilled = false;
         }
@@ -431,7 +431,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      *
      */
     public interface OnGoogleFitGetData {
-        public void getGoogleFitData(String data);
+        void getGoogleFitData(String data);
     }
 
 

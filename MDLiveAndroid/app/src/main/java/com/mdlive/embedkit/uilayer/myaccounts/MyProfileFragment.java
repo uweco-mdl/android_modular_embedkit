@@ -506,9 +506,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
     public Boolean isEmpty(String cardInfo)
     {
-        if(!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     public void selectImage() {
@@ -523,8 +521,8 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraPlugIn.fileUri = cameraPlugIn.getOutputMediaFileUri();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPlugIn.fileUri);
+                    PickImagePlugin.fileUri = cameraPlugIn.getOutputMediaFileUri();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, PickImagePlugin.fileUri);
                     startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
                     /*Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(takePicture, 2);*/

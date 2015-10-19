@@ -47,7 +47,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
-    public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION,PROCEDURE};
+    public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION,PROCEDURE}
+
     protected TYPE_CONSTANT type;
     public Intent resultData = new Intent();
     public static boolean IsThisPageEdited = false;
@@ -101,16 +102,16 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 isEditCalled = false;
                 adapter.notifyDataSetChanged();
                 ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
-                ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_edit));
+                findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_edit));
             }
-            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_existing_btn).setVisibility(View.VISIBLE);
 
         }else{
-            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.GONE);
+            findViewById(R.id.add_existing_btn).setVisibility(View.GONE);
             isEditCalled = true;
             adapter.notifyDataSetChanged();
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-            ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
+            findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         }
     }
 
@@ -186,11 +187,11 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             if(duplicateList.size() > 0){
                 conditionsListView.setVisibility(View.VISIBLE);
                 noConditionsLayout.setVisibility(View.GONE);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             }else{
                 noConditionsLayout.setVisibility(View.VISIBLE);
                 conditionsListView.setVisibility(View.GONE);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             }
 
         }catch (Exception e){

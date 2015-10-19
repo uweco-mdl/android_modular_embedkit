@@ -29,7 +29,7 @@ public class PickImagePlugin {
     public UploadRecordInterface uploadInterface;
 
     public PickImagePlugin(Activity parentActivity, UploadRecordInterface uploadInterface){
-        this.parentActivity = parentActivity;
+        PickImagePlugin.parentActivity = parentActivity;
         this.uploadInterface = uploadInterface;
     }
 
@@ -60,14 +60,10 @@ public class PickImagePlugin {
      * Checking device has camera hardware or not
      */
     public boolean isDeviceSupportCamera() {
-        if (parentActivity.getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        // this device has a camera
+// no camera on this device
+        return parentActivity.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
     public void removePhotoFromGallery(boolean capturedInCamera, String filePath){
@@ -182,7 +178,7 @@ public class PickImagePlugin {
 
 
     public interface UploadRecordInterface {
-        public void uploadMedicalRecordService(String filePath, boolean capturedInCamera);
+        void uploadMedicalRecordService(String filePath, boolean capturedInCamera);
     }
 
 

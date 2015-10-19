@@ -104,9 +104,9 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_refine_search));
 
 
@@ -147,15 +147,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
 
 
         }else if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone"))
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
         }else
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.VISIBLE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.VISIBLE);
         }
         /**
          * The back image will pull you back to the Previous activity
@@ -797,7 +797,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
       /*We need to get the instance of the LayoutInflater*/
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveSearchProvider.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);

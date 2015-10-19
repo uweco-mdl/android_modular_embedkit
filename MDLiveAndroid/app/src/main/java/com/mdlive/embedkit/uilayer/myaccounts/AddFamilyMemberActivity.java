@@ -462,9 +462,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     private void addFamilyMember(String params) {
@@ -566,9 +564,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
         Pattern pattern = Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
         Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
+        return matcher.matches();
     }
 }

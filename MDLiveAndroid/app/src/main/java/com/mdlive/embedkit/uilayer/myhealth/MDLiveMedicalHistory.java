@@ -98,10 +98,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_medical_history).toUpperCase());
 
         findViewById(R.id.ContainerScrollView).setVisibility(View.GONE);
@@ -247,20 +247,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         PediatricAgeCheckGroup_1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.perdiatric1YesButton)
-                    isPregnant = true;
-                else
-                    isPregnant = false;
+                isPregnant = checkedId == R.id.perdiatric1YesButton;
                 ValidateModuleFields();
             }
         });
         PediatricAgeCheckGroup_2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.perdiatric2YesButton)
-                    isBreastfeeding = true;
-                else
-                    isBreastfeeding = false;
+                isBreastfeeding = checkedId == R.id.perdiatric2YesButton;
                 ValidateModuleFields();
             }
         });
@@ -554,15 +548,15 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
         if (isAllFieldsfilled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             } else {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             } else {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             }
         }
     }

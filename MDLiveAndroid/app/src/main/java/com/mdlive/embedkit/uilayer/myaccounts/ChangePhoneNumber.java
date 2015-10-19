@@ -209,9 +209,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     public void loadProfileInfo(String params) {

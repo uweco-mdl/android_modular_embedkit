@@ -493,10 +493,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
     public boolean hasAleastOnCharAndNumberCheck(String yourString){
         boolean hasAlpha = yourString.matches(".*[a-zA-Z]+.*");
         boolean hasNumber = yourString.matches(".*[0-9]+.*");
-        if(hasAlpha && hasNumber){
-            return true;
-        }
-        return false;
+        return hasAlpha && hasNumber;
     }
     public void showViewsOnCondition() {
         try {

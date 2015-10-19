@@ -129,10 +129,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             }
 
             ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-            ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
-            ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+            findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
+            findViewById(R.id.txtApply).setVisibility(View.GONE);
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-            ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
+            findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_header_reason_txt).toUpperCase());
 
             setProgressBar(findViewById(R.id.progressDialog));
@@ -168,7 +168,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         findViewById(R.id.topContentHolder).setVisibility(View.GONE);
                         findViewById(R.id.photoLayout).setVisibility(View.VISIBLE);
                         ((ImageView) findViewById(R.id.indicatorIcon)).setImageResource(R.drawable.down_arrow_icon_white);
-                        ((ImageView) findViewById(R.id.indicatorIcon)).setContentDescription(getString(R.string.mdl_ada_arrowdown_photo_button));
+                        findViewById(R.id.indicatorIcon).setContentDescription(getString(R.string.mdl_ada_arrowdown_photo_button));
                     } else {
                         findViewById(R.id.topContentHolder).setVisibility(View.VISIBLE);
                         findViewById(R.id.photoLayout).setVisibility(View.GONE);
@@ -184,13 +184,13 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
             if (providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")) {
                 isTherapistUser = true;
-                ((LinearLayout) findViewById(R.id.behaviourView)).setVisibility(View.VISIBLE);
-                ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.GONE);
+                findViewById(R.id.behaviourView).setVisibility(View.VISIBLE);
+                findViewById(R.id.childHeader).setVisibility(View.GONE);
                 getBehaviouralHealthServiceData();
             } else {
                 isTherapistUser = false;
-                ((LinearLayout) findViewById(R.id.behaviourView)).setVisibility(View.GONE);
-                ((LinearLayout) findViewById(R.id.childHeader)).setVisibility(View.VISIBLE);
+                findViewById(R.id.behaviourView).setVisibility(View.GONE);
+                findViewById(R.id.childHeader).setVisibility(View.VISIBLE);
                 ReasonForVisit();
             }
 
@@ -227,9 +227,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         private void enableOrDisableNextStep(){
             if(validateTherapyFields()){
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             }else{
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             }
         }
 
@@ -540,11 +540,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             try {
                 for(int i =0; i<historyPercentageArray.length();i++){
                     if(historyPercentageArray.getJSONObject(i).has("behavioral")){
-                        if(historyPercentageArray.getJSONObject(i).getInt("behavioral") > 10){
-                            isBehaviourHistoryCompleted = true;
-                        }else{
-                            isBehaviourHistoryCompleted = false;
-                        }
+                        isBehaviourHistoryCompleted = historyPercentageArray.getJSONObject(i).getInt("behavioral") > 10;
                         break;
                     }
                 }
@@ -590,9 +586,9 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         public void onResume() {
             try {
                 if(loadImageService != null && loadImageService.getStatus().equals(AsyncTask.Status.RUNNING)){
-                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thumpProgressBar).setVisibility(View.VISIBLE);
                 }else{
-                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
+                    findViewById(R.id.thumpProgressBar).setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -814,14 +810,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
          * Checking device has camera hardware or not
          */
         private boolean isDeviceSupportCamera() {
-            if (getApplicationContext().getPackageManager().hasSystemFeature(
-                    PackageManager.FEATURE_CAMERA)) {
-                // this device has a camera
-                return true;
-            } else {
-                // no camera on this device
-                return false;
-            }
+            // this device has a camera
+// no camera on this device
+            return getApplicationContext().getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA);
         }
 
         /**
@@ -932,7 +924,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                             loadImageService.execute();
                         }
                     } else {
-                        ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
+                        findViewById(R.id.thumpProgressBar).setVisibility(View.GONE);
                         photosContainer.setVisibility(View.GONE);
                     }
                 }
@@ -1174,7 +1166,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             protected void onPreExecute() {
                 if(!(progressBarLayout.getVisibility() == View.VISIBLE)){
-                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.thumpProgressBar).setVisibility(View.VISIBLE);
                 }
                 super.onPreExecute();
             }
@@ -1201,11 +1193,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     hasPendingDownloads = true;
                 }
                 if(hasPendingDownloads && loadImageService != null && !loadImageService.isCancelled()){
-                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
+                    findViewById(R.id.thumpProgressBar).setVisibility(View.GONE);
                     loadImageService = new loadDownloadedImages();
                     loadImageService.execute();
                 }else{
-                    ((ProgressBar) findViewById(R.id.thumpProgressBar)).setVisibility(View.GONE);
+                    findViewById(R.id.thumpProgressBar).setVisibility(View.GONE);
                 }
             }
 

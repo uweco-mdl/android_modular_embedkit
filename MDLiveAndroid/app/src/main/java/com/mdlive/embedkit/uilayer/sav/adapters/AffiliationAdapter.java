@@ -8,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -21,10 +18,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.sav.MDLiveProviderDetails;
-import com.mdlive.embedkit.uilayer.sav.MDLiveProviderGroupDetailsAffiliations;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by raja_rath on 10/6/2015.
@@ -67,7 +62,7 @@ public class AffiliationAdapter extends BaseAdapter {
             setValues(providerImage, txtProviderName, position);
 
         } else {
-            grid = (View) convertView;
+            grid = convertView;
         }
 
         return grid;

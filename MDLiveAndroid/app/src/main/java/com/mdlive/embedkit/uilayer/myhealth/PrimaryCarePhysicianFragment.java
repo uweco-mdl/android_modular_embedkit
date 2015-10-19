@@ -270,9 +270,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     private void addPCP(String params) {

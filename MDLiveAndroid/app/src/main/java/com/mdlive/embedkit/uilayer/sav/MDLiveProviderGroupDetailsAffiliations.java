@@ -2,22 +2,17 @@ package com.mdlive.embedkit.uilayer.sav;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -33,8 +28,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ProviderDetailsAffiliationServices;
 
 import org.json.JSONObject;
-
-import static com.android.volley.Response.*;
 
 /**
  * Created by raja_rath on 10/1/2015.
@@ -58,7 +51,7 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
      * The home button will pull you back to the Dashboard activity
      */
 
-        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MdliveUtils.hideSoftKeyboard(MDLiveProviderGroupDetailsAffiliations.this);
@@ -119,25 +112,25 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
                 final JsonObject linkItem = linksArray.get(i).getAsJsonObject();
                 switch (i){
                     case 0:
-                        ((NetworkImageView) findViewById(R.id.LinkImg1)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.LinkImg1).setVisibility(View.VISIBLE);
                         ((NetworkImageView) findViewById(R.id.LinkImg1)).setImageUrl(linkItem.get("logo_url").getAsString(),
                                 ApplicationController.getInstance().getImageLoader(getApplicationContext()));
                         applyActionListner(linkItem, ((NetworkImageView) findViewById(R.id.LinkImg1)));
                         break;
                     case 1:
-                        ((NetworkImageView) findViewById(R.id.LinkImg2)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.LinkImg2).setVisibility(View.VISIBLE);
                         ((NetworkImageView) findViewById(R.id.LinkImg2)).setImageUrl(linkItem.get("logo_url").getAsString(),
                                 ApplicationController.getInstance().getImageLoader(getApplicationContext()));
                         applyActionListner(linkItem, ((NetworkImageView) findViewById(R.id.LinkImg2)));
                         break;
                     case 2:
-                        ((NetworkImageView) findViewById(R.id.LinkImg3)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.LinkImg3).setVisibility(View.VISIBLE);
                         ((NetworkImageView) findViewById(R.id.LinkImg3)).setImageUrl(linkItem.get("logo_url").getAsString(),
                                 ApplicationController.getInstance().getImageLoader(getApplicationContext()));
                         applyActionListner(linkItem, ((NetworkImageView) findViewById(R.id.LinkImg3)));
                         break;
                     case 3:
-                        ((NetworkImageView) findViewById(R.id.LinkImg4)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.LinkImg4).setVisibility(View.VISIBLE);
                         ((NetworkImageView) findViewById(R.id.LinkImg4)).setImageUrl(linkItem.get("logo_url").getAsString(),
                                 ApplicationController.getInstance().getImageLoader(getApplicationContext()));
                         applyActionListner(linkItem, ((NetworkImageView) findViewById(R.id.LinkImg4)));

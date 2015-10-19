@@ -12,7 +12,6 @@ import com.mdlive.embedkit.R;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sanjibkumar_p on 7/14/2015.

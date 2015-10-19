@@ -47,7 +47,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_tick_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_summary).toUpperCase());
         mFeedbackSummaryEt = ((EditText) findViewById(R.id.txt_feedback_summary));
         setProgressBar(findViewById(R.id.progressBar));
@@ -66,7 +66,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
                 getResources().getString(R.string.mdl_summary_michelle_txt,userBasicInfo.getPersonalInfo().getFirstName()));
            //Phone number from user info service for assistance
         ((TextView) findViewById(R.id.txt_phone_summary)).setText(userBasicInfo.getAssistPhoneNumber());
-        ((TextView) findViewById(R.id.txt_phone_summary)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.txt_phone_summary).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber().replaceAll("-", "")));
@@ -78,12 +78,12 @@ public class MDLiveSummary extends MDLiveBaseActivity {
     }
 
     public void questionBoxOnClick(View v){
-        if(((LinearLayout) findViewById(R.id.questionContainer)).getVisibility() == View.VISIBLE){
+        if(findViewById(R.id.questionContainer).getVisibility() == View.VISIBLE){
             ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.down_arrow_icon);
-            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.GONE);
+            findViewById(R.id.questionContainer).setVisibility(View.GONE);
         }else{
             ((ImageView) findViewById(R.id.summary_down_arrow)).setImageResource(R.drawable.right_arrow_icon);
-            ((LinearLayout) findViewById(R.id.questionContainer)).setVisibility(View.VISIBLE);
+            findViewById(R.id.questionContainer).setVisibility(View.VISIBLE);
         }
     }
 

@@ -121,7 +121,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 
 
         //getProviderStatus();
-        ((ImageView)findViewById(R.id.homeImg)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.homeImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 movetohome();
@@ -631,11 +631,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                             handler.removeCallbacks(runnable);
                             providerStatusHandler.removeCallbacks(providerStatusRunnable);
                             if(yesResObj.has("message")){
-                                if(yesResObj.getString("message").contains("escalated")){
-                                    isEscalated=true;
-                                }else{
-                                    isEscalated=false;
-                                }
+                                isEscalated = yesResObj.getString("message").contains("escalated");
                             }
                             thankYouIntent.putExtra("activitycaller","OnCall");
                             thankYouIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

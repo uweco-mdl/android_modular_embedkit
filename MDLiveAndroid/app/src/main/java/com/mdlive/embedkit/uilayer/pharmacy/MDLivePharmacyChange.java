@@ -91,9 +91,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));
 
 
@@ -542,7 +542,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void initializeStateDialog() {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePharmacyChange.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         stageListView = (ListView) convertView.findViewById(R.id.popupListview);
         stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));

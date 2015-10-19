@@ -552,9 +552,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     private void loadBillingInfo(String params) {

@@ -132,22 +132,13 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-                if(isChecked){
-                    isAllFieldsfilled = true;
-                }else{
-                    isAllFieldsfilled = false;
-                }
+                isAllFieldsfilled = isChecked;
                 ValidateModuleFields();
             }
         });
 
         //check the current state before we display the screen
-        if(mySwitch.isChecked()) {
-            isAllFieldsfilled = true;
-        }
-        else {
-            isAllFieldsfilled = false;
-        }
+        isAllFieldsfilled = mySwitch.isChecked();
 
         ValidateModuleFields();
     }
@@ -233,10 +224,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     public boolean checkPerdiatricAge(){
-        if(calculteAgeFromPrefs(strDate, this)<IntegerConstants.ADD_CHILD_AGELIMIT){
-            return true;
-        }
-        return false;
+        return calculteAgeFromPrefs(strDate, this) < IntegerConstants.ADD_CHILD_AGELIMIT;
     }
 
     public static int calculteAgeFromPrefs(String strDate, Context context){
@@ -257,11 +245,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      */
 
     public void ValidateModuleFields() {
-        isAllFieldsfilled = true;
 
-        if(TextUtils.isEmpty(firstNameEditText.getText().toString())){
-            isAllFieldsfilled = false;
-        }
+        isAllFieldsfilled = !TextUtils.isEmpty(firstNameEditText.getText().toString());
         if(TextUtils.isEmpty(lastNameEditText.getText().toString())){
             isAllFieldsfilled = false;
         }
@@ -389,7 +374,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
       /*We need to get the instance of the LayoutInflater*/
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveFamilymember.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
 
         alertDialog.setView(convertView);
 

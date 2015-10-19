@@ -87,8 +87,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_confirm_appointment_txt).toUpperCase());
 
 
@@ -172,9 +172,9 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     public void enableConfirmAppt(){
         if(CheckTermsConsent && CheckPrivacyPolicy){
-            ((Button) findViewById(R.id.start_visit)).setVisibility(View.VISIBLE);
+            findViewById(R.id.start_visit).setVisibility(View.VISIBLE);
         }else{
-            ((Button) findViewById(R.id.start_visit)).setVisibility(View.GONE);
+            findViewById(R.id.start_visit).setVisibility(View.GONE);
         }
     }
 
@@ -393,7 +393,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         //If Provider name is equal to Doctor on call Time field visibility should be gone.
         try {
             if(providerName.equalsIgnoreCase("Doctor On Call")){
-                ((TextView) findViewById(R.id.txtTime)).setVisibility(View.INVISIBLE);
+                findViewById(R.id.txtTime).setVisibility(View.INVISIBLE);
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));

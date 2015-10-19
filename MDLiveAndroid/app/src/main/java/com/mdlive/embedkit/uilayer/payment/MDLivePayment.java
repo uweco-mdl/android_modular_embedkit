@@ -96,9 +96,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
-        ((ImageView) findViewById(R.id.txtApply)).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_payment_txt));
         mScanCardBtn = (Button)findViewById(R.id.ScanCardBtn);
         if (getIntent() != null) {
@@ -107,11 +107,11 @@ public class MDLivePayment extends MDLiveBaseActivity {
             storePayableAmount(finalAmount);
             ((TextView) findViewById(R.id.cost)).setText("$" + finalAmount);
         }
-        ((RelativeLayout) findViewById(R.id.masterCardRl)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.masterCardRl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Delete
-                setExistingCardDetailUser=true;
+                setExistingCardDetailUser = true;
                 moveToNextPage();
 //                getCreditCardInfoService();
 
@@ -244,8 +244,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 if (myProfile.getString("cc_number").equals(null)||myProfile.getString("cc_number").equals("null")||myProfile.getString("cc_number").equals("")||myProfile.getString("cc_number").isEmpty()
                         ) {
                     Log.e("inside","Am in Null");
-                    ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.GONE);
-                    ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
+                    findViewById(R.id.masterCardRl).setVisibility(View.GONE);
+                    findViewById(R.id.parentMasterCardLl).setVisibility(View.GONE);
                 } else {
                     Log.e("inside","Am not in Null");
                     if(myProfile.getString("cc_type_id").equalsIgnoreCase("1")) {
@@ -267,8 +267,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
                         ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.master);
                     }
-                    ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.VISIBLE);
-                    ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.masterCardRl).setVisibility(View.VISIBLE);
+                    findViewById(R.id.parentMasterCardLl).setVisibility(View.VISIBLE);
                 }
 
                 //this is called when master card image view is clicked
@@ -760,7 +760,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void payNow(View paymentButton) {
         if (finalAmount.equals("0.00")) {
             //Remove this..it is in next screen
-                           /* doConfirmAppointment();*/;
+                           /* doConfirmAppointment();*/
             CheckdoconfirmAppointment(true);
         } else {
             if (dateView.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {

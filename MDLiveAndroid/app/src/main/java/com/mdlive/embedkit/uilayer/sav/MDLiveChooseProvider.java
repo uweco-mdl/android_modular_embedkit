@@ -107,7 +107,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }
         fromGetSartedPage = true;
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.backImg)).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
        /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
 
@@ -206,7 +206,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 //
 //            }
 //        });
-        ((ImageView)findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.filterTxt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
@@ -243,8 +243,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 setInfoVisibilty();
                 docOnCalLinLay.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
-                ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
-                ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
+                findViewById(R.id.txtFilter).setVisibility(View.GONE);
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
                 doctorOnCallButtonClick();
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
@@ -256,7 +256,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {
                                 public void run() {
                                     filterMainRl.setVisibility(View.GONE);
-                                    ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                                    findViewById(R.id.txtFilter).setVisibility(View.GONE);
                                     MdliveUtils.showDialog(MDLiveChooseProvider.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, getString(R.string.mdl_ok_upper), null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -273,7 +273,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     } else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
                         filterMainRl.setVisibility(View.GONE);
-                        ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                        findViewById(R.id.txtFilter).setVisibility(View.GONE);
                     }
                 }catch(Exception e){
                     setInfoVisibilty();
@@ -303,7 +303,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             Log.e("Response--->", response.toString());
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
-            ((RelativeLayout)findViewById(R.id.progressBar)).setVisibility(View.GONE);
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             boolean StrDoctorOnCall = false;
@@ -359,7 +359,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             //setListView();
                         } else {
                             filterMainRl.setVisibility(View.GONE);
-                           ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                           findViewById(R.id.txtFilter).setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responseArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -395,7 +395,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             //setListView();
                         }else{
                             showOrHideFooter();
-                            ((TextView)findViewById(R.id.txtFilter)).setVisibility(View.GONE);
+                            findViewById(R.id.txtFilter).setVisibility(View.GONE);
                             filterMainRl.setVisibility(View.GONE);
                             MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                                 @Override
@@ -616,7 +616,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Calendar tomorrow = Calendar.getInstance();
                 tomorrow.add(Calendar.DATE, 1);  // number of days to add
                 tomorrow.set(tomorrow.get(Calendar.YEAR), tomorrow.get(Calendar.MONTH), tomorrow.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-                Date currenTimeZone1 = (Date) calendar.getTime();
+                Date currenTimeZone1 = calendar.getTime();
                 Log.e("general Timezone-->",calendar.getTimeInMillis()+"");
                 Log.e("today Timezone-->",today.getTimeInMillis()+"");
                 Log.e("tomrw Timezone-->",tomorrow.getTimeInMillis()+"");
@@ -629,7 +629,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     sendData = "Tomorrow "+calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE);
                     Log.e("Kobe Timezone-->","Kobe tmr");
                 }else{
-                    Date currenTimeZone = (Date) calendar.getTime();
+                    Date currenTimeZone = calendar.getTime();
                     sendData = sdf.format(currenTimeZone);
                     Log.e("Kobe Timezone-->","Kobe future");
                 }

@@ -281,7 +281,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
         try {
             final JSONObject questions = response.getJSONObject("questions");
-            Iterator<String> a = (Iterator<String>) questions.keys();
+            Iterator<String> a = questions.keys();
 
             while (a.hasNext()) {
                 String key = a.next();

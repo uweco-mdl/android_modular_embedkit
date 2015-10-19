@@ -233,10 +233,6 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             });
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
-
         if (mPassCode7.getText().length() < 6) {
             if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
                 ((MyAccountsHome) getActivity()).hideTick();
