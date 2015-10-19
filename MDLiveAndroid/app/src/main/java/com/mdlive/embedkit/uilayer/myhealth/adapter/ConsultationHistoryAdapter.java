@@ -50,7 +50,7 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        //if (convertView == null) {
+        if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.consultation_history_adapter_layout, parent, false);
 
@@ -64,10 +64,10 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
             viewHolder.afterCareInstructionsTv = (TextView) convertView.findViewById(R.id.adapter_aftercare_instructions_text_view);
             viewHolder.claimFormTv = (TextView) convertView.findViewById(R.id.adapter_view_claim_form_text_view);
 
-            //convertView.setTag(viewHolder);
-        //} else {
-            //viewHolder = (ViewHolder) convertView.getTag();
-        //}
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).getProviderImageUrl(), ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).getProviderName());
         viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());

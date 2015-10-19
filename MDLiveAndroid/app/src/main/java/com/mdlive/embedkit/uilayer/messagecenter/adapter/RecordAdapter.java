@@ -22,7 +22,7 @@ public class RecordAdapter extends ArrayAdapter<Record> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-
+        if(convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_record, parent, false);
 
@@ -30,40 +30,10 @@ public class RecordAdapter extends ArrayAdapter<Record> {
             viewHolder.mImageView = (ImageView) convertView.findViewById(R.id.adapter_record_image_view);
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_record_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_record_bottom_text_view);
-
-//        String extensionRemoved = MdliveUtils.getExtention(getItem(position).downloadLink);
-
-
-            /*if(extensionRemoved.equalsIgnoreCase("jpeg") || extensionRemoved.equalsIgnoreCase("jpg"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_jpg_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("pdf"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_pdf_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("png"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_png_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("doc")||(extensionRemoved.equalsIgnoreCase("docx") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_word_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("xls") ||(extensionRemoved.equalsIgnoreCase("xlsx") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_xl_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("pptx") ||(extensionRemoved.equalsIgnoreCase("ppt") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_pp_format);
-            }
-            else
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_empty_format);
-            }
-*/
-
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         viewHolder.mTextViewTop.setText(getItem(position).docName);
         viewHolder.mTextViewBottom.setText(" by " + getItem(position).uploadedBy + " on " +getItem(position).uploadedAt);
 

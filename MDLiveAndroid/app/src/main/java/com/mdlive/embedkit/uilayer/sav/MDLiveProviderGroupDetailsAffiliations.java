@@ -74,14 +74,12 @@ public class MDLiveProviderGroupDetailsAffiliations extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("onResponse loadProviderGroupDetailsAffiliation ", response.toString());
                 handleSuccessResponse(response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
                 hideProgress();
             }};
         ProviderDetailsAffiliationServices services = new ProviderDetailsAffiliationServices(MDLiveProviderGroupDetailsAffiliations.this, null);

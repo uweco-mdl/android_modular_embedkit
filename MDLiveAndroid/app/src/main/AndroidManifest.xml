@@ -6,6 +6,7 @@
         android:allowBackup="true"
         android:label="@string/mdl_app_name"
         android:largeHeap="true"
+        android:supportsRtl="false"
         android:theme="@style/CustomTheme">
 
         <activity
@@ -43,7 +44,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits"
+            android:name=".uilayer.PendingVisits.MDLivePendingVisits"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden" />

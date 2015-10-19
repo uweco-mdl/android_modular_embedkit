@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 
 import java.util.ArrayList;
 
@@ -120,29 +121,38 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
      *     The datas are fetched from the Arraylist based on the position the data will be placed
      *     in the listview.
      */
-
-    @Override
-    public View getView(final int pos, View convertview, ViewGroup parent) {
+    private static class ViewHolder {
         ImageView reasonCheckbox;
         TextView reasonTxt;
         LinearLayout reasonListItem;
-        View row;
-        inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
-                false);
-        reasonCheckbox = (ImageView) row.findViewById(R.id.reasonCheckbox);
-        reasonTxt = (TextView) row.findViewById(R.id.reasonTxt);
-        reasonListItem = (LinearLayout) row.findViewById(R.id.reasonListItem);
+    }
+    @Override
+    public View getView(final int pos, View convertview, ViewGroup parent) {
+        ViewHolder viewHolder = null;
 
-        if(notFound){
-            reasonCheckbox.setVisibility(View.GONE);
-            reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
-        }else {
-            reasonCheckbox.setVisibility(View.VISIBLE);
-            reasonTxt.setText(array.get(pos));
+        if (convertview == null) {
+            inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertview = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
+                    false);
+            viewHolder = new ViewHolder();
+            viewHolder.reasonCheckbox = (ImageView) convertview.findViewById(R.id.reasonCheckbox);
+            viewHolder.reasonTxt = (TextView) convertview.findViewById(R.id.reasonTxt);
+            viewHolder.reasonListItem = (LinearLayout) convertview.findViewById(R.id.reasonListItem);
+            convertview.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertview.getTag();
         }
 
-        reasonListItem.setOnClickListener(new View.OnClickListener() {
+
+        if(notFound){
+            viewHolder.reasonCheckbox.setVisibility(View.GONE);
+            viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
+        }else {
+            viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
+            viewHolder.reasonTxt.setText(array.get(pos));
+        }
+
+        viewHolder.reasonListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkedItemPosition = pos;
@@ -152,12 +162,12 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         });
 
         if(checkedItemPosition >= 0 && (checkedItemPosition == pos || checkedItemReaston.equals(array.get(pos)))){
-            reasonCheckbox.setImageResource(R.drawable.check_box_tick);
+            viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_tick);
             btnContinue.setVisibility(View.VISIBLE);
         }else{
-            reasonCheckbox.setImageResource(R.drawable.check_box_untick);
+            viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_untick);
         }
 
-        return row;
+        return convertview;
     }
 }

@@ -1023,6 +1023,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             if(cursor != null && cursor.moveToFirst()){
                 lastFileNameId = cursor.getString(0);
             }
+            cursor.close();
         }
 
         public void checkOutLastFileInGallery(){
@@ -1047,6 +1048,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
                 }
                 lastFileNameId = "";
+                cursor.close();
             }
         }
 
@@ -1068,6 +1070,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                 cursor.moveToFirst();
                 return cursor.getString(column_index);
             }
+            cursor.close();
             // this is our fallback here
             return uri.getPath();
         }

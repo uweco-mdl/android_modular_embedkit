@@ -99,6 +99,7 @@ public class PickImagePlugin {
         if(cursor != null && cursor.moveToFirst()){
             lastFileNameId = cursor.getString(0);
         }
+        cursor.close();
     }
 
     public void checkOutLastFileInGallery(){
@@ -124,6 +125,7 @@ public class PickImagePlugin {
             }
             lastFileNameId = "";
         }
+        cursor.close();
     }
 
 
@@ -281,6 +283,7 @@ public class PickImagePlugin {
             cursor.moveToFirst();
             return cursor.getString(column_index);
         }
+        cursor.close();
         // this is our fallback here
         return uri.getPath();
     }

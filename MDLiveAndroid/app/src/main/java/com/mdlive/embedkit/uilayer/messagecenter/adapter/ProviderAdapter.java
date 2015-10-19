@@ -25,7 +25,7 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        //if (convertView == null) {
+        if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.new_adapter_layout, parent, false);
 
@@ -34,10 +34,10 @@ public class ProviderAdapter extends ArrayAdapter<MyProvider> {
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_provider_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_provider_bottom_text_view);
 
-            //convertView.setTag(viewHolder);
-        //} else {
-            //viewHolder = (ViewHolder) convertView.getTag();
-        //}
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
