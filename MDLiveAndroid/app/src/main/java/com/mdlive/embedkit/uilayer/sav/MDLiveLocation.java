@@ -330,7 +330,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                         JsonArray TyprArray = localZip.get("types").getAsJsonArray();
                         for (int k = 0; k < TyprArray.size(); k++) {
                             String zip = TyprArray.get(k).getAsString();
-                            Log.e("responObj", zip.toString());
                             if (zip.equalsIgnoreCase("administrative_area_level_1")) {
                                 SelectedZipCodeCity = localZip.get("short_name").getAsString();
                                 Log.e("Results", SelectedZipCodeCity);

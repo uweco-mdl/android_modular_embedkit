@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.DashBoardSpinnerAdapter;
@@ -214,7 +216,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 if (mMessageCountTextView != null) {
                     if (userBasicInfo.getNotifications().getMessages() > 0) {
                         mMessageCountTextView.setText(String.valueOf(userBasicInfo.getNotifications().getMessages()));
-                        mMessageCountTextView.setContentDescription(String.valueOf(userBasicInfo.getNotifications().getMessages())+"unread Messages");
+                        mMessageCountTextView.setContentDescription(String.valueOf(userBasicInfo.getNotifications().getMessages()) + "unread Messages");
                         mMessageCountTextView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -251,6 +253,15 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     }
                 }, 100);
             }
+            JsonParser parser = new JsonParser();
+            JsonObject notificationPayload = new JsonObject();
+            notificationPayload.addProperty("alert", "you have a new message");
+            notificationPayload.add("acme", parser.parse("[\"appointment\", \"57899\"]"));
+
+            final Intent intent = new Intent();
+            intent.setAction("com.google.android.c2dm.intent.RECEIVE");
+            intent.putExtra("message", notificationPayload.toString());
+            getActivity().sendBroadcast(intent);
         } catch(Exception e){
             e.printStackTrace();
         }

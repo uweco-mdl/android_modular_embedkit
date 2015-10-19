@@ -417,7 +417,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
 
         Gson gs = new Gson();
-        Log.e("Post Params", gs.toJson(postParams).toString());
 
 
     }
@@ -529,7 +528,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
                 enableSaveButton();
                 Gson gs = new Gson();
-                Log.e("Post Params", gs.toJson(postParams).toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

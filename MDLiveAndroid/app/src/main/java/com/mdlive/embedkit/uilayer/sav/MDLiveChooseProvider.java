@@ -300,17 +300,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     private void handleSuccessResponse(String response) {
         try {
-            Log.e("Response--->", response.toString());
+            Log.e("Response--->", response);
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
             findViewById(R.id.progressBar).setVisibility(View.GONE);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response);
             boolean StrDoctorOnCall = false;
-            JSONObject resObject=new JSONObject(response.toString());
-
-            Log.e("Call", ""+responObj.get("doctor_on_call").getAsBoolean());
-            Log.e("Video", ""+responObj.get("doctor_on_call_video").getAsBoolean());
+            JSONObject resObject=new JSONObject(response);
 
             //Doctor call Validation
             if(resObject.has("doctor_on_call_video") || resObject.has("doctor_on_call")){

@@ -65,17 +65,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private TextView mUsernameLength = null;
     private TextView mUsernameAlphaNumericCheck = null;
     private TextView mUsernameSpecialCharactersCheck = null;
-    private String Username = null;
-    private String Email = null;
-    private String FirstName = null;
-    private String LastName = null;
-    private String Address1 = null;
-    private String City = null;
-    private String State = null;
-    private String Phone = null;
-    private String DOB = null;
-    private String Gender = null;
-    private String Zipcode = null;
+    private String userName = null;
+    private String eMail = null;
+    private String firstName = null;
+    private String lastName = null;
+    private String address1 = null;
+    private String city = null;
+    private String state = null;
+    private String phone = null;
+    private String dob = null;
+    private String gender = null;
+    private String zipCode = null;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
@@ -193,7 +193,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         }, y, m, d);
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
-//                dp.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
                 dp.show();
             }
         });
@@ -406,22 +405,22 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     }
 
     public void addFamilyMemberInfo() {
-        Username = mUsername.getText().toString().trim();
-        Email = mEmail.getText().toString().trim();
-        FirstName = mFirstName.getText().toString().trim();
-        LastName = mLastName.getText().toString().trim();
-        Address1 = mAddress1.getText().toString().trim();
-        City = mCity.getText().toString().trim();
-        State = mState.getText().toString().trim();
-        Phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
-        DOB = mDOB.getText().toString().trim();
-        Zipcode =mZip.getText().toString();
-        Gender = mGender.getText().toString().trim();
+        userName = mUsername.getText().toString().trim();
+        eMail = mEmail.getText().toString().trim();
+        firstName = mFirstName.getText().toString().trim();
+        lastName = mLastName.getText().toString().trim();
+        address1 = mAddress1.getText().toString().trim();
+        city = mCity.getText().toString().trim();
+        state = mState.getText().toString().trim();
+        phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
+        dob = mDOB.getText().toString().trim();
+        zipCode =mZip.getText().toString();
+        gender = mGender.getText().toString().trim();
 
-        if (isEmpty(Username) && isEmpty(Email) && isEmpty(FirstName) && isEmpty(LastName) && isEmpty(Address1) && isEmpty(City)
-                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender)) {
-            if (validEmail(Email)) {
-                if(!MdliveUtils.validateZipCode(Zipcode)){
+        if (isEmpty(userName) && isEmpty(eMail) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(address1) && isEmpty(city)
+                && isEmpty(state) && isEmpty(phone) && isEmpty(dob) && isEmpty(gender)) {
+            if (validEmail(eMail)) {
+                if(!MdliveUtils.validateZipCode(zipCode)){
                     Toast.makeText(getApplicationContext(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
                 }else {
                     try {
@@ -430,17 +429,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("computer", "MAC");
                         JSONObject jsonObject1 = new JSONObject();
-                        jsonObject1.put("username", Username);
-                        jsonObject1.put("first_name", FirstName);
-                        jsonObject1.put("last_name", LastName);
-                        jsonObject1.put("gender", Gender);
-                        jsonObject1.put("email", Email);
-                        jsonObject1.put("phone", Phone);
-                        jsonObject1.put("address1", Address1);
-                        jsonObject1.put("city", City);
-                        jsonObject1.put("state_id", State);
-                        jsonObject1.put("zip", Zipcode.replace("-", ""));
-                        jsonObject1.put("birthdate", DOB);
+                        jsonObject1.put("username", userName);
+                        jsonObject1.put("first_name", firstName);
+                        jsonObject1.put("last_name", lastName);
+                        jsonObject1.put("gender", gender);
+                        jsonObject1.put("email", eMail);
+                        jsonObject1.put("phone", phone);
+                        jsonObject1.put("address1", address1);
+                        jsonObject1.put("city", city);
+                        jsonObject1.put("state_id", state);
+                        jsonObject1.put("zip", zipCode.replace("-", ""));
+                        jsonObject1.put("birthdate", dob);
                         jsonObject1.put("answer", "idontknow");
 
                         parent.put("member", jsonObject1);
@@ -454,7 +453,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(getBaseContext(), "Email id is invalid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "eMail id is invalid", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(AddFamilyMemberActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();

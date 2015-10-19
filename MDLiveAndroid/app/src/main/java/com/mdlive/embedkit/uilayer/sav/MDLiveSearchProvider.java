@@ -439,7 +439,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 try {
                     Object value = providertype.get(key);
                     providerTypeArrayList.add(value.toString());
-                    providerIdArrayList.add(key.toString());
+                    providerIdArrayList.add(key);
                 } catch (JSONException e) {
                     // Something went wrong!
                 }

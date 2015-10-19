@@ -97,10 +97,10 @@ public class LifeStyleBaseAdapter extends BaseAdapter {
             }
         });
 
-        if (Model.YES.toString().equalsIgnoreCase(model.active)) {
+        if (Model.YES.equalsIgnoreCase(model.active)) {
             viewHolder.mYesRadioButton.setChecked(true);
             viewHolder.mNoRadioButton.setChecked(false);
-        } else if(Model.NO.toString().equalsIgnoreCase(model.active)) {
+        } else if(Model.NO.equalsIgnoreCase(model.active)) {
             viewHolder.mYesRadioButton.setChecked(false);
             viewHolder.mNoRadioButton.setChecked(true);
         } else {

@@ -178,7 +178,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         Log.e("Response user ",response.toString());
         hideProgressDialog();
         try {
-            String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName().toString() + " " + userBasicInfo.getPersonalInfo().getLastName().toString();
+            String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName() + " " + userBasicInfo.getPersonalInfo().getLastName();
 
             nameList.add(primaryUserName);
             urlList.add(userBasicInfo.getPersonalInfo().getImageUrl());

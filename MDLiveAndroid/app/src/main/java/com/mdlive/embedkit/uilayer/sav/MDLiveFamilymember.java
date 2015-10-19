@@ -307,7 +307,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         };
 
         AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, getProgressDialog());
-        addChildServices.getChildDependentsr(array, responseListener, errorListener);
+        addChildServices.getChildDependent(array, responseListener, errorListener);
     }
 
     /**
