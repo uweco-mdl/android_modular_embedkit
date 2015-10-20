@@ -24,9 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -245,6 +243,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         ) {
                     Log.e("inside","Am in Null");
                     findViewById(R.id.masterCardRl).setVisibility(View.GONE);
+                    findViewById(R.id.ortxt).setVisibility(View.GONE);
                     findViewById(R.id.parentMasterCardLl).setVisibility(View.GONE);
                 } else {
                     Log.e("inside","Am not in Null");
@@ -268,6 +267,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         ((ImageView) findViewById(R.id.card_logo)).setImageResource(R.drawable.master);
                     }
                     findViewById(R.id.masterCardRl).setVisibility(View.VISIBLE);
+                    findViewById(R.id.ortxt).setVisibility(View.VISIBLE);
                     findViewById(R.id.parentMasterCardLl).setVisibility(View.VISIBLE);
                 }
 

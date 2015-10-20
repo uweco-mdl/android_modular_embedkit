@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Record;
 
 /**
@@ -36,8 +37,26 @@ public class RecordAdapter extends ArrayAdapter<Record> {
         }
         viewHolder.mTextViewTop.setText(getItem(position).docName);
         viewHolder.mTextViewBottom.setText(" by " + getItem(position).uploadedBy + " on " +getItem(position).uploadedAt);
-
+        viewHolder.mImageView.setImageResource(getImageResource(MdliveUtils.getExtention(getItem(position).docName)));
         return convertView;
+    }
+
+    private int getImageResource(String type){
+        int resourceId = R.drawable.empty_format;
+
+        if(type.contains("gif") || type.contains("png") || type.contains("jpeg") || type.contains("jpg")){
+            resourceId = R.drawable.ic_png_format;
+        } else if(type.contains("pdf")){
+            resourceId = R.drawable.ic_pdf_format;
+        } else if(type.contains("doc")){
+            resourceId = R.drawable.ic_word_format;
+        } else if(type.contains("xls")){
+            resourceId = R.drawable.ic_xl_format;
+        } else if(type.contains("ppt")){
+            resourceId = R.drawable.ic_pp_format;
+        }
+
+        return resourceId;
     }
 
     private static class ViewHolder {

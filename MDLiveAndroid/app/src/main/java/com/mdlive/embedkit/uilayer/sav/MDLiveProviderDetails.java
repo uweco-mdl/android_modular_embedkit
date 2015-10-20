@@ -1520,12 +1520,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
         if(ProviderImageArray.size() != 0) {
             providerImageCollectionHolder.removeAllViews();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100);
             params.setMargins(5, 10, 5, 10);
             for (int i = 0; i < ProviderImageArray.size(); i++) {
                 try {
                     if (!ProviderImageArray.get(i).getAsJsonObject().get("logo").isJsonNull()) {
                         final ImageView imageView = new ImageView(MDLiveProviderDetails.this);
+                        //imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         imageView.setLayoutParams(params);
                         ImageRequest request = new ImageRequest(ProviderImageArray.get(i).getAsJsonObject().get("logo").getAsString(),
                                 new Response.Listener<Bitmap>() {

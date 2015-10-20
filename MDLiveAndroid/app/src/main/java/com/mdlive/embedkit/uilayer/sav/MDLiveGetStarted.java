@@ -140,7 +140,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
-//        loadProviderType();
         clearCacheInVolley();
 
         try {
