@@ -166,6 +166,8 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     private void handleSuccessResponse(JSONObject response) {
 
         try {
+            Log.e("Life style Response", response.toString());
+
             mHeightFtEditText.setText(response.optInt("height_feet", 0) + "");
             mHeightInEditText.setText(response.optInt("height_inches", 0) + "");
             mWeightLbsEditText.setText(response.optInt("weight", 0) + "");
@@ -178,11 +180,12 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             List<Model> lifeStyleModels = new ArrayList<Model>();
             for (int i = 0; i < lifestyleConditionArray.length(); i++) {
                 jsonObject = lifestyleConditionArray.getJSONObject(i);
-                lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"), jsonObject.getString("active")));
-
+                lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"),
+                        ((jsonObject.isNull("active") || jsonObject.optString("active").trim().length() == 0) ? "":jsonObject.getString("active"))));
             }
             adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels);
             mListView.setAdapter(adapter);
+            mListView.invalidateViews();
 
         } catch (Exception e) {
             e.printStackTrace();

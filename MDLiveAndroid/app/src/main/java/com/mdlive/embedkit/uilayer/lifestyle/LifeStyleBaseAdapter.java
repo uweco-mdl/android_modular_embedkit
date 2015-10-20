@@ -63,55 +63,54 @@ public class LifeStyleBaseAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-
         if (convertView == null) {
-            final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.mdlive_lifestyle_addrows, parent, false);
-
             viewHolder = new ViewHolder();
             viewHolder.mTextView = (TextView) convertView.findViewById(R.id.life_style_question_text);
             viewHolder.mRadioGroup = (RadioGroup) convertView.findViewById(R.id.rootradiogroup);
             viewHolder.mYesRadioButton = (RadioButton) convertView.findViewById(R.id.yesradioButton);
             viewHolder.mNoRadioButton = (RadioButton) convertView.findViewById(R.id.noradioButton);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
         final Model model = mModels.get(position);
-
         viewHolder.mTextView.setText(model.condition);
+        viewHolder.mRadioGroup.setOnCheckedChangeListener(null);
+
+        if (Model.YES.equalsIgnoreCase(mModels.get(position).active)) {
+            viewHolder.mRadioGroup.setTag(Model.YES);
+            viewHolder.mYesRadioButton.setChecked(true);
+        } else if(Model.NO.equalsIgnoreCase(mModels.get(position).active)) {
+            viewHolder.mRadioGroup.setTag(Model.NO);
+            viewHolder.mNoRadioButton.setChecked(true);
+        } else {
+            viewHolder.mRadioGroup.setTag(null);
+            viewHolder.mRadioGroup.clearCheck();
+        }
         viewHolder.mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.yesradioButton) {
-                    viewHolder.mYesRadioButton.setChecked(true);
-                    viewHolder.mNoRadioButton.setChecked(false);
-                    mModels.get(position).active = Model.YES;
-                } else if (checkedId == R.id.noradioButton) {
-                    viewHolder.mYesRadioButton.setChecked(false);
-                    viewHolder.mNoRadioButton.setChecked(true);
-                    mModels.get(position).active = Model.NO;
+                if(viewHolder.mRadioGroup.getTag() != null){
+                    if (checkedId == R.id.yesradioButton) {
+                        mModels.get(position).active = Model.YES;
+                    } else if (checkedId == R.id.noradioButton) {
+                        mModels.get(position).active = Model.NO;
+                    }
+                }else{
+                    if (checkedId == R.id.yesradioButton) {
+                        mModels.get(position).active = Model.YES;
+                    } else if (checkedId == R.id.noradioButton) {
+                        mModels.get(position).active = Model.NO;
+                    }
                 }
             }
         });
-
-        if (Model.YES.equalsIgnoreCase(model.active)) {
-            viewHolder.mYesRadioButton.setChecked(true);
-            viewHolder.mNoRadioButton.setChecked(false);
-        } else if(Model.NO.equalsIgnoreCase(model.active)) {
-            viewHolder.mYesRadioButton.setChecked(false);
-            viewHolder.mNoRadioButton.setChecked(true);
-        } else {
-            viewHolder.mYesRadioButton.setChecked(false);
-            viewHolder.mNoRadioButton.setChecked(false);
-        }
-
         return convertView;
     }
 
-    static class ViewHolder {
+    class ViewHolder {
         TextView mTextView;
         RadioGroup mRadioGroup;
         RadioButton mYesRadioButton;
