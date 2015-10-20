@@ -357,9 +357,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 myText.setTextColor(Color.WHITE);
                                 myText.setTextSize(16);
                                 myText.setPadding(8 * density ,4 * density, 8 * density, 4 * density);
-                                myText.setBackgroundResource(R.drawable.edittext_bg);
+                                myText.setBackgroundResource(R.drawable.timeslot_white_rounded_corner);
                                 myText.setText("Now");
-                                myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                                myText.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
                                 myText.setClickable(true);
                                 previousSelectedTv = myText;
                                 if(str_appointmenttype.toLowerCase().contains("video")||str_appointmenttype.toLowerCase().contains("video or phone")){
@@ -503,9 +503,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                         myText.setTextColor(Color.WHITE);
                                         myText.setTextSize(16);
                                         myText.setPadding(8 * density, 4 * density, 8 * density, 4 * density);
-                                        myText.setBackgroundResource(R.drawable.edittext_bg);
+                                        myText.setBackgroundResource(R.drawable.timeslot_white_rounded_corner);
                                         myText.setText("Now");
-                                        myText.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                                        myText.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
                                         myText.setClickable(true);
                                         previousSelectedTv = myText;
                                         if (str_appointmenttype.toLowerCase().contains("video")) {
@@ -716,9 +716,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 byvideoBtn.setTextColor(Color.WHITE);
-                byphoneBtn.setTextColor(Color.GRAY);
-                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                byphoneBtn.setTextColor(Color.WHITE);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -734,10 +734,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             public void onClick(View v) {
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-                byvideoBtn.setTextColor(Color.GRAY);
+                byvideoBtn.setTextColor(Color.WHITE);
                 byphoneBtn.setTextColor(Color.WHITE);
-                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
-                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
+                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -777,12 +777,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byvideoBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 byvideoBtn.setTextColor(Color.WHITE);
-                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-                byphoneBtn.setTextColor(Color.GRAY);
+                ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                byphoneBtn.setTextColor(Color.WHITE);
                 saveConsultationType("Video");
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
@@ -795,13 +795,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 saveConsultationType("Phone");
                 byphoneBtn.setTextColor(Color.WHITE);
-                byvideoBtn.setTextColor(Color.GRAY);
+                byvideoBtn.setTextColor(Color.WHITE);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -1341,7 +1341,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         params.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
         myText.setLayoutParams(params);
         myText.setGravity(Gravity.CENTER);
-        myText.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+        myText.setBackgroundResource(R.drawable.timeslot_white_rounded_corner);
         myText.setClickable(true);
         myText.setTag(timeSlotListMap.get(position).get("appointment_type"));
         myText.setPadding(8 * density ,4 * density, 8 * density, 4 * density);
@@ -1368,13 +1368,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         //This is to select and Unselect the Timeslot
         if(previousSelectedTv == null){
             previousSelectedTv = timeslotTxt;
-            timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+            timeslotTxt.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
             timeslotTxt.setTextColor(Color.WHITE);
         }else{
-            previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+            previousSelectedTv.setBackgroundResource(R.drawable.timeslot_white_rounded_corner);
             previousSelectedTv.setTextColor(Color.GRAY);
             previousSelectedTv = timeslotTxt;
-            timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+            timeslotTxt.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
             timeslotTxt.setTextColor(Color.WHITE);
         }
 
@@ -1389,13 +1389,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
                     previousSelectedTv = timeslotTxt;
-                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
                     timeslotTxt.setTextColor(Color.WHITE);
                 }else{
-                    previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
+                    previousSelectedTv.setBackgroundResource(R.drawable.timeslot_white_rounded_corner);
                     previousSelectedTv.setTextColor(Color.GRAY);
                     previousSelectedTv = timeslotTxt;
-                    timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
+                    timeslotTxt.setBackgroundResource(R.drawable.timeslot_blue_rounded_corner);
                     timeslotTxt.setTextColor(Color.WHITE);
                 }
                 //Enabling or Disabling the Request Appointment Button.

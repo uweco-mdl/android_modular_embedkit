@@ -18,7 +18,12 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by sudha_s on 8/23/2015.
@@ -201,14 +206,35 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
         } else {
 
-            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
-            ((TextView) findViewById(R.id.date)).setText("Date: " + consultationDate);
-            Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-            String timeZoneValue = "";
-            if (UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo() != null) {
-                timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
+            try {
+                consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
+
+                Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+                String timeZoneValue = "";
+                String Timestamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
+                if (UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo() != null) {
+                    timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
+                }
+                Calendar calendar;
+                calendar = TimeZoneUtils.getCalendarWithOffset(this);
+                SimpleDateFormat sdfNow = new SimpleDateFormat("MMM dd, yyyy");
+                sdfNow.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                Date dateNow = calendar.getTime();
+//                ((TextView) findViewById(R.id.txtDate)).setText(format);
+                if(!Timestamp.equals("0")) {
+                    calendar.setTimeInMillis(Long.parseLong(Timestamp) * 1000);
+                    final Date dateTime = calendar.getTime();
+    //                ((TextView) findViewById(R.id.txtDate)).setText(format);
+    //                ((TextView) findViewById(R.id.time)).setText("Time: " +sdfNow.format(dateTime)+ " " + timeZoneValue);
+                    ((TextView) findViewById(R.id.date)).setText("Date: " + sdfNow.format(dateTime));
+                    ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
+                }else {
+                    ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
+                    ((TextView) findViewById(R.id.date)).setText("Date: " + consultationDate);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-            ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
         }
 
     }
