@@ -19,7 +19,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -277,7 +276,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         if(((TextView)findViewById(R.id.SpeaksTxtView)).getText() != null && ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().length() != 0 &&
                 !((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().equalsIgnoreCase("Any")){
-            postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
+//            postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
+            postParams.put("speaks", postParams.get("speaks"));
         }
 
         if(serverDateFormat != null && !serverDateFormat.equalsIgnoreCase(("Any"))){
@@ -689,6 +689,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         FilterSearchServices services = new FilterSearchServices(MDLiveSearchProvider.this, null);
+        Log.e("Filter",postParams.toString());
         services.getFilterSearch(postParams, successCallBackListener, errorListener);
     }
 
@@ -701,10 +702,12 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             hideProgress();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
+
             if(!responObj.isJsonNull()){
                 JsonArray responArray = responObj.get("physicians").getAsJsonArray();
                 if (responArray.size() != 0) {
                     if (responArray.get(0).isJsonObject()) {
+                        Log.e("Filter Response",responObj.toString());
                         Intent intent = new Intent();
                         intent.putExtra("Response", response.toString());
                         intent.putExtra("postParams", new Gson().toJson(postParams));
@@ -712,6 +715,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                         finish();
                         MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
                     }else{
+                        Log.e("Filter Response",responObj.toString());
                         MdliveUtils.showDialog(MDLiveSearchProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
