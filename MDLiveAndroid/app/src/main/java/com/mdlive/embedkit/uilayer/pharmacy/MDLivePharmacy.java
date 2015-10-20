@@ -261,6 +261,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
         Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
+        storePayableAmount("0.00");
         startActivity(i);
         MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
     }
@@ -270,6 +271,14 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
         editor.commit();
     }
+
+    public void storePayableAmount(String amount) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
+
 
     /**
      * This function is used to get post body content for Check Insurance Eligibility

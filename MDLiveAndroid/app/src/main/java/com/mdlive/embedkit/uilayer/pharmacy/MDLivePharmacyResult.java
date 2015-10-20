@@ -691,9 +691,18 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
         Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
+        storePayableAmount("0.00");
         startActivity(i);
         MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
     }
+
+    public void storePayableAmount(String amount) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
+
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();

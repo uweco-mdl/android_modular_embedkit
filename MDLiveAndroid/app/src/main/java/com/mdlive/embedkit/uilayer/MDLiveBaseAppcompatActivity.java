@@ -489,6 +489,12 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
     }
 
+    public void stopPinTimer() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
     public void clearMinimizedTime() {
         if (mHandler == null) {
             mHandler = new Handler();

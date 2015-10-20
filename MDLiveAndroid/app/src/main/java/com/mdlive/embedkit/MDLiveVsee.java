@@ -65,7 +65,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_vsee);
-        clearMinimizedTime();
+        stopPinTimer();
 
         pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
         pager.setClipToPadding(false);
@@ -227,7 +227,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
     @Override
     public void onDestroy() {
-
         try{
             VSeeVideoManager.instance().endVideoCalls();
             VSeeServerConnection.instance().logout();

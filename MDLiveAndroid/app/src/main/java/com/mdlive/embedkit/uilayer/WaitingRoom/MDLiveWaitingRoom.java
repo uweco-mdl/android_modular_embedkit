@@ -86,7 +86,8 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_waiting_room);
-        clearMinimizedTime();
+        //clearMinimizedTime();
+        stopPinTimer();
         this.setTitle(getString(R.string.mdl_waiting_room_title));
 
         isReturning = getIntent().getBooleanExtra("isReturning",false);
@@ -452,7 +453,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        clearMinimizedTime();
+        //clearMinimizedTime();
         handler.removeCallbacks(runnable);
         providerStatusHandler.removeCallbacks(providerStatusRunnable);
         Log.e("Test", "Destroy Coming");
