@@ -1,10 +1,10 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
@@ -23,6 +22,8 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -83,6 +84,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 && DeepLinkUtils.DEEPLINK_DATA.getPage().length() > 0) {
             findViewById(R.id.drawer_layout).setVisibility(View.GONE);
         }
+
     }
     private boolean isScreenLoaded = false;
     @Override
@@ -93,6 +95,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         }
         MdliveUtils.hideSoftKeyboard(this);
         isScreenLoaded = true;
+
     }
 
     @Override
@@ -126,7 +129,14 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onMdliveAssistClicked(View view) {
         if (!isDrawerOpen()) {
-            MdliveUtils.showMDLiveAssistDialog(this);
+            try {
+                Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
+                Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+                method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
+            } catch (ClassNotFoundException e){
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -196,7 +206,14 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 case 1:
                     findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
                     // Assist screen
-                    MdliveUtils.showMDLiveAssistDialog(this);
+                    try {
+                        Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
+                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
+                    } catch (ClassNotFoundException e){
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                     break;
                 case 2:
                     // SAV screen

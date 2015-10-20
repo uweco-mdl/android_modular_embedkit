@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,12 @@ public class DrawerAdapter extends BaseAdapter {
 
     private ArrayList<String> mDataSet;
 
-    private TypedArray images;
+    private ArrayList<Drawable> images;
 
     /**
      * Default constructor
      */
-    public DrawerAdapter(Context context, ArrayList<String> dataSet,TypedArray images) {
+    public DrawerAdapter(Context context, ArrayList<String> dataSet,ArrayList<Drawable> images) {
 
         mInflater = LayoutInflater.from(context);
         mDataSet = dataSet;
@@ -68,7 +69,7 @@ public class DrawerAdapter extends BaseAdapter {
         }
 
         holder.title.setText(mDataSet.get(position));
-        holder.image.setImageResource(images.getResourceId(position, -1));
+        holder.image.setImageDrawable(images.get(position));
         return recycledView;
     }
 

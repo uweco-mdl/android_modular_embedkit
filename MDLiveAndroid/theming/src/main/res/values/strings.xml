@@ -1132,6 +1132,8 @@
     <string name="mdli_provider_since">Provider since : </string>
     <string name="mdl_help_number_if_assist_not_present">18889952183</string>
 
+    <string name="mdl_mdlive_assist_module">com.mdlive.assist.MDLiveAssistUtil</string>
+
     <string-array name="mdl_countries_array">
         <item>United States</item>
         <item>Andorra</item>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,8 +30,8 @@ import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
-
 /**
  * Created by dhiman_da on 8/6/2015.
  */
@@ -138,6 +139,19 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         mMessageCountTextView = (TextView) view.findViewById(R.id.message_count);
         if (mMessageCountTextView != null) {
             mMessageCountTextView.setVisibility(View.INVISIBLE);
+        }
+
+        HashMap<String, Integer> moduleMap = new HashMap<>();
+        String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
+        moduleMap.put(modules[0], R.id.mdliveAssist);
+        for(int i=0; i<modules.length;i++){
+            try {
+               Class.forName(modules[i]);
+            } catch (ClassNotFoundException e) {
+                // Disable the module if the class is not found
+                LinearLayout layout = (LinearLayout) view.findViewById(moduleMap.get(modules[i]));
+                layout.setVisibility(View.GONE);
+            }
         }
     }
 

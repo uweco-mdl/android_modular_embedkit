@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -39,6 +40,10 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+
+import java.lang.Class;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,51 +179,57 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
 
-        switch (position) {
-            // Home
-            case 0:
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+        if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
+            ArrayList<String>drawerList = ((NavigationDrawerFragment) fragment).getDrawerList();
+            String string = drawerList.get(position).toString();
+
+            if(string.equalsIgnoreCase(getString(R.string.mdl_home))) {
+                // Home
                 onHomeClicked();
-                break;
-
-            // See a Doctor
-            case 1:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_see_a_doctor_now))){
+                // See a Doctor
                 onSeeADoctorClicked();
-                break;
-
-            // MDLive My Health
-            case 2:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_my_health))) {
+                // MDLive My Health
                 startActivityWithClassName(MedicalHistoryActivity.class);
-                break;
-
-            // MDLIVE Assist
-            case 3:
-                MdliveUtils.showMDLiveAssistDialog(this);
-                break;
-
-            // Message Center
-            case 4:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_mdlive_assist))) {
+                // MDLIVE Assist
+                String[] modules = getBaseContext().getResources().getStringArray(R.array.left_navigation_modules);
+                for(int i=0; i<modules.length;i++) {
+                    try {
+                        Class clazz = Class.forName(modules[i]);
+                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
+                    } catch (ClassNotFoundException e){
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_message_center))) {
+                // Message Center
                 onMessageClicked();
-                break;
-
-            // Symptom Checker
-            case 5:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_symptom_checker))) {
+                // Symptom Checker
                 startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-                break;
-
-            // My Accounts
-            case 6:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_my_accounts))) {
+                // My Accounts
                 startActivityWithClassName(MyAccountActivity.class);
-                break;
-
-            // Support
-            case 7:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_support))) {
+                // Support
                 startActivityWithClassName(MDLiveHelpAndSupportActivity.class);
-                break;
-
-            // Share
-            case 8:
+            }
+            else if(string.equalsIgnoreCase(getString(R.string.mdl_share_app))) {
+                // Share
                 shareApplication();
-                break;
+            }
         }
     }
 

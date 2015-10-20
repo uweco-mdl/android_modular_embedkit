@@ -58,6 +58,7 @@ android.packagingOptions {
 }
 
 dependencies {
+    compile project(':assist')
     compile project(':theming')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

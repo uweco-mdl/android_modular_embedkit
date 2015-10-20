@@ -12,7 +12,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.mdliveassist.MDLiveAssistFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MDLiveFullBgFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 /**
@@ -42,9 +42,9 @@ public class MDLiveMyHealthActivity extends AppCompatActivity implements Fragmen
             tabHost.setup(this, getSupportFragmentManager(), R.id.mdlive_my_health_activity);
 
             tabHost.addTab(createTabSpec(tabHost.newTabSpec(MEDICALHISTORY), MEDICALHISTORY, R.drawable.icon_i), MDLiveMyHealthListFragment.class, null);
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(PHARMACY), PHARMACY, R.drawable.icon_i), MDLiveAssistFragment.class, null);
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(PROVIDERS), PROVIDERS, R.drawable.icon_i), MDLiveAssistFragment.class, null);
-            tabHost.addTab(createTabSpec(tabHost.newTabSpec(VISITS), VISITS, R.drawable.icon_i), MDLiveAssistFragment.class, null);
+            tabHost.addTab(createTabSpec(tabHost.newTabSpec(PHARMACY), PHARMACY, R.drawable.icon_i), MDLiveFullBgFragment.class, null);
+            tabHost.addTab(createTabSpec(tabHost.newTabSpec(PROVIDERS), PROVIDERS, R.drawable.icon_i), MDLiveFullBgFragment.class, null);
+            tabHost.addTab(createTabSpec(tabHost.newTabSpec(VISITS), VISITS, R.drawable.icon_i), MDLiveFullBgFragment.class, null);
 
             tabHost.setOnTabChangedListener(this);
         }

@@ -76,10 +76,6 @@ public class MDLiveMyPharmacyActivity extends MDLiveBaseAppcompatActivity {
         onMessageClicked();
     }
 
-    public void onMdliveAssistClicked(View view) {
-        MdliveUtils.showMDLiveAssistDialog(this);
-    }
-
     public void onSymptomCheckerClicked(View view) {
         startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
     }

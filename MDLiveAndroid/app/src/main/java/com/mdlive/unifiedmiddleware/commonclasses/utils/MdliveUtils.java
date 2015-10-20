@@ -1142,57 +1142,6 @@ public class MdliveUtils {
         }
     }
 
-    /**
-     * Shows MD Live Assist dialog
-     */
-    public static  void showMDLiveAssistDialog(final Activity activity) {
-        try {
-            final WeakReference<Activity> reference = new WeakReference<Activity>(activity);
-
-            if (reference.get() == null) {
-                return;
-            }
-
-            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(reference.get());
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(reference.get());
-            builder.setCancelable(false);
-            LayoutInflater layoutInflater = LayoutInflater.from(reference.get());
-            final View view = layoutInflater.inflate(R.layout.alertdialogmessage, null);
-            TextView alertText = (TextView) view.findViewById(R.id.alertdialogtextview);
-            alertText.setText(reference.get().getText(R.string.mdl_call_text));
-
-            builder.setView(view);
-            builder.setPositiveButton(reference.get().getText(R.string.mdl_call),
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                Intent intent = new Intent(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + userBasicInfo.getAssistPhoneNumber().trim()));
-                                reference.get().startActivity(intent);
-                            } catch (Exception e) {
-                            }
-
-                        }
-                    });
-            builder.setNegativeButton(reference.get().getText(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-
-                    }
-                }
-            });
-            builder.create().show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void showMDLiveHelpAndSupportDialog(final Activity activity) {
         try {
             final WeakReference<Activity> reference = new WeakReference<Activity>(activity);

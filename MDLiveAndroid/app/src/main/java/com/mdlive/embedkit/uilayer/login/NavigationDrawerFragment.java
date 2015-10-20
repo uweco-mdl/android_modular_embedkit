@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,8 +41,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
 /**
  * Created by venkataraman_r on 7/16/2015.
  */
@@ -64,6 +65,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private float mScrollHeight;
 
     private OnUserChangedInGetStarted mOnUserChangedInGetStarted;
+    private ArrayList<String> mDrawerArray;
 
     public NavigationDrawerFragment() {
     }
@@ -127,9 +129,41 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         });
 
         ArrayList<String> drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
+        String[] navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items);
         TypedArray imgs = getResources().obtainTypedArray(R.array.left_navigation_items_image);
+        ArrayList<Drawable> navImages = new ArrayList<>();
 
-        mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(), drawerItems, imgs));
+        HashMap<String, Integer> stringMap = new HashMap<>();
+        for (int i = 0; i<navStrings.length; i++){
+            stringMap.put(navStrings[i], 1);
+        }
+        // List of supported modules to check. If it doesn't exist, remove from the navigation menu
+        HashMap<String, String> moduleMap = new HashMap<>();
+        String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
+        moduleMap.put(getString(R.string.mdl_mdlive_assist), modules[0]);
+
+        for(int i = 0; i< navStrings.length; i++){
+            try{
+                String module = moduleMap.get(navStrings[i]);
+                if(module != null) {
+                    Class.forName(module);
+                }
+            } catch (ClassNotFoundException e) {
+                // Feature is remove. Set the flag to remove the associated icon later
+                drawerItems.remove(i);
+                stringMap.put(navStrings[i], 0);
+            }
+        }
+
+        // Add only the drawables that have the corresponding strings in the menu
+        for(int i = 0; i<navStrings.length; i++) {
+            if(stringMap.get(navStrings[i]) == 1) {
+                navImages.add(imgs.getDrawable(i));
+            }
+        }
+
+        mDrawerArray = drawerItems;
+        mDrawerListView.setAdapter(new DrawerAdapter(this.getActivity(), drawerItems, navImages));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
         mDrawerListView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -550,6 +584,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 parentView.invalidate();
             }
         }, 50);
+    }
+
+    public ArrayList<String> getDrawerList() {
+        return mDrawerArray;
     }
 
     /**
