@@ -452,7 +452,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                                 dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMedicalHistory.this));
                                 findViewById(R.id.UpdateInfoWindow).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.updateInfoText)).setText(
-                                        getResources().getString(R.string.mdl_last_update_txt)+
+                                        getResources().getString(R.string.mdl_last_update_txt)+" "+
                                                 dateFormat.format(calendar.getTime())
                                 );
                                 isNewUser = false;
