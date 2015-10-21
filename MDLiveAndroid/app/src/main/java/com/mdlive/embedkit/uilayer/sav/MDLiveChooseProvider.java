@@ -391,17 +391,24 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             setBodyContent(responArray);
                             //setListView();
                         }else{
-                            showOrHideFooter();
-                            findViewById(R.id.txtFilter).setVisibility(View.GONE);
-                            filterMainRl.setVisibility(View.GONE);
-                            MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                            if (StrDoctorOnCall) {
+                                docOnCalLinLay.setVisibility(View.VISIBLE);
+                                filterMainRl.setVisibility(View.GONE);
+                                findViewById(R.id.txtFilter).setVisibility(View.GONE);
+                                findViewById(R.id.progressBar).setVisibility(View.GONE);
+                            } else {
+                                showOrHideFooter();
+                                findViewById(R.id.txtFilter).setVisibility(View.GONE);
+                                filterMainRl.setVisibility(View.GONE);
+                                MdliveUtils.showDialog(MDLiveChooseProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                                    finish();
-                                }
-                            });
-                        }
+                                        finish();
+                                    }
+                                });
+                            }
+                    }
 
                     }
                 }
