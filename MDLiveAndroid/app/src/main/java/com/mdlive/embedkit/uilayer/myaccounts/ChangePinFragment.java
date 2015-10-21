@@ -54,9 +54,6 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
     private Button mButton8;
     private Button mButton9;
     private Button mButton0;
-    private View mButtonCross;
-
-    private TextView mTitle;
 
     private StringBuffer mStringBuffer;
 
@@ -100,7 +97,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
         mPassCode7.addTextChangedListener(this);
         mPassCode7.requestFocus();
 
-        mTitle = (TextView) changePin.findViewById(R.id.title);
+        TextView mTitle = (TextView) changePin.findViewById(R.id.title);
 
         mTitle.setText(changePin.getResources().getString(R.string.mdl_please_confirm_your_pin));
 
@@ -217,7 +214,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
             });
         }
 
-        mButtonCross = changePin.findViewById(R.id.num_pad_cross);
+        View mButtonCross = changePin.findViewById(R.id.num_pad_cross);
         if (mButtonCross != null) {
             mButtonCross.setOnClickListener(new View.OnClickListener() {
                 @Override

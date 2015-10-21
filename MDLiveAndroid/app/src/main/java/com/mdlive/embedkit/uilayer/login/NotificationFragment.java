@@ -307,11 +307,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.APPT_ID, apptId);
             editor.commit();
-            final StringBuilder builder = new StringBuilder();
-            builder.append("Doctor On Call" + "\n");
-            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis()/1000, "", getActivity()) + "\n");//Sending Current time for Doctoro on call
+            String builder = "Doctor On Call" + "\n";
+            builder = builder + TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis()/1000, "", getActivity()) + "\n";//Sending Current time for Doctoro on call
 
-            builder.append(mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n");
+            builder = builder + mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n";
 
             onCallNotifyTextview.setText(builder.toString());
 

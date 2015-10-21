@@ -56,8 +56,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
-    private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
-    private LinearLayout genderll,dobLl;
+    private String strGender,strDate;
     private DatePickerDialog datePickerDialog;
     private  boolean isAllFieldsfilled = true;
     private ArrayList<String> GenderList = new ArrayList<String>();
@@ -79,8 +78,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         lastNameEditText = (EditText) findViewById(R.id.lastNamePatientEt);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
         dateTxt = (TextView) findViewById(R.id.dobTxt);
-        genderll = (LinearLayout) findViewById(R.id.genderLl);
-        dobLl = (LinearLayout) findViewById(R.id.dobLl);
+        LinearLayout genderll = (LinearLayout) findViewById(R.id.genderLl);
+        LinearLayout dobLl = (LinearLayout) findViewById(R.id.dobLl);
         addChildBtn = (Button)findViewById(R.id.addChildBtn);
         setProgressBar(findViewById(R.id.progressDialog));
         getDateOfBirth();
@@ -147,8 +146,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     * Event for Add Child button click
     * */
     public void onAddChildButtonClicked(View view) {
-        firstNameEditTextValue = firstNameEditText.getText().toString().trim();
-        lastNameEditTextValue = lastNameEditText.getText().toString().trim();
+        String firstNameEditTextValue = firstNameEditText.getText().toString().trim();
+        String lastNameEditTextValue = lastNameEditText.getText().toString().trim();
         if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
                 && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
             if(checkPerdiatricAge()){

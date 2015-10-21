@@ -31,18 +31,6 @@ public class  BillingInformationFragment extends MDLiveBaseFragment  {
     private TextView mCreditCardAddress = null;
     private TextView mReplaceCreditCard = null;
     private ImageView creditCardLogo = null;
-    private String cardNumber = null;
-    private String securityCode = null;
-    private String cardExpirationMonth = null;
-    private String cardExpirationYear = null;
-    private String nameOnCard = null;
-    private String mobile = null;
-    private String address1 = null;
-    private String address2 = null;
-    private String city = null;
-    private String state = null;
-    private String country = null;
-    private String zip = null;
     android.support.v7.widget.CardView mviewCreditCard;
     JSONObject myProfile;
 
@@ -158,30 +146,29 @@ public class  BillingInformationFragment extends MDLiveBaseFragment  {
 
             if (response != null) {
                 myProfile = response.getJSONObject("billing_information");
-                country = myProfile.getString("billing_country");
-                cardExpirationYear = myProfile.getString("cc_expyear");
-                nameOnCard = myProfile.getString("billing_name");
-                zip = myProfile.getString("billing_zip5");
-                securityCode = myProfile.getString("cc_cvv2");
-                cardNumber = myProfile.getString("cc_number");
-                state = myProfile.getString("billing_state");
-                mobile = myProfile.getString("cc_type_id");
-                address2 = myProfile.getString("billing_address2");
+                String country = myProfile.getString("billing_country");
+                String cardExpirationYear = myProfile.getString("cc_expyear");
+                String nameOnCard = myProfile.getString("billing_name");
+                String zip = myProfile.getString("billing_zip5");
+                String securityCode = myProfile.getString("cc_cvv2");
+                String cardNumber = myProfile.getString("cc_number");
+                String state = myProfile.getString("billing_state");
+                String mobile = myProfile.getString("cc_type_id");
+                String address2 = myProfile.getString("billing_address2");
 
                 if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
                     address2="";
                 }
 
-                city = myProfile.getString("billing_city");
-                address1 = myProfile.getString("billing_address1");
-                cardExpirationMonth = myProfile.getString("cc_expmonth");
+                String city = myProfile.getString("billing_city");
+                String address1 = myProfile.getString("billing_address1");
+                String cardExpirationMonth = myProfile.getString("cc_expmonth");
 
 
                 if (TextUtils.isEmpty(cardNumber) && TextUtils.isEmpty(securityCode) && TextUtils.isEmpty(cardExpirationMonth) && TextUtils.isEmpty(cardExpirationYear) && TextUtils.isEmpty(nameOnCard)) {
                     mReplaceCreditCard.setText(getResources().getString(R.string.mdl_add_card));
                     mviewCreditCard.setVisibility(View.GONE);
                 } else {
-//                    mCreditCardDate.setText("Mastercard ending in " + cardNumber);
                     if(mobile.equalsIgnoreCase("1")) {
 
                       mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));

@@ -53,8 +53,6 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
     private EditText mCity = null;
     private String response;
     private List<String> stateIds = new ArrayList<String>();
-    private List<String> stateList = new ArrayList<String>();
-    private RelativeLayout mStateLayout;
     private String mtimeZone;
     @Nullable
     @Override
@@ -68,7 +66,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
         mState = (TextView) changeAddressView.findViewById(R.id.state);
         mZip = (EditText) changeAddressView.findViewById(R.id.zip);
         mCity = (EditText) changeAddressView.findViewById(R.id.city);
-        mStateLayout = (RelativeLayout)changeAddressView.findViewById(R.id.stateLayout);
+        RelativeLayout mStateLayout = (RelativeLayout)changeAddressView.findViewById(R.id.stateLayout);
 
 
         mZip.setTag(null);
@@ -267,7 +265,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        List<String> stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
         stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);

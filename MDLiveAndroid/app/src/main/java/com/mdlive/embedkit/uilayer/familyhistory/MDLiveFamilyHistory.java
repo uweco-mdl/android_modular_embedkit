@@ -248,13 +248,11 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     public void addAction (View view) {
         if(mFamilyHistoryOtherEditText.getText().length() != 0) {
             mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
-            Log.d("FamilyHistoryOtherValue",mFamilyHistoryOtherEditTextValue.toString());
             mFamilyHistoryOtherEditText.setText("");
             MdliveUtils.hideKeyboard(getBaseContext(), mFamilyHistoryOtherEditText);
         }
         else {
             mFamilyHistoryOtherEditTextValue = "";
-            Log.d("FamilyHistoryOtherValue",mFamilyHistoryOtherEditTextValue);
         }
     }
 
@@ -281,7 +279,6 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             public void afterTextChanged(Editable s) {
                 // TODO Auto-generated method stub
                 mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
-                Log.d("FamilyHistoryOtherValue", mFamilyHistoryOtherEditTextValue.toString());
 
             }
         });
@@ -321,7 +318,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
                 }
             });
 
-            if (FamilyHistoryModel.YES.toString().equalsIgnoreCase(familyHistoryList.get(position).active)) {
+            if (FamilyHistoryModel.YES.equalsIgnoreCase(familyHistoryList.get(position).active)) {
                 checkBox.setChecked(true);
                 spinner.setVisibility(View.VISIBLE);
 
@@ -363,7 +360,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             } else {
                 int selectedPosition = 0;
                 for (int j = 0; j < relationShpList.size(); j++) {
-                    if (familyHistoryList.get(position).relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
+                    if (familyHistoryList.get(position).relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).trim())) {
                         selectedPosition = j;
                         break;
                     }

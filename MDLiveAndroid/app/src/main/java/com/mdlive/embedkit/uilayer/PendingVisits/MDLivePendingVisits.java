@@ -21,8 +21,7 @@ import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
 import org.json.JSONObject;
 
 public class MDLivePendingVisits extends MDLiveBaseActivity {
-    private Button resumeBtn;
-    private TextView txtPatientName, txtReason, txtDoctorName, txtAddress;
+    private TextView txtPatientName, txtAddress;
 
 
     @Override
@@ -40,10 +39,10 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
      * This function will deals with all necessary UI Initialization.
      */
     public void initializeUI() {
-        resumeBtn = (Button) findViewById(R.id.resumeConsultationBtn);
+        Button resumeBtn = (Button) findViewById(R.id.resumeConsultationBtn);
         txtPatientName = (TextView) findViewById(R.id.txtPendingPatientName);
-        txtDoctorName = (TextView) findViewById(R.id.txtPendingDoctorName);
-        txtReason = (TextView) findViewById(R.id.txtPendingReason);
+        TextView txtDoctorName = (TextView) findViewById(R.id.txtPendingDoctorName);
+        TextView txtReason = (TextView) findViewById(R.id.txtPendingReason);
         txtAddress = (TextView) findViewById(R.id.txtPharmacyAddress);
         setProgressBar(findViewById(R.id.progressDialog));
         resumeBtn.setOnClickListener(new View.OnClickListener() {

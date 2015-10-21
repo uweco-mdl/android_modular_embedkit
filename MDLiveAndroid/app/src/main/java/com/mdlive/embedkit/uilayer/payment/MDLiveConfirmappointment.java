@@ -57,10 +57,9 @@ import java.util.HashMap;
  * Created by sudha_s on 8/22/2015.
  */
 public class MDLiveConfirmappointment extends MDLiveBaseActivity {
-    private String providerName, providerType, consultationType, consultationDate, Time, TimeStamp, phone, doctorEVisit;
-    private String promoCode = null;
+    private String providerName, consultationType, Time, TimeStamp;
     private String appointmentMethodType;
-    private String timeStamp, phys_ID;
+    private String phys_ID;
     private boolean CheckdoconfirmAppmt = false;
     private static String errorPhoneNumber=null;
     private boolean CheckTermsConsent = false;
@@ -364,7 +363,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
             providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
             ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
-            providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+            String providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
             ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
             consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
             String consultationTypeStr = getString(R.string.mdl_title_video_home);
@@ -373,7 +372,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 findViewById(R.id.PhoneToCallNumberLayout).setVisibility(View.VISIBLE);
             }
             ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationTypeStr);
-            consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
             Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
             TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
             phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
@@ -381,14 +379,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 appointmentMethodType = "1";
             } else if (consultationType.equalsIgnoreCase("Phone")) {
                 appointmentMethodType = "2";
-                Log.e("Phone", "Am in Phone");
             } else {
                 appointmentMethodType = "1";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e("Step 2", "11111");
 
         //If Provider name is equal to Doctor on call Time field visibility should be gone.
         try {
@@ -407,7 +403,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
                 }
                 final Date date = calendar.getTime();
-//                ((TextView) findViewById(R.id.txtDate)).setText(format);
                 ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(date));
                 String timeZoneValue = "";
                 if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
@@ -419,12 +414,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     SimpleDateFormat sdfNow = new SimpleDateFormat("EEEE, MMMM d");
                     sdfNow.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                     Date dateNow = calendar.getTime();
-//                ((TextView) findViewById(R.id.txtDate)).setText(format);
                     ((TextView) findViewById(R.id.txtDate)).setText(sdfNow.format(dateNow));
                     if(!TimeStamp.equals("0")) {
                         calendar.setTimeInMillis(Long.parseLong(TimeStamp) * 1000);
                         final Date dateTime = calendar.getTime();
-//                ((TextView) findViewById(R.id.txtDate)).setText(format);
                         ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(dateTime));
                     }
                 }else if(Time!=null){
@@ -444,15 +437,13 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
                 }
                 ((TextView) findViewById(R.id.txtTime)).setText(currentTime+" "+timeZoneValue);
-                Log.e("Step 2 C", "11111");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         //This is for Now Scenario
-        phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
+        String phone = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         formatDualString(phone);
-        doctorEVisit = sharedpreferences.getString(PreferenceConstants.PHONE_NUMBER, "");
         SharedPreferences amountPreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.amountInDollar)).setText(getString(R.string.mdl_dollar) + amountPreferences.getString(PreferenceConstants.AMOUNT, "0.00"));
         String str_ProfileImg = sharedpreferences.getString(PreferenceConstants.PROVIDER_PROFILE, "");

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -43,7 +44,6 @@ import java.util.regex.Pattern;
  */
 public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
-    private UserBasicInfo mUserBasicInfo;
     private EditText mUsername = null;
     private EditText mEmail = null;
     private EditText mFirstName = null;
@@ -60,19 +60,8 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private TextView mUsernameLength = null;
     private TextView mUsernameAlphaNumericCheck = null;
     private TextView mUsernameSpecialCharactersCheck = null;
-    private String Username = null;
-    private String Email = null;
-    private String FirstName = null;
-    private String LastName = null;
-    private String Address1 = null;
-    private String City = null;
-    private String State = null;
-    private String Phone = null;
-    private String DOB = null;
-    private String Gender = null;
-    private String Zipcode = null;
+
     private List<String> stateIds = new ArrayList<String>();
-    private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
     private boolean mayIAllowToEdit = true;
 
@@ -113,7 +102,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
         init(addFamilyMember);
 
-        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+        UserBasicInfo mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
         mAddress1 = (EditText) addFamilyMember.findViewById(R.id.streetAddress);
         mCity = (EditText) addFamilyMember.findViewById(R.id.city);
         mState = (TextView) addFamilyMember.findViewById(R.id.state);
@@ -143,7 +132,6 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View v) {
                 final Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
-                Log.e("mDOBLayout", "mDOBLayout");
                 int y = c.get(Calendar.YEAR) + 4;
                 int m = c.get(Calendar.MONTH) - 2;
                 int d = c.get(Calendar.DAY_OF_MONTH);
@@ -166,7 +154,6 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         }, y, m, d);
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
-//                dp.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, getActivity()));
                 dp.show();
             }
         });
@@ -261,7 +248,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                     } else {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-                        mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
+                        mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getActivity(), R.drawable.red_circle_small), null, null, null);
                     }
                     if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
@@ -348,17 +335,17 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     }
 
     public void addFamilyMemberInfo() {
-        Username = mUsername.getText().toString().trim();
-        Email = mEmail.getText().toString().trim();
-        FirstName = mFirstName.getText().toString().trim();
-        LastName = mLastName.getText().toString().trim();
-        Address1 = mAddress1.getText().toString().trim();
-        City = mCity.getText().toString().trim();
-        State = mState.getText().toString().trim();
-        Phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
-        DOB = mDOB.getText().toString().trim();
-        Zipcode = mZip.getText().toString();
-        Gender = mGender.getText().toString().trim();
+        String Username = mUsername.getText().toString().trim();
+        String Email = mEmail.getText().toString().trim();
+        String FirstName = mFirstName.getText().toString().trim();
+        String LastName = mLastName.getText().toString().trim();
+        String Address1 = mAddress1.getText().toString().trim();
+        String City = mCity.getText().toString().trim();
+        String State = mState.getText().toString().trim();
+        String Phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
+        String DOB = mDOB.getText().toString().trim();
+        String Zipcode = mZip.getText().toString();
+        String Gender = mGender.getText().toString().trim();
 
         if (isEmpty(Username) && isEmpty(Email) && isEmpty(FirstName) && isEmpty(LastName) && isEmpty(Address1) && isEmpty(City)
                 && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender) && isEmpty(Zipcode)) {
@@ -447,7 +434,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        List<String> stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
         stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);

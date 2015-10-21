@@ -62,8 +62,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private TextView mState = null;
     private EditText mZip = null;
 
-    private String cardNumber = null;
-    private String securityCode = null;
     private String cardExpirationMonth = null;
     private String cardExpirationYear = null;
     private String nameOnCard = null;
@@ -73,10 +71,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private String state = null;
     private String country = null;
     private String zip = null;
-    private SwitchCompat changeAddress;
     RelativeLayout mAddressVisibility,mStateLayout;
-    private List<String> stateIds = new ArrayList<String>();
-    private List<String> stateList = new ArrayList<String>();
     private WebView myAccountHostedPCI;
     private Button mScanCardBtn;
 
@@ -185,7 +180,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mZip = (EditText) billingInformation.findViewById(R.id.zip);
         mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
-        changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
+        SwitchCompat changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
         changeAddress.setChecked(false);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
@@ -276,8 +271,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     cardExpirationYear = myProfile.getString("cc_expyear");
                     nameOnCard = myProfile.getString("billing_name");
                     zip = myProfile.getString("billing_zip5");
-                    securityCode = myProfile.getString("cc_cvv2");
-                    cardNumber = myProfile.getString("cc_number");
                     state = myProfile.getString("billing_state");
                     address2 = myProfile.getString("billing_address2");
                     city = myProfile.getString("billing_city");
@@ -607,8 +600,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        List<String> stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        final List<String> stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
 

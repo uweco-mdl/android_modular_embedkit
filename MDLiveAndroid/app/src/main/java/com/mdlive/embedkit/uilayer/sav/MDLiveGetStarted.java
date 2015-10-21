@@ -112,8 +112,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private LocationCooridnates locationService;
     private IntentFilter intentFilter;
-    private String selectedCity, locationServiceText, shortNameText;
-    private boolean isLocationFetched;
+    private String shortNameText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1190,7 +1189,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                Log.d("Error Response", error.toString());
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
@@ -1250,7 +1248,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 String SelectedText = list.get(position);
                 selectedText.setText(SelectedText);
                 strProviderId = providerTypeIdList.get(position);
-                Log.e("selected pos pID", strProviderId);
                 dialog.dismiss();
             }
         });
@@ -1263,7 +1260,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             * then we are manually adding the Security JSON again
             * */
 
-        Log.e("upldateUserData", response.toString());
         final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         final UserBasicInfo userBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
         userBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
@@ -1305,11 +1301,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *
      */
     private void providerSuccessResponse(String response) {
-        try {
-            Log.e("REsponse--->", response.toString());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        //
 
     }
     /**
@@ -1402,10 +1394,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     public void getCurrentLocation() {
         showProgress();
-        Log.e("Location ", "Sta");
         try {
             registerReceiver(locationReceiver, intentFilter);
-            isLocationFetched = true;
             if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
                 locationService.setBroadCastData(getClass().getSimpleName());
                 locationService.startTrackingLocation(MDLiveGetStarted.this);
@@ -1425,7 +1415,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         public void onReceive(Context context, Intent intent) {
             try {
                 hideProgress();
-                Log.e("Location ", "ended");
                 if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
                     double lat = intent.getDoubleExtra("Latitude", 0d);
                     double lon = intent.getDoubleExtra("Longitude", 0d);
@@ -1454,7 +1443,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Location Response", response.toString());
                 hideProgress();
                 CurrentLocationResponse(response);
             }
@@ -1463,7 +1451,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
 
@@ -1499,8 +1486,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         try {
             hideProgress();
             //Fetch Data From the Services
+            String locationServiceText = "";
             if (response.has("state")) {
-                selectedCity = response.getString("state");
+                String selectedCity = response.getString("state");
                 for (int l = 0; l < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); l++) {
                     if (selectedCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
                         locationServiceText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
@@ -1514,9 +1502,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, locationServiceText);
                 editor.commit();
                 locationTxt.setText(locationServiceText);
-            }/*else{
-                locationTxt.setText(serverUserLocation);
-            }*/
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

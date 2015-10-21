@@ -98,14 +98,11 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
 
         final Appointment appointment = mAppointments.get(position);
         SharedPreferences sharedpreferences = convertView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
-        final StringBuilder builder = new StringBuilder();
-        builder.append(appointment.getPhysicianName() + "\n");
-        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "") + "\n");
+        String builder = appointment.getPhysicianName() + "\n";
 
-            builder.append(TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "", parent.getContext()) + "\n");
+            builder = builder + TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "", parent.getContext()) + "\n";
 
-        builder.append(appointment.getApptType() + " " + convertView.getContext().getResources().getString(R.string.mdl_consultation));
+            builder = builder + appointment.getApptType() + " " + convertView.getContext().getResources().getString(R.string.mdl_consultation);
 
         viewHolder.mTextView.setText(builder.toString());
         viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));

@@ -60,12 +60,10 @@ import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInst
  */
 public class MDLiveLocation extends MDLiveBaseActivity {
     private EditText ZipcodeEditTxt;
-    private TextView CurrentLocationTxt,StateTxt;
-    private String SelectedZipCodeCity;
-    private ArrayList<String> StateName = new ArrayList<String>();
+    private TextView StateTxt;
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
-    private String ZipCodeCity,selectedCity,longNameText,shortNameText,zipcode_longNameText;
+    private String selectedCity,longNameText,shortNameText;
     boolean isCityFound=false;
     private LocationCooridnates locationService;
     private IntentFilter intentFilter;
@@ -132,7 +130,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 MdliveUtils.validateZipcodeFormat(ZipcodeEditTxt);
             }
         });
-        CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
+        Button CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,12 +329,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                         for (int k = 0; k < TyprArray.size(); k++) {
                             String zip = TyprArray.get(k).getAsString();
                             if (zip.equalsIgnoreCase("administrative_area_level_1")) {
-                                SelectedZipCodeCity = localZip.get("short_name").getAsString();
-                                Log.e("Results", SelectedZipCodeCity);
+                                String SelectedZipCodeCity = localZip.get("short_name").getAsString();
 
                                 //This is for long name like Florida.
-                                zipcode_longNameText = localZip.get("long_name").getAsString();
-                             //This is for Short name like FL
+                                //This is for Short name like FL
                                 for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();l++) {
                                     if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
                                         longNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
@@ -513,7 +509,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
 }

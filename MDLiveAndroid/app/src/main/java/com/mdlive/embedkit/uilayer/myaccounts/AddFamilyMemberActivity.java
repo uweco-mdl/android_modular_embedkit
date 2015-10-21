@@ -48,7 +48,6 @@ import java.util.regex.Pattern;
  * Created by venkataraman_r on 8/22/2015.
  */
 public class AddFamilyMemberActivity extends AppCompatActivity {
-    private UserBasicInfo mUserBasicInfo;
     private EditText mUsername = null;
     private EditText mEmail = null;
     private EditText mFirstName = null;
@@ -65,19 +64,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private TextView mUsernameLength = null;
     private TextView mUsernameAlphaNumericCheck = null;
     private TextView mUsernameSpecialCharactersCheck = null;
-    private String userName = null;
-    private String eMail = null;
-    private String firstName = null;
-    private String lastName = null;
-    private String address1 = null;
-    private String city = null;
-    private String state = null;
-    private String phone = null;
-    private String dob = null;
-    private String gender = null;
-    private String zipCode = null;
+
     private List<String> stateIds = new ArrayList<String>();
-    private List<String> stateList = new ArrayList<String>();
     private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
     private boolean mayIAllowToEdit = true;
     private ProgressDialog pDialog;
@@ -110,7 +98,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
         init();
 
-        mUserBasicInfo = UserBasicInfo.readFromSharedPreference(this);
+        UserBasicInfo mUserBasicInfo = UserBasicInfo.readFromSharedPreference(this);
         mAddress1 = (EditText) findViewById(R.id.streetAddress);
         mCity = (EditText) findViewById(R.id.city);
         mState = (TextView) findViewById(R.id.state);
@@ -405,17 +393,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     }
 
     public void addFamilyMemberInfo() {
-        userName = mUsername.getText().toString().trim();
-        eMail = mEmail.getText().toString().trim();
-        firstName = mFirstName.getText().toString().trim();
-        lastName = mLastName.getText().toString().trim();
-        address1 = mAddress1.getText().toString().trim();
-        city = mCity.getText().toString().trim();
-        state = mState.getText().toString().trim();
-        phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
-        dob = mDOB.getText().toString().trim();
-        zipCode =mZip.getText().toString();
-        gender = mGender.getText().toString().trim();
+        String userName = mUsername.getText().toString().trim();
+        String eMail = mEmail.getText().toString().trim();
+        String firstName = mFirstName.getText().toString().trim();
+        String lastName = mLastName.getText().toString().trim();
+        String address1 = mAddress1.getText().toString().trim();
+        String city = mCity.getText().toString().trim();
+        String state = mState.getText().toString().trim();
+        String phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
+        String dob = mDOB.getText().toString().trim();
+        String zipCode =mZip.getText().toString();
+        String gender = mGender.getText().toString().trim();
 
         if (isEmpty(userName) && isEmpty(eMail) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(address1) && isEmpty(city)
                 && isEmpty(state) && isEmpty(phone) && isEmpty(dob) && isEmpty(gender)) {
@@ -525,7 +513,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddFamilyMemberActivity.this);
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        List<String> stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
         stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
