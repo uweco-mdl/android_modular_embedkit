@@ -30,7 +30,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -697,7 +696,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             listView = (ListView) findViewById(R.id.reasonList);
             //showOrHideFooter();
 
-            baseadapter = new ReasonForVisitAdapter(getApplicationContext(), ReasonList,
+            baseadapter = new ReasonForVisitAdapter(MDLiveReasonForVisit.this, ReasonList,
                     ((ImageView)findViewById(R.id.txtApply)));
             listView.setAdapter(baseadapter);
             RefineSearch();

@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.sav.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.embedkit.uilayer.sav.MDLiveReasonForVisit;
 
 import java.util.ArrayList;
 
@@ -24,16 +25,16 @@ import java.util.ArrayList;
 public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private ArrayList<String> originalArray = new ArrayList<String>();
     private ArrayList<String> array = new ArrayList<String>();
-    private Context context;
+    private Activity context;
     private Filter filter;
     private LayoutInflater inflate;
     private Boolean notFound = false;
     private int checkedItemPosition = -1;
     private String checkedItemReaston = "";
     private ImageView btnContinue;
-    public ReasonForVisitAdapter(Context applicationContext,
+    public ReasonForVisitAdapter(Activity activityContext,
                                  ArrayList<String> arraylist, ImageView btnContinue) {
-        this.context = applicationContext;
+        this.context = activityContext;
         this.originalArray = arraylist;
         this.array = arraylist;
         this.btnContinue = btnContinue;
@@ -147,11 +148,17 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         if(notFound){
             viewHolder.reasonCheckbox.setVisibility(View.GONE);
             viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
+            viewHolder.reasonTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MDLiveReasonForVisit) context).rightBtnOnClick(null);
+                }
+            });
         }else {
             viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
             viewHolder.reasonTxt.setText(array.get(pos));
-        }
 
+        }
         viewHolder.reasonListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -44,9 +44,12 @@ public class RecordAdapter extends ArrayAdapter<Record> {
     private int getImageResource(String type){
         int resourceId = R.drawable.empty_format;
 
-        if(type.contains("gif") || type.contains("png") || type.contains("jpeg") || type.contains("jpg")){
+        if(type.contains("gif") || type.contains("png")){
             resourceId = R.drawable.ic_png_format;
-        } else if(type.contains("pdf")){
+        } else if(type.contains("jpg") || type.contains("jpeg")){
+            resourceId = R.drawable.ic_jpg_format;
+        }
+        else if(type.contains("pdf")){
             resourceId = R.drawable.ic_pdf_format;
         } else if(type.contains("doc")){
             resourceId = R.drawable.ic_word_format;
