@@ -309,7 +309,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         }else
         {
-            postParams.put("provider_type", "2");
+            String providerTypeString = ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString();
+            int pos = MDLiveGetStarted.providerTypeArrayList.indexOf(providerTypeString);
+            String providerTypeId = MDLiveGetStarted.providerTypeIdList.get(pos>=0?pos : 1);
+            postParams.put("provider_type", providerTypeId);
         }
 
         // PHS USERS Available by
@@ -532,7 +535,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             while (iter.hasNext()) {
                 String key = iter.next();
                 map.put(key, (String) itemObj.get(key));
-                System.out.println(key);
             }
             SearchArrayList.add(map);
 
