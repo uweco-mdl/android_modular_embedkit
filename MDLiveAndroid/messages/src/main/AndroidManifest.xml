@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mdlive.messages">
+
+    <application android:allowBackup="true"
+        android:supportsRtl="true">
+        <activity
+            android:name=".messagecenter.MessageCenterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
+        <activity
+            android:name=".messagecenter.MessageCenterInboxDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+        <activity
+            android:name=".messagecenter.MessageCenterComposeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden"/>
+    </application>
+</manifest>

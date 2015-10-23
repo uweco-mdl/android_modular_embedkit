@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
@@ -46,6 +47,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyFragment;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,8 +216,15 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
     }
 
     public void myRecordsOnClick(View view){
-        Intent i = new Intent(getBaseContext(), MDLiveMyRecords.class);
-        startActivity(i);
+        try {
+            Class.forName("com.mdlive.messages.messagecenter.MessageMyRecordsFragment");
+            Intent i = new Intent(getBaseContext(), MDLiveMyRecords.class);
+            startActivity(i);
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_messages_module_not_found), Toast.LENGTH_LONG).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

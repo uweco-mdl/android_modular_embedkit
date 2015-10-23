@@ -144,6 +144,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         HashMap<String, Integer> moduleMap = new HashMap<>();
         String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
         moduleMap.put(modules[0], R.id.mdliveAssist);
+        moduleMap.put(modules[1], R.id.messageCenter);
         for(int i=0; i<modules.length;i++){
             try {
                Class.forName(modules[i]);

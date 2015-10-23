@@ -25,7 +25,6 @@ import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
@@ -198,17 +197,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_mdlive_assist))) {
                 // MDLIVE Assist
-                String[] modules = getBaseContext().getResources().getStringArray(R.array.left_navigation_modules);
-                for(int i=0; i<modules.length;i++) {
-                    try {
-                        Class clazz = Class.forName(modules[i]);
-                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
-                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
-                    } catch (ClassNotFoundException e){
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
+                onAssistClicked();
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_message_center))) {
                 // Message Center
@@ -316,19 +305,35 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         onAddChildSelcted(user, dependentUserSize);
     }
 
+    public void onAssistClicked() {
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
+            Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+            method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public void onMessageClicked(View view) {
         onMessageClicked();
     }
 
     public void onMessageClicked() {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        if (userBasicInfo != null && userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
-            startActivityWithClassName(MessageCenterActivity.class);
-        } else {
-            if(findViewById(R.id.drawer_layout) != null) {
-                findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
+        try {
+            if (userBasicInfo != null && userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
+                Class clazz = Class.forName(getString(R.string.mdl_mdlive_messages_module));
+                startActivityWithClassName(clazz);
+            } else {
+                if (findViewById(R.id.drawer_layout) != null) {
+                    findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
+                }
+                showEmailConfirmationDialog();
             }
-            showEmailConfirmationDialog();
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
         }
     }
 

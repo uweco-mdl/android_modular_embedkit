@@ -1,1 +1,1 @@
-include  ':theming', ':assist', ':app'
+include  ':theming', ':assist', ':messages', ':app'

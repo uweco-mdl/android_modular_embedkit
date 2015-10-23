@@ -129,14 +129,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onMdliveAssistClicked(View view) {
         if (!isDrawerOpen()) {
-            try {
-                Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
-                Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
-                method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
-            } catch (ClassNotFoundException e){
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            onAssistClicked();
         }
     }
 
@@ -206,14 +199,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 case 1:
                     findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
                     // Assist screen
-                    try {
-                        Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
-                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
-                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
-                    } catch (ClassNotFoundException e){
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    onAssistClicked();
                     break;
                 case 2:
                     // SAV screen

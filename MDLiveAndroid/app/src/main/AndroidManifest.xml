@@ -173,20 +173,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.messagecenter.MessageCenterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"/>
-
-        <activity
-            android:name=".uilayer.messagecenter.MessageCenterInboxDetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"/>
-        <activity
-            android:name=".uilayer.messagecenter.MessageCenterComposeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden"/>
 
         <!-- Sprint 2 Application Activity starts here -->
 

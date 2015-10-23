@@ -90,10 +90,6 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
 
     }
 
-    public void onMessageCenterClicked(View view) {
-        onMessageClicked();
-    }
-
     public void onSymptomCheckerClicked(View view) {
         startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
     }

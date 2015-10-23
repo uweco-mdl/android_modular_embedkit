@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.myaccounts;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -12,14 +11,10 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.messagecenter.adapter.MessageCenterViewPagerAdapter;
+import com.mdlive.embedkit.uilayer.myaccounts.adapter.MyAccountViewPagerAdapter;
 import com.mdlive.embedkit.uilayer.myaccounts.GetFamilyMemberFragment.OnChildAdded;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 /**
  * Created by sanjibkumar_p on 7/27/2015.
@@ -75,7 +70,7 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        final MessageCenterViewPagerAdapter adapter = new MessageCenterViewPagerAdapter(getSupportFragmentManager());
+        final MyAccountViewPagerAdapter adapter = new MyAccountViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.mdl_account));
         adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.mdl_billing));
         adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.mdl_family_history));

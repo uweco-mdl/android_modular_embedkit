@@ -3,18 +3,21 @@ package com.mdlive.embedkit.uilayer.myhealth.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageCenterComposeActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by unnikrishnan_b on 8/22/2015.
@@ -134,7 +137,15 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     }
 
     private void launchComposeMessage(ConsultationHistory consultationHistory){
-        context.startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntentWithHeading(context, consultationHistory, context.getString(R.string.mdl_send_message_caps)));
+        try {
+            Class clazz = Class.forName("com.mdlive.messages.messagecenter.MessageCenterComposeActivity");
+            Method method = clazz.getMethod("getMessageComposeDetailsIntentWithHeading", Context.class, Parcelable.class, String.class);
+            context.startActivity( (Intent) method.invoke(null, context, consultationHistory, context.getString(R.string.mdl_send_message_caps)));
+        } catch (ClassNotFoundException e){
+            Toast.makeText(context, context.getString(R.string.mdl_mdlive_messages_module_not_found), Toast.LENGTH_LONG).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 

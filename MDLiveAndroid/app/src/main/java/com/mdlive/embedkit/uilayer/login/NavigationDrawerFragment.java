@@ -141,6 +141,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         HashMap<String, String> moduleMap = new HashMap<>();
         String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
         moduleMap.put(getString(R.string.mdl_mdlive_assist), modules[0]);
+        moduleMap.put(getString(R.string.mdl_message_center), modules[1]);
 
         for(int i = 0; i< navStrings.length; i++){
             try{
@@ -148,7 +149,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 if(module != null) {
                     Class.forName(module);
                 }
-            } catch (ClassNotFoundException e) {
+            }catch (ClassNotFoundException e){
                 // Feature is remove. Set the flag to remove the associated icon later
                 drawerItems.remove(i);
                 stringMap.put(navStrings[i], 0);
