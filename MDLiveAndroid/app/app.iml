@@ -103,8 +103,8 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="HockeySDK-3.0.2" level="project" />
-    <orderEntry type="library" exported="" name="httpmime-4.0.2" level="project" />
     <orderEntry type="library" exported="" name="guava-15.0" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.0.2" level="project" />
     <orderEntry type="library" exported="" name="application-layer-0.3.20524" level="project" />
     <orderEntry type="library" exported="" name="apache-mime4j-0.6" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
