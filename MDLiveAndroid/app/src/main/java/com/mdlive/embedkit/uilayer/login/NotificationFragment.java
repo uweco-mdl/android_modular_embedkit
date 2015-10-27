@@ -25,7 +25,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointme
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
 
 import org.json.JSONObject;
 
@@ -209,7 +209,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             }
         };
 
-        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+        final MDLivePendingVisitService service = new MDLivePendingVisitService(getActivity(), null);
         service.getUserPendingHistory(successCallBackListener, errorListener);
         }
     }

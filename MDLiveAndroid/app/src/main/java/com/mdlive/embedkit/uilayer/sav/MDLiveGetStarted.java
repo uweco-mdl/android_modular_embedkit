@@ -50,7 +50,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
 import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
@@ -532,7 +532,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             }
         };
 
-        MDLivePendigVisitService getApponitmentsService=new MDLivePendigVisitService(MDLiveGetStarted.this,getProgressDialog());
+        MDLivePendingVisitService getApponitmentsService=new MDLivePendingVisitService(MDLiveGetStarted.this,getProgressDialog());
         getApponitmentsService.getUserPendingHistory(successListener,errorListner);
     }
 
