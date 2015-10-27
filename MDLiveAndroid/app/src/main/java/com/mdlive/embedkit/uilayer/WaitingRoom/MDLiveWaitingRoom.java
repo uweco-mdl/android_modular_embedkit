@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
@@ -26,7 +27,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -176,9 +176,14 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                                     MdliveUtils.showDialog(MDLiveWaitingRoom.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, "OK", null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveGetStarted.class);
-                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(i);
+                                            try {
+                                                Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+                                                Intent i = new Intent(MDLiveWaitingRoom.this, clazz);
+                                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(i);
+                                            } catch (ClassNotFoundException e){
+                                                Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                            }
                                             dialog.dismiss();
                                             MDLiveWaitingRoom.this.finish();
                                         }

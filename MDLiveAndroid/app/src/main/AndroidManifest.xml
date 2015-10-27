@@ -29,55 +29,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
 
-        <!-- Provider Details -->
-
-        <activity
-            android:name=".uilayer.sav.MDLiveGetStarted"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveFamilymember"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveChooseProvider"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveSearchProvider"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveProviderDetails"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveMakeAppmtrequest"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveAppointmentThankYou"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveReasonForVisit"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.sav.MDLiveLocation"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-
         <!-- Pharmacy Activities -->
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacy"
@@ -213,7 +164,11 @@
             android:name=".uilayer.appointment.AppointmentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
-
+        <activity
+            android:name=".uilayer.appointment.MDLiveAppointmentThankYou"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".uilayer.myaccounts.MyAccountsHome"
@@ -256,5 +211,5 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
     </application>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 </manifest>

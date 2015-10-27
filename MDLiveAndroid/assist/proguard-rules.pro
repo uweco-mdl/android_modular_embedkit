@@ -19,7 +19,9 @@
 # SQLite
 # Common Module
 
--keep class !mobile.UILayer.** {*;}
+-keep class com.mdlive.assist.MDLiveAssistUtil {
+    public <methods>;
+}
 
 
 

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav;
+package com.mdlive.sav;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,9 +32,10 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.sav.R;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;

@@ -12,7 +12,7 @@
         android:layout_marginLeft="@dimen/chooseotherdoctor_marginleft"
         android:orientation="horizontal"
         >
-        <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
             android:id="@+id/ProfileImglist"
             android:visibility="visible"
             style="@style/DoctorOnCallImgViewStyle"/>

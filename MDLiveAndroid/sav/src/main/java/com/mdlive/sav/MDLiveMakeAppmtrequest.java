@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav;
+package com.mdlive.sav;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -29,10 +29,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;

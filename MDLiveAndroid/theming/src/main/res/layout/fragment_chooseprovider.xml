@@ -71,7 +71,7 @@
                 android:visibility="gone">
 
 
-                <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                     android:id="@+id/ProfileImg"
                     android:layout_width="120dp"
                     android:layout_height="120dp"

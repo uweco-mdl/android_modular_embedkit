@@ -141,10 +141,13 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             mMessageCountTextView.setVisibility(View.INVISIBLE);
         }
 
+        // Add the list of modules here
         HashMap<String, Integer> moduleMap = new HashMap<>();
         String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
         moduleMap.put(modules[0], R.id.mdliveAssist);
         moduleMap.put(modules[1], R.id.messageCenter);
+        moduleMap.put(modules[2], R.id.mdliveSAV);
+
         for(int i=0; i<modules.length;i++){
             try {
                Class.forName(modules[i]);

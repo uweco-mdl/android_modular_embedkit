@@ -34,7 +34,7 @@ import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult;
-import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav;
+package com.mdlive.sav;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,8 +25,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;

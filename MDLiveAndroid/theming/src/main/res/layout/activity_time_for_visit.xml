@@ -23,7 +23,7 @@
             android:textColor="@color/darkgreyTextColor"
             android:textSize="20sp" />
 
-        <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
             android:id="@+id/doctorPic"
             android:layout_width="120dp"
             android:layout_height="120dp"

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav.adapters;
+package com.mdlive.sav.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
+import com.mdlive.sav.R;
 
 import java.util.ArrayList;
 

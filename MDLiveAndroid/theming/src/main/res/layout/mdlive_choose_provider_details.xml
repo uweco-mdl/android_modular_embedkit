@@ -32,7 +32,7 @@
                         android:layout_marginRight="@dimen/dimen_0_dp"
                         android:layout_marginTop="@dimen/dimen_0_dp">
 
-                        <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                        <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                             android:id="@+id/ProfileImg1"
                             style="@style/DoctorOnCallImgViewStyle"
                             android:layout_width="@dimen/chooseproviderdoctoroncallImg_height"

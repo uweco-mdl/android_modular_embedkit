@@ -40,7 +40,7 @@
 
                         <RelativeLayout style="@style/common_style_W_Match_H_Wrap_O_Vertical">
 
-                            <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                                 android:id="@+id/imgProfilePic"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"

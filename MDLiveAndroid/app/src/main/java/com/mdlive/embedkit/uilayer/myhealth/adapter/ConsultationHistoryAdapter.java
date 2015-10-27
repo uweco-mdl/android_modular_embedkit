@@ -142,7 +142,7 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
             Method method = clazz.getMethod("getMessageComposeDetailsIntentWithHeading", Context.class, Parcelable.class, String.class);
             context.startActivity( (Intent) method.invoke(null, context, consultationHistory, context.getString(R.string.mdl_send_message_caps)));
         } catch (ClassNotFoundException e){
-            Toast.makeText(context, context.getString(R.string.mdl_mdlive_messages_module_not_found), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         } catch (Exception e){
             e.printStackTrace();
         }

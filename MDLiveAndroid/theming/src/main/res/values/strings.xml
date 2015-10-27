@@ -1134,8 +1134,9 @@
 
     <string name="mdl_mdlive_assist_module">com.mdlive.assist.MDLiveAssistUtil</string>
     <string name="mdl_mdlive_messages_module">com.mdlive.messages.messagecenter.MessageCenterActivity</string>
+    <string name="mdl_mdlive_sav_module">com.mdlive.sav.MDLiveGetStarted</string>
 
-    <string name="mdl_mdlive_messages_module_not_found">Sorry, the message center feature is require to access this!</string>
+    <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
 
     <string-array name="mdl_countries_array">
         <item>United States</item>

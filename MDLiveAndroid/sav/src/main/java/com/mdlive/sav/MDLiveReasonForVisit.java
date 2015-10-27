@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav;
+package com.mdlive.sav;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -39,7 +39,6 @@ import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.BehavioralHistory;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.ConditionAndActive;
@@ -48,7 +47,8 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.embedkit.uilayer.myhealth.imageadapter.ImageAdapter;
 import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
-import com.mdlive.embedkit.uilayer.sav.adapters.ReasonForVisitAdapter;
+import com.mdlive.sav.adapters.ReasonForVisitAdapter;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
