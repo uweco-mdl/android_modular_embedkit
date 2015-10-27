@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav;
+package com.mdlive.embedkit.uilayer.appointment;
 
 import android.content.Context;
 import android.content.Intent;

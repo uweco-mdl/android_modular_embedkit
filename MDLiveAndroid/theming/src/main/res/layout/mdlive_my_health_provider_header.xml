@@ -28,7 +28,7 @@
             android:paddingBottom="@dimen/dimen_10_dp"
             android:paddingTop="@dimen/dimen_10_dp">
 
-            <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+            <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                 android:id="@+id/ProfileImg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

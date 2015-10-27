@@ -70,10 +70,6 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
     }
 
     /* Start of Dashboard icons click listener */
-    public void onSeeADoctorNowClicked(View view) {
-        onSeeADoctorClicked();
-    }
-
     public void onMyHealthClicked(View view) {
 
     }

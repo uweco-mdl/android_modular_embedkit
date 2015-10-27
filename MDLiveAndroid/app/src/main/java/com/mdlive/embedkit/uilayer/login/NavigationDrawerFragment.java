@@ -137,11 +137,12 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         for (int i = 0; i<navStrings.length; i++){
             stringMap.put(navStrings[i], 1);
         }
-        // List of supported modules to check. If it doesn't exist, remove from the navigation menu
+        // Add the list of modules here
         HashMap<String, String> moduleMap = new HashMap<>();
         String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
         moduleMap.put(getString(R.string.mdl_mdlive_assist), modules[0]);
         moduleMap.put(getString(R.string.mdl_message_center), modules[1]);
+        moduleMap.put(getString(R.string.mdl_see_a_doctor_now), modules[2]);
 
         for(int i = 0; i< navStrings.length; i++){
             try{

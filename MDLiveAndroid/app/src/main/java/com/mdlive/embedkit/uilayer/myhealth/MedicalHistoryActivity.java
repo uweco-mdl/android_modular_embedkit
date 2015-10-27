@@ -221,7 +221,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
             Intent i = new Intent(getBaseContext(), MDLiveMyRecords.class);
             startActivity(i);
         } catch (ClassNotFoundException e){
-            Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_messages_module_not_found), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         } catch (Exception e){
             e.printStackTrace();
         }

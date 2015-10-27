@@ -11,19 +11,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
-import com.mdlive.embedkit.uilayer.sav.MDLiveAppointmentThankYou;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -32,6 +32,7 @@ import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
 import org.json.JSONObject;
 
+import java.lang.Class;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -123,10 +124,15 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (resumeScreen.equalsIgnoreCase("Get Started")) {
-                                    Intent getStartedIntent = new Intent(MDLiveConfirmappointment.this, MDLiveGetStarted.class);
-                                    startActivity(getStartedIntent);
-                                    MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
-                                    finish();
+                                    try {
+                                        Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+                                        Intent getStartedIntent = new Intent(MDLiveConfirmappointment.this, clazz);
+                                        startActivity(getStartedIntent);
+                                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                                        finish();
+                                    }catch(ClassNotFoundException e){
+                                        Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             }
                         });

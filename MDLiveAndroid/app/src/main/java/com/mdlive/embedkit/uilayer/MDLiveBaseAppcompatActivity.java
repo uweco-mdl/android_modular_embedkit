@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -28,7 +29,6 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClick
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -349,11 +349,18 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     public void onSeeADoctorClicked() {
         final User user = User.getSelectedUser(getBaseContext());
-
-        if (user == null) {
-            startActivityWithClassName(MDLiveGetStarted.class);
-        } else {
-            startActivity(MDLiveGetStarted.getGetStartedIntentWithUser(getBaseContext(), user));
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+            Method method = clazz.getMethod("getGetStartedIntentWithUser", Context.class, User.class);
+            if (user == null) {
+                startActivityWithClassName(clazz);
+            } else {
+                startActivity((Intent)method.invoke(null, getBaseContext(), user));
+            }
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

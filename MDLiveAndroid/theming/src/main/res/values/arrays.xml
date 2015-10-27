@@ -28,6 +28,7 @@
     <string-array name="left_navigation_modules">
         <item>@string/mdl_mdlive_assist_module</item>
         <item>@string/mdl_mdlive_messages_module</item>
+        <item>@string/mdl_mdlive_sav_module</item>
     </string-array>
 
     <string-array name="waiting_room_details">

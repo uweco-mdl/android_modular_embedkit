@@ -3,7 +3,6 @@ package com.mdlive.embedkit.uilayer.behaviouralhealth;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -12,14 +11,10 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 import java.util.Calendar;
@@ -78,14 +73,9 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     }
 
     /* Start of Dashboard icons click listener */
-    public void onSeeADoctorNowClicked(View view) {
+    public void onScheduleAVisitClicked(View view) {
         onSeeADoctorClicked();
     }
-
-    public void onScheduleAVisitClicked(View view) {
-        startActivityWithClassName(MDLiveGetStarted.class);
-    }
-
     public void onMyHealthClicked(View view) {
 
     }

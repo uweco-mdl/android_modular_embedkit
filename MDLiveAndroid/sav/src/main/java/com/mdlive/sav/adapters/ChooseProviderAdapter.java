@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav.adapters;
+package com.mdlive.sav.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,10 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,0 +1,49 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mdlive.sav">
+
+    <application android:allowBackup="true"
+        android:supportsRtl="true">
+        <!-- Provider Details -->
+
+        <activity
+            android:name=".MDLiveGetStarted"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <activity
+            android:name=".MDLiveFamilymember"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveChooseProvider"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveSearchProvider"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveProviderDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveMakeAppmtrequest"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveReasonForVisit"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveLocation"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+    </application>
+</manifest>

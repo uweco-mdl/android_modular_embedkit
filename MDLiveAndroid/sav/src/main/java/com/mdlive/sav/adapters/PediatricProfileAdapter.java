@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.sav.adapters;
+package com.mdlive.sav.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CustomEt;
 

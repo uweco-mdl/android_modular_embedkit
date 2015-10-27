@@ -15,7 +15,6 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -23,4 +22,14 @@
 -verbose
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
--keep class !mobile.UILayer.** {*;}
+-keep class com.mdlive.messages.messagecenter.MessageCenterActivity {
+    public <methods>;
+}
+
+-keep class com.mdlive.messages.messagecenter.MessageMyRecordsFragment {
+    public <methods>;
+}
+
+-keep class com.mdlive.messages.messagecenter.MessageCenterComposeActivity {
+    public <methods>;
+}

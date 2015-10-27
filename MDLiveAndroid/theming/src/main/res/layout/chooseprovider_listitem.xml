@@ -6,7 +6,7 @@
     android:descendantFocusability="blocksDescendants"
     >
 
-    <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
         android:id="@+id/ProfileImglist"
         android:layout_width="80dp"
         android:layout_height="80dp"
