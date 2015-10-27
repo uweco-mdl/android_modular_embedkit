@@ -1,7 +1,14 @@
 package com.mdlive.embedkit.global;
 
 
+import android.app.Activity;
+import android.content.Intent;
+
+import com.mdlive.embedkit.uilayer.login.SSOActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * All the configuration details are stored here. These information will be passed to the middleware \
@@ -20,9 +27,27 @@ public class MDLiveConfig {
         EXIT_SIGNAL
     }
 
+    /**
+     * This API exposes the capabilities of the delivered embedkit.
+     * All exposed components must be declared here.
+     * The affiliate's app will use this enum to view/select a specific EmbedKit component.
+     */
+    public enum EMBEDKITS {
+        SYMPTOM_CHECKER,
+        MY_MESSAGES,
+        MY_HEALTH,
+        MY_ACCOUNT,
+        DOCTOR_CONSULT,
+        CALL_ASSIST
+    }
+
+    // Define what embedkit components subset will be actually accessible to affiliate app
+    public static Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST, EMBEDKITS.MY_MESSAGES);
+
     public static final String ZERO_PAY = "0.00";     // used to indicate a "zero payment" liability for consultations
 
     public static ENVIRON CURRENT_ENVIRONMENT;
+    public static EMBEDKITS SELECTED_COMPONENT;
 
     public static final String SSO_SERVICE = "/customer_logins/embed_kit";
     public static final String LOGIN_SERVICES = "/customer_logins";
@@ -131,6 +156,12 @@ public class MDLiveConfig {
     public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
 
     public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
+
+    // SSO-related keys
+    public static String USR_UNIQ_ID=null;
+    public static String AUTH_KEY=null;
+    public static final String UNIQUE_ID_STRINGNAME = "uniqueid";
+    public static final String AUTHORIZATION_KEY = "api_key";
 
     static {
         System.loadLibrary("app");
@@ -309,9 +340,35 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
 
         AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
+
     }
 
     static native String getProdApiKeyFromNative();
     static native String getProdSecretKeyFromNative();
+
+    /**
+     * Initiates a specific EmbedKit component
+     *
+     * @param component
+     * @return
+     */
+    public static boolean activate(EMBEDKITS component, String jsonString, ENVIRON env, Activity ctx )
+    {
+        boolean success = true;
+
+        SELECTED_COMPONENT = component;
+
+        try {
+            Intent embedKitIntent = new Intent(ctx, SSOActivity.class);
+            embedKitIntent.putExtra("affiliate_sso_login", jsonString);
+            embedKitIntent.putExtra("env", env.name());
+            ctx.startActivity(embedKitIntent);
+        }catch(Exception ex)
+        {
+            success = false;
+        }
+
+        return(success);
+    }
 
 }

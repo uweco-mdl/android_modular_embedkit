@@ -71,7 +71,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
 
     //compile 'com.squareup.picasso:picasso:2.5.2'
-    compile('com.vsee:vsee-kit:0.3.20524@aar') {
+    compile('com.vsee:vsee-kit:0.4.21616@aar') {
         transitive = true
     }
 }

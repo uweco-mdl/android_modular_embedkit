@@ -16,7 +16,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
 
 import org.json.JSONObject;
 
@@ -93,7 +93,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
             }
         };
 
-        MDLivePendigVisitService getUserInfoService = new MDLivePendigVisitService(MDLivePendingVisits.this, null);
+        MDLivePendingVisitService getUserInfoService = new MDLivePendingVisitService(MDLivePendingVisits.this, null);
         getUserInfoService.getUserAggregateInformation(successListener, errorListner);
     }
 

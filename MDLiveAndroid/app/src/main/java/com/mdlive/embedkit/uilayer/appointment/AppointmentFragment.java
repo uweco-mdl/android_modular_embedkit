@@ -21,7 +21,7 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.MDLivePendigVisitService;
+import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -181,7 +181,7 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
         final Appointment appointment = getArguments().getParcelable(APPOINTMENT_TAG);
 
-        final MDLivePendigVisitService service = new MDLivePendigVisitService(getActivity(), null);
+        final MDLivePendingVisitService service = new MDLivePendingVisitService(getActivity(), null);
         service.deleteAppointment(String.valueOf(appointment.getId()), successCallBackListener, errorListener);
     }
 }
