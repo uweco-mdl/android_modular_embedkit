@@ -1,5 +1,6 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.global.MDLiveConfig.ENVIRON;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
-import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -243,13 +243,9 @@ public class SSOActivity extends MDLiveBaseActivity {
 
             case DOCTOR_CONSULT:
 
-            case CALL_ASSIST:
-
-                break;
-
-            default:        //
-
                 try {
+                    Class clazz_mdlGetStarted = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+
                     if(response !=  null){
                         if(response.has("notifications")){
                             JSONObject notifications = response.getJSONObject("notifications");
@@ -261,7 +257,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                                     hideProgress();
 
 
-                                    final Intent intent = new Intent(getBaseContext(), MDLiveGetStarted.class);
+                                    final Intent intent = new Intent(getBaseContext(), clazz_mdlGetStarted);
                                     intent.putExtra("token", mToken);
                                     startActivity(intent);
 
@@ -270,9 +266,21 @@ public class SSOActivity extends MDLiveBaseActivity {
                             }
                         }
                     }
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+                break;
+
+            case CALL_ASSIST:
+
+                break;
+
+            default:        //
 
                 break;
         }
@@ -338,13 +346,18 @@ public class SSOActivity extends MDLiveBaseActivity {
                 startActivity(pendingVisitIntent);
                 finish();
             }else {
-                Intent i = new Intent(getApplicationContext(), MDLiveGetStarted.class);
+
+                Class clazz_mdlGetStarted = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+
+                Intent i = new Intent(getApplicationContext(), clazz_mdlGetStarted);
                 i.putExtra("token", mToken); // The token received from service on successful login
                 startActivity(i);
                 finish();
             }
 
-        }catch (Exception e){
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
 
