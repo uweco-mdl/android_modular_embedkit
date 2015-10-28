@@ -223,11 +223,13 @@ public class SSOActivity extends MDLiveBaseActivity {
     }
 
     /**
-     * Checks the upcoming appoinment count, depending on that
+     * Checks the upcoming appointment count, depending on that
      * starts new screens either Pending Visit or Get Started
      * @param response
      */
     public void handleSuccessResponse(JSONObject response){
+
+        boolean success = false;        // initialize to 'failed' mode unless later proved otherwise
 
         switch(MDLiveConfig.SELECTED_COMPONENT){
             case SYMPTOM_CHECKER:
@@ -235,15 +237,25 @@ public class SSOActivity extends MDLiveBaseActivity {
                 break;
 
             case MY_MESSAGES:
+                try {
+                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_messages_module));
+
+                    success = startTargetActivity(response, clazz);
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
 
             case MY_HEALTH:
 
             case MY_ACCOUNT:
 
             case DOCTOR_CONSULT:
-
                 try {
-                    Class clazz_mdlGetStarted = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
 
                     if(response !=  null){
                         if(response.has("notifications")){
@@ -255,12 +267,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                                 }else{
                                     hideProgress();
 
-
-                                    final Intent intent = new Intent(getBaseContext(), clazz_mdlGetStarted);
-                                    intent.putExtra("token", mToken);
-                                    startActivity(intent);
-
-                                    finish();
+                                    success = startTargetActivity(response, clazz);
                                 }
                             }
                         }
@@ -276,7 +283,16 @@ public class SSOActivity extends MDLiveBaseActivity {
                 break;
 
             case CALL_ASSIST:
+                try {
+                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
 
+                    success = startTargetActivity(response, clazz);
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
 
             default:        //
@@ -284,6 +300,30 @@ public class SSOActivity extends MDLiveBaseActivity {
                 break;
         }
 
+    }
+
+    /**
+     * Initiate the target activity
+     *
+     * @param clazz
+     *
+     * @return success status of this method call
+     */
+    private boolean startTargetActivity(JSONObject response, Class clazz)
+    {
+        boolean status = true;
+
+        if(response !=  null){
+            final Intent intent = new Intent(getBaseContext(), clazz);
+            intent.putExtra("token", mToken);
+            startActivity(intent);
+
+            finish();
+        }
+        else
+            status = false;
+
+        return(status);
     }
 
     /***
