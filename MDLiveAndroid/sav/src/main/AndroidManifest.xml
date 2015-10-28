@@ -45,5 +45,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".adapters.MDLiveImageGalleryView"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
     </application>
 </manifest>

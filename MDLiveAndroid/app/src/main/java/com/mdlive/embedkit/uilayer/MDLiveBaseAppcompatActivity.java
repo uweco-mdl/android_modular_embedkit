@@ -28,7 +28,6 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -193,7 +192,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_my_health))) {
                 // MDLive My Health
-                startActivityWithClassName(MedicalHistoryActivity.class);
+                onMyHealthClicked();
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_mdlive_assist))) {
                 // MDLIVE Assist
@@ -355,7 +354,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             if (user == null) {
                 startActivityWithClassName(clazz);
             } else {
-                startActivity((Intent)method.invoke(null, getBaseContext(), user));
+                startActivity((Intent) method.invoke(null, getBaseContext(), user));
             }
         }catch (ClassNotFoundException e){
             e.printStackTrace();
@@ -364,17 +363,42 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
     }
 
+    public void onMyHealthClicked(){
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+            startActivityWithClassName(clazz);
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
     public void onPersonalInfoClicked(View view) {
-        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 0);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+            Method method = clazz.getMethod("getSelectedTabFromMedicalHistory", Context.class, Integer.class);
+            final Intent intent = (Intent) method.invoke(null, getBaseContext(), 0);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } catch(ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         finish();
     }
 
     public void onPreferedStoreClicked(View view) {
-        final Intent intent = MedicalHistoryActivity.getSelectedTabFromMedicalHistory(getBaseContext(), 1);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+            Method method = clazz.getMethod("getSelectedTabFromMedicalHistory", Context.class, Integer.class);
+            final Intent intent = (Intent) method.invoke(null, getBaseContext(), 1);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }catch(ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         finish();
     }
 

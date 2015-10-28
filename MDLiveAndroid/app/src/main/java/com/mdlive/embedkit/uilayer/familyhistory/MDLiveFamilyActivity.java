@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.familyhistory;
 
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -9,12 +8,10 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
@@ -81,10 +78,6 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     }
 
     /* Start of Dashboard icons click listener */
-    public void onMyHealthClicked(View view) {
-
-    }
-
     public void onSymptomCheckerClicked(View view) {
         startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
     }

@@ -147,6 +147,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         moduleMap.put(modules[0], R.id.mdliveAssist);
         moduleMap.put(modules[1], R.id.messageCenter);
         moduleMap.put(modules[2], R.id.mdliveSAV);
+        moduleMap.put(modules[3], R.id.mdliveMyHealth);
 
         for(int i=0; i<modules.length;i++){
             try {

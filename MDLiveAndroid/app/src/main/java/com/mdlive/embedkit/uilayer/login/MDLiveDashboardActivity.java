@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.login;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -117,7 +115,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onMyHealthClicked(View view) {
         if (!isDrawerOpen()) {
-            startActivityWithClassName(MedicalHistoryActivity.class);
+            onMyHealthClicked();
         }
     }
 
@@ -207,7 +205,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     break;
                 case 3:
                     // Medical health screen
-                    startActivityWithClassName(MedicalHistoryActivity.class);
+                    onMyHealthClicked();
                     break;
                 case 4:
                     // Message center screen

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageMyRecordsFragment;
 import com.mdlive.messages.R;
 
 /**

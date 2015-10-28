@@ -25,6 +25,7 @@
 
 
         <LinearLayout
+            android:id="@+id/mdliveMyHealth"
             style="@style/HomeImageviewContainerStyle"
             android:onClick="onMyHealthClicked">
 

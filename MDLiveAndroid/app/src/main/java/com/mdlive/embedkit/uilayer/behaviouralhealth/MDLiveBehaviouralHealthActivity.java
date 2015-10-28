@@ -76,9 +76,6 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     public void onScheduleAVisitClicked(View view) {
         onSeeADoctorClicked();
     }
-    public void onMyHealthClicked(View view) {
-
-    }
 
     public void onSymptomCheckerClicked(View view) {
         startActivityWithClassName(MDLiveSymptomCheckerActivity.class);

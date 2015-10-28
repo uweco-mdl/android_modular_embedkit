@@ -1135,6 +1135,7 @@
     <string name="mdl_mdlive_assist_module">com.mdlive.assist.MDLiveAssistUtil</string>
     <string name="mdl_mdlive_messages_module">com.mdlive.messages.messagecenter.MessageCenterActivity</string>
     <string name="mdl_mdlive_sav_module">com.mdlive.sav.MDLiveGetStarted</string>
+    <string name="mdl_mdlive_myhealth_module">com.mdlive.myhealth.MedicalHistoryActivity</string>
 
     <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
 

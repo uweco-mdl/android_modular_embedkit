@@ -8,12 +8,14 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,7 +26,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
@@ -34,6 +35,8 @@ import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -273,12 +276,14 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 if (map != null) {
                     LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
                             Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
-                    Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
+                    map.addMarker(new MarkerOptions().position(markerPoint)
                             .title("Marker"));
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
                 }
             } else {
-                if(isVisibleToUser && parentActivity instanceof MedicalHistoryActivity && ((MedicalHistoryActivity)parentActivity).getViewPager().getCurrentItem() == 1){
+                Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+                Method method = clazz.getMethod("getViewPager");
+                if(isVisibleToUser && parentActivity.getClass().isAssignableFrom(clazz) && (((ViewPager)method.invoke(clazz.cast(parentActivity))).getCurrentItem() == 1)){
                     final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
                     if(userBasicInfo.getNotifications().getPharmacyDetails() == null){
                         if(locationService!=null && locationService.checkLocationServiceSettingsEnabled(getActivity())){
@@ -300,6 +305,8 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     }
                 }
             }
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -340,7 +347,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             if (map != null) {
                 LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
                         Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
-                Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
+                map.addMarker(new MarkerOptions().position(markerPoint)
                         .title("Marker"));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
             }
