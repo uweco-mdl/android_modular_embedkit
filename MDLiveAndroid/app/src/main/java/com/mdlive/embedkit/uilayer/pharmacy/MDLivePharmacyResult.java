@@ -40,7 +40,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
@@ -624,11 +623,16 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             hideProgress();
             reloadSlidingMenu();
             if(getIntent().hasExtra("FROM_MY_HEALTH")){
-                Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-                i.putExtra("FROM_SELECTION", true);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                try {
+                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+                    Intent i = new Intent(getBaseContext(), clazz);
+                    i.putExtra("FROM_SELECTION", true);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                } catch (ClassNotFoundException e){
+                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                }
                 MdliveUtils.closingActivityAnimation(this);
             }else if (response.getString("message").equals("Pharmacy details updated")) {
                 checkInsuranceEligibility();
@@ -698,7 +702,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExixtingCard);
         editor.commit();
     }
 
@@ -712,7 +716,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method","1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot","Now");
-        insuranceMap.put("provider_type_id","3");
+        insuranceMap.put("provider_type_id", "3");
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
     }
@@ -782,11 +786,16 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onBackPressed() {
         if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
                 !getIntent().getBooleanExtra("PHARMACY_SELECTED", false)){
-                Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-                i.putExtra("FROM_PHARMACY",true);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                try {
+                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+                    Intent i = new Intent(getBaseContext(), clazz);
+                    i.putExtra("FROM_PHARMACY", true);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }catch(ClassNotFoundException e){
+                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                }
                 MdliveUtils.closingActivityAnimation(this);
         } else {
             super.onBackPressed();

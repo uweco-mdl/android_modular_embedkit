@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;

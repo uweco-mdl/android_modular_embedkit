@@ -32,7 +32,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -568,11 +567,16 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     public void onBackPressed() {
         if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
                 !getIntent().getBooleanExtra("PHARMACY_SELECTED", false)){
-            Intent i = new Intent(getBaseContext(),MedicalHistoryActivity.class);
-            i.putExtra("FROM_PHARMACY",true);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+            try {
+                Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+                Intent i = new Intent(getBaseContext(), clazz);
+                i.putExtra("FROM_PHARMACY", true);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            } catch(ClassNotFoundException e){
+                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            }
             MdliveUtils.closingActivityAnimation(this);
         } else {
             super.onBackPressed();

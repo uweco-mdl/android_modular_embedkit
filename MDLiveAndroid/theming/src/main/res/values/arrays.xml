@@ -29,6 +29,7 @@
         <item>@string/mdl_mdlive_assist_module</item>
         <item>@string/mdl_mdlive_messages_module</item>
         <item>@string/mdl_mdlive_sav_module</item>
+        <item>@string/mdl_mdlive_myhealth_module</item>
     </string-array>
 
     <string-array name="waiting_room_details">
