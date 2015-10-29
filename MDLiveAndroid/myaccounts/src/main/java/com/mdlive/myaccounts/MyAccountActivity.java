@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,12 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.myaccounts.adapter.MyAccountViewPagerAdapter;
-import com.mdlive.embedkit.uilayer.myaccounts.GetFamilyMemberFragment.OnChildAdded;
+import com.mdlive.myaccounts.adapter.MyAccountViewPagerAdapter;
+import com.mdlive.myaccounts.GetFamilyMemberFragment.OnChildAdded;
+import com.mdlive.myaccounts.R;
 
 /**
  * Created by sanjibkumar_p on 7/27/2015.

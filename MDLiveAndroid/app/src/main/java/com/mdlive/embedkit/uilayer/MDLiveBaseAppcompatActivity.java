@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
@@ -26,8 +27,6 @@ import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
-import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -207,7 +206,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_my_accounts))) {
                 // My Accounts
-                startActivityWithClassName(MyAccountActivity.class);
+                onMyAccountClicked();
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_support))) {
                 // Support
@@ -309,7 +308,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
             method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
         } catch (ClassNotFoundException e){
-            e.printStackTrace();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -331,7 +330,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 showEmailConfirmationDialog();
             }
         } catch (ClassNotFoundException e){
-            e.printStackTrace();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -356,7 +355,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 startActivity((Intent) method.invoke(null, getBaseContext(), user));
             }
         }catch (ClassNotFoundException e){
-            e.printStackTrace();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -367,7 +366,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            e.printStackTrace();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -376,7 +375,16 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_symptomchecker_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            e.printStackTrace();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onMyAccountClicked(){
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myaccount_module));
+            startActivityWithClassName(clazz);
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -430,7 +438,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             MdliveUtils.showAddChildExcededDialog(this,userBasicInfo.getAssistPhoneNumber());
         } else {
             Intent addFamilyMember = new Intent(getBaseContext(), AddFamilyMemberActivity.class);
-            startActivity(addFamilyMember); ;
+            startActivity(addFamilyMember);
         }
     }
 

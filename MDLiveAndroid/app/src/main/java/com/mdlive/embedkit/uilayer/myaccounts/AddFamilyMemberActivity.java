@@ -301,19 +301,29 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent upIntent = new Intent(this, MyAccountActivity.class);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(upIntent);
-        finish();
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myaccount_module));
+            Intent upIntent = new Intent(this, clazz);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(upIntent);
+            finish();
+        } catch (ClassNotFoundException e){
+            super.onBackPressed();
+        }
     }
 
     public void leftBtnOnClick(View view) {
-        Intent upIntent = new Intent(this, MyAccountActivity.class);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(upIntent);
-        finish();
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_myaccount_module));
+            Intent upIntent = new Intent(this, clazz);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(upIntent);
+            finish();
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void rightBtnOnClick(View view) {

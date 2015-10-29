@@ -1137,6 +1137,7 @@
     <string name="mdl_mdlive_sav_module">com.mdlive.sav.MDLiveGetStarted</string>
     <string name="mdl_mdlive_myhealth_module">com.mdlive.myhealth.MedicalHistoryActivity</string>
     <string name="mdl_mdlive_symptomchecker_module">com.mdlive.symptomchecker.MDLiveSymptomCheckerActivity</string>
+    <string name="mdl_mdlive_myaccount_module">com.mdlive.myaccounts.MyAccountActivity</string>
 
     <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
 

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,8 +26,8 @@ import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;

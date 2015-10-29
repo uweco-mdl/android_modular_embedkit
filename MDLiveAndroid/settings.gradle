@@ -1,1 +1,1 @@
-include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker'
+include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker', ':myaccounts'

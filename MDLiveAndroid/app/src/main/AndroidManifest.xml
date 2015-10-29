@@ -116,13 +116,15 @@
             android:windowSoftInputMode="stateHidden" />
 
         <!-- Sprint 2 Application Activity starts here -->
-
         <activity
-            android:name=".uilayer.myaccounts.MyAccountActivity"
+            android:name=".uilayer.myaccounts.AddFamilyMemberActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
-            android:configChanges="locale|touchscreen|orientation|screenLayout|screenSize|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="androi.support.PARENT_ACTIVITY"
+                android:value="com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity"/>
+        </activity>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
             android:screenOrientation="portrait"
@@ -151,23 +153,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity
-            android:name=".uilayer.myaccounts.MyAccountsHome"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden"/>
-
-        <activity
-            android:name=".uilayer.myaccounts.AddFamilyMemberActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".uilayer.myaccounts.MyAccountActivity">
-            <meta-data
-                android:name="androi.support.PARENT_ACTIVITY"
-                android:value="com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity"/>
-        </activity>
 
         <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"

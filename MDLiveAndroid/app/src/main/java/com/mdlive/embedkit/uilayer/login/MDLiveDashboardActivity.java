@@ -13,7 +13,6 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
-import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
@@ -137,7 +136,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onMyAccountClicked(View view) {
         if (!isDrawerOpen()) {
-            startActivityWithClassName(MyAccountActivity.class);
+            onMyAccountClicked();
         }
     }
 
@@ -215,7 +214,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     break;
                 case 6:
                     // My Account screen
-                    startActivityWithClassName(MyAccountActivity.class);
+                    onMyAccountClicked();
                     break;
             }
 

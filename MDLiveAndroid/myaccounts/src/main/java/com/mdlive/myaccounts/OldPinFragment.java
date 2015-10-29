@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.myaccounts.R;
 
 /**
  * Created by venkataraman_r on 7/27/2015.
