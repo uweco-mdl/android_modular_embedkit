@@ -121,9 +121,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="androi.support.PARENT_ACTIVITY"
-                android:value="com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity"/>
         </activity>
         <activity
             android:name=".uilayer.behaviouralhealth.MDLiveBehaviouralHealthActivity"
