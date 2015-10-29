@@ -13,7 +13,6 @@ import com.mdlive.embedkit.uilayer.login.EmailConfirmFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
@@ -66,10 +65,6 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
     }
 
     /* Start of Dashboard icons click listener */
-    public void onSymptomCheckerClicked(View view) {
-        startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
-    }
-
     public void onMyAccountClicked(View view) {
         startActivityWithClassName(MyAccountActivity.class);
     }

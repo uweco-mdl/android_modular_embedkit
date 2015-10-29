@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.symptomchecker;
+package com.mdlive.symptomchecker;
 
 
 import android.app.Fragment;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 

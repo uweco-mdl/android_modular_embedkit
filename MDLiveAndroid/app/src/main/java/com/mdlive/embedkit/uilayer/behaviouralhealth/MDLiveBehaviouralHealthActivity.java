@@ -14,7 +14,6 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 import java.util.Calendar;
@@ -75,10 +74,6 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     /* Start of Dashboard icons click listener */
     public void onScheduleAVisitClicked(View view) {
         onSeeADoctorClicked();
-    }
-
-    public void onSymptomCheckerClicked(View view) {
-        startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
     }
 
     public void onMyAccountClicked(View view) {
