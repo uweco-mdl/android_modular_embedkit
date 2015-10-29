@@ -28,7 +28,6 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -204,7 +203,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_symptom_checker))) {
                 // Symptom Checker
-                startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                onSymptomCheckerClicked();
             }
             else if(string.equalsIgnoreCase(getString(R.string.mdl_my_accounts))) {
                 // My Accounts
@@ -366,6 +365,15 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onMyHealthClicked(){
         try {
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+            startActivityWithClassName(clazz);
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void onSymptomCheckerClicked(){
+        try {
+            Class clazz = Class.forName(getString(R.string.mdl_mdlive_symptomchecker_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
             e.printStackTrace();

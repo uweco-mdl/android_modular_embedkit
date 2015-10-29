@@ -101,6 +101,7 @@
         android:paddingTop="20dp">
 
         <LinearLayout
+            android:id="@+id/symptomChecker"
             style="@style/HomeImageviewContainerStyle"
             android:onClick="onSymptomCheckerClicked">
 

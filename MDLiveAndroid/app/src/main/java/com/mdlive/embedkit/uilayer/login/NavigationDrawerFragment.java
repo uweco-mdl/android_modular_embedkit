@@ -144,6 +144,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         moduleMap.put(getString(R.string.mdl_message_center), modules[1]);
         moduleMap.put(getString(R.string.mdl_see_a_doctor_now), modules[2]);
         moduleMap.put(getString(R.string.mdl_my_health), modules[3]);
+        moduleMap.put(getString(R.string.mdl_symptom_checker), modules[4]);
 
         for(int i = 0; i< navStrings.length; i++){
             try{

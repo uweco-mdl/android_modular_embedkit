@@ -14,14 +14,12 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
-import com.mdlive.embedkit.uilayer.symptomchecker.MDLiveSymptomCheckerActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
-import java.lang.reflect.Method;
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -133,7 +131,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void onSymptomCheckerClicked(View view) {
         if (!isDrawerOpen()) {
-            startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+            onSymptomCheckerClicked();
         }
     }
 
@@ -213,7 +211,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     break;
                 case 5:
                     // Symptom Checker screen
-                    startActivityWithClassName(MDLiveSymptomCheckerActivity.class);
+                    onSymptomCheckerClicked();
                     break;
                 case 6:
                     // My Account screen
