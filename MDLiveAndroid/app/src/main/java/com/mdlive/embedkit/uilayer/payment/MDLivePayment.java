@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +73,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     private HashMap<String, HashMap<String, String>> billingParams;
     private double payableAmount;
     private String finalAmount = "";
+    private  EditText edtZipCode;
     private boolean setExistingCardDetailUser=false;
     JSONObject myProfile;
     Calendar expiryDate = Calendar.getInstance();
@@ -125,10 +128,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
         billingParams = new HashMap<>();
-      /*  //edtZipCode = (EditText) findViewById(R.id.edtZipCode);
+         edtZipCode = (EditText) findViewById(R.id.edtZipCode);
+        edtZipCode.setTag(null);
+
         edtZipCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
@@ -137,25 +143,36 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (edtZipCode.getText().toString().length() >= 9) {
-                    if (!edtZipCode.getText().toString().contains("-")) {
-                        String formattedString = MdliveUtils.zipCodeFormat(Long.parseLong(edtZipCode.getText().toString()));
-                        edtZipCode.setText(formattedString);
-                    }
-
-                }
+                MdliveUtils.validateZipcodeFormat(edtZipCode);
             }
-        });*/
+        });
+//        edtZipCode.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+////                MdliveUtils.validateZipcodeFormat(edtZipCode);
+//                if (edtZipCode.getText().toString().length() >= 9) {
+//                    if (!edtZipCode.getText().toString().contains("-")) {
+//                        String formattedString = MdliveUtils.zipCodeFormat(edtZipCode.getText().toString());
+//                        edtZipCode.setText(formattedString);
+//                    }
+//
+//                }
+//            }
+//        });
+
+
         HostedPCI.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             HostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
-            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
-        } else {
-            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
-        }
-
         HostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         mScanCardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,9 +202,20 @@ public class MDLivePayment extends MDLiveBaseActivity {
         if (finalAmount.equals("0.00")) {
             //Remove this..it is in next screen
              //* doConfirmAppointment();*//*
+
             moveToNextPage();
         } else {
-            HostedPCI.loadUrl("javascript:tokenizeForm()");
+            if(!edtZipCode.getText().toString().equalsIgnoreCase("")) {
+                if (MdliveUtils.validateZipCode(edtZipCode.getText().toString())) {
+                    HostedPCI.loadUrl("javascript:tokenizeForm()");
+                    edtZipCode.clearFocus();
+                } else{
+                    MdliveUtils.showDialog(MDLivePayment.this,getString(R.string.mdl_app_name),getString(R.string.mdl_valid_zip));
+                }
+            } else {
+                MdliveUtils.showDialog(MDLivePayment.this,getString(R.string.mdl_app_name),getString(R.string.mdl_please_fill_required_fields));
+            }
+
         }
 
 
@@ -197,6 +225,17 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLivePayment.this);
         onBackPressed();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
+        } else {
+            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        }
+        MdliveUtils.DIALOG_SHOWN = false;
     }
 
     public void getCreditCardInfoService() {
@@ -301,6 +340,17 @@ public class MDLivePayment extends MDLiveBaseActivity {
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
                 Log.e("token response",jobj.getString("status"));
+                DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
+                            HostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
+                        } else {
+                            HostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+                        }
+                        MdliveUtils.DIALOG_SHOWN = false;
+                    }
+                };
                 if(setExistingCardDetailUser)
                 {
                     if (jobj.getString("status").equals("success")) {
@@ -308,7 +358,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         updateCardDetails(params);
                         Log.e("get Existing params->",params);
                     } else {
-                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
+                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"),listener);
                     }
                 }else
                 {
@@ -317,7 +367,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         updateCardDetails(params);
                         Log.e("print params->",params);
                     } else {
-                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
+                        MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"),listener);
                     }
                 }
 
@@ -842,10 +892,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
     // This is For navigating to the next Screen
 
     private void moveToNextPage() {
-        CheckdoconfirmAppointment(true);
-        Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
-        startActivity(i);
-        MdliveUtils.startActivityAnimation(MDLivePayment.this);
+
+            CheckdoconfirmAppointment(true);
+            Intent i = new Intent(MDLivePayment.this, MDLiveConfirmappointment.class);
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePayment.this);
+
     }
 
     /**

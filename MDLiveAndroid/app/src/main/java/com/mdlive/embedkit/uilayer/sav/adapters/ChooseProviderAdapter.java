@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView;
+import com.mdlive.embedkit.uilayer.sav.MDLiveChooseProvider;
 import com.mdlive.embedkit.uilayer.sav.MDLiveDoctorOnCall;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -80,6 +81,8 @@ public class ChooseProviderAdapter extends BaseAdapter {
             seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MDLiveChooseProvider.isDoctorOnCall=MDLiveChooseProvider.mDoctorOnCall;
+                    MDLiveChooseProvider.isDoctorOnVideo=MDLiveChooseProvider.mDoctorOnVideo;
                     Intent seeFirstAvailableDocIntent=new Intent(context,MDLiveDoctorOnCall.class);
                     context.startActivity(seeFirstAvailableDocIntent);
                 }

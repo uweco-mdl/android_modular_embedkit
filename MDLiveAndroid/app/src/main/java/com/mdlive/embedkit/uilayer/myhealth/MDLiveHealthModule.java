@@ -179,7 +179,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     }
                 }
                 for(String modes : modesList){
-                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(modes)){
+                    if(getIntent().getStringExtra("Frequency").toLowerCase().contains(modes.toLowerCase())){
                         ((TextView) findViewById(R.id.modeTxt)).setText(modes);
                     }
                 }

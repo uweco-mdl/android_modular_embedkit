@@ -45,6 +45,7 @@ import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
@@ -167,6 +168,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             if(data != null){
                 getPharmacySearchResults(getPostBody(data));
             }
+
+        }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.INSURANCE_ERROR_CODE) {
+
+
         }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.PHARMACY_REQUEST_CODE){
             list.clear();
             markerIdCollection.clear();
@@ -630,6 +635,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 startActivity(i);
                 MdliveUtils.closingActivityAnimation(this);
             }else if (response.getString("message").equals("Pharmacy details updated")) {
+                /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+                i.putExtra("redirect_mypharmacy", true);
+                startActivity(i);
+                MdliveUtils.closingActivityAnimation(this);*/
                 checkInsuranceEligibility();
             }
         } catch (Exception e) {
@@ -655,16 +664,26 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     JSONObject jobj=new JSONObject(response.toString());
                     if(jobj.has("final_amount")){
                         if(Integer.parseInt(jobj.getString("final_amount"))>0){
-                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
-                            i.putExtra("final_amount",jobj.getString("final_amount"));
-                            i.putExtra("redirect_mypharmacy", true);
-                            startActivity(i);
-                            finish();
-                            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+                            if(userBasicInfo.getVerifyEligibility()) {
+                                Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                i.putExtra("redirect_mypharmacy", true);
+                                startActivity(i);
+                                finish();
+                                MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            } else
+                            {
+                                Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                i.putExtra("redirect_mypharmacy", true);
+                                startActivity(i);
+                                finish();
+                                MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            }
                         }else{
                             moveToNextPage();
                         }
-
                     }
 
                 }catch (Exception e){
@@ -690,10 +709,20 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
-        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
-        storePayableAmount("0.00");
-        startActivity(i);
-        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getVerifyEligibility())
+        {
+            Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+            i.putExtra("final_amount", "0.00");
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        } else
+        {
+            Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
+            storePayableAmount("0.00");
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        }
     }
 
     public void storePayableAmount(String amount) {

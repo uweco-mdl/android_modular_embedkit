@@ -71,6 +71,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private TextView loadingTxt;
     private boolean flag = false;
     public static boolean isDoctorOnCall = false, isDoctorOnVideo = false, fromGetSartedPage = true;
+    public static boolean mDoctorOnCall = false, mDoctorOnVideo = false;
 
     private Button seeFirstAvailDoctor;
 
@@ -175,6 +176,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isDoctorOnCall=mDoctorOnCall;
+                isDoctorOnVideo=mDoctorOnVideo;
                 Intent seeFirstAvailableDocIntent=new Intent(MDLiveChooseProvider.this,MDLiveDoctorOnCall.class);
                 startActivity(seeFirstAvailableDocIntent);
             }
@@ -295,26 +298,36 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     isDoctorOnCall=false;
                     isDoctorOnVideo=false;
                     StrDoctorOnCall=false;
+                    mDoctorOnCall=false;
+                    mDoctorOnVideo=false;
                 }else if(resObject.getBoolean("doctor_on_call_video")) {
                     isDoctorOnVideo=true;
                     isDoctorOnCall=false;
                     StrDoctorOnCall=true;
+                    mDoctorOnCall=false;
+                    mDoctorOnVideo=true;
                 } else if(resObject.getBoolean("doctor_on_call")) {
                     isDoctorOnVideo=false;
                     isDoctorOnCall=true;
                     StrDoctorOnCall=true;
+                    mDoctorOnCall=true;
+                    mDoctorOnVideo=false;
 
                 }
                 if(resObject.getBoolean("doctor_on_call")&&resObject.getBoolean("doctor_on_call_video")){
                     isDoctorOnVideo=true;
                     isDoctorOnCall=true;
                     StrDoctorOnCall=true;
+                    mDoctorOnCall=true;
+                    mDoctorOnVideo=true;
 
                 }else if(!resObject.getBoolean("doctor_on_call")&&!resObject.getBoolean("doctor_on_call_video"))
                 {
                     isDoctorOnVideo=false;
                     isDoctorOnCall=false;
                     StrDoctorOnCall=false;
+                    mDoctorOnCall=false;
+                    mDoctorOnVideo=false;
                 }
 
             }

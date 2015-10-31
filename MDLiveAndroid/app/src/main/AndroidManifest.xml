@@ -94,6 +94,11 @@
             android:windowSoftInputMode="stateHidden" />
 
         <!-- Pharmacy Activities -->
+
+        <activity
+            android:name=".uilayer.pharmacy.MDLiveInsuranceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacy"
             android:screenOrientation="portrait"

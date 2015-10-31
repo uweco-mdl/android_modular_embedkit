@@ -33,8 +33,10 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
 import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.sav.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
@@ -115,7 +117,10 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View view){
-        checkInsuranceEligibility();
+        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
+        MdliveUtils.closingActivityAnimation(this);*/
+       checkInsuranceEligibility();
     }
     /**
      * This function handles click listener of SavContinueBtn
@@ -123,6 +128,9 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      * @param view - view of button which is called.
      */
     public void SavContinueBtnOnClick(View view) {
+        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
+        MdliveUtils.closingActivityAnimation(this);*/
         checkInsuranceEligibility();
     }
 
@@ -228,11 +236,22 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
                     if (jobj.has("final_amount")) {
+
                         if (!jobj.getString("final_amount").equals("0") && !jobj.getString("final_amount").equals("0.00")) {
-                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
-                            i.putExtra("final_amount", jobj.getString("final_amount"));
-                            startActivity(i);
-                            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+                            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+                            if(userBasicInfo.getVerifyEligibility()) {
+                                Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                startActivity(i);
+                                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+                            } else
+                            {
+                                Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                startActivity(i);
+                                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+                            }
+
                         } else {
                             moveToNextPage();
                         }
@@ -240,7 +259,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -260,10 +278,22 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getVerifyEligibility())
+        {
+            Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+            i.putExtra("final_amount", "0.00");
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        } else
+        {
         Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
         storePayableAmount("0.00");
         startActivity(i);
         MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        }
+
+
     }
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -579,5 +609,36 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == IntegerConstants.INSURANCE_ERROR_CODE) {
+            try {
+                showDialog(getApplicationContext(),
+                        "Connection Timed Out Error Occured.", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void showDialog(final Context context, String message,
+                                  DialogInterface.OnClickListener positiveOnclickListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+        alertDialogBuilder
+                .setTitle("MDLIVE")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok",positiveOnclickListener);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
+        alertDialog.show();
+    }
 
 }
