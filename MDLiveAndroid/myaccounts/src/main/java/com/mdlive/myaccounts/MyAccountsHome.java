@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 
 import android.content.SharedPreferences;
@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 /**

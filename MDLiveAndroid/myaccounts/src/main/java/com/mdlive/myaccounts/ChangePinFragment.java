@@ -1,26 +1,39 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.mdlive.embedkit.R;
+import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.myaccounts.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
+import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.login.PinCreation;
+import com.mdlive.unifiedmiddleware.services.myaccounts.ChangePinService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
- * Created by venkataraman_r on 7/27/2015.
+ * Created by venkataraman_r on 6/24/2015.
  */
-public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextWatcher {
+public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher {
 
     private ToggleButton mPassCode1 = null;
     private ToggleButton mPassCode2 = null;
@@ -48,19 +61,17 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
     private StringBuffer mStringBuffer;
 
 
-    public static MyAccountNewPinFragment newInstance(String oldPin, final boolean create) {
+    public static ChangePinFragment newInstance(String newPin,String oldPin, final boolean create) {
 
-        final MyAccountNewPinFragment newPinFragment = new MyAccountNewPinFragment();
+        final ChangePinFragment changePinFragment = new ChangePinFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("OldPin", oldPin);
+        bundle.putString("OldPin",oldPin);
+        bundle.putString("NewPin",newPin);
         bundle.putBoolean("update", create);
-        newPinFragment.setArguments(bundle);
-        return newPinFragment;
+        changePinFragment.setArguments(bundle);
+        return changePinFragment;
     }
-
-    public MyAccountNewPinFragment() {
-        super();
-    }
+    public ChangePinFragment(){ super(); }
 
     @Nullable
     @Override
@@ -71,13 +82,6 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
         init(changePin);
 
         return changePin;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        ((MyAccountsHome) getActivity()).hideTick();
     }
 
     public void init(View changePin) {
@@ -97,10 +101,10 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
 
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
-        mPassCode7.addTextChangedListener(this);
-        mPassCode7.requestFocus();
+        mTitle.setText(changePin.getResources().getString(R.string.mdl_please_confirm_your_pin));
 
-        mTitle.setText("Please enter your new PIN");
+               mPassCode7.addTextChangedListener(this);
+        mPassCode7.requestFocus();
 
         mButton0 = (Button) changePin.findViewById(R.id.num_pad_0);
         if (mButton0 != null) {
@@ -228,12 +232,15 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
             });
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+
         if (mPassCode7.getText().length() < 6) {
             if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
                 ((MyAccountsHome) getActivity()).hideTick();
             }
         }
-
     }
 
     @Override
@@ -305,8 +312,8 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
         }
         else{
             if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
-                ((MyAccountsHome) getActivity()).showTick();
-                newPin();
+                //((MyAccountsHome) getActivity()).showTick();
+                uploadChangePin();
             }
         }
     }
@@ -321,11 +328,133 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
 
     }
 
-    public void newPin()
+    private void loadPinService(String params) {
+        showProgressDialog();
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                handleCreatePinSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    Log.e("responseBody",responseBody);
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                    } else {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                    }
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+
+            }
+        };
+
+        ChangePinService service = new ChangePinService(getActivity(), null);
+        service.changePin(successCallBackListener, errorListener, params);
+    }
+
+    private void handleCreatePinSuccessResponse(JSONObject response) {
+
+        try {
+            hideProgressDialog();
+
+            MdliveUtils.setLockType(getActivity(), getActivity().getString(R.string.mdl_pin));
+            Toast.makeText(getActivity(),"Pin Changed Successfully",Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadChangePin()
     {
-        FragmentManager fragmentManager = getFragmentManager();
         String oldPin = getArguments().getString("OldPin");
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, ChangePinFragment.newInstance(mPassCode7.getText().toString(), oldPin, getArguments().getBoolean("update")),"Old Pin").commit();
+        String newPin = getArguments().getString("NewPin");
+        boolean update = getArguments().getBoolean("update");
+
+        String confirmPin = mPassCode7.getText().toString();
+        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        if(confirmPin.equals(newPin)){
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("passcode", oldPin);
+                jsonObject.put("new_passcode", confirmPin);
+                jsonObject.put("device_token", sharedPref.getString("Device_Token", "0") );
+                Log.i("params", jsonObject.toString());
+                if (update) {
+                    loadConfirmPin(confirmPin);
+                } else {
+                    loadPinService(jsonObject.toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_pin_mismatch));
+        }
+    }
+
+    public void loadConfirmPin(final String confirmPin) {
+        try {
+            //final SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+            final JSONObject jsonObject = new JSONObject();
+            jsonObject.put("device_token", MdliveUtils.getDeviceToken(getActivity()));
+            jsonObject.put("passcode", confirmPin);
+            fetachPinWebserviceCall(jsonObject.toString());
+        } catch (JSONException e) {
+            logE("Error", e.getMessage());
+        }
+    }
+
+    private void fetachPinWebserviceCall(String params) {
+        MdliveUtils.hideKeyboard(getActivity(), (View) mPassCode7);
+        showProgressDialog();
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                handleCreatePinSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                try {
+                    //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    Log.e("responseBody",responseBody);
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("message"));
+                    } else {
+                        MdliveUtils.showDialog(getActivity(), "CONFIRMATION FAILURE", errorObj.getString("error"));
+                    }
+                } catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        PinCreation service = new PinCreation(getActivity(), null);
+        service.createPin(successCallBackListener, errorListener, params);
     }
 }

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;

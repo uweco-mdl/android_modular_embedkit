@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+
+// VSee integration:
+//
+// First repository is for VSee released artifacts.  Others pick up transitive dependencies.
+// To access the VSee bintray repo, you must create a bintray account (it is free) and have
+// us add you to our team.
+//
+repositories {
+    maven {
+        credentials {
+            username 'uweco'
+            password '903fdbf83488be99797a7757429240ca4f3a2619'
+        }
+        url 'http://dl.bintray.com/vsee/android'
+    }
+    maven {
+        url "https://repo.commonsware.com.s3.amazonaws.com"
+    }
+    maven {
+        url "http://dl.bintray.com/populov/maven"
+    }
+    jcenter()
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile project(':theming')
+    compile project(':app')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

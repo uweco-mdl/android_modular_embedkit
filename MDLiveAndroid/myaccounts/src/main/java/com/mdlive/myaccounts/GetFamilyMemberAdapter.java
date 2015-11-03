@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.myaccounts;
+package com.mdlive.myaccounts;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mdlive.embedkit.R;
+import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 
