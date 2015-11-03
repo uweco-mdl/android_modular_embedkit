@@ -39,6 +39,7 @@ import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.BehavioralHistory;
 import com.mdlive.embedkit.uilayer.behaviouralhealth.ConditionAndActive;
@@ -1096,9 +1097,15 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
             String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+
             urlConnection.setRequestProperty("Authorization", auth);
-            urlConnection.setRequestProperty("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+            if(MDLiveConfig.IS_SSO){
+                urlConnection.setRequestProperty("RemoteUserId", MDLiveConfig.USR_UNIQ_ID!=null ? MDLiveConfig.USR_UNIQ_ID : AppSpecificConfig.DEFAULT_USER_ID);
+            }
+            else {
+                urlConnection.setRequestProperty("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
 //        urlConnection.setRequestProperty("RemoteUserId", MDLiveConfig.USR_UNIQ_ID); // for SSO2 we no longer persist sensitive data in sharedprefs
+            }
 
             String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
             if(dependentId != null) {

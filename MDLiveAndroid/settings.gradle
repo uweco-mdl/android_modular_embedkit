@@ -1,1 +1,5 @@
-include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker'
+// ---- The first three targets must ALWAYS be present: app, theming, assist;
+// ---- the rest are optional. Order of appearance in the include statement is inconsequential
+// ----
+//include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker'
+include  ':app', ':theming', ':assist', ':symptomchecker', ':sav'

@@ -20,6 +20,8 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
+import java.lang.ref.WeakReference;
+
 
 /**
  * Created by dhiman_da on 8/6/2015.

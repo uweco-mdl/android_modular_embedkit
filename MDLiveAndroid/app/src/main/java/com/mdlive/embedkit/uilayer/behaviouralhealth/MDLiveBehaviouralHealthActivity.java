@@ -16,6 +16,7 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.MyAccountActivity;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,7 +27,6 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_history_layout);
         clearMinimizedTime();
-
 
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 

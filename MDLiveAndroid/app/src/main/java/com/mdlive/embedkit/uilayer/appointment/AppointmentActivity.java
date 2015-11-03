@@ -18,6 +18,8 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by dhiman_da on 8/22/2015.
  */

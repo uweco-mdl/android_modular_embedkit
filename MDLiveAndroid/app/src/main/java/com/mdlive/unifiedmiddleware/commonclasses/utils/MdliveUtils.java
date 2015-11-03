@@ -35,6 +35,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -1469,17 +1470,27 @@ public class MdliveUtils {
         Log.d("Hello", "First Time :" + firstTime + ".");
     }
 
-    public static String getRemoteUserId(final Context context) {
-        final WeakReference<Context> reference = new WeakReference<>(context);
+    public static String getRemoteUserId(final Context context)
+    {
+        String remoteUserId = null;
 
-        if (reference.get() == null) {
-            return "";
+        if(MDLiveConfig.IS_SSO){
+            remoteUserId = MDLiveConfig.USR_UNIQ_ID==null? AppSpecificConfig.DEFAULT_USER_ID : MDLiveConfig.USR_UNIQ_ID;
+            //Log.d("Hello", "RemoteUserId :" +  remoteUserId + ".");
+        }
+        else {
+            final WeakReference<Context> reference = new WeakReference<>(context);
+
+            if (reference.get() == null) {
+                return "";
+            }
+
+            final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            remoteUserId = preferences.getString(PreferenceConstants.USER_UNIQUE_ID, "");
+            //Log.d("Hello", "RemoteUserId :" +  remoteUserId + ".");
         }
 
-        final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        String remoteUserId = preferences.getString(PreferenceConstants.USER_UNIQUE_ID, "");
-        Log.d("Hello", "RemoteUserId :" +  remoteUserId + ".");
-        return remoteUserId;
+        return(remoteUserId);
     }
 
     public static void clearRemoteUserId(final Context context) {

@@ -3,7 +3,10 @@ package com.mdlive.embedkit.global;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.SSOActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 
@@ -42,7 +45,10 @@ public class MDLiveConfig {
     }
 
     // Define what embedkit components subset will be actually accessible to affiliate app
-    public static Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST, EMBEDKITS.MY_MESSAGES);
+    public static final Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST,
+                                                                        EMBEDKITS.DOCTOR_CONSULT,
+                                                                        EMBEDKITS.SYMPTOM_CHECKER);
+    public static boolean IS_SSO = false;
 
     public static final String ZERO_PAY = "0.00";     // used to indicate a "zero payment" liability for consultations
 
@@ -157,11 +163,13 @@ public class MDLiveConfig {
 
     public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
 
-    // SSO-related keys
+    // SSO-related keys. Data vales are stored in volatile RAM instead of persisted in SharedPrefs
     public static String USR_UNIQ_ID=null;
     public static String AUTH_KEY=null;
+    public static String S_TOKEN=null;
     public static final String UNIQUE_ID_STRINGNAME = "uniqueid";
     public static final String AUTHORIZATION_KEY = "api_key";
+    public static final String SESSION_TOKEN = "token";
 
     static {
         System.loadLibrary("app");
@@ -347,13 +355,26 @@ public class MDLiveConfig {
     static native String getProdSecretKeyFromNative();
 
     /**
-     * Initiates a specific EmbedKit component
+     * Initiates a specific EmbedKit component.
+     * If requested component is unsupported, then exit with a message.
      *
-     * @param component
+     * @param component     the EmbedKit component to be activated
+     * @param jsonString    string containing encrypted SSO login data
+     * @param env           target environment (Stage, Prod, QA,...)
+     * @param ctx           the caller's context object
      * @return
      */
     public static boolean activate(EMBEDKITS component, String jsonString, ENVIRON env, Activity ctx )
     {
+        // if affiliate is trying to activate an unsupported component, exit with a message
+        if(!EMBEDKIT_COMPONENTS.contains(component))
+        {
+            if (ctx != null)
+                Toast.makeText(ctx, ctx.getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+
+            return(false);
+        }
+
         boolean success = true;
 
         SELECTED_COMPONENT = component;
@@ -363,10 +384,17 @@ public class MDLiveConfig {
             embedKitIntent.putExtra("affiliate_sso_login", jsonString);
             embedKitIntent.putExtra("env", env.name());
             ctx.startActivity(embedKitIntent);
+
+            Toast.makeText(ctx, "-- SSOActivity started --", Toast.LENGTH_SHORT).show();
         }catch(Exception ex)
         {
             success = false;
+            Toast.makeText(ctx, "-- SSOActivity failed to start -- "+ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.w("-- MDLiveConfig --","\n**************\n***************\n" + ex.getMessage() + "\n***************\n");
+
         }
+
+        IS_SSO = success;   // although this is an SSO session, only set to TRUE if new intent activation succeeded
 
         return(success);
     }

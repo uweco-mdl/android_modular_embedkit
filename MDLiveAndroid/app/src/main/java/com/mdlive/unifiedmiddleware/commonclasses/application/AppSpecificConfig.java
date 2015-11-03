@@ -34,6 +34,7 @@ public class AppSpecificConfig {
     public static String DELETE_MEDICALREPORT = "/customer/delete_document";
     public static String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
     public static String DEFAULT_USER_ID = "MobileUser";
+    public static String DEFAULT_SESSION_ID = "";
     public static String URL_PHARMACIES_CURRENT = "/pharmacies/current"; // Need additional header
     public static String URL_PHARMACIES_SEARCH_LOCATION = "/pharmacies/search";
     public static String URL_PHARMACIES_UPDATE = "/pharmacies/update"; // Need post body

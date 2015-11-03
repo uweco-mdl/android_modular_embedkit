@@ -13,6 +13,10 @@
         <item>@string/mdl_share_app</item>
     </string-array>
 
+    <string-array name="left_navigation_items_sso">
+        <item>@string/mdl_home</item>
+    </string-array>
+
     <string-array name="left_navigation_items_image">
         <item>@drawable/drawer_home_icon</item>
         <item>@drawable/drawer_talk_doctor_icon</item>
