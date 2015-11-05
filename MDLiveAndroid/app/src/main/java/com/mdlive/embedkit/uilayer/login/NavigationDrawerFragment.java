@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +160,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         moduleMap.put(getString(R.string.mdl_my_accounts), modules[5]);
 
         if(!MDLiveConfig.IS_SSO){
-            for (int i = 0; i < navStrings.length; i++) {
+            for (int i = navStrings.length - 1; i > 0; i--) {
                 try {
                     String module = moduleMap.get(navStrings[i]);
                     if (module != null) {
