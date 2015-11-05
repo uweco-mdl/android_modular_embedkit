@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-/**
- * Created by venkataraman_r on 7/16/2015.
- */
+
 public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private static final String USER_PASSED_FROM_ACTIVITY = "user_passed";
 
@@ -129,12 +127,17 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             }
         });
 
-        ArrayList<String> drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
+        ArrayList<String> drawerItems;
         String[] navStrings;
-        if(MDLiveConfig.IS_SSO)
+
+        if (MDLiveConfig.IS_SSO) {
             navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items_sso);
-        else
+            drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items_sso)));
+        }
+        else {
             navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items);
+            drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
+        }
 
         TypedArray imgs = getResources().obtainTypedArray(R.array.left_navigation_items_image);
         ArrayList<Drawable> navImages = new ArrayList<>();
@@ -208,8 +211,15 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 loadUserInformationDetails(true);
             }
         } else {
-            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-            updateList();
+            if(MDLiveConfig.IS_SSO)
+            {
+                loadUserInformationDetails(true);
+            }
+            else
+            {
+                mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                updateList();
+            }
         }
     }
 

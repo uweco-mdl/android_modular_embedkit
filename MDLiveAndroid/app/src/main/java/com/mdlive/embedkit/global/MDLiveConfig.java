@@ -384,8 +384,6 @@ public class MDLiveConfig {
             embedKitIntent.putExtra("affiliate_sso_login", jsonString);
             embedKitIntent.putExtra("env", env.name());
             ctx.startActivity(embedKitIntent);
-
-            Toast.makeText(ctx, "-- SSOActivity started --", Toast.LENGTH_SHORT).show();
         }catch(Exception ex)
         {
             success = false;
