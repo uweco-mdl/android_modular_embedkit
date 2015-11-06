@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="left_navigation_modules">
+        <item>@string/mdl_mdlive_assist_module</item>
+        <item>@string/mdl_mdlive_messages_module</item>
+        <item>@string/mdl_mdlive_sav_module</item>
+        <item>@string/mdl_mdlive_myhealth_module</item>
+        <item>@string/mdl_mdlive_symptomchecker_module</item>
+        <item>@string/mdl_mdlive_myaccount_module</item>
+    </string-array>
+</resources>

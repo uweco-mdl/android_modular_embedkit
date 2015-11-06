@@ -1132,27 +1132,11 @@
     <string name="mdli_provider_since">Provider since : </string>
     <string name="mdl_help_number_if_assist_not_present">18889952183</string>
 
-    <string name="mdl_mdlive_assist_module">com.mdlive.assist.MDLiveAssistUtil</string>
-    <string name="mdl_mdlive_messages_module">com.mdlive.messages.messagecenter.MessageCenterActivity</string>
-    <string name="mdl_mdlive_sav_module">com.mdlive.sav.MDLiveGetStarted</string>
-    <string name="mdl_mdlive_myhealth_module">com.mdlive.myhealth.MedicalHistoryActivity</string>
-    <string name="mdl_mdlive_symptomchecker_module">com.mdlive.symptomchecker.MDLiveSymptomCheckerActivity</string>
-    <string name="mdl_mdlive_myaccount_module">com.mdlive.myaccounts.MyAccountActivity</string>
-
-    <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
-
     <!-- For Google Analytics -->
     <!-- Affliate Google Tracking ID, if empty, then tracking is disable -->
     <string name="ga_customTrackingId"></string>
     <!-- MDLive Google Analytics flag. Set to true to enable internal tracking for MDLive-->
     <string name="enable_mdlive_ga_tracking">true</string>
-    <string name="mdl_mdlive_adult">Adult</string>
-    <string name="mdl_mdlive_child">Child</string>
-    <string name="mdl_mdlive_session">Session</string>
-    <string name="mdl_mdlive_add_family_session">MDLIVE-Add Family Dependent</string>
-    <string name="mdl_mdlive_home_page">MDLIVE-home-page</string>
-    <string name="mdl_mdlive_video_session_initiated">Video session initiated</string>
-    <string name="mdl_mdlive_video_session_screen">MDLIVE-Video Session</string>
 
     <string-array name="mdl_countries_array">
         <item>United States</item>
