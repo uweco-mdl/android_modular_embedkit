@@ -87,7 +87,7 @@ public class MDLiveWaitingRoomNew extends Activity{
             @Override
             public void onResponse(Object response) {
                 handleVSeeResponse(response.toString());
-                Log.e("Response Vsee", response.toString());
+                //Log.v("Response Vsee", response.toString());
             }
         };
         NetworkErrorListener errorListner = new NetworkErrorListener() {

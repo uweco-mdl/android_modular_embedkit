@@ -26,7 +26,7 @@ public class MakeanappmtServices extends BaseServicesPlugin {
     public void makeappmt(HashMap<String,Object> postParams,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
             Gson gson=  new Gson();
-            Log.e("PostParams",gson.toJson(postParams).toString());
+            Log.v("PostParams",gson.toJson(postParams).toString());
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MAKE_APPOINTMENT, gson.toJson(postParams), responseListener, errorListener);
         }catch(Exception e){
             e.printStackTrace();

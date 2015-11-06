@@ -94,7 +94,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
 
     protected void medicalConditionOrAllergyListHandleSuccessResponse(JSONObject response) {
         try {
-            Log.e("Conditions response", response.toString());
+            Log.v("Conditions response", response.toString());
             conditionsListJSONArray = response.getJSONArray("surgeries");
             preRenderKnownConditionData();
         }catch(Exception e){

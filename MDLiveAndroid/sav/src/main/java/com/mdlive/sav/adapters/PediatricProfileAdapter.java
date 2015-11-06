@@ -221,17 +221,17 @@ public class PediatricProfileAdapter extends BaseAdapter {
     public void saveAllQuestionAnswersForPerdiotric(){
         if(immunizationEt != null){
             SavePediatricEditValues(PreferenceConstants.PEDIATRIC_IMMUNISATION_PREF, immunizationEt.getText().toString());
-            Log.e("immunizationEt", immunizationEt.getText().toString());
+            Log.v("immunizationEt", immunizationEt.getText().toString());
         }
 
         if(birthCompleteEt != null){
             SavePediatricEditValues(PreferenceConstants.PEDIATRIC_BIRTH_PREF, birthCompleteEt.getText().toString());
-            Log.e("birthCompleteEt", birthCompleteEt.getText().toString());
+            Log.v("birthCompleteEt", birthCompleteEt.getText().toString());
         }
 
         if(newBornEt != null){
             SavePediatricEditValues(PreferenceConstants.PEDIATRIC_CHILD_PREF, newBornEt.getText().toString());
-            Log.e("newBornEt", newBornEt.getText().toString());
+            Log.v("newBornEt", newBornEt.getText().toString());
         }
 
     }

@@ -157,6 +157,9 @@
             android:theme="@style/MDLive_Red_Theme"
             android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 </manifest>

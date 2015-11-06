@@ -19,8 +19,8 @@ public class ProviderDetailServices extends BaseServicesPlugin {
     public void getProviderDetails(String locatedIn, String appointementDate, String appointmentType,
                                    String DoctorId, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
-            Log.e("appmtDate",appointementDate);
-            Log.e("providerdetailsUrl",AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PROVIDER_DETAILS + DoctorId + "?appointment_date=" + appointementDate + "&appointment_type=" + appointmentType + "&located_in=" + locatedIn);
+            Log.v("appmtDate",appointementDate);
+            Log.v("providerdetailsUrl",AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PROVIDER_DETAILS + DoctorId + "?appointment_date=" + appointementDate + "&appointment_type=" + appointmentType + "&located_in=" + locatedIn);
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PROVIDER_DETAILS + DoctorId + "?appointment_date=" + appointementDate + "&appointment_type=" + appointmentType + "&located_in=" + locatedIn, null, responseListener, errorListener);
         }catch(Exception e){
             e.printStackTrace();

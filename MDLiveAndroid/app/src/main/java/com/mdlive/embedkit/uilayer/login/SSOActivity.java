@@ -125,7 +125,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                 public void onResponse(JSONObject response) {
 
                     try {
-                        Log.e("Response", response.toString());
+                        //Log.e("Response", response.toString());
                         hideProgress();
                         MDLiveConfig.USR_UNIQ_ID = response.getString(MDLiveConfig.UNIQUE_ID_STRINGNAME);
                         MDLiveConfig.AUTH_KEY = response.getString(MDLiveConfig.AUTHORIZATION_KEY);

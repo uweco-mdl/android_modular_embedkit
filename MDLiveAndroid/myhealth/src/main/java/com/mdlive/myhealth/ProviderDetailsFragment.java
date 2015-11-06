@@ -166,7 +166,7 @@ public class ProviderDetailsFragment extends MDLiveBaseFragment {
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
                 try {
-                    Log.e("Response pdetails", response.toString());
+                    Log.v("Response pdetails", response.toString());
                     JsonParser parser = new JsonParser();
                     JsonObject responObj = (JsonObject) parser.parse(response.toString());
                     JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -311,7 +311,7 @@ public class ProviderDetailsFragment extends MDLiveBaseFragment {
     private void getProviderImageArrayResponse(JsonObject providerdetObj) {
         String ProviderImage = "";
         JsonArray ProviderImageArray = providerdetObj.get("provider_groups").getAsJsonArray();
-        Log.e("Size", ProviderImageArray.size() + "");
+        Log.v("Size", ProviderImageArray.size() + "");
 //        providerImageHolder.removeAllViews();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(5,5,5,5);

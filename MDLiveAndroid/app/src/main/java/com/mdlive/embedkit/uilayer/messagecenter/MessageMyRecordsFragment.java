@@ -274,8 +274,8 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
     @Override
     public void uploadMedicalRecordService(String filePath, boolean capturedInCamera) {
 
-        Log.e("File Path From Local", filePath);
-        Log.e("capturedInCamera", capturedInCamera + "");
+        Log.v("File Path From Local", filePath);
+        Log.v("capturedInCamera", capturedInCamera + "");
 
         final File file = new File(filePath);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");

@@ -159,7 +159,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String strnxtavailable = appointmentNextAvailable.getText().toString().trim();
         String stridealdate = appointmentIdealDate.getText().toString().trim();
         strappointmentContactNumber = MdliveUtils.getSpecialCaseRemovedNumber(strappointmentContactNumber);
-        Log.e("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
+        Log.v("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
         if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
 
                 && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)) {
@@ -327,7 +327,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
-                    Log.e("Response Body", errorObj.toString());
+                    Log.v("Response Body", errorObj.toString());
                     NetworkResponse errorResponse = error.networkResponse;
                     if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("error") || errorObj.has("message")) {
@@ -355,14 +355,14 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         };
         MakeanappmtServices services = new MakeanappmtServices(MDLiveMakeAppmtrequest.this, null);
         services.makeappmt(params, successCallBackListener, errorListener);
-        Log.e("params",params.toString());
+        Log.v("params",params.toString());
     }
     private void handlepostSuccessResponse(JSONObject response) {
         try {
             hideProgress();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
-            Log.e("mak res",response.toString());
+            Log.v("mak res",response.toString());
             if (response.has("message")) {
                 Intent intent = new Intent(MDLiveMakeAppmtrequest.this, MDLiveAppointmentThankYou.class);
                 intent.putExtra("activitycaller", getString(R.string.mdl_makeAppmtRequest));

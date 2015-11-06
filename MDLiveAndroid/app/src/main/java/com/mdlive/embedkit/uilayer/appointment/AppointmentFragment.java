@@ -80,14 +80,14 @@ public class AppointmentFragment extends MDLiveBaseFragment {
         ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), appointment.getTimeZone()));
 
         final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "EDT");
-        Log.e("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
+        Log.v("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
         switch (type) {
 
             case 0 :
                 // Ten minutes case
                 SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                 String Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
-                Log.e("Print Time",Time);
+                Log.v("Print Time",Time);
                 String consultationType =  sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
                 view.findViewById(R.id.help).setVisibility(View.GONE);
 

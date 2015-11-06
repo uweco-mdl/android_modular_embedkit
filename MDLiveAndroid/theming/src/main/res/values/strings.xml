@@ -1141,6 +1141,19 @@
 
     <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
 
+    <!-- For Google Analytics -->
+    <!-- Affliate Google Tracking ID, if empty, then tracking is disable -->
+    <string name="ga_customTrackingId"></string>
+    <!-- MDLive Google Analytics flag. Set to true to enable internal tracking for MDLive-->
+    <string name="enable_mdlive_ga_tracking">true</string>
+    <string name="mdl_mdlive_adult">Adult</string>
+    <string name="mdl_mdlive_child">Child</string>
+    <string name="mdl_mdlive_session">Session</string>
+    <string name="mdl_mdlive_add_family_session">MDLIVE-Add Family Dependent</string>
+    <string name="mdl_mdlive_home_page">MDLIVE-home-page</string>
+    <string name="mdl_mdlive_video_session_initiated">Video session initiated</string>
+    <string name="mdl_mdlive_video_session_screen">MDLIVE-Video Session</string>
+
     <string-array name="mdl_countries_array">
         <item>United States</item>
         <item>Andorra</item>

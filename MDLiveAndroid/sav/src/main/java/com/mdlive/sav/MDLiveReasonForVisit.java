@@ -165,7 +165,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             // Provider mode
             String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
-            Log.e("Provider Mode", providerMode);
+            Log.v("Provider Mode", providerMode);
 
             if (providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")) {
                 isTherapistUser = true;
@@ -214,11 +214,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         private void handleSuccessResponse(JSONObject response) {
             //try {
                 hideProgress();
-                Log.e("Provider Mode Response ", response.toString());
+                //Log.v("Provider Mode Response ", response.toString());
                 final Gson gson = new Gson();
                 mBehavioralHistory = gson.fromJson(response.toString(), BehavioralHistory.class);
                 behaviour_reason = ((EditText) findViewById(R.id.behaviour_reason));
-                Log.e("Hello", mBehavioralHistory.toString());
+                //Log.v("Hello", mBehavioralHistory.toString());
 
                 LinearLayout behaviourHolder = (LinearLayout) findViewById(R.id.behaviourHolder);
                 if(behaviourHolder.getChildCount() > 0){
@@ -411,7 +411,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                         pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
                     }
                 }
-                Log.e("pediatricPercentage", pediatricPercentage + "");
+                Log.v("pediatricPercentage", pediatricPercentage + "");
                 if(pediatricPercentage != 0){
                     Intent medicalIntent = new Intent(MDLiveReasonForVisit.this, MDLiveMedicalHistory.class);
                     startActivity(medicalIntent);

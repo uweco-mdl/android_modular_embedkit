@@ -658,7 +658,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     pediatricPercentage = historyPercentageArray.getJSONObject(i).getInt("pediatric");
                 }
             }
-            Log.e("pediatricPercentage", pediatricPercentage+"");
+            Log.v("pediatricPercentage", pediatricPercentage+"");
             if(pediatricPercentage != 0){
                 ((TextView) findViewById(R.id.PediatricNameTv)).setText(getString(R.string.mdl_pediatric_completed_txt));
             }else{

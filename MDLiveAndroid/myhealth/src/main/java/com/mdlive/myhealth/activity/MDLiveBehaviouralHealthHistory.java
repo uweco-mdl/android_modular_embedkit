@@ -99,7 +99,7 @@ public class MDLiveBehaviouralHealthHistory extends Activity {
         NetworkSuccessListener successListner = new NetworkSuccessListener() {
             @Override
             public void onResponse(Object response) {
-                Log.e("Response History", response.toString());
+                //Log.v("Response History", response.toString());
                 handleSuccessResponse(response.toString());
                 MdliveUtils.hideProgressDialog(pDialog);
             }

@@ -161,7 +161,7 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-                Log.e("Response - ", response.toString());
+                //Log.v("Response - ", response.toString());
                 final Gson gson = new Gson();
                 final ConsultationHistoryDetails consultationHistoryDetails =  gson.fromJson(response.toString(), ConsultationHistoryDetails.class);
                 if(consultationHistoryDetails.getConsultationHistory().size()>0){
@@ -173,10 +173,10 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
                 }
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(consultationHistoryDetails.getConsultationHistory());
-                    Log.e("Response - ", consultationHistoryDetails.getConsultationHistory().size() + " -- ");
+                    //Log.v("Response - ", consultationHistoryDetails.getConsultationHistory().size() + " -- ");
                     mProviderAdapter.notifyDataSetChanged();
                 }
-                Log.e("Response - ", consultationHistoryDetails.getConsultationHistory().toString());
+                //Log.v("Response - ", consultationHistoryDetails.getConsultationHistory().toString());
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {

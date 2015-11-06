@@ -158,10 +158,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void onTickClicked(View v){
         saveDateOfBirth();
         try{
-            Log.e("Arkansas",locationTxt.getText().toString());
             if(locationTxt.getText().toString().equals("Arkansas"))
             {
-                Log.e("Arkansas",locationTxt.getText().toString());
                 ChooseProviderResponseList();
             }else {
 
@@ -205,10 +203,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                 editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
                             }
                             editor.commit();
-                            Log.e("phne num lenght-->",phonrNmberEditTxt.getText().toString()+"Length-->"+phonrNmberEditTxt.getText().toString().length());
+                            Log.v("phne num lenght-->",phonrNmberEditTxt.getText().toString()+"Length-->"+phonrNmberEditTxt.getText().toString().length());
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
-                                Log.e("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
+                                Log.v("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
                                 phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
@@ -269,7 +267,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
-        Log.e("Long Location Nmae-->", longLocation);
+        Log.v("Long Location Nmae-->", longLocation);
         SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 
         if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
@@ -307,7 +305,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             String longNameLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
             SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
-            Log.e("Result Location Nmae-->",SavedLocation);
+            Log.v("Result Location Name-->",SavedLocation);
             locationTxt.setText(longNameLocation);
             SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
             SharedPreferences.Editor searchEditor = searchPref.edit();
@@ -328,7 +326,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
 
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
-        Log.e("List of Spinner value ", list.toString());
+        Log.v("List of Spinner value ", list.toString());
         dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -588,7 +586,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
+                //Log.d("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
@@ -625,7 +623,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
+                Log.e("Status Code", "" + error.networkResponse.statusCode);
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
@@ -653,7 +651,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
+                //Log.d("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
@@ -667,7 +665,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("ptype Response", response.toString());
+                Log.v("ptype Response", response.toString());
                 hideProgress();
                 handleproviderTypeSuccessResponse(response);
             }
@@ -676,7 +674,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
+                //Log.d("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
@@ -698,7 +696,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleSuccessResponse(JSONObject response) {
         try {
-            Log.e("userinfo Res-->",response.toString());
+            //Log.e("userinfo Res-->",response.toString());
             assistFamilyMemmber = response.getString("assist_phone_number");
             remainingFamilyMemberCount = response.getInt("remaining_family_members_limit");
             JSONObject personalInfo = response.getJSONObject("personal_info");
@@ -989,7 +987,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
             remainingFamilyMemberCount = 0;
-            Log.e("dependent user info",response.toString());
+            //Log.v("dependent user info",response.toString());
             dependentList.clear();
             PatientList.clear();
             JSONObject personalInfo = response.getJSONObject("personal_info");
@@ -1132,7 +1130,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 String SelectedText = list.get(position);
                 selectedText.setText(SelectedText);
                 strProviderId = providerTypeIdList.get(position);
-                Log.e("selected pos pID",strProviderId);
+                Log.v("selected pos pID",strProviderId);
                 dialog.dismiss();
             }
         });
@@ -1146,7 +1144,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     private void providerSuccessResponse(String response) {
         try {
-            Log.e("REsponse--->", response.toString());
+            //Log.v("REsponse--->", response.toString());
         }catch(Exception e){
             e.printStackTrace();
         }

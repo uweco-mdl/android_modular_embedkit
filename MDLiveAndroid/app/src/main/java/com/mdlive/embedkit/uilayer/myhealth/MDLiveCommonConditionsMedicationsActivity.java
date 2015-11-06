@@ -421,7 +421,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             hideProgress();
             JSONObject healthHistory = response.getJSONObject("health_history");
             String conditonsNames = "";
-            Log.e("HISTORY REPONSE", response.toString());
+            Log.v("HISTORY REPONSE", response.toString());
             if(type == TYPE_CONSTANT.CONDITION){
                 JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
                 for (int i = 0; i < conditonsArray.length(); i++) {
@@ -435,7 +435,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 }
                 if (conditonsNames.trim().length() == 0)
                     conditonsNames = getString(R.string.mdl_no_condition_reported);
-                Log.e("conditonsNames", conditonsNames);
+                Log.v("conditonsNames", conditonsNames);
                 resultData.putExtra("conditionsData", conditonsNames);
             }else if(type == TYPE_CONSTANT.MEDICATION){
                 JSONArray conditonsArray = healthHistory.getJSONArray("medications");

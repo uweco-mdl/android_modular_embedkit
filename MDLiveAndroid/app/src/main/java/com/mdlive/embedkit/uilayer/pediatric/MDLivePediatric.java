@@ -390,7 +390,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
 
         Gson gs = new Gson();
-        Log.e("Post Params", gs.toJson(postParams).toString());
+        //Log.v("Post Params", gs.toJson(postParams).toString());
 
 
     }
@@ -456,7 +456,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 handleSuccessResponse(response.toString());
-                Log.e("Pediatric Profile", response.toString());
+                Log.v("Pediatric Profile", response.toString());
                 setInfoVisibilty();
             }
         };
@@ -496,7 +496,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 postParams.put("personal_info", weightMap);
                 enableSaveButton();
                 Gson gs = new Gson();
-                Log.e("Post Params", gs.toJson(postParams).toString());
+                //Log.v("Post Params", gs.toJson(postParams).toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

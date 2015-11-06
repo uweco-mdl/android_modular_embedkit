@@ -26,10 +26,6 @@
     public <methods>;
 }
 
--keep class com.mdlive.messages.messagecenter.MessageMyRecordsFragment {
-    public <methods>;
-}
-
 -keep class com.mdlive.messages.messagecenter.MessageCenterComposeActivity {
     public <methods>;
 }

@@ -239,7 +239,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 //                }
 
                 try {
-                    Log.i("response", response);
                     JSONObject myProfile = new JSONObject(response);
                     country = myProfile.getString("billing_country");
                     cardExpirationYear = myProfile.getString("cc_expyear");
@@ -334,8 +333,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.e("Values",""+newVal);
-                Log.e("OldValues",""+oldVal);
+                Log.v("Values",""+newVal);
+                Log.v("OldValues",""+oldVal);
                 Calendar c = Calendar.getInstance();
                 int minimumYear = c.get(Calendar.YEAR);
                 if(newVal!=minimumYear){
@@ -426,13 +425,11 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 jsonObject.put("billing_state_id", state);
                 jsonObject.put("cc_expmonth", cardExpirationMonth);
                 jsonObject.put("cc_cvv2", cvv);
-                Log.i("cvv", "" + cvv);
                 jsonObject.put("cc_num", cardNumber);
                 jsonObject.put("billing_country_id", country);
 
                 parent.put("billing_information", jsonObject);
                 loadBillingInfo(parent.toString());
-                Log.i("ADD Credit Card", parent.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

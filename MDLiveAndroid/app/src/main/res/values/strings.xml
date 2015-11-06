@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- MDLIVE Google Analytics tracking ID -->
+    <!--Replace placeholder ID with your tracking ID old UA-50076077-1 -->
+    <!--   Stage - UA-59678541-1 , Dev - UA-59666445-1 , QA - UA-59663838-1 , Prod - UA-52183043-1    -->
+    <string name="ga_mdlive_trackingId">UA-69393608-1</string>
 </resources>

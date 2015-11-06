@@ -91,7 +91,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("confirm appmt res---->", response.toString());
+                //Log.v("confirm appmt res---->", response.toString());
                 hideProgress();
                 try {
                     String apptId = response.getString("appointment_id");
@@ -166,8 +166,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        Log.e("PostValue confirmTimeStamp", TimeStamp);
-        Log.e("PostValue phys", phys_ID);
+        Log.v("PostValue confirmTS", TimeStamp);
+        Log.v("PostValue phys", phys_ID);
         params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
         if(phys_ID==null)
@@ -221,7 +221,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     public void rightBtnOnClick(View v) {
         if (CheckdoconfirmAppmt) {
-            Log.e("Am", "Am in rightbtnClick");
             doConfirmAppointment();
         }
 
@@ -245,7 +244,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void getPreferenceValue() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         CheckdoconfirmAppmt = sharedpreferences.getBoolean(PreferenceConstants.EXISTING_CARD_CHECK, true);
-        Log.e("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
+        Log.v("CheckdoconfirmAppmt", CheckdoconfirmAppmt + "");
         providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
         ((TextView) findViewById(R.id.txtProfileName)).setText(providerName);
         providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_TYPE, "");
@@ -260,7 +259,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             appointmentMethodType = "1";
         } else if (consultationType.equalsIgnoreCase("Phone")) {
             appointmentMethodType = "2";
-            Log.e("Phone", "Am in Phone");
         } else {
             appointmentMethodType = "1";
         }
@@ -280,7 +278,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
         String str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
         String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
-        Log.e("CheckAvailabilityType",str_Availability_Type);
+        Log.v("CheckAvailabilityType",str_Availability_Type);
         try {
             if(str_avail_status.equalsIgnoreCase("true")) {
                 if (str_Availability_Type.equalsIgnoreCase("video or phone")) {

@@ -283,7 +283,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     bottomLoder.setVisibility(View.GONE);
                 }
                 try {
-                    Log.e("Pharmacy Response --> ", response.toString());
+                    Log.v("Pharmacy Response --> ", response.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -297,7 +297,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
-                    Log.e("Pharmacy Response ", errorObj.toString());
+                    Log.v("Pharmacy Response ", errorObj.toString());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -528,7 +528,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 keyParams.put("per_page", 10);
                                 Gson gson = new Gson();
                                 String postBody = gson.toJson(keyParams);
-                                Log.e("Post Body", postBody);
+                                Log.v("Post Body", postBody);
                                 getPharmacySearchResults(postBody);
                             }
                         }
@@ -772,7 +772,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
         params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
         params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
-        Log.e("ConfirmAPPT Params", params.toString());
+        //Log.v("ConfirmAPPT Params", params.toString());
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, null);
         services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);

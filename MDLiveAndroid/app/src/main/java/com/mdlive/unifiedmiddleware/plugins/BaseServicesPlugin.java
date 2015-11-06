@@ -246,25 +246,25 @@ public abstract class BaseServicesPlugin {
         headerMap.put("Authorization", auth);
         headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
         String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-        Log.e("Authorization",auth);
-        Log.e("RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+        //Log.v("Authorization",auth);
+        //Log.v("RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
         if(dependentId != null) {
             headerMap.put("DependantId", dependentId);
-            Log.e("DependentID", dependentId);
+            Log.v("DependentID", dependentId);
         }
 
         sharedpreferences = context.getSharedPreferences(PreferenceConstants.DEVICE_OS,Context.MODE_PRIVATE);
         String deviceOS = sharedpreferences.getString(PreferenceConstants.DEVICE_OS_KEY, null);
         if (deviceOS != null) {
             headerMap.put("Device_OS", deviceOS);
-            Log.e("Device_OS", deviceOS);
+            Log.v("Device_OS", deviceOS);
         }
 
         sharedpreferences = context.getSharedPreferences(PreferenceConstants.DEVICE_ID,Context.MODE_PRIVATE);
         String deviceID = sharedpreferences.getString(PreferenceConstants.DEVICE_ID, null);
         if (deviceID != null) {
             headerMap.put("device_id", deviceID);
-            Log.e("device_id", deviceID);
+            Log.v("device_id", deviceID);
         }
         return headerMap;
     }

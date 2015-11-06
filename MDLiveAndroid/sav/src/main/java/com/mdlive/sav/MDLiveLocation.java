@@ -251,7 +251,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response",error.toString());
+                //Log.e("Response",error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
 
@@ -282,7 +282,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Response", error.toString());
+                //Log.d("Response", error.toString());
                 hideProgress();
                 if (error.networkResponse == null) {
                     if (error.getClass().equals(TimeoutError.class)) {
@@ -323,10 +323,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                         JsonArray TyprArray = localZip.get("types").getAsJsonArray();
                         for (int k = 0; k < TyprArray.size(); k++) {
                             String zip = TyprArray.get(k).getAsString();
-                            Log.e("responObj", zip.toString());
+                            Log.v("responObj", zip.toString());
                             if (zip.equalsIgnoreCase("administrative_area_level_1")) {
                                 SelectedZipCodeCity = localZip.get("short_name").getAsString();
-                                Log.e("Results", SelectedZipCodeCity);
+                                Log.v("Results", SelectedZipCodeCity);
 
                                 //This is for long name like Florida.
                                 zipcode_longNameText = localZip.get("long_name").getAsString();
@@ -412,10 +412,10 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
         String activityCaller  = getIntent().getStringExtra("activitycaller");
-        Log.e("Caller bname",activityCaller);
+        Log.v("Caller bname",activityCaller);
         if(activityCaller.equals("getstarted")){
             editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
-            Log.e("print short name",shortNameText);
+            Log.v("print short name",shortNameText);
             editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
             editor.commit();
         }

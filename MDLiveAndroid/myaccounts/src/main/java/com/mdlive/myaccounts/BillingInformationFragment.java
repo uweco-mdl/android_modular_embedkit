@@ -150,7 +150,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
 
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         hideProgressDialog();
-        Log.i("response", response.toString());
+        //Log.i("response", response.toString());
         try {
 
             if (response != null) {

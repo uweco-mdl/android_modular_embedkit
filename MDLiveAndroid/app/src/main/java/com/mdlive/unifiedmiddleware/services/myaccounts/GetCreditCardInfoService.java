@@ -26,7 +26,7 @@ public class GetCreditCardInfoService extends BaseServicesPlugin {
         try{
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_GET_CREDIT_CARD_INFO,
                     params, responseListener, errorListener);
-            Log.e("req Url",(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_GET_CREDIT_CARD_INFO));
+            //Log.e("req Url",(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_GET_CREDIT_CARD_INFO));
         }
         catch (Exception e){
             e.printStackTrace();

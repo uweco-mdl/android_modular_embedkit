@@ -203,19 +203,15 @@ public class MDLivePayment extends MDLiveBaseActivity {
 
     public void handlegetCreditCardInfoSuccessResponse(JSONObject response) {
         dismissDialog();
-        Log.i("response", response.toString());
+        //Log.i("response", response.toString());
         try {
             if (response != null) {
-                Log.e("inside","Am not in main Null");
                 myProfile = response.getJSONObject("billing_information");
-                Log.e("inside",myProfile.getString("cc_number"));
                 if (myProfile.getString("cc_number").equals(null)||myProfile.getString("cc_number").equals("null")||myProfile.getString("cc_number").equals("")||myProfile.getString("cc_number").isEmpty()
                         ) {
-                    Log.e("inside","Am in Null");
                     ((RelativeLayout) findViewById(R.id.masterCardRl)).setVisibility(View.GONE);
                     ((LinearLayout) findViewById(R.id.parentMasterCardLl)).setVisibility(View.GONE);
                 } else {
-                    Log.e("inside","Am not in Null");
                     if(myProfile.getString("cc_type_id").equalsIgnoreCase("1")) {
 
                         ((TextView) findViewById(R.id.useMasterCardtxt)).setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
@@ -245,7 +241,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
 //                getBillingPutParams(response.toString());
             }else
             {
-                Log.e("inside","Am in main  Null");
 
 
 
@@ -268,13 +263,12 @@ public class MDLivePayment extends MDLiveBaseActivity {
             // this is called from JS with passed value
             try {
                 JSONObject jobj = new JSONObject(billingResponse);
-                Log.e("token response",jobj.getString("status"));
+                Log.v("token response",jobj.getString("status"));
                 if(setExistingCardDetailUser)
                 {
                     if (jobj.getString("status").equals("success")) {
                         String params = getExistingBillingPutParams(billingResponse);
                         updateCardDetails(params);
-                        Log.e("get Existing params->",params);
                     } else {
                         MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
                     }
@@ -283,7 +277,6 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     if (jobj.getString("status").equals("success")) {
                         String params = getBillingPutParams(billingResponse);
                         updateCardDetails(params);
-                        Log.e("print params->",params);
                     } else {
                         MdliveUtils.alert(getProgressDialog(), MDLivePayment.this, jobj.getString("status"));
                     }
@@ -311,8 +304,8 @@ public class MDLivePayment extends MDLiveBaseActivity {
         yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.e("Values",""+newVal);
-                Log.e("OldValues",""+oldVal);
+                //Log.e("Values",""+newVal);
+                //Log.e("OldValues",""+oldVal);
                 Calendar c = Calendar.getInstance();
                 int minimumYear = c.get(Calendar.YEAR);
                 if(newVal!=minimumYear){
@@ -389,7 +382,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                 try {
                     dismissDialog();
                     JSONObject resObj = new JSONObject(response.toString());
-                    Log.e("billing success res-->",response.toString());
+                    Log.v("billing success res-->",response.toString());
                     if (resObj.has("message")) {
                 //Remove this..it is in next screen
                            /* doConfirmAppointment();*/
@@ -434,7 +427,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public String getBillingPutParams(String billingDetails) {
         try {
             JSONObject resObj = new JSONObject(billingDetails);
-            Log.e("success res-->",resObj.toString());
+            //Log.e("success res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
@@ -464,7 +457,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
     public String getExistingBillingPutParams(String billingDetails) {
         try {
             JSONObject resObj = new JSONObject(billingDetails);
-            Log.e("payment res-->",resObj.toString());
+            Log.v("payment res-->",resObj.toString());
             JSONObject billingObj = resObj.getJSONObject("billing_information");
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             HashMap<String, String> cardInfo = new HashMap<>();
@@ -737,7 +730,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 hideProgress();
-                Log.e("Zero Dollar Insurance", response.toString());
+                //Log.e("Zero Dollar Insurance", response.toString());
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
                     if (jobj.has("final_amount")) {

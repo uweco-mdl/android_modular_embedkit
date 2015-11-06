@@ -246,7 +246,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
 
                     mNoProvidersView.setVisibility(View.GONE);
                 }
-                Log.e("Response - ", provider.toString());
+                Log.v("Response - ", provider.toString());
             }
         };
         final NetworkErrorListener errorListener = new NetworkErrorListener() {

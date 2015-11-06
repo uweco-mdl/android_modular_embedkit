@@ -98,7 +98,7 @@ public class MDLiveAddAllergies extends MDLiveCommonConditionsMedicationsActivit
 
     protected void medicalConditionOrAllergyListHandleSuccessResponse(JSONObject response) {
         try {
-            Log.e("Conditions response", response.toString());
+            Log.v("Conditions response", response.toString());
             conditionsListJSONArray = response.getJSONArray((type == TYPE_CONSTANT.CONDITION)?"conditions":type == (TYPE_CONSTANT.ALLERGY)?"allergies":"medications");
             preRenderKnownConditionData();
         }catch(Exception e){

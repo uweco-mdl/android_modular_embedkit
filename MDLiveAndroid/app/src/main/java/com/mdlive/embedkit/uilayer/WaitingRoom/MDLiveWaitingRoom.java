@@ -167,7 +167,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
-                    Log.e("WaitingRoom 1 REsponse", errorObj.toString());
+                    Log.v("WaitingRoom 1 REsponse", errorObj.toString());
                     if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("message") || errorObj.has("error")) {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
@@ -302,7 +302,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 //                ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.start_consultation);
 
                 Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
-                Log.e("VeeSEE -->", "Final reached....");
+                Log.v("VeeSEE -->", "Final reached....");
                 i.putExtra("username",userName);
                 i.putExtra("password",password);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

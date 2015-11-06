@@ -24,7 +24,7 @@ public class DownloadMedicalService extends BaseServicesPlugin {
      */
     public void doDownloadImagesRequest( NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
-            Log.e("Url called for Download", AppSpecificConfig.BASE_URL+AppSpecificConfig.DOWNLOAD_MEDICALREPORT);
+            //Log.v("Url called for Download", AppSpecificConfig.BASE_URL+AppSpecificConfig.DOWNLOAD_MEDICALREPORT);
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.DOWNLOAD_MEDICALREPORT, null, responseListener, errorListener);
         }catch(Exception e){
             e.printStackTrace();

@@ -15,10 +15,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.WaitingRoom.WaitingRoomViewPager;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 import com.vsee.kit.VSeeKit;
 import com.vsee.kit.VSeeServerConnection;
 import com.vsee.kit.VSeeVideoManager;
@@ -300,6 +303,20 @@ public class MDLiveVsee extends MDLiveBaseActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
+                                    // Obtain the shared Tracker instance.
+                                    AnalyticsApplication application = (AnalyticsApplication) getApplication();
+                                    Tracker mTracker = application.getTracker(tn);
+                                    if (mTracker != null) {
+                                        mTracker.setScreenName(getString(R.string.mdl_mdlive_video_session_screen));
+                                        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+                                        mTracker.send(new HitBuilders.EventBuilder()
+                                                .setCategory(getString(R.string.mdl_mdlive_session))
+                                                .setAction(getString(R.string.mdl_mdlive_video_session_initiated))
+                                                .setLabel(getString(R.string.mdl_mdlive_video_session_initiated))
+                                                .build());
+                                    }
+                                }
                                 CONSULTED = true;
                                 startActivity(VSeeVideoManager.instance().getVideoLaunchIntent());
                             }

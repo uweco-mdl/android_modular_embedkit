@@ -215,7 +215,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error Response", error.toString());
+                Log.e("Status Code", "" + error.networkResponse.statusCode);
                 setInfoVisibilty();
                 docOnCalLinLay.setVisibility(View.VISIBLE);
                 filterMainRl.setVisibility(View.GONE);
@@ -270,7 +270,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     private void handleSuccessResponse(String response) {
         try {
-            Log.e("Response--->", response.toString());
+            //Log.v("Response--->", response.toString());
             setInfoVisibilty();
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
@@ -304,7 +304,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
             }else  if(!responObj.get("physicians").isJsonNull()){
                 if (responObj.has("physicians")){
-                    Log.e("Coming","First");
+                    Log.v("Coming","First");
                     JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                     if(responArray.size()!=0){
                         if(responArray.get(0).isJsonObject()){
@@ -349,7 +349,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      */
     private void setListViews() {
         showOrHideFooter();
-        Log.e("List","Am in SetListview");
         baseadapter = new ChooseProviderAdapter(MDLiveChooseProvider.this, providerListMap);
         listView.setAdapter(baseadapter);
         baseadapter.notifyDataSetChanged();
@@ -424,7 +423,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             String nxtavaildate="";
             for(int j=0;j<affiliationsArray.size();j++) {
                 groupAffiliations = affiliationsArray.get(j).getAsJsonObject().get("group_name").getAsString();
-                Log.e("affiliationsArray-->", groupAffiliations);
+                Log.v("affiliationsArray-->", groupAffiliations);
             }
             try {
                 long nextAvailabilityTimeStamp = responArray.get(i).getAsJsonObject().get("next_availability").getAsLong();
@@ -462,7 +461,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             map.put("next_availability",nxtavaildate);
             map.put("shared_timestamp",shared_timestamp+"");
             providerListMap.add(map);
-            Log.e("check providerlist",providerListMap.toString());
+            Log.v("check providerlist",providerListMap.toString());
         }
     }
     /**
@@ -506,9 +505,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("List","Am in ListItem Click Listener");
-                Log.e("Provider Id",providerListMap.get(position).get("id"));
-                Log.e("Provider availabilityType",providerListMap.get(position).get("availability_type"));
+                Log.v("Provider Id",providerListMap.get(position).get("id"));
+                Log.v("Provider availabilityType",providerListMap.get(position).get("availability_type"));
                 saveDoctorId(providerListMap.get(position).get("id"), providerListMap.get(position).get("shared_timestamp"),
                         providerListMap.get(position).get("name"), providerListMap.get(position).get("group_name"),providerListMap.get(position).get("availability_type"),providerListMap.get(position).get("available_now_status"));
                 Intent Reasonintent = new Intent(MDLiveChooseProvider.this,MDLiveProviderDetails.class);
@@ -546,21 +544,21 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 tomorrow.add(Calendar.DATE, 1);  // number of days to add
                 tomorrow.set(tomorrow.get(Calendar.YEAR), tomorrow.get(Calendar.MONTH), tomorrow.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
                 Date currenTimeZone1 = (Date) calendar.getTime();
-                Log.e("general Timezone-->",calendar.getTimeInMillis()+"");
-                Log.e("today Timezone-->",today.getTimeInMillis()+"");
-                Log.e("tomrw Timezone-->",tomorrow.getTimeInMillis()+"");
+                Log.v("general Timezone-->",calendar.getTimeInMillis()+"");
+                Log.v("today Timezone-->",today.getTimeInMillis()+"");
+                Log.v("tomrw Timezone-->",tomorrow.getTimeInMillis()+"");
 
                 String sendData="";
                 if(timestamp <= today.getTimeInMillis()){
                     sendData = "Today "+calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE);
-                    Log.e("Kobe Timezone-->","Kobe today");
+                    Log.v("Kobe Timezone-->","Kobe today");
                 }else if(timestamp > today.getTimeInMillis() && timestamp <= tomorrow.getTimeInMillis()){
                     sendData = "Tomorrow "+calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE);
-                    Log.e("Kobe Timezone-->","Kobe tmr");
+                    Log.v("Kobe Timezone-->","Kobe tmr");
                 }else{
                     Date currenTimeZone = (Date) calendar.getTime();
                     sendData = sdf.format(currenTimeZone);
-                    Log.e("Kobe Timezone-->","Kobe future");
+                    Log.v("Kobe Timezone-->","Kobe future");
                 }
 
                 //Date currenTimeZone = (Date) calendar.getTime();

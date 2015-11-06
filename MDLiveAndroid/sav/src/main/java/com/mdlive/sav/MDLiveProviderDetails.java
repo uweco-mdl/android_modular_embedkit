@@ -147,15 +147,15 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
         try {
             if(Shared_AppointmentDate!=null && Shared_AppointmentDate.length() != 0){
-                Log.e("Check timestamp",Shared_AppointmentDate);
+                Log.v("Check timestamp",Shared_AppointmentDate);
                 final Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(Long.parseLong(Shared_AppointmentDate) * 1000);
                 Log.d("Time - ", cal.getTime().toString() + " - ");
                 final Date date = cal.getTime();
                 final Format format = new SimpleDateFormat("yyyy/MM/dd");
                 String convertedTime =  format.format(date);
-                Log.e("convertedtime", convertedTime);
-                Log.e("ProviderDate",convertedTime);
+                Log.v("convertedtime", convertedTime);
+                Log.v("ProviderDate",convertedTime);
                 AppointmentDate = convertedTime;
 //
             }
@@ -291,7 +291,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         hideProgress();
         horizontalscrollview.setVisibility(View.GONE);
         //Fetch Data From the Services
-        Log.e("Response Date pdetails", response.toString());
+        //Log.v("Response Date pdetails", response.toString());
         JsonParser parser = new JsonParser();
         JsonObject responObj = (JsonObject) parser.parse(response.toString());
         JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -347,7 +347,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
 //                            Log.e("Date Check timeslot", str_timeslot+"");
 //                            Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
-                            Log.e("Date Check appointment_type", str_appointmenttype);
+                            Log.v("Date Check appointment_type", str_appointmenttype);
 
 
                             HashMap<String, String> datemap = new HashMap<String, String>();
@@ -412,9 +412,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                 {
 //                   datelayout.removeAllViews();
 //                    timeSlotList.clear();
-                    Log.e("timeslotlength", timeSlotList.size() + "");
+                    Log.v("timeslotlength", timeSlotList.size() + "");
                     if(layout.getChildCount() == 0){
-                        Log.e("nothing","nothing");
                         selectedTimeslot=false;
                         ((RelativeLayout)findViewById(R.id.noappmtsTxtLayout)).setVisibility(View.VISIBLE);
                         ((TextView)findViewById(R.id.noAppmtsTxt)).setText(getString(R.string.mdl_notimeslots_txt));
@@ -453,7 +452,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
             JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
 
-            Log.e("Stage 1..", response.toString());
+            Log.v("Stage 1..", response.toString());
             boolean isDoctorWithPatient = false;
             LinearLayout layout = (LinearLayout) findViewById(R.id.panelMessageFiles);
           String str_timeslot = "" /*str_phys_avail_id = "",*/;
@@ -463,7 +462,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
           String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
-            Log.e("CheckAvailabilityType",str_Availability_Type);
+            Log.v("CheckAvailabilityType",str_Availability_Type);
 if(str_avail_status.equalsIgnoreCase("true"))
 {
             if(str_Availability_Type.equalsIgnoreCase("video or phone"))
@@ -517,7 +516,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
 
 //                            Log.e("Date Check timeslot", str_timeslot+"");
 //                            Log.e("General Check phys_id", (str_phys_avail_id == null)?"":str_phys_avail_id+"");
-                                Log.e(" Check appointment_type", str_appointmenttype);
+                                Log.v(" Check appointment_type", str_appointmenttype);
 
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("timeslot", str_timeslot);
@@ -585,7 +584,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 e.printStackTrace();
             }
 
-            Log.e("layout.getChildCount()", layout.getChildCount() + "");
+            Log.v("layout.getChildCount()", layout.getChildCount() + "");
 
 
             //with patient
@@ -608,7 +607,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
             else if (isDoctorAvailableNow && layout.getChildCount() < 1) {
 
                 horizontalscrollview.setVisibility(View.GONE);
-                Log.e("Am in availble now", "Am in availble now");
                 ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
                 if (str_Availability_Type.equalsIgnoreCase("video")) {
                     onlyvideo();
@@ -635,7 +633,6 @@ if(str_avail_status.equalsIgnoreCase("true"))
             //part 2 available ly later
             //Part2 ----> timeslot not zero followed by many timeslots
             else if (!isDoctorAvailableNow && layout.getChildCount() >=1) {
-                Log.e("Am in Avail Later","Available Later");
                 availableOnlyLater(str_Availability_Type);
 
             }
@@ -687,12 +684,12 @@ if(str_avail_status.equalsIgnoreCase("true"))
     private void enableReqAppmtBtn() {
         if(!selectedTimeslot)
         {
-            Log.e("false", "selectedTimeslot");
+            Log.v("false", "selectedTimeslot");
             reqApmtBtm.setVisibility(View.GONE);
 
         }else
         {
-            Log.e("false","Visible");
+            Log.v("false","Visible");
             reqApmtBtm.setVisibility(View.VISIBLE);
 
         }
@@ -990,7 +987,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
             isDoctorAvailableNow=false;
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
-            Log.e("where","Amin with patient");
+            Log.v("where","Amin with patient");
             ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
             clickForVideoOrPhoneTapReqFutureAction();
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setClickable(false);
@@ -1056,7 +1053,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
 //            ((RelativeLayout) findViewById(R.id.dateTxtLayout)).setVisibility(View.GONE);
 //            horizontalscrollview.setVisibility(View.GONE);
-            Log.e("where","part1 with patient");
+            Log.v("where","part1 with patient");
             ((LinearLayout)findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
             ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
             clickForVideoOrPhoneTapReqFutureAction();
@@ -1139,7 +1136,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 @Override
                 public void onClick(View v) {
                     try {
-                        Log.e("within", "video");
+                        Log.v("within", "video");
                         selectedAppmtTypeVideoOrPhone = "video";
                         byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                         byvideoBtn.setTextColor(Color.WHITE);
@@ -1158,7 +1155,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         }
 
                         for (TextView tv : videoList) {
-                            Log.e("videoList", "" + tv);
+                            Log.v("videoList", "" + tv);
                             layout.addView(tv);
                         }
                         saveConsultationType("Video");
@@ -1185,7 +1182,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 @Override
                 public void onClick(View v) {
                     try {
-                        Log.e("within", "Phone");
+                        Log.v("within", "Phone");
                         selectedAppmtTypeVideoOrPhone = "phone";
                         byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                         byphoneBtn.setTextColor(Color.WHITE);
@@ -1229,8 +1226,8 @@ if(str_avail_status.equalsIgnoreCase("true"))
                 byvideoBtn.setTextColor(Color.GRAY);
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                 byphoneBtn.setTextColor(Color.GRAY);
-                Log.e("SizePhonelist",phoneList.size()+"");
-                Log.e("SizeVideolist",videoList.size()+"");
+                Log.v("SizePhonelist",phoneList.size()+"");
+                Log.v("SizeVideolist",videoList.size()+"");
 
                 if(videoList.size()==0)
                 {
@@ -1246,7 +1243,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         @Override
                         public void onClick(View v) {
                             try {
-                                Log.e("withinElse", "video");
+                                Log.v("withinElse", "video");
                                 selectedAppmtTypeVideoOrPhone = "video";
                                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byvideoBtn.setTextColor(Color.WHITE);
@@ -1264,7 +1261,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                 }
 
                                 for (TextView tv : videoList) {
-                                    Log.e("videoList", "" + tv);
+                                    Log.v("videoList", "" + tv);
                                     layout.addView(tv);
                                 }
                                 saveConsultationType("Video");
@@ -1293,7 +1290,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                         @Override
                         public void onClick(View v) {
                             try {
-                                Log.e("withinElse", "Phone");
+                                Log.v("withinElse", "Phone");
                                 selectedAppmtTypeVideoOrPhone = "phone";
                                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                                 byphoneBtn.setTextColor(Color.WHITE);
@@ -1334,7 +1331,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.APPOINTMENT_TYPE, appmtType);
-        Log.e("appmtType",appmtType);
+        Log.v("appmtType",appmtType);
         editor.commit();
     }
 
@@ -1367,11 +1364,11 @@ if(str_avail_status.equalsIgnoreCase("true"))
 //        lp.setMargins(4 * density ,4 * density, 4 * density, 4 * density);
 //        myText.setLayoutParams(lp);
         layout.addView(myText);
-        Log.e("final timeslots",str_appointmenttype);
+        Log.v("final timeslots",str_appointmenttype);
         if(str_appointmenttype.equalsIgnoreCase("video")||str_appointmenttype.equalsIgnoreCase("video or phone") && str_timeslot != null && !str_timeslot.equals("0")){
 
             videoList.add(myText);
-            Log.e("videoList", ""+videoList.size());
+            Log.v("videoList", ""+videoList.size());
         }
 
         if(str_appointmenttype.equalsIgnoreCase("phone")||str_appointmenttype.equalsIgnoreCase("video or phone") && str_timeslot != null && !str_timeslot.equals("0")){
@@ -1404,7 +1401,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
     private void defaultNowTextPreferences(final TextView timeslotTxt, final String appointmentType) {
 
         selectedTimeslot=true;
-        Log.e("check now", timeslotTxt.getText().toString());
+        Log.v("check now", timeslotTxt.getText().toString());
         //saveConsultationType(appointmentType);
         saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
         //This is to select and Unselect the Timeslot
@@ -1433,17 +1430,15 @@ if(str_avail_status.equalsIgnoreCase("true"))
             public void onClick(View v) {
                 selectedTimeslot=true;
                 String appointmentType = (String) v.getTag();
-                Log.e("check now", timeslotTxt.getText().toString());
+                Log.v("check now", timeslotTxt.getText().toString());
                 //saveConsultationType(appointmentType);
                 saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
                 //This is to select and Unselect the Timeslot
                 if(previousSelectedTv == null){
-                    Log.e("Crash","if");
                     previousSelectedTv = timeslotTxt;
                     timeslotTxt.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
                     timeslotTxt.setTextColor(Color.WHITE);
                 }else{
-                    Log.e("Crash","else");
                     previousSelectedTv.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
                     previousSelectedTv.setTextColor(Color.GRAY);
                     previousSelectedTv = timeslotTxt;
@@ -1740,13 +1735,13 @@ if(str_avail_status.equalsIgnoreCase("true"))
          Shared_AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
         try {
             if(Shared_AppointmentDate!=null && Shared_AppointmentDate.length() != 0){
-                Log.e("Check timestamp",Shared_AppointmentDate);
+                Log.v("Check timestamp",Shared_AppointmentDate);
                 c.setTimeInMillis(Long.parseLong(Shared_AppointmentDate) * 1000);
                 final Date date = c.getTime();
                 final Format format = new SimpleDateFormat("yyyy/MM/dd");
 
                 String convertedTime =  format.format(date);
-                Log.e("getCurrentDate",convertedTime);
+                Log.v("getCurrentDate",convertedTime);
 //                AppointmentDate = convertedTime;
 
                 final Format format1 = new SimpleDateFormat("E, MMM dd, yyyy");

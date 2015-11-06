@@ -21,10 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -34,6 +38,8 @@ import com.mdlive.unifiedmiddleware.services.myaccounts.AddFamilyMemberInfoServi
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -389,6 +395,27 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     parent.put("member", jsonObject1);
                     parent.put("camera", jsonObject);
 
+                    // Obtain the shared Tracker instance.
+                    AnalyticsApplication application = (AnalyticsApplication) getApplication();
+                    for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
+                        Tracker mTracker = application.getTracker(tn);
+                        String age = getString(R.string.mdl_mdlive_child);
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                            int years = MdliveUtils.calculateAge(sdf.parse(DOB));
+                            if (years >= 18) {
+                                age = getString(R.string.mdl_mdlive_adult);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        mTracker.setScreenName(getString(R.string.mdl_mdlive_add_family_session));
+                        mTracker.send(new HitBuilders.ScreenViewBuilder()
+                                .setCustomDimension(MDLiveConfig.GA_DIMENSIONS.GENDER.ordinal(), Gender)
+                                .setCustomDimension(MDLiveConfig.GA_DIMENSIONS.AGE.ordinal(), age)
+                                .build());
+                    }
                     addFamilyMember(parent.toString());
 
                 } catch (JSONException e) {

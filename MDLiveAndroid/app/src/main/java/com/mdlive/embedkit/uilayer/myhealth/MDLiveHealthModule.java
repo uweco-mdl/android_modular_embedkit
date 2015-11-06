@@ -320,14 +320,14 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             String dateofBirth =userBasicInfo.getPersonalInfo().getBirthdate();
 //            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
             procedureYearList.clear();
-            Log.e("dateofBirth", dateofBirth);
+            Log.v("dateofBirth", dateofBirth);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
                 years = Calendar.getInstance().get(Calendar.YEAR) - years;
                 for(int i = years; i <= Calendar.getInstance().get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
-                    Log.e("Years--->", i+"");
+                    Log.v("Years--->", i+"");
                 }
                 if(procedureYearList.size() == 0){
                     procedureYearList.add(Calendar.getInstance().get(Calendar.YEAR)+"");
@@ -445,7 +445,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 map.put("name", surgeryName.getText().toString());
                 map.put("surgery_year", surgeryYear.getText().toString());
                 allergies.put("surgery", map);
-                Log.e("Post Body ", new Gson().toJson(allergies));
+                Log.v("Post Body ", new Gson().toJson(allergies));
                 saveNewConditionsOrAllergies(new Gson().toJson(allergies));
             }
         }else if(type == TYPE_CONSTANT.MEDICATION){
@@ -466,7 +466,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 map.put("frequency", ((TextView)findViewById(R.id.timesTxt)).getText().toString() +" "+
                         ((TextView)findViewById(R.id.modeTxt)).getText().toString());
                 medications.put("medication", map);
-                Log.e("Post Body ", new Gson().toJson(medications));
+                Log.v("Post Body ", new Gson().toJson(medications));
                 saveNewConditionsOrAllergies(new Gson().toJson(medications));
             }else{
                 MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_medication_already_exist));
@@ -646,7 +646,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Response String", response.toString());
+                Log.v("Response String", response.toString());
                 hideProgress();
                 setResult(RESULT_OK);
                 finish();

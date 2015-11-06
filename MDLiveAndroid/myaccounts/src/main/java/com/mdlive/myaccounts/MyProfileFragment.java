@@ -271,7 +271,6 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         if(!mFromResult){
             hideProgressDialog();
         }
-        Log.i("response", response.toString());
         try {
             myProfile = response.getJSONObject("personal_info");
             profileImageURL = myProfile.getString("image_url");

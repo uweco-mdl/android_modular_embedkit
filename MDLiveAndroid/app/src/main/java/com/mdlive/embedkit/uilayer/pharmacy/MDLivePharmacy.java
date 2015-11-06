@@ -226,7 +226,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             @Override
             public void onResponse(Object response) {
                 hideProgress();
-                Log.e("Zero Dollar Insurance", response.toString());
+                Log.v("Zero Dollar Insurance", response.toString());
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
                     if (jobj.has("final_amount")) {
@@ -333,7 +333,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, Object> params = new HashMap<String, Object>();
        String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        Log.e("ConsultationType",consultationType);
+        Log.v("ConsultationType",consultationType);
         String appointmentMethodType="";
         if(consultationType.equalsIgnoreCase("Video"))
         {
@@ -341,14 +341,13 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         }else if(consultationType.equalsIgnoreCase("Phone"))
         {
             appointmentMethodType="2";
-            Log.e("Phone","Am in Phone");
         }else
         {
             appointmentMethodType="1";
         }
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        Log.e("PostValue confirmTimeStamp",settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, ""));
-        Log.e("PostValue phys",settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
+        Log.v("PostValue confirmTS",settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, ""));
+        Log.v("PostValue phys",settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
         params.put("appointment_method", appointmentMethodType);
         params.put("alternate_visit_option", "No Answer");
         params.put("phys_availability_id", settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));

@@ -41,6 +41,12 @@ public class MDLiveConfig {
         CALL_ASSIST
     }
 
+    // Custom dimensions for Google Analytics
+    public enum GA_DIMENSIONS {
+        GENDER,
+        AGE
+    }
+
     // Define what embedkit components subset will be actually accessible to affiliate app
     public static Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST, EMBEDKITS.MY_MESSAGES);
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<resources>
+    <!--Enable automatic exception tracking-->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <!--Enable automatic activity tracking-->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+
+    <!-- User define attributes. Add additional screennames below-->
+    <screenName name="com.mdlive.mobile.LoginActivity">
+        MDLIVE-login-screen
+    </screenName>
+    <screenName name="com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity">
+        MDLIVE-home-page
+    </screenName>
+    <screenName name="com.mdlive.sav.MDLiveGetStarted">
+        MDLIVE-SAV-get-started
+    </screenName>
+    <screenName name="com.mdlive.sav.MDLiveReasonForVisit">
+        MDLIVE-SAV-reason-for-visit
+    </screenName>
+    <screenName name="com.mdlive.sav.MDLiveSearchProvider">
+        MDLIVE-refine-search
+    </screenName>
+    <screenName name="com.mdlive.sav.MDLiveChooseProvider">
+        MDLIVE-SAV-choose-provider
+    </screenName>
+    <screenName name="com.mdlive.myhealth.MDLiveMedicalHistory">
+        MDLIVE-SAV-medhistory-question
+    </screenName>
+    <screenName name="com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy">
+        MDLIVE-SAV-my-pharmacy
+    </screenName>
+    <screenName name="com.mdlive.embedkit.uilayer.payment.MDLivePayment">
+        MDLIVE-SAV-checkout
+    </screenName>
+    <screenName name="com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment">
+        MDLIVE-SAV-confirm-appointment
+    </screenName>
+    <screenName name="com.mdlive.sav.MDLiveDoctorOnCall">
+        MDLIVE-SAV-provider-oncall
+    </screenName>
+    <screenName name="com.mdlive.myhealth.MDLiveMyHealthVisitsFragment">
+        MDLIVE-my-visit
+    </screenName>
+    <screenName name="com.mdlive.embedkit.uilayer.pharmacy.MDLiveMyPharmacyActivity">
+        MDLIVE-SAV-my-pharmacy
+    </screenName>
+    <screenName name="com.mdlive.messages.messagecenter.MessageCenterActivity">
+        MDLIVE-message-center
+    </screenName>
+    <screenName name="com.mdlive.myhealth.MedicalHistoryActivity">
+        MDLIVE-medhistory
+    </screenName>
+    <screenName name="com.mdlive.myaccounts.MyAccountActivity">
+        MDLIVE-my-account
+    </screenName>
+    <screenName name="com.mdlive.symptomchecker.MDLiveSymptomCheckerActivity">
+        MDLIVE-symptom-checker
+    </screenName>
+</resources>

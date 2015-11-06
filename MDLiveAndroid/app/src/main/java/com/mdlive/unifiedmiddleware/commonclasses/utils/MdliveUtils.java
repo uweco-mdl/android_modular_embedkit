@@ -570,14 +570,14 @@ public class MdliveUtils {
 //    Step1
     public static String getTimeFromTimestamp(String timestamp) {
 
-        Log.e("Check timestamp",timestamp);
+        Log.v("Check timestamp",timestamp);
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(timestamp) * 1000);
         Log.d("Time - ", cal.getTime().toString() + " - ");
         final Date date = cal.getTime();
         final Format format = new SimpleDateFormat("h:mm a");
         String convertedTime =  format.format(date);
-        Log.e("convertedtime", convertedTime);
+        Log.v("convertedtime", convertedTime);
         return convertedTime;
     }
 
@@ -776,7 +776,7 @@ public class MdliveUtils {
             UserBasicInfo userbasicinfo = UserBasicInfo.readFromSharedPreference(cxt);
             String age=sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH,"");
             DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Log.e("Date final",age);
+            Log.v("Date final",age);
             Date date = format.parse(userbasicinfo.getPersonalInfo().getBirthdate());
             return MdliveUtils.calculateAge(date);
         }catch (Exception e){
@@ -891,7 +891,7 @@ public class MdliveUtils {
 
     public static String zipCodeFormat(String zipcode) {
         try {
-            Log.e("zipcode", zipcode);
+            Log.v("zipcode", zipcode);
             if(zipcode != null && !zipcode.contains("-") && zipcode.length() >= 6){
                 zipcode = zipcode.substring(0, 5)+"-"+zipcode.substring(5, zipcode.length()-1);
                 return zipcode;
@@ -1267,19 +1267,19 @@ public class MdliveUtils {
         Log.d("Set Date", "Diff : " + diffDays);
 
         if (diffDays ==0) {
-            Log.e("Day","Today");
+            Log.v("Day","Today");
             final Format format = new SimpleDateFormat("H:mm a");
             return "Today "+format.format(date);
         } else if (diffDays == 1) {
-            Log.e("Day","Tomorrow");
+            Log.v("Day","Tomorrow");
             final Format format = new SimpleDateFormat("H:mm a");
             return "Tommorrow "+ format.format(date);
         } else if (diffDays >1) {
-            Log.e("Day","future");
+            Log.v("Day","future");
             final Format format = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a");
             return format.format(date);
         } else {
-            Log.e("Day","future");
+            Log.v("Day","future");
             final Format format = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a");
             return format.format(date);
         }
@@ -1538,7 +1538,7 @@ public class MdliveUtils {
 
     public static String formatDualString(String formatText) {
         boolean hasParenthesis = false;
-        Log.e("Raw Format Text",formatText);
+        Log.v("Raw Format Text",formatText);
         if(formatText.indexOf(")") > 0){
             hasParenthesis = true;
         }
@@ -1548,12 +1548,12 @@ public class MdliveUtils {
         formatText= formatText.replace("-", "");
         if(formatText.length() >= 7){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+"-"+formatText.substring(6, formatText.length());
-            Log.e("Print format txt",formatText);
+            Log.v("Print format txt",formatText);
         }else if(formatText.length() >= 4){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
-            Log.e("Print format txt",">4");
+            Log.v("Print format txt",">4");
         }else if(formatText.length() == 3 && hasParenthesis){
-            Log.e("Print format txt",">3");
+            Log.v("Print format txt",">3");
             formatText = "("+formatText.substring(0, formatText.length())+")";
         }
         return formatText;

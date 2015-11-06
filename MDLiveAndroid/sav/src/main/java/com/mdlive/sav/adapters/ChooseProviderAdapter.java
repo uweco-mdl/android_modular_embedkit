@@ -101,9 +101,9 @@ public class ChooseProviderAdapter extends BaseAdapter {
             SpecialistTxt.setText(array.get(pos).get("specialty"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
-            Log.e("AvailableNowStatus", array.get(pos).get("available_now_status"));
+            Log.v("AvailableNowStatus", array.get(pos).get("available_now_status"));
             if (array.get(pos).get("available_now_status").equals("true")) {
-                Log.e("AvailableNowStatus", "Am in True");
+                Log.v("AvailableNowStatus", "Am in True");
                 if(array.get(pos).get("availability_type").equalsIgnoreCase("with patient")) {
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
@@ -140,13 +140,11 @@ public class ChooseProviderAdapter extends BaseAdapter {
             else {
 
 //                if(array.get(pos).get("availability_type").equals("not available"))
-                Log.e("nulldate",array.get(pos).get("next_availability").toString());
+                Log.v("nulldate",array.get(pos).get("next_availability").toString());
                 if(array.get(pos).get("next_availability").toString()==null)
                 {
-                    Log.e("nullcheck","Am in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText("");
                 }else {
-                    Log.e("nullcheck","Am not in null");
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("next_availability"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
                 }
