@@ -23,6 +23,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
 
+        <!-- Login process -->
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.login.SSOActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"/>
+
         <!-- Pharmacy Activities -->
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacy"

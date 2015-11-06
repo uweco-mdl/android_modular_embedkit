@@ -17,6 +17,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
@@ -58,7 +59,7 @@ public abstract class BaseServicesPlugin {
 
     /**
      *
-     * This method will send a JSONObject Request and will retrieve a JSONObject Response.
+     * This method will make a JSONObject POST Request and will retrieve a JSONObject Response.
      *
      * @param url       The Request URL
      * @param params    The POST Parameters
@@ -106,7 +107,7 @@ public abstract class BaseServicesPlugin {
 
 
     /**
-     * Facade for the {@link #jsonObjectPostRequest(String, String, Response.Listener,Response.ErrorListener,boolean) jsonObjectPostRequest} method
+     * Facade for the {@link #jsonObjectPostRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPostRequest} method
      *
      * @param url       The Request URL
      * @param params    The POST Parameters
@@ -146,8 +147,21 @@ public abstract class BaseServicesPlugin {
         }
     }
 
-    /*Get Request*/
-    public void jsonObjectGetRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    /**
+     * This method will make a JSONObject GET Request and will retrieve a JSONObject Response.
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     * @param isSSO
+     */
+    public void jsonObjectGetRequest(String url,
+                                     String params,
+                                     Response.Listener<JSONObject> responseListener,
+                                     Response.ErrorListener errorListener,
+                                     final boolean isSSO)
+    {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
@@ -155,7 +169,7 @@ public abstract class BaseServicesPlugin {
                         ,errorListener) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        return getAuthHeader(context);
+                        return getAuthHeader(context, isSSO);
                     }
                 };
                 int socketTimeout = WEBSERVICE_TIMEOUT;
@@ -170,6 +184,20 @@ public abstract class BaseServicesPlugin {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Facade for the {@link #jsonObjectGetRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPostRequest} method
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+    public void jsonObjectGetRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener)
+    {
+        jsonObjectGetRequest(url, params, responseListener, errorListener, false);
+    }
+
 
     /*Get Request*/
     public void jsonObjectDeleteRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
@@ -236,15 +264,22 @@ public abstract class BaseServicesPlugin {
     public static Map getAuthHeader(Context context, boolean isSSO)
     {
         Map<String, String> headerMap = new HashMap<String, String>();
-        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
+        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY, AppSpecificConfig.SECRET_KEY);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
         SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
 
         if(isSSO){
             headerMap.put("Content-Type", "application/json");
+            //headerMap.put("Authorization",  MDLiveConfig.AUTH_KEY==null ? auth : MDLiveConfig.AUTH_KEY);
+            headerMap.put("RemoteUserId", MDLiveConfig.USR_UNIQ_ID!=null ? MDLiveConfig.USR_UNIQ_ID : AppSpecificConfig.DEFAULT_USER_ID);
+            headerMap.put("SessionToken", MDLiveConfig.S_TOKEN!=null ? MDLiveConfig.S_TOKEN : AppSpecificConfig.DEFAULT_SESSION_ID);
         }
+        else{
+            headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+            headerMap.put("SessionToken", sharedpreferences.getString(PreferenceConstants.SESSION_ID, AppSpecificConfig.DEFAULT_SESSION_ID));
+        }
+
         headerMap.put("Authorization", auth);
-        headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
         String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         //Log.v("Authorization",auth);
         //Log.v("RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));

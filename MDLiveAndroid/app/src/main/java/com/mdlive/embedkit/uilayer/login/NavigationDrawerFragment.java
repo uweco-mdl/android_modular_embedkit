@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -43,9 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-/**
- * Created by venkataraman_r on 7/16/2015.
- */
+
 public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private static final String USER_PASSED_FROM_ACTIVITY = "user_passed";
 
@@ -128,14 +128,26 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             }
         });
 
-        ArrayList<String> drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
-        String[] navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items);
+        ArrayList<String> drawerItems;
+        String[] navStrings;
+
+        if (MDLiveConfig.IS_SSO) {
+            navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items_sso);
+            drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items_sso)));
+        }
+        else {
+            navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items);
+            drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items)));
+        }
+
         TypedArray imgs = getResources().obtainTypedArray(R.array.left_navigation_items_image);
         ArrayList<Drawable> navImages = new ArrayList<>();
 
-        HashMap<String, Integer> stringMap = new HashMap<>();
+        HashMap<String, Boolean> stringMap = new HashMap<>();
+        boolean SHOW_THE_ICON = true,
+                HIDE_THE_ICON = false;
         for (int i = 0; i<navStrings.length; i++){
-            stringMap.put(navStrings[i], 1);
+            stringMap.put(navStrings[i], SHOW_THE_ICON);
         }
         // Add the list of modules here
         HashMap<String, String> moduleMap = new HashMap<>();
@@ -147,22 +159,24 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         moduleMap.put(getString(R.string.mdl_symptom_checker), modules[4]);
         moduleMap.put(getString(R.string.mdl_my_accounts), modules[5]);
 
-        for(int i = 0; i< navStrings.length; i++){
-            try{
-                String module = moduleMap.get(navStrings[i]);
-                if(module != null) {
-                    Class.forName(module);
+        if(!MDLiveConfig.IS_SSO){
+            for (int i = navStrings.length - 1; i > 0; i--) {
+                try {
+                    String module = moduleMap.get(navStrings[i]);
+                    if (module != null) {
+                        Class.forName(module);
+                    }
+                } catch (ClassNotFoundException e) {
+                    // Feature is remove. Set the flag to remove the associated icon later
+                    drawerItems.remove(i);
+                    stringMap.put(navStrings[i], HIDE_THE_ICON);
                 }
-            }catch (ClassNotFoundException e){
-                // Feature is remove. Set the flag to remove the associated icon later
-                drawerItems.remove(i);
-                stringMap.put(navStrings[i], 0);
             }
         }
 
         // Add only the drawables that have the corresponding strings in the menu
         for(int i = 0; i<navStrings.length; i++) {
-            if(stringMap.get(navStrings[i]) == 1) {
+            if(stringMap.get(navStrings[i]) == SHOW_THE_ICON) {
                 navImages.add(imgs.getDrawable(i));
             }
         }
@@ -198,8 +212,15 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 loadUserInformationDetails(true);
             }
         } else {
-            mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
-            updateList();
+            if(MDLiveConfig.IS_SSO)
+            {
+                loadUserInformationDetails(true);
+            }
+            else
+            {
+                mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                updateList();
+            }
         }
     }
 

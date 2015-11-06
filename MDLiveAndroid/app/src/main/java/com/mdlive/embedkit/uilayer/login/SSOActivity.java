@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
@@ -31,7 +32,6 @@ import org.json.JSONObject;
 public class SSOActivity extends MDLiveBaseActivity {
     private ProgressDialog mProgressDialog;
     private ProgressDialog pDialog = null;
-    private String mToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                         hideProgress();
                         MDLiveConfig.USR_UNIQ_ID = response.getString(MDLiveConfig.UNIQUE_ID_STRINGNAME);
                         MDLiveConfig.AUTH_KEY = response.getString(MDLiveConfig.AUTHORIZATION_KEY);
-                        mToken = response.getString("token");
+                        MDLiveConfig.S_TOKEN = response.getString(MDLiveConfig.SESSION_TOKEN);
 
                     //    Log.w("EMBEDKIT SSO2","********\n********\n******* RemoteUsrId = "+ MDLiveConfig.USR_UNIQ_ID);
                     //    Log.w("EMBEDKIT SSO2","********\n********\n******* Auth Key = "+ MDLiveConfig.AUTH_KEY);
@@ -164,7 +164,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                                     message = errorObj.getString("message");
                                 } else if (errorObj.has("error")) {
                                     message = errorObj.getString("error");
-                                } else { // Worst case can show time oout exception
+                                } else { // Worst case can show time out exception
                                     notifyErrorAffiliate("408", "Request connection time out");
                                 }
                                 notifyErrorAffiliate(errorCode, message);
@@ -230,15 +230,26 @@ public class SSOActivity extends MDLiveBaseActivity {
     public void handleSuccessResponse(JSONObject response){
 
         boolean success = false;        // initialize to 'failed' mode unless later proved otherwise
+        Class clazz=null;
 
         switch(MDLiveConfig.SELECTED_COMPONENT){
-            case SYMPTOM_CHECKER:
 
+            case SYMPTOM_CHECKER:
+                try {
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_symptomchecker_module));
+
+                    success = startTargetActivity(response, clazz);
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
 
             case MY_MESSAGES:
                 try {
-                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_messages_module));
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_messages_module));
 
                     success = startTargetActivity(response, clazz);
 
@@ -250,12 +261,34 @@ public class SSOActivity extends MDLiveBaseActivity {
                 break;
 
             case MY_HEALTH:
+                try {
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
+
+                    success = startTargetActivity(response, clazz);
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
 
             case MY_ACCOUNT:
+                try {
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_myaccount_module));
+
+                    success = startTargetActivity(response, clazz);
+
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
 
             case DOCTOR_CONSULT:
                 try {
-                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
 
                     if(response !=  null){
                         if(response.has("notifications")){
@@ -284,7 +317,7 @@ public class SSOActivity extends MDLiveBaseActivity {
 
             case CALL_ASSIST:
                 try {
-                    Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
+                    clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
 
                     success = startTargetActivity(response, clazz);
 
@@ -315,7 +348,7 @@ public class SSOActivity extends MDLiveBaseActivity {
 
         if(response !=  null){
             final Intent intent = new Intent(getBaseContext(), clazz);
-            intent.putExtra("token", mToken);
+            intent.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN);
             startActivity(intent);
 
             finish();
@@ -389,7 +422,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                 Class clazz_mdlGetStarted = Class.forName(getString(R.string.mdl_mdlive_sav_module));
 
                 Intent i = new Intent(getApplicationContext(), clazz_mdlGetStarted);
-                i.putExtra("token", mToken); // The token received from service on successful login
+                i.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN); // The token received from service on successful login
                 startActivity(i);
                 finish();
             }

@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+
 public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
     MDLiveFamilyFragment mdLiveFamilyFragment = null;
 

@@ -1,10 +1,12 @@
 package com.mdlive.embedkit.uilayer.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -146,6 +149,16 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             }
         };
         SummaryService summaryService = new SummaryService(this, getProgressDialog());
-        summaryService.sendRating(rating,successListener,errorListner );
+        summaryService.sendRating(rating, successListener, errorListner);
+    }
+
+    /**
+     * Terminate the EmbedKit execution and signal the caller/affiliate app to resume execution control
+     */
+    public static void generateExitBroadcast(Activity act)
+    {
+        Intent intent = new Intent(MDLiveConfig.SIGNALS.EXIT_SIGNAL.name());
+
+        LocalBroadcastManager.getInstance(act).sendBroadcast(intent);
     }
 }

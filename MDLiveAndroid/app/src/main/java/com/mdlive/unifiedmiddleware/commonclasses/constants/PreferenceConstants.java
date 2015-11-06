@@ -10,6 +10,7 @@ public class PreferenceConstants {
     public static final String REASON_PREFERENCES = "REASON_FOR_VISIT";
     public static final String USER_UNIQUE_ID = "USER_UNIQUE_ID";
     public static final String DEPENDENT_USER_ID = "DEPENDENT_USER_ID";
+    public static final String SESSION_ID = "SESSION_ID";
     public static final String WEBSERVICE_APIKEY = "USER_UNIQUE_ID";
     public static final String SAVED_MASTER_USER = "SAVED_MASTER_USER";
     public static final String ZIPCODE_PREFERENCES = "ZIPCODE_PREFERENCES";

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
@@ -23,6 +24,7 @@ import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmail
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnUserSelectionChanged;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
+import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
@@ -38,8 +40,11 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
 
 import java.lang.Class;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,11 +67,20 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
     private DrawerLayout mDrawerLayout;
 
+    // Collection that contains all Activities that need to be terminated upon embedkit exit in SSO mode
+    public static List<WeakReference<? extends MDLiveBaseAppcompatActivity>> VisitedScreens_SSO = new LinkedList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clearMinimizedTime();
         setTitle("");
+
+        if(MDLiveConfig.IS_SSO)
+        {
+            WeakReference<MDLiveBaseAppcompatActivity> weakRef = new WeakReference<>(this);
+            VisitedScreens_SSO.add(weakRef);
+        }
     }
 
     @Override
@@ -335,12 +349,22 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void onHomeClicked() {
-        final User user = User.getSelectedUser(getBaseContext());
+        if(MDLiveConfig.IS_SSO){
 
-        if (user == null) {
-            startActivityWithClassName(MDLiveDashboardActivity.class);
-        } else {
-            startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+            // send signal to notify caller that we are terminating
+            MDLiveSummary.generateExitBroadcast(this);
+
+            // purge all EmbedKit screens from the activity stack
+            performCleanExit();
+        }
+        else {
+            final User user = User.getSelectedUser(getBaseContext());
+
+            if (user == null) {
+                startActivityWithClassName(MDLiveDashboardActivity.class);
+            } else {
+                startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));
+            }
         }
     }
 
@@ -555,6 +579,23 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 toolbar.setElevation(7 * getResources().getDisplayMetrics().density);
             }
         }
+    }
+
+    /**
+     * wipe away previous activities from activity stack and exit the EmbedKit
+     *
+     */
+    public void performCleanExit()
+    {
+        for(WeakReference<? extends MDLiveBaseAppcompatActivity> ref : VisitedScreens_SSO){
+            MDLiveBaseAppcompatActivity screen = ref.get();
+            if(screen!=null)
+                screen.finish();
+        }
+
+        // now explicitly purge the weakref container, just to be safe
+        VisitedScreens_SSO.clear();
+
     }
 
 }

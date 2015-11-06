@@ -14,6 +14,8 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
+import java.lang.ref.WeakReference;
+
 public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity {
 
     @Override
