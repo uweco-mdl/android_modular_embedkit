@@ -46,17 +46,6 @@ android {
     }
 }
 
-// VSee integration:
-// If you don't include this section you will get errors due to duplicate files in
-// 3rd party dependencies.
-android.packagingOptions {
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/NOTICE'
-    exclude 'version.properties'
-}
-
 dependencies {
     compile project(':assist')
     compile project(':theming')
@@ -72,7 +61,4 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
 
     //compile 'com.squareup.picasso:picasso:2.5.2'
-    compile('com.vsee:vsee-kit:0.4.21616@aar') {
-        transitive = true
-    }
 }

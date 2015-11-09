@@ -22,7 +22,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
@@ -301,12 +300,17 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 //                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Start Consultation");
 //                ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.start_consultation);
 
-                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
-                Log.v("VeeSEE -->", "Final reached....");
-                i.putExtra("username",userName);
-                i.putExtra("password",password);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
+                try {
+                    Class clazz = Class.forName("com.mdlive.sav.MDLiveVsee");
+                    Intent i = new Intent(MDLiveWaitingRoom.this, clazz);
+                    Log.v("VeeSEE -->", "Final reached....");
+                    i.putExtra("username", userName);
+                    i.putExtra("password", password);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(i);
+                } catch (ClassNotFoundException e){
+                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                }
                 finish();
                 overridePendingTransition(0, 0);
             }

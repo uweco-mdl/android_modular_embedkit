@@ -41,8 +41,22 @@ android {
     }
 }
 
+// VSee integration:
+// If you don't include this section you will get errors due to duplicate files in
+// 3rd party dependencies.
+android.packagingOptions {
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/NOTICE'
+    exclude 'version.properties'
+}
+
 dependencies {
     compile project(':theming')
     compile project(':app')
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile('com.vsee:vsee-kit:0.4.21616@aar') {
+        transitive = true
+    }
 }

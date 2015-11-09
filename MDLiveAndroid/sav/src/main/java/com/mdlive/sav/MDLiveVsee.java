@@ -1,4 +1,4 @@
-package com.mdlive.embedkit;
+package com.mdlive.sav;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;

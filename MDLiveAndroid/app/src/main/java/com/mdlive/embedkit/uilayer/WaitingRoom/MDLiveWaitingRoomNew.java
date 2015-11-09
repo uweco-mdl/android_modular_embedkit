@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.mdlive.embedkit.MDLiveVsee;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -148,10 +146,15 @@ public class MDLiveWaitingRoomNew extends Activity{
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "cc", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(MDLiveWaitingRoomNew.this, MDLiveVsee.class);
-                        i.putExtra("username",userName);
-                        i.putExtra("password",password);
-                        startActivity(i);
+                        try {
+                            Class clazz = Class.forName("com.mdlive.sav.MDLiveVsee");
+                            Intent i = new Intent(MDLiveWaitingRoomNew.this, clazz);
+                            i.putExtra("username", userName);
+                            i.putExtra("password", password);
+                            startActivity(i);
+                        } catch (ClassNotFoundException e){
+                            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }, 5000);
             }
