@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.WaitingRoom;
+package com.mdlive.sav.WaitingRoom;
 
 import android.app.ProgressDialog;
 import android.content.Context;

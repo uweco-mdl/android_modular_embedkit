@@ -49,5 +49,14 @@
             android:name=".adapters.MDLiveImageGalleryView"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
+        <activity
+            android:name=".MDLiveVsee"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".WaitingRoom.MDLiveWaitingRoom"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
     </application>
 </manifest>

@@ -101,7 +101,7 @@
                     />
             </RelativeLayout>
 
-            <com.mdlive.embedkit.uilayer.WaitingRoom.WaitingRoomViewPager
+            <com.mdlive.sav.WaitingRoom.WaitingRoomViewPager
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/viewPager"
                 android:layout_marginTop="20dp"

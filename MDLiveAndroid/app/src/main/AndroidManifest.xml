@@ -92,16 +92,6 @@
             android:screenOrientation="portrait" >
             </activity>
         -->
-
-        <activity
-            android:name=".MDLiveVsee"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".uilayer.WaitingRoom.MDLiveWaitingRoom"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.payment.MDLiveConfirmappointment"
             android:screenOrientation="portrait"

@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.WaitingRoom;
+package com.mdlive.sav.WaitingRoom;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,16 +16,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
+import com.mdlive.sav.MDLiveGetStarted;
+import com.mdlive.sav.MDLiveVsee;
+import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -86,12 +87,10 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 movetohome();
             }
         });
-
         pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
         pager.setClipToPadding(false);
         pager.setPageMargin(44);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getWaitWatingRoomTips()));
-
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -175,14 +174,10 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                                     MdliveUtils.showDialog(MDLiveWaitingRoom.this, getApplicationInfo().loadLabel(getPackageManager()).toString(), errorMsg, "OK", null, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            try {
-                                                Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
-                                                Intent i = new Intent(MDLiveWaitingRoom.this, clazz);
-                                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivity(i);
-                                            } catch (ClassNotFoundException e){
-                                                Toast.makeText(getApplicationContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
-                                            }
+                                            Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveGetStarted.class);
+                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(i);
+
                                             dialog.dismiss();
                                             MDLiveWaitingRoom.this.finish();
                                         }
@@ -300,17 +295,13 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
 //                ((TextView)findViewById(R.id.txt_waitingtext)).setText("Start Consultation");
 //                ((ImageView)findViewById(R.id.consultation_image_view)).setImageResource(R.drawable.start_consultation);
 
-                try {
-                    Class clazz = Class.forName("com.mdlive.sav.MDLiveVsee");
-                    Intent i = new Intent(MDLiveWaitingRoom.this, clazz);
-                    Log.v("VeeSEE -->", "Final reached....");
-                    i.putExtra("username", userName);
-                    i.putExtra("password", password);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(i);
-                } catch (ClassNotFoundException e){
-                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
-                }
+                Intent i = new Intent(MDLiveWaitingRoom.this, MDLiveVsee.class);
+                Log.v("VeeSEE -->", "Final reached....");
+                i.putExtra("username", userName);
+                i.putExtra("password", password);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+
                 finish();
                 overridePendingTransition(0, 0);
             }

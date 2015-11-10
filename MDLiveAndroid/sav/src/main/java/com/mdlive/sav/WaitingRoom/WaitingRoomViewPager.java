@@ -1,4 +1,4 @@
-package com.mdlive.embedkit.uilayer.WaitingRoom;
+package com.mdlive.sav.WaitingRoom;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -78,7 +77,13 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
     }
 
     public void onStartAppointmentClicked(View view) {
-        startActivityWithClassName(MDLiveWaitingRoom.class);
+        try{
+            Class clazz = Class.forName("com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom");
+            startActivityWithClassName(clazz);
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void onCancelAppointmentClicked(View view) {

@@ -8,10 +8,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashboardActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -86,9 +86,15 @@ public class MDLiveStartVisit extends MDLiveBaseActivity {
     }
 
     private void movetoWaitingRoom() {
-        Intent intent = new Intent(MDLiveStartVisit.this, MDLiveWaitingRoom.class);
-        startActivity(intent);
-        MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+        try{
+            Class clazz = Class.forName("com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom");
+            Intent intent = new Intent(MDLiveStartVisit.this, clazz);
+            startActivity(intent);
+            MdliveUtils.startActivityAnimation(MDLiveStartVisit.this);
+        } catch (ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        }
+
     }
 
 

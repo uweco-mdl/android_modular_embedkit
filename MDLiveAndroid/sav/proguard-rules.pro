@@ -25,3 +25,6 @@
 -keep class com.mdlive.sav.MDLiveGetStarted {
     public <methods>;
 }
+
+-keep class com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom{
+}

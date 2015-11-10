@@ -49,7 +49,7 @@ public class MDLiveWaitingRoomFragment extends MDLiveBaseFragment {
 
         ((TextView) view.findViewById(R.id.header_text_view)).setText(getArguments().getString(HEADER));
         ((TextView) view.findViewById(R.id.header_text_view)).setBackgroundColor(getArguments().getInt(COLOR));
-        ((TextView) view.findViewById(R.id.body_text_view)).setBackgroundColor(getArguments().getInt(BODY));
+        ((TextView) view.findViewById(R.id.body_text_view)).setText(getArguments().getString(BODY));
 
         ((TextView) view.findViewById(R.id.body_text_view)).setOnTouchListener(new View.OnTouchListener() {
             @Override

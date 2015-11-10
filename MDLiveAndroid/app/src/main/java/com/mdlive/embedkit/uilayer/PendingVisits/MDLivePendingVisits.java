@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
-import com.mdlive.embedkit.uilayer.WaitingRoom.MDLiveWaitingRoom;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -53,9 +53,14 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(PreferenceConstants.APPT_ID, getIntent().getExtras().getString("AppointmentID"));//Saving appointment id in Preference which is received from service
                 editor.commit();
-                Intent waitingRoomIntent = new Intent(MDLivePendingVisits.this, MDLiveWaitingRoom.class);
-                startActivity(waitingRoomIntent);
-                MdliveUtils.startActivityAnimation(MDLivePendingVisits.this);
+                try {
+                    Class clazz = Class.forName("com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom");
+                    Intent waitingRoomIntent = new Intent(MDLivePendingVisits.this, clazz);
+                    startActivity(waitingRoomIntent);
+                    MdliveUtils.startActivityAnimation(MDLivePendingVisits.this);
+                } catch (ClassNotFoundException e){
+                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
