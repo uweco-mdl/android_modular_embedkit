@@ -15,6 +15,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
+import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -86,10 +87,9 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         }
 
         // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        Tracker mTracker;
+        AnalyticsApplication application = new AnalyticsApplication();
         for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
-            mTracker = application.getTracker(tn);
+            Tracker mTracker = application.getTracker(getApplication(), tn);
             if(mTracker != null) {
                 mTracker.setScreenName(getString(R.string.mdl_mdlive_home_page));
                 mTracker.send(new HitBuilders.ScreenViewBuilder().build());

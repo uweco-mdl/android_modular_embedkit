@@ -16,18 +16,19 @@
 
 package com.mdlive.unifiedmiddleware.commonclasses.utils;
 
+import android.content.Context;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.mdlive.embedkit.R;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 
 import java.util.HashMap;
 
 /**
- * This is a subclass of {@link ApplicationController} used to provide shared objects for this app, such as
+ * This is a subclass of {@link //ApplicationController} used to provide shared objects for this app, such as
  * the {@link Tracker}.
  */
-public class AnalyticsApplication extends ApplicationController{
+public class AnalyticsApplication{
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
      *
@@ -46,13 +47,13 @@ public class AnalyticsApplication extends ApplicationController{
      * Gets the {@link Tracker} for this {@link TrackerName}.
      * @return tracker
      */
-    synchronized public Tracker getTracker(TrackerName trackerId) {
+    synchronized public Tracker getTracker(Context context, TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            String tid = (trackerId == TrackerName.AFFILIATE_TRACKER)?getString(R.string.ga_customTrackingId):
-                    getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true")?
-                    getString(R.string.ga_mdlive_trackingId):null;
+            String tid = (trackerId == TrackerName.AFFILIATE_TRACKER)?context.getString(R.string.ga_customTrackingId):
+                    context.getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true")?
+                    context.getString(R.string.ga_mdlive_trackingId):null;
             if(tid != null) {
                 Tracker t = analytics.newTracker(R.xml.analytics);
                 t.set("&tid", tid);

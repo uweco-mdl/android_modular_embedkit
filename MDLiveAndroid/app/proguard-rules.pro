@@ -120,14 +120,6 @@
     public *;
 }
 
-#-keep class com.mdlive.embedkit.global.MDLiveConfig {
-#    public static final java.util.Set EMBEDKIT_COMPONENTS;
-#    public static java.util.EnumSet *;
-#    public static java.util.Set *;
-#}
-
-#-keepclassmembers class com.mdlive.embedkit.global.MDLiveConfig {
-#    public static java.util.Set EMBEDKIT_COMPONENTS;
-#    public static java.util.EnumSet *;
-#    public static java.util.Set *;
-#}
+-keep class com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication{
+    public <methods>;
+}

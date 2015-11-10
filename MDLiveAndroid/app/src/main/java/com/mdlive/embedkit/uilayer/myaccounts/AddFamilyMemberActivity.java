@@ -396,9 +396,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     parent.put("camera", jsonObject);
 
                     // Obtain the shared Tracker instance.
-                    AnalyticsApplication application = (AnalyticsApplication) getApplication();
+                    AnalyticsApplication application = new AnalyticsApplication();
                     for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
-                        Tracker mTracker = application.getTracker(tn);
+                        Tracker mTracker = application.getTracker(getApplication(), tn);
                         String age = getString(R.string.mdl_mdlive_child);
                         try {
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
