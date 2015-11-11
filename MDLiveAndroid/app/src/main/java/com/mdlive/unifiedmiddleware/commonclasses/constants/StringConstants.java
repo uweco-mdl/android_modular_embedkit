@@ -10,6 +10,7 @@ public class StringConstants {
    /* GetStarted*/
     public static final String ADD_CHILD = "Add Child";
     public static final String ADD_FAMILY_MEMBER = "Add Family Member";
+    public static final String ALERT_PHONENUMBER = "1-888-818-0978";
     public static final String GENDER_MALE = "Male";
     public static final String GENDER_FEMALE = "Female";
     public static final String TEL= "tel:";

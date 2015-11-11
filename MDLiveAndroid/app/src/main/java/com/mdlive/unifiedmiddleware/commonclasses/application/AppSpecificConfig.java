@@ -34,7 +34,6 @@ public class AppSpecificConfig {
     public static String DELETE_MEDICALREPORT = "/customer/delete_document";
     public static String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
     public static String DEFAULT_USER_ID = "MobileUser";
-    public static String DEFAULT_SESSION_ID = "";
     public static String URL_PHARMACIES_CURRENT = "/pharmacies/current"; // Need additional header
     public static String URL_PHARMACIES_SEARCH_LOCATION = "/pharmacies/search";
     public static String URL_PHARMACIES_UPDATE = "/pharmacies/update"; // Need post body
@@ -72,8 +71,12 @@ public class AppSpecificConfig {
     public static String ADD_CHILD = "/customer/1/add_family_member";
     public static String URL_VISIT_CHECK_PROVIDER_STATUS = "/services/consultations/provider_status/";
     public static String URL_VISIT_PROVIDER_CONSULTATION = "/services/consultations/get_vsee_login/";
-    public static  String URL_MESSAGES_READ = "/messages/";
-    public static  String URL_MESSAGES_READ_TYPE = "?msg_type=";
+    public static String URL_MESSAGES_READ = "/messages/";
+    public static String URL_MESSAGES_READ_TYPE = "?msg_type=";
+    public static String URL_ONCALL_APPT = "/appointments/oncall_consultation";
+    public static String URL_WAITING_ONCALL_STATUS = "/waiting_room/:id/status";
+    public static final String URL_AUTHENTICATE_LOGIN_BAYLOR = "/customer_logins/authenticate";
+
     public static String URL_ENVIRONMENT = "";
     public static String URL_CHANGE_PASSWORD;
     public static String URL_CHANGE_PIN;
@@ -123,9 +126,10 @@ public class AppSpecificConfig {
     public static String SYMPTOM_CHECKER_URL;
 
     // API used to get zip code
-    public static final String GEOCODE_API_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/";
+    public static String GEOCODE_API_ENDPOINT;
 
     public static String PIN_AUTHENTICATION;
+    public static String GEO_TARGET_DETAILS;
 
     private AppSpecificConfig(){
         // this class cannot be directly instantiated externally

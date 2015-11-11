@@ -53,6 +53,10 @@ public class UserBasicInfo implements Parcelable {
     @Expose
     private boolean verifyEligibility;
 
+    @SerializedName("timezone_offset")
+    @Expose
+    private String timezoneOffset;
+
     /**
      *
      * @return
@@ -69,6 +73,14 @@ public class UserBasicInfo implements Parcelable {
      */
     public void setAffiliationLogo(String affiliationLogo) {
         this.affiliationLogo = affiliationLogo;
+    }
+
+    public String getTimezoneOffset() {
+        return timezoneOffset;
+    }
+
+    public void setTimezoneOffset(String timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
     }
 
     /**
@@ -288,6 +300,7 @@ public class UserBasicInfo implements Parcelable {
         dest.writeString(this.assistPhoneNumber);
         dest.writeByte(primaryUser ? (byte) 1 : (byte) 0);
         dest.writeByte(verifyEligibility ? (byte) 1 : (byte) 0);
+        dest.writeString(timezoneOffset);
     }
 
     public UserBasicInfo() {
@@ -306,6 +319,7 @@ public class UserBasicInfo implements Parcelable {
         this.assistPhoneNumber = in.readString();
         this.primaryUser = in.readByte() != 0;
         this.verifyEligibility = in.readByte() != 0;
+        this.timezoneOffset = in.readString();
     }
 
     public static final Parcelable.Creator<UserBasicInfo> CREATOR = new Parcelable.Creator<UserBasicInfo>() {
@@ -333,6 +347,7 @@ public class UserBasicInfo implements Parcelable {
                 ", assistPhoneNumber='" + assistPhoneNumber + '\'' +
                 ", primaryUser=" + primaryUser +
                 ", verifyEligibility=" + verifyEligibility +
+                ", timezoneOffset=" + timezoneOffset +
                 '}';
     }
 

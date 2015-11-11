@@ -303,9 +303,9 @@ public class MDLiveVsee extends MDLiveBaseActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                AnalyticsApplication application = new AnalyticsApplication();
                                 for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
                                     // Obtain the shared Tracker instance.
-                                    AnalyticsApplication application = new AnalyticsApplication();
                                     Tracker mTracker = application.getTracker(getApplication(), tn);
                                     if (mTracker != null) {
                                         mTracker.setScreenName(getString(R.string.mdl_mdlive_video_session_screen));

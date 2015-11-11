@@ -1,25 +1,34 @@
 package com.mdlive.unifiedmiddleware.commonclasses.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.DeepLink;
+
+import java.util.List;
 
 /**
  * Created by sampath_k on 08/09/15.
  */
 public class DeepLinkUtils {
     private static final String DELIMITER = "_";
-    public static enum PageCode {HOME, ASSIST, SAV, HEALTH, MESG, SC, ACCNT};
-    public static final String DEEP_LINK_BAYLOR = "is_baylor_deep_link";
-    public static final String BAYLOR_PACKAGE_NAME = "com.baylorscottandwhite.healthsource";
+    public enum PageCode {HOME, ASSIST, SAV, HEALTH, MESG, SC, ACCNT};
+    public enum DeeplinkAffiliate {
+        WALGREENS, SUTTER, PRIORITY_HEALTH, BAYLOR
+    }
+    public static final String BAYLOR_PACKAGE_NAME = "com.mdlive.testharnesss3";// ORIGINAL = "com.baylorscottandwhite.healthsource";
     public static DeepLink DEEPLINK_DATA;
 
     /**
@@ -61,21 +70,6 @@ public class DeepLinkUtils {
     }
 
     /**
-     * Indicates whether or not a user is affiliated to Baylor
-     *
-     * @param ctx context obj for accessing other objects
-     * @return True if user is affiliated, False otherwise
-     */
-    public static boolean isBaylorAffiliate(Activity ctx) {
-        boolean status = false;
-        if (ctx != null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctx);
-            status = sharedPref.getBoolean(DeepLinkUtils.DEEP_LINK_BAYLOR, false);
-        }
-        return (status);
-    }
-
-    /**
      * Generic single-button dialog generator.
      *
      * @param context    the calling Activity
@@ -112,19 +106,32 @@ public class DeepLinkUtils {
      * @param ctx the caller's context
      */
     public static void openBaylorApp(Context ctx) {
-        if (ctx == null)
-            return;
+        // first, restart app if already in background
         try {
-            Intent baylorIntent = ctx.getPackageManager().getLaunchIntentForPackage(DeepLinkUtils.BAYLOR_PACKAGE_NAME);
-            baylorIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            ctx.startActivity(baylorIntent);
-        } catch (Exception e) {
-//            BugSenseHandler.sendException(new Exception(SplashScreen.CRASH_PREPENDAGE + e.getMessage(), e));
+            boolean mdl_in_backg = false;
+            ActivityManager am = (ActivityManager) ctx.getApplicationContext().getSystemService(ctx.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> procInfos = am.getRunningAppProcesses();
+            for (int i = 0; i < procInfos.size(); i++) {
+                if (procInfos.get(i).processName.equals(DeepLinkUtils.BAYLOR_PACKAGE_NAME)) {
+                    mdl_in_backg = true;
+                    break;
+                }
+            }
+            Intent i = null;
+            if (mdl_in_backg) {
+                ContextWrapper cwrapper = (ContextWrapper) ctx;
+                i = cwrapper.getBaseContext().getPackageManager().getLaunchIntentForPackage(DeepLinkUtils.BAYLOR_PACKAGE_NAME);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            } else {
+                i = ctx.getPackageManager().getLaunchIntentForPackage(DeepLinkUtils.BAYLOR_PACKAGE_NAME);
+            }
+            ctx.startActivity(i);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
-
     public static int getPageCode() {
-        if (DEEPLINK_DATA.getPage() != null && !DEEPLINK_DATA.getPage().isEmpty()) {
+        if (DEEPLINK_DATA!=null && DEEPLINK_DATA.getPage() != null && !DEEPLINK_DATA.getPage().isEmpty()) {
             return DeepLinkUtils.PageCode.valueOf(DeepLinkUtils.DEEPLINK_DATA.getPage()).ordinal();
         } else {
             return -1;

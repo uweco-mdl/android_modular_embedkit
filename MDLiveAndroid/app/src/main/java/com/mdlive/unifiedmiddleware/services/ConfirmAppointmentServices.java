@@ -21,8 +21,8 @@ public class ConfirmAppointmentServices extends BaseServicesPlugin{
 
     public void doConfirmAppointment(String params, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
-            //Log.d("Postparams",params);
-            //Log.e("req Url",(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_CONFIRM_APPT));
+            Log.d("Postparams",params);
+            Log.e("req Url",(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_CONFIRM_APPT));
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_CONFIRM_APPT, params, responseListener, errorListener);
         }catch(Exception e){
             e.printStackTrace();
@@ -39,10 +39,19 @@ public class ConfirmAppointmentServices extends BaseServicesPlugin{
     }
 
     public void doUpdateBillingInformation(String params, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
-        //Log.e("req Url",(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_BILLING_UPDATE));
-        //Log.e("post val",params);
+        Log.e("req Url",(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_BILLING_UPDATE));
+        Log.e("post val",params);
         // https://dev-members.mdlive.com/services/billing_informations/1
 //        jsonObjectPutRequest("https://dev-members.mdlive.com/services/billing_informations/1",params,responseListener,errorListener);
         jsonObjectPutRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_BILLING_UPDATE,params,responseListener,errorListener);
+    }
+
+    public void doOnCallAppointment(String params, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
+        try {
+            Log.d("params",params);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ONCALL_APPT, params, responseListener, errorListener);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

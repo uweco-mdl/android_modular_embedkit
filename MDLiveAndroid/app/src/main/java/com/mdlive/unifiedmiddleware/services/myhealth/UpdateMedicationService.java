@@ -27,7 +27,7 @@ public class UpdateMedicationService extends BaseServicesPlugin {
 
     public void doLoginRequest(String medicationId, String postBody, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
-            //Log.v("Post Body", postBody);
+            Log.e("Post Body", postBody);
             jsonObjectPutRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICATION_UPDATE + "/" + medicationId,
                     postBody, responseListener, errorListener);
         }catch(Exception e){

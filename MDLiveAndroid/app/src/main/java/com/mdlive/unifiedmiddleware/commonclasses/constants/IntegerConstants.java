@@ -30,5 +30,5 @@ public class IntegerConstants {
     public static final int PEDIATRIC_REQUEST_CODE = 400;
 
     public static final int PHARMACY_REQUEST_CODE = 500;
-
+    public static int SESSION_TIMEOUT = 60000; // 60 sec timeout for normal mdlive user & 30 minutes for Baylor user
 }
