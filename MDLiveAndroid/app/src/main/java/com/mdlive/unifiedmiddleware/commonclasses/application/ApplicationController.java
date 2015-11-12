@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.BitmapLruCache;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 
@@ -76,7 +77,7 @@ public class ApplicationController extends android.support.multidex.MultiDexAppl
             @Override
             public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                     throws IOException, AuthFailureError {
-                headers.putAll(BaseServicesPlugin.getAuthHeader(context));
+                headers.putAll(BaseServicesPlugin.getAuthHeader(context, MDLiveConfig.IS_SSO));
                 return super.performRequest(request, headers);
             }
         };

@@ -172,10 +172,10 @@ public class MDLiveConfig {
     // SSO-related keys. Data vales are stored in volatile RAM instead of persisted in SharedPrefs
     public static String USR_UNIQ_ID=null;
     public static String AUTH_KEY=null;
-    public static String S_TOKEN=null;
+    //public static String S_TOKEN=null;
     public static final String UNIQUE_ID_STRINGNAME = "uniqueid";
     public static final String AUTHORIZATION_KEY = "api_key";
-    public static final String SESSION_TOKEN = "token";
+    //public static final String SESSION_TOKEN = "token";
 
     static {
         System.loadLibrary("app");
@@ -393,7 +393,6 @@ public class MDLiveConfig {
         }catch(Exception ex)
         {
             success = false;
-            Toast.makeText(ctx, "-- SSOActivity failed to start -- "+ex.getMessage(), Toast.LENGTH_SHORT).show();
             Log.w("-- MDLiveConfig --","\n**************\n***************\n" + ex.getMessage() + "\n***************\n");
 
         }

@@ -26,8 +26,6 @@ public class UserBasicInfoServices extends BaseServicesPlugin {
         try {
             //Log.d("Hello", "Selected User : " + memberId + ".");
 
-            Toast.makeText(context, "-- About to fetch BasicUserInfo :\n"+"Selected User : " + memberId, Toast.LENGTH_LONG).show();
-
             String url = AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO;
             if(!memberId.isEmpty()){
                 //url.replace(":id","get_image_url");

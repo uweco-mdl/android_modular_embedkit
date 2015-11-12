@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -22,7 +23,12 @@ public class ZipCodeServices extends BaseServicesPlugin {
     public void getZipCodeServices(String getzipvalue, NetworkSuccessListener<JSONObject> responseListener, NetworkErrorListener errorListener) {
         try {
             Log.v("print Zip code-->", getzipvalue);
-            jsonObjectPostRequest(AppSpecificConfig.GEOCODE_API_ENDPOINT + "json?address=" + getzipvalue + "&sensor=false", null, responseListener, errorListener);
+            jsonObjectPostRequest(AppSpecificConfig.GEOCODE_API_ENDPOINT + "json?address=" + getzipvalue + "&sensor=false",
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

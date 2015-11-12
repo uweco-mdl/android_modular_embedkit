@@ -463,26 +463,27 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             str_Availability_Type = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_TYPE_PREFERENCES,"");
           String  str_avail_status = sharedpreferences.getString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES,"");
             Log.v("CheckAvailabilityType",str_Availability_Type);
-if(str_avail_status.equalsIgnoreCase("true"))
-{
-            if(str_Availability_Type.equalsIgnoreCase("video or phone"))
-            {   isDoctorAvailableNow=true;
-            }else if (str_Availability_Type.equalsIgnoreCase("phone")) {
-                isDoctorAvailableNow=true;
-            }else if (str_Availability_Type.equalsIgnoreCase("video")) {
-                isDoctorAvailableNow=true;
-            }
+            if(str_avail_status.equalsIgnoreCase("true"))
+            {
+                if(str_Availability_Type.equalsIgnoreCase("video or phone"))
+                {   isDoctorAvailableNow=true;
+                }else if (str_Availability_Type.equalsIgnoreCase("phone")) {
+                    isDoctorAvailableNow=true;
+                }else if (str_Availability_Type.equalsIgnoreCase("video")) {
+                    isDoctorAvailableNow=true;
+                }
 
-            else if (str_Availability_Type.equalsIgnoreCase("With Patient")) {
-                isDoctorAvailableNow=false;
-            }else
+                else if (str_Availability_Type.equalsIgnoreCase("With Patient")) {
+                    isDoctorAvailableNow=false;
+                }else
+                {
+                    isDoctorAvailableNow=false;
+                }
+            }
+            else
             {
                 isDoctorAvailableNow=false;
-            }}
-            else
-{
-    isDoctorAvailableNow=false;
-}
+            }
 
             if (layout.getChildCount() > 0) {
                 layout.removeAllViews();
@@ -505,7 +506,7 @@ if(str_avail_status.equalsIgnoreCase("true"))
                                 str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
                                 selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
-
+Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
                                 if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "phys_availability_id")){
                                     str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();

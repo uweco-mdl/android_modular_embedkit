@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -25,8 +26,12 @@ public class GetCreditCardInfoService extends BaseServicesPlugin {
     {
         try{
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_GET_CREDIT_CARD_INFO,
-                    params, responseListener, errorListener);
+                                    params,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
             //Log.e("req Url",(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_GET_CREDIT_CARD_INFO));
+
         }
         catch (Exception e){
             e.printStackTrace();

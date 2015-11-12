@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.android.volley.Response;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 
@@ -24,7 +25,11 @@ public class BehaviouralService extends BaseServicesPlugin {
 //        jsonObjectGetRequest("https://stage-rtl.mdlive.com/services/behavioral_histories",null,responseListener,errorListener);
 
         try {
-            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_BEHAVIOURAL_HISTORY, null, responseListener, errorListener);
+            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_BEHAVIOURAL_HISTORY,
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

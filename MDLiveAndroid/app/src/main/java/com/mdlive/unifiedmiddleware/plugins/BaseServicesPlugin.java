@@ -59,7 +59,7 @@ public abstract class BaseServicesPlugin {
 
     /**
      *
-     * This method will make a JSONObject POST Request and will retrieve a JSONObject Response.
+     * This method makes a JSONObject POST Request and retrieves a JSONObject Response.
      *
      * @param url       The Request URL
      * @param params    The POST Parameters
@@ -122,8 +122,21 @@ public abstract class BaseServicesPlugin {
         jsonObjectPostRequest(url, params, responseListener, errorListener, false);
     }
 
-    /* Put Request */
-    public void jsonObjectPutRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+
+    /**
+     * This method makes a JSONObject PUT Request and retrieves a JSONObject Response.
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     * @param isSSO
+     */
+    public void jsonObjectPutRequest(String url,
+                                     String params,
+                                     Response.Listener<JSONObject> responseListener,
+                                     Response.ErrorListener errorListener,
+                                     final boolean isSSO) {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
@@ -131,7 +144,7 @@ public abstract class BaseServicesPlugin {
                         ,errorListener) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        return getAuthHeader(context);
+                        return getAuthHeader(context, isSSO);
                     }
                 };
                 int socketTimeout = WEBSERVICE_TIMEOUT;
@@ -148,7 +161,24 @@ public abstract class BaseServicesPlugin {
     }
 
     /**
-     * This method will make a JSONObject GET Request and will retrieve a JSONObject Response.
+     * Facade for the {@link #jsonObjectPutRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPutRequest} method
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+/*    public void jsonObjectPutRequest(String url,
+                                     String params,
+                                     Response.Listener<JSONObject> responseListener,
+                                     Response.ErrorListener errorListener)
+    {
+        jsonObjectPutRequest(url, params, responseListener, errorListener, false);
+    }
+*/
+
+    /**
+     * This method makes a JSONObject GET Request and retrieves a JSONObject Response.
      *
      * @param url
      * @param params
@@ -186,21 +216,33 @@ public abstract class BaseServicesPlugin {
     }
 
     /**
-     * Facade for the {@link #jsonObjectGetRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPostRequest} method
+     * Facade for the {@link #jsonObjectGetRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectGetRequest} method
      *
      * @param url
      * @param params
      * @param responseListener
      * @param errorListener
      */
-    public void jsonObjectGetRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener)
+/*    public void jsonObjectGetRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener)
     {
         jsonObjectGetRequest(url, params, responseListener, errorListener, false);
     }
+*/
 
-
-    /*Get Request*/
-    public void jsonObjectDeleteRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    /**
+     * This method makes a JSONObject DELETE Request and retrieves a JSONObject Response.
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+    public void jsonObjectDeleteRequest(String url,
+                                        String params,
+                                        Response.Listener<JSONObject> responseListener,
+                                        Response.ErrorListener errorListener,
+                                        final boolean isSSO)
+    {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
@@ -208,7 +250,7 @@ public abstract class BaseServicesPlugin {
                         ,errorListener) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        return getAuthHeader(context);
+                        return getAuthHeader(context, isSSO);
                     }
                 };
                 int socketTimeout = WEBSERVICE_TIMEOUT;//30 seconds - change to what you want
@@ -224,15 +266,45 @@ public abstract class BaseServicesPlugin {
         }
     }
 
-    /* JSON ARRAY Get Request */
-    public void jsonArrayGetRequst(String url, String params, Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener){
+    /**
+     * Facade for the {@link #jsonObjectDeleteRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectDeleteRequest} method
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+/*
+    public void jsonObjectDeleteRequest(String url,
+                                        String params,
+                                        Response.Listener<JSONObject> responseListener,
+                                        Response.ErrorListener errorListener)
+    {
+        jsonObjectDeleteRequest(url, params, responseListener, errorListener, false);
+    }
+*/
+
+    /**
+     * Fetch array data via a GET request
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+    public void jsonArrayGetRequest(String url,
+                                   String params,
+                                   Response.Listener<JSONArray> responseListener,
+                                   Response.ErrorListener errorListener,
+                                   final boolean isSSO)
+    {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
                 JsonArrayRequest req = new JsonArrayRequest(url, responseListener, errorListener) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        return getAuthHeader(context);
+                        return getAuthHeader(context, isSSO);
                     }
                 };
                 int socketTimeout = 60000;
@@ -248,6 +320,22 @@ public abstract class BaseServicesPlugin {
         }
     }
 
+    /**
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+/*
+    public void jsonArrayGetRequest(String url,
+                                   String params,
+                                   Response.Listener<JSONArray> responseListener,
+                                   Response.ErrorListener errorListener)
+    {
+        jsonArrayGetRequest(url, params, responseListener, errorListener, false);
+    }
+*/
 
     /**
      * Facade for the {@link #getAuthHeader(Context, boolean) getAuthHeader} method
@@ -255,11 +343,12 @@ public abstract class BaseServicesPlugin {
      * @param context
      * @return
      */
+/*
     public static Map getAuthHeader(Context context)
     {
         return(getAuthHeader(context, false));
     }
-
+*/
 
     public static Map getAuthHeader(Context context, boolean isSSO)
     {
@@ -272,7 +361,7 @@ public abstract class BaseServicesPlugin {
             headerMap.put("Content-Type", "application/json");
             //headerMap.put("Authorization",  MDLiveConfig.AUTH_KEY==null ? auth : MDLiveConfig.AUTH_KEY);
             headerMap.put("RemoteUserId", MDLiveConfig.USR_UNIQ_ID!=null ? MDLiveConfig.USR_UNIQ_ID : AppSpecificConfig.DEFAULT_USER_ID);
-            headerMap.put("SessionToken", MDLiveConfig.S_TOKEN!=null ? MDLiveConfig.S_TOKEN : AppSpecificConfig.DEFAULT_SESSION_ID);
+            //headerMap.put("SessionToken", MDLiveConfig.S_TOKEN!=null ? MDLiveConfig.S_TOKEN : AppSpecificConfig.DEFAULT_SESSION_ID);
         }
         else{
             headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));

@@ -156,6 +156,7 @@
     <string name="mdl_choose">Choose </string>
     <string name="mdl_select_provider">Or choose a specific provider below</string>
     <string name="mdl_select_provider_olyfilter">Choose a specific provider below</string>
+    <string name="mdl_see_doctor_now">See this doctor now</string>
 
     <!--Get Started-->
     <string name="mdl_get_started">Patient Information</string>
@@ -614,6 +615,7 @@
     <!-- Strings for Add Family Screen -->
     <string name="mdl_age_error_message">Child must be younger than 18 years old.</string>
     <string name="mdl_add_child">Add Child</string>
+    <string name="mdl_add_child_start">Add Child To Be Started</string>
     <string name="mdl_child_must_be_younger_than">Child must be younger than 18 years old.</string>
     <string name="mdl_first_name">First Name</string>
     <string name="mdl_last_name">Last Name</string>

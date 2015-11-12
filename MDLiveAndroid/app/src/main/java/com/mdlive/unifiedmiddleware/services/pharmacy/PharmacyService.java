@@ -3,6 +3,7 @@ package com.mdlive.unifiedmiddleware.services.pharmacy;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -25,7 +26,10 @@ public class PharmacyService extends BaseServicesPlugin {
     public void doMyPharmacyRequest(NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_PHARMACIES_CURRENT,
-                    null, responseListener, errorListener);
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -42,10 +46,16 @@ public class PharmacyService extends BaseServicesPlugin {
             if(latitude != null && !latitude.isEmpty() && longitude != null && !longitude.isEmpty()){
                 jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_PHARMACIES_CURRENT+
                                 "?latitude="+latitude+"&longitude="+longitude,
-                        null, responseListener, errorListener);
+                                null,
+                                responseListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
             }else{
                 jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_PHARMACIES_CURRENT,
-                        null, responseListener, errorListener);
+                                null,
+                                responseListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -60,7 +70,11 @@ public class PharmacyService extends BaseServicesPlugin {
      */
 
     public void doPostCheckInsulranceEligibility(String params,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
-        jsonObjectPostRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_ZERO_INSURANCE,params,responseListener,errorListener);
+        jsonObjectPostRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_ZERO_INSURANCE,
+                                params,
+                                responseListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
     }
 
 
