@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -24,7 +25,10 @@ public class ConsultationHistoryServices extends BaseServicesPlugin {
     }
     public void getConsultationHistory(NetworkSuccessListener<JSONObject> responseListener, NetworkErrorListener errorListener) {
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_CONSULTATION_HISTORY,
-                    null, responseListener, errorListener);
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
 
         }
 }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import com.android.volley.Response;
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
@@ -27,7 +28,11 @@ public class SummaryService extends BaseServicesPlugin {
             postParams.put("cust_appointment_id",apptId);
             postParams.put("rating",rating);
             postParams.put("comment",comment);
-            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_RATINGS, new Gson().toJson(postParams), responseListener, errorListener);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_RATINGS,
+                                    new Gson().toJson(postParams),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }
 
     }

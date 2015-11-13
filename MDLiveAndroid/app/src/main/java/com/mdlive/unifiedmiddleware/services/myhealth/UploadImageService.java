@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
@@ -36,7 +37,10 @@ public class UploadImageService  extends BaseServicesPlugin {
             contents.put("document", "data:image/" + extension + ";base64," + MdliveUtils.encodeFileToBase64Binary(file, extension));
             customer_document.put("customer_document", contents);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.UPLOAD_MEDICALREPORT,
-                    new Gson().toJson(customer_document), responseListener, errorListener);
+                                    new Gson().toJson(customer_document),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -378,7 +378,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onDependentSelected(User user) {
         if (user.mMode == User.MODE_ADD_CHILD) {
-            Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();
             return;
         }
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
@@ -394,7 +394,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onPrimarySelected(User user) {
         if (user.mMode == User.MODE_ADD_CHILD) {
-            Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();
             return;
         }
         IS_DEPENDENT_SELECTED = false;

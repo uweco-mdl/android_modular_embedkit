@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.mdlive.embedkit.BuildConfig;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -26,7 +27,10 @@ public class UpgradeAlert extends BaseServicesPlugin {
     public void upgradeAlertService(NetworkSuccessListener<JSONObject> responseListener, NetworkErrorListener errorListener, String params) {
         try {
             jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.UPGRADE_SERVICES + "os=Android&version=" + BuildConfig.VERSION_NAME,
-                    null, responseListener, errorListener);
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         } catch (Exception e) {
             e.printStackTrace();
         }

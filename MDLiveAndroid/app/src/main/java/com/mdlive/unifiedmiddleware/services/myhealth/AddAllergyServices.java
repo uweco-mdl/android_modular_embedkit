@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -30,7 +31,10 @@ public class AddAllergyServices extends BaseServicesPlugin{
             }
             allergies.put("allergies", namelist);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ALLERGY_LIST,
-                    new Gson().toJson(allergies), responseListener, errorListener);
+                                    new Gson().toJson(allergies),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +49,10 @@ public class AddAllergyServices extends BaseServicesPlugin{
             namelist.add(map);
             allergies.put("allergies", namelist);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ALLERGY_LIST,
-                    new Gson().toJson(allergies), responseListener, errorListener);
+                                    new Gson().toJson(allergies),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         } catch (Exception e) {
             e.printStackTrace();
         }

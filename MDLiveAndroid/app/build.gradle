@@ -46,6 +46,7 @@ android {
     }
 }
 
+
 dependencies {
     compile project(':assist')
     compile project(':theming')
@@ -63,4 +64,5 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:3.19.0'
     compile 'io.card:android-sdk:5.1.0'
     //compile 'com.squareup.picasso:picasso:2.5.2'
+
 }

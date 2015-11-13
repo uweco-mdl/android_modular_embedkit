@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.login;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,7 +45,8 @@ public class MDLiveWaitingRoomFragment extends MDLiveBaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
         ((TextView) view.findViewById(R.id.header_text_view)).setText(getArguments().getString(HEADER));

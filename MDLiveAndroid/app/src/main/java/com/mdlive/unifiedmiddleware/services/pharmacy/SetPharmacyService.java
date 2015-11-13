@@ -3,6 +3,7 @@ package com.mdlive.unifiedmiddleware.services.pharmacy;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -33,7 +34,10 @@ public class SetPharmacyService extends BaseServicesPlugin {
     public void doPharmacyResultsRequest(String postBody, String pharmacyId, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
             jsonObjectPutRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_PHARMACIES_UPDATE+pharmacyId,
-                    postBody, responseListener, errorListener);
+                                    postBody,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

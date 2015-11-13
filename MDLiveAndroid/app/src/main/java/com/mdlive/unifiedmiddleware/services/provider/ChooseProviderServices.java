@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -27,7 +28,11 @@ public class ChooseProviderServices extends BaseServicesPlugin {
             params.put("located_in",locationType);
             params.put("provider_type",providerType);
             Log.e("Located in-->",locationType+"  Provider Type--->"+ providerType);
-            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_CHOOSE_PROVIDER, new Gson().toJson(params), responseListener, errorListener);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_CHOOSE_PROVIDER,
+                                    new Gson().toJson(params),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
 
         }catch(Exception e){
             e.printStackTrace();

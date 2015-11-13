@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
@@ -42,7 +43,11 @@ public class UserBasicInfoServices extends BaseServicesPlugin {
 
                 Log.d("Hello", "Selected User : " + "For Parent.");
             }
-            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO, null, responseListener, errorListener);
+            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO,
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -473,7 +473,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
                                 selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
-
+Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
                                 if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "phys_availability_id")){
                                     str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();

@@ -3,6 +3,7 @@ package com.mdlive.unifiedmiddleware.services;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -15,25 +16,41 @@ public class MDLivePendingVisitService extends BaseServicesPlugin {
 
     public void getUserPendingHistory(NetworkSuccessListener successListener,
                                       NetworkErrorListener errorListener){
-        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT, null, successListener, errorListener);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT,
+                                null,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
 
     }
 
     public void getUserAggregateInformation(NetworkSuccessListener successListener,
                                             NetworkErrorListener errorListener){
-        jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_USER_INFO,null,successListener,errorListener);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_USER_INFO,
+                                null,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
 
     }
 
     public void deleteAppointment(final String id,
                                   NetworkSuccessListener successListener,
                                   NetworkErrorListener errorListener){
-        jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_USER_INFO + "/" + id,null,successListener,errorListener);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_USER_INFO + "/" + id,
+                                null,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
 
     }
 
     public void getAppointment(final String id, NetworkSuccessListener successListener,NetworkErrorListener errorListener){
-        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT + "/" + id, null, successListener, errorListener);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT + "/" + id,
+                                null,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
 
     }
 }

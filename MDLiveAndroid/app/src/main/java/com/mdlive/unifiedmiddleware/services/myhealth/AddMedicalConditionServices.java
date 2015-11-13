@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -33,7 +34,10 @@ public class AddMedicalConditionServices extends BaseServicesPlugin{
             }
             conditions.put("conditions", namelist);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICAL_CONDITIONS_LIST,
-                    new Gson().toJson(conditions), responseListener, errorListener);
+                                    new Gson().toJson(conditions),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +56,10 @@ public class AddMedicalConditionServices extends BaseServicesPlugin{
             namelist.add(map);
             conditions.put("conditions", namelist);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MEDICAL_CONDITIONS_LIST,
-                    new Gson().toJson(conditions), responseListener, errorListener);
+                                    new Gson().toJson(conditions),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         } catch (Exception e) {
             e.printStackTrace();
         }

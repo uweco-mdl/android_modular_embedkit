@@ -166,6 +166,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         for (int i = 0; i<navStrings.length; i++){
             stringMap.put(navStrings[i], SHOW_THE_ICON);
         }
+
         // Add the list of modules here
         HashMap<String, String> moduleMap = new HashMap<>();
         String[] modules = getActivity().getResources().getStringArray(R.array.left_navigation_modules);
@@ -185,8 +186,10 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     }
                 } catch (ClassNotFoundException e) {
                     // Feature is remove. Set the flag to remove the associated icon later
-                    drawerItems.remove(i);
-                    stringMap.put(navStrings[i], HIDE_THE_ICON);
+                    if(i<drawerItems.size()) {
+                        drawerItems.remove(i);
+                        stringMap.put(navStrings[i], HIDE_THE_ICON);
+                    }
                 }
             }
         }

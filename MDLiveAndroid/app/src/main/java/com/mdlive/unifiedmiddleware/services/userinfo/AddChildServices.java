@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -26,7 +27,11 @@ public class AddChildServices extends BaseServicesPlugin {
         try {
             Gson gson = new Gson();
 
-            jsonObjectPostRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.ADD_CHILD, gson.toJson(Result), responseListener, errorListener);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.ADD_CHILD,
+                                    gson.toJson(Result),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

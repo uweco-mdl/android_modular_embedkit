@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -27,7 +28,11 @@ public class MakeanappmtServices extends BaseServicesPlugin {
         try {
             Gson gson=  new Gson();
             Log.e("PostParams",gson.toJson(postParams).toString());
-            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MAKE_APPOINTMENT, gson.toJson(postParams), responseListener, errorListener);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_MAKE_APPOINTMENT,
+                                    gson.toJson(postParams),
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

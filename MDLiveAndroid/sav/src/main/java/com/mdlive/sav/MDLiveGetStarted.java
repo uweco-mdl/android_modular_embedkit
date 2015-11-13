@@ -324,6 +324,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+
         Log.v("Long Location Nmae-->", longLocation);
         SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 

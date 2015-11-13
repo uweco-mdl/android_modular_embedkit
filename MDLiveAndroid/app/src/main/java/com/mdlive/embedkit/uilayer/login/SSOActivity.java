@@ -26,9 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by dhiman_da on 7/2/2015.
- */
+
 public class SSOActivity extends MDLiveBaseActivity {
     private ProgressDialog mProgressDialog;
     private ProgressDialog pDialog = null;
@@ -129,12 +127,13 @@ public class SSOActivity extends MDLiveBaseActivity {
                         hideProgress();
                         MDLiveConfig.USR_UNIQ_ID = response.getString(MDLiveConfig.UNIQUE_ID_STRINGNAME);
                         MDLiveConfig.AUTH_KEY = response.getString(MDLiveConfig.AUTHORIZATION_KEY);
-                        MDLiveConfig.S_TOKEN = response.getString(MDLiveConfig.SESSION_TOKEN);
+                        //MDLiveConfig.S_TOKEN = response.getString(MDLiveConfig.SESSION_TOKEN);
 
-                    //    Log.w("EMBEDKIT SSO2","********\n********\n******* RemoteUsrId = "+ MDLiveConfig.USR_UNIQ_ID);
-                    //    Log.w("EMBEDKIT SSO2","********\n********\n******* Auth Key = "+ MDLiveConfig.AUTH_KEY);
+                        //Log.w("EMBEDKIT SSO2","********\n********\n******* RemoteUsrId = "+ MDLiveConfig.USR_UNIQ_ID);
+                        //Log.w("EMBEDKIT SSO2","********\n********\n******* Auth Key = "+ MDLiveConfig.AUTH_KEY);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        //Log.w("EMBEDKIT SSO2","********\n********\n******* SSO CONNECT ERROR = "+ e.getMessage());
+                        //e.printStackTrace();
                     }
 
                     loadUserInformationDetails();
@@ -348,7 +347,7 @@ public class SSOActivity extends MDLiveBaseActivity {
 
         if(response !=  null){
             final Intent intent = new Intent(getBaseContext(), clazz);
-            intent.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN);
+            //intent.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN);
             startActivity(intent);
 
             finish();
@@ -422,7 +421,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                 Class clazz_mdlGetStarted = Class.forName(getString(R.string.mdl_mdlive_sav_module));
 
                 Intent i = new Intent(getApplicationContext(), clazz_mdlGetStarted);
-                i.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN); // The token received from service on successful login
+                //i.putExtra("token", MDLiveConfig.S_TOKEN == null ? "" : MDLiveConfig.S_TOKEN); // The token received from service on successful login
                 startActivity(i);
                 finish();
             }
