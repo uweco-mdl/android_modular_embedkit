@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -64,6 +62,7 @@
                                 style="@style/myProfileTextStyle"
                                 android:layout_below="@id/txtProfileName"
                                 android:layout_marginTop="0dp"
+                                android:textSize="16dp"
                                 android:layout_toRightOf="@id/imgProfilePic" />
 
                         </RelativeLayout>
@@ -83,7 +82,8 @@
                         <TextView
                             android:id="@+id/txtTime"
                             style="@style/phone_consultation_text"
-                            android:layout_marginBottom="0dp" />
+                            android:layout_marginBottom="@dimen/dimen_8_dp"
+                             />
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -91,6 +91,8 @@
                 <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
                     style="@style/myChangeProfileInfoLayoutStyle"
                     android:layout_marginTop="10dp"
+                    android:id="@+id/PhoneToCallNumberLayout"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="4dp">
 
@@ -101,11 +103,13 @@
                             android:padding="5dp"
                             android:layout_gravity="left"
                             android:tag="@string/mdltag_phone_to_call"
+                            android:textColor="@color/confirmappmt_evisit_color"
                             android:text="@string/mdl_phone_to_call" />
 
                         <TextView
                             android:id="@+id/phoneNumber"
                             android:padding="5dp"
+                            android:textColor="@color/mdl_confirm_btn_color"
                             style="@style/appointment_text_style"
                             android:layout_gravity="right" />
 
@@ -124,6 +128,7 @@
                             style="@style/appointment_text_style"
                             android:layout_gravity="left"
                             android:padding="5dp"
+                            android:textColor="@color/confirmappmt_evisit_color"
                             android:tag="@string/mdltag_doctor_visit"
                             android:text="@string/mdl_doctor_visit" />
 
@@ -135,7 +140,6 @@
 
                     </FrameLayout>
                 </android.support.v7.widget.CardView>
-
                 <RelativeLayout
                     style="@style/common_style_W_Match_H_Wrap"
                     android:layout_marginTop="10dp"
@@ -178,18 +182,84 @@
 
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    style="@style/myChangeProfileInfoLayoutStyle"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="3dp">
+                        <CheckBox
+                            android:id="@+id/mdl_terms_consent_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/mdl_terms_check_text_desc"
+                            android:checked="false"
+                            
+                            android:theme="@style/RadioButtonTheme" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mdl_terms_consent"
+                            android:textColor="@color/darkblack"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="16sp"
+                            android:textColorLink="#0079FD"
+                            android:layout_toRightOf="@+id/mdl_terms_consent_checkbox"
+                            android:layout_toEndOf="@+id/mdl_terms_consent_checkbox" />
+                        </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/dimen_18_dp"
+                        android:layout_marginLeft="3dp"
+                        >
+                        <CheckBox
+                            android:id="@+id/mdl_privacy_policy_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/mdl_privacy_check_text_desc"
+                            android:checked="false"
+                            android:theme="@style/RadioButtonTheme" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mdl_privacy_policy"
+                            android:textColor="@color/darkblack"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="3dp"
+                            android:textSize="16sp"
+                            android:textColorLink="#0079FD"
+                            android:layout_toRightOf="@+id/mdl_privacy_policy_checkbox"
+                            android:layout_toEndOf="@+id/mdl_privacy_policy_checkbox"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </ScrollView>
+
 
         <Button
             android:id="@+id/start_visit"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/search_pvr_blue_color"
+            android:background="@color/mdl_confirm_btn_color"
             android:clickable="true"
             android:onClick="rightBtnOnClick"
+            android:visibility="gone"
             android:text="@string/mdl_confirm_appointment_txt"
             android:tag="@string/mdltag_confirm_appointment_txt"
             android:textAllCaps="false"

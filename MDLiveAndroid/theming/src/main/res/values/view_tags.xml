@@ -6,10 +6,13 @@
     <string name="mdltag_user_name_caps">mdl_user_name_caps</string>
     <string name="mdltag_street_address_caps">mdl_street_address_caps</string>
     <string name="mdltag_city_caps">mdl_city_caps</string>
+    <string name="mdltag_ph_zipcode">mdl_ph_zipcode</string>
     <string name="mdltag_state_caps">mdl_state_caps</string>
     <string name="mdltag_dob_caps">mdl_dob_caps</string>
     <string name="mdltag_gender_caps">mdl_gender_caps</string>
     <string name="mdltag_phone_caps">mdl_phone_caps</string>
+    <string name="mdltag_reply_message_caps">mdl_reply_message_caps</string>
+
 
     <string name="mdltag_appointment_details">mdl_appointment_details</string>
     <string name="mdltag_phone_consultation">mdl_phone_consultation</string>
@@ -73,8 +76,6 @@
     <string name="mdltag_schedule_appoinment">mdl_schedule_appoinment</string>
     <string name="mdltag_to_cancel_your_appointment">mdl_to_cancel_your_appointment</string>
     <string name="mdltag_call_customer_service_small">mdl_call_customer_service_small</string>
-    <string name="mdltag_mdlive_call_center_text">mdl_mdlive_call_center_text</string>
-
     <string name="mdltag_cancelation_fee_may_apply">mdl_cancelation_fee_may_apply</string>
     <string name="mdltag_start_appointment">mdl_start_appointment</string>
     <string name="mdltag_cancel_appointment">mdl_cancel_appointment</string>
@@ -119,6 +120,7 @@
     <string name="mdltag_see_your_visit">mdl_see_your_visit</string>
     <string name="mdltag_no_prev_visits">mdl_no_prev_visits</string>
     <string name="mdltag_provider_access_to_med_records">mdl_provider_access_to_med_records</string>
+    <string name="mdltag_provider_access_to_med_records_empty">mdl_provider_access_to_med_records_empty</string>
 
     <string name="mdltag_to">mdl_to</string>
     <string name="mdltag_subject">mdl_subject</string>
@@ -204,6 +206,7 @@
     <string name="mdltag_address">mdl_address</string>
     <string name="mdltag_timezone">mdl_timezone</string>
     <string name="mdltag_change_language">mdl_change_language</string>
+    <string name="mdltag_preferred_language">mdl_preferred_language</string>
     <string name="mdltag_preferred_signin">mdl_preferred_signin</string>
     <string name="mdltag_change_pin">mdl_change_pin</string>
     <string name="mdltag_change_security_questions">mdl_change_security_questions</string>
@@ -275,8 +278,9 @@
     <string name="mdltag_summary_feedback_txt">mdl_summary_feedback_txt</string>
     <string name="mdltag_summary_need_assistance_txt">mdl_summary_need_assistance_txt</string>
     <string name="mdltag_summary_phone_txt">mdl_summary_phone_txt</string>
-    <string name="mdltag_summary_michelle_txt">mdl_summary_michelle_txt</string>
+    <string name="mdltag_summary_txt">mdl_summary_txt</string>
     <string name="mdltag_summary_comment_txt">mdl_summary_comment_txt</string>
+    <string name="mdltag_gps_error_message">mdl_gps_error_message</string>
 
     <string name="mdltag_closeBtn">mdl_closeBtn</string>
     <string name="mdltag_doctor_filters">mdl_doctor_filters</string>
@@ -293,7 +297,16 @@
     <string name="mdltag_txt_appointment_date">mdl_txt_appointment_date</string>
     <string name="mdltag_appointment_date">mdl_appointment_date</string>
 
+    <string name="mdltag_condition_not_found_txt">mdl_condition_not_found_txt</string>
+    <string name="mdltag_medication_not_found_txt">mdl_medication_not_found_txt</string>
+    <string name="mdltag_allergy_not_found_txt">mdl_allergy_not_found_txt</string>
+
+
+
+
     <string name="mdltag_specialties">mdl_specialties</string>
+
+    <string name="mdltag_affiliations">mdl_affiliations</string>
 
     <string name="mdltag_provider_location">mdl_provider_location</string>
 
@@ -346,6 +359,12 @@
     <string name="mdltag_empty_conditions_reported">mdl_empty_conditions_reported</string>
     <string name="mdltag_empty_conditions_reported_msg">mdl_empty_conditions_reported_msg</string>
     <string name="mdltag_add_conditions_text">mdl_add_conditions_text</string>
+    <string name="mdltag_add_other_procedure_text">mdl_add_other_procedure_text</string>
+
+    <string name="mdltag_mdlive_call_center_text">mdl_mdlive_call_center_text</string>
+    <string name="mdltag_thankkyou_appoint_txt">mdl_thankkyou_appoint_txt</string>
+    <string name="mdltag_mdl_to_appint_call_txt">mdl_to_appint_call_txt</string>
+
 
     <string name="mdltag_dosageTxt">mdl_dosageTxt</string>
     <string name="mdltag_select_surgery_txt">mdl_select_surgery_txt</string>
@@ -376,9 +395,6 @@
     <string name="mdltag_behaviouralhealth_question_five">mdl_behaviouralhealth_question_five</string>
     <string name="mdltag_behaviouralhealth_question_six">mdl_behaviouralhealth_question_six</string>
     <string name="mdltag_behaviouralhealth_question_seven">mdl_behaviouralhealth_question_seven</string>
-
-    <string name="mdltag_thankkyou_appoint_txt">mdl_thankkyou_appoint_txt</string>
-    <string name="mdltag_mdl_to_appint_call_txt">mdl_to_appint_call_txt</string>
 
 
     <string name="mdltag_behaviouralhealth_question_options_two">mdl_behaviouralhealth_question_options_two</string>
@@ -484,6 +500,7 @@
     <string name="mdltag_expiration_date">mdl_expiration_date</string>
     <string name="mdltag_mm_yy">mdl_mm_yy</string>
     <string name="mdltag_name_on_card">mdl_name_on_card</string>
+    <string name="mdltag_zipTxt">mdl_zipcode</string>
     <string name="mdltag_hsa_card">mdl_hsa_card</string>
     <string name="mdltag_card_usage_message">mdl_card_usage_message</string>
 
@@ -522,5 +539,6 @@
     <string name="mdltag_pediatric_childcare_text">mdl_pediatric_childcare_text</string>
     <string name="mdltag_pediatric_siblings_text">mdl_pediatric_siblings_text</string>
     <string name="mdltag_pediatric_mandatory_text">mdl_pediatric_mandatory_text</string>
-
+    <string name="mdltag_sync_google_fit_txt">mdl_sync_google_fit_txt</string>
+    <string name="mdltag_backto_healcare">mdl_backto_healcare</string>
 </resources>

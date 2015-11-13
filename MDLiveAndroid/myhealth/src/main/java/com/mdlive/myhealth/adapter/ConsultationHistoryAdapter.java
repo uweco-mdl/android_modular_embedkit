@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mdlive.myhealth.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
+import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.ConsultationHistory;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 import java.lang.reflect.Method;
 
@@ -49,7 +53,7 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        //if (convertView == null) {
+        if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.consultation_history_adapter_layout, parent, false);
 
@@ -63,10 +67,10 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
             viewHolder.afterCareInstructionsTv = (TextView) convertView.findViewById(R.id.adapter_aftercare_instructions_text_view);
             viewHolder.claimFormTv = (TextView) convertView.findViewById(R.id.adapter_view_claim_form_text_view);
 
-            //convertView.setTag(viewHolder);
-        //} else {
-            //viewHolder = (ViewHolder) convertView.getTag();
-        //}
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).getProviderImageUrl(), ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).getProviderName());
         viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());
@@ -84,7 +88,15 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         viewHolder.sendMessageTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchComposeMessage(getItem(position));
+                UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(context);
+                if(userBasicInfo.getPersonalInfo().getEmailConfirmed()){
+                    launchComposeMessage(getItem(position));
+                } else {
+                    final EmailConfirmationDialogFragment dialogFragment = EmailConfirmationDialogFragment.newInstance();
+                    if(context instanceof FragmentActivity) {
+                        dialogFragment.show(((FragmentActivity)context).getSupportFragmentManager(), MDLiveBaseAppcompatActivity.DIALOG_FRAGMENT);
+                    }
+                }
             }
         });
 
@@ -128,11 +140,9 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             if (browserIntent.resolveActivity(getContext().getPackageManager()) != null) {
                 context.startActivity(browserIntent);
-            } else {
-                MdliveUtils.showDialog(context, context.getString(R.string.mdl_app_name), context.getString(R.string.mdl_no_compitable_app));
             }
         } catch (Exception e) {
-
+            MdliveUtils.showDialog(context, context.getString(R.string.mdl_app_name), context.getString(R.string.mdl_no_compitable_app));
         }
     }
 

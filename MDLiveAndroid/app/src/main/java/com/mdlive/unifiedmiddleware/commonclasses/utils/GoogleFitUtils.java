@@ -38,12 +38,12 @@ import java.util.concurrent.TimeUnit;
 public class GoogleFitUtils {
 
     private static final String TAG = "MDLIVE";
-    private GoogleApiClient mClient = null;
+    public GoogleApiClient mClient = null;
     private JSONObject fitnessObject;
-    private boolean authInProgress = false;
     public static final int REQUEST_OAUTH = 51;
     private static GoogleFitUtils sInstance;
     private Activity context;
+    public boolean authInProgress = false;
 
 
     public static synchronized GoogleFitUtils getInstance() {
@@ -62,7 +62,6 @@ public class GoogleFitUtils {
     public void buildFitnessClient(final boolean isGetData, final String[] values, final Activity context) {
         // Create the Google API Client
         this.context = context;
-        Log.i(TAG, "Inside--- Connected!!!");
         mClient = new GoogleApiClient.Builder(context)
                 .addApi(Fitness.HISTORY_API)
                 .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
@@ -119,7 +118,7 @@ public class GoogleFitUtils {
                                 // authorization dialog is displayed to the user.
                                 if (!authInProgress) {
                                     try {
-                                        Log.i(TAG, "Attempting to resolve failed connection");
+                                        Log.i("Google Fit - ", "Attempting to resolve failed connection");
                                         authInProgress = true;
                                         result.startResolutionForResult(context,
                                                 REQUEST_OAUTH);
@@ -168,7 +167,7 @@ public class GoogleFitUtils {
                             for (Field field : dp.getDataType().getFields()) {
                                 float value = 0.0f;
                                 if (field.getName().equalsIgnoreCase("Weight")) {
-                                    value = dp.getValue(field).asFloat() * 2.20462f;
+                                    value =  Math.round(dp.getValue(field).asFloat() * 2.20462f);
                                 } else {
                                     value = dp.getValue(field).asFloat();
                                 }
@@ -185,6 +184,8 @@ public class GoogleFitUtils {
                         fitnessObject = new JSONObject("{\"weight\" : \"0\", \"height\" : \"0\"}");
                         if (context instanceof MDLiveLifeStyleFragment.OnGoogleFitGetData) {
                             ((MDLiveLifeStyleFragment.OnGoogleFitGetData) context).getGoogleFitData(fitnessObject.toString());
+                        } else if(context instanceof MedicalHistoryFragment.OnGoogleFitGetData){
+                            ((MedicalHistoryFragment.OnGoogleFitGetData) context).getGoogleFitData(fitnessObject.toString());
                         }
                     }catch (JSONException ex){
                         // Never happen
@@ -193,6 +194,8 @@ public class GoogleFitUtils {
                 }
                 if (context instanceof MDLiveLifeStyleFragment.OnGoogleFitGetData) {
                     ((MDLiveLifeStyleFragment.OnGoogleFitGetData) context).getGoogleFitData(fitnessObject.toString());
+                } else if(context instanceof MedicalHistoryFragment.OnGoogleFitGetData){
+                    ((MedicalHistoryFragment.OnGoogleFitGetData) context).getGoogleFitData(fitnessObject.toString());
                 }
 
             }
@@ -208,8 +211,8 @@ public class GoogleFitUtils {
         long endTime = cal.getTimeInMillis();
         cal.add(Calendar.YEAR, -1);
         long startTime = cal.getTimeInMillis();
-        float weightValue = Float.parseFloat(values[1]) / 2.20462f;
-        float heightValue = Float.parseFloat(values[0]) / 39.3701f;
+        final float weightValue = Float.parseFloat(values[1]) / 2.20462f;
+        final float heightValue = Float.parseFloat(values[0]) / 39.3701f;
         final DataSet weightDataSet = createDataForRequest(
                 DataType.TYPE_WEIGHT,
                 DataSource.TYPE_RAW,
@@ -233,20 +236,15 @@ public class GoogleFitUtils {
 
             @Override
             public void run() {
-                com.google.android.gms.common.api.Status weightInsertStatus =
-                        Fitness.HistoryApi.insertData(mClient, weightDataSet)
-                                .await(1, TimeUnit.MINUTES);
-
-                com.google.android.gms.common.api.Status heightInsertStatus =
-                        Fitness.HistoryApi.insertData(mClient, heightDataSet)
-                                .await(1, TimeUnit.MINUTES);
-
-                if (!weightInsertStatus.isSuccess() || !heightInsertStatus.isSuccess()) {
-                    Log.i(TAG, "There was a problem inserting the dataset.");
-
-                } else {
-                    Log.i(TAG, "Data entered successfully.");
-                   // fitnessCbContext.success("Success"); TODO : Return Success
+                if(weightValue > 0) {
+                    com.google.android.gms.common.api.Status weightInsertStatus =
+                            Fitness.HistoryApi.insertData(mClient, weightDataSet)
+                                    .await(1, TimeUnit.MINUTES);
+                }
+                if(heightValue > 0) {
+                    com.google.android.gms.common.api.Status heightInsertStatus =
+                            Fitness.HistoryApi.insertData(mClient, heightDataSet)
+                                    .await(1, TimeUnit.MINUTES);
                 }
             }
         }).start();
@@ -278,8 +276,7 @@ public class GoogleFitUtils {
         //function converts Feet to Meters.
         double toFeet = meters;
         toFeet = meters*3.2808f;  // official conversion rate of Meters to Feet
-        Log.d("tofeet-", toFeet + "");
         double toInch = toFeet - Math.floor(toFeet);
-        return new double[]{Math.floor(toFeet),(toInch * 12)};
+        return new double[]{Math.floor(toFeet),Math.round(toInch * 12)};
     }
 }

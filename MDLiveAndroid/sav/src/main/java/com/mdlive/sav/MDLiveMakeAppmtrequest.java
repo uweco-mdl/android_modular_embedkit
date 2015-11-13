@@ -17,8 +17,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,20 +31,24 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mdlive.embedkit.uilayer.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.sav.adapters.ReasonForVisitAdapter;
+import com.mdlive.sav.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
 import com.mdlive.unifiedmiddleware.services.provider.MakeanappmtServices;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -58,16 +64,20 @@ import static java.util.Calendar.MONTH;
  */
 public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     private TextView appointmentIdealDate,appointmentNextAvailable;
-    private EditText appointmentContactNumber,appointmentReason,appointmentComment;
+    private EditText appointmentContactNumber,appointmentComment;
+    private AutoCompleteTextView appointmentReason;
     private HashMap<String,Object> params = new HashMap<>();
     private ArrayList<String> nextAvailableList = new ArrayList<>();
     private int month, day, year,selectedvideo=1;
-    private String DoctorId,postidealTime,appointmentType;
+    private String DoctorId,postidealTime,appointmentType,selectionType="",longLocation;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
+    private ArrayList<String> reasonList;
+    private ReasonForVisitAdapter baseadapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_appointment_request_form);
+        this.setTitle(getString(R.string.mdl_make_appointment_txt));
         clearMinimizedTime();
 
         try {
@@ -82,7 +92,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_make_appointment_txt).toUpperCase());
 
 
@@ -90,40 +102,13 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         appointmentType = settings.getString(PreferenceConstants.APPOINTMENT_TYPE, null);
-//        if(appointmentType!=null) {
-//            if (appointmentType.equalsIgnoreCase("video")) {
-//                findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-//                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-//                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-//                findViewById(R.id.phone_ll).setVisibility(View.INVISIBLE);
-//                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
-//                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
-//            } else if (appointmentType.equalsIgnoreCase("phone")) {
-//                selectedvideo = 2;
-//                findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-//                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-//                findViewById(R.id.video_ll).setVisibility(View.INVISIBLE);
-//                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
-//                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
-//                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
-//            }
-//        }
-        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+          longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         //PHS user
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
-            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-                ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-                ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                findViewById(R.id.phone_ll).setVisibility(View.INVISIBLE);
-                ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
-                ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+            highlightVideo();
         }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
-            findViewById(R.id.video_ll).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
-            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.video_icon_white);
+            highlightPhone();
         }
 
         if (savedInstanceState == null) {
@@ -137,19 +122,99 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+        ReasonForVisit();
+    }
 
+    private void highlightVideo() {
+        selectionType="video";
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+        ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+        findViewById(R.id.phone_ll).setVisibility(View.VISIBLE);
+        findViewById(R.id.phone_ll).setClickable(false);
+        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_gray);
+        ((TextView) findViewById(R.id.phoneBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
     }
 
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLiveMakeAppmtrequest.this);
         onBackPressed();
-
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(MDLiveMakeAppmtrequest.this);
+    }
+
+
+    /**
+     * Reason for Visit List Details.
+     * Class : ReasonForVisitServices - Service class used to fetch the List information
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     */
+    private void ReasonForVisit() {
+        showProgress();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleSuccessListener(response);
+            }
+        };
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
+            }
+        };
+        ReasonForVisitServices services = new ReasonForVisitServices(MDLiveMakeAppmtrequest.this, null);
+        services.getReasonList(successCallBackListener, errorListener);
+    }
+
+    /**
+     * Successful Response Handler for Provider Request.
+     * The response will provide the list of symptoms.If there is no symptoms the user can
+     * create the new symptom and add the symptom.
+     */
+    private void handleSuccessListener(JSONObject response) {
+        try {
+            hideProgress();
+            JSONArray arr = response.getJSONArray("chief_complaint");
+            for (int i = 0; i < arr.length(); i++) {
+                reasonList.add(arr.getJSONObject(i).getString(arr.getJSONObject(i).keys().next()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        appointmentReason.setAdapter(getAutoCompletionArrayAdapter());
+        appointmentReason.setDropDownVerticalOffset(0);
+    }
+
+    /**
+     Setting adapter value to appointment
+     */
+    private ArrayAdapter<String> getAutoCompletionArrayAdapter() {
+        return new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reasonList) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                parent.setBackgroundColor(Color.WHITE);
+                final TextView text = (TextView) view.findViewById(android.R.id.text1);
+                text.setTextColor(Color.BLACK);
+                text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        appointmentReason.setText(text.getText().toString());
+                        appointmentReason.dismissDropDown();
+                    }
+                });
+                return view;
+            }
+        };
     }
 
     public void rightBtnOnClick(View v){
@@ -160,20 +225,61 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         String stridealdate = appointmentIdealDate.getText().toString().trim();
         strappointmentContactNumber = MdliveUtils.getSpecialCaseRemovedNumber(strappointmentContactNumber);
         Log.v("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
-        if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
+        if(TextUtils.isEmpty(strappointmentContactNumber)||appointmentContactNumber.getText().toString().length()<14){
 
-                && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)) {
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter a valid US phone number.");
+        } else if(TextUtils.isEmpty(strappmtreason)){
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter reason for your appointment.");
+        } else if(TextUtils.isEmpty(selectionType)){
+            DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    selectedvideo = 1;
+                    selectionType = "video";
+                    findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+                    ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+                    findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+                    ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+                    dialogInterface.dismiss();
 
+                }
+            };
+
+            DialogInterface.OnClickListener negativeOnClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    selectedvideo = 2;
+                    selectionType = "phone";
+                    findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+                    ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+                    findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+                    ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+                    ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+                    ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+                    dialogInterface.dismiss();
+
+                }
+            };
+
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this,"Appointment Type", "Would you like this appointment by phone or video?", "Phone", "Video",
+                    negativeOnClickListener, positiveOnClickListener);
+        }
+       else if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
+               /* && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)*/ && !TextUtils.isEmpty(selectionType))
+        {
             HashMap params1 = new HashMap();
             params1.put("appointment_method", selectedvideo);
             params1.put("contact_number",strappointmentContactNumber);
             params1.put("chief_complaint", "Tendinitis");
             params1.put("physician_id", DoctorId);
-            params1.put("appointment_date",postidealTime);
+            params1.put("appointment_date",appointmentIdealDate.getText().toString().trim());
             params1.put("preferred_time", strnxtavailable);//
             params.put("alternate_visit_option","No Answer");
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-            params.put("do_you_have_primary_care_physician",settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
+            params.put("do_you_have_primary_care_physician",settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
             params.put("appointment",params1);
             LoadappmtRequest();
             saveDateAndTime();
@@ -195,35 +301,75 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         appointmentIdealDate = (TextView) findViewById(R.id.appointmentIdealDate);
         appointmentNextAvailable = (TextView) findViewById(R.id.appointmentNextAvailable);
         appointmentContactNumber = (EditText) findViewById(R.id.appointmentContactNumber);
-        appointmentReason = (EditText) findViewById(R.id.appointmentReason);
+        appointmentReason = (AutoCompleteTextView) findViewById(R.id.appointmentReason);
         appointmentComment = (EditText) findViewById(R.id.appointmentComment);
         //formatDualString(appointmentContactNumber.getText().toString().trim());
         MdliveUtils.formatDualString(appointmentContactNumber.getText().toString().trim());
         appointmentContactNumber.addTextChangedListener(watcher);
+        GetCurrentDate((TextView) findViewById(R.id.appointmentNextAvailable));
+        nextAvailableList.clear();
+        nextAvailableList.add("Morning");
+        nextAvailableList.add("Afternoon");
+        nextAvailableList.add("Evening");
+        reasonList  = new ArrayList<>();
+        ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 
 
     }
     public void onclickVideo(View v)
     {
-        selectedvideo = 1;
-        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-        ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
-        findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
-        ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
-        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-        ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
+            selectedvideo = 1;
+            highlightVideo();
+        }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
+            selectedvideo = 2;
+            highlightPhone();
+        }else {
+            selectedvideo = 1;
+            selectionType = "video";
+            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.WHITE);
+            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.GRAY);
+            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
+            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+        }
 
     }
     public void onclickPhone(View v)
     {
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video")||longLocation.equalsIgnoreCase("idaho")) {
+            selectedvideo = 1;
+            highlightVideo();
+            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon);
+        }else  if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone")||longLocation.equalsIgnoreCase("texas")) {
+            selectedvideo = 2;
+            highlightPhone();
+        }else {
 
-        selectedvideo=2;
+            selectedvideo = 2;
+            selectionType = "phone";
+            findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
+            ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
+            findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
+            ((TextView) findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
+            ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+            ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+        }
+    }
+
+    private void highlightPhone() {
+        selectionType = "phone";
+        findViewById(R.id.video_ll).setClickable(false);
+        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.disable_round_rect_grey_border);
+        findViewById(R.id.video_ll).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.videoBtn)).setTextColor(getResources().getColor(R.color.disableBtn));
         findViewById(R.id.phone_ll).setBackgroundResource(R.drawable.round_rect_grey_border_blue);
-        ((TextView)findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
-        findViewById(R.id.video_ll).setBackgroundResource(R.drawable.round_rect_grey_border);
-        ((TextView)findViewById(R.id.videoBtn)).setTextColor(Color.GRAY);
-        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon);
+        ((TextView) findViewById(R.id.phoneBtn)).setTextColor(Color.WHITE);
         ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
+        ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_gray);
     }
 
     /**
@@ -236,10 +382,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
      *
      */
     public void onclickNxtAvailable(View v) {
-        nextAvailableList.clear();
-        nextAvailableList.add("morning");
-        nextAvailableList.add("afternoon");
-        nextAvailableList.add("evening");
 
         showListViewDialog(nextAvailableList,(TextView)findViewById(R.id.appointmentNextAvailable));
 
@@ -254,17 +396,17 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     }
 
     public void GetCurrentDate(TextView selectedText) {
-        final Calendar c = Calendar.getInstance();
+
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
         // Show current date
+        String format = new SimpleDateFormat("EEEE  MMM d, yyyy").format(c.getTime());
+        Log.v("chk date",format);
+        ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
 
-        selectedText.setText(new StringBuilder()
-                // Month is 0 based, just add 1
-                .append(month + 1).append("/").append(day).append("/")
-                .append(year).append(" "));
     }
 
     @Override
@@ -274,9 +416,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis()-10000);
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings() -10000);
                 return dialog;
         }
         return null;
@@ -294,13 +436,20 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             day = selectedDay;
 
             // Show selected date
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = TimeZoneUtils.getCalendarWithOffset(MDLiveMakeAppmtrequest.this);
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            String format = new SimpleDateFormat("E, MMM d, yyyy").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE  MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
+            String format = sdf.format(cal.getTime());
             ((TextView)findViewById(R.id.appointmentIdealDate)).setText(format);
             DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+            format1.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveMakeAppmtrequest.this));
+            String timeZoneValue = "";
+            if(UserBasicInfo.readFromSharedPreference(MDLiveMakeAppmtrequest.this).getPersonalInfo()!=null){
+                timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveMakeAppmtrequest.this).getPersonalInfo().getTimezone();
+            }
             postidealTime = format1.format(cal.getTime());
 
         }
@@ -415,7 +564,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveMakeAppmtrequest.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);

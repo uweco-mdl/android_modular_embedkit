@@ -2,22 +2,25 @@ package com.mdlive.embedkit.uilayer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
-import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment;
 import com.mdlive.embedkit.uilayer.login.EmailConfirmationDialogFragment.OnEmailConfirmationClicked;
@@ -30,14 +33,18 @@ import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.OnAppointmentClicked;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.BroadcastConstant;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
+import com.mdlive.unifiedmiddleware.plugins.SocialSharingHandler;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+import com.mdlive.unifiedmiddleware.services.login.SSOBaylorService;
 
 import java.lang.Class;
 import java.lang.ref.WeakReference;
@@ -48,6 +55,9 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.NavigationDrawerCallbacks;
 
@@ -64,8 +74,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public static final String MAIN_CONTENT = "main_content";
     public static final String LEFT_MENU = "left_menu";
     public static final String RIGHT_MENU = "right_menu";
-
+    public static boolean IS_DEPENDENT_SELECTED;
     private DrawerLayout mDrawerLayout;
+
+    private Handler mHandler;
 
     // Collection that contains all Activities that need to be terminated upon embedkit exit in SSO mode
     public static List<WeakReference<? extends MDLiveBaseAppcompatActivity>> VisitedScreens_SSO = new LinkedList<>();
@@ -74,6 +86,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clearMinimizedTime();
+        MdliveUtils.activity = this;
         setTitle("");
 
         if(MDLiveConfig.IS_SSO)
@@ -87,9 +100,91 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onStart() {
         super.onStart();
 
-        if (showPinScreen() && MdliveUtils.getLockType(getBaseContext()).equals("Pin")) {
-            sendBroadcast(getUnlockBroadcast());
+        if (showPinScreen()) {
+            if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
+            {
+                DialogInterface.OnClickListener backToBaylor = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackToBaylorClicked(null);
+                    }
+                };
+                MdliveUtils.showDialog(this,getString(R.string.mdl_app_name),getString(R.string.mdl_baylor_session_expired),getString(R.string.mdl_Ok),null,backToBaylor,null);
+            }else if (MdliveUtils.getLockType(getBaseContext()).equals("Pin")){
+                sendBroadcast(getUnlockBroadcast());
+            }
+        }else if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name())){
+            MakeBaylorSSOLogin();
         }
+    }
+    /**
+     * Call the SSO service to auto login user if they come through baylor application
+     * For baylor user the login and pin creation screens are not applicable
+     * The user will be directed to destination screen without any interruption
+     */
+    private void MakeBaylorSSOLogin() {
+        try {
+//            final ProgressDialog pDialog = MdliveUtils.getFullScreenProgressDialog(this);
+            final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (response.has("error")) {
+                        BaylorSSOError();
+                    }
+                }
+            };
+            final NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    try {
+                        BaylorSSOError();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            SSOBaylorService service = new SSOBaylorService(this, null);
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String guid = sharedPref.getString(PreferenceConstants.BAYLOR_GUID, null);
+            HashMap<String, String> postParam = new HashMap<>();
+            postParam.put("user_guid", guid);
+            postParam.put("affiliation_id", DeepLinkUtils.DEEPLINK_DATA.getAffiliationId() + "");
+
+            service.BaylorSSO(successCallBackListener, errorListener, (new JSONObject(postParam)).toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * When the baylor sso integration fails to login then display this error and ask your to login again from baylor app
+     * This current activity will be closed once the user hits ok button
+     */
+    private void BaylorSSOError(){
+        DialogInterface.OnClickListener backToBaylor = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onBackToBaylorClicked(null);
+            }
+        };
+        MdliveUtils.showDialog(this, getString(com.mdlive.embedkit.R.string.mdl_app_name), getString(com.mdlive.embedkit.R.string.mdl_failed_baylor_login), getString(com.mdlive.embedkit.R.string.mdl_Ok), null, backToBaylor, null);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MdliveUtils.isAppInForground = false;
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MdliveUtils.isAppInForground = true;
     }
 
     @Override
@@ -185,7 +280,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
      * @param position
      */
     @Override
-    public void onNavigationDrawerItemSelected(int position){
+    public void onNavigationDrawerItemSelected(int position) {
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
 
@@ -239,6 +334,11 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         finish();
     }
 
+    public void onBackToBaylorClicked(View view) {
+        MdliveUtils.clearNecessarySharedPrefernces(getApplicationContext());
+        DeepLinkUtils.openBaylorApp(this);
+        finish();
+    }
     @Override
     public void sendUserInformation(UserBasicInfo userBasicInfo) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(RIGHT_MENU);
@@ -281,12 +381,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
             return;
         }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).hideNotification();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadDependendUserDetails(user, true);
@@ -299,12 +397,14 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Toast.makeText(getBaseContext(), "Add Child To Be Started", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        IS_DEPENDENT_SELECTED = false;
+        /*if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+        }*/
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).hideNotification();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
             ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
@@ -446,7 +546,15 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     public void onAppointmentClicked(Appointment appointment) {
         getDrawerLayout().closeDrawer(GravityCompat.START);
         getDrawerLayout().closeDrawer(GravityCompat.END);
-        startActivity(AppointmentActivity.getAppointmentIntent(getBaseContext(), appointment));
+        try {
+            Class clazz = Class.forName("com.mdlive.sav.appointment.AppointmentActivity");
+            Method method = clazz.getMethod("getAppointmentIntent", Context.class, Appointment.class);
+            startActivity((Intent)method.invoke(null, getBaseContext(), appointment));
+        }catch (ClassNotFoundException e){
+            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -467,29 +575,47 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     }
 
     public void shareApplication() {
-        final Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mdl_share_details_text));
-        startActivity(Intent.createChooser(sharingIntent, getString(R.string.mdl_share_using)));
+        SocialSharingHandler sShare = new SocialSharingHandler();
+        try {
+            sShare.doSendIntent(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopPinTimer() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     public void clearMinimizedTime() {
-        final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Log.d("Timer", "clear called");
+            }
+        }, 1000);
     }
 
     private boolean showPinScreen() {
         final SharedPreferences preferences = getSharedPreferences(PreferenceConstants.TIME_PREFERENCE, MODE_PRIVATE);
-        final long lastTime = preferences.getLong(PreferenceConstants.TIME_KEY, System.currentTimeMillis());
+        final long lastTime = preferences.getLong(PreferenceConstants.TIME_KEY, -1l);
 
-        final long difference = System.currentTimeMillis() - lastTime;
-        if (difference > 60 * 1000) {
-            return true;
-        } else {
+        if (lastTime < 0) {
             return false;
         }
+
+        final long difference = System.currentTimeMillis() - lastTime;
+        return difference > IntegerConstants.SESSION_TIMEOUT;
     }
 
     private void saveLastMinimizedTime() {
@@ -597,5 +723,4 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         VisitedScreens_SSO.clear();
 
     }
-
 }

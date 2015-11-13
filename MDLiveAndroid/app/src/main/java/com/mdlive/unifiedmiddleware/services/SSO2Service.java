@@ -19,6 +19,6 @@ public class SSO2Service extends BaseServicesPlugin {
                              NetworkSuccessListener<JSONObject> successListener,
                              NetworkErrorListener errorListener){
 
-        jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.SSO_SERVICE, requestData, successListener, errorListener, true);
+        jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.SSO_SERVICE, requestData, successListener, errorListener);
     }
 }

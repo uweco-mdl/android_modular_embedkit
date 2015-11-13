@@ -12,6 +12,7 @@
     <color name="black">#35393d</color>
     <color name="darkblack">#000000</color>
     <color name="withPatient">#F18032</color>
+    <color name="disableBtn">#E6E6E6</color>
 
     <color name="white">#ffffff</color>
     <color name="grey_txt">#b4b9bd</color>
@@ -22,7 +23,7 @@
     <color name="green">#2A7DB6</color>
     <color name="red">#FA5858</color>
     <color name="location_color">#35393d</color>
-
+    <color name="confirmappmt_evisit_color">#464646</color>
     <item name="view" type="color">#E0D8D8</item>
     <item name="search_bgd" type="color">#878f95</item>
 
@@ -56,9 +57,13 @@
 
     <color name="gray_6">#666666</color>
     <color name="gray_a">#AAAAAA</color>
+    <color name="gray_thankyou">#2E2F2F</color>
+
+    <color name="gray_added_color">#7A7A7A</color>
     <color name="gray_c">#CCCCCC</color>
     <color name="transparent">#0FFF</color>
     <color name="link_blue">#0645AD</color>
+    <color name="customercall_blue">#257cfc</color>
     <color name="selected_bg">#0645AD</color>
     <color name="white_trans">@color/white</color>
 
@@ -67,6 +72,7 @@
     <color name="Availabilty_TextColor_green">#00bd4a</color>
     <color name="need_assistance">#959595</color>
     <color name="summary_contact">#007aff</color>
+    <color name="startappmt_btn_blue">#0288d1</color>
 
     <color name="ReasonForVisit_TextColor_black">#100c0c</color>
     <color name="ReasonForVisit_EditText_HintColor">#959595</color>
@@ -86,6 +92,7 @@
     <color name="change_password_alert_text_color">#6d6d6d</color>
     <color name="change_password_alert_text_color_red">#ff0000</color>
     <color name="change_password_alert_text_color_green">#4bb544</color>
+    <color name="change_password_medium_text_color_yellow">#D2B224</color>
 
     <color name="red_200">#EF9A9A</color>
     <color name="red_300">#E57373</color>
@@ -117,7 +124,7 @@
     <color name="search_pvr_blue_color">#007AFF</color>
     <color name="condition_txt_color">#454545</color>
 
-
+    <color name="mdl_confirm_btn_color">#0288d1</color>
     <color name="search_pvr_txt_blue_color">#0079FD</color>
 
     <color name="card_details_text_color">#257cfc</color>
@@ -208,5 +215,7 @@
     <color name="divider">#dbdbdb</color>
 
     <color name="dashboard_menu_color">#556370</color>
+
+    <color name="doctor_on_call_background">#29abe2</color>
 
 </resources>

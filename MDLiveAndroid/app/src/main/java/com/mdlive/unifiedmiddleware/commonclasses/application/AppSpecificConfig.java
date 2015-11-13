@@ -26,6 +26,7 @@ public class AppSpecificConfig {
     public static String URL_FILTER_SEARCH = "/providers/filter_providers";
     public static String URL_MAKE_APPOINTMENT = "/appointments/cs_schedule_appointment";
     public static String URL_REASON_FOR_VISIT = "/support/chief_complaint_reasons";
+    public static String URL_TIMEZONE_BY_STATE = "/support/state_timezones";
     public static String URL_ZIPCODE = "/providers/search_providers";
     public static String URL_PROVIDER_DETAILS ="/providers/";
     public static String URL_PEDIATRIC_PROFILE = "/medical_histories/pediatric_profile";
@@ -34,6 +35,7 @@ public class AppSpecificConfig {
     public static String DELETE_MEDICALREPORT = "/customer/delete_document";
     public static String DOWNLOAD_MEDICAL_IMAGE = "/customer/download_document";
     public static String DEFAULT_USER_ID = "MobileUser";
+    public static String DEFAULT_SESSION_ID = "";
     public static String URL_PHARMACIES_CURRENT = "/pharmacies/current"; // Need additional header
     public static String URL_PHARMACIES_SEARCH_LOCATION = "/pharmacies/search";
     public static String URL_PHARMACIES_UPDATE = "/pharmacies/update"; // Need post body
@@ -130,6 +132,7 @@ public class AppSpecificConfig {
 
     public static String PIN_AUTHENTICATION;
     public static String GEO_TARGET_DETAILS;
+    public static String URL_HEALTH_KIT_SYNC;
 
     private AppSpecificConfig(){
         // this class cannot be directly instantiated externally

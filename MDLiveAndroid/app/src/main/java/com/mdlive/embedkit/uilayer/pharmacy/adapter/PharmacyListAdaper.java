@@ -53,29 +53,29 @@ public class PharmacyListAdaper extends BaseAdapter{
             convertView = (View) convertView.getTag();
         }
         if((Boolean)getItem(position).get("is_preferred")){
-            ((LinearLayout) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.preferStoretxt).setVisibility(View.VISIBLE);
         }else{
-            ((LinearLayout) convertView.findViewById(R.id.preferStoretxt)).setVisibility(View.GONE);
+            convertView.findViewById(R.id.preferStoretxt).setVisibility(View.GONE);
         }
 
         if((Boolean)getItem(position).get("twenty_four_hours")){
-            ((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.twentyfourHrstxt).setVisibility(View.VISIBLE);
         }else{
-            ((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).setVisibility(View.GONE);
+            convertView.findViewById(R.id.twentyfourHrstxt).setVisibility(View.GONE);
         }
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddressline2)).setText(
-                ((getItem(position).get("city")!= null) ? (String)getItem(position).get("city")+", ":"")+
-                    (String)getItem(position).get("state")+" "+(String)getItem(position).get("zipcode"));
+                ((getItem(position).get("city")!= null) ? getItem(position).get("city") +", ":"")+
+                        getItem(position).get("state") +" "+ getItem(position).get("zipcode"));
 
         ((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
 
         ((TextView) convertView.findViewById(R.id.milesText)).setText((((getItem(position).get("distance") != null) &&
-                ((String) getItem(position).get("distance")).length() != 0) ? (String) ((String) getItem(position).get("distance")).trim().replace(" miles", "mi") : ""));
+                ((String) getItem(position).get("distance")).length() != 0) ? ((String) getItem(position).get("distance")).trim().replace(" miles", "mi") : ""));
 
-        if(((LinearLayout) convertView.findViewById(R.id.twentyfourHrstxt)).getVisibility() == View.VISIBLE){
+        if(convertView.findViewById(R.id.twentyfourHrstxt).getVisibility() == View.VISIBLE){
             setMaxWidthForLeftText(convertView.findViewById(R.id.relative_layout),
                     (TextView) convertView.findViewById(R.id.text_view_a),
                     (LinearLayout) convertView.findViewById(R.id.preferStoretxt)

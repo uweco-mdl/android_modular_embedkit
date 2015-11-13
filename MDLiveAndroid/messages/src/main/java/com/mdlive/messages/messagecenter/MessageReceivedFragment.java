@@ -68,8 +68,11 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.fragment_message_received_list_view);
+        mBlankLayout = view.findViewById(R.id.blank_layout);
+        mBlankLayout.setVisibility(View.GONE);
         if (mListView != null) {
-            mMessageReceivedAdapter = new MessageReceivedAdapter(view.getContext(), R.layout.adapter_message_received, android.R.id.text1);
+            mMessageReceivedAdapter = new MessageReceivedAdapter(view.getContext(),
+                    R.layout.adapter_message_received, android.R.id.text1);
             mListView.setAdapter(mMessageReceivedAdapter);
             mListView.setOnScrollListener(new InfiniteScrollListener(0) {
                 @Override
@@ -80,17 +83,14 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                    mMessageReceivedAdapter.getItem(i).readStatus = true;
-                    mMessageReceivedAdapter.getView(i, view, adapterView).invalidate();
-
                     if (getActivity() != null && getActivity() instanceof MessageCenterActivity) {
                         ((MessageCenterActivity) getActivity()).onReceivedMessageClicked(mMessageReceivedAdapter.getItem(i));
                     }
+                    mMessageReceivedAdapter.getItem(i).readStatus = true;
+                    mMessageReceivedAdapter.getView(i, view, adapterView).invalidate();
                 }
             });
         }
-
-        mBlankLayout = view.findViewById(R.id.blank_layout);
 
         final ImageView image = (ImageView) view.findViewById(R.id.message_center_empty_image_view);
         if (image != null) {
@@ -164,7 +164,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgressDialog();
-
                 handleSucess(response);
             }
         };
@@ -187,8 +186,6 @@ public class MessageReceivedFragment extends MDLiveBaseFragment {
     }
 
     private void handleSucess(final JSONObject response) {
-        logD("Hello", "Page Number : " + mPageCount);
-        logD("Hello", response.toString());
         final Gson gson = new Gson();
         final ReceivedMessages newReceivedMessages =  gson.fromJson(response.toString(), ReceivedMessages.class);
         if (newReceivedMessages.receivedMessages != null && newReceivedMessages.receivedMessages.size() > 0) {

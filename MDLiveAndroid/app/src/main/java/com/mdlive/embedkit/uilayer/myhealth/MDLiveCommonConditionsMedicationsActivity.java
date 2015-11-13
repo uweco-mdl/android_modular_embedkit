@@ -47,7 +47,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
-    public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION,PROCEDURE};
+    public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION,PROCEDURE}
+
     protected TYPE_CONSTANT type;
     public Intent resultData = new Intent();
     public static boolean IsThisPageEdited = false;
@@ -101,14 +102,16 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 isEditCalled = false;
                 adapter.notifyDataSetChanged();
                 ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+                findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_edit));
             }
-            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_existing_btn).setVisibility(View.VISIBLE);
 
         }else{
-            ((RelativeLayout)findViewById(R.id.add_existing_btn)).setVisibility(View.GONE);
+            findViewById(R.id.add_existing_btn).setVisibility(View.GONE);
             isEditCalled = true;
             adapter.notifyDataSetChanged();
             ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+            findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         }
     }
 
@@ -157,7 +160,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("frequency")
                             && !((JSONObject) conditionsListJSONArray.get(i)).isNull("frequency")){
-                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("frequency");
+                        conditionSubname += ((JSONObject) conditionsListJSONArray.get(i)).getString("frequency").toLowerCase();
                         data.setFrequency(((JSONObject) conditionsListJSONArray.get(i)).getString("frequency"));
                     }
                     if(((JSONObject) conditionsListJSONArray.get(i)).has("source") &&
@@ -184,11 +187,11 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             if(duplicateList.size() > 0){
                 conditionsListView.setVisibility(View.VISIBLE);
                 noConditionsLayout.setVisibility(View.GONE);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             }else{
                 noConditionsLayout.setVisibility(View.VISIBLE);
                 conditionsListView.setVisibility(View.GONE);
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             }
 
         }catch (Exception e){
@@ -246,6 +249,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 convertView = getLayoutInflater().inflate(R.layout.mdlive_custom_addhealth, null);
                 holder = new ViewHolder();
                 holder.deleteIcon = (ImageView) convertView.findViewById(R.id.deleteIcon);
+                holder.deleteIcon.setContentDescription(getString(R.string.mdl_ada_delete));
                 holder.conditionName = (TextView) convertView.findViewById(R.id.conditionName);
                 holder.conditionSubName = (TextView) convertView.findViewById(R.id.conditionSubName);
                 convertView.setTag(holder);

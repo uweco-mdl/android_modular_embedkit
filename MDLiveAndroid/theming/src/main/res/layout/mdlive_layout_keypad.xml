@@ -7,7 +7,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray_c" />
+        android:background="@color/gray_c"
+        android:layout_marginBottom="@dimen/dimen_32_dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="1"
+            android:text="@string/mdl_number_one"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -33,7 +34,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2"
+            android:text="@string/mdl_number_two"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -44,7 +45,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="3"
+            android:text="@string/mdl_number_three"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -63,7 +64,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="4"
+            android:text="@string/mdl_number_four"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -74,7 +75,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="5"
+            android:text="@string/mdl_number_five"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -85,7 +86,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="6"
+            android:text="@string/mdl_number_six"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -104,7 +105,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="7"
+            android:text="@string/mdl_number_seven"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -115,7 +116,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="8"
+            android:text="@string/mdl_number_eight"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -126,7 +127,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="9"
+            android:text="@string/mdl_number_nine"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>
@@ -154,7 +155,7 @@
             android:layout_width="@dimen/dimen_0_dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0"
+            android:text="@string/mdl_number_zero"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:fontFamily="sans-serif-light"/>

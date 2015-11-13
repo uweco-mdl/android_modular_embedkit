@@ -31,6 +31,7 @@ public class PrimaryCarePhysicianActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myaccounts_home);
         clearMinimizedTime();
+        this.setTitle(getResources().getString(R.string.mdl_pcp_title));
 
         try {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

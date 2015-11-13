@@ -28,6 +28,7 @@
                 android:layout_height="@dimen/dimen_24_dp"
                 android:layout_gravity="center_vertical|left"
                 android:onClick="onLeftDrawerClicked"
+                android:contentDescription="@string/mdl_ada_hamburger"
                 android:scaleType="centerCrop"
                 android:src="@drawable/hamburger" />
         </FrameLayout>
@@ -50,6 +51,7 @@
                 android:onClick="onTickClicked"
                 android:padding="10dp"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/mdl_ada_tick_button"
                 android:src="@drawable/top_tick_icon" />
 
             <ImageView
@@ -60,6 +62,7 @@
                 android:layout_marginRight="@dimen/dimen_16_dp"
                 android:onClick="onRightDrawerClicked"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/mdl_ada_bell"
                 android:src="@drawable/notification_bell_white" />
         </FrameLayout>
 

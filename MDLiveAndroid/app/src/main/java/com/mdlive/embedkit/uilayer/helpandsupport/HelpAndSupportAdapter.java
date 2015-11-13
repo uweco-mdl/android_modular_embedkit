@@ -12,7 +12,6 @@ import com.mdlive.embedkit.R;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sanjibkumar_p on 7/14/2015.
@@ -23,7 +22,6 @@ public class HelpAndSupportAdapter extends ArrayAdapter<HashMap<String,String>> 
     public List<HashMap<String, String>> itemList;
     private Activity mContext;
     LayoutInflater inflater;
-    private Map<Integer, Boolean> map = new HashMap<Integer, Boolean>();
 
     public HelpAndSupportAdapter(Activity context, List<HashMap<String, String>> itemList) {
         super(context, R.layout.mdlive_help_and_support_addrows, itemList);

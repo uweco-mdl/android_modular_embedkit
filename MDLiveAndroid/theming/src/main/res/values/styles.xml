@@ -183,6 +183,17 @@
     </style>
 
     <!-- Header. -->
+    <style name="VerificationHeaderTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="HeaderTextViewStyle">
         <item name="android:layout_width">wrap_content</item>
@@ -411,7 +422,7 @@
         <item name="android:textSize">@dimen/textsize_medium</item>
         <item name="android:gravity">left|center</item>/>
         <item name="android:layout_marginLeft">@dimen/switch_marginLeft</item>
-        <item name="android:text">@string/mdl_i_michelle_text</item>
+        <item name="android:text">@string/mdl_summary_txt</item>
     </style>
 
     //Reason
@@ -970,6 +981,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
+        <item name="android:paddingBottom">@dimen/dimen_16_dp</item>
     </style>
     <!-- Choose Provider Header-->
 
@@ -1034,8 +1046,39 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textColor">@color/unread_text_color</item>
-        <item name="android:paddingBottom">5dp</item>
     </style>
+
+    <!-- CCP Affilition Detail Screen-->
+    <style name="CCPAffiliationStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">10dp</item>
+
+    </style>
+    <style name="CCPAffiliationDetailHeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="CCPAffiliationDetailContentStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/unread_text_color</item>
+    </style>
+    <style name="CCPAffiliationLinkImg">
+        <item name="android:layout_width">55dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginRight">@dimen/dimen_13_dp</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_13_dp</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
     <!-- Credit Card-->
     <style name="CardTextViewStyle">
         <item name="android:layout_width">match_parent</item>
@@ -1404,7 +1447,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">17sp</item>
         <item name="android:gravity">start</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
@@ -1943,7 +1989,14 @@
     </style>
 
     <!-- For Appointment Request Form Page -->
-
+    <style name="AppointmentRequestFieldsHeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/appointment_request_form_text_size</item>
+        <item name="android:textColorHint">@color/EditText_HintColor</item>
+        <item name="android:textColor">@color/darkblack</item>
+    </style>
     <style name="AppointmentRequestFieldsStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1954,6 +2007,15 @@
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:textColorHint">@color/EditText_HintColor</item>
         <item name="android:textColor">@color/darkblack</item>
+    </style>
+    <style name="AppointmentIdealDateStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/appointment_request_form_text_size</item>
+        <item name="android:textColorHint">@color/EditText_HintColor</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="AppointmentRequestButtonStyle">
@@ -2009,6 +2071,16 @@
         <item name="android:paddingBottom">@dimen/dimen_4_dp</item>
         <item name="android:paddingLeft">9dp</item>
         <item name="android:paddingRight">9dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:background">@drawable/round_rect_white</item>
+    </style>
+
+    <style name="Get_Started_location_Style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:paddingLeft">9dp</item>
         <item name="android:textSize">17sp</item>
         <item name="android:background">@drawable/round_rect_white</item>
     </style>
@@ -2154,11 +2226,33 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:textSize">@dimen/appointment_request_form_text_size</item>
         <item name="android:background">@drawable/dark_blue_button</item>
+        <item name="android:stateListAnimator">@null</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Switch">
         <item name="colorControlActivated">@color/toggle_color</item>
+    </style>
+
+    <style name="InsuranceEligibiltyPrimaryTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="InsuranceEligibiltySecondaryTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 </resources>
 

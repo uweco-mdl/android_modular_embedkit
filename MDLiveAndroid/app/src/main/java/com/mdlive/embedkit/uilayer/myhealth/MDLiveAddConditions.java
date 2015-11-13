@@ -38,6 +38,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
         type = TYPE_CONSTANT.CONDITION;
         super.onCreate(savedInstanceState);
         IsThisPageEdited = false;
+        this.setTitle(getString(R.string.mdl_add_conditions_text));
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,7 +50,9 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_edit));
         ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_condition_img);
 
         ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_conditions_reported));
@@ -138,7 +141,7 @@ public class MDLiveAddConditions extends MDLiveCommonConditionsMedicationsActivi
                     if(duplicateList.size() == 0){
                         noConditionsLayout.setVisibility(View.VISIBLE);
                         conditionsListView.setVisibility(View.GONE);
-                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                        findViewById(R.id.txtApply).setVisibility(View.GONE);
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();

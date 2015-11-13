@@ -22,7 +22,7 @@ public class AddChildServices extends BaseServicesPlugin {
 
 
 
-    public void getChildDependentsr(HashMap<String,HashMap<String,String>> Result,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
+    public void getChildDependent(HashMap<String,HashMap<String,String>> Result,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
             Gson gson = new Gson();
 

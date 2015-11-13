@@ -1,6 +1,6 @@
 // ---- The first two targets must ALWAYS be present: app, theming;
 // ---- the rest are optional. Order of appearance in the include statement is inconsequential
 // ---- If assist module is remove, then the dependency will also have to be remove inside app build.gradle
-//include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker', ':myaccounts'
-include  ':app', ':theming', ':assist', ':symptomchecker', ':sav'
+include  ':theming', ':assist', ':messages', ':sav', ':app', ':myhealth', ':symptomchecker', ':myaccounts'
+//include  ':app', ':theming', ':assist', ':symptomchecker', ':sav'
 

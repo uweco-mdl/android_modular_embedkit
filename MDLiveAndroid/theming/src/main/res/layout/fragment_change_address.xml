@@ -44,6 +44,8 @@
                         android:inputType="textNoSuggestions"
                         android:cursorVisible="true"
                         android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:maxLength="50"
                         android:background="@color/white"/>
 
                 </RelativeLayout>
@@ -71,6 +73,8 @@
                         android:background="@color/white"
                         android:imeOptions="actionNext"
                         android:cursorVisible="true"
+                        android:singleLine="true"
+                        android:maxLength="50"
                         />
 
                 </RelativeLayout>
@@ -99,6 +103,7 @@
                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:imeOptions="actionNext"
                         android:cursorVisible="true"
+                        android:maxLength="50"
                         />
 
                 </RelativeLayout>

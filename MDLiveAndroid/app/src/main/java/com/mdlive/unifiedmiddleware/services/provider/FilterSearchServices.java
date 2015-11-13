@@ -19,7 +19,13 @@ public class FilterSearchServices extends BaseServicesPlugin {
 
     }
 
-
+    public void getFilterSearch(String postParams,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
+        try {
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_FILTER_SEARCH, postParams, responseListener, errorListener);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void getFilterSearch(HashMap<String,String> postParams,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {

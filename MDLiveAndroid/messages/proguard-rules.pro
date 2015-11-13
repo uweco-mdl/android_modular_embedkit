@@ -29,3 +29,5 @@
 -keep class com.mdlive.messages.messagecenter.MessageCenterComposeActivity {
     public <methods>;
 }
+
+-keep class com.mdlive.messages.messagecenter.MessageCenterInboxDetailsActivity{}

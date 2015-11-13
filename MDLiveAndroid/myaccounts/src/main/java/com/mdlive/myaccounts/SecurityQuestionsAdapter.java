@@ -56,14 +56,16 @@ public class SecurityQuestionsAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Holder holder=new Holder();
-        View rowView;
-
-        rowView = inflater.inflate(R.layout.security_questions_list, null);
-        holder.tv=(TextView) rowView.findViewById(R.id.txtMemberName);
-
+        if(convertView == null){
+            convertView = inflater.inflate(R.layout.security_questions_list, null);
+            holder.tv=(TextView) convertView.findViewById(R.id.txtMemberName);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
         holder.tv.setText(values.get(position));
 
-        return rowView;
+        return convertView;
     }
 
 }

@@ -57,9 +57,10 @@
                                     android:imeOptions="actionDone"
                                     android:singleLine="true"
                                     android:textColor="@color/black"
-                                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                    android:textCursorDrawable="@null"
+                                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                                     android:textColorHint="@color/pharmacy_search_hint_color"
-                                    android:textCursorDrawable="@drawable/color_cursor"/>
+                                    />
 
                             </RelativeLayout>
 

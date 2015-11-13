@@ -1,5 +1,6 @@
 package com.mdlive.sav.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mdlive.sav.MDLiveReasonForVisit;
 import com.mdlive.sav.R;
 
 import java.util.ArrayList;
@@ -23,16 +25,16 @@ import java.util.ArrayList;
 public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private ArrayList<String> originalArray = new ArrayList<String>();
     private ArrayList<String> array = new ArrayList<String>();
-    private Context context;
+    private Activity context;
     private Filter filter;
     private LayoutInflater inflate;
     private Boolean notFound = false;
     private int checkedItemPosition = -1;
     private String checkedItemReaston = "";
     private ImageView btnContinue;
-    public ReasonForVisitAdapter(Context applicationContext,
+    public ReasonForVisitAdapter(Activity activityContext,
                                  ArrayList<String> arraylist, ImageView btnContinue) {
-        this.context = applicationContext;
+        this.context = activityContext;
         this.originalArray = arraylist;
         this.array = arraylist;
         this.btnContinue = btnContinue;
@@ -120,29 +122,44 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
      *     The datas are fetched from the Arraylist based on the position the data will be placed
      *     in the listview.
      */
-
-    @Override
-    public View getView(final int pos, View convertview, ViewGroup parent) {
+    private static class ViewHolder {
         ImageView reasonCheckbox;
         TextView reasonTxt;
         LinearLayout reasonListItem;
-        View row;
-        inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        row = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
-                false);
-        reasonCheckbox = (ImageView) row.findViewById(R.id.reasonCheckbox);
-        reasonTxt = (TextView) row.findViewById(R.id.reasonTxt);
-        reasonListItem = (LinearLayout) row.findViewById(R.id.reasonListItem);
+    }
+    @Override
+    public View getView(final int pos, View convertview, ViewGroup parent) {
+        ViewHolder viewHolder = null;
 
-        if(notFound){
-            reasonCheckbox.setVisibility(View.GONE);
-            reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
-        }else {
-            reasonCheckbox.setVisibility(View.VISIBLE);
-            reasonTxt.setText(array.get(pos));
+        if (convertview == null) {
+            inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertview = inflate.inflate(R.layout.mdlive_reasonforvisitbaseadapter, parent,
+                    false);
+            viewHolder = new ViewHolder();
+            viewHolder.reasonCheckbox = (ImageView) convertview.findViewById(R.id.reasonCheckbox);
+            viewHolder.reasonTxt = (TextView) convertview.findViewById(R.id.reasonTxt);
+            viewHolder.reasonListItem = (LinearLayout) convertview.findViewById(R.id.reasonListItem);
+            convertview.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertview.getTag();
         }
 
-        reasonListItem.setOnClickListener(new View.OnClickListener() {
+
+        if(notFound){
+            viewHolder.reasonCheckbox.setVisibility(View.GONE);
+            viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
+            viewHolder.reasonTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MDLiveReasonForVisit) context).rightBtnOnClick(null);
+                }
+            });
+        }else {
+            viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
+            viewHolder.reasonTxt.setText(array.get(pos));
+
+        }
+        viewHolder.reasonListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkedItemPosition = pos;
@@ -152,12 +169,12 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         });
 
         if(checkedItemPosition >= 0 && (checkedItemPosition == pos || checkedItemReaston.equals(array.get(pos)))){
-            reasonCheckbox.setImageResource(R.drawable.check_box_tick);
+            viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_tick);
             btnContinue.setVisibility(View.VISIBLE);
         }else{
-            reasonCheckbox.setImageResource(R.drawable.check_box_untick);
+            viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_untick);
         }
 
-        return row;
+        return convertview;
     }
 }

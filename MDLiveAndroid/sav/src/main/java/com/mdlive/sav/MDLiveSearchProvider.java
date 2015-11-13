@@ -3,6 +3,7 @@ package com.mdlive.sav;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,12 +19,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,6 +33,7 @@ import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -49,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.util.Calendar.MONTH;
@@ -86,6 +89,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_provider);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_refine_search));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -99,17 +103,23 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider_caps));
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_refine_search));
 
 
         initialiseData();
+
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        ((TextView) findViewById(R.id.ProviderTypeTxtView)).setText(sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "Any"));
+
         //Load Services
-        loadSearchproviderDetails();
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, null);
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         LocationTxtView.setText(SavedLocation);
+        loadSearchproviderDetails();
     }
 
     public void leftBtnOnClick(View v){
@@ -136,15 +146,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
 
 
         }else if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("phone"))
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.GONE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
         }else
         {
-            ((RelativeLayout)findViewById(R.id.AvailableByR1)).setVisibility(View.VISIBLE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.VISIBLE);
         }
         /**
          * The back image will pull you back to the Previous activity
@@ -182,8 +192,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * Family Physician or Pediatrician.These things will be populated in the arraylist.
      */
     public void providerTypeAction(View v) {
+        ProviderTypeArrayList = MDLiveGetStarted.providerTypeArrayList;
+        ArrayList<HashMap<String,String>> providerIdArray = new ArrayList<HashMap<String,String>>();
 
-        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", searchArrayListProviderId);
+        for(int i = 0; i<ProviderTypeArrayList.size();i++){
+            HashMap<String,String> providerID = new HashMap<String,String>();
+            providerID.put(MDLiveGetStarted.providerTypeIdList.get(i),ProviderTypeArrayList.get(i));
+            providerIdArray.add(providerID);
+        }
+        showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", providerIdArray);
     }
 
     /**
@@ -252,20 +269,50 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         //MDLive Embed Kit Implementtaions
 
-        postParams.put("located_in", filter_SavedLocation);
-        postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
 
-        postParams.put("appointment_date", serverDateFormat);//date needs to be sent in (yyyy/MM/dd)this format to server.
-        postParams.put("gender", genderTxtView.getText().toString());
-        postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
-        postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
-        postParams.put("provider_name",edtSearch.getText().toString() );
+        if(filter_SavedLocation != null && !filter_SavedLocation.equalsIgnoreCase("Any")){
+            postParams.put("located_in", filter_SavedLocation);
+        }
+
+        if(((TextView)findViewById(R.id.SpeaksTxtView)).getText() != null && ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().equalsIgnoreCase("Any")){
+//            postParams.put("speaks", ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString());
+            postParams.put("speaks", postParams.get("speaks"));
+        }
+
+        if(serverDateFormat != null && !serverDateFormat.equalsIgnoreCase(("Any"))){
+            postParams.put("appointment_date", serverDateFormat);//date needs to be sent in (yyyy/MM/dd)this format to server.
+        }
+
+        if(genderTxtView.getText() != null && genderTxtView.getText().toString().length() != 0 &&
+                !genderTxtView.getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("gender", genderTxtView.getText().toString());
+        }
+        if(((TextView)findViewById(R.id.SortbyTxtView)).getText() != null && ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SortbyTxtView)).getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("sort_by", ((TextView)findViewById(R.id.SortbyTxtView)).getText().toString());
+        }
+
+        if(((TextView)findViewById(R.id.SpecialityTxtView)).getText() != null && ((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().length() != 0 &&
+                !((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
+        }
+
+        if(edtSearch.getText() != null && edtSearch.getText().toString().length() != 0 &&
+                !edtSearch.getText().toString().equalsIgnoreCase("Any")){
+            postParams.put("provider_name",edtSearch.getText().toString());
+        }
+
         if (postParams.get("provider_type") != null) {
             postParams.put("provider_type", postParams.get("provider_type"));
 
+
         }else
         {
-            postParams.put("provider_type", "2");
+            String providerTypeString = ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString();
+            int pos = MDLiveGetStarted.providerTypeArrayList.indexOf(providerTypeString);
+            String providerTypeId = MDLiveGetStarted.providerTypeIdList.get(pos>=0?pos : 1);
+            postParams.put("provider_type", providerTypeId);
         }
 
         // PHS USERS Available by
@@ -283,7 +330,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         }
 
 
-        LoadFilterSearchServices();
+     //   Log.e("Post Params", new Gson().toJson(postParams));
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.PROVIDERTYPE_ID, postParams.get("provider_type"));
+        if(((TextView)findViewById(R.id.ProviderTypeTxtView)).getText() != null) {
+            editor.putString(PreferenceConstants.PROVIDER_MODE, ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString());
+        }
+        editor.commit();
+       LoadFilterSearchServices();
     }
 
 
@@ -293,6 +348,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
         SavedLocation = searchPref.getString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
         filter_SavedLocation = searchPref.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
+        Log.e("filter_SavedLocation", filter_SavedLocation);
         LocationTxtView.setText(SavedLocation);
     }
 
@@ -334,7 +390,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
-        services.getsearchdetails(successCallBackListener, errorListener);
+        services.getSearchDetails(successCallBackListener, errorListener);
     }
     /**
      *
@@ -386,7 +442,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 try {
                     Object value = providertype.get(key);
                     providerTypeArrayList.add(value.toString());
-                    providerIdArrayList.add(key.toString());
+                    providerIdArrayList.add(key);
                 } catch (JSONException e) {
                     // Something went wrong!
                 }
@@ -442,14 +498,15 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             JSONObject licenseObject = provider_type_array.getJSONObject(i);
             String str_provider_type = licenseObject.getString("provider_type");
             String str_provider_type_id = licenseObject.getString("id");
-            HashMap<String, String> map = new HashMap<String, String>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             map.put(str_provider_type_id, str_provider_type);
             searchArrayListProviderId.add(map);
-            ProviderTypeArrayList.add(str_provider_type);
-            HashMap<String, String> specialitymap = null;
+
+//            ProviderTypeArrayList.add(str_provider_type);
+            LinkedHashMap<String, String> specialitymap = null;
             JSONArray speciality_array = licenseObject.getJSONArray("speciality");
             SpecialityArrayList.clear();
-            specialitymap = new HashMap<String, String>();
+            specialitymap = new LinkedHashMap<String, String>();
             for (int j = 0; j < speciality_array.length(); j++) {
                 JSONObject specialityObj = speciality_array.getJSONObject(j);
                 specialitymap.put(specialityObj.getString("name"), specialityObj.getString("id"));
@@ -457,8 +514,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 SpecialityArrayList.add(specialityObj.getString("name"));
             }
             tempmap.put(str_provider_type, specialitymap);
-
         }
+
 
     }
 
@@ -478,7 +535,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             while (iter.hasNext()) {
                 String key = iter.next();
                 map.put(key, (String) itemObj.get(key));
-                System.out.println(key);
             }
             SearchArrayList.add(map);
 
@@ -495,7 +551,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         JSONArray Speaks_array = response.getJSONArray("speaks");
         ArrayList<String> keysList = new ArrayList<String>();
         for (int i = 0; i < Speaks_array.length(); i++) {
-            HashMap<String, String> map = new HashMap<String, String>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             JSONObject itemObj = Speaks_array.getJSONObject(i);
 
             Iterator<String> iter = itemObj.keys();//Logic to get the keys form Json Object
@@ -516,6 +572,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void getproviderType(JSONObject response) throws JSONException {
+        Log.d("Response", response.toString());
         JSONArray provider_array = response.getJSONArray("provider_type");
         ArrayList<String> keysList = new ArrayList<String>();
         for (int i = 0; i < provider_array.length(); i++) {
@@ -634,6 +691,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         FilterSearchServices services = new FilterSearchServices(MDLiveSearchProvider.this, null);
+        Log.e("Filter",postParams.toString());
         services.getFilterSearch(postParams, successCallBackListener, errorListener);
     }
 
@@ -646,16 +704,20 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             hideProgress();
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
+
             if(!responObj.isJsonNull()){
                 JsonArray responArray = responObj.get("physicians").getAsJsonArray();
                 if (responArray.size() != 0) {
                     if (responArray.get(0).isJsonObject()) {
+                        Log.e("Filter Response",responObj.toString());
                         Intent intent = new Intent();
                         intent.putExtra("Response", response.toString());
+                        intent.putExtra("postParams", new Gson().toJson(postParams));
                         setResult(1, intent);
                         finish();
                         MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
                     }else{
+                        Log.e("Filter Response",responObj.toString());
                         MdliveUtils.showDialog(MDLiveSearchProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -667,15 +729,13 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 }
             }
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void GetCurrentDate(TextView selectedText) {
-        final Calendar c = Calendar.getInstance();
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
@@ -698,10 +758,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
 
                 DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings());
                 return dialog;
         }
         return null;
@@ -717,12 +777,16 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = TimeZoneUtils.getCalendarWithOffset(MDLiveSearchProvider.this);
             cal.set(Calendar.YEAR, selectedYear);
             cal.set(Calendar.DAY_OF_MONTH, selectedDay);
             cal.set(Calendar.MONTH, selectedMonth);
-            String format = new SimpleDateFormat("MMM d, yyyy").format(cal.getTime());
-            serverDateFormat=new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveSearchProvider.this));
+            String format = sdf.format(cal.getTime());
+            sdf = new SimpleDateFormat("yyyy/MM/dd");
+            sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveSearchProvider.this));
+            serverDateFormat= sdf.format(cal.getTime());
             // Show selected date
             AppointmentTxtView.setText(format);
 
@@ -739,7 +803,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
       /*We need to get the instance of the LayoutInflater*/
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveSearchProvider.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
@@ -774,14 +838,18 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
 
     private void specialityBasedOnProvider(String selectedText, String key) {
-        if ("provider_type".equalsIgnoreCase(key)) {
-            SpecialityArrayList.clear();
-            Map<String, String> speciality = tempmap.get(selectedText);
+        try {
+            if ("provider_type".equalsIgnoreCase(key)) {
+                SpecialityArrayList.clear();
+                Map<String, String> speciality = tempmap.get(selectedText);
 
-            for (Map.Entry<String, String> entry : speciality.entrySet()) {
-                SpecialityArrayList.add(entry.getKey());
+                for (Map.Entry<String, String> entry : speciality.entrySet()) {
+                    SpecialityArrayList.add(entry.getKey());
+                }
+
             }
-
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

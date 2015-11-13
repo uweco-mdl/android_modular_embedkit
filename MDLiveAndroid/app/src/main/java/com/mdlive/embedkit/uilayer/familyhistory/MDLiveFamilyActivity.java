@@ -28,6 +28,7 @@ public class MDLiveFamilyActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_lifestyle_activity);
         clearMinimizedTime();
+        this.getString(R.string.mdl_my_family_history);
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

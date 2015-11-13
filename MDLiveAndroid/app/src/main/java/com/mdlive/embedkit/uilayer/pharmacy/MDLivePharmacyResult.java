@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -40,15 +39,13 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
-import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.embedkit.uilayer.pharmacy.adapter.PharmacyListAdaper;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.ResultPharmacyService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.SetPharmacyService;
@@ -98,6 +95,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         setContentView(R.layout.mdlive_pharmacy_result);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_choose_phr_txt));
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -114,7 +112,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.options_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_filter_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_phr_txt).toUpperCase());
 
         initializeViews();
@@ -149,7 +149,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
         startActivityForResult(i, IntegerConstants.PHARMACY_REQUEST_CODE);
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
-        //finish();
     }
 
     @Override
@@ -167,14 +166,18 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             if(data != null){
                 getPharmacySearchResults(getPostBody(data));
             }
+
+        }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.INSURANCE_ERROR_CODE) {
+
+
         }else if(resultCode == RESULT_OK && requestCode == IntegerConstants.PHARMACY_REQUEST_CODE){
-                list.clear();
-                markerIdCollection.clear();
-                markerExpandIdCollection.clear();
-                expandgoogleMap.clear();
-                googleMap.clear();
-                adaper.notifyDataSetChanged();
-                getPharmacySearchResults(getPostBody(data));
+            list.clear();
+            markerIdCollection.clear();
+            markerExpandIdCollection.clear();
+            expandgoogleMap.clear();
+            googleMap.clear();
+            adaper.notifyDataSetChanged();
+            getPharmacySearchResults(getPostBody(data));
         }
     }
 
@@ -226,17 +229,19 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         googleMap = mapView.getMap();
         googleMap.getUiSettings().setAllGesturesEnabled(false);
         expandgoogleMap = mapView.getMap();
-        /*if (googleMap != null) {
-            if (googleMap != null) {
-                googleMap.setInfoWindowAdapter(markerInfoAdapter);
-            }
-        }*/
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng arg0) {
                 Log.d("arg0", arg0.latitude + "-" + arg0.longitude);
                 expandableMapViewContainer.setVisibility(View.VISIBLE);
+            }
+        });
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            public boolean onMarkerClick(Marker marker) {
+                marker.hideInfoWindow();
+                expandableMapViewContainer.setVisibility(View.VISIBLE);
+                return true;
             }
         });
 
@@ -248,11 +253,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
 
 
-        /*expandgoogleMap.getUiSettings().setScrollGesturesEnabled(false);
-        googleMap.getUiSettings().setScrollGesturesEnabled(false);*/
     }
 
-    /*GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+    GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
             try {
@@ -261,7 +264,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 e.printStackTrace();
             }
         }
-    };*/
+    };
 
 
 
@@ -276,49 +279,55 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
 
     public void getPharmacySearchResults(String postBody) {
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if(bottomLoder.getVisibility()==View.VISIBLE){
-                    bottomLoder.setVisibility(View.GONE);
+        if (MdliveUtils.isNetworkAvailable(MDLivePharmacyResult.this)) {
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (bottomLoder.getVisibility() == View.VISIBLE) {
+                        bottomLoder.setVisibility(View.GONE);
+                    }
+                    try {
+                        Log.v("Pharmacy Response --> ", response.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handleListSuccessResponse(response);
+                    resetLoadingViews();
                 }
-                try {
-                    Log.v("Pharmacy Response --> ", response.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                handleListSuccessResponse(response);
-                resetLoadingViews();
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject errorObj = new JSONObject(responseBody);
-                    Log.v("Pharmacy Response ", errorObj.toString());
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        JSONObject errorObj = new JSONObject(responseBody);
+                        Log.v("Pharmacy Response ", errorObj.toString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                if(bottomLoder.getVisibility()==View.VISIBLE){
-                    bottomLoder.setVisibility(View.GONE);
+                    if (bottomLoder.getVisibility() == View.VISIBLE) {
+                        bottomLoder.setVisibility(View.GONE);
+                    }
+                    hideProgress();
+                    resetLoadingViews();
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
                 }
+            };
+            if (bottomLoder.getVisibility() == View.VISIBLE) {
                 hideProgress();
-                resetLoadingViews();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
+            } else {
+                showProgress();
             }
-        };
-        if(bottomLoder.getVisibility()==View.VISIBLE){
+            ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
+            services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
+        }else{
+            MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLivePharmacyResult.this);
             hideProgress();
-        }else {
-            showProgress();
+            bottomLoder.setVisibility(View.GONE);
         }
-        ResultPharmacyService services = new ResultPharmacyService(MDLivePharmacyResult.this, null);
-        services.doPharmacyLocationRequest(postBody, responseListener, errorListener);
     }
 
 
@@ -437,10 +446,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     distance = responArray.get(i).getAsJsonObject().get("distance").getAsString();
                 try {
                     if(responArray.get(i).getAsJsonObject().has("is_preferred")){
-                        if(responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean())
-                            is_preferred = true;
-                        else
-                            is_preferred = false;
+                        is_preferred = responArray.get(i).getAsJsonObject().get("is_preferred").getAsBoolean();
                     }else{
                         is_preferred = false;
                     }
@@ -464,7 +470,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
             }
             adaper.notifyDataSetChanged();
-            //expandgoogleMap.setOnInfoWindowClickListener(infoWindowClickListener);
+            expandgoogleMap.setOnInfoWindowClickListener(infoWindowClickListener);
             setListViewHeightBasedOnChildren(pharmList);
             //For Google map initialize view
             if (markerPoint != null && googleMap != null)
@@ -509,7 +515,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 mapscrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                     @Override
                     public void onScrollChanged() {
-                        View view = (View) mapscrollView.getChildAt(mapscrollView.getChildCount() - 1);
+                        View view = mapscrollView.getChildAt(mapscrollView.getChildCount() - 1);
                         int diff = (view.getBottom() - (mapscrollView.getHeight() + mapscrollView.getScrollY()));
                         if(((int) keyParams.get("page")) == 1 && isFirstItemDisplaying){
                             mapscrollView.scrollTo(0, 0);
@@ -536,7 +542,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 });
             }
         }catch (Exception e){
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -582,9 +588,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         map.put("distance", distance);
         map.put("active", active);
         Marker marker = googleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
-        markerIdCollection.put(marker, i);
+        markerIdCollection.put(marker, list.size());
         Marker expandmarker = expandgoogleMap.addMarker(new MarkerOptions().position(markerPoint).title(store_name));
-        markerExpandIdCollection.put(expandmarker, i);
+        markerExpandIdCollection.put(expandmarker, list.size());
         list.add(map);
     }
 
@@ -635,6 +641,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 }
                 MdliveUtils.closingActivityAnimation(this);
             }else if (response.getString("message").equals("Pharmacy details updated")) {
+                /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+                i.putExtra("redirect_mypharmacy", true);
+                startActivity(i);
+                MdliveUtils.closingActivityAnimation(this);*/
                 checkInsuranceEligibility();
             }
         } catch (Exception e) {
@@ -660,16 +670,31 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     JSONObject jobj=new JSONObject(response.toString());
                     if(jobj.has("final_amount")){
                         if(Integer.parseInt(jobj.getString("final_amount"))>0){
-                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
-                            i.putExtra("final_amount",jobj.getString("final_amount"));
-                            i.putExtra("redirect_mypharmacy", true);
-                            startActivity(i);
-                            finish();
-                            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+                            if(userBasicInfo.getVerifyEligibility()) {
+                                Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                i.putExtra("redirect_mypharmacy", true);
+                                startActivity(i);
+                                finish();
+                                MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            } else
+                            {
+                                try {
+                                    Class clazz = Class.forName("com.mdlive.sav.payment.MDLivePayment");
+                                    Intent i = new Intent(getApplicationContext(), clazz);
+                                    i.putExtra("final_amount", jobj.getString("final_amount"));
+                                    i.putExtra("redirect_mypharmacy", true);
+                                    startActivity(i);
+                                } catch (ClassNotFoundException e){
+                                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                }
+                                finish();
+                                MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+                            }
                         }else{
                             moveToNextPage();
                         }
-
                     }
 
                 }catch (Exception e){
@@ -695,10 +720,34 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
 
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
-        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
-        startActivity(i);
-        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getVerifyEligibility())
+        {
+            Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+            i.putExtra("final_amount", "0.00");
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        } else
+        {
+            try {
+                Class clazz = Class.forName("com.mdlive.sav.payment.MDLiveConfirmappointment");
+                Intent i = new Intent(MDLivePharmacyResult.this, clazz);
+                storePayableAmount("0.00");
+                startActivity(i);
+            } catch (ClassNotFoundException e) {
+                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            }
+            MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
+        }
     }
+
+    public void storePayableAmount(String amount) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
+
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -716,66 +765,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method","1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot","Now");
-        insuranceMap.put("provider_type_id", "3");
+        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
-    }
-
-    /**
-     * This method handles appointment confirmation for zero dollar user
-     * responseListener-Listner to handle success response.
-     * errorListener -Listner to handle failed response.
-     * ConfirmAppointmentServices-Class will send the request to the server and get the responses
-     *
-     */
-    private void doConfirmAppointment() {
-        showProgress();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    hideProgress();
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.APPT_ID, apptId);
-                        editor.commit();
-                        Intent i = new Intent(MDLivePharmacyResult.this, MDLiveConfirmappointment.class);
-                        startActivity(i);
-                        finish();
-                        MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
-                    } else {
-                        Toast.makeText(MDLivePharmacyResult.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
-            }
-        };
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("appointment_method", "1");
-        params.put("phys_availability_id", "");
-        params.put("alternate_visit_option", "No Answer");
-        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
-        params.put("timeslot", "Now");
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON,"Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION,"FL"));
-        //Log.v("ConfirmAPPT Params", params.toString());
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacyResult.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
     /**
@@ -796,7 +788,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 }catch(ClassNotFoundException e){
                     Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
                 }
-                MdliveUtils.closingActivityAnimation(this);
+            MdliveUtils.closingActivityAnimation(this);
         } else {
             super.onBackPressed();
             MdliveUtils.closingActivityAnimation(this);

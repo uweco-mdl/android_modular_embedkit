@@ -18,7 +18,6 @@
         <ScrollView
             android:id="@+id/ContainerScrollView"
             style="@style/ScrollViewStyle"
-            android:layout_marginBottom="@dimen/medical_history_margin_twelve"
             android:clipToPadding="false"
             android:clipChildren="false"
             android:background="@color/choose_pharmacy_background"
@@ -28,7 +27,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/medical_history_common_margin"
                 android:layout_marginTop="@dimen/medical_history_common_margin"
                 android:orientation="vertical">
 
@@ -42,29 +40,36 @@
                         android:id="@+id/updateInfoText"
                         style="@style/BaseTextViewStyle.MedicalHistory"
                         android:text="@string/mdl_last_update_txt"
+                        android:textColor="@color/darkblack"
                         android:tag="@string/mdltag_last_update_txt" />
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/PediatricAgeCheck1"
                     android:visibility="gone">
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/pregnantLayout"
                         style="@style/BaseLayoutStyle_MedicalHistory"
+                        android:layout_centerInParent="true"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/PediatricChecks"
+                            android:layout_toLeftOf="@+id/pregnantRadioLayout"
+                            android:layout_alignParentLeft="true"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_age_check1"
                             android:tag="@string/mdltag_age_check1" />
 
                         <LinearLayout
+                            android:id="@+id/pregnantRadioLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:orientation="horizontal">
 
                             <RadioGroup
@@ -76,6 +81,7 @@
                                     android:id="@+id/perdiatric1YesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_age_check1_radio_desc_Yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
@@ -83,37 +89,45 @@
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
+                                    android:contentDescription="@string/mdl_age_check1_radio_desc_No"
                                     android:tag="@string/mdltag_no"/>
 
                             </RadioGroup>
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/pregnantLayout"
                         style="@style/ViewStyle.MedicalHistory" />
-                </LinearLayout>
+                </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/PediatricAgeCheck2"
                     android:visibility="gone">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/breastFeedLayout"
                         style="@style/BaseLayoutStyle_MedicalHistory"
+                        android:layout_centerInParent="true"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/PediatricCheck"
+                            android:layout_alignParentLeft="true"
+                            android:layout_toLeftOf="@+id/breastFeedRadioLayout"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_age_check2"
                             android:tag="@string/mdltag_age_check2" />
 
 
                         <LinearLayout
+                            android:id="@+id/breastFeedRadioLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:orientation="horizontal">
 
                             <RadioGroup
@@ -125,6 +139,7 @@
                                     android:id="@+id/perdiatric2YesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_age_check2_radio_desc_Yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
@@ -132,16 +147,18 @@
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
+                                    android:contentDescription="@string/mdl_age_check2_radio_desc_No"
                                     android:tag="@string/mdltag_no" />
 
                             </RadioGroup>
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/breastFeedLayout"
                         style="@style/ViewStyle.MedicalHistory"
                         />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/PediatricLayoutLl"
@@ -197,18 +214,22 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/MyHealthConditionChoiceLl">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/diabeticLayout"
                         style="@style/BaseLayoutStyle_MedicalHistory"
+                        android:layout_centerInParent="true"
                         android:orientation="horizontal"
                          >
 
                         <TextView
+                            android:id="@+id/txtDiabetic"
+                            android:layout_toLeftOf="@+id/diabeticLayoutRadio"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_my_health_preexisting"
                             android:tag="@string/mdltag_my_health_preexisting"/>
@@ -216,6 +237,9 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/diabeticLayoutRadio"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
                             android:orientation="horizontal">
 
                             <RadioGroup
@@ -227,6 +251,7 @@
                                     android:id="@+id/conditionYesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_my_health_preexisting_radio_desc_yes"
                                     android:tag="@string/mdltag_yes"
                                     android:checked="false" />
 
@@ -235,17 +260,19 @@
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
+                                    android:contentDescription="@string/mdl_my_health_preexisting_radio_desc_No"
                                     android:tag="@string/mdltag_no" />
 
                             </RadioGroup>
                         </LinearLayout>
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/diabeticLayout"
                         style="@style/ViewStyle.MedicalHistory" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/MyHealthConditionsLl"
@@ -301,23 +328,29 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/MyHealthMedicationsLl">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/medicationsLayout"
                         style="@style/BaseLayoutStyle_MedicalHistory"
+                        android:layout_centerInParent="true"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:layout_toLeftOf="@+id/medicationsRadioLayout"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_my_health_medications"
+                            android:layout_alignParentLeft="true"
                             android:tag="@string/mdltag_my_health_medications"/>
 
                         <LinearLayout
+                            android:id="@+id/medicationsRadioLayout"
                             android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -330,12 +363,14 @@
                                     android:id="@+id/medicationsYesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:checked="false"
+                                    android:contentDescription="@string/mdl_my_health_medications_radio_desc_Yes"
                                     android:text="@string/mdl_yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
                                     android:id="@+id/medicationsNoButton"
                                     style="@style/YesNoRadioButtonStyle"
+                                    android:contentDescription="@string/mdl_my_health_medications_radio_desc_No"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
                                     android:tag="@string/mdltag_no" />
@@ -343,11 +378,12 @@
                             </RadioGroup>
                         </LinearLayout>
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/medicationsLayout"
                         style="@style/ViewStyle.MedicalHistory" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/MedicationsLl"
@@ -405,25 +441,31 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/MyHealthAllergiesLl">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/allergiesLayout"
                         style="@style/BaseLayoutStyle_MedicalHistory"
+                        android:layout_centerInParent="true"
                         android:orientation="horizontal"
                         >
 
                         <TextView
+                            android:layout_alignParentLeft="true"
                             android:id="@+id/Primary_txt"
+                            android:layout_toLeftOf="@+id/allergiesRadioLayout"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_my_health_allergies"
                             android:tag="@string/mdltag_my_health_allergies" />
 
                         <LinearLayout
+                            android:id="@+id/allergiesRadioLayout"
                             android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -436,22 +478,25 @@
                                     android:id="@+id/allergiesYesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_my_health_allergies_radio_desc_Yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
                                     android:id="@+id/allergiesNoButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
+                                    android:contentDescription="@string/mdl_my_health_allergies_radio_desc_No"
                                     android:text="@string/mdl_no"
                                     android:tag="@string/mdltag_no" />
 
                             </RadioGroup>
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/allergiesLayout"
                         style="@style/ViewStyle.MedicalHistory" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/AllergiesLl"
@@ -509,14 +554,16 @@
                 </RelativeLayout>
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="visible"
                     android:id="@+id/MyHealthProceduresLl">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/procedureLayout"
+                        android:layout_centerInParent="true"
                         style="@style/BaseLayoutStyle_MedicalHistory"
                         android:orientation="horizontal"
                         >
@@ -525,9 +572,13 @@
                             android:id="@+id/Procedure_txt"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_my_health_procedures"
+                            android:layout_toLeftOf="@+id/procedureRadioLayout"
+                            android:layout_alignParentLeft="true"
                             android:tag="@string/mdltag_my_health_procedures" />
 
                         <LinearLayout
+                            android:id="@+id/procedureRadioLayout"
+                            android:layout_alignParentRight="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -541,6 +592,7 @@
                                     android:id="@+id/procedureYesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_my_health_procedures_radio_desc_Yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
@@ -548,15 +600,17 @@
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
+                                    android:contentDescription="@string/mdl_my_health_procedures_radio_desc_No"
                                     android:tag="@string/mdltag_no" />
 
                             </RadioGroup>
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/procedureLayout"
                         style="@style/ViewStyle.MedicalHistory" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/ProcedureLl"
@@ -669,16 +723,20 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/MyPrimaryCareLl">
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/providerLayout"
+                        android:layout_centerInParent="true"
                         style="@style/BaseLayoutStyle_MedicalHistory"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:layout_toLeftOf="@+id/providerRadioLayout"
+                            android:layout_alignParentLeft="true"
                             android:id="@+id/Primary_Care_Provider_Txt"
                             style="@style/BaseTextViewStyle.MyhealthContentStyle"
                             android:text="@string/mdl_primary_txt"
@@ -686,7 +744,9 @@
 
 
                         <LinearLayout
+                            android:id="@+id/providerRadioLayout"
                             android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -699,6 +759,7 @@
                                     android:id="@+id/primaryCareYesButton"
                                     style="@style/YesNoRadioButtonStyle"
                                     android:text="@string/mdl_yes"
+                                    android:contentDescription="@string/mdl_primary_txt_radio_desc_Yes"
                                     android:tag="@string/mdltag_yes" />
 
                                 <RadioButton
@@ -706,15 +767,17 @@
                                     style="@style/YesNoRadioButtonStyle"
                                     android:layout_marginLeft="@dimen/medical_history_margin_ten"
                                     android:text="@string/mdl_no"
+                                    android:contentDescription="@string/mdl_primary_txt_radio_desc_No"
                                     android:tag="@string/mdltag_no" />
 
                             </RadioGroup>
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <View
+                        android:layout_below="@+id/providerLayout"
                         style="@style/ViewStyle.MedicalHistory" />
-                </LinearLayout>
+                </RelativeLayout>
 
 
             </LinearLayout>

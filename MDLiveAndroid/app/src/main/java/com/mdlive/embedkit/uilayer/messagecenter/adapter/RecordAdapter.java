@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Record;
 
 /**
@@ -22,7 +23,7 @@ public class RecordAdapter extends ArrayAdapter<Record> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-
+        if(convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_record, parent, false);
 
@@ -30,44 +31,35 @@ public class RecordAdapter extends ArrayAdapter<Record> {
             viewHolder.mImageView = (ImageView) convertView.findViewById(R.id.adapter_record_image_view);
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_record_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_record_bottom_text_view);
-
-//        String extensionRemoved = MdliveUtils.getExtention(getItem(position).downloadLink);
-
-
-            /*if(extensionRemoved.equalsIgnoreCase("jpeg") || extensionRemoved.equalsIgnoreCase("jpg"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_jpg_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("pdf"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_pdf_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("png"))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_png_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("doc")||(extensionRemoved.equalsIgnoreCase("docx") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_word_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("xls") ||(extensionRemoved.equalsIgnoreCase("xlsx") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_xl_format);
-            }
-            else if(extensionRemoved.equalsIgnoreCase("pptx") ||(extensionRemoved.equalsIgnoreCase("ppt") ))
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_pp_format);
-            }
-            else
-            {
-                viewHolder.mImageView.setImageResource(R.drawable.ic_empty_format);
-            }
-*/
-
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         viewHolder.mTextViewTop.setText(getItem(position).docName);
         viewHolder.mTextViewBottom.setText(" by " + getItem(position).uploadedBy + " on " +getItem(position).uploadedAt);
-
+        viewHolder.mImageView.setImageResource(getImageResource(MdliveUtils.getExtention(getItem(position).docName)));
         return convertView;
+    }
+
+    private int getImageResource(String type){
+        int resourceId = R.drawable.empty_format;
+
+        if(type.contains("gif") || type.contains("png")){
+            resourceId = R.drawable.ic_png_format;
+        } else if(type.contains("jpg") || type.contains("jpeg")){
+            resourceId = R.drawable.ic_jpg_format;
+        }
+        else if(type.contains("pdf")){
+            resourceId = R.drawable.ic_pdf_format;
+        } else if(type.contains("doc")){
+            resourceId = R.drawable.ic_word_format;
+        } else if(type.contains("xls")){
+            resourceId = R.drawable.ic_xl_format;
+        } else if(type.contains("ppt")){
+            resourceId = R.drawable.ic_pp_format;
+        }
+
+        return resourceId;
     }
 
     private static class ViewHolder {

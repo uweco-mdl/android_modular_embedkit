@@ -143,7 +143,7 @@ public class EmailConfirmationDialogFragment extends DialogFragment {
             } else if (tag.equalsIgnoreCase("ol")) {
                 if (opening) {
                     lists.push(tag);
-                    olNextIndex.push(Integer.valueOf(1)).toString();//TODO: add support for lists starting other index than 1
+                    olNextIndex.push(1).toString();
                 } else {
                     lists.pop();
                     olNextIndex.pop().toString();
@@ -157,7 +157,7 @@ public class EmailConfirmationDialogFragment extends DialogFragment {
                     if (parentList.equalsIgnoreCase("ol")) {
                         start(output, new Ol());
                         output.append(olNextIndex.peek().toString() + ". ");
-                        olNextIndex.push(Integer.valueOf(olNextIndex.pop().intValue() + 1));
+                        olNextIndex.push(olNextIndex.pop() + 1);
                     } else if (parentList.equalsIgnoreCase("ul")) {
                         start(output, new Ul());
                     }

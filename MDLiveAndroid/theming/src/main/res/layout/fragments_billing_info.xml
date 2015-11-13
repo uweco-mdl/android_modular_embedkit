@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_background"
-        android:layout_marginTop="20dp"
         android:paddingBottom="20dp"
         android:orientation="vertical">
 
@@ -26,26 +25,39 @@
             android:layout_marginTop="15dp"
             android:text="@string/mdl_credit_card_info"
             android:tag="@string/mdltag_credit_card_info"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textColor="@color/darkblack"
             android:textSize="17sp" />
 
-        <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-            style="@style/myChangeProfileInfoLayoutStyle"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="4dp">
-
-            <RelativeLayout style="@style/common_style_W_Match_H_Wrap">
-
+        <!--<android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"-->
+            <!--style="@style/myChangeProfileInfoLayoutStyle"-->
+            <!--app:cardBackgroundColor="@color/white"-->
+            <!--app:cardCornerRadius="4dp">-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
                 <WebView
                     android:id="@+id/myAccountHostedPCI"
                     style="@style/myChangeProfileInfoTextStyle"
                     android:text="@string/mdl_card_number"
                     android:tag="@string/mdltag_card_number"/>
 
+                <Button
+                    android:layout_width="32dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/camera_icon_blue"
+                    android:id="@+id/ScanCardBtn"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="45dp"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone"
+                    />
+
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
 
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             style="@style/myChangeProfileInfoLayoutStyle"
@@ -221,6 +233,7 @@
                     style="@style/myChangeProfileInfoValueStyle"
                     android:layout_below="@id/stateView"
                     android:background="@color/white"
+                    android:contentDescription="@string/mdl_ada_dropdown"
                     android:drawablePadding="5dp"
                     android:drawableRight="@drawable/dropdown_icon" />
 

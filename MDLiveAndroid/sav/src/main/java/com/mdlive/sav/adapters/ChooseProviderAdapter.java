@@ -1,14 +1,17 @@
 package com.mdlive.sav.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mdlive.sav.MDLiveChooseProvider;
+import com.mdlive.sav.MDLiveDoctorOnCall;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -71,23 +74,19 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 inflate = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent, false);
-           /* ((ImageView) row.findViewById(R.id.filterTxt)).setOnClickListener(new View.OnClickListener() {
+
+            Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
+
+
+            seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, MDLiveSearchProvider.class);
-                    ((Activity) context).startActivityForResult(intent, 1);
-                    MdliveUtils.hideSoftKeyboard(((Activity) context));
+                public void onClick(View view) {
+                    MDLiveChooseProvider.isDoctorOnCall=MDLiveChooseProvider.mDoctorOnCall;
+                    MDLiveChooseProvider.isDoctorOnVideo=MDLiveChooseProvider.mDoctorOnVideo;
+                    Intent seeFirstAvailableDocIntent=new Intent(context,MDLiveDoctorOnCall.class);
+                    context.startActivity(seeFirstAvailableDocIntent);
                 }
-            });*/
-//            ((Button)row.findViewById(R.id.seenextAvailableBtn)).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent  = new Intent(context, MDLiveReasonForVisit.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    context.getApplicationContext().startActivity(intent);
-//                    MdliveUtils.hideSoftKeyboard(((Activity) context));
-//                }
-//            });
+            });
         } else {
             if (row == null)
                 inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -101,9 +100,9 @@ public class ChooseProviderAdapter extends BaseAdapter {
             SpecialistTxt.setText(array.get(pos).get("specialty"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
-            Log.v("AvailableNowStatus", array.get(pos).get("available_now_status"));
+
             if (array.get(pos).get("available_now_status").equals("true")) {
-                Log.v("AvailableNowStatus", "Am in True");
+
                 if(array.get(pos).get("availability_type").equalsIgnoreCase("with patient")) {
                     ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
                     ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
@@ -136,12 +135,9 @@ public class ChooseProviderAdapter extends BaseAdapter {
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }
 
-            }
-            else {
+            } else {
 
-//                if(array.get(pos).get("availability_type").equals("not available"))
-                Log.v("nulldate",array.get(pos).get("next_availability").toString());
-                if(array.get(pos).get("next_availability").toString()==null)
+                if(array.get(pos).get("next_availability") == null)
                 {
                     ((TextView) row.findViewById(R.id.specalist)).setText("");
                 }else {
@@ -155,9 +151,6 @@ public class ChooseProviderAdapter extends BaseAdapter {
                This is to Check the availability of the Doctor is through either by phone or video
                if it is through phone calling icon should be visible or if it is either through
                video then the video icon should be visible .*/
-
-//            withPatientTxt = (TextView) row.findViewById(R.id.callImg);
-//
 
             }
 

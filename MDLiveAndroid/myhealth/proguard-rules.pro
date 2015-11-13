@@ -25,3 +25,7 @@
 -keep class com.mdlive.myhealth.MedicalHistoryActivity {
     public <methods>;
 }
+
+-keep public class * extends android.view.View
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.support.v4.Fragment

@@ -2,6 +2,7 @@ package com.mdlive.unifiedmiddleware.commonclasses.utils;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,7 +17,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by srinivasan_ka on 9/5/2015.
@@ -28,7 +28,7 @@ public class PickImagePlugin {
     public UploadRecordInterface uploadInterface;
 
     public PickImagePlugin(Activity parentActivity, UploadRecordInterface uploadInterface){
-        this.parentActivity = parentActivity;
+        PickImagePlugin.parentActivity = parentActivity;
         this.uploadInterface = uploadInterface;
     }
 
@@ -59,14 +59,10 @@ public class PickImagePlugin {
      * Checking device has camera hardware or not
      */
     public boolean isDeviceSupportCamera() {
-        if (parentActivity.getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        // this device has a camera
+// no camera on this device
+        return parentActivity.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
     public void removePhotoFromGallery(boolean capturedInCamera, String filePath){
@@ -83,7 +79,7 @@ public class PickImagePlugin {
      * Creating file uri to store image/video
      */
     public Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
+        return Uri.fromFile(getOutputMediaFile(parentActivity));
     }
 
     String lastFileNameId = "";
@@ -102,6 +98,7 @@ public class PickImagePlugin {
         if(cursor != null && cursor.moveToFirst()){
             lastFileNameId = cursor.getString(0);
         }
+        cursor.close();
     }
 
     public void checkOutLastFileInGallery(){
@@ -127,13 +124,14 @@ public class PickImagePlugin {
             }
             lastFileNameId = "";
         }
+        cursor.close();
     }
 
 
     /*
     * returning image / video
     */
-    public static File getOutputMediaFile() {
+    public static File getOutputMediaFile(Context context) {
         // External sdcard location
         File mediaStorageDir = new File(
                 Environment
@@ -146,8 +144,8 @@ public class PickImagePlugin {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
         File mediaFile;
         mediaFile = new File(mediaStorageDir.getPath() + File.separator
                 + "IMG_" + timeStamp + ".jpg");
@@ -181,7 +179,7 @@ public class PickImagePlugin {
 
 
     public interface UploadRecordInterface {
-        public void uploadMedicalRecordService(String filePath, boolean capturedInCamera);
+        void uploadMedicalRecordService(String filePath, boolean capturedInCamera);
     }
 
 
@@ -284,6 +282,7 @@ public class PickImagePlugin {
             cursor.moveToFirst();
             return cursor.getString(column_index);
         }
+        cursor.close();
         // this is our fallback here
         return uri.getPath();
     }

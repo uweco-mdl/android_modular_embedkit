@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -77,6 +76,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_pharmacy_choose);
+        this.setTitle(getString(R.string.mdl_search_pharm_txt));
         clearMinimizedTime();
 
         try {
@@ -91,7 +91,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));
 
 
@@ -182,6 +184,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         });
 
         //validation for Zip code
+        zipcodeText.setTag(null);
         zipcodeText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -193,13 +196,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (zipcodeText.getText().toString().length() >= 9) {
-                    if (!zipcodeText.getText().toString().contains("-")) {
-                        String formattedString = MdliveUtils.zipCodeFormat(Long.parseLong(zipcodeText.getText().toString()));
-                        zipcodeText.setText(formattedString);
-                    }
-                }
+                MdliveUtils.validateZipcodeFormat(zipcodeText);
             }
+
         });
         cityText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -224,7 +223,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             locationService.setBroadCastData(StringConstants.DEFAULT);
@@ -346,20 +345,24 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
                 double lat = intent.getDoubleExtra("Latitude", 0d);
                 double lon = intent.getDoubleExtra("Longitude", 0d);
-                Location loc = new Location("dummyprovider");
-                loc.setLatitude(lat);
-                loc.setLongitude(lon);
-                addExtrasForLocationInIntent(loc);
-                MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
-                if(isFromPharmacyResult){
-                    MDLivePharmacyChange.this.setResult(RESULT_OK, sendingIntent);
+                if(lat!=0 && lon!=0){
+                    Location loc = new Location("dummyprovider");
+                    loc.setLatitude(lat);
+                    loc.setLongitude(lon);
+                    addExtrasForLocationInIntent(loc);
+                    MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
+                    if(isFromPharmacyResult){
+                        MDLivePharmacyChange.this.setResult(RESULT_OK, sendingIntent);
+                    }else{
+                        startActivity(sendingIntent);
+                        MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                    }
+                    finish();
                 }else{
-                    startActivity(sendingIntent);
-                    MdliveUtils.startActivityAnimation(MDLivePharmacyChange.this);
+                    MdliveUtils.showGPSFailureDialog(MDLivePharmacyChange.this,null);
                 }
-                finish();
             }else{
-                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                MdliveUtils.showGPSFailureDialog(MDLivePharmacyChange.this,null);
             }
         }
     };
@@ -458,8 +461,8 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 ArrayAdapter<String> adapter = getAutoCompletionArrayAdapter(pharmacy_search_name, suggestionList);
                 pharmacy_search_name.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -539,7 +542,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private void initializeStateDialog() {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePharmacyChange.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         stageListView = (ListView) convertView.findViewById(R.id.popupListview);
         stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));

@@ -159,12 +159,11 @@
         var scanCard = function(){
            window.billing.scanCreditCard();
         };
-        /*var setCardNumber = function(card_number){
-        alert("card_number  "+card_number);
+        var setCardNumber = function(card_number){
             var iframe = document.getElementById('mdliveframe');
 			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 			innerDoc.getElementById('ccNum').value= card_number;
-        };*/
+        };
 		var tokenizeForm = function() {
 		var iframe = document.getElementById('mdliveframe');
         var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -223,7 +222,7 @@
 
 		<!--Production HPCI iFrame -->
 		<iframe id="mdliveframe" name="mdliveframe"
-				src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=mobileandroid&sid=527123&fullParentHost=file%3A%2F%2F%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex_prod.html&cvvValidate=Y"
+				src="https://cc.hostedpci.com/iSynSApp/showPxyPage!ccFrame.action?pgmode1=prod&locationName=embedbillingandroid&sid=527123&fullParentHost=file%3A%2F%2F%2Fandroid_asset%2Fhtdocs%2Fhpci%2Findex_prod.html&cvvValidate=Y"
 				frameborder="0" scrolling="no" onload="mdliveSetData();"> If you can see
 			this, your browser doesn't understand IFRAME. </iframe>
 
@@ -238,5 +237,5 @@
 </body>
 
 </html>
-<!--<div class="ccv-camera-img-content" onclick="scanCard(); return false;"><img class="scan-card-button" src="images/photo.svg"/></div>-->
+
 

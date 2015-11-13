@@ -122,7 +122,6 @@
                                 android:hint="@string/mdl_date_of_birth_hint"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/textsize_large" />
-                            />
 
                             <View
                                 style="@style/ViewStyle"
@@ -181,7 +180,7 @@
                                 android:layout_marginLeft="4dp"
                                 android:checked="false"
                                 android:gravity="left|center"
-                                android:text="@string/mdl_i_michelle_text"
+                                android:text="@string/mdl_summary_txt"
                                 android:tag="i_michelle_text"
                                 android:textSize="16sp" />
                         </LinearLayout>

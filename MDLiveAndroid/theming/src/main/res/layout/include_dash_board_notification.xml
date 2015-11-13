@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:tag="@string/mdltag_your_appointmant_has_started"
-            android:text="@string/mdl_your_appointmant_has_started"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/notification_second_text_view"
@@ -38,6 +38,6 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             android:tag="@string/mdltag_tap_here_to_enter"
-            android:text="@string/mdl_tap_here_to_enter"/>
+            android:text=""/>
     </LinearLayout>
 </LinearLayout>

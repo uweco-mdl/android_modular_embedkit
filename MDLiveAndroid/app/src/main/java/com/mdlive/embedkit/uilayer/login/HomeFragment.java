@@ -23,9 +23,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
     Toolbar toolbar;
-    private TextView toolbarTitle;
-    private ProgressDialog pDialog;
-    private TextView emailConfirmation = null;
 
     public static HomeFragment newInstance() {
         final HomeFragment fragment = new HomeFragment();
@@ -48,11 +45,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     public void init(View homePage)
     {
-        emailConfirmation = (TextView)homePage.findViewById(R.id.email_unconfirmed);
+        TextView emailConfirmation = (TextView)homePage.findViewById(R.id.email_unconfirmed);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
+        TextView toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
 
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
         toolbarTitle.setText(getResources().getString(R.string.mdl_app_name));
 
         emailConfirmation.setOnClickListener(this);

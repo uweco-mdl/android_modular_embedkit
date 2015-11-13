@@ -16,6 +16,7 @@
             android:layout_centerVertical="true"
             android:onClick="onLeftDrawerClicked"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/mdl_ada_hamburger"
             android:src="@drawable/hamburger" />
 
 
@@ -28,6 +29,7 @@
             android:layout_marginRight="@dimen/dimen_16_dp"
             android:onClick="onRightDrawerClicked"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/mdl_ada_bell"
             android:src="@drawable/notification_bell_white" />
 
         <TextView

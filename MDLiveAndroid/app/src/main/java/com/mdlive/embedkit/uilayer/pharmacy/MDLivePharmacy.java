@@ -27,20 +27,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.embedkit.uilayer.payment.MDLiveConfirmappointment;
-import com.mdlive.embedkit.uilayer.payment.MDLivePayment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
-import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
 import org.json.JSONException;
@@ -83,7 +80,9 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         }
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.reverse_arrow);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_pharm_txt).toUpperCase());
 
 
@@ -117,7 +116,10 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     }
 
     public void rightBtnOnClick(View view){
-        checkInsuranceEligibility();
+        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
+        MdliveUtils.closingActivityAnimation(this);*/
+       checkInsuranceEligibility();
     }
     /**
      * This function handles click listener of SavContinueBtn
@@ -125,6 +127,9 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      * @param view - view of button which is called.
      */
     public void SavContinueBtnOnClick(View view) {
+        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
+        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
+        MdliveUtils.closingActivityAnimation(this);*/
         checkInsuranceEligibility();
     }
 
@@ -187,7 +192,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             unregisterReceiver(locationReceiver);
@@ -230,11 +235,27 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
                     if (jobj.has("final_amount")) {
-                        if (Integer.parseInt(jobj.getString("final_amount")) > 0) {
-                            Intent i = new Intent(getApplicationContext(), MDLivePayment.class);
-                            i.putExtra("final_amount", jobj.getString("final_amount"));
-                            startActivity(i);
-                            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+
+                        if (!jobj.getString("final_amount").equals("0") && !jobj.getString("final_amount").equals("0.00")) {
+                            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+                            if(userBasicInfo.getVerifyEligibility()) {
+                                Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+                                i.putExtra("final_amount", jobj.getString("final_amount"));
+                                startActivity(i);
+                                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+                            } else
+                            {
+                                try {
+                                    Class clazz = Class.forName("com.mdlive.sav.payment.MDLivePayment");
+                                    Intent i = new Intent(getApplicationContext(), clazz);
+                                    i.putExtra("final_amount", jobj.getString("final_amount"));
+                                    startActivity(i);
+                                    MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+                                } catch (ClassNotFoundException e){
+                                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                }
+                            }
+
                         } else {
                             moveToNextPage();
                         }
@@ -242,7 +263,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -262,9 +282,27 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
-        Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
-        startActivity(i);
-        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
+        if(userBasicInfo.getVerifyEligibility())
+        {
+            Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+            i.putExtra("final_amount", "0.00");
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        } else
+        {
+            try {
+                Class clazz = Class.forName("com.mdlive.sav.payment.MDLiveConfirmappointment");
+                Intent i = new Intent(MDLivePharmacy.this, clazz);
+                storePayableAmount("0.00");
+                startActivity(i);
+                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+            }catch (ClassNotFoundException e){
+                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            }
+        }
+
+
     }
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -272,6 +310,14 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
         editor.commit();
     }
+
+    public void storePayableAmount(String amount) {
+        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.AMOUNT, amount);
+        editor.commit();
+    }
+
 
     /**
      * This function is used to get post body content for Check Insurance Eligibility
@@ -288,101 +334,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
         return new Gson().toJson(insuranceMap);
-    }
-
-
-    /**
-     * This method handles appointment confirmation for zero dollar user
-     * responseListener-Listner to handle success response.
-     * errorListener -Listner to handle failed response.
-     * ConfirmAppointmentServices-Class will send the request to the server and get the responses
-     */
-    private void doConfirmAppointment() {
-        showProgress();
-        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    hideProgress();
-                    String apptId = response.getString("appointment_id");
-                    if (apptId != null) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString(PreferenceConstants.APPT_ID, apptId);
-                        editor.commit();
-                        Intent i = new Intent(MDLivePharmacy.this, MDLiveConfirmappointment.class);
-                        startActivity(i);
-                        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
-                    } else {
-                        Toast.makeText(MDLivePharmacy.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        NetworkErrorListener errorListener = new NetworkErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
-            }
-        };
-        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-       String consultationType = settings.getString(PreferenceConstants.CONSULTATION_TYPE, "");
-        Log.v("ConsultationType",consultationType);
-        String appointmentMethodType="";
-        if(consultationType.equalsIgnoreCase("Video"))
-        {
-            appointmentMethodType="1";
-        }else if(consultationType.equalsIgnoreCase("Phone"))
-        {
-            appointmentMethodType="2";
-        }else
-        {
-            appointmentMethodType="1";
-        }
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        Log.v("PostValue confirmTS",settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, ""));
-        Log.v("PostValue phys",settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
-        params.put("appointment_method", appointmentMethodType);
-        params.put("alternate_visit_option", "No Answer");
-        params.put("phys_availability_id", settings.getString(PreferenceConstants.SELECTED_PHYSID, ""));
-        if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("Now"))
-        {
-            params.put("timeslot","Now");
-        }else if(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "").equalsIgnoreCase("0"))
-        {
-            params.put("timeslot","Now");
-        }
-
-        else {
-            params.put("timeslot", Long.parseLong(settings.getString(PreferenceConstants.SELECTED_TIMESTAMP, "")));
-        }
-        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
-        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-        params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PHONE_NUMBER, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-//
-//        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-//        SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-//        HashMap<String, Object> params = new HashMap<String, Object>();
-//        params.put("appointment_method", "1");
-//        params.put("do_you_have_primary_care_physician", "No");
-//        params.put("phys_availability_id", "");
-//        params.put("alternate_visit_option", "No Answer");
-//        params.put("timeslot", "Now");
-//        params.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
-//        params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
-//        params.put("customer_call_in_number", settings.getString(PreferenceConstants.PHONE_NUMBER, ""));
-//        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLivePharmacy.this, null);
-        services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
     }
 
     /*
@@ -465,32 +416,16 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
         map = mapView.getMap();
         if (map != null) {
-
-            /**
-             *  This adapter is used to display info window when users click on the marker on google map
-             *
-             *  It has a layout to show user when click on marker.
-             */
-            map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                // Use default InfoWindow frame
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    View v = getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
-                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
-                    TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
-                    TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
-                    addressline1.setText(bundletoSend.get("store_name")+"");
-                    addressline2.setText(bundletoSend.get("address1")+"");
-                    addressline3.setText(bundletoSend.get("city")+"  "+(TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
-                    return v;
-                }
-                @Override
-                public View getInfoContents(Marker arg0) {
-                    return null;
+            map.setInfoWindowAdapter(null);
+            map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(false);
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                public boolean onMarkerClick(Marker marker) {
+                    marker.hideInfoWindow();
+                    return true;
                 }
             });
 
-            map.getUiSettings().setScrollGesturesEnabled(false);
             map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
@@ -506,7 +441,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
             addressline1.setText(pharmacyDatas.getString("store_name") + " "+
                     ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
-                    pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
+                            pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
                     + pharmacyDatas.getString("state") + " "
@@ -516,7 +451,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
-                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                findViewById(R.id.txt_my_pharmacy_addressline_four).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -548,6 +483,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                 Marker marker = map.addMarker(new MarkerOptions().position(markerPoint)
                         .title("Marker"));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));
+                map.setInfoWindowAdapter(null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -556,11 +492,11 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     }
 
 
-        /**
-         * This function is used for parse and update UI for server response.
-         *
-         * @param response - Response received from server.
-         */
+    /**
+     * This function is used for parse and update UI for server response.
+     *
+     * @param response - Response received from server.
+     */
     public void loadDatas(String response) {
         try {
             JSONObject jobj = new JSONObject(response);
@@ -576,7 +512,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             JSONObject coordinates = pharmacyDatas.getJSONObject("coordinates");
             if(pharmacyDatas.has("phone")){
                 ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
-                ((TextView) findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                findViewById(R.id.txt_my_pharmacy_addressline_four).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -683,5 +619,36 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == IntegerConstants.INSURANCE_ERROR_CODE) {
+            try {
+                showDialog(getApplicationContext(),
+                        "Connection Timed Out Error Occured.", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void showDialog(final Context context, String message,
+                                  DialogInterface.OnClickListener positiveOnclickListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+        alertDialogBuilder
+                .setTitle("MDLIVE")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok",positiveOnclickListener);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+            }
+        });
+        alertDialog.show();
+    }
 
 }

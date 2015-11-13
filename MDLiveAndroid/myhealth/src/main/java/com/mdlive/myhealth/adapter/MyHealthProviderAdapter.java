@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.mdlive.myhealth.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.MyProvider;
 
 /**
@@ -25,7 +24,7 @@ public class MyHealthProviderAdapter extends ArrayAdapter<MyProvider> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        //if (convertView == null) {
+        if (convertView == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.new_adapter_layout, parent, false);
 
@@ -34,15 +33,15 @@ public class MyHealthProviderAdapter extends ArrayAdapter<MyProvider> {
             viewHolder.mTextViewTop = (TextView) convertView.findViewById(R.id.adapter_provider_top_text_view);
             viewHolder.mTextViewBottom = (TextView) convertView.findViewById(R.id.adapter_provider_bottom_text_view);
 
-            //convertView.setTag(viewHolder);
-        //} else {
-            //viewHolder = (ViewHolder) convertView.getTag();
-        //}
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).name);
         viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdli_provider_since) + getItem(position).providerSince);
-//        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + MdliveUtils.getReceivedSentTime(getItem(position).lastAppointment, "EDT"));
+//        viewHolder.mTextViewBottom.setText(convertView.getResources().getString(R.string.mdl_last_visit) + MdliveUtils.getReceivedSentTime(getItem(position).lastAppointment, ""));
         return convertView;
     }
 

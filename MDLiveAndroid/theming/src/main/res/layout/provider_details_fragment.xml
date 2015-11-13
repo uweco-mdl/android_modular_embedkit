@@ -93,7 +93,6 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:background="@null"
-                        android:text="Wed,Sep2014"
                         android:id="@+id/dateTxt"
                         android:onClick="appointmentAction"
                         android:textSize="18sp"
@@ -111,13 +110,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="By Video"/>
+                            android:text="@string/mdl_by_video"/>
                         <Button
                             android:id="@+id/byphoneBtn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="By Phone"/>
+                            android:text="@string/mdl_by_phone"/>
                     </LinearLayout>
                     <LinearLayout
                         style="@style/LinearLayoutStyle"
@@ -152,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"
-                        android:text="Request future appointment"/>
+                        android:text="@string/mdl_request_future_appointment"/>
 
 
                     <LinearLayout

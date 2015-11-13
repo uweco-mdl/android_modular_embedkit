@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import com.mdlive.sav.MDLiveChooseProvider;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 
 import org.json.JSONArray;
@@ -16,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,8 +111,16 @@ public class PendingAppointment implements Parcelable {
 
             if (appointmentArray != null && appointmentArray.length() > 0) {
                 for (int i = 0; i < appointmentArray.length(); i++) {
-                    MDLiveChooseProvider.isDoctorOnCall=false;
-                    MDLiveChooseProvider.isDoctorOnVideo=false;
+                    try {
+                        Class clazz = Class.forName("com.mdlive.sav.MDLiveChooseProvider");
+                        Field isDoctorOnCall = clazz.getDeclaredField("isDoctorOnCall");
+                        Field isDoctorOnVideo = clazz.getDeclaredField("isDoctorOnVideo");
+                        isDoctorOnCall.set(null, false);
+                        isDoctorOnVideo.set(null, false);
+                    } catch (ClassNotFoundException e){
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                     final  JSONObject appointment = appointmentArray.optJSONObject(i);
                     final Appointment appo = new Appointment();
 
@@ -137,9 +145,17 @@ public class PendingAppointment implements Parcelable {
             }
             if (onCallAppointmentArray != null && onCallAppointmentArray.length() > 0) {
                     for (int i = 0; i < onCallAppointmentArray.length(); i++) {
-                        Log.e("Cominmg","Coming here");
-                        MDLiveChooseProvider.isDoctorOnCall=false;
-                        MDLiveChooseProvider.isDoctorOnVideo=true;
+                        Log.v("Cominmg","Coming here");
+                        try {
+                            Class clazz = Class.forName("com.mdlive.sav.MDLiveChooseProvider");
+                            Field isDoctorOnCall = clazz.getDeclaredField("isDoctorOnCall");
+                            Field isDoctorOnVideo = clazz.getDeclaredField("isDoctorOnVideo");
+                            isDoctorOnCall.set(null, false);
+                            isDoctorOnVideo.set(null, true);
+                        } catch (ClassNotFoundException e){
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                         final  JSONObject onCallAppointment = onCallAppointmentArray.optJSONObject(i);
                         final OncallAppointment appo = new OncallAppointment();
                         appo.setApptType(onCallAppointment.optString("appt_type"));

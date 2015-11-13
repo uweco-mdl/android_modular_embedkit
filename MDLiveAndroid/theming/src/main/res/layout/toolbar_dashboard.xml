@@ -12,6 +12,7 @@
             android:layout_width="@dimen/dimen_24_dp"
             android:layout_height="@dimen/dimen_24_dp"
             android:layout_alignParentLeft="true"
+            android:contentDescription="@string/mdl_ada_hamburger"
             android:layout_centerVertical="true"
             android:onClick="onLeftDrawerClicked"
             android:scaleType="centerCrop"
@@ -24,6 +25,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dimen_16_dp"
             android:onClick="onRightDrawerClicked"
+            android:contentDescription="@string/mdl_ada_bell"
             android:scaleType="centerCrop"
             android:src="@drawable/notification_bell_white" />
     </RelativeLayout>

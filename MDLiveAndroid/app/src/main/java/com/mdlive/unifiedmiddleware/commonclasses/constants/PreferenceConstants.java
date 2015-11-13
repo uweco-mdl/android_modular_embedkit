@@ -9,6 +9,7 @@ public class PreferenceConstants {
     public static final String PAY_AMOUNT_PREFERENCES = "AMOUNT_PREFERENCES";
     public static final String REASON_PREFERENCES = "REASON_FOR_VISIT";
     public static final String USER_UNIQUE_ID = "USER_UNIQUE_ID";
+    public static final String SESSION_ID = "SESSION_ID";
     public static final String DEPENDENT_USER_ID = "DEPENDENT_USER_ID";
     public static final String ZIPCODE_PREFERENCES = "ZIPCODE_PREFERENCES";
     public static final String LONGNAME_LOCATION_PREFERENCES = "LONGNAME_LOCATION_PREFERENCES";
@@ -70,4 +71,6 @@ public class PreferenceConstants {
     public static final String GOOGLE_FIT_PREFERENCES = "GOOGLE_FIT_PREFERENCES";
     public static final String GOOGLE_FIT_FIRST_TIME = "GOOGLE_FIT_FIRST_TIME";
     public static final String BAYLOR_GUID = "baylor_guid";
+    public static final String TIMEZONE_SET_AUTOMATIC = "set_automatic";
+    public static final String SAVED_PUSH_NOTIFICATION_ID = "SAVED_PUSH_NOTIFICATION_ID";
 }

@@ -19,6 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onCrossClicked"
+                android:contentDescription="@string/mdl_ada_close_button"
                 android:scaleType="centerCrop"
                 android:src="@drawable/exit_icon" />
 
@@ -27,6 +28,7 @@
                 android:layout_width="@dimen/dimen_24_dp"
                 android:layout_height="@dimen/dimen_24_dp"
                 android:layout_gravity="center_vertical|left"
+                android:contentDescription="@string/mdl_ada_hamburger"
                 android:onClick="onLeftDrawerClicked"
                 android:scaleType="centerCrop"
                 android:src="@drawable/hamburger" />
@@ -48,6 +50,7 @@
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="10dp"
                 android:onClick="onTickClicked"
+                android:contentDescription="@string/mdl_ada_tick_button"
                 android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/top_tick_icon" />
@@ -60,6 +63,7 @@
                 android:layout_marginRight="@dimen/dimen_16_dp"
                 android:onClick="onRightDrawerClicked"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/mdl_ada_bell"
                 android:src="@drawable/notification_bell_white" />
         </FrameLayout>
 

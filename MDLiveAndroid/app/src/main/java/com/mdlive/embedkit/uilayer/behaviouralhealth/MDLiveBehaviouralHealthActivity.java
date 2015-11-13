@@ -1,6 +1,7 @@
 package com.mdlive.embedkit.uilayer.behaviouralhealth;
 
 import android.app.DatePickerDialog;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -8,25 +9,34 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
-
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
-import java.lang.ref.WeakReference;
 import java.util.Calendar;
-import java.util.Date;
 
 
-public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity {
+public class MDLiveBehaviouralHealthActivity extends MedicalHistoryPluginActivity {
+    boolean isFromSAVflow = false, isNewUser = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_behavioural_history_layout);
         clearMinimizedTime();
 
+        locationService = new LocationCooridnates(getApplicationContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+        if(getIntent() != null && getIntent().hasExtra("from_sav")){
+            isFromSAVflow = true;
+            isNewUser = false;
+        }
+        if(getIntent() != null && getIntent().hasExtra("isNewUser")){
+            isNewUser = true;
+        }
         setDrawerLayout((DrawerLayout) findViewById(com.mdlive.embedkit.R.id.drawer_layout));
 
         final Toolbar toolbar = (Toolbar) findViewById(com.mdlive.embedkit.R.id.toolbar);
@@ -42,10 +52,21 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
         }
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(com.mdlive.embedkit.R.id.dash_board__main_container, MDLiveBehaviouralHealthFragment.newInstance(), MAIN_CONTENT).
-                    commit();
+            if(isFromSAVflow){
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(com.mdlive.embedkit.R.id.dash_board__main_container,
+                                MDLiveBehaviouralHealthFragment.newInstance(isFromSAVflow, isNewUser), MAIN_CONTENT).
+                        commit();
+
+            }else{
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(com.mdlive.embedkit.R.id.dash_board__main_container,
+                                MDLiveBehaviouralHealthFragment.newInstance(), MAIN_CONTENT).
+                        commit();
+
+            }
 
             getSupportFragmentManager().
                     beginTransaction().
@@ -76,12 +97,12 @@ public class MDLiveBehaviouralHealthActivity extends MDLiveBaseAppcompatActivity
     }
 
     public void chooseStateOnClick(View view){
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveBehaviouralHealthFragment) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, ((MDLiveBehaviouralHealthFragment) fragment).pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+            datePickerDialog.getDatePicker().setMaxDate(TimeZoneUtils.getCalendarWithOffset(this).getTime().getTime());
             datePickerDialog.show();
         }
     }

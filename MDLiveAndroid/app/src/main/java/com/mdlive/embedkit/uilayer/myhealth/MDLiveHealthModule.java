@@ -30,6 +30,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -68,7 +69,8 @@ import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInst
 public class MDLiveHealthModule extends MDLiveBaseActivity {
 
 //    public ArrayList<String> existingConditions;
-    public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE};
+    public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE}
+
     protected TYPE_CONSTANT type;
     public boolean isPerformingAutoSuggestion = false, allowtoDisplayContents = true;
     public AutoCompleteTextView conditionText;
@@ -76,8 +78,8 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public LinkedList<String> procedureNameList = new LinkedList<>();
     public LinkedList<String> procedureYearList = new LinkedList<>();
     public AlertDialog procedureNameDialog, procedureYearDialog, timesDialog, modeDialog;
-    public TextView surgeryName, surgeryYear;
-    public EditText dosageTxt;
+    public TextView surgeryName, surgeryYear, errorText;
+    public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
             "Once","Twice","Three times","Four times", "Five times", "Six times"
     };
@@ -104,13 +106,13 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_allergies_with_eg_hint));
             }else if(getIntent().getStringExtra("type").equals("medication")){
                 type = TYPE_CONSTANT.MEDICATION;
-                ((LinearLayout) findViewById(R.id.medicationCredentailsLayout)).setVisibility(View.VISIBLE);
+                findViewById(R.id.medicationCredentailsLayout).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_medication));
                 ((EditText) findViewById(R.id.conditionText)).setHint(getString(R.string.mdl_add_medication_hint));
             }else if(getIntent().getStringExtra("type").equals("procedure")){
                 type = TYPE_CONSTANT.PROCEDURE;
-                ((EditText) findViewById(R.id.conditionText)).setVisibility(View.GONE);
-                ((LinearLayout) findViewById(R.id.procedureLayout)).setVisibility(View.VISIBLE);
+                findViewById(R.id.conditionText).setVisibility(View.GONE);
+                findViewById(R.id.procedureLayout).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_add_procedure));
             }
         }
@@ -129,9 +131,22 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
 
         conditionText = (AutoCompleteTextView) findViewById(R.id.conditionText);
+        errorText = (TextView) findViewById(R.id.errorText);
+        otherProcedureTxt = (EditText) findViewById(R.id.otherProcedureTxt);
+
+        //Setting error Text for conditions/allergies/medications
+        if(type.equals(TYPE_CONSTANT.CONDITION)){
+            errorText.setText(getString(R.string.mdl_condition_not_found_txt));
+        }else if(type.equals(TYPE_CONSTANT.MEDICATION)){
+            errorText.setText(getString(R.string.mdl_medication_not_found_txt));
+        }else if(type.equals(TYPE_CONSTANT.ALLERGY)){
+            errorText.setText(getString(R.string.mdl_allergy_not_found_txt));
+        }else{
+            errorText.setText("");
+        }
 
         if(type.equals(TYPE_CONSTANT.PROCEDURE)){
             initializeViews();
@@ -140,7 +155,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureYearList.add(getIntent().getStringExtra("Year"));*/
                 surgeryName.setText(getIntent().getStringExtra("Name"));
                 surgeryYear.setText(getIntent().getStringExtra("Year"));
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
                 isUpdateMode = true;
             }else{
                 isUpdateMode = false;
@@ -149,7 +164,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             initializeMedicationViews();
             if(getIntent() != null && getIntent().hasExtra("Name")){
                 conditionText.setText(getIntent().getStringExtra("Name"));
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
                 isUpdateMode = true;
             }else{
                 isUpdateMode = false;
@@ -234,7 +249,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
         LayoutInflater inflater = getLayoutInflater();
 
-        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View nameView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(nameView);
         ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
 
@@ -243,8 +258,10 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         timesDialog = alertDialog.create();
         ((TextView)findViewById(R.id.timesTxt)).setText(timesList[0]);
+        findViewById(R.id.timesTxt).setContentDescription(getString(R.string.mdl_ada_dropdown) + timesList[0]);
         ((TextView)findViewById(R.id.modeTxt)).setText(modesList[0]);
-        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        findViewById(R.id.modeTxt).setContentDescription(getString(R.string.mdl_ada_dropdown) + modesList[0]);
+        View yearView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(yearView);
         ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,modesList);
@@ -271,10 +288,12 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public void initializeViews() {
         surgeryName = ((TextView) findViewById(R.id.surgeryName));
         surgeryYear = ((TextView) findViewById(R.id.surgeryYear));
+        surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_select_surgery_txt));
+        surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+getString(R.string.mdl_year_txt));
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveHealthModule.this);
         LayoutInflater inflater = getLayoutInflater();
 
-        View nameView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View nameView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(nameView);
         ListView nameListView = (ListView) nameView.findViewById(R.id.popupListview);
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureNameList);
@@ -282,13 +301,14 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         nameListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         procedureNameDialog = alertDialog.create();
 
-        View yearView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View yearView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(yearView);
         ListView yearListView = (ListView) yearView.findViewById(R.id.popupListview);
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, procedureYearList);
         yearListView.setAdapter(yearAdapter);
         yearListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         procedureYearDialog = alertDialog.create();
+
 
         nameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -297,11 +317,61 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureNameDialog.dismiss();
                 if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                         && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                        if(otherProcedureTxt.getText() != null &&
+                                otherProcedureTxt.getText().toString().length() != 0){
+                            if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                    && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
+                                surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryName.getText().toString());
+                                surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryYear.getText().toString());
+                                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+                            }else{
+                                findViewById(R.id.txtApply).setVisibility(View.GONE);
+                            }
+                        }else{
+                           findViewById(R.id.txtApply).setVisibility(View.GONE);
+                        }
+                    }else{
+                        surgeryName.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryName.getText().toString());
+                        surgeryYear.setContentDescription(getString(R.string.mdl_ada_dropdown)+surgeryYear.getText().toString());
+                        findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+                    }
+                }
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    otherProcedureTxt.setVisibility(View.VISIBLE);
+                }else{
+                    otherProcedureTxt.setVisibility(View.GONE);
                 }
             }
         });
 
+        otherProcedureTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(otherProcedureTxt.getVisibility() == View.VISIBLE){
+                    if(s != null && s.length() > 0){
+                        if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
+                            findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+                        }else{
+                            findViewById(R.id.txtApply).setVisibility(View.GONE);
+                        }
+                    }else{
+                        findViewById(R.id.txtApply).setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         yearListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -309,7 +379,29 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 procedureYearDialog.dismiss();
                 if(!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
                         && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))){
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+
+                    if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))) {
+                        if (otherProcedureTxt.getText() != null &&
+                                otherProcedureTxt.getText().toString().length() != 0) {
+                            if (!surgeryName.getText().toString().equals(getString(R.string.mdl_select_surgery_txt))
+                                    && !surgeryYear.getText().equals(getString(R.string.mdl_year_txt))) {
+                                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+                            } else {
+                                findViewById(R.id.txtApply).setVisibility(View.GONE);
+                            }
+                        } else {
+                            findViewById(R.id.txtApply).setVisibility(View.GONE);
+                        }
+                }
+                else{
+                        findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
+                    }
+                }
+
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    otherProcedureTxt.setVisibility(View.VISIBLE);
+                }else{
+                    otherProcedureTxt.setVisibility(View.GONE);
                 }
             }
         });
@@ -323,14 +415,15 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             Log.v("dateofBirth", dateofBirth);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth));
-                years = Calendar.getInstance().get(Calendar.YEAR) - years;
-                for(int i = years; i <= Calendar.getInstance().get(Calendar.YEAR); i++){
+                sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
+                int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth),this);
+                years = TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR) - years;
+                for(int i = years; i <= TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
                     Log.v("Years--->", i+"");
                 }
                 if(procedureYearList.size() == 0){
-                    procedureYearList.add(Calendar.getInstance().get(Calendar.YEAR)+"");
+                    procedureYearList.add(TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR)+"");
                 }
             }
             yearAdapter.notifyDataSetChanged();
@@ -370,14 +463,25 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         try {
             hideProgress();
             procedureNameList.clear();
+            boolean isItemAvailableInList = false;
             if(response != null){
                 if(response.has("surgeries")){
                     JSONArray surgeriesArray = response.getJSONArray("surgeries");
                     for(int i = 1; i < surgeriesArray.length(); i++){
                         JSONObject item = surgeriesArray.getJSONObject(i);
                         procedureNameList.add(item.getString("name"));
+                        if(surgeryName.getText().toString().equals(item.getString("name"))){
+                            isItemAvailableInList = true;
+                        }
                     }
                 }
+                if(isUpdateMode){
+                    if(!isItemAvailableInList){
+                        procedureNameList.add(surgeryName.getText().toString());
+                    }
+                }
+
+                procedureNameList.add(getString(R.string.mdl_procedure_other_txt));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -442,7 +546,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     && surgeryYear.getText() != null && !surgeryYear.getText().toString().equals("Year")){
                 HashMap<String, HashMap<String, String>> allergies = new HashMap<>();
                 HashMap<String, String> map = new HashMap<>();
-                map.put("name", surgeryName.getText().toString());
+                if(surgeryName.getText().toString().equals(getString(R.string.mdl_procedure_other_txt))){
+                    map.put("name", otherProcedureTxt.getText().toString());
+                }else{
+                    map.put("name", surgeryName.getText().toString());
+                }
                 map.put("surgery_year", surgeryYear.getText().toString());
                 allergies.put("surgery", map);
                 Log.v("Post Body ", new Gson().toJson(allergies));
@@ -559,6 +667,13 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 atv.setDropDownVerticalOffset(0);
                 MdliveUtils.showSoftKeyboard(this, atv);
             }
+            if(errorText.getText() != null && errorText.getText().toString().length() != 0){
+                if(conditionArray.length() == 0 && !atv.isPopupShowing()){
+                    errorText.setVisibility(View.VISIBLE);
+                }else{
+                    errorText.setVisibility(View.GONE);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -590,13 +705,14 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             public void afterTextChanged(Editable editable) {
                 String text = conditonEt.getText().toString().trim();
                 if(text == null || text.length() == 0){
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                    findViewById(R.id.txtApply).setVisibility(View.GONE);
                 }else{
-                    ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
                 }
                 if (text.length() >= 3) {
                     getAutoCompleteData((AutoCompleteTextView) conditonEt, text);
                 } else {
+                    errorText.setVisibility(View.GONE);
                     // Need to clear the data or hide the auto compleete text dropdown
                     if (((AutoCompleteTextView) conditonEt).getAdapter() != null) {
                         ((ArrayAdapter<String>) ((AutoCompleteTextView) conditonEt).getAdapter()).clear();

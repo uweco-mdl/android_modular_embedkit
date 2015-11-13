@@ -22,12 +22,11 @@
                 <include
                     android:id="@+id/toolbar"
                     layout="@layout/mdlive_toolbar" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingTop="10dp">
+                    android:background="@color/getstarted_background_color">
 
                     <LinearLayout
                         android:id="@+id/topContentHolder"
@@ -37,7 +36,6 @@
                         android:orientation="vertical"
                         android:visibility="visible"
                         android:paddingTop="10dp">
-
 
                         <LinearLayout
                             android:id="@+id/behaviourView"
@@ -162,31 +160,39 @@
                             android:id="@+id/imgCamera"
                             android:layout_width="28dp"
                             android:layout_height="21dp"
-                            android:layout_marginBottom="20dp"
+                            android:layout_centerVertical="true"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_alignParentLeft="true"
                             android:src="@drawable/camera_icon_white" />
 
-                        <TextView
-                            android:id="@+id/txt_addPhoto"
-                            style="@style/chooseProviderTextStyle"
-                            android:layout_marginTop="11dp"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/imgCamera"
-                            android:tag="@string/mdltag_add_photo"
-                            android:text="@string/mdl_add_photo"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true"
+                            >
+                            <TextView
+                                android:id="@+id/txt_addPhoto"
+                                style="@style/chooseProviderTextStyle"
+                                android:layout_toRightOf="@id/imgCamera"
+                                android:tag="@string/mdltag_add_photo"
+                                android:text="@string/mdl_add_photo"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
 
-                        <TextView
-                            style="@style/chooseProviderTextStyle"
-                            android:layout_below="@id/txt_addPhoto"
-                            android:layout_marginTop="1dp"
-                            android:layout_toRightOf="@id/imgCamera"
-                            android:tag="@string/mdltag_my_health_helpful"
-                            android:text="@string/mdl_my_health_helpful"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
+                            <TextView
+                                style="@style/chooseProviderTextStyle"
+                                android:layout_below="@id/txt_addPhoto"
+                                android:layout_marginTop="1dp"
+                                android:layout_toRightOf="@id/imgCamera"
+                                android:tag="@string/mdltag_my_health_helpful"
+                                android:text="@string/mdl_my_health_helpful"
+                                android:textColor="@color/white"
+                                android:textSize="13sp" />
+                            </LinearLayout>
+
 
                         <ImageView
                             android:id="@+id/indicatorIcon"
@@ -195,6 +201,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="20dp"
+                            android:contentDescription="@string/mdl_ada_arrowup_photo_button"
                             android:src="@drawable/arrow_up" />
 
                     </RelativeLayout>
@@ -203,7 +210,7 @@
                         android:id="@+id/photoLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
+                        android:background="@color/getstarted_background_color"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -225,6 +232,7 @@
                                 android:horizontalSpacing="10dp"
                                 android:numColumns="4"
                                 android:padding="5dp"
+                                android:layout_marginTop="5dp"
                                 android:stretchMode="columnWidth"
                                 android:verticalSpacing="10dp" />
 
@@ -253,6 +261,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingRight="22dp"
+                                android:contentDescription="@string/mdl_ada_takepic_button"
                                 android:src="@drawable/camera_icon" />
                             <!--android:contentDescription="@string/pict_by_camera"-->
 
@@ -262,7 +271,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="22dp"
-
+                                android:contentDescription="@string/mdl_ada_gallery_button"
                                 android:src="@drawable/gallery_icon" />
                             <!--android:contentDescription="@string/pict_by_gallery"-->
                         </LinearLayout>

@@ -6,6 +6,7 @@
         android:allowBackup="true"
         android:label="@string/mdl_app_name"
         android:largeHeap="true"
+        android:supportsRtl="false"
         android:theme="@style/CustomTheme">
 
         <activity
@@ -30,7 +31,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"/>
 
+        <activity
+            android:name=".uilayer.PendingVisits.MDLivePendingVisits"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+
+
+
         <!-- Pharmacy Activities -->
+
+        <activity
+            android:name=".uilayer.pharmacy.MDLiveInsuranceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacy"
             android:screenOrientation="portrait"
@@ -38,8 +52,7 @@
         <activity
             android:name=".uilayer.pharmacy.MDLivePharmacyChange"
             android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/MDLive_Red_Theme" />
 
         <!--
              <activity
@@ -70,12 +83,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
 
-        <!-- Payment Activity -->
-
-        <activity
-            android:name=".uilayer.payment.MDLivePayment"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
         <activity
             android:name=".uilayer.login.MDLiveSummary"
             android:launchMode="singleInstance"
@@ -92,14 +99,6 @@
             android:screenOrientation="portrait" >
             </activity>
         -->
-        <activity
-            android:name=".uilayer.payment.MDLiveConfirmappointment"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
-        <activity
-            android:name=".uilayer.payment.MDLiveStartVisit"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
         <!--<activity
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
@@ -139,16 +138,6 @@
             android:theme="@style/MDLive_Red_Theme" />
 
         <activity
-            android:name=".uilayer.appointment.AppointmentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme" />
-        <activity
-            android:name=".uilayer.appointment.MDLiveAppointmentThankYou"
-            android:screenOrientation="portrait"
-            android:theme="@style/MDLive_Red_Theme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity
             android:name=".uilayer.familyhistory.MDLiveFamilyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme"
@@ -157,6 +146,18 @@
         <service android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false"/>
+
+
+        <activity
+            android:name="com.mdlive.unifiedmiddleware.plugins.FacebookShareUtil"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity
+            android:name="com.mdlive.embedkit.uilayer.login.HealthSystemsActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 </manifest>

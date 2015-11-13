@@ -13,12 +13,13 @@
         android:src="@drawable/notification_icon4_upcoming"
         android:layout_marginTop="@dimen/dimen_8_dp"
         android:paddingTop="@dimen/dimen_14_dp"
-        android:paddingLeft="@dimen/dimen_8_dp"/>
+        android:paddingLeft="@dimen/dimen_2_dp"/>
 
     <TextView
         android:id="@+id/adapter_upcoming_appoinment_text_view"
         style="@style/Notification_Text_Upcoming"
         android:textSize="18sp"
-        android:layout_marginTop="@dimen/dimen_8_dp"
-        android:layout_marginBottom="@dimen/dimen_8_dp"/>
+        android:layout_marginLeft="@dimen/dimen_8_dp"
+        android:layout_marginTop="@dimen/dimen_10_dp"
+        android:paddingTop="@dimen/dimen_8_dp"/>
 </LinearLayout>

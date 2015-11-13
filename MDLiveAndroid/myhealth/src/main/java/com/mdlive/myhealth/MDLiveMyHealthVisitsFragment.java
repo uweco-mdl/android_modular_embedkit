@@ -53,6 +53,7 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(getString(R.string.mdl_visits));
 
     }
 
@@ -67,6 +68,7 @@ public class MDLiveMyHealthVisitsFragment extends MDLiveBaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        getActivity().setTitle(getString(R.string.mdl_visits));
     }
 
 

@@ -2,7 +2,7 @@
     package="com.mdlive.symptomchecker">
 
     <application android:allowBackup="true"
-        android:supportsRtl="true">
+        android:supportsRtl="false">
         <activity
             android:name=".MDLiveSymptomCheckerActivity"
             android:screenOrientation="portrait"

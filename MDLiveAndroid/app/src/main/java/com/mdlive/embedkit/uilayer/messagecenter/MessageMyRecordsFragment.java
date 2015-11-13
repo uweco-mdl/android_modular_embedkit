@@ -27,6 +27,7 @@ import com.mdlive.embedkit.uilayer.messagecenter.adapter.RecordAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.PickImagePlugin;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Records;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -45,7 +46,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by dhiman_da on 6/24/2015.
@@ -87,7 +87,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.fragment_message_my_records_list_view);
-        mEmptyView = (View) view.findViewById(R.id.emptyView);
+        mEmptyView = view.findViewById(R.id.emptyView);
         mEmptyView.setVisibility(View.GONE);
 
         if (mListView != null) {
@@ -279,7 +279,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
 
         final File file = new File(filePath);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        String currentTimeStamp = dateFormat.format(new Date());
+        String currentTimeStamp = dateFormat.format(TimeZoneUtils.getCalendarWithOffset(getActivity()).getTime());
         try {
             JSONObject parent = new JSONObject();
             JSONObject jsonObject = new JSONObject();
@@ -411,14 +411,15 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose Photo");
+        builder.setCancelable(false);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
                     //cameraPlugIn.captureImage();
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraPlugIn.fileUri = cameraPlugIn.getOutputMediaFileUri();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPlugIn.fileUri);
+                    PickImagePlugin.fileUri = cameraPlugIn.getOutputMediaFileUri();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, PickImagePlugin.fileUri);
                     startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
                 } else if (items[item].equals("Choose from Library")) {
                     //cameraPlugIn.pickImage();
@@ -434,6 +435,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
                 }
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 

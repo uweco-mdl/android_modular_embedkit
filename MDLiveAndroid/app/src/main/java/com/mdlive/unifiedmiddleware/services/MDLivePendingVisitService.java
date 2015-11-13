@@ -31,4 +31,9 @@ public class MDLivePendingVisitService extends BaseServicesPlugin {
         jsonObjectGetRequest(AppSpecificConfig.BASE_URL+AppSpecificConfig.URL_USER_INFO + "/" + id,null,successListener,errorListener);
 
     }
+
+    public void getAppointment(final String id, NetworkSuccessListener successListener,NetworkErrorListener errorListener){
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT + "/" + id, null, successListener, errorListener);
+
+    }
 }

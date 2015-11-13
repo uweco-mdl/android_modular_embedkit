@@ -19,8 +19,8 @@
             android:onClick="doneTxtClick"
             android:clickable="true"
             android:textSize="15sp"
-            android:text="@string/mdl_done"
-            android:tag="@string/mdltag_done" />
+            android:text="@string/mdl_doneUpperCase"
+            android:tag="@string/mdltag_doneUpperCase" />
         <TextView
             android:id="@+id/imageNameText"
             android:layout_width="wrap_content"
@@ -48,10 +48,6 @@
             android:tag="@string/mdltag_upload_upper"/>
 
     </RelativeLayout>
-
-    <View
-        style="@style/ViewStyle"
-        />
 
     <RelativeLayout
         android:layout_width="match_parent"

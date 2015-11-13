@@ -12,7 +12,6 @@
             android:id="@+id/mdlVersionNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="V 2.21s"
             android:textSize="17dp"
             android:textColor="@color/unread_text_color"
             android:fontFamily="sans-serif"/>
