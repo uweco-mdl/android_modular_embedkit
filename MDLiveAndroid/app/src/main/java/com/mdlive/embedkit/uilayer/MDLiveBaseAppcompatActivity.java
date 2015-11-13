@@ -198,6 +198,9 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
 
         if (mDrawerLayout != null) {
             setDrawerListener();
+            if(MDLiveConfig.IS_SSO){
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
         }
     }
 
