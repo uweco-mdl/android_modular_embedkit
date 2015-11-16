@@ -25,7 +25,7 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
     public static final String RIGHT_MENU = "right_menu";
 
     public View progressBarLayout;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog=null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,8 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 //        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
 //            progressBarLayout.setVisibility(View.GONE);
 //        }
-        mProgressDialog.dismiss();
+        if(mProgressDialog!=null && mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
     }
 
     /*

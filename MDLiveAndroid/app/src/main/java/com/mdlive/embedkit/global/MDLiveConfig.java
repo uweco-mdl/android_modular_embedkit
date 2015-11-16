@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.SSOActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -370,7 +371,7 @@ public class MDLiveConfig {
      * @param ctx           the caller's context object
      * @return
      */
-    public static boolean activate(EMBEDKITS component, String jsonString, ENVIRON env, Activity ctx )
+    public static boolean activate(EMBEDKITS component, String jsonString, ENVIRON env, Activity ctx)
     {
         // if affiliate is trying to activate an unsupported component, exit with a message
         if(!EMBEDKIT_COMPONENTS.contains(component))

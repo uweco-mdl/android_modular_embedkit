@@ -49,15 +49,20 @@ public class AnalyticsApplication{
      */
     synchronized public Tracker getTracker(Context context, TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            String tid = (trackerId == TrackerName.AFFILIATE_TRACKER)?context.getString(R.string.ga_customTrackingId):
-                    context.getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true")?
-                    context.getString(R.string.ga_mdlive_trackingId):null;
-            if(tid != null) {
-                Tracker t = analytics.newTracker(R.xml.analytics);
-                t.set("&tid", tid);
-                mTrackers.put(trackerId, t);
+            try {
+                GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
+                // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+                String tid = (trackerId == TrackerName.AFFILIATE_TRACKER) ? context.getString(R.string.ga_customTrackingId) :
+                        context.getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true") ?
+                                context.getString(R.string.ga_mdlive_trackingId) : null;
+                if (tid != null) {
+                    Tracker t = analytics.newTracker(R.xml.analytics);
+                    t.set("&tid", tid);
+                    mTrackers.put(trackerId, t);
+                }
+            }catch(Exception ex){
+                // affiliate has not implemented Google Analytics support
+                //
             }
         }
         return mTrackers.get(trackerId);

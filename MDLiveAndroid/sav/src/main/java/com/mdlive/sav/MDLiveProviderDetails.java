@@ -582,7 +582,8 @@ Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 //               saveConsultationType(str_Availability_Type);
                 saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("***TIMESLOT 3 ERROR",e.getMessage());
+                //e.printStackTrace();
             }
 
             Log.v("layout.getChildCount()", layout.getChildCount() + "");
@@ -1404,7 +1405,11 @@ Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         selectedTimeslot=true;
         Log.v("check now", timeslotTxt.getText().toString());
         //saveConsultationType(appointmentType);
-        saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(), ((TextView) findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
+        saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(),
+                                            ((TextView) findViewById(R.id.dateTxt)).getText().toString(),
+                                            str_ProfileImg,
+                                            selectedTimestamp,
+                                            str_phys_avail_id);
         //This is to select and Unselect the Timeslot
         if(previousSelectedTv == null){
             previousSelectedTv = timeslotTxt;
@@ -1593,7 +1598,7 @@ Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-
+Log.e("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n****\n");
         editor.putString(PreferenceConstants.SELECTED_TIMESLOT, selectedTime);
         editor.putString(PreferenceConstants.SELECTED_TIMESTAMP, selectedTimestamp);
         editor.putString(PreferenceConstants.SELECTED_DATE, datteText);
