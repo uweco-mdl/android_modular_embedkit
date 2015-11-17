@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
@@ -27,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,6 +40,7 @@ import java.util.HashMap;
  */
 public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     private OnChildAdded mOnChildAdded;
+    private UserBasicInfo userBasicInfo;
 
     private ListView lv;
     private HashMap<String, ArrayList<String>> values;
@@ -70,7 +76,6 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         values = new HashMap<String, ArrayList<String>>();
 
         lv = (ListView) view.findViewById(R.id.listView);
@@ -86,15 +91,36 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         lv.addFooterView(footer);
         lv.addHeaderView(header);
 
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
+        userBasicInfo = UserBasicInfo.readFromSharedPreference(view.getContext());
 
         if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
             addFamilyMember1.setVisibility(View.GONE);
             callCustomer.setVisibility(View.VISIBLE);
 
-            Spannable word = new SpannableString(getString(R.string.mdl_please_call_customer));
-            word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.search_pvr_txt_blue_color)), 7, 28, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            callCustomer.setText(word);
+            SpannableString callCustomerService = new SpannableString(getString(R.string.mdl_please_call_customer));
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    try {
+                        Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
+                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getActivity()).getAssistPhoneNumber());
+                    } catch (ClassNotFoundException e){
+                        Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                public void updateDrawState(TextPaint ds) {// override updateDrawState
+                    ds.setColor(getResources().getColor(R.color.search_pvr_txt_blue_color)); //set color for link
+                    ds.setUnderlineText(false); // set to false to remove underline
+                }
+            };
+
+            callCustomerService.setSpan(clickableSpan, 7, 28, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            callCustomer.setText(callCustomerService);
+            callCustomer.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
         addFamilyMember1.setOnClickListener(new View.OnClickListener() {
@@ -159,8 +185,17 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     }
 
     public void handleFamilyMemberAddedSucessResponse(JSONObject response) {
+        Log.e("Response user ",response.toString());
         hideProgressDialog();
         try {
+            String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName() + " " + userBasicInfo.getPersonalInfo().getLastName();
+
+            nameList.add(primaryUserName);
+            urlList.add(userBasicInfo.getPersonalInfo().getImageUrl());
+            boolean isPrimaryUser=response.getBoolean("primary_user");
+
+
+
             if((response.get("primary_user").toString())== "false")
             {
                 lv.removeFooterView(footer);
@@ -175,8 +210,13 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                 nameList.add(name);
                 urlList.add(url);
             }
+            
+            if(!isPrimaryUser){
+                nameList.remove(nameList.size() - 1);
+                urlList.remove(urlList.size() - 1);
+            }
 
-            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList));
+            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList,isPrimaryUser));
 
             if (mOnChildAdded != null) {
                 mOnChildAdded.reloadNavigartion();

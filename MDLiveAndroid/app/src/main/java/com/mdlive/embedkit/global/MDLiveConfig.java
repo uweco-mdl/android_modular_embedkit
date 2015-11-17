@@ -165,10 +165,11 @@ public class MDLiveConfig {
 
     // URL for NotificationService
     public static final String URL_NOTIFICATION = "/notifications";
-
     public static final String PIN_AUTHENTICATION = "/pass_codes/authenticate";
-
     public static final String EMAIL_CONFIRMATION = "/customer/resend_email_confirmation";
+    public static final String GEOCODE_API_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/";
+    public static final String GEO_TARGET_DETAILS = "/geolocations/geo_target_details?ip_address=";
+    public static final String URL_HEALTH_KIT_SYNC = "/healthkit_registrations/";
 
     // SSO-related keys. Data vales are stored in volatile RAM instead of persisted in SharedPrefs
     public static String USR_UNIQ_ID=null;
@@ -207,8 +208,8 @@ public class MDLiveConfig {
                 AppSpecificConfig.SECRET_KEY = "89c8d3ea88501e8e62a";
                 AppSpecificConfig.URL_ENVIRONMENT = "q";
                 AppSpecificConfig.URL_SIGN_UP = "https://pluto-members.mdtestsite.net/signup/mobile";
-                AppSpecificConfig.URL_FORGOT_USERNAME = "http://www.mdlive.com/mobile/forgotusername";
-                AppSpecificConfig.URL_FORGOT_PASSWORD = "http://www.mdlive.com/mobile/forgotpassword";
+                AppSpecificConfig.URL_FORGOT_USERNAME = "https://pluto-members.mdtestsite.net/forgot_username";
+                AppSpecificConfig.URL_FORGOT_PASSWORD = "https://pluto-members.mdtestsite.net/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://stage-symptomchecker.mdlive.com/sc/html/index.html";
                 break;
             case STAGE:
@@ -233,7 +234,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://stage-symptomchecker.mdlive.com/sc/html/index.html";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://symptomchecker.mdlive.com/sc/html/index.html";
                 break;
             case QAPL:
                 // QA Pluto URL
@@ -336,26 +337,20 @@ public class MDLiveConfig {
         AppSpecificConfig.URL_GET_FAMILY_MEMBER_INFO=URL_GET_FAMILY_MEMBER_INFO;
         AppSpecificConfig.URL_EDIT_PROFILE_INFO=URL_EDIT_PROFILE_INFO;
         AppSpecificConfig.URL_CHANGE_PROFILE_PIC=URL_CHANGE_PROFILE_PIC;
-
-
         AppSpecificConfig.URL_LIFE_STYLE = URL_LIFE_STYLE;
         AppSpecificConfig.URL_UPDATE_LIFE_STYLE = URL_UPDATE_LIFE_STYLE;
-
         AppSpecificConfig.URL_HELP_AND_SUPPORT = URL_HELP_AND_SUPPORT;
         AppSpecificConfig.URL_ASK_A_QUESTION = URL_ASK_A_QUESTION;
-
         AppSpecificConfig.URL_FAMILY_HISTORY = URL_FAMILY_HISTORY;
         AppSpecificConfig.URL_UPDATE_FAMILY_HISTORY = URL_UPDATE_FAMILY_HISTORY;
-
         AppSpecificConfig.URL_BEHAVIOURAL_HISTORY = URL_BEHAVIOURAL_HISTORY;
         AppSpecificConfig.URL_UPDATE_BEHAVIOURAL_HISTORY = URL_UPDATE_BEHAVIOURAL_HISTORY;
-
         AppSpecificConfig.URL_NOTIFICATIONS = URL_NOTIFICATION;
-
         AppSpecificConfig.URL_CONSULTATION_HISTORY = URL_CONSULTATION_HISTORY;
-
         AppSpecificConfig.PIN_AUTHENTICATION = PIN_AUTHENTICATION;
-
+        AppSpecificConfig.GEOCODE_API_ENDPOINT = GEOCODE_API_ENDPOINT;
+        AppSpecificConfig.GEO_TARGET_DETAILS = GEO_TARGET_DETAILS;
+        AppSpecificConfig.URL_HEALTH_KIT_SYNC = URL_HEALTH_KIT_SYNC;
     }
 
     static native String getProdApiKeyFromNative();

@@ -23,8 +23,7 @@
         android:layout_below="@+id/no_record_img"
         android:textColor="@color/EditText_HintColor"
         android:gravity="center"
-        android:textSize="21sp"
-        android:textStyle="bold"
+        android:textSize="26sp"
         android:layout_marginTop="8dp"/>
 
     <TextView

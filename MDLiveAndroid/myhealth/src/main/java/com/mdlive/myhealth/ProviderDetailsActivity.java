@@ -4,23 +4,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.myhealth.MedicalHistoryFragment;
 import com.mdlive.myhealth.R;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity implements MedicalHistoryFragment.OnMedicalHistoryResponse{
+public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity {
 
     public static final String TAG = "ProviderDetails";
 
@@ -41,6 +43,7 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_provider));
+            ((ImageView) findViewById(R.id.left_icon)).setImageResource(R.drawable.back_arrow_hdpi);
             elevateToolbar(toolbar);
         }
 
@@ -60,6 +63,12 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity impleme
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+    }
+
+    @Override
+    public void onLeftDrawerClicked(View view) {
+        MdliveUtils.hideSoftKeyboard(ProviderDetailsActivity.this);
+        onBackPressed();
     }
 
     /**

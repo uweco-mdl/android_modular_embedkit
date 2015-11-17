@@ -18,7 +18,7 @@
             android:layout_marginRight="13dp"
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
-            android:src="@drawable/profilepic" />
+            android:src="@drawable/ic_empty_format" />
 
         <TextView
             android:id="@+id/adapter_record_top_text_view"

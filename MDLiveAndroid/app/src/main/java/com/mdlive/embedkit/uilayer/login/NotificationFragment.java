@@ -2,25 +2,34 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.app.Activity;
 import android.app.Notification;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.embedkit.uilayer.appointment.AppointmentActivity;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Notifications;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.OncallAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PendingAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -38,7 +47,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     private static final long MILIS_IN_SECOND = 1000;
     private static final long DURATION = 30 * MILIS_IN_SECOND;
-
     private PendingAppointment mPendingAppointment;
 
     private View mMessagesLinearLayout;
@@ -47,22 +55,31 @@ public class NotificationFragment extends MDLiveBaseFragment {
     private TextView mPersonalInfoTextView;
     private TextView mPreferedStoreTextView;
     private TextView mUpcomingAppoinmantTextView;
-    private ListView mUpcomingAppoinmantListView;
+    public ListView mUpcomingAppoinmantListView;
+
+    public LinearLayout onCallNotificationLayout;
+    private TextView onCallNotifyTextview;
 
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             loadPendingAppoinments();
-
             mHandler.postDelayed(mRunnable, DURATION);
         }
     };
 
     private Notification mNotification;
 
+    public static NotificationFragment instance;
+
+    public static NotificationFragment getInstance(){
+        return instance;
+    }
+
     public static NotificationFragment newInstance() {
         final NotificationFragment fragment = new NotificationFragment();
+        instance = fragment;
         return fragment;
     }
 
@@ -108,6 +125,8 @@ public class NotificationFragment extends MDLiveBaseFragment {
         mPreferedStoreTextView = (TextView) view.findViewById(R.id.notification_fragment_prefered_store_text_view);
         mUpcomingAppoinmantTextView = (TextView) view.findViewById(R.id.notification_fragment_upcoming_appoinment_text_view);
         mUpcomingAppoinmantListView = (ListView) view.findViewById(R.id.notification_fragment_upcoming_appoinment_list_view);
+        onCallNotificationLayout= (LinearLayout) view.findViewById(R.id.onCallNotifyLayout);
+        onCallNotifyTextview= (TextView) view.findViewById(R.id.oncall_appointment_textview);
 
         view.findViewById(R.id.notification_button).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -141,7 +160,6 @@ public class NotificationFragment extends MDLiveBaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -169,19 +187,22 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
             if (userBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                 mMessagesTextView.setText(mMessagesTextView.getResources().getQuantityString(R.plurals.mdl_messages, notification.getMessages(), notification.getMessages()));
+                mMessagesLinearLayout.setVisibility(View.VISIBLE);
             } else {
                 //mMessagesTextView.setVisibility(View.GONE);
                 mMessagesLinearLayout.setVisibility(View.GONE);
             }
 
-            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage());
+            mPersonalInfoTextView.setText(userBasicInfo.getHealthMessage()  + ".");
 
             final StringBuilder store = new StringBuilder();
 
             if (notification.getPharmacyDetails() != null) {
                 store.append(notification.getPharmacyDetails().getStoreName() + "\n");
-                store.append(notification.getPharmacyDetails().getAddress1() + "\n");
-                store.append(notification.getPharmacyDetails().getState() + "," + notification.getPharmacyDetails().getState() + " " + notification.getPharmacyDetails().getZipcode());
+                store.append(notification.getPharmacyDetails().getAddress1() + ",\n");
+                store.append(notification.getPharmacyDetails().getCity() + ", " +
+                        notification.getPharmacyDetails().getState() + " " +
+                        notification.getPharmacyDetails().getZipcode()  + ".");
             } else {
                 store.append(getActivity().getString(R.string.mdl_no_prefered_store));
             }
@@ -192,14 +213,35 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     private void loadPendingAppoinments() {
+        mUpcomingAppoinmantListView.setAdapter(null);
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         if (MdliveUtils.isNetworkAvailable(getActivity())) {
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                logD("PendingAppoinments", response.toString().trim());
-                mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                /*mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
+                onNotificationLoaded();*/
 
-                onNotificationLoaded();
+                try {
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                    if(userBasicInfo != null && userBasicInfo.getPrimaryUser() && !MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED){
+                        logD("Parent Pending Appoinments", response.toString().trim());
+                        mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                        mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
+                        onNotificationLoaded();
+                    }else if(userBasicInfo != null && !userBasicInfo.getPrimaryUser() && MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED){
+                        logD("Dependent Pending Appoinments", response.toString().trim());
+                        mPendingAppointment = PendingAppointment.fromJsonString(response.toString().trim());
+                        mPendingAppointment.saveToSharedPreference(getActivity(), response.toString().trim());
+                        onNotificationLoaded();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -215,8 +257,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
     }
 
     private void onNotificationLoaded() {
-        if (mPendingAppointment.getAppointments() != null &&
-                mPendingAppointment.getAppointments().size() > 0) {
+        if (mPendingAppointment.getAppointments() != null && mPendingAppointment.getAppointments().size() > 0) {
             mUpcomingAppoinmantTextView.setVisibility(View.GONE);
             mNoAppointmentLinearLayout.setVisibility(View.GONE);
             mUpcomingAppoinmantListView.setVisibility(View.VISIBLE);
@@ -229,13 +270,9 @@ public class NotificationFragment extends MDLiveBaseFragment {
                 mUpcomingAppoinmantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (mOnAppointmentClicked != null &&
-                                (getActivity() != null && !(getActivity() instanceof AppointmentActivity))) {
-                            mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
-                        }
-
                         if (mOnAppointmentClicked != null) {
                             mOnAppointmentClicked.onCloseDrawer();
+                            mOnAppointmentClicked.onAppointmentClicked(adapter.getAppointment(position));
                         }
                     }
                 });
@@ -247,21 +284,71 @@ public class NotificationFragment extends MDLiveBaseFragment {
                     } else {
                         mNotifyDashboard.onHideNotifyDashboard();
                     }
-                    /*for (int i = 0; i < mPendingAppointment.getAppointments().size(); i++) {
-                        final int type = MdliveUtils.getRemainigTimeToAppointment(mPendingAppointment.getAppointments().get(i).getInMilliseconds(), "EST");
-                        if (type == 0) {
-                            mNotifyDashboard.onShowNofifyDashboard(mPendingAppointment.getAppointments().get(i));
-                        } else {
-                            mNotifyDashboard.onHideNotifyDashboard();
-                        }
-                    }*/
+
                 }
             }
-        } else {
+        }else {
             mUpcomingAppoinmantTextView.setVisibility(View.VISIBLE);
             mNoAppointmentLinearLayout.setVisibility(View.VISIBLE);
             mUpcomingAppoinmantTextView.setText(mUpcomingAppoinmantTextView.getResources().getString(R.string.mdl_no_upcoming_appoinments));
             mUpcomingAppoinmantListView.setVisibility(View.GONE);
+        }
+
+
+        //Condition will handle if pending appointments for on call appointments
+        if(mPendingAppointment.getOncallAppointments() != null && mPendingAppointment.getOncallAppointments().size() > 0){
+
+            mUpcomingAppoinmantTextView.setVisibility(View.GONE);
+            mNoAppointmentLinearLayout.setVisibility(View.GONE);
+            onCallNotificationLayout.setVisibility(View.VISIBLE);
+            String apptId = mPendingAppointment.getOncallAppointments().get(0).getId();
+            Log.v("Appoint Ment Id Save", apptId);
+            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(PreferenceConstants.APPT_ID, apptId);
+            editor.commit();
+            String builder = "Doctor On Call" + "\n";
+            builder = builder + TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis()/1000, "", getActivity()) + "\n";//Sending Current time for Doctoro on call
+
+            builder = builder + mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n";
+
+            onCallNotifyTextview.setText(builder.toString());
+
+            Log.v("Appointment Side", mPendingAppointment.getOncallAppointments().get(0).getApptType());
+            if(mPendingAppointment.getOncallAppointments().get(0).getApptType().equalsIgnoreCase("video")){
+                onCallNotificationLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
+                            Intent intent = new Intent(getActivity(), clazz);
+                            startActivity(intent);
+                            MdliveUtils.startActivityAnimation(getActivity());
+                        } catch (ClassNotFoundException e){
+                            Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+
+
+
+
+
+                // For Showing Dashboard Notification
+                if (mNotifyDashboard != null) {
+                    if ( mPendingAppointment.getOncallAppointments().size() > 0) {
+                        mNotifyDashboard.onShowNotifyOnCallDashBorad(mPendingAppointment.getOncallAppointments().get(0));
+                    } else {
+                        mNotifyDashboard.onHideNotifyDashboard();
+                    }
+                }
+        }
+    }
+    public  void reloadPendingAppointment() {
+        if (mHandler != null && mRunnable != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.post(mRunnable);
         }
     }
 
@@ -272,6 +359,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
 
     public interface NotifyDashboard {
         void onShowNofifyDashboard(final Appointment appointment);
+        void onShowNotifyOnCallDashBorad(final OncallAppointment appointment);
         void onHideNotifyDashboard();
     }
 }

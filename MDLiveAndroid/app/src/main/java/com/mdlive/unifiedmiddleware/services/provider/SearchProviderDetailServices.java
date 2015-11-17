@@ -21,7 +21,7 @@ public class SearchProviderDetailServices extends BaseServicesPlugin
 
 
 
-    public void getsearchdetails(NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
+    public void getSearchDetails(NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_SEARCH_PROVIDER,
                                     null,

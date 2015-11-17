@@ -324,14 +324,38 @@
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:visibility="visible"
+                <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    style="@style/myChangeProfileInfoLayoutStyle"
                     android:layout_weight="0.4"
-                    >
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="4dp">
 
-                </View>
+                    <RelativeLayout style="@style/common_style_W_Wrap_H_Wrap"
+                        android:id="@+id/zipcodeLayout"
+                        >
+
+                        <TextView
+                            android:id="@+id/zipCodeView"
+                            style="@style/myChangeProfileInfoTextStyle"
+                            android:text="@string/mdl_ph_zipcode"
+                            android:textAllCaps="true"
+                            android:tag="@string/mdltag_ph_zipcode" />
+
+                        <EditText
+                            android:id="@+id/zipcodeEditText"
+                            style="@style/myChangeProfileInfoValueStyle"
+                            android:layout_below="@id/zipCodeView"
+                            android:singleLine="true"
+                            android:maxLength="10"
+                            android:inputType="number"
+                            android:imeOptions="actionNext"
+                            android:background="@color/white"
+                            android:cursorVisible="true"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"/>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
@@ -370,7 +394,6 @@
 
                 <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
                     style="@style/myChangeProfileInfoLayoutStyle"
-
                     android:layout_weight="0.4"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="4dp">

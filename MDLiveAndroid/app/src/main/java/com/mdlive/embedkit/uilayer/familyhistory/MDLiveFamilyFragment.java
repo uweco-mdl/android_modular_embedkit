@@ -81,8 +81,9 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.mdlive_family_histroy, container, false);
-
+        getActivity().getString(R.string.mdl_my_family_history);
         findWidgetId();
+
         getFamilyHistoryServiceData();
 
         return view;
@@ -278,7 +279,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
                 }
             });
 
-            if (FamilyHistoryModel.YES.toString().equalsIgnoreCase(familyHistoryList.get(position).active)) {
+            if (FamilyHistoryModel.YES.equalsIgnoreCase(familyHistoryList.get(position).active)) {
                 checkBox.setChecked(true);
                 spinnerCv.setVisibility(View.VISIBLE);
 
@@ -315,7 +316,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
             } else {
                 int selectedPosition = 0;
                 for (int j = 0; j < relationShpList.size(); j++) {
-                    if (familyHistoryList.get(position).relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
+                    if (familyHistoryList.get(position).relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).trim())) {
                         selectedPosition = j;
                         break;
                     }
@@ -358,7 +359,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
             }
         });
 
-        if (FamilyHistoryModel.YES.toString().equalsIgnoreCase(model.active)) {
+        if (FamilyHistoryModel.YES.equalsIgnoreCase(model.active)) {
             checkBox.setChecked(true);
             spinnerCv.setVisibility(View.VISIBLE);
 
@@ -395,7 +396,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         } else {
             int selectedPosition = 0;
             for (int j = 0; j < relationShpList.size(); j++) {
-                if (model.relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).toString().trim())) {
+                if (model.relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).trim())) {
                     selectedPosition = j;
                     break;
                 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,23 +25,12 @@ import org.json.JSONObject;
 /**
  * Created by venkataraman_r on 6/22/2015.
  */
-public class BillingInformationFragment extends MDLiveBaseFragment  {
+public class  BillingInformationFragment extends MDLiveBaseFragment  {
 
     private TextView mCreditCardDate = null;
     private TextView mCreditCardAddress = null;
     private TextView mReplaceCreditCard = null;
-    private String cardNumber = null;
-    private String securityCode = null;
-    private String cardExpirationMonth = null;
-    private String cardExpirationYear = null;
-    private String nameOnCard = null;
-    private String mobile = null;
-    private String address1 = null;
-    private String address2 = null;
-    private String city = null;
-    private String state = null;
-    private String country = null;
-    private String zip = null;
+    private ImageView creditCardLogo = null;
     android.support.v7.widget.CardView mviewCreditCard;
     JSONObject myProfile;
 
@@ -67,6 +57,7 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
         mCreditCardAddress = (TextView) view.findViewById(R.id.cardAddress);
         mReplaceCreditCard = (TextView) view.findViewById(R.id.addCreditCard);
         mviewCreditCard = (android.support.v7.widget.CardView) view.findViewById(R.id.viewCreditCard);
+        creditCardLogo = (ImageView) view.findViewById(R.id.imgCard);
 
         mReplaceCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +69,10 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
 
                     changePhone.putExtra("Fragment_Name1", "ADD CREDIT CARD");
                     changePhone.putExtra("Credit_Card_View", "Add");
-                    changePhone.putExtra("Credit_Card_Response", "Add_New");
+                    changePhone.putExtra("Credit_Card_Response", myProfile.toString());
                 } else {
-                    changePhone.putExtra("Fragment_Name1", "REPLACE CREDIT CARD");
-                    changePhone.putExtra("Credit_Card_View", "replace");
+                    changePhone.putExtra("Fragment_Name1", "ADD CREDIT CARD");
+                    changePhone.putExtra("Credit_Card_View", "Add");
                     changePhone.putExtra("Credit_Card_Response", myProfile.toString());
                 }
                 startActivityForResult(changePhone, 1);
@@ -155,44 +146,47 @@ public class BillingInformationFragment extends MDLiveBaseFragment  {
 
             if (response != null) {
                 myProfile = response.getJSONObject("billing_information");
-                country = myProfile.getString("billing_country");
-                cardExpirationYear = myProfile.getString("cc_expyear");
-                nameOnCard = myProfile.getString("billing_name");
-                zip = myProfile.getString("billing_zip5");
-                securityCode = myProfile.getString("cc_cvv2");
-                cardNumber = myProfile.getString("cc_number");
-                state = myProfile.getString("billing_state");
-                mobile = myProfile.getString("cc_type_id");
-                address2 = myProfile.getString("billing_address2");
+                String country = myProfile.getString("billing_country");
+                String cardExpirationYear = myProfile.getString("cc_expyear");
+                String nameOnCard = myProfile.getString("billing_name");
+                String zip = myProfile.getString("billing_zip5");
+                String securityCode = myProfile.getString("cc_cvv2");
+                String cardNumber = myProfile.getString("cc_number");
+                String state = myProfile.getString("billing_state");
+                String mobile = myProfile.getString("cc_type_id");
+                String address2 = myProfile.getString("billing_address2");
 
                 if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
                     address2="";
                 }
 
-                city = myProfile.getString("billing_city");
-                address1 = myProfile.getString("billing_address1");
-                cardExpirationMonth = myProfile.getString("cc_expmonth");
+                String city = myProfile.getString("billing_city");
+                String address1 = myProfile.getString("billing_address1");
+                String cardExpirationMonth = myProfile.getString("cc_expmonth");
 
 
                 if (TextUtils.isEmpty(cardNumber) && TextUtils.isEmpty(securityCode) && TextUtils.isEmpty(cardExpirationMonth) && TextUtils.isEmpty(cardExpirationYear) && TextUtils.isEmpty(nameOnCard)) {
                     mReplaceCreditCard.setText(getResources().getString(R.string.mdl_add_card));
                     mviewCreditCard.setVisibility(View.GONE);
                 } else {
-//                    mCreditCardDate.setText("Mastercard ending in " + cardNumber);
                     if(mobile.equalsIgnoreCase("1")) {
 
                       mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.visa);
                     }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
 
                         mCreditCardDate.setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.discover);
                     }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
 
                         mCreditCardDate.setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.amex);
                     }
 
                     else
                     {
                         mCreditCardDate.setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.master);
                     }
 
                     mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +

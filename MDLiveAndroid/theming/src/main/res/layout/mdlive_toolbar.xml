@@ -17,6 +17,7 @@
             android:layout_marginLeft="10dp"
             android:onClick="leftBtnOnClick"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/mdl_ada_close_button"
             android:src="@drawable/exit_icon" />
 
         <TextView
@@ -43,6 +44,7 @@
             android:onClick="rightBtnOnClick"
             android:padding="10dp"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/mdl_ada_tick_button"
             android:src="@drawable/top_tick_icon" />
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

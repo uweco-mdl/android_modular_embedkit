@@ -26,6 +26,7 @@ public class AppSpecificConfig {
     public static String URL_FILTER_SEARCH = "/providers/filter_providers";
     public static String URL_MAKE_APPOINTMENT = "/appointments/cs_schedule_appointment";
     public static String URL_REASON_FOR_VISIT = "/support/chief_complaint_reasons";
+    public static String URL_TIMEZONE_BY_STATE = "/support/state_timezones";
     public static String URL_ZIPCODE = "/providers/search_providers";
     public static String URL_PROVIDER_DETAILS ="/providers/";
     public static String URL_PEDIATRIC_PROFILE = "/medical_histories/pediatric_profile";
@@ -72,8 +73,12 @@ public class AppSpecificConfig {
     public static String ADD_CHILD = "/customer/1/add_family_member";
     public static String URL_VISIT_CHECK_PROVIDER_STATUS = "/services/consultations/provider_status/";
     public static String URL_VISIT_PROVIDER_CONSULTATION = "/services/consultations/get_vsee_login/";
-    public static  String URL_MESSAGES_READ = "/messages/";
-    public static  String URL_MESSAGES_READ_TYPE = "?msg_type=";
+    public static String URL_MESSAGES_READ = "/messages/";
+    public static String URL_MESSAGES_READ_TYPE = "?msg_type=";
+    public static String URL_ONCALL_APPT = "/appointments/oncall_consultation";
+    public static String URL_WAITING_ONCALL_STATUS = "/waiting_room/:id/status";
+    public static final String URL_AUTHENTICATE_LOGIN_BAYLOR = "/customer_logins/authenticate";
+
     public static String URL_ENVIRONMENT = "";
     public static String URL_CHANGE_PASSWORD;
     public static String URL_CHANGE_PIN;
@@ -123,9 +128,11 @@ public class AppSpecificConfig {
     public static String SYMPTOM_CHECKER_URL;
 
     // API used to get zip code
-    public static final String GEOCODE_API_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/";
+    public static String GEOCODE_API_ENDPOINT;
 
     public static String PIN_AUTHENTICATION;
+    public static String GEO_TARGET_DETAILS;
+    public static String URL_HEALTH_KIT_SYNC;
 
     private AppSpecificConfig(){
         // this class cannot be directly instantiated externally

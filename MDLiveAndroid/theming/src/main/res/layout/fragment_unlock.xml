@@ -115,7 +115,7 @@
         android:text="@string/mdl_enter_your_pin_to_unlock"
         android:tag="@string/mdltag_enter_your_pin_to_unlock"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
         android:text="@string/mdl_sign_in_with_user_name_and_password"
         android:tag="@string/mdltag_sign_in_with_user_name_and_password"
         android:textColor="@color/card_details_text_color"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:clickable="true"
         android:onClick="onSignInClicked"/>
 </LinearLayout>

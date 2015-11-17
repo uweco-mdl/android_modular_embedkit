@@ -28,6 +28,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,6 +73,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mdlive_my_health_providers, null, false);
+
     }
 
     @Override
@@ -84,7 +86,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle(getString(R.string.mdl_providers));
         mListView = (ListView) view.findViewById(R.id.chooseProviderList);
         mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.mdlive_my_health_provider_header, null);
         mHeaderView.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +95,7 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 startActivity(PrimaryCarePhysicianActivity.getPCPIntent(getActivity(), primaryCarePhysician));
             }
         });
-        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);;
+        mNoProvidersView = view.findViewById(R.id.health_no_provider_container);
     }
 
     @Override
@@ -167,9 +169,17 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
                 final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 final Provider provider =  gson.fromJson(response.toString(), Provider.class);
-
                 primaryCarePhysician = null;
+                try {
+                    if(response.has("primary_care_physician")){
+                        if(response.opt("primary_care_physician") instanceof JSONArray){
 
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
         /*
         * This is a work around, as for new user rather sending on blank Json object
         * It sends a empty JSON Array
@@ -197,6 +207,11 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
                     provider.primaryCarePhysician = primaryCarePhysician;
                 } catch (JSONException e) {
                     provider.primaryCarePhysician = null;
+                }
+
+                if(provider.primaryCarePhysician != null){
+                    ((TextView) mHeaderView.findViewById(R.id.statusMessage))
+                            .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records));
                 }
 
                 if (mListView != null) {
@@ -242,8 +257,12 @@ public class MDLiveMyHealthProvidersFragment extends MDLiveBaseFragment {
 
                 if (mProviderAdapter != null) {
                     mProviderAdapter.addAll(provider.myProviders);
-                    mProviderAdapter.notifyDataSetChanged();
+                    if(mProviderAdapter.getCount() == 0){
+                        ((TextView) mHeaderView.findViewById(R.id.statusMessage))
+                                .setText(getActivity().getString(R.string.mdl_provider_access_to_med_records_empty));
 
+                    }
+                    mProviderAdapter.notifyDataSetChanged();
                     mNoProvidersView.setVisibility(View.GONE);
                 }
                 Log.v("Response - ", provider.toString());

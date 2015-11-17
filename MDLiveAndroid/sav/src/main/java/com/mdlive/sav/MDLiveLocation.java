@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -45,6 +44,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.location.ZipCodeServices;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -61,12 +61,10 @@ import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInst
  */
 public class MDLiveLocation extends MDLiveBaseActivity {
     private EditText ZipcodeEditTxt;
-    private TextView CurrentLocationTxt,StateTxt;
-    private String SelectedZipCodeCity;
-    private ArrayList<String> StateName = new ArrayList<String>();
+    private TextView StateTxt;
     private List<String> LongNameList = new ArrayList<String>();
     private List<String> ShortNameList = new ArrayList<String>();
-    private String ZipCodeCity,selectedCity,longNameText,shortNameText,zipcode_longNameText;
+    private String selectedCity,longNameText,shortNameText;
     boolean isCityFound=false;
     private LocationCooridnates locationService;
     private IntentFilter intentFilter;
@@ -85,14 +83,19 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.setTitle(getString(R.string.mdl_update_location));
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.exit_icon);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_update_location));
 
 
+
         StateTxt = (TextView) findViewById(R.id.StateTxt);
+
         setProgressBar(findViewById(R.id.progressDialog));
-        StateTxt.setOnClickListener( new View.OnClickListener() {
+        StateTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ZipcodeEditTxt.setText("");
@@ -105,6 +108,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         intentFilter.addAction(getClass().getSimpleName());
 
         ZipcodeEditTxt = (EditText) findViewById(R.id.ZipEditTxt);
+        ZipcodeEditTxt.setTag(null);
+        ZipcodeEditTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         ZipcodeEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,40 +127,11 @@ public class MDLiveLocation extends MDLiveBaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(ZipcodeEditTxt.getText().toString().length()>= IntegerConstants.ZIPCODE_LENGTH){
-                    if(!ZipcodeEditTxt.getText().toString().contains("-")){
-                        String formattedString= MdliveUtils.zipCodeFormat(Long.parseLong(ZipcodeEditTxt.getText().toString()));
-                        ZipcodeEditTxt.setText(formattedString);
-                    }
-                }
+                StateTxt.setText(getString(R.string.mdl_select_state));
+                MdliveUtils.validateZipcodeFormat(ZipcodeEditTxt);
             }
         });
-        //TextView SavContinueBtn = (TextView) findViewById(R.id.txtApply);
-        /*SavContinueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MdliveUtils.hideSoftKeyboard(MDLiveLocation.this);
-                if(ZipcodeEditTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO||StateTxt.getText().toString().length()!=IntegerConstants.NUMBER_ZERO){
-                    if(ZipcodeEditTxt.getText().length()!=IntegerConstants.NUMBER_ZERO){
-                        String getEditTextValue = ZipcodeEditTxt.getText().toString();
-                        if(MdliveUtils.validateZipCode(getEditTextValue)){
-                            loadZipCode(getEditTextValue);
-                        }else{
-                            MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip));
-                        }
-                    }else{
-                        SaveZipCodeCity(selectedCity);
-                        finish();
-                    }
-
-                }else{
-                    MdliveUtils.alert(pDialog, MDLiveLocation.this, getString(R.string.valid_zip_state));
-                }
-
-            }
-        });
-*/
-        CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
+        Button CurrentLocationTxt = (Button) findViewById(R.id.currentLocation);
         CurrentLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,8 +146,27 @@ public class MDLiveLocation extends MDLiveBaseActivity {
          * of the state from the localisation
          */
 
-        LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
-        ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        try {
+            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+            String stateJson = sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "[]");
+            JSONArray stateJsonArray = new JSONArray(stateJson);
+            Log.d("JSON Count", stateJsonArray.length() + "");
+            if(stateJsonArray.length()>0){
+                for(int i = 0; i<stateJsonArray.length();i++){
+                    ShortNameList.add(stateJsonArray.getJSONObject(i).keys().next());
+                    LongNameList.add(stateJsonArray.getJSONObject(i).getString(ShortNameList.get(i)));
+                }
+                Log.d("stateList->",LongNameList.toString());
+                Log.d("stateList->",ShortNameList.toString());
+            } else {
+                LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+                ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+            }
+        } catch (Exception e) {
+            LongNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+            ShortNameList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        }
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().
@@ -218,7 +218,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         try {
             unregisterReceiver(locationReceiver);
@@ -253,7 +253,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 //Log.e("Response",error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
+//                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
+                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      dialog.dismiss();
+                    }
+                });
 
             }
         };
@@ -323,14 +329,11 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                         JsonArray TyprArray = localZip.get("types").getAsJsonArray();
                         for (int k = 0; k < TyprArray.size(); k++) {
                             String zip = TyprArray.get(k).getAsString();
-                            Log.v("responObj", zip.toString());
                             if (zip.equalsIgnoreCase("administrative_area_level_1")) {
-                                SelectedZipCodeCity = localZip.get("short_name").getAsString();
-                                Log.v("Results", SelectedZipCodeCity);
+                                String SelectedZipCodeCity = localZip.get("short_name").getAsString();
 
                                 //This is for long name like Florida.
-                                zipcode_longNameText = localZip.get("long_name").getAsString();
-                             //This is for Short name like FL
+                                //This is for Short name like FL
                                 for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();l++) {
                                     if (SelectedZipCodeCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
                                         longNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
@@ -365,8 +368,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private void CurrentLocationResponse(JSONObject response) {
         try {
             hideProgress();
-            //Fetch Data From the Services
+            //Fetch Data From the Serviceservices
+            Log.v("UseCurrentLocation",response.toString());
             selectedCity = response.getString("state");
+            for(int l=0;l< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();l++) {
+                if (selectedCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
+                    longNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
+                    shortNameText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l);
+                    SaveZipCodeCity(longNameText);
+                    break;
+                }
+            }
             finish();
         } catch (Exception e) {
             e.printStackTrace();
@@ -396,10 +408,27 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 double lon = intent.getDoubleExtra("Longitude", 0d);
                 loadCurrentLocation(lat + "", lon + "");
             }else{
-                Toast.makeText(getApplicationContext(), "Unable to get your location", Toast.LENGTH_SHORT).show();
+                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
             }
         }
     };
+
+
+    public void SavecurrentLocation(String ZipCodeCity) {
+        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        String activityCaller = getIntent().getStringExtra("activitycaller");
+        Log.v("Caller bname", activityCaller);
+        if (activityCaller.equals("getstarted")) {
+            editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, ZipCodeCity);
+            editor.commit();
+        }
+    }
 
     /**
      * @param ZipCodeCity : Pass the selected zipcode String
@@ -413,7 +442,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         SharedPreferences.Editor editor = settings.edit();
         String activityCaller  = getIntent().getStringExtra("activitycaller");
         Log.v("Caller bname",activityCaller);
-        if(activityCaller.equals("getstarted")){
+        if(activityCaller.equals(getString(R.string.mdl_getstarted))){
             editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
             Log.v("print short name",shortNameText);
             editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, longNameText);
@@ -443,7 +472,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private void showListViewDialog(final List<String> list, final TextView SelectedText) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveLocation.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
@@ -459,6 +488,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 shortNameText = ShortNameList.get(position);
                 longNameText = LongNameList.get(position);
                 SelectedText.setText(longNameText);
+                SelectedText.setContentDescription(getString(R.string.mdl_ada_dropdown)+longNameText);
                 selectedCity = shortNameText;
                 dialog.dismiss();
             }
@@ -480,7 +510,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-        //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 
 }

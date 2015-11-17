@@ -38,47 +38,140 @@
                             android:background="@color/white"
                             android:padding="10dp">
 
+                            <LinearLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/round_rect_light_grey_border"
+                                style="@style/Get_Started_Field_Style"
+                                >
+                            <TextView
+                                android:id="@+id/appointmentIdealDateTitle"
+                                style="@style/AppointmentIdealDateStyle"
+                                android:textColor="@color/black"
+                                android:clickable="true"
+                                android:text="@string/mdl_ideal_date"
+                                android:textSize="14sp"
+                                android:paddingLeft="@dimen/dimen_0_dp"
+                                android:tag="@string/mdltag_ideal_date"/>
                             <TextView
                                 android:id="@+id/appointmentIdealDate"
-                                style="@style/AppointmentRequestFieldsStyle"
+                                style="@style/AppointmentIdealDateStyle"
                                 android:clickable="true"
-                                android:drawableRight="@drawable/right_arrow_icon"
-                                android:hint="@string/mdl_ideal_date"
+                                android:textColor="@color/gray_a"
+                                android:drawableRight="@drawable/dropdown_icon"
                                 android:onClick="onclickDate"
-                                android:tag="@string/mdltag_ideal_date" />
+                                android:paddingLeft="@dimen/dimen_0_dp"
+                                android:tag="@string/mdltag_ideal_date"/>
 
-                            <TextView
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/round_rect_light_grey_border"
+                                style="@style/Get_Started_Field_Style"
+                                >
+                                <TextView
+                                    android:id="@+id/appointmentIdealTimeTitle"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:clickable="true"
+                                    android:text="@string/mdl_next_available"
+                                    android:textSize="14sp"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    android:tag="@string/mdltag_ideal_date"/>
+                                <TextView
                                 android:id="@+id/appointmentNextAvailable"
-                                style="@style/AppointmentRequestFieldsStyle"
+                                style="@style/AppointmentIdealDateStyle"
                                 android:clickable="true"
-                                android:drawableRight="@drawable/right_arrow_icon"
-                                android:hint="@string/mdl_next_available"
+                                 android:paddingLeft="@dimen/dimen_0_dp"
+                                android:drawableRight="@drawable/dropdown_icon"
+                                android:textColor="@color/gray_a"
                                 android:onClick="onclickNxtAvailable"
                                 android:tag="@string/mdltag_next_available" />
 
-                            <EditText
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/round_rect_light_grey_border"
+                                style="@style/Get_Started_Field_Style"
+                                >
+                                <TextView
+                                    android:id="@+id/appointmentContactNumberTitle"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:clickable="true"
+                                    android:text="@string/mdl_best_number_to_contact"
+                                    android:textSize="14sp"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    android:tag="@string/mdltag_ideal_date"/>
+                                <EditText
                                 android:id="@+id/appointmentContactNumber"
-                                style="@style/AppointmentRequestFieldsStyle"
-                                android:hint="@string/mdl_best_number_to_contact"
+                                style="@style/AppointmentIdealDateStyle"
+                                    android:textColor="@color/gray_a"
+                                    android:background="@null"
                                 android:inputType="number"
+                                    android:textCursorDrawable="@null"
                                 android:maxLength="14"
-                                android:tag="@string/mdltag_best_number_to_contact" />
+                                 android:paddingLeft="@dimen/dimen_0_dp"
+                               />
 
-                            <EditText
-                                android:id="@+id/appointmentReason"
-                                style="@style/AppointmentRequestFieldsStyle"
-                                android:hint="@string/mdl_reason_for_visit"
-                                android:singleLine="true"
-                                android:tag="@string/mdltag_reason_for_visit" />
+                            </LinearLayout>
 
-                            <EditText
-                                android:id="@+id/appointmentComment"
-                                style="@style/AppointmentRequestFieldsStyle"
-                                android:gravity="top"
-                                android:hint="@string/mdl_additional_text"
-                                android:lines="10"
-                                android:minLines="6"
-                                android:tag="@string/mdltag_additional_text" />
+
+                            <LinearLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/round_rect_light_grey_border"
+                                style="@style/Get_Started_Field_Style"
+                                >
+                                <TextView
+                                    android:id="@+id/appointmentReasonTitle"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:clickable="true"
+                                    android:text="@string/mdl_reason_for_visit"
+                                    android:textSize="14sp"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    android:tag="@string/mdltag_ideal_date"/>
+                                <AutoCompleteTextView
+                                    android:id="@+id/appointmentReason"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:textColor="@color/gray_a"
+                                    android:background="@null"
+                                    android:singleLine="true"
+                                    android:textCursorDrawable="@null"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/round_rect_light_grey_border"
+                                style="@style/Get_Started_Field_Style"
+                                >
+                                <TextView
+                                    android:id="@+id/appointmentcommentsTitle"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:hint="@string/mdl_additional_text"
+                                    android:textSize="15sp"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    android:tag="@string/mdltag_ideal_date"/>
+                                <EditText
+                                    android:id="@+id/appointmentComment"
+                                    style="@style/AppointmentIdealDateStyle"
+                                    android:gravity="top"
+                                    android:textColor="@color/gray_a"
+                                    android:background="@null"
+                                    android:textCursorDrawable="@null"
+                                    android:minLines="6"
+                                    android:paddingLeft="@dimen/dimen_0_dp"
+                                    />
+
+                            </LinearLayout>
+
 
                             <LinearLayout
                                 style="@style/common_style_W_Match_H_Wrap_O_Horizontal"

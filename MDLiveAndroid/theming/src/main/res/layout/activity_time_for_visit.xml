@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/search_pvr_blue_color"
+            android:background="@color/mdl_confirm_btn_color"
             android:clickable="true"
             android:onClick="rightBtnOnClick"
             android:text="@string/mdl_start_visit"

@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.myhealth.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PrimaryCarePhysician;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddPCP;
@@ -51,7 +54,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private List<String> countryList = new ArrayList<String>();
-
+    private boolean mayIallowtoEdit = true;
 
     public static PrimaryCarePhysicianFragment newInstance(final PrimaryCarePhysician primaryCarePhysician) {
         final Bundle args = new Bundle();
@@ -70,7 +73,26 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_primary_care_physician, container, false);
+
+        View primaryCarePhysician = inflater.inflate(R.layout.activity_primary_care_physician, container, false);
+        mZip = (EditText) primaryCarePhysician.findViewById(R.id.zip);
+        mZip.setTag(null);
+        mZip.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MdliveUtils.validateZipcodeFormat(mZip);
+            }
+        });
+        return primaryCarePhysician;
     }
 
     @Override
@@ -101,11 +123,13 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         if (mAddress1 != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mAddress1.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).address1);
         }
-
+        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
         mCountry = (TextView) view.findViewById(R.id.country);
         mCountryLayout = (RelativeLayout) view.findViewById(R.id.countryLayout);
         if (mCountry != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mCountry.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).country);
+        }else if(mCountry!=null){
+            mCountry.setText(userBasicInfo.getPersonalInfo().getCountry());
         }
         mCountryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +143,9 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         mStateLayout = (RelativeLayout) view.findViewById(R.id.stateLayout);
         if (mState != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mState.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
+            mState.setContentDescription(getString(R.string.mdl_ada_dropdown)+((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).state);
+        } else if(mState!=null) {
+            mState.setText(userBasicInfo.getPersonalInfo().getState());
         }
         mStateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +159,29 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         }
 
         mPhoneNumber = (EditText) view.findViewById(R.id.phoneNumber);
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mayIallowtoEdit) {
+                    mayIallowtoEdit=false;
+                    mPhoneNumber.setText(MdliveUtils.formatDualString(s.toString()));
+                    mPhoneNumber.setSelection(mPhoneNumber.getText().toString().length());
+                    mayIallowtoEdit = true;
+                }
+
+            }
+        });
+
         if (mPhoneNumber != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mPhoneNumber.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).phone);
         }
@@ -140,6 +190,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
         if (mPracticeName != null && getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG) != null) {
             mPracticeName.setText(((PrimaryCarePhysician) getArguments().getParcelable(PRIMARY_CAR_PHYSICIAN_TAG)).practice);
         }
+
     }
 
 
@@ -175,6 +226,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String SelectedText = countryList.get(i);
                 mCountry.setText(SelectedText);
+                mCountry.setContentDescription(getString(R.string.mdl_ada_dropdown)+SelectedText);
                 dialogInterface.dismiss();
             }
         });
@@ -201,7 +253,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 jsonObject.put("address1", mAddress1.getText().toString());
                 jsonObject.put("country_id", countryList.indexOf(mCountry.getText().toString()) > 0 ? countryList.indexOf(mCountry.getText().toString()) + 1 : 1);
                 jsonObject.put("state", mState.getText().toString());
-                jsonObject.put("zip", mZip.getText().toString());
+                jsonObject.put("zip", mZip.getText().toString().replace("-", ""));
                 jsonObject.put("phone", mPhoneNumber.getText().toString());
 
                 parent.put("primary_care_physician", jsonObject);
@@ -218,9 +270,7 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     private void addPCP(String params) {

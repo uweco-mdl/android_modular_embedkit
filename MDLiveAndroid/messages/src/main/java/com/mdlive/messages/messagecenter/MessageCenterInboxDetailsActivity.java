@@ -47,7 +47,15 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 
         if (savedInstanceState == null) {
-            if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(DATA_TAG) != null) {
+            if(getIntent().getExtras() != null && getIntent().hasExtra("notification_id")){
+                ReceivedMessage messagebean = new ReceivedMessage();
+                messagebean.messageId = getIntent().getIntExtra("notification_id", 0);
+                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_inbox).toUpperCase());
+                getSupportFragmentManager().
+                        beginTransaction().
+                        add(R.id.container, newInstance(messagebean)).
+                        commit();
+            } else if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(DATA_TAG) != null) {
                 Parcelable parcelable = getIntent().getExtras().getParcelable(DATA_TAG);
 
                 if (parcelable instanceof ReceivedMessage) {
@@ -86,11 +94,13 @@ public class MessageCenterInboxDetailsActivity extends MDLiveBaseAppcompatActivi
     }
 
     public void onBackClicked(View view) {
+        if(getIntent().getExtras() != null && getIntent().hasExtra("notification_id")){
+            onMessageClicked();
+        }
         finish();
     }
 
     public void onReplyClicked(final Parcelable parcelable) {
         startActivity(MessageCenterComposeActivity.getMessageComposeDetailsIntent(getBaseContext(), parcelable));
-        finish();
     }
 }

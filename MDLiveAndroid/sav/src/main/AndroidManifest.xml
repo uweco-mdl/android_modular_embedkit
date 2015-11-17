@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permisssion.ACCESS_FINE_LOCATION"></uses-permission>
 
     <application android:allowBackup="true"
-        android:supportsRtl="true">
+        android:supportsRtl="false">
         <!-- Provider Details -->
 
         <activity
@@ -60,5 +60,40 @@
             android:name=".WaitingRoom.MDLiveWaitingRoom"
             android:screenOrientation="portrait"
             android:theme="@style/MDLive_Red_Theme" />
+        <activity
+            android:name=".MDLiveProviderGroupDetailsAffiliations"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+
+        <!-- Payment Activity -->
+
+        <activity
+            android:name=".payment.MDLivePayment"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
+        <activity
+            android:name=".payment.MDLiveConfirmappointment"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
+        <activity
+            android:name=".payment.MDLiveStartVisit"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
+
+        <activity
+            android:name=".appointment.AppointmentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme" />
+        <activity
+            android:name=".appointment.MDLiveAppointmentThankYou"
+            android:screenOrientation="portrait"
+            android:theme="@style/MDLive_Red_Theme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MDLiveDoctorOnCall"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 </manifest>

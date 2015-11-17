@@ -3,6 +3,7 @@ package com.mdlive.unifiedmiddleware.services;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.plugins.BaseServicesPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -19,6 +20,10 @@ public class SSO2Service extends BaseServicesPlugin {
                              NetworkSuccessListener<JSONObject> successListener,
                              NetworkErrorListener errorListener){
 
-        jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.SSO_SERVICE, requestData, successListener, errorListener, true);
+        jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.SSO_SERVICE,
+                                requestData,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
     }
 }

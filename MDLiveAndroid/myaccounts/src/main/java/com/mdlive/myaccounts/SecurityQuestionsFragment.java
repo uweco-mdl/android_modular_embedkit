@@ -61,6 +61,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View securityQuestions = inflater.inflate(R.layout.fragments_security_questions, null);
+        getActivity().setTitle(getString(R.string.mdl_change_security_questions));
 
         mSecurityQuestion1Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion1Layout);
         mSecurityQuestion2Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion2Layout);
@@ -280,7 +281,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
         try {
             final JSONObject questions = response.getJSONObject("questions");
-            Iterator<String> a = (Iterator<String>) questions.keys();
+            Iterator<String> a = questions.keys();
 
             while (a.hasNext()) {
                 String key = a.next();

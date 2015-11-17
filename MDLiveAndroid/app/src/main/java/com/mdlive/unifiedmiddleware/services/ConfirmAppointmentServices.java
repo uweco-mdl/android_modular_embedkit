@@ -59,4 +59,17 @@ public class ConfirmAppointmentServices extends BaseServicesPlugin{
                                 errorListener,
                                 MDLiveConfig.IS_SSO);
     }
+
+    public void doOnCallAppointment(String params, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
+        try {
+            Log.d("params",params);
+            jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_ONCALL_APPT,
+                                    params,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 }

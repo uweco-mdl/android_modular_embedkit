@@ -68,7 +68,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_vsee);
-        clearMinimizedTime();
+        stopPinTimer();
 
         pager = (WaitingRoomViewPager) findViewById(R.id.viewPager);
         pager.setClipToPadding(false);
@@ -230,7 +230,6 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
     @Override
     public void onDestroy() {
-
         try{
             VSeeVideoManager.instance().endVideoCalls();
             VSeeServerConnection.instance().logout();
@@ -303,9 +302,9 @@ public class MDLiveVsee extends MDLiveBaseActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                AnalyticsApplication application = new AnalyticsApplication();
                                 for(AnalyticsApplication.TrackerName tn : AnalyticsApplication.TrackerName.values()) {
                                     // Obtain the shared Tracker instance.
-                                    AnalyticsApplication application = new AnalyticsApplication();
                                     Tracker mTracker = application.getTracker(getApplication(), tn);
                                     if (mTracker != null) {
                                         mTracker.setScreenName(getString(R.string.mdl_mdlive_video_session_screen));

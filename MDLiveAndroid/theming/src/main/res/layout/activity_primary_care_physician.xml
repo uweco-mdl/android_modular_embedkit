@@ -21,6 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="18dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/mdl_pcp_title_text"
                 android:tag="@string/mdltag_pcp_title_text"
@@ -290,6 +291,7 @@
                         android:layout_below="@id/phoneNumberView"
                         android:background="@color/white"
                         android:cursorVisible="true"
+                        android:maxLength="14"
                         android:inputType="phone"/>
 
                 </RelativeLayout>

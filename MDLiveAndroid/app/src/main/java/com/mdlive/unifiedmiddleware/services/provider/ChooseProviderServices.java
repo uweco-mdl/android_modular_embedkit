@@ -27,7 +27,7 @@ public class ChooseProviderServices extends BaseServicesPlugin {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("located_in",locationType);
             params.put("provider_type",providerType);
-            Log.v("Located in-->",locationType+"  Provider Type--->"+ providerType);
+            Log.e("Located in-->",locationType+"  Provider Type--->"+ providerType);
             jsonObjectPostRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_CHOOSE_PROVIDER,
                                     new Gson().toJson(params),
                                     responseListener,

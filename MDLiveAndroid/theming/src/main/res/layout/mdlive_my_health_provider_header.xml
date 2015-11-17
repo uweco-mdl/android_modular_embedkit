@@ -5,6 +5,7 @@
     android:background="@color/window_background_color">
 
     <TextView
+        android:id="@+id/statusMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/mdl_provider_access_to_med_records"

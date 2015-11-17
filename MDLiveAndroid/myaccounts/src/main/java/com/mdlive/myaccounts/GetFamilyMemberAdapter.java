@@ -27,10 +27,12 @@ public class GetFamilyMemberAdapter extends BaseAdapter {
     HashMap<String,ArrayList<String>> values ;
     ArrayList<String>name =new ArrayList<>();
     ArrayList<String>url =new ArrayList<>();
-    public GetFamilyMemberAdapter(Context context, ArrayList<String> nameList,ArrayList<String> urlList ) {
+    private boolean isPrimaryUser;
+    public GetFamilyMemberAdapter(Context context, ArrayList<String> nameList,ArrayList<String> urlList,boolean isPrimaryUser ) {
         this.context = context;
         name = nameList;
         url = urlList;
+        this.isPrimaryUser=isPrimaryUser;
 
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -75,10 +77,20 @@ public class GetFamilyMemberAdapter extends BaseAdapter {
             rowView.setTag(holder);
         }
         else{
-            holder=(Holder)rowView.getTag();}
+            holder=(Holder)rowView.getTag();
+        }
 
-            holder.tv.setText(name.get(position));
-            holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
+         if(isPrimaryUser && position==0){
+             holder.type.setText(context.getString(R.string.mdl_primary));
+             holder.type.setVisibility(View.VISIBLE);
+         } else if(!isPrimaryUser && position==1){
+             holder.type.setText(context.getString(R.string.mdl_primary));
+             holder.type.setVisibility(View.VISIBLE);
+         }else{
+             holder.type.setVisibility(View.GONE);
+         }
+        holder.tv.setText(name.get(position));
+        holder.img.setImageUrl(url.get(position), ApplicationController.getInstance().getImageLoader(context));
 
         return rowView;
     }

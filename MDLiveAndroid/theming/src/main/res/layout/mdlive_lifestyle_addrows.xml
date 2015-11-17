@@ -33,12 +33,14 @@
                 android:id="@+id/yesradioButton"
                 android:text="@string/mdl_yes"
                 android:tag="@string/mdltag_yes"
+                android:checked="false"
                 style="@style/YesNoRadioButtonStyle" />
 
             <RadioButton
                 android:id="@+id/noradioButton"
                 android:text="@string/mdl_no"
                 android:tag="@string/mdltag_no"
+                android:checked="false"
                 style="@style/YesNoRadioButtonStyle"
                 android:layout_marginLeft="8dp" />
 

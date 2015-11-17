@@ -8,7 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +24,14 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
+import com.mdlive.unifiedmiddleware.plugins.CardIOPlugin;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myaccounts.AddCreditCardInfoService;
@@ -58,8 +62,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private TextView mState = null;
     private EditText mZip = null;
 
-    private String cardNumber = null;
-    private String securityCode = null;
     private String cardExpirationMonth = null;
     private String cardExpirationYear = null;
     private String nameOnCard = null;
@@ -69,11 +71,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private String state = null;
     private String country = null;
     private String zip = null;
-    private SwitchCompat changeAddress;
     RelativeLayout mAddressVisibility,mStateLayout;
-    private List<String> stateIds = new ArrayList<String>();
-    private List<String> stateList = new ArrayList<String>();
     private WebView myAccountHostedPCI;
+    private Button mScanCardBtn;
 
     private int year, month;
     Calendar expiryDate = Calendar.getInstance();
@@ -98,6 +98,23 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View billingInformation = inflater.inflate(R.layout.fragments_billing_info, null);
+        mZip = (EditText) billingInformation.findViewById(R.id.zip);
+        mZip.setTag(null);
+        mZip.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MdliveUtils.validateZipcodeFormat(mZip);
+            }
+        });
 
         init(billingInformation);
         myAccountHostedPCI.getSettings().setJavaScriptEnabled(true);
@@ -105,9 +122,18 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             myAccountHostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
-        myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
+        if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index_prod.html");
+        } else {
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index.html");
+        }
         myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-
+        mScanCardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CardIOPlugin.scanCard(getActivity());
+            }
+        });
         return billingInformation;
 
     }
@@ -154,11 +180,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mZip = (EditText) billingInformation.findViewById(R.id.zip);
         mCardExpirationMonth = (TextView) billingInformation.findViewById(R.id.expirationDate);
 
-        changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
+        SwitchCompat changeAddress = (SwitchCompat) billingInformation.findViewById(R.id.addressChange);
+        changeAddress.setChecked(false);
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
-
+        mScanCardBtn = (Button)billingInformation.findViewById(R.id.ScanCardBtn);
 
         mAddress1.setText("");
         mAddress2.setText("");
@@ -219,11 +246,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 }
             }
         });
-
+        response = getArguments().getString("Response");
         if (getArguments().getString("View").equalsIgnoreCase("view") || getArguments().getString("View").equalsIgnoreCase("replace")) {
-            response = getArguments().getString("Response");
             if (response != null) {
-                changeAddress.setChecked(false);
+
 //                if (getArguments().getString("View").equalsIgnoreCase("view")) {
 //                    if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
 //                        ((MyAccountsHome) getActivity()).hideTick();
@@ -244,13 +270,14 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     cardExpirationYear = myProfile.getString("cc_expyear");
                     nameOnCard = myProfile.getString("billing_name");
                     zip = myProfile.getString("billing_zip5");
-                    securityCode = myProfile.getString("cc_cvv2");
-                    cardNumber = myProfile.getString("cc_number");
                     state = myProfile.getString("billing_state");
                     address2 = myProfile.getString("billing_address2");
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
+                    if (myProfile.optBoolean("allow_cc_scan", false)){
+                        mScanCardBtn.setVisibility(View.VISIBLE);
+                    }
 
 
 
@@ -301,9 +328,16 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     e.printStackTrace();
                 }
             }
-        }else{
 
-            changeAddress.setChecked(true);
+        }else if(response!=null){
+            try {
+                JSONObject myProfile = new JSONObject(response);
+                if (myProfile.optBoolean("allow_cc_scan", false)) {
+                    mScanCardBtn.setVisibility(View.VISIBLE);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
         }
 
 
@@ -321,7 +355,59 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             }
         });
 
+        changeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
 
+                    SharedPreferences prefs = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+
+                    String name = prefs.getString("Profile_Address", "");
+                    try {
+                        JSONObject myProfile = new JSONObject(name);
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address1"))) {
+                            mAddress1.setText("");
+                        } else {
+                            mAddress1.setText(myProfile.getString("address1").trim());
+                        }
+
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("address2"))) {
+                            mAddress2.setText("");
+                        } else {
+                            mAddress2.setText(myProfile.getString("address2").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
+                            mState.setText("");
+                        } else {
+                            mState.setText(myProfile.getString("state").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("city"))) {
+                            mCity.setText("");
+                        } else {
+                            mCity.setText(myProfile.getString("city").trim());
+                        }
+                        if (MdliveUtils.checkIsEmpty(myProfile.getString("zipcode"))) {
+                            mZip.setText("");
+                        } else {
+                            mZip.setText(myProfile.getString("zipcode").trim());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+//                    mAddress1.setText(address1);
+//                    mAddress2.setText(address2);
+//                    mCity.setText(city);
+//                    mState.setText(state);
+//                    mZip.setText(zip);
+                    mAddress1.setText("");
+                    mAddress2.setText("");
+                    mCity.setText("");
+                    mState.setText("");
+                    mZip.setText("");
+                }
+            }
+        });
     }
     private void showDatePicker() {
         final Dialog d = new Dialog(getActivity());
@@ -335,7 +421,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 Log.v("Values",""+newVal);
                 Log.v("OldValues",""+oldVal);
-                Calendar c = Calendar.getInstance();
+                Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
+//                c.setTimeZone("");
                 int minimumYear = c.get(Calendar.YEAR);
                 if(newVal!=minimumYear){
                     monthPicker.setMaxValue(12);
@@ -351,8 +438,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         monthPicker.setWrapSelectorWheel(true);
         try {
-            Calendar c = Calendar.getInstance();
-            Date mDate = new Date();
+            Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
+            Date mDate = c.getTime();
             c.setTime(mDate);
             monthPicker.setMaxValue(12);
             monthPicker.setMinValue(c.get(Calendar.MONTH) + 1);
@@ -360,7 +447,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Calendar c = Calendar.getInstance();
+        Calendar c = TimeZoneUtils.getCalendarWithOffset(getActivity());
         int minimumYear = c.get(Calendar.YEAR);
         yearPicker.setMaxValue(9999);
         yearPicker.setMinValue(minimumYear);
@@ -373,8 +460,10 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 try {
                     year = yearPicker.getValue();
                     month = monthPicker.getValue() - 1;
+                    expiryDate = TimeZoneUtils.getCalendarWithOffset(getActivity());
                     expiryDate.set(year, month, 1);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
+                    dateFormat.setTimeZone(TimeZoneUtils.getOffsetTimezone(getActivity()));
                     cardExpirationMonth = String.valueOf(month);
                     cardExpirationYear = String.valueOf(year);
                     mCardExpirationMonth.setText(dateFormat.format(expiryDate.getTime()));
@@ -397,7 +486,6 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         d.show();
     }
-
     public void addCreditCardInfo(String cardNumber,String cvv,String isHSA,String ccTypeId) {
 //        cardNumber = mCardNumber.getText().toString();
 //        securityCode = mSecurityCode.getText().toString();
@@ -411,6 +499,14 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         zip = mZip.getText().toString().trim();
 
         if (isEmpty(cardExpirationMonth) && isEmpty(cardExpirationYear) && isEmpty(nameOnCard) && isEmpty(address1) && isEmpty(city) && isEmpty(state) && isEmpty(zip) && isEmpty(cardExpirationMonth) && isEmpty(country)) {
+            if(!MdliveUtils.validateZipCode(zip)){
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_valid_zip), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
+            }else {
             try {
                 JSONObject parent = new JSONObject();
                 JSONObject jsonObject = new JSONObject();
@@ -432,16 +528,21 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                 loadBillingInfo(parent.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
+                }
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            MdliveUtils.showDialog(getActivity(), "All fields are required", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
         }
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     private void loadBillingInfo(String params) {
@@ -480,8 +581,13 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private void handleAddBillingInfoSuccessResponse(JSONObject response) {
         try {
             dismissDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+//            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            MdliveUtils.showDialog(getActivity(), response.getString("message"), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -491,8 +597,8 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
 
-        stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
-        stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
+        List<String> stateList = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName));
+        final List<String> stateIds = Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode));
 
         final String[] stringArray = stateList.toArray(new String[stateList.size()]);
 
@@ -532,5 +638,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         });
     }
 
-
+    protected void setCardNumber(String number){
+        String javascriptString = "javascript:setCardNumber('"+ number + "');";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            myAccountHostedPCI.evaluateJavascript(javascriptString,null);
+        } else {
+            myAccountHostedPCI.loadUrl(javascriptString);
+        }
+    }
 }

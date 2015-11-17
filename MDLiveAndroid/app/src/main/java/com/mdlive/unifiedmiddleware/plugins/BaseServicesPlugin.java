@@ -1,6 +1,5 @@
 package com.mdlive.unifiedmiddleware.plugins;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.mdlive.embedkit.global.MDLiveConfig;
-import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -66,8 +64,7 @@ public abstract class BaseServicesPlugin {
      * @param responseListener
      * @param errorListener
      */
-    public void jsonObjectPostRequest(String url,
-                                      String params,
+    public void jsonObjectPostRequest(String url, String params,
                                       Response.Listener<JSONObject> responseListener,
                                       Response.ErrorListener errorListener,
                                       final boolean isSSO) {
@@ -81,47 +78,23 @@ public abstract class BaseServicesPlugin {
                         return getAuthHeader(context, isSSO);
                     }
                 };
-                /*
-                int socketTimeout = WEBSERVICE_TIMEOUT;
-                */
-
                 int socketTimeout;
                 if(url.contains("/appointments/oncall_consultation")){
                     socketTimeout = WEBSERVICE_TIMEOUT_ONCALL;
                 }else{
                     socketTimeout = WEBSERVICE_TIMEOUT;
                 }
-
-                RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                 RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
                 req.setRetryPolicy(policy);
                 ApplicationController.getInstance().addToRequestQueue(req,context);
             } else {
                 hideDialogIfShowing();
                 MdliveUtils.connectionTimeoutError(pDialog, context);
             }
-
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-
-
-    /**
-     * Facade for the {@link #jsonObjectPostRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPostRequest} method
-     *
-     * @param url       The Request URL
-     * @param params    The POST Parameters
-     * @param responseListener
-     * @param errorListener
-     */
-    public void jsonObjectPostRequest(String url,
-                                      String params,
-                                      Response.Listener<JSONObject> responseListener,
-                                      Response.ErrorListener errorListener)
-    {
-        jsonObjectPostRequest(url, params, responseListener, errorListener, false);
-    }
-
 
     /**
      * This method makes a JSONObject PUT Request and retrieves a JSONObject Response.
@@ -169,6 +142,23 @@ public abstract class BaseServicesPlugin {
      * @param errorListener
      */
 /*    public void jsonObjectPutRequest(String url,
+                                     String params,
+                                     Response.Listener<JSONObject> responseListener,
+                                     Response.ErrorListener errorListener)
+    {
+        jsonObjectPutRequest(url, params, responseListener, errorListener, false);
+    }
+*/
+
+    /*Get Request
+     * Facade for the {@link #jsonObjectPutRequest(String, String, Response.Listener, Response.ErrorListener, boolean) jsonObjectPutRequest} method
+     *
+     * @param url
+     * @param params
+     * @param responseListener
+     * @param errorListener
+     */
+ /*   public void jsonObjectPutRequest(String url,
                                      String params,
                                      Response.Listener<JSONObject> responseListener,
                                      Response.ErrorListener errorListener)
@@ -353,7 +343,7 @@ public abstract class BaseServicesPlugin {
     public static Map getAuthHeader(Context context, boolean isSSO)
     {
         Map<String, String> headerMap = new HashMap<String, String>();
-        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY, AppSpecificConfig.SECRET_KEY);
+        String creds = String.format("%s:%s", AppSpecificConfig.API_KEY,AppSpecificConfig.SECRET_KEY);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
         SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
 
@@ -369,6 +359,7 @@ public abstract class BaseServicesPlugin {
         }
 
         headerMap.put("Authorization", auth);
+        headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
         String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         //Log.v("Authorization",auth);
         //Log.v("RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));

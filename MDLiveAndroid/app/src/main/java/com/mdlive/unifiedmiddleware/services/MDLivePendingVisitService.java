@@ -44,4 +44,13 @@ public class MDLivePendingVisitService extends BaseServicesPlugin {
                                 MDLiveConfig.IS_SSO);
 
     }
+
+    public void getAppointment(final String id, NetworkSuccessListener successListener,NetworkErrorListener errorListener){
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_PENDING_APPOINTMENT + "/" + id,
+                                null,
+                                successListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
+
+    }
 }

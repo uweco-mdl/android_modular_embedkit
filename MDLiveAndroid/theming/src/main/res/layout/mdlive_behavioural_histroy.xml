@@ -81,7 +81,7 @@
                 android:background="@color/gray_c" />
             <LinearLayout
                 style="@style/Choose_Pharmacy_Search_Field"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:id="@+id/behavoural_when_ll"
                 android:orientation="vertical">
 

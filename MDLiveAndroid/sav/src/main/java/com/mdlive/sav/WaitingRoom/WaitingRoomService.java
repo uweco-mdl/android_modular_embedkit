@@ -43,4 +43,19 @@ public class WaitingRoomService extends BaseServicesPlugin {
                                 MDLiveConfig.IS_SSO);
 
     }
+
+    public void doPutCallBackRequest(String url,Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
+        jsonObjectPutRequest(url, null, responseListener, errorListener, MDLiveConfig.IS_SSO);
+
+    }
+    public void doGetOnCallProviderStatus(Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
+        SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        String apptId = sharedpreferences.getString(PreferenceConstants.APPT_ID, "");
+        String jointUrl=AppSpecificConfig.URL_WAITING_ONCALL_STATUS.replace(":id",apptId);
+        jsonObjectGetRequest(AppSpecificConfig.BASE_URL + jointUrl,
+                                null,
+                                responseListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
+    }
 }

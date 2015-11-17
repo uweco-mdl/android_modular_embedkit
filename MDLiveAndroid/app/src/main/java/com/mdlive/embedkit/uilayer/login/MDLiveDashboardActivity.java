@@ -2,29 +2,31 @@ package com.mdlive.embedkit.uilayer.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
-import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.OncallAppointment;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
-
-import java.lang.ref.WeakReference;
-
 
 /**
  * Created by dhiman_da on 8/6/2015.
@@ -60,7 +62,6 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
         if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
             user = getIntent().getExtras().getParcelable(User.USER_TAG);
 
-            Log.d("Hello", "Selected User : " + user.toString());
         }
 
         if (savedInstanceState == null) {
@@ -96,6 +97,36 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
             }
         }
     }
+    private void checkNotification(){
+        try {
+            SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+            if (settings.contains("has_push_notification")) {
+                String message = settings.getString("has_push_notification", "{}");
+                settings.edit().remove("has_push_notification").commit();
+                JsonParser parser = new JsonParser();
+                JsonObject originalPayload = parser.parse(message).getAsJsonObject();
+                try {
+                    Class clazz;
+                    if(originalPayload.get("acme").getAsJsonArray().get(0).getAsString().equalsIgnoreCase("message")){
+                        clazz = Class.forName("com.mdlive.messages.messagecenter.MessageCenterInboxDetailsActivity");
+                    } else {
+                        clazz = Class.forName("com.mdlive.sav.appointment.AppointmentActivity");
+                    }
+                    Intent messageIntent = new Intent(this, clazz);
+
+                    messageIntent.putExtra("notification_id", originalPayload.get("acme").getAsJsonArray().get(1).getAsInt());
+
+                    messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(messageIntent);
+                }catch (ClassNotFoundException e){
+                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private boolean isScreenLoaded = false;
     @Override
     public void onResume() {
@@ -110,6 +141,10 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     @Override
     public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment && ((MDLiveDashBoardFragment) fragment).isWebView) {
+            ((MDLiveDashBoardFragment) fragment).mWebView.setVisibility(View.GONE);  // Since there is no further navigation from the webview
+        }
         return;
     }
 
@@ -174,6 +209,14 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     }
 
     @Override
+    public void onShowNotifyOnCallDashBorad(OncallAppointment appointment) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
+        if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
+            ((MDLiveDashBoardFragment) fragment).showOnCallNotification(appointment);
+        }
+    }
+
+    @Override
     public void onHideNotifyDashboard() {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
@@ -195,7 +238,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
 
     public void checkDeeplink() {
         Log.d("DeepLink", "In Deeplink check");
-
+        checkNotification();
         if (DeepLinkUtils.DEEPLINK_DATA != null ) {
             Log.d("DeepLink", "Data : " + DeepLinkUtils.DEEPLINK_DATA);
 
@@ -205,6 +248,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                 case 0:
                     // Home screen
                     // Do nothing, already in Home
+                    findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
                     break;
                 case 1:
                     findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);

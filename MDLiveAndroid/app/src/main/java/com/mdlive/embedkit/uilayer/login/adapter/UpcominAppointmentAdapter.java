@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Appointment;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-
+        try {
         if (viewHolder == null) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.adapter_pending_appoinments, parent, false);
@@ -98,16 +98,17 @@ public class UpcominAppointmentAdapter extends BaseAdapter {
 
         final Appointment appointment = mAppointments.get(position);
         SharedPreferences sharedpreferences = convertView.getContext().getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        String time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
-        final StringBuilder builder = new StringBuilder();
-        builder.append(appointment.getPhysicianName() + "\n");
-        //builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(Long.parseLong(time), "EDT") + "\n");
-        builder.append(MdliveUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "EDT") + "\n");
-        builder.append(appointment.getApptType());
+        String builder = appointment.getPhysicianName() + "\n";
+
+            builder = builder + TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(appointment.getInMilliseconds(), "", parent.getContext()) + "\n";
+
+            builder = builder + appointment.getApptType() + " " + convertView.getContext().getResources().getString(R.string.mdl_consultation);
 
         viewHolder.mTextView.setText(builder.toString());
         viewHolder.mTextView.setTextColor(convertView.getContext().getResources().getColor(R.color.selected_bg));
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*final int type = MdliveUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), appointment.getTimeZone());
 
         switch (type) {

@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.DeepLinkUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.PharmacyDetails;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.Security;
@@ -46,6 +47,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Created by venkataraman_r on 7/16/2015.
+ */
 public class NavigationDrawerFragment extends MDLiveBaseFragment {
     private static final String USER_PASSED_FROM_ACTIVITY = "user_passed";
 
@@ -66,22 +70,26 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
     private OnUserChangedInGetStarted mOnUserChangedInGetStarted;
     private ArrayList<String> mDrawerArray;
-
+    public static NavigationDrawerFragment fragmentInstance;
     public NavigationDrawerFragment() {
+    }
+
+    public static NavigationDrawerFragment getInstance(){
+        return fragmentInstance;
     }
 
     public static NavigationDrawerFragment newInstance() {
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        fragmentInstance = fragment;
         return fragment;
     }
 
     public static NavigationDrawerFragment newInstance(final User user) {
         final Bundle args = new Bundle();
         args.putParcelable(USER_PASSED_FROM_ACTIVITY, user);
-
         final NavigationDrawerFragment fragment = new NavigationDrawerFragment();
+        fragmentInstance = fragment;
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -127,8 +135,17 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 selectItem(position);
             }
         });
-
         ArrayList<String> drawerItems;
+        /*if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
+        {
+            view.findViewById(R.id.BacktoBaylor).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.LogoutUser).setVisibility(View.GONE);
+            drawerItems.remove(drawerItems.size()-1);
+        }else{
+            view.findViewById(R.id.BacktoBaylor).setVisibility(View.GONE);
+            view.findViewById(R.id.LogoutUser).setVisibility(View.VISIBLE);
+        }*/
+
         String[] navStrings;
 
         if (MDLiveConfig.IS_SSO) {
@@ -196,6 +213,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 return false;
             }
         });
+
     }
 
     @Override
@@ -219,7 +237,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
             {
                 loadUserInformationDetails(true);
             }
-            else
+            else if(getActivity()!=null)
             {
                 mUserBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
                 updateList();
@@ -258,35 +276,23 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         if (showProgress) {
             showProgressDialog();
         }
-
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
                 User.clearUser(getActivity());
-
-                /* Security JSON we need to read again, because of the web service issue..
-                * We are excluding the security tag to be parsed by GSON,
-                * then we are manually adding the Security JSON again
-                * */
-                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
-                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
-                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
-                try {
-                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
-                } catch (JSONException e) {
-                    mUserBasicInfo.setHealthLastUpdate(-1l);
-                }
-
-                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
-
-                updateList();
-
+                handleServiceResponseForParent(response);
                 if (showProgress) {
                     hideProgressDialog();
                 }
             }
+
+
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -302,9 +308,28 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
             }};
-
         final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
+    }
+
+    public void handleServiceResponseForParent(JSONObject response) {
+    /* Security JSON we need to read again, because of the web service issue..
+    * We are excluding the security tag to be parsed by GSON,
+    * then we are manually adding the Security JSON again
+    * */
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            mUserBasicInfo.setHealthLastUpdate(-1l);
+        }
+
+        mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
+
+        updateList();
     }
 
     /**
@@ -321,7 +346,11 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         if (showProgress) {
             showProgressDialog();
         }
-
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -331,23 +360,13 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 * We are excluding the security tag to be parsed by GSON,
                 * then we are manually adding the Security JSON again
                 * */
-                final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
-                mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
-                mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
-                try {
-                    mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
-                } catch (JSONException e) {
-                    mUserBasicInfo.setHealthLastUpdate(-1l);
-                }
-
-                mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
-                updateList();
-
+                handleServiceResponseForDependent(response);
                 if (showProgress) {
                     hideProgressDialog();
                 }
             }
+
+
         };
 
         final NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -381,9 +400,27 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         services.getUserBasicInfoRequest(user.mId, successCallBackListener, errorListener);
     }
 
+    public void handleServiceResponseForDependent(JSONObject response) {
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        mUserBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        mUserBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        mUserBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            mUserBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            mUserBasicInfo.setHealthLastUpdate(-1l);
+        }
+        mUserBasicInfo.saveToSharedPreference(getActivity(), response.toString().trim());
+        updateList();
+    }
+
     private void updateList() {
         if (mOnUserInformationLoaded != null) {
             mOnUserInformationLoaded.sendUserInformation(mUserBasicInfo);
+        }
+
+        if(NotificationFragment.getInstance() != null) {
+            NotificationFragment.getInstance().reloadPendingAppointment();
         }
 
         if (getActivity() == null) {
@@ -527,17 +564,34 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                 if (load) {
                     if (getActivity() != null && getActivity() instanceof MDLiveDashboardActivity) {
                         if (user.mMode == User.MODE_PRIMARY) {
+                            if(NotificationFragment.getInstance() != null) {
+                                NotificationFragment.getInstance().reloadPendingAppointment();
+                            }
                             loadUserInformationDetails(true);
                         } else {
+
+                            if(NotificationFragment.getInstance() != null) {
+                                NotificationFragment.getInstance().reloadPendingAppointment();
+
+                            }
+                            if(MDLiveDashBoardFragment.getUserSelectionInstance() != null){
+                                MDLiveDashBoardFragment.getUserSelectionInstance().onDependentSelected(user);
+                            }
                             loadDependendUserDetails(user, true);
                         }
                     } else {
                         if (mOnUserInformationLoaded != null) {
                             mOnUserInformationLoaded.reloadApplicationForUser(user);
                         }
+                        if(NotificationFragment.getInstance() != null) {
+                            NotificationFragment.getInstance().reloadPendingAppointment();
+                        }
                     }
                 } else {
                     // No need to load new data
+                    if(NotificationFragment.getInstance() != null) {
+                        NotificationFragment.getInstance().reloadPendingAppointment();
+                    }
                 }
 
                 setMaxWidthForLeftText(mSelectedUserLinearLayout,

@@ -9,17 +9,11 @@ public class PreferenceConstants {
     public static final String PAY_AMOUNT_PREFERENCES = "AMOUNT_PREFERENCES";
     public static final String REASON_PREFERENCES = "REASON_FOR_VISIT";
     public static final String USER_UNIQUE_ID = "USER_UNIQUE_ID";
-    public static final String DEPENDENT_USER_ID = "DEPENDENT_USER_ID";
     public static final String SESSION_ID = "SESSION_ID";
-    public static final String WEBSERVICE_APIKEY = "USER_UNIQUE_ID";
-    public static final String SAVED_MASTER_USER = "SAVED_MASTER_USER";
+    public static final String DEPENDENT_USER_ID = "DEPENDENT_USER_ID";
     public static final String ZIPCODE_PREFERENCES = "ZIPCODE_PREFERENCES";
     public static final String LONGNAME_LOCATION_PREFERENCES = "LONGNAME_LOCATION_PREFERENCES";
     public static final String SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES = "LONGNAME_LOCATION_PREFERENCES";
-    public static final String SAVE_TIMESLOT_PREFERENCES = "SAVE_TIMESLOT_PREFERENCES";
-    public static final String SAVE_PHYS_ID_PREFERENCES = "SAVE_PHYS_ID_PREFERENCES";
-    public static final String SAVE_APPT_TYPE_PREFERENCES = "SAVE_APPT_TYPE_PREFERENCES";
-    public static final String NORESULTS_PREFERENCES = "NORESULTS_PREFERENCES";
     public static final String PROVIDER_DOCTORID_PREFERENCES = "DOCTORID_PREFERENCES";
     public static final String PROVIDER_APPOINTMENT_DATE_PREFERENCES = "APPOINTMENT_DATE_PREFERENCES";
     public static final String PROVIDER_GROUP_AFFILIATIONS_PREFERENCES = "GROUP_AFFILIATIONS_PREFERENCES";
@@ -31,11 +25,6 @@ public class PreferenceConstants {
     public static final String PEDIATRIC_CHILD_PREF = "PEDIATRIC_CHILD_PREF";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public static final String APPT_ID = "APPT_ID";
-    public static final String IS_MEDICATION_CHECKED = "IS_MEDICATION_CHECKED";
-    public static final String IS_ALLERGY_CHECKED = "IS_ALLERGY_CHECKED";
-    public static final String IS_CONDITION_CHECKED = "IS_CONDITION_CHECKED";
-    public static final String IS_FIRST_TIME_USER = "IS_FIRST_TIME_USER";
-    public static final String MDLIVE_USERS_PHOTO_PATH = "MDLIVE_USERS_PHOTO_PATH";
     public static final String PATIENT_NAME = "patient_name";
     public static final String AMOUNT = "payable_amount";
     public static final String OFFER_CODE = "offer_code";
@@ -66,6 +55,7 @@ public class PreferenceConstants {
     public static final String PREFFERED_SIGNIN = "Preffered_SignIn";
     public static final String PREFFERED_LANGUAGE = "Preffered_Language";
     public static final String SIGN_IN = "Sign_In";
+    public static final String LOCK_TYPE = "Lock_Type";
     public static final String TIME_PREFERENCE = "TIME_PREFERENCE";
     public static final String TIME_KEY = "TIME_KEY";
     public static final String SELECTED_USER = "SELECTED_USER";
@@ -74,7 +64,13 @@ public class PreferenceConstants {
     public static final String DEVICE_ID = "device_id";
     public static final String DEVICE_ID_KEY = "device_id";
     public static final String DEVICE_TOKEN = "device_token";
-    public static final String DEVICE_TOKEN_KEY = "device_token_key";
+    public static final String USER_STATE_LIST = "USER_STATE_LIST";
+    public static final String HEALTH_SYSTEM_PREFERENCES = "HEALTH_SYSTEM_PREFERENCES";
     public static final String FIRST_TIME = "FIRST_TIME";
     public static final String PRIMARY_PHYSICIAN_STATUS = "PRIMARY_PHYSICIAN_STATUS";
+    public static final String GOOGLE_FIT_PREFERENCES = "GOOGLE_FIT_PREFERENCES";
+    public static final String GOOGLE_FIT_FIRST_TIME = "GOOGLE_FIT_FIRST_TIME";
+    public static final String BAYLOR_GUID = "baylor_guid";
+    public static final String TIMEZONE_SET_AUTOMATIC = "set_automatic";
+    public static final String SAVED_PUSH_NOTIFICATION_ID = "SAVED_PUSH_NOTIFICATION_ID";
 }

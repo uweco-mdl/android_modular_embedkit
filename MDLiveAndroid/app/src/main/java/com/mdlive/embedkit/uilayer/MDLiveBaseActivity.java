@@ -57,9 +57,9 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
      * Show progressbar that is used in activity when service calls.
      */
     public void showProgress() {
-//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.GONE){
-//            progressBarLayout.setVisibility(View.VISIBLE);
-//        }
+        if(mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
         mProgressDialog.show();
     }
 
@@ -67,11 +67,10 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
      * Hide progressbar that is used in activity when service call ends.
      */
     public void hideProgress() {
-//        if(progressBarLayout!=null&&progressBarLayout.getVisibility()== View.VISIBLE){
-//            progressBarLayout.setVisibility(View.GONE);
-//        }
-        if(mProgressDialog!=null && mProgressDialog.isShowing())
+        if(mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+        }
+
     }
 
     /*

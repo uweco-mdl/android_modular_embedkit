@@ -21,6 +21,7 @@ public class IntegerConstants {
     public static final int IMAGE_DIVIDED_SIZE = 4;
 
     public static final int PHAMRACY_RESULT_CODE = 4000;
+    public static final int INSURANCE_ERROR_CODE = 4001;
 
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int PICK_IMAGE_REQUEST_CODE = 101;
@@ -30,5 +31,5 @@ public class IntegerConstants {
     public static final int PEDIATRIC_REQUEST_CODE = 400;
 
     public static final int PHARMACY_REQUEST_CODE = 500;
-
+    public static int SESSION_TIMEOUT = 60000; // 60 sec timeout for normal mdlive user & 30 minutes for Baylor user
 }

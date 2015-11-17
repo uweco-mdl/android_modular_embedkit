@@ -44,16 +44,21 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity im
 
         showRight(false);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            elevateToolbar(toolbar);
-            setTitle("");
-            if (getIntent().getExtras() != null && getIntent().hasExtra(HEADING_TAG)) {
-                ((TextView) findViewById(R.id.headerTxt)).setText(getIntent().getStringExtra(HEADING_TAG).toUpperCase());
-            } else {
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_send_message_caps));
+        try {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                elevateToolbar(toolbar);
+                setTitle("");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (getIntent().getExtras() != null && getIntent().hasExtra(HEADING_TAG)) {
+            ((TextView) findViewById(R.id.headerTxt)).setText(getIntent().getStringExtra(HEADING_TAG).toUpperCase());
+        } else {
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_send_message_caps));
         }
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -77,6 +82,14 @@ public class MessageCenterComposeActivity extends MDLiveBaseAppcompatActivity im
                     beginTransaction().
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
+        }
+    }
+
+    public void isFromNewMessageCompose(boolean isNewCompose) {
+        if (isNewCompose) {
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_send_message_caps));
+        } else {
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_reply_message_caps));
         }
     }
 

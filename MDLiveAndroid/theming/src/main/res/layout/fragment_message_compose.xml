@@ -65,6 +65,8 @@
                 android:layout_height="@dimen/button_height_48_dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:padding="@dimen/dimen_8_dp">
 
                 <TextView
@@ -88,15 +90,16 @@
                     android:background="@null"
                     android:textColor="@color/unread_text_color"
                     android:fontFamily="sans-serif"
-                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:layout_marginLeft="5dp"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_1_dp"
-                android:background="@color/need_assistance"/>
+                android:layout_height="0.2dp"
+                android:background="@color/pharmacy_search_hint_color"/>
 
             <EditText
                 android:id="@+id/fragment_message_compose_body_edit_text"
@@ -113,7 +116,6 @@
                 android:textColorHint="@color/gray_c"
                 android:textColor="@color/unread_text_color"
                 android:fontFamily="sans-serif"
-                android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>

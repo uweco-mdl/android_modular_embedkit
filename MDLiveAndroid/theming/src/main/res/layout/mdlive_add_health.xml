@@ -46,6 +46,20 @@
             android:padding="15dp"
              />
 
+
+        <TextView
+            android:id="@+id/errorText"
+            style="@style/common_style_W_Match_H_Wrap"
+            android:tag="@string/mdltag_add_conditions_text"
+            android:textColorHint="@color/grey_txt"
+            android:textColor="@color/condition_txt_color"
+            android:gravity="left"
+            android:textSize="17sp"
+            android:visibility="gone"
+            android:padding="5dp"
+            />
+
+
         <LinearLayout
             style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
             android:id="@+id/medicationCredentailsLayout"
@@ -118,9 +132,14 @@
             </LinearLayout>
 
         <LinearLayout
-            style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+            style="@style/common_style_W_Match_H_Wrap_O_Vertical"
             android:id="@+id/procedureLayout"
             android:visibility="gone"
+            >
+
+        <LinearLayout
+            style="@style/common_style_W_Match_H_Wrap_O_Horizontal"
+            android:visibility="visible"
             >
 
             <TextView
@@ -165,6 +184,29 @@
                 android:layout_marginTop="10dp"
                 />
 
+
+
+
+        </LinearLayout>
+
+            <EditText
+                android:id="@+id/otherProcedureTxt"
+                style="@style/common_style_W_Match_H_Wrap"
+                android:background="@drawable/searchpvr_white_rounded_corner"
+                android:hint="@string/mdl_add_other_procedure_text"
+                android:tag="@string/mdltag_add_other_procedure_text"
+                android:textColorHint="@color/grey_txt"
+                android:textColor="@color/condition_txt_color"
+                android:gravity="left"
+                android:textSize="17sp"
+                android:visibility="gone"
+                android:textCursorDrawable="@null"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:imeOptions="actionDone"
+                android:layout_marginTop="10dp"
+                android:padding="15dp"
+                />
 
         </LinearLayout>
 

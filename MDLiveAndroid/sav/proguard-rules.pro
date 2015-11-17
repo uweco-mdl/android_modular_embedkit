@@ -26,5 +26,11 @@
     public <methods>;
 }
 
--keep class com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom{
+-keep class com.mdlive.sav.MDLiveChooseProvider{
+    public static <fields>;
 }
+
+-keep class com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom{}
+-keep class com.mdlive.sav.payment.MDLiveConfirmappointment{}
+-keep class com.mdlive.sav.payment.MDLivePayment{}
+-keep class com.mdlive.sav.appointment.AppointmentActivity{}

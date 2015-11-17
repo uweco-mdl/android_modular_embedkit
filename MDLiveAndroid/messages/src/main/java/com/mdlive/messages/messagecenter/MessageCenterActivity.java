@@ -27,7 +27,7 @@ public class MessageCenterActivity extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_tab_activity);
         clearMinimizedTime();
-        setTitle("");
+        this.setTitle(getString(R.string.mdl_message_center));
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

@@ -89,7 +89,7 @@ public class MessageProviderFragment extends MDLiveBaseFragment {
 
         mListLayout = view.findViewById(R.id.list_layout);
         mBlankLayout = view.findViewById(R.id.blank_layout);
-
+        mBlankLayout.setVisibility(View.GONE);
         final ImageView image = (ImageView) view.findViewById(R.id.message_center_empty_image_view);
         if (image != null) {
             image.setImageResource(R.drawable.empty_provider);

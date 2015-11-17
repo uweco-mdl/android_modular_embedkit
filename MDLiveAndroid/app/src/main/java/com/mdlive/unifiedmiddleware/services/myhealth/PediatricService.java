@@ -17,7 +17,11 @@ public class PediatricService extends BaseServicesPlugin {
     }
 
     public void doPostPediatricBelowTwo(String params,NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
-        jsonObjectPostRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_UPDATE_PEDIATRIC,params,responseListener,errorListener);
+        jsonObjectPostRequest(AppSpecificConfig.BASE_URL+ AppSpecificConfig.URL_UPDATE_PEDIATRIC,
+                                params,
+                                responseListener,
+                                errorListener,
+                                MDLiveConfig.IS_SSO);
 
     }
     public void doGetPediatricBelowTwo(NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){

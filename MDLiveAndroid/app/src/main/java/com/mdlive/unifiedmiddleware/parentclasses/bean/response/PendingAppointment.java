@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -14,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,11 +105,22 @@ public class PendingAppointment implements Parcelable {
         try {
             final JSONObject jsonObject = new JSONObject(jsonString);
             final JSONArray appointmentArray = jsonObject.optJSONArray("appointments");
+            final JSONArray onCallAppointmentArray = jsonObject.optJSONArray("oncall_appointments");
 
 
 
             if (appointmentArray != null && appointmentArray.length() > 0) {
                 for (int i = 0; i < appointmentArray.length(); i++) {
+                    try {
+                        Class clazz = Class.forName("com.mdlive.sav.MDLiveChooseProvider");
+                        Field isDoctorOnCall = clazz.getDeclaredField("isDoctorOnCall");
+                        Field isDoctorOnVideo = clazz.getDeclaredField("isDoctorOnVideo");
+                        isDoctorOnCall.set(null, false);
+                        isDoctorOnVideo.set(null, false);
+                    } catch (ClassNotFoundException e){
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                     final  JSONObject appointment = appointmentArray.optJSONObject(i);
                     final Appointment appo = new Appointment();
 
@@ -130,28 +143,55 @@ public class PendingAppointment implements Parcelable {
                     pendingAppointment.appointments.add(appo);
                 }
             }
+            if (onCallAppointmentArray != null && onCallAppointmentArray.length() > 0) {
+                    for (int i = 0; i < onCallAppointmentArray.length(); i++) {
+                        Log.v("Cominmg","Coming here");
+                        try {
+                            Class clazz = Class.forName("com.mdlive.sav.MDLiveChooseProvider");
+                            Field isDoctorOnCall = clazz.getDeclaredField("isDoctorOnCall");
+                            Field isDoctorOnVideo = clazz.getDeclaredField("isDoctorOnVideo");
+                            isDoctorOnCall.set(null, false);
+                            isDoctorOnVideo.set(null, true);
+                        } catch (ClassNotFoundException e){
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        final  JSONObject onCallAppointment = onCallAppointmentArray.optJSONObject(i);
+                        final OncallAppointment appo = new OncallAppointment();
+                        appo.setApptType(onCallAppointment.optString("appt_type"));
+                        appo.setCustomerCallInNumber(onCallAppointment.optString("customer_call_in_number"));
+                        try {
+                            appo.setId(onCallAppointment.getString("id") + "");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        pendingAppointment.oncallAppointments.add(appo);
+                    }
+            }
+
+
 
 
         } catch (JSONException e) {
-
+            e.printStackTrace();
         }
 
         return pendingAppointment;
     }
 
-    public void saveToSharedPreference(final Context context) {
+    public void saveToSharedPreference(final Context context , final String jsonString) {
         final WeakReference<Context> weakReference = new WeakReference<Context>(context);
 
         if (weakReference != null && weakReference.get() != null) {
             final SharedPreferences preferences = weakReference.get().getSharedPreferences(PreferenceConstants.PENDING_APPOINMENT, Context.MODE_PRIVATE);
             final SharedPreferences.Editor editor = preferences.edit();
 
-            editor.putString(PreferenceConstants.APPOINMENT, toJsonString());
+            editor.putString(PreferenceConstants.APPOINMENT, jsonString);
             editor.commit();
         }
     }
 
-    public static UserBasicInfo readFromSharedPreference(final Context context) {
+    public static PendingAppointment readFromSharedPreference(final Context context) {
         final WeakReference<Context> weakReference = new WeakReference<Context>(context);
 
         if (weakReference != null && weakReference.get() != null) {
@@ -160,7 +200,7 @@ public class PendingAppointment implements Parcelable {
             final String savedString = preferences.getString(PreferenceConstants.APPOINMENT, null);
 
             if (savedString != null) {
-                return UserBasicInfo.fromJsonString(savedString);
+                return PendingAppointment.fromJsonString(savedString);
             } else {
                 return null;
             }

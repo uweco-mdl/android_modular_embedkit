@@ -30,6 +30,7 @@ import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.userinfo.AddChildServices;
@@ -55,8 +56,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private EditText firstNameEditText, lastNameEditText;
     private TextView genderTxt,dateTxt;
     private int month,day,year;
-    private String firstNameEditTextValue, lastNameEditTextValue,strGender,strDate;
-    private LinearLayout genderll,dobLl;
+    private String strGender,strDate;
     private DatePickerDialog datePickerDialog;
     private  boolean isAllFieldsfilled = true;
     private ArrayList<String> GenderList = new ArrayList<String>();
@@ -78,8 +78,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         lastNameEditText = (EditText) findViewById(R.id.lastNamePatientEt);
         genderTxt= (TextView) findViewById(R.id.genderTxt);
         dateTxt = (TextView) findViewById(R.id.dobTxt);
-        genderll = (LinearLayout) findViewById(R.id.genderLl);
-        dobLl = (LinearLayout) findViewById(R.id.dobLl);
+        LinearLayout genderll = (LinearLayout) findViewById(R.id.genderLl);
+        LinearLayout dobLl = (LinearLayout) findViewById(R.id.dobLl);
         addChildBtn = (Button)findViewById(R.id.addChildBtn);
         setProgressBar(findViewById(R.id.progressDialog));
         getDateOfBirth();
@@ -131,22 +131,13 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-                if(isChecked){
-                    isAllFieldsfilled = true;
-                }else{
-                    isAllFieldsfilled = false;
-                }
+                isAllFieldsfilled = isChecked;
                 ValidateModuleFields();
             }
         });
 
         //check the current state before we display the screen
-        if(mySwitch.isChecked()) {
-            isAllFieldsfilled = true;
-        }
-        else {
-            isAllFieldsfilled = false;
-        }
+        isAllFieldsfilled = mySwitch.isChecked();
 
         ValidateModuleFields();
     }
@@ -155,8 +146,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     * Event for Add Child button click
     * */
     public void onAddChildButtonClicked(View view) {
-        firstNameEditTextValue = firstNameEditText.getText().toString().trim();
-        lastNameEditTextValue = lastNameEditText.getText().toString().trim();
+        String firstNameEditTextValue = firstNameEditText.getText().toString().trim();
+        String lastNameEditTextValue = lastNameEditText.getText().toString().trim();
         if (!TextUtils.isEmpty(firstNameEditTextValue) && !TextUtils.isEmpty(lastNameEditTextValue)
                 && !TextUtils.isEmpty(strDate) && !TextUtils.isEmpty(strGender)) {
             if(checkPerdiatricAge()){
@@ -232,17 +223,15 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     public boolean checkPerdiatricAge(){
-        if(calculteAgeFromPrefs(strDate)<IntegerConstants.ADD_CHILD_AGELIMIT){
-            return true;
-        }
-        return false;
+        return calculteAgeFromPrefs(strDate, this) < IntegerConstants.ADD_CHILD_AGELIMIT;
     }
 
-    public static int calculteAgeFromPrefs(String strDate){
+    public static int calculteAgeFromPrefs(String strDate, Context context){
         try {
             DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            format.setTimeZone(TimeZoneUtils.getOffsetTimezone(context));
             Date date = format.parse(strDate);
-            return MdliveUtils.calculateAge(date);
+            return MdliveUtils.calculateAge(date,context);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -255,11 +244,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      */
 
     public void ValidateModuleFields() {
-        isAllFieldsfilled = true;
 
-        if(TextUtils.isEmpty(firstNameEditText.getText().toString())){
-            isAllFieldsfilled = false;
-        }
+        isAllFieldsfilled = !TextUtils.isEmpty(firstNameEditText.getText().toString());
         if(TextUtils.isEmpty(lastNameEditText.getText().toString())){
             isAllFieldsfilled = false;
         }
@@ -320,7 +306,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         };
 
         AddChildServices addChildServices = new AddChildServices(MDLiveFamilymember.this, getProgressDialog());
-        addChildServices.getChildDependentsr(array, responseListener, errorListener);
+        addChildServices.getChildDependent(array, responseListener, errorListener);
     }
 
     /**
@@ -328,11 +314,11 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      * for the particular native date picker.
      */
     private void getDateOfBirth() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
         datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
-        datePickerDialog.getDatePicker().setMinDate(MdliveUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT));
-        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+        datePickerDialog.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, this));
+        datePickerDialog.getDatePicker().setMaxDate(TimeZoneUtils.getCalendarWithOffset(this).getTime().getTime());
     }
     /**
      * The Current date and time will be retrieved by using this method.
@@ -343,7 +329,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     public void GetCurrentDate(TextView selectedText)
     {
         // Get current date by calender
-        final Calendar c = Calendar.getInstance();
+        final Calendar c = TimeZoneUtils.getCalendarWithOffset(this);
         year = c.get(Calendar.YEAR);
         month = c.get(MONTH);
         day   = c.get(Calendar.DAY_OF_MONTH);
@@ -356,15 +342,15 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         @Override
         public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = TimeZoneUtils.getCalendarWithOffset(MDLiveFamilymember.this);
             calendar.set(selectedYear, selectedMonth, selectedDay);
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
 
-            Calendar currendDate = Calendar.getInstance();
-            currendDate.setTime(new Date());
-            strDate = (new StringBuilder().append(((month+1) > 10) ? month+1:"0"+(month+1))
+            Calendar currendDate = TimeZoneUtils.getCalendarWithOffset(MDLiveFamilymember.this);
+            currendDate.setTime(calendar.getTime());
+            strDate = (new StringBuilder().append(((month+1) > 9) ? month+1:"0"+(month+1))
                     .append("/").append((day > 9) ? day :"0"+(day))
                     .append("/").append(year)
                     .append(" ")+"");
@@ -387,7 +373,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
       /*We need to get the instance of the LayoutInflater*/
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveFamilymember.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
 
         alertDialog.setView(convertView);
 

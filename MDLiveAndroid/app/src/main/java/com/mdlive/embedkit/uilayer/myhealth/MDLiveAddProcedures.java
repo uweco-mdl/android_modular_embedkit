@@ -32,6 +32,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
         type = TYPE_CONSTANT.PROCEDURE;
         super.onCreate(savedInstanceState);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_add_procedure));
         IsThisPageEdited = false;
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -44,7 +45,9 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
             e.printStackTrace();
         }
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.editpen_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_edit));
         ((ImageView) findViewById(R.id.statusIcon)).setImageResource(R.drawable.no_procedure_img);
         ((TextView) findViewById(R.id.headerTxt)).setText(getResources().getString(R.string.mdl_add_procedure));
         ((TextView) findViewById(R.id.noConditionTitleTv)).setText(getResources().getString(R.string.mdl_no_procedures_reported));
@@ -131,7 +134,7 @@ public class MDLiveAddProcedures extends MDLiveCommonConditionsMedicationsActivi
                     if(duplicateList.size() == 0){
                         noConditionsLayout.setVisibility(View.VISIBLE);
                         conditionsListView.setVisibility(View.GONE);
-                        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                        findViewById(R.id.txtApply).setVisibility(View.GONE);
                     }
                     adapter.getRemovedItemsIds().clear();
                     adapter.notifyDataSetChanged();

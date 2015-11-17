@@ -31,6 +31,7 @@
         android:id="@+id/drawer_user_row_down_image_view"
         android:layout_width="@dimen/dimen_8_dp"
         android:layout_height="@dimen/dimen_4_dp"
+        android:contentDescription="@string/mdl_ada_dropdown"
         android:src="@drawable/arrow_down_black"
         android:layout_marginLeft="@dimen/dimen_8_dp"
         android:layout_gravity="center_vertical"/>

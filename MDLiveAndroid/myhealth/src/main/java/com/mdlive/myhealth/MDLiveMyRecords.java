@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.mdlive.myhealth.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.messagecenter.MessageMyRecordsFragment;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.messagecenter.MessageMyRecordsFragment;
 
 /**
  * Created by venkataraman_r on 8/31/2015.
@@ -24,20 +24,23 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_center_compose);
         clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_my_record));
 
         try {
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.header);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 setTitle("");
-                ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
-                ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-                findViewById(R.id.txtApply).setVisibility(View.GONE);
                 elevateToolbar(toolbar);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_record).toUpperCase());
+        ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
 
         setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
 

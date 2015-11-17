@@ -19,35 +19,6 @@
     <RelativeLayout
         style="@style/common_style_W_Match_M_Match"
         android:background="@color/white">
-        <!--<RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/wagHeaderLinearLayoutStyle"
-            android:orientation="horizontal">
-            <ImageView
-                style="@style/HeaderBackImgStyle"
-                android:background="@drawable/exit_icon"
-                android:contentDescription="@string/closeBtn"
-                android:id="@+id/backImg"
-                />
-
-            <TextView
-                android:id="@+id/headerTxt"
-                style = "@style/HeaderTextViewStyle"
-                android:layout_toRightOf="@+id/backImg"
-                android:text="@string/doctor_filters"
-                />
-            <Button
-                android:onClick="doneAction"
-                android:id="@+id/doneBtn"
-                android:labelFor="@string/done"
-                style = "@style/endHeaderTextViewStyle"
-                android:textSize="@dimen/textsize_large"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:background="@null"
-                android:text="@string/doneUpperCase"
-                />
-        </RelativeLayout>-->
 
         <TextView
             android:id="@+id/txtAdvancedSearchOptions"
@@ -57,7 +28,8 @@
             android:text="@string/mdl_advanced_search_options"
             android:tag="@string/mdltag_advanced_search_options"
             android:textColor="@color/darkgrey_background"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/edt_searchProvider"
@@ -150,7 +122,7 @@
                 style="@style/searchProviderValueStyle"
                 android:layout_below="@+id/txtProviderType"
                 android:tag="@string/mdltag_any"
-                android:text="@string/mdl_any" />
+                 />
         </RelativeLayout>
 
         <View

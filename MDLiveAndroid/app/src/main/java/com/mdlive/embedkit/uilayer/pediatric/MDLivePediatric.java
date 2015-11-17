@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,17 +26,22 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.behaviouralhealth.MedicalHistoryPluginActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.GoogleFitUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
+import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.myhealth.PediatricService;
@@ -49,7 +55,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class MDLivePediatric extends MDLiveBaseActivity {
+public class MDLivePediatric extends MedicalHistoryPluginActivity {
     private RadioGroup birthComplicationGroup, lastShotGroup, smokingGroup, childOutGroup, siblingsGroup;
     public EditText edtBirthComplications, edtLastShot, edtCurrentWeight;
     private List<String> dietList;
@@ -67,10 +73,23 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        clearMinimizedTime();
-        cxt = this;
         initializeUI();
+        cxt = this;
+        clearMinimizedTime();
+        this.setTitle(getString(R.string.mdl_pediatric_header_text));
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                    commit();
+        }
         touchHandlers();
+
     }
 
     /**
@@ -121,11 +140,18 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        locationService = new LocationCooridnates(getApplicationContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+
         dietLayout= (CardView) findViewById(R.id.diet_layout);
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
         ((ImageView) findViewById(R.id.txtApply)).setImageResource(R.drawable.top_tick_icon);
+        findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_pediatric_header_text));
 
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -199,14 +225,14 @@ public class MDLivePediatric extends MDLiveBaseActivity {
      */
 
     public boolean checkPerdiatricAge() {
-        if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_TWO && MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) < IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+        if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_TWO && TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) < IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             return true;
-        } else if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_TWO) {
-            if (MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO && MdliveUtils.daysFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO) {
+        } else if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_TWO) {
+            if (TimeZoneUtils.calculteMonthFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO && TimeZoneUtils.daysFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_ZERO) {
                 return true;
             }
-        } else if (MdliveUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
-            if (MdliveUtils.calculteMonthFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO && MdliveUtils.daysFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO) {
+        } else if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
+            if (TimeZoneUtils.calculteMonthFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO && TimeZoneUtils.daysFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_ZERO) {
                 return true;
             }
         }
@@ -288,7 +314,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         birthComplicationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                MdliveUtils.hideSoftKeyboard(MDLivePediatric.this);
                 if (checkedId == R.id.birthComplications_yesButton) {
                     updateParams("Birth complications", "Yes");
                     edtBirthComplications.setVisibility(View.VISIBLE);
@@ -303,6 +329,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                 }
             }
         });
+
         lastShotGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -390,7 +417,6 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
 
         Gson gs = new Gson();
-        //Log.v("Post Params", gs.toJson(postParams).toString());
 
 
     }
@@ -494,9 +520,14 @@ public class MDLivePediatric extends MDLiveBaseActivity {
 
 
                 postParams.put("personal_info", weightMap);
+                String weight = personalInfoObj.getString("weight");
+                boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY",false);
+                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight) && fromMedicalHistory) {
+                    ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
+                }
+
                 enableSaveButton();
                 Gson gs = new Gson();
-                //Log.v("Post Params", gs.toJson(postParams).toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -512,6 +543,18 @@ public class MDLivePediatric extends MDLiveBaseActivity {
      */
 
     public void enableRadioButtons(String name, String value) {
+
+        boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY",false);
+
+        if(fromMedicalHistory){
+            if ("Immunization up to date?".equals(name)) {
+                if ("Yes".equals(value)) {
+                    ((RadioButton) findViewById(R.id.immunization_yesButton)).setChecked(true);
+                } else if ("No".equals(value)) {
+                    ((RadioButton) findViewById(R.id.immunization_noButton)).setChecked(true);
+                }
+            }
+        }
         if ("Smoking exposure".equals(name)) {
             if ("Yes".equals(value)) {
                 ((RadioButton) findViewById(R.id.smoking_yesButton)).setChecked(true);
@@ -538,8 +581,12 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             }
         } else if ("Birth complications explanation".equals(name)) {
             edtBirthComplications.setText(value);
-        } else if ("Current Diet".equals(name)) {
-            txtDietType.setText(StringConstants.DIET_TYPE);
+        } else if ("Current Diet".equalsIgnoreCase(name)) {
+            if(value != null && !value.isEmpty()) {
+                txtDietType.setText(value);
+            } else {
+                txtDietType.setText(StringConstants.DIET_TYPE);
+            }
         }
     }
 
@@ -568,9 +615,13 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             public void onResponse(Object response) {
                 hideProgress();
                 if(getIntent() != null && getIntent().hasExtra("firstTimeUser")){
-                    Intent medicalIntent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
-                    startActivity(medicalIntent);
-                    MdliveUtils.startActivityAnimation(MDLivePediatric.this);
+                    if(getIntent().hasExtra("theraphyFlow")){
+                        checkMedicalAggregation();
+                    }else{
+                        Intent medicalIntent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
+                        startActivity(medicalIntent);
+                        MdliveUtils.startActivityAnimation(MDLivePediatric.this);
+                    }
                 }else{
                     setResult(RESULT_OK);
                     finish();
@@ -583,6 +634,15 @@ public class MDLivePediatric extends MDLiveBaseActivity {
                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
             }
         };
+        SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
+        EditText weightEt = (EditText) findViewById(R.id.edt_currentweight);
+        if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+            if((weightEt.getText().toString().equals("0"))){
+                GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(weightEt.getText().toString()) + ""},this);
+            }
+        }
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
         getProfileData.doPostPediatricBelowTwo(new Gson().toJson(postParams), successListener, errorListener);
     }
@@ -603,6 +663,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String selectedType = list.get(which);
                 selectedText.setText(selectedType);
+                selectedText.setContentDescription(getString(R.string.mdl_ada_dropdown) + selectedType);
                 updateDropDownParams(typeName, selectedType);
                 enableSaveButton();
                 dialog.dismiss();
@@ -620,15 +681,15 @@ public class MDLivePediatric extends MDLiveBaseActivity {
     public void enableSaveButton() {
         if (isFieldsNotEmpty()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             } else {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.VISIBLE);
+                findViewById(R.id.txtApply).setVisibility(View.VISIBLE);
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             } else {
-                ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+                findViewById(R.id.txtApply).setVisibility(View.GONE);
             }
         }
     }
@@ -679,7 +740,7 @@ public class MDLivePediatric extends MDLiveBaseActivity {
        */
     public void setProgressBarVisibility() {
         showProgress();
-        ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);
+        findViewById(R.id.txtApply).setVisibility(View.GONE);
     }
 
     /*
@@ -700,5 +761,13 @@ public class MDLivePediatric extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(this);
     }
 
+    private boolean isInteger(String value){
+        try {
+            Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 
 }

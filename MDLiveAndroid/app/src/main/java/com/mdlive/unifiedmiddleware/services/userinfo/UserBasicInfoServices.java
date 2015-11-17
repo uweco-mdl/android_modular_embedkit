@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
@@ -24,27 +23,31 @@ public class UserBasicInfoServices extends BaseServicesPlugin {
 
     public void getUserBasicInfoRequest(String memberId, NetworkSuccessListener<JSONObject> responseListener , NetworkErrorListener errorListener){
         try {
-            //Log.d("Hello", "Selected User : " + memberId + ".");
+            Log.d("Hello", "Selected User : " + memberId + ".");
 
             String url = AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO;
             if(!memberId.isEmpty()){
                 //url.replace(":id","get_image_url");
                 SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(PreferenceConstants.DEPENDENT_USER_ID, memberId);
+                editor.putString(PreferenceConstants.DEPENDENT_USER_ID,memberId);
                 editor.commit();
 
-                //Log.d("Hello", "Selected User : " + "From Pref : " + sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, "") + ".");
-                //Log.d("Hello", "Selected User : "  + "For Dependent.");
+                Log.d("Hello", "Selected User : " + "From Pref : " + sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, "") + ".");
+                Log.d("Hello", "Selected User : "  + "For Dependent.");
             }else{
                 SharedPreferences sharedpreferences = context.getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
+                editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
                 editor.commit();
 
-                //Log.d("Hello", "Selected User : " + "For Parent.");
+                Log.d("Hello", "Selected User : " + "For Parent.");
             }
-            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO, null, responseListener, errorListener, MDLiveConfig.IS_SSO);
+            jsonObjectGetRequest(AppSpecificConfig.BASE_URL + AppSpecificConfig.URL_USER_INFO,
+                                    null,
+                                    responseListener,
+                                    errorListener,
+                                    MDLiveConfig.IS_SSO);
         }catch(Exception e){
             e.printStackTrace();
         }

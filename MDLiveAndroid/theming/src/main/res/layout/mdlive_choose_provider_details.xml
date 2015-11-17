@@ -175,6 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"
                                 android:textSize="@dimen/dimen_16_dp"
+                                android:contentDescription="@string/mdl_ada_video_btn_forward"
                                 android:text="@string/mdl_by_video"
                                 android:tag="@string/mdltag_by_video"/>
 
@@ -201,6 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"
                                 android:textSize="@dimen/dimen_16_dp"
+                                android:contentDescription="@string/mdl_ada_phone_btn_forward"
                                 android:text="@string/mdl_by_phone"
                                 android:tag="@string/mdltag_by_phone"/>
 
@@ -347,7 +349,7 @@
                         <LinearLayout
                             android:id="@+id/hosaffiliationsLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop">
+                            android:layout_marginTop="@dimen/dimen_10_dp">
 
                             <include layout="@layout/mdlive_provider_license" />
                         </LinearLayout>
@@ -355,7 +357,7 @@
                         <LinearLayout
                             android:id="@+id/educationLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop">
+                            android:layout_marginTop="@dimen/dimen_10_dp">
                             <!--android:layout_marginTop="@dimen/margin_top"-->
                             <include layout="@layout/mdlive_provider_education"
                                 />
@@ -364,7 +366,7 @@
                         <LinearLayout
                             android:id="@+id/languagesLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop">
+                            android:layout_marginTop="@dimen/dimen_10_dp">
 
                             <include layout="@layout/mdlive_provider_languages" />
                         </LinearLayout>
@@ -372,7 +374,7 @@
                         <LinearLayout
                             android:id="@+id/boardCertificationsLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop">
+                            android:layout_marginTop="@dimen/dimen_10_dp">
 
                             <include layout="@layout/mdlive_provider_location"
                                 />
@@ -381,14 +383,23 @@
                         <LinearLayout
                             android:id="@+id/aboutmeLl"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop">
+                            android:layout_marginTop="@dimen/dimen_10_dp">
 
                             <include layout="@layout/mdlive_provider_aboutme" />
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/providerGroupAffiliation"
                             style="@style/LinearLayoutStyle"
-                            android:layout_marginTop="@dimen/speciatiesLl_marginTop"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/dimen_10_dp">
+
+                            <include layout="@layout/mdlive_provider_affilitations" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/LinearLayoutStyle"
+                            android:layout_marginTop="@dimen/dimen_10_dp"
                             android:visibility="gone">
 
                             <include layout="@layout/mdlive_provider_languages" />

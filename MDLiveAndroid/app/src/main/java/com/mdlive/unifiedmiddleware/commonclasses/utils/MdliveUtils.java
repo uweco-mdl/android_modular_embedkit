@@ -10,16 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -37,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SSOUser;
@@ -49,16 +48,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,67 +61,41 @@ import java.util.regex.Pattern;
  */
 public class MdliveUtils {
     private static final AtomicInteger S_NEXT_GENERATED_ID = new AtomicInteger(1);
+    public static boolean isAppInForground = false;
     public static SSOUser ssoInstance;
+    public static AppCompatActivity activity;
+    public static boolean DIALOG_SHOWN = false;
+
     private MdliveUtils(){
         // this class cannot be directly instantiated externally
     }
-
-    /**
-     * Validation for Email
-     *
-     * @param value
-     * @return
-     */
-    public final static boolean isValidEmail(String value) {
-        return !TextUtils.isEmpty(value) && android.util.Patterns.EMAIL_ADDRESS.matcher(value).matches();
-    }
-
-    /**
-     *
-     * Validation for User Name
-     * @param value
-     * @return
-     */
-    public final static boolean isValidUserName(String value) {
-        return (value.length()>2)?true:false;
-    }
-
-    /**
-     *
-     * Validation for password
-     * @param value
-     * @return
-     */
-    public final static boolean isValidPassword(String value) {
-        return (value.length()>2)?true:false;
-    }
-
-    /**
-     *
-     * Validation for Name
-     * @param value
-     * @return
-     */
-    public final static boolean isValidName(String value) {
-        return Pattern.matches("^\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}", value);
-    }
-
     public static void connectionTimeoutError(ProgressDialog pDialog, final Context context) {
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(context);
-        if(pDialog!=null && pDialog.isShowing()){
-            pDialog.dismiss();
-        }
-        ((Activity)context).runOnUiThread(new Runnable() {
-            public void run() {
-                final String number = userBasicInfo == null ? context.getString(R.string.mdl_help_number_if_assist_not_present) : userBasicInfo.getAssistPhoneNumber();
-                showDialog(context, context.getApplicationInfo().loadLabel(context.getPackageManager()).toString(), context.getString(R.string.mdl_connection_timeout_error_message, number), context.getString(R.string.mdl_ok_upper), null, null, null);
+        if(!MdliveUtils.DIALOG_SHOWN) {
+            MdliveUtils.DIALOG_SHOWN = true;
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(context);
+            if (pDialog != null && pDialog.isShowing()) {
+                pDialog.dismiss();
             }
-        });
+            final DialogInterface.OnClickListener onClick = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    MdliveUtils.DIALOG_SHOWN = false;
+                }
+            };
+            ((Activity) context).runOnUiThread(new Runnable() {
+                public void run() {
+                    final String number = userBasicInfo == null ? context.getString(R.string.mdl_help_number_if_assist_not_present) : userBasicInfo.getAssistPhoneNumber();
+                    showDialog(context, context.getApplicationInfo().loadLabel(context.getPackageManager()).toString(), context.getString(R.string.mdl_connection_timeout_error_message, number), context.getString(R.string.mdl_ok_upper), null, onClick, null);
+                }
+            });
+        }
     }
 
 
     public static void showDialog(final Context context, String title, String message, String positiveBtn, final String negativeBtn,
                                   DialogInterface.OnClickListener positiveOnclickListener, final DialogInterface.OnClickListener negativeOnclickListener) {
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
         if(positiveOnclickListener == null){
@@ -155,9 +122,8 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
                 if (negativeBtn!=null && negativeOnclickListener !=null){
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                    //
                 }
             }
         });
@@ -169,7 +135,7 @@ public class MdliveUtils {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
         alertDialogBuilder
-                .setTitle("")
+                .setTitle("MDLIVE")
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("Ok",positiveOnclickListener);
@@ -177,7 +143,7 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
         });
         alertDialog.show();
@@ -196,7 +162,7 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
         });
         alertDialog.setView(promoCode);
@@ -207,8 +173,7 @@ public class MdliveUtils {
     public static void showDialog(final Context context, String title, String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
-        DialogInterface.OnClickListener positiveOnclickListener =
-                positiveOnclickListener = new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -223,7 +188,7 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
         });
 
@@ -242,14 +207,17 @@ public class MdliveUtils {
     }
 
     public static void alert(ProgressDialog pDialog, final Context context, final String message, final DialogInterface.OnClickListener onClickListener) {
-        if(pDialog!=null && pDialog.isShowing()){
-            pDialog.dismiss();
-        }
-        ((Activity)context).runOnUiThread(new Runnable() {
-            public void run() {
-                showDialog(context, context.getApplicationInfo().loadLabel(context.getPackageManager()).toString(), message, "OK", null, onClickListener, null);
+        if(!MdliveUtils.DIALOG_SHOWN) {
+            MdliveUtils.DIALOG_SHOWN = true;
+            if (pDialog != null && pDialog.isShowing()) {
+                pDialog.dismiss();
             }
-        });
+            ((Activity) context).runOnUiThread(new Runnable() {
+                public void run() {
+                    showDialog(context, context.getApplicationInfo().loadLabel(context.getPackageManager()).toString(), message, "OK", null, onClickListener, null);
+                }
+            });
+        }
     }
 
     /**
@@ -257,7 +225,7 @@ public class MdliveUtils {
      */
     public static void hideSoftKeyboard(Activity context) {
         if(context.getCurrentFocus()!=null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(), 0);
         }
     }
@@ -281,12 +249,7 @@ public class MdliveUtils {
         String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
         Pattern zipCodePattern = Pattern.compile(regex);
         Matcher matcher = zipCodePattern.matcher(zipCode);
-        if(matcher.matches()){
-            return true;
-        }else{
-            return false;
-
-        }
+        return matcher.matches();
     }
 
     public static ProgressDialog getProgressDialog(String message, Activity context) {
@@ -319,47 +282,6 @@ public class MdliveUtils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static boolean isNotEmpty(String str)
-    {
-        return(str!=null && !str.isEmpty());
-    }
-
-    /**
-     * Generate a value suitable for use in view's setId() method.
-     * This value will not collide with ID values generated at build time by aapt for R.id.
-     *
-     * @return a generated ID value
-     */
-    public static int generateViewId() {
-        for (;;) {
-            final int result = S_NEXT_GENERATED_ID.get();
-            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
-            int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
-            if (S_NEXT_GENERATED_ID.compareAndSet(result, newValue)) {
-                return result;
-            }
-        }
-    }
-
-    /**
-     * get Formatted String for Date
-     *
-     * @param - dateString : date String is going to be parsed as required formatted string.
-     */
-
-    public static String getFormattedDate(String dateString){
-        //2015-05-29 07:15:00
-        SimpleDateFormat sdf = null;
-        try {
-            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return sdf.format(sdf.parse(dateString));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static void showProgressDialog(ProgressDialog dialog){
         dialog.show();
     }
@@ -369,40 +291,6 @@ public class MdliveUtils {
         }
 
     }
-/*
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-        }
-    }*/
-
-/*
-    public int calculateAge(int year, int month, int day){
-        Calendar thatDay = Calendar.getInstance();
-        thatDay.set(Calendar.DAY_OF_MONTH, day);
-        thatDay.set(Calendar.MONTH,month); // 0-11 so 1 less
-        thatDay.set(Calendar.YEAR, year);
-
-        Calendar today = Calendar.getInstance();
-
-        long diff = today.getTimeInMillis() - thatDay.getTimeInMillis(); //result in millis
-        today.setTimeInMillis(diff);
-        return today.get(Calendar.YEAR);
-    }*/
-
     /**
      *  This method is used to calcualte age by getting the date of birth
      *
@@ -412,17 +300,17 @@ public class MdliveUtils {
      */
 
 
-    public static int calculateAge(Date birthDate)
+    public static int calculateAge(Date birthDate, Context context)
     {
         int years = 0;
         int months = 0;
         int days = 0;
         //create calendar object for birth day
-        Calendar birthDay = Calendar.getInstance();
+        Calendar birthDay = TimeZoneUtils.getCalendarWithOffset(context);
         birthDay.setTimeInMillis(birthDate.getTime());
         //create calendar object for current day
         long currentTime = System.currentTimeMillis();
-        Calendar now = Calendar.getInstance();
+        Calendar now = TimeZoneUtils.getCalendarWithOffset(context);
         now.setTimeInMillis(currentTime);
         //Get difference between years
         years = now.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR);
@@ -464,20 +352,17 @@ public class MdliveUtils {
         return years;
     }
 
-    public static int calculateMonth(Date birthDate)
+    public static int calculateMonth(Date birthDate, Context context)
     {
-        int years = 0;
         int months = 0;
-        int days = 0;
         //create calendar object for birth day
-        Calendar birthDay = Calendar.getInstance();
+        Calendar birthDay = TimeZoneUtils.getCalendarWithOffset(context);
         birthDay.setTimeInMillis(birthDate.getTime());
         //create calendar object for current day
         long currentTime = System.currentTimeMillis();
-        Calendar now = Calendar.getInstance();
+        Calendar now = TimeZoneUtils.getCalendarWithOffset(context);
         now.setTimeInMillis(currentTime);
         //Get difference between years
-        years = now.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR);
         int currMonth = now.get(Calendar.MONTH) + 1;
         int birthMonth = birthDay.get(Calendar.MONTH) + 1;
         //Get difference between months
@@ -485,29 +370,22 @@ public class MdliveUtils {
         //if month difference is in negative then reduce years by one and calculate the number of months.
         if (months < 0)
         {
-            years--;
             months = 12 - birthMonth + currMonth;
             if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
                 months--;
         } else if (months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
         {
-            years--;
             months = 11;
         }
         //Calculate the days
-        if (now.get(Calendar.DATE) > birthDay.get(Calendar.DATE))
-            days = now.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
-        else if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
+        if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
         {
             int today = now.get(Calendar.DAY_OF_MONTH);
             now.add(Calendar.MONTH, -1);
-            days = now.getActualMaximum(Calendar.DAY_OF_MONTH) - birthDay.get(Calendar.DAY_OF_MONTH) + today;
         } else
         {
-            days = 0;
             if (months == 12)
             {
-                years++;
                 months = 0;
             }
         }
@@ -516,20 +394,18 @@ public class MdliveUtils {
         return months;
     }
 
-    public static int calculateDays(Date birthDate)
+    public static int calculateDays(Date birthDate, Context context)
     {
-        int years = 0;
         int months = 0;
         int days = 0;
         //create calendar object for birth day
-        Calendar birthDay = Calendar.getInstance();
+        Calendar birthDay = TimeZoneUtils.getCalendarWithOffset(context);
         birthDay.setTimeInMillis(birthDate.getTime());
         //create calendar object for current day
         long currentTime = System.currentTimeMillis();
-        Calendar now = Calendar.getInstance();
+        Calendar now = TimeZoneUtils.getCalendarWithOffset(context);
         now.setTimeInMillis(currentTime);
         //Get difference between years
-        years = now.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR);
         int currMonth = now.get(Calendar.MONTH) + 1;
         int birthMonth = birthDay.get(Calendar.MONTH) + 1;
         //Get difference between months
@@ -537,13 +413,11 @@ public class MdliveUtils {
         //if month difference is in negative then reduce years by one and calculate the number of months.
         if (months < 0)
         {
-            years--;
             months = 12 - birthMonth + currMonth;
             if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
                 months--;
         } else if (months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
         {
-            years--;
             months = 11;
         }
         //Calculate the days
@@ -557,29 +431,10 @@ public class MdliveUtils {
         } else
         {
             days = 0;
-            if (months == 12)
-            {
-                years++;
-                months = 0;
-            }
         }
         //Create new Age object
 
         return days;
-    }
-    //Convertion for the Timestamp to corresponding timezone
-//    Step1
-    public static String getTimeFromTimestamp(String timestamp) {
-
-        Log.v("Check timestamp",timestamp);
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(Long.parseLong(timestamp) * 1000);
-        Log.d("Time - ", cal.getTime().toString() + " - ");
-        final Date date = cal.getTime();
-        final Format format = new SimpleDateFormat("h:mm a");
-        String convertedTime =  format.format(date);
-        Log.v("convertedtime", convertedTime);
-        return convertedTime;
     }
 
     public static int getSampleSizeInFileSize(File file){
@@ -666,36 +521,6 @@ public class MdliveUtils {
         }
         return extension;
     }
-
-    public Matrix getImageOrientation(File file){
-        try {
-            ExifInterface exif = new ExifInterface(
-                    file.getAbsolutePath());
-            int orientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-
-            int rotate = 0;
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = 270;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-            }
-            Matrix matrix = new Matrix();
-            matrix.postRotate(orientation);
-            return matrix;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     /**
      * Function to show settings alert dialog
      * On pressing Settings button will lauch Settings Options
@@ -733,8 +558,8 @@ public class MdliveUtils {
         alert.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(activity.getResources().getColor(R.color.mdlivePrimaryBlueColor));
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(activity.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(activity.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(activity.getResources().getColor(R.color.mdlivePrimaryBlueColor));
 
             }
         });
@@ -743,48 +568,6 @@ public class MdliveUtils {
         alert.show();
     }
 
-    public static int daysFromPrefs(Context cxt){
-        try {
-            SharedPreferences sharedpreferences = cxt.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String age=sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH,"");
-            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = format.parse(age);
-            return MdliveUtils.calculateDays(date);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return 0;
-    }
-
-    public static int calculteMonthFromPrefs(Context cxt){
-        try {
-            SharedPreferences sharedpreferences = cxt.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            String age=sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH,"");
-            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = format.parse(age);
-            return MdliveUtils.calculateMonth(date);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return 0;
-    }
-
-    public static int calculteAgeFromPrefs(Context cxt){
-        try {
-            SharedPreferences sharedpreferences = cxt.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-            UserBasicInfo userbasicinfo = UserBasicInfo.readFromSharedPreference(cxt);
-            String age=sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH,"");
-            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Log.v("Date final",age);
-            Date date = format.parse(userbasicinfo.getPersonalInfo().getBirthdate());
-            return MdliveUtils.calculateAge(date);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return 0;
-    }
     //Hiding Keyboard
     public static void hideKeyboard(Context cxt,EditText edText) {
         InputMethodManager imm = (InputMethodManager)cxt.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -869,26 +652,6 @@ public class MdliveUtils {
         }
     }
 
-    /**
-     * This method will converts the user entered zipcode into standar format.
-     *
-     * @param zipcode- User typed zipcode to received as params
-     * @return-Formatted mobile to the scrren
-     */
-
-    public static String zipCodeFormat(Long zipcode) {
-        try {
-            DecimalFormat zipcodeDecimalFormat = new DecimalFormat("0000000000");
-            String zipString = zipcodeDecimalFormat.format(zipcode);
-            MessageFormat zipCodeFormat = new MessageFormat("{0}-{1}");
-            String[] zipCodeArray = {zipString.substring(1, 6), zipString.substring(6)};
-            return zipCodeFormat.format(zipCodeArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-
-    }
 
     public static String zipCodeFormat(String zipcode) {
         try {
@@ -903,6 +666,18 @@ public class MdliveUtils {
         return zipcode;
     }
 
+    public static void validateZipcodeFormat(EditText zipcodeEt) {
+        if (zipcodeEt.getText().toString().length() > 5 && zipcodeEt.getTag() == null) {
+            zipcodeEt.setTag(true);
+            if(!zipcodeEt.getText().toString().contains("-")) {
+                zipcodeEt.setText(zipcodeEt.getText().toString().substring(0, 5) + "-" + zipcodeEt.getText().toString().substring(5));
+            } else if(zipcodeEt.getText().toString().length() == 6){
+                zipcodeEt.setText(zipcodeEt.getText().toString().replace("-", ""));
+            }
+            zipcodeEt.setTag(null);
+            zipcodeEt.setSelection(zipcodeEt.length());
+        }
+    }
 
     /**
      *This method handles all the error scenarios and displays the corresponding alert.
@@ -931,7 +706,6 @@ public class MdliveUtils {
                 } else if (errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY || errorResponse.statusCode == HttpStatus.SC_NOT_FOUND || errorResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     Log.e("Status Code", "" + error.networkResponse.statusCode);
                     String responseBody = new String(error.networkResponse.data, "utf-8");
-                    Log.e("responseBody",responseBody);
                     JSONObject errorObj = new JSONObject(responseBody);
                     if (errorObj.has("message")) {
                        alert(pDialog, reference.get(), errorObj.getString("message"));
@@ -939,6 +713,9 @@ public class MdliveUtils {
                         showVisitCloseAlert(reference, errorObj.getString("error"));
                     } else if (errorObj.has("error")) {
                        alert(pDialog, reference.get(), errorObj.getString("error"));
+                    } else if(errorObj.toString().equals("{}")){
+                        final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                        alert(pDialog, reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
                     } else{
                         connectionTimeoutError(pDialog, reference.get());
 
@@ -1007,9 +784,7 @@ public class MdliveUtils {
 
 
                 } else if (errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY || errorResponse.statusCode == HttpStatus.SC_NOT_FOUND || errorResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
-                    Log.e("Status Code", "" + error.networkResponse.statusCode);
                     String responseBody = new String(error.networkResponse.data, "utf-8");
-                    Log.e("responseBody",responseBody);
                     JSONObject errorObj = new JSONObject(responseBody);
                     if (errorObj.has("message")) {
                         alert(pDialog, cxt, errorObj.getString("message"));
@@ -1027,31 +802,27 @@ public class MdliveUtils {
         }
     }
 
-    public static void checkGpsLocation(Activity activity) {
-        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-//                locationCallback(location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            //Do what you need if enabled...
-        }else{
-            //MdliveUtils.showGPSSettingsAlert(activity);
+    public static void showGPSFailureDialog(final Activity activity, DialogInterface.OnClickListener positiveClickListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                activity);
+        if(positiveClickListener == null){
+            positiveClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
         }
+        alertDialogBuilder
+                .setTitle(activity.getString(R.string.mdl_app_name))
+                .setMessage(activity.getString(R.string.mdl_gps_error_message))
+                .setCancelable(false)
+                .setPositiveButton("Ok", positiveClickListener);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
+
+
 
     public static void showDialog(final Context context, String title, String message, final DialogInterface.OnClickListener positiveClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -1067,7 +838,7 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
         });
         alertDialog.show();
@@ -1087,24 +858,11 @@ public class MdliveUtils {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
+//                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
             }
         });
         alertDialog.show();
-    }
-
-
-    /*
-    * Return the long mili seconds for a date which is n years back
-     */
-    public static long getDateBeforeNumberOfYears(final int numberOfYears) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        calendar.add(Calendar.YEAR, -numberOfYears);
-
-        return calendar.getTime().getTime();
     }
 
     /**
@@ -1125,7 +883,7 @@ public class MdliveUtils {
      * calculate the number of days from a given long time
      *
      * shows today/ yesterday/ number of days ago.
-     */
+     *//*
     public static String getDaysAgo(final Context context, final long startDay) {
         final Calendar calendarToday = Calendar.getInstance();
 
@@ -1141,7 +899,7 @@ public class MdliveUtils {
         } else {
             return context.getString(R.string.mdl_personal_record_updated_days_ago, difference);
         }
-    }
+    }*/
 
     public static void showMDLiveHelpAndSupportDialog(final Activity activity) {
         try {
@@ -1229,19 +987,9 @@ public class MdliveUtils {
         }
     }
 
-    public static String convertMiliSeconedsToStringWithTimeZone(final long milis, final String timeZone) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
-        cal.setTimeInMillis(milis * 1000);
-
-        final Date date = cal.getTime();
-        final Format format = new SimpleDateFormat("E. yyyy MM dd HH:mm a");
-        return format.format(date) + ", " + "EST";
-    }
-
-    /*
+    /*    *//*
     * Get the last visited String
-    * */
+    * *//*
     public static String getLastVisit(final long milis) {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(milis * 1000);
@@ -1249,131 +997,10 @@ public class MdliveUtils {
         final Date date = cal.getTime();
         final Format format = new SimpleDateFormat("MM/dd/yyyy");
         return format.format(date);
-    }
+    }*/
     //Choose Provider Logic Date
 
-    public static String getReceivedTimeForProvider(final long milis, final String timeZone) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-        final Date now = cal.getTime();
-        cal.setTimeInMillis(milis * 1000);
-
-        final Date date = cal.getTime();
-
-        long diff =   date.getTime()-now.getTime();
-
-        int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-
-        Log.d("Set Date", "Diff : " + diffDays);
-
-        if (diffDays ==0) {
-            Log.v("Day","Today");
-            final Format format = new SimpleDateFormat("H:mm a");
-            return "Today "+format.format(date);
-        } else if (diffDays == 1) {
-            Log.v("Day","Tomorrow");
-            final Format format = new SimpleDateFormat("H:mm a");
-            return "Tommorrow "+ format.format(date);
-        } else if (diffDays >1) {
-            Log.v("Day","future");
-            final Format format = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a");
-            return format.format(date);
-        } else {
-            Log.v("Day","future");
-            final Format format = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a");
-            return format.format(date);
-        }
-    }
-
-    public static String getReceivedSentTime(final long milis, final String timeZone) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-        final Date now = cal.getTime();
-        cal.setTimeInMillis(milis * 1000);
-
-        final Date date = cal.getTime();
-
-        long diff = now.getTime() - date.getTime();
-
-        int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-
-        Log.d("Set Date", "Diff : " + diffDays);
-
-        if (diffDays < 1) {
-            final Format format = new SimpleDateFormat("H:mm a");
-            return format.format(date).toLowerCase();
-        } else if (diffDays == 1) {
-            return "Yesterday";
-        } else {
-            final Format format = new SimpleDateFormat("MM/dd/yyyy");
-            return format.format(date);
-        }
-    }
-
-    public static String getReceivedSentTimeInDetails(final long milis, final String timeZone) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-        final Date now = cal.getTime();
-        cal.setTimeInMillis(milis * 1000);
-
-        final Date date = cal.getTime();
-
-        final Format format = new SimpleDateFormat("MM/dd/yyyy H:mm a");
-        return format.format(date);
-    }
-
-    /*
-    * Will return 0 if less than 10 minutes
-    * Will return 1 if less than 24 hours
-    * Will return 2 in other cases.
-    * */
-    public static int getRemainigTimeToAppointment(final long milis, final String timeZone) {
-        final long now = System.currentTimeMillis();
-
-        final Calendar myTime = Calendar.getInstance();
-        myTime.setTimeInMillis(now);
-        myTime.setTimeZone(TimeZone.getTimeZone("EDT"));
-
-
-        final Calendar start = Calendar.getInstance();
-        start.setTimeInMillis(milis * 1000);
-
-        long difference = start.getTimeInMillis() - myTime.getTimeInMillis();
-        long minute = 60 * 1000;
-        long tenMinutes = 10 * minute;
-
-        final long oneDay = 24 * 60 * 60 * 1000;
-
-        if (difference < tenMinutes) {
-            return 0;
-        } else if (difference < oneDay){
-            return 1;
-        } else {
-            return 2;
-        }
-    }
-
-    public static String getRemainigTimeToAppointmentString(final long milis, final String timeZone) {
-        final long now = System.currentTimeMillis();
-
-        final Calendar myTime = Calendar.getInstance();
-        myTime.setTimeInMillis(now);
-        myTime.setTimeZone(TimeZone.getTimeZone("EST"));
-
-
-        final Calendar start = Calendar.getInstance();
-        start.setTimeInMillis(milis * 1000);
-
-        long difference = start.getTimeInMillis() - myTime.getTimeInMillis();
-        long minute = 60 * 1000;
-
-        return "" + (int) difference/minute;
-    }
-
-    public static String getFutureAppointmentTime(final long milis, final String timeZone) {
+    /*    public static String getFutureAppointmentTime(final long milis, final String timeZone) {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone(timeZone));
 
@@ -1385,7 +1012,7 @@ public class MdliveUtils {
         final Format format1 = new SimpleDateFormat("EEE, dd ");
         final Format format2 = new SimpleDateFormat("HH:mm a z");
         return format1.format(date) + " at " + format2.format(date);
-    }
+    }*/
 
     public static void clearNecessarySharedPrefernces(final Context context) {
         final WeakReference<Context> reference = new WeakReference<>(context);
@@ -1403,13 +1030,21 @@ public class MdliveUtils {
         prefs = reference.get().getSharedPreferences(PreferenceConstants.USER_BASIC_INFO, Context.MODE_PRIVATE);
         prefs.edit().clear().commit();
 
-//      Do not delete PIN/ PASSWORD preference
-//        prefs = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-//        prefs.edit().clear().commit();
-        setFirstTime(context, true);
+//      Do not delete PIN/ PASSWORD preference, just reset the preferred sign in to password by default
+        prefs = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+        prefs.edit().putString(PreferenceConstants.LOCK_TYPE, context.getString(R.string.mdl_password)).commit();
 
         prefs = reference.get().getSharedPreferences(PreferenceConstants.SELECTED_USER, Context.MODE_PRIVATE);
         prefs.edit().clear().commit();
+        // Clear Baylor cache
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor baylorEditor = sharedPref.edit();
+        baylorEditor.remove(PreferenceConstants.BAYLOR_GUID).commit();
+        IntegerConstants.SESSION_TIMEOUT = 60 * 1000;
+        if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name()))
+        {
+            DeepLinkUtils.DEEPLINK_DATA = null;
+        }
     }
 
     public static String getLockType(final Context context) {
@@ -1420,11 +1055,39 @@ public class MdliveUtils {
         }
 
         final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-        String type = preferences.getString(PreferenceConstants.SIGN_IN + getRemoteUserId(context), context.getString(R.string.mdl_password));
-        Log.d("Hello", "Get Type :" + type + ".");
+        String type = preferences.getString(PreferenceConstants.SIGN_IN + getRemoteUserId(context), context.getString(R.string.mdl_pin));
         return type;
     }
 
+    public static String getPreferredLockType(final Context context) {
+        try {
+            final WeakReference<Context> reference = new WeakReference<>(context);
+
+            if (reference.get() == null) {
+                return "Password";
+            }
+
+            final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+            String type = preferences.getString(PreferenceConstants.LOCK_TYPE, context.getString(R.string.mdl_password));
+            return type;
+        }catch (Exception e){
+            return "Password";
+        }
+    }
+    public static void setPreferredLockType(final Context context, final String type) {
+        final WeakReference<Context> reference = new WeakReference<>(context);
+
+        if (reference.get() == null) {
+            return;
+        }
+
+        final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(PreferenceConstants.LOCK_TYPE, type);
+        editor.commit();
+
+    }
     public static void setLockType(final Context context, final String type) {
         final WeakReference<Context> reference = new WeakReference<>(context);
 
@@ -1436,42 +1099,12 @@ public class MdliveUtils {
         final SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString(PreferenceConstants.SIGN_IN + getRemoteUserId(context), type);
+        editor.putString(PreferenceConstants.LOCK_TYPE, type);
         editor.commit();
 
-        Log.d("Hello", "Set Type :" + type + ".");
     }
 
-    public static boolean getFirstTime(final Context context) {
-        final WeakReference<Context> reference = new WeakReference<>(context);
-
-        if (reference.get() == null) {
-            return false;
-        }
-
-        final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-        boolean isFirstTime = preferences.getBoolean(PreferenceConstants.FIRST_TIME, true);
-        Log.d("Hello", "First Time :" + isFirstTime + ".");
-        return isFirstTime;
-    }
-
-    public static void setFirstTime(final Context context, final boolean firstTime) {
-        final WeakReference<Context> reference = new WeakReference<>(context);
-
-        if (reference.get() == null) {
-            return;
-        }
-
-        final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.PREFFERED_SIGNIN, Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putBoolean(PreferenceConstants.FIRST_TIME, firstTime);
-        editor.commit();
-
-        Log.d("Hello", "First Time :" + firstTime + ".");
-    }
-
-    public static String getRemoteUserId(final Context context)
-    {
+    public static String getRemoteUserId(final Context context) {
         String remoteUserId = null;
 
         if(MDLiveConfig.IS_SSO){
@@ -1486,8 +1119,8 @@ public class MdliveUtils {
             }
 
             final SharedPreferences preferences = reference.get().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-            remoteUserId = preferences.getString(PreferenceConstants.USER_UNIQUE_ID, "");
-            //Log.d("Hello", "RemoteUserId :" +  remoteUserId + ".");
+                remoteUserId = preferences.getString(PreferenceConstants.USER_UNIQUE_ID, "");
+                //Log.d("Hello", "RemoteUserId :" +  remoteUserId + ".");
         }
 
         return(remoteUserId);
@@ -1549,7 +1182,6 @@ public class MdliveUtils {
 
     public static String formatDualString(String formatText) {
         boolean hasParenthesis = false;
-        Log.v("Raw Format Text",formatText);
         if(formatText.indexOf(")") > 0){
             hasParenthesis = true;
         }
@@ -1559,48 +1191,29 @@ public class MdliveUtils {
         formatText= formatText.replace("-", "");
         if(formatText.length() >= 7){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, 6)+"-"+formatText.substring(6, formatText.length());
-            Log.v("Print format txt",formatText);
         }else if(formatText.length() >= 4){
             formatText = "("+formatText.substring(0, 3)+") "+formatText.substring(3, formatText.length());
-            Log.v("Print format txt",">4");
         }else if(formatText.length() == 3 && hasParenthesis){
-            Log.v("Print format txt",">3");
             formatText = "("+formatText.substring(0, formatText.length())+")";
         }
         return formatText;
     }
     public static boolean checkIsEmpty(String text){
 
-        if ((text.equalsIgnoreCase("null")) || (text == null)  || (TextUtils.isEmpty(text)) ||(text.trim().length()) == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (text.equalsIgnoreCase("null")) || (text == null) || (TextUtils.isEmpty(text)) || (text.trim().length()) == 0;
     }
 
-    public static void saveDeviceToken(final Context context, final String deviceToken) {
-        final WeakReference<Context> reference = new WeakReference<Context>(context);
-
-        if (reference != null && reference.get() != null) {
-            final SharedPreferences sharedPreferences = reference.get().getSharedPreferences(PreferenceConstants.DEVICE_TOKEN, Context.MODE_PRIVATE);
-            final SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(PreferenceConstants.DEVICE_TOKEN_KEY, deviceToken);
-            editor.commit();
-
-            Log.d("Device_TOKEN", deviceToken);
-        }
-    }
-
+    /**
+     *
+     * @param context
+     * @return Device UUID for unique identification
+     */
     public static String getDeviceToken(final Context context) {
-        final WeakReference<Context> reference = new WeakReference<Context>(context);
-
-        if (reference != null && reference.get() != null) {
-            final SharedPreferences sharedPreferences = reference.get().getSharedPreferences(PreferenceConstants.DEVICE_TOKEN, Context.MODE_PRIVATE);
-            final String deviceToken = sharedPreferences.getString(PreferenceConstants.DEVICE_TOKEN_KEY, "");
-            Log.d("Device_TOKEN", deviceToken);
-            return deviceToken;
+        if (context != null) {
+            return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         } else {
             return "";
         }
     }
+
 }

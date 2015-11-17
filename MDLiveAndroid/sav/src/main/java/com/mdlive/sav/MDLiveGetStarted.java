@@ -1,22 +1,27 @@
 package com.mdlive.sav;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -33,11 +38,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -50,8 +57,9 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
-import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
+import com.mdlive.unifiedmiddleware.services.location.CurrentLocationServices;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
+import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
 import org.apache.http.HttpStatus;
@@ -63,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.OnUserChangedInGetStarted;
@@ -91,8 +98,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     private int remainingFamilyMemberCount;
 
     private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
-    private ArrayList<String> providerTypeArrayList;
-    private ArrayList<String> providerTypeIdList;
+    public static ArrayList<String> providerTypeArrayList;
+    public static ArrayList<String> providerTypeIdList;
     private  ArrayList<String> dependentList = new ArrayList<String>();
     private Spinner patientSpinner;
     private EditText phonrNmberEditTxt;
@@ -101,11 +108,23 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     ArrayAdapter<String> dataAdapter;
     User user = null;
 
+    //Location Services
+
+    private LocationCooridnates locationService;
+    private IntentFilter intentFilter;
+    private String shortNameText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_get_started);
         clearMinimizedTime();
+        clearCacheInVolley();
+        this.setTitle(getString(R.string.mdl_getstarted));
+        locationService = new LocationCooridnates(MDLiveGetStarted.this);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
+
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,14 +139,28 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         MdliveUtils.hideSoftKeyboard(this);
         initialiseData();
-        loadProviderType();
         clearCacheInVolley();
 
-
-        if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
-            user = getIntent().getExtras().getParcelable(User.USER_TAG);
-            Log.d("Hello", "Selected User : " + user.toString());
+        try {
+            if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
+                user = getIntent().getExtras().getParcelable(User.USER_TAG);
+                Log.d("Hello", "Selected User : " + user.toString());
+            }
+            if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                final SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(PreferenceConstants.DEPENDENT_USER_ID, user.mId);
+                editor.commit();
+                loadDependentUserInformationDetails(user.mId);
+                loadDependentProviderTypeDetails(user.mId);
+                Log.v("Mid", user.mId);
+            } else {
+                loadProviderType();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+//        loadProviderType();
 
 
         if (savedInstanceState == null) {
@@ -141,6 +174,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+
+        findViewById(R.id.txt_alert_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSettingsAlert();
+            }
+        });
     }
 
 
@@ -158,6 +198,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     public void onTickClicked(View v){
         saveDateOfBirth();
         try{
+            SharedPreferences searchPref = this.getSharedPreferences("SearchPref", 0);
+            SharedPreferences.Editor searchPrefEditor = searchPref.edit();
+            searchPrefEditor.putString(PreferenceConstants.SEARCHFILTER_LONGNAME_LOCATION_PREFERENCES, locationTxt.getText().toString());
+            searchPrefEditor.commit();
             if(locationTxt.getText().toString().equals("Arkansas"))
             {
                 ChooseProviderResponseList();
@@ -170,7 +214,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                         DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber().replaceAll("-", "")));
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER.replaceAll("-", "")));
                                 startActivity(intent);
                                 MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
@@ -207,7 +251,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
                                 Log.v("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
-                                phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
+                                //phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
                                 if(((TextView)findViewById(R.id.providertypeTxt)).getText() != null)
@@ -226,6 +270,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     }
                 }
             }
+            HideKeyboard();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -240,7 +285,14 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *
      * **/
 
-
+    private void HideKeyboard(){
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
@@ -260,21 +312,31 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
 
 
-    public void goToLocation(View v){
-        Intent LocationIntent  = new Intent(MDLiveGetStarted.this,MDLiveLocation.class);
+    public void goToLocation(View v) {
+        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+            findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+        }
+        Intent LocationIntent = new Intent(MDLiveGetStarted.this, MDLiveLocation.class);
         LocationIntent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
         startActivityForResult(LocationIntent, IdConstants.REQUEST_LOCATION_CHANGE);
         MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String  longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
+        String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
 
         Log.v("Long Location Nmae-->", longLocation);
         SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 
-        if(longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO)
+        if (longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO){
             locationTxt.setText(longLocation);
+        }
+
+
+
 
     }
+
     /**
      *
      * The Click event for the Provider Type will be showing the dialog which
@@ -346,8 +408,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(MDLiveGetStarted.this);
-                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + userBasicInfo.getAssistPhoneNumber()));
+                                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + StringConstants.ALERT_PHONENUMBER));
                                     startActivity(intent);
                                     MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
 
@@ -376,13 +437,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     }else {
                         if (StringConstants.ADD_FAMILY_MEMBER.equalsIgnoreCase(dependentName)) {
                             Intent intent = new Intent(MDLiveGetStarted.this, AddFamilyMemberActivity.class);
+                            intent.putExtra("activitycaller", getString(R.string.mdl_getstarted));
                             intent.putExtra("user_info", userInfoJSONString);
                             startActivityForResult(intent, IdConstants.REQUEST_ADD_CHILD);
                             MdliveUtils.startActivityAnimation(MDLiveGetStarted.this);
                             patientSpinner.setSelection(IntegerConstants.NUMBER_ZERO);
                         }else {
                             loadDependentInformationDetails(dependentName, position);
-
                         }
                     }
                 }
@@ -460,12 +521,16 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 HashMap<String,String> tmpMap=PatientList.get(position-1);
                 if(!tmpMap.containsKey("authorized")){
                     loadUserInformationDetails();
-                    loadProviderType();
+                    loadDependentProviderTypeDetails("");
                 }else{
                     if(tmpMap.get("name").equalsIgnoreCase(dependentName)&&tmpMap.get("authorized").equalsIgnoreCase("true")){//Condition to check whether the user is below 18 years old
                         if(!dependentList.get(IntegerConstants.NUMBER_ZERO).equals(tmpMap.get("name"))){//Condition to avoid calling dependent service if already data is available for dependents
 
                             loadDependentUserInformationDetails(tmpMap.get("id"));//Method call to load the selected dependent details.
+                            SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                            SharedPreferences.Editor sharedEditor = sharedpreferences.edit();
+                            sharedEditor.putString(PreferenceConstants.DEPENDENT_USER_ID,tmpMap.get("id"));
+                            sharedEditor.commit();
                             loadDependentProviderTypeDetails(tmpMap.get("id"));
                             //Method call to load the selected dependent details.
                             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -576,11 +641,22 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     private void loadUserInformationDetails() {
         showProgress();
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
                 handleSuccessResponse(response);
+                if(NavigationDrawerFragment.getInstance() != null){
+                    NavigationDrawerFragment.getInstance().handleServiceResponseForParent(response);
+                }
+                createAndSaveUser(response, "");
+                getCurrentLocation();
+               // upldateUserData(response);
             }
         };
 
@@ -604,32 +680,38 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      */
     private void loadProviderType() {
         showProgress();
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(PreferenceConstants.DEPENDENT_USER_ID,null);
+        editor.commit();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                try {
                 hideProgress();
-                if (user != null && user.mMode == User.MODE_DEPENDENT) {
-                    Log.d("Hello", "Selected User : " + user.toString());
-                    Log.d("Hello", "Selected User : " + "Dependent is called");
-                    loadDependentUserInformationDetails(user.mId);
-                    loadDependentProviderTypeDetails(user.mId);
-                } else {
-                    Log.d("Hello", "Selected User : " + "Parent is called");
-                    loadUserInformationDetails();
+                    if (response.has("located_in")) {
+                        editor.putString(PreferenceConstants.USER_STATE_LIST, response.getJSONArray("located_in").toString()).commit();
+                    }
+                    if (user != null && user.mMode == User.MODE_DEPENDENT) {
+                        loadDependentUserInformationDetails(user.mId);
+                    } else {
+                        loadUserInformationDetails();
+                    }
+                    handleproviderTypeSuccessResponse(response);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                handleproviderTypeSuccessResponse(response);
             }
         };
 
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Status Code", "" + error.networkResponse.statusCode);
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
-        ProviderTypeList services = new ProviderTypeList(MDLiveGetStarted.this, null);
-        services.getProviderType("", successCallBackListener, errorListener);
+        SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
+        ptypeservices.getSearchDetails(successCallBackListener, errorListener);
     }
     /**
      * Load Family Member Type Details.
@@ -638,14 +720,23 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
 
-    private void loadDependentUserInformationDetails(String depenedentId) {
+    private void loadDependentUserInformationDetails(final String depenedentId) {
         showProgress();
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
                 hideProgress();
                 handleDependentSuccessResponse(response);
+                if(NavigationDrawerFragment.getInstance() != null){
+                    NavigationDrawerFragment.getInstance().handleServiceResponseForDependent(response);
+                }
+                createAndSaveUser(response, depenedentId);
+                getCurrentLocation();
             }
         };
 
@@ -660,15 +751,52 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
     }
 
+    private void createAndSaveUser(final JSONObject response, final String dependentId) {
+        try {
+            JSONObject personalInfo = response.getJSONObject("personal_info");
+
+            final User user = new User();
+            user.mName = personalInfo.getString("first_name") + " " + personalInfo.getString("last_name");
+            user.mImageUrl = personalInfo.getString("image_url");
+
+            if (dependentId != null && !TextUtils.isEmpty(dependentId)) {
+
+                user.mId = dependentId;
+                user.mMode = User.MODE_DEPENDENT;
+            } else {
+                user.mId = "";
+                user.mMode = User.MODE_PRIMARY;
+            }
+
+            user.saveSelectedUser(getBaseContext());
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
     private void loadDependentProviderTypeDetails(String depenedentId) {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.v("ptype Response", response.toString());
-                hideProgress();
-                handleproviderTypeSuccessResponse(response);
+                try {
+
+                    Log.v("ptype Response", response.toString());
+                    hideProgress();
+                    if (response.has("located_in")) {
+                        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(PreferenceConstants.USER_STATE_LIST, response.getJSONArray("located_in").toString()).commit();
+                        Log.d("Shared List", sharedpreferences.getString(PreferenceConstants.USER_STATE_LIST, "No List"));
+                    }
+                    handleproviderTypeSuccessResponse(response);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -679,8 +807,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
-        ProviderTypeList ptypeservices = new ProviderTypeList(MDLiveGetStarted.this, null);
-        ptypeservices.getProviderType(depenedentId, successCallBackListener, errorListener);
+        SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
+        ptypeservices.getSearchDetails(successCallBackListener, errorListener);
     }
 
 
@@ -905,40 +1033,29 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
-            Log.d("Provider Response - ", " - " + response.toString());
-            JSONObject providertype = response.getJSONObject("provider_types");
             providerTypeArrayList.clear();
             providerTypeIdList.clear();
-
-            Iterator<String> iter = providertype.keys();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                try {
-                    Object value = providertype.get(key);
-                    providerTypeArrayList.add(value.toString());
-                    providerTypeIdList.add(key);
-                } catch (JSONException e) {
-                    // Something went wrong!
-                }
-                //Default first item coming from the service will set here.it will change into dynamic
-                // when we click the other items in the dialog.
-
+            JSONArray provider_array = response.getJSONArray("provider_type");
+            Log.v("providerTypeArrayList", provider_array.toString());
+            for (int i = 0; i < provider_array.length(); i++)
+            {
+                providerTypeIdList.add(provider_array.getJSONObject(i).getInt("id") + "");
+                providerTypeArrayList.add(provider_array.getJSONObject(i).getString("provider_type"));
             }
-            int id = 0;
-            for(int tmpId = 0; tmpId <providerTypeIdList.size();tmpId++){
-                if(!providerTypeIdList.get(tmpId).equals("1")){
-                    id = tmpId;
-                    break;
-                }
-            }
+            Log.v("providerTypeArrayList", providerTypeArrayList.toString());
+
             Collections.reverse(providerTypeArrayList);
+
             Collections.reverse(providerTypeIdList);
-            ((TextView)findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
-            strProviderId=providerTypeIdList.get(0);
+            Log.v("providerTypeIDList", providerTypeIdList.toString());
+            ((TextView) findViewById(R.id.providertypeTxt)).setText(providerTypeArrayList.get(0));
+            findViewById(R.id.providertypeTxt).setContentDescription(getString(R.string.mdl_ada_dropdown) + providerTypeArrayList.get(0));
+            strProviderId = providerTypeIdList.get(0);
+
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -1031,9 +1148,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             editor.putString(PreferenceConstants.PATIENT_NAME, personalInfo.getString("first_name") + " " +personalInfo.getString("last_name"));
             editor.putString(PreferenceConstants.GENDER, personalInfo.getString("gender"));
             editor.commit();
-            if(notiObj.getInt("upcoming_appointments")>=1){
+            /*if(notiObj.getInt("upcoming_appointments")>=1){
                 getPendingAppointments();
-            }
+            }*/
             JsonArray conditionsSearch = responObj.get("dependant_users").getAsJsonArray();
             for(int i=0;i<conditionsSearch.size();i++) {
                 strPatientName = conditionsSearch.get(i).getAsJsonObject().get("name").getAsString();
@@ -1071,7 +1188,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                Log.d("Error Response", error.toString());
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
@@ -1115,7 +1231,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.mdlive_screen_popup, null);
+        View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
@@ -1131,11 +1247,51 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 String SelectedText = list.get(position);
                 selectedText.setText(SelectedText);
                 strProviderId = providerTypeIdList.get(position);
-                Log.v("selected pos pID",strProviderId);
                 dialog.dismiss();
             }
         });
     }
+
+
+    private void upldateUserData(final JSONObject response) {
+    /* Security JSON we need to read again, because of the web service issue..
+            * We are excluding the security tag to be parsed by GSON,
+            * then we are manually adding the Security JSON again
+            * */
+
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        final UserBasicInfo userBasicInfo = gson.fromJson(response.toString().trim(), UserBasicInfo.class);
+        userBasicInfo.getPersonalInfo().setSecurity(Security.fromJSON(response.toString().trim()));
+        userBasicInfo.getNotifications().setPharmacyDetails(PharmacyDetails.fromJSON(response.toString().trim()));
+        try {
+            userBasicInfo.setHealthLastUpdate(response.getLong("health_last_update"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            userBasicInfo.setHealthLastUpdate(-1l);
+        }
+
+        userBasicInfo.saveToSharedPreference(getBaseContext(), response.toString().trim());
+
+        List<User> users = null;
+
+        if (userBasicInfo.getPrimaryUser()) {
+            users = UserBasicInfo.getUsersAsPrimaryUser(getBaseContext());
+        } else {
+            users = UserBasicInfo.getUsersAsDependentUser(getBaseContext());
+        }
+
+        if (users != null && users.size() > 0) {
+            final User user = users.get(0);
+            if (user != null) {
+                user.saveSelectedUser(getBaseContext());
+                final Fragment fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
+                if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
+                    ((NavigationDrawerFragment) fragment).reload();
+                }
+            }
+        }
+    }
+
     /**
      *
      *  Successful Response Handler for Load Basic Info.
@@ -1144,11 +1300,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *
      */
     private void providerSuccessResponse(String response) {
-        try {
-            //Log.v("REsponse--->", response.toString());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        //
 
     }
     /**
@@ -1170,6 +1322,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     @Override
     public void onBackPressed() {
         onHomeClicked();
+        HideKeyboard();
     }
 
     public void showHamburgerTick() {
@@ -1184,6 +1337,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     public void onCrossClicked(View v) {
         onHomeClicked();
+        HideKeyboard();
     }
 
 
@@ -1215,6 +1369,171 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             ((NotificationFragment) fragment).setNotification(userBasicInfo);
         }
     }
+
+
+    //Location Fetched class
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            hideProgress();
+            unregisterReceiver(locationReceiver);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            if (locationService != null && locationService.isTrackingLocation()) {
+                locationService.stopListners();
+            }
+            HideKeyboard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void getCurrentLocation() {
+        showProgress();
+        try {
+            registerReceiver(locationReceiver, intentFilter);
+            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+                locationService.setBroadCastData(getClass().getSimpleName());
+                locationService.startTrackingLocation(MDLiveGetStarted.this);
+                findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+            } else {
+                showSettingsAlert();
+                findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+                hideProgress();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                hideProgress();
+                if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                    double lat = intent.getDoubleExtra("Latitude", 0d);
+                    double lon = intent.getDoubleExtra("Longitude", 0d);
+                    loadCurrentLocation(lat + "", lon + "");
+                }else{
+                    MdliveUtils.showGPSFailureDialog(MDLiveGetStarted.this,null);
+                }
+            }
+             catch (Exception e) {
+                e.printStackTrace();
+            }
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+
+        }
+    };
+
+    /**
+     * Load Current location.
+     * Class : CurrentLocationServices - Service class used to fetch the current latitude and longitude
+     * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
+     */
+    private void loadCurrentLocation(String latitude, String longitude) {
+        showProgress();
+        NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                hideProgress();
+                CurrentLocationResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+
+            }
+        };
+
+        CurrentLocationServices currentlocationservices = new CurrentLocationServices(MDLiveGetStarted.this, getProgressDialog());
+        currentlocationservices.getCurrentLocation(latitude, longitude, responseListener, errorListener);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+                findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Successful Response Handler for getting Current Location
+     */
+
+
+    private void CurrentLocationResponse(JSONObject response) {
+        try {
+            hideProgress();
+            //Fetch Data From the Services
+            String locationServiceText = "";
+            if (response.has("state")) {
+                String selectedCity = response.getString("state");
+                for (int l = 0; l < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); l++) {
+                    if (selectedCity.equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(l))) {
+                        locationServiceText = Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(l);
+                        shortNameText = selectedCity;
+                        break;
+                    }
+                }
+                SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, shortNameText);
+                editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, locationServiceText);
+                editor.commit();
+                locationTxt.setText(locationServiceText);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLiveGetStarted.this);
+        // Setting Dialog Title
+        alertDialog.setTitle("");
+        // Setting Dialog Message
+        alertDialog.setMessage("We need access to your GPS to determine your location.");
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 }
 
 

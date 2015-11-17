@@ -3,6 +3,7 @@ package com.mdlive.embedkit.uilayer.pharmacy;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -78,6 +79,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         }
         try {
             view = inflater.inflate(R.layout.mdlive_pharmacy_fragment, container, false);
+            getActivity().setTitle(getString(R.string.mdl_pharmacy));
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
@@ -195,33 +197,15 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         mapView = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView));
         map = mapView.getMap();
         if (map != null) {
-
-            /**
-             *  This adapter is used to display info window when users click on the marker on google map
-             *
-             *  It has a layout to show user when click on marker.
-             */
-            map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                // Use default InfoWindow frame
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    View v = getActivity().getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
-                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
-                    TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
-                    TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
-                    addressline1.setText(bundletoSend.get("store_name") + "");
-                    addressline2.setText(bundletoSend.get("address1") + "");
-                    addressline3.setText(bundletoSend.get("city") + "  " + (TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
-                    return v;
-                }
-
-                @Override
-                public View getInfoContents(Marker arg0) {
-                    return null;
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                public boolean onMarkerClick(Marker marker) {
+                    marker.hideInfoWindow();
+                    return true;
                 }
             });
-
+            map.setInfoWindowAdapter(null);
             map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
 
@@ -252,8 +236,8 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 bundletoSend.putString("phone", pharmacyDatas.getString("phone"));
                 if (pharmacyDatas.has("phone")) {
                     ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setText(MdliveUtils.formatDualString(pharmacyDatas.getString("phone")));
-                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setClickable(true);
-                    ((TextView) getView().findViewById(R.id.txt_my_pharmacy_addressline_four)).setOnClickListener(new View.OnClickListener() {
+                    getView().findViewById(R.id.txt_my_pharmacy_addressline_four).setClickable(true);
+                    getView().findViewById(R.id.txt_my_pharmacy_addressline_four).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -373,16 +357,30 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                     startActivity(i);
                     MdliveUtils.startActivityAnimation(getActivity());
                 } else{
-                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                    startActivity(pharmacyintent);
+                    MdliveUtils.showGPSFailureDialog(getActivity(),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
+                                    startActivity(pharmacyintent);
+                                }
+                            });
                 }
             } else {
-                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                startActivity(pharmacyintent);
+                MdliveUtils.showGPSFailureDialog(getActivity(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
+                                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
+                                startActivity(pharmacyintent);
+                            }
+                        });
             }
         }
     };

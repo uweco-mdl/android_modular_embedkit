@@ -51,6 +51,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePhoneNumberView = inflater.inflate(R.layout.fragment_change_phonenumber, null);
+        getActivity().setTitle(getString(R.string.mdl_phone_number));
 
         mPhoneNumber = (EditText) changePhoneNumberView.findViewById(R.id.phoneNumber);
         mEmergencyContactNumber = (EditText) changePhoneNumberView.findViewById(R.id.emergencyContactNumber);
@@ -183,7 +184,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                     Log.i("PhoneNumber", mPhoneNumber.getText().toString().trim().replaceAll("[-() ]", ""));
                     jsonObject.put("birthdate", responseDetail.getString("birthdate"));
                     jsonObject.put("state_id", responseDetail.getString("state"));
-                    jsonObject.put("city", responseDetail.getString("country"));
+                    jsonObject.put("city", responseDetail.getString("city"));
                     jsonObject.put("zipcode", responseDetail.getString("zipcode"));
                     jsonObject.put("first_name", responseDetail.getString("first_name"));
                     jsonObject.put("address1", responseDetail.getString("address1"));
@@ -208,9 +209,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
     }
 
     public Boolean isEmpty(String cardInfo) {
-        if (!TextUtils.isEmpty(cardInfo))
-            return true;
-        return false;
+        return !TextUtils.isEmpty(cardInfo);
     }
 
     public void loadProfileInfo(String params) {

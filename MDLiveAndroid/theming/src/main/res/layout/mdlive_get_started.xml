@@ -60,25 +60,39 @@
                     </LinearLayout>
 
 
-                    <LinearLayout
-                        style="@style/Get_Started_Field_Style"
-                        android:onClick="goToLocation">
+                    <RelativeLayout
+                        style="@style/Get_Started_location_Style"
+                        >
 
                         <TextView
+                            android:id="@+id/txt_location"
                             style="@style/Get_Started_Label_Style"
                             android:text="@string/mdl_my_location"
+                            android:layout_marginTop="@dimen/dimen_10_dp"
                             android:tag="@string/mdltag_my_location"/>
 
                         <TextView
+                            android:layout_below="@+id/txt_location"
                             style="@style/Get_Started_Text_Field_Style"
                             android:id="@+id/locationTxt"
                             android:singleLine="true"
                             android:ellipsize="end"
-                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="5dp"
+                            android:clickable="true"
+                            android:onClick="goToLocation"
+                            android:layout_toLeftOf="@+id/txt_alert_img"
                             android:gravity="center_vertical"
                             />
+                        <TextView
+                            android:id="@+id/txt_alert_img"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/ic_alert"/>
 
-                    </LinearLayout>
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         style="@style/Get_Started_Field_Style"
@@ -99,7 +113,7 @@
 
                     <LinearLayout
                         style="@style/Get_Started_Field_Style"
-                        android:onClick="goToProviderType">
+                        >
 
                         <TextView
                             style="@style/Get_Started_Label_Style"
@@ -154,5 +168,17 @@
     </android.support.v4.widget.DrawerLayout>
 
     <include layout="@layout/custom_progress_dialog" />
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
 </merge>
