@@ -359,10 +359,10 @@ public abstract class BaseServicesPlugin {
         }
 
         headerMap.put("Authorization", auth);
-        headerMap.put("RemoteUserId", sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+
         String dependentId = sharedpreferences.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-        //Log.v("Authorization",auth);
-        //Log.v("RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
+        //Log.w("*** Authorization",auth);
+        //Log.w("*** RemoteUserId",sharedpreferences.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID));
         if(dependentId != null) {
             headerMap.put("DependantId", dependentId);
             Log.v("DependentID", dependentId);

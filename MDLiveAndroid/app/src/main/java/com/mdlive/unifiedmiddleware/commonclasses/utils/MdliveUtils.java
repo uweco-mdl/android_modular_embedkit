@@ -291,6 +291,7 @@ public class MdliveUtils {
         }
 
     }
+
     /**
      *  This method is used to calcualte age by getting the date of birth
      *
@@ -298,8 +299,6 @@ public class MdliveUtils {
      *
      *
      */
-
-
     public static int calculateAge(Date birthDate, Context context)
     {
         int years = 0;
