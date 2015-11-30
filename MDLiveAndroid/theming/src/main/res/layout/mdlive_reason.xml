@@ -262,7 +262,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingRight="22dp"
                                 android:contentDescription="@string/mdl_ada_takepic_button"
-                                android:src="@drawable/camera_icon" />
+                                android:src="@drawable/camera_icon2" />
                             <!--android:contentDescription="@string/pict_by_camera"-->
 
 

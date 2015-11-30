@@ -896,7 +896,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     } else {
                         takePhoto.setClickable(true);
                         takeGallery.setClickable(true);
-                        takePhoto.setImageResource(R.drawable.camera_icon);
+                        takePhoto.setImageResource(R.drawable.camera_icon2);
                         takeGallery.setImageResource(R.drawable.gallery_icon);
                     }
 

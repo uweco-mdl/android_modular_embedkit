@@ -123,3 +123,7 @@
 -keep class com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication{
     public <methods>;
 }
+
+# VSeeKit
+-keep public class com.vsee.kit.** {*;}
+-keep public class com.vsee.kit.evisit.** {*;}

@@ -34,3 +34,8 @@
 -keep class com.mdlive.sav.payment.MDLiveConfirmappointment{}
 -keep class com.mdlive.sav.payment.MDLivePayment{}
 -keep class com.mdlive.sav.appointment.AppointmentActivity{}
+
+
+# VSeeKit
+-keep public class com.vsee.kit.** {*;}
+-keep public class com.vsee.kit.evisit.** {*;}
