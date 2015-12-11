@@ -9,11 +9,14 @@ import android.widget.Toast;
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.global.MDLiveConfig.ENVIRON;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
+import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
@@ -52,6 +55,25 @@ public class SSOActivity extends MDLiveBaseActivity {
         finally{
             MDLiveConfig.CURRENT_ENVIRONMENT = env;
         }
+
+        JsonParser jparser = new JsonParser();
+        JsonObject jobj = (JsonObject)jparser.parse(affiliateEncyData);
+        try {
+            String clientsecret = jobj.remove("client_secret").getAsString();
+            JsonObject tmp = jobj.remove("encrypted_message").getAsJsonObject();
+            String apikey = tmp.remove("client_api_key").getAsString();
+
+            AppSpecificConfig.API_KEY = apikey;
+            AppSpecificConfig.SECRET_KEY = clientsecret;
+
+            //Log.e("API KEY ====","*******\n****** "+apikey);
+            //Log.e("CLI SECRET ====","*******\n****** "+clientsecret);
+
+        }catch(NullPointerException nex)
+        {
+            // @ToDo
+        }
+
 
         MDLiveConfig.setData(env);
 
