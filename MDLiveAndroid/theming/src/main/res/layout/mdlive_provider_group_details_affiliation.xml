@@ -152,22 +152,22 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                         android:id="@+id/LinkImg1"
                         style="@style/CCPAffiliationLinkImg"
                         android:visibility="gone" />
 
-                    <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                         android:id="@+id/LinkImg2"
                         style="@style/CCPAffiliationLinkImg"
                         android:visibility="gone" />
 
-                    <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                         android:id="@+id/LinkImg3"
                         style="@style/CCPAffiliationLinkImg"
                         android:visibility="gone" />
 
-                    <com.mdlive.embedkit.uilayer.sav.CircularNetworkImageView
+                    <com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView
                         android:id="@+id/LinkImg4"
                         style="@style/CCPAffiliationLinkImg"
                         android:visibility="gone" />
