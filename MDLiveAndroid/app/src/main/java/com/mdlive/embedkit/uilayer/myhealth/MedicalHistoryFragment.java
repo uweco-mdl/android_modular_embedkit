@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -33,7 +34,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryAggregationS
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -355,11 +355,11 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null) {
             String message = "No Internet Connection";
-            if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            if (networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
                 message = "Internal Server Error";
-            } else if (networkResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+            } else if (networkResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY) {
                 message = "Unprocessable Entity Error";
-            } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
+            } else if (networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND) {
                 message = "Page Not Found";
             }
             MdliveUtils.showDialog(getActivity(), "Error",

@@ -27,6 +27,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -48,7 +49,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.ProcedureUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.SuggestMedicationService;
 import com.mdlive.unifiedmiddleware.services.myhealth.UpdateMedicationService;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -876,7 +876,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject errorObj = new JSONObject(responseBody);
             NetworkResponse errorResponse = error.networkResponse;
-            if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+            if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                 if (errorObj.has("message") || errorObj.has("error")) {
                     final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                     (MDLiveHealthModule.this).runOnUiThread(new Runnable() {

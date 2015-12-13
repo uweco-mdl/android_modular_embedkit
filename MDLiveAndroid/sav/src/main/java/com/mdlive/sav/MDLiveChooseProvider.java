@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -41,7 +42,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -234,7 +234,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("message") || errorObj.has("error")) {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveChooseProvider.this).runOnUiThread(new Runnable() {

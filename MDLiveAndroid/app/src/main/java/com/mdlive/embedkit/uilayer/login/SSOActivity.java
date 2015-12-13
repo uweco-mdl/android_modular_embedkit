@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
@@ -24,7 +23,6 @@ import com.mdlive.unifiedmiddleware.services.MDLivePendingVisitService;
 import com.mdlive.unifiedmiddleware.services.SSO2Service;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -175,7 +173,10 @@ public class SSOActivity extends MDLiveBaseActivity {
                                 // send timeout error message back to affiliate
                                 notifyErrorAffiliate("408", "Request connection time out");
 
-                            } else if (errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY || errorResponse.statusCode == HttpStatus.SC_NOT_FOUND || errorResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                            } else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY
+                                        || errorResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND
+                                        || errorResponse.statusCode == MDLiveConfig.HTTP_UNAUTHORIZED)
+                            {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 Log.e("responseBody", responseBody);
                                 JSONObject errorObj = new JSONObject(responseBody);
@@ -189,7 +190,7 @@ public class SSOActivity extends MDLiveBaseActivity {
                                     notifyErrorAffiliate("408", "Request connection time out");
                                 }
                                 notifyErrorAffiliate(errorCode, message);
-                            } else if (errorResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                            } else if (errorResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
                                 notifyErrorAffiliate(errorResponse.statusCode + "", "Request connection time out");
                             }
                         }

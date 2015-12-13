@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.messages.R;
@@ -24,7 +25,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.messagecenter.MessageCenter;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.Format;
@@ -207,7 +207,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    if(error.networkResponse.statusCode == HttpStatus.SC_NOT_FOUND){
+                    if(error.networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND){
                         MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_appt_error), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

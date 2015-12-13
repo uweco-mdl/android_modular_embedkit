@@ -21,6 +21,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.MDLiveSummary;
 import com.mdlive.embedkit.uilayer.login.MDLiveWaitingRoomFragment;
@@ -36,7 +37,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,7 +207,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
                     Log.v("WaitingRoom 1 REsponse", errorObj.toString());
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("message") || errorObj.has("error")) {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveWaitingRoom.this).runOnUiThread(new Runnable() {
