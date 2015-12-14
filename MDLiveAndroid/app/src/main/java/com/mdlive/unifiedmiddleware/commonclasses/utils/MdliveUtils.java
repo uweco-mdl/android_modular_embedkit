@@ -41,7 +41,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.request.SSOUser;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -702,7 +701,9 @@ public class MdliveUtils {
                     connectionTimeoutError(pDialog, reference.get());
 
 
-                } else if (errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY || errorResponse.statusCode == HttpStatus.SC_NOT_FOUND || errorResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                } else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_UNAUTHORIZED) {
                     Log.e("Status Code", "" + error.networkResponse.statusCode);
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
@@ -782,7 +783,9 @@ public class MdliveUtils {
                     connectionTimeoutError(pDialog, cxt);
 
 
-                } else if (errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY || errorResponse.statusCode == HttpStatus.SC_NOT_FOUND || errorResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                } else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_UNAUTHORIZED) {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     if (errorObj.has("message")) {
@@ -878,28 +881,6 @@ public class MdliveUtils {
         //context.overridePendingTransition(R.anim.mdlive_trans_right_in, R.anim.mdlive_trans_right_out);
     }
 
-    /**
-     * calculate the number of days from a given long time
-     *
-     * shows today/ yesterday/ number of days ago.
-     *//*
-    public static String getDaysAgo(final Context context, final long startDay) {
-        final Calendar calendarToday = Calendar.getInstance();
-
-        long end = calendarToday.getTimeInMillis();
-        long start = startDay;
-
-        final int difference = (int) TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
-
-        if (difference == 0) {
-            return context.getString(R.string.mdl_personal_record_updated_today);
-        } else if (difference == 1) {
-            return context.getString(R.string.mdl_personal_record_updated_yesterday);
-        } else {
-            return context.getString(R.string.mdl_personal_record_updated_days_ago, difference);
-        }
-    }*/
-
     public static void showMDLiveHelpAndSupportDialog(final Activity activity) {
         try {
             final WeakReference<Activity> reference = new WeakReference<Activity>(activity);
@@ -965,8 +946,13 @@ public class MdliveUtils {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + assistPhonenum));
-                    reference.get().startActivity(intent);
-                    MdliveUtils.startActivityAnimation(reference.get());
+                    try {
+                        reference.get().startActivity(intent);
+                        MdliveUtils.startActivityAnimation(reference.get());
+                    }catch(SecurityException secex){
+                        // handle runtime exception
+                        // ...
+                    }
 
                 }
             };

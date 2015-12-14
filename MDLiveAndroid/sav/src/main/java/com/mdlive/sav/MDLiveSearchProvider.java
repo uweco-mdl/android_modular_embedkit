@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
@@ -41,7 +42,6 @@ import com.mdlive.unifiedmiddleware.services.ProviderTypeList;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -666,7 +666,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                     JSONObject errorObj = new JSONObject(responseBody);
                     Log.e("Response Body", errorObj.toString());
                     NetworkResponse errorResponse = error.networkResponse;
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("error") || errorObj.has("message")) {
                             final String errorMsg = errorObj.has("error") ? errorObj.getString("error") : (errorObj.has("message") ? errorObj.getString("message") : "");
                             if(errorMsg != null && errorMsg.length() != 0){

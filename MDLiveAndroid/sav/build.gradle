@@ -9,8 +9,8 @@ apply plugin: 'com.android.library'
 repositories {
     maven {
         credentials {
-            username 'uweco'
-            password '903fdbf83488be99797a7757429240ca4f3a2619'
+            username 'mdlive-vsee-user'
+            password 'vs33_p@sswd'
         }
         url 'http://dl.bintray.com/vsee/android'
     }
@@ -24,12 +24,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }

@@ -31,6 +31,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -47,7 +48,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ReasonForVisitServices;
 import com.mdlive.unifiedmiddleware.services.provider.MakeanappmtServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -478,7 +478,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                     JSONObject errorObj = new JSONObject(responseBody);
                     Log.v("Response Body", errorObj.toString());
                     NetworkResponse errorResponse = error.networkResponse;
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("error") || errorObj.has("message")) {
                             final String errorMsg = errorObj.has("error") ? errorObj.getString("error") : (errorObj.has("message") ? errorObj.getString("message") : "");
                             if(errorMsg != null && errorMsg.length() != 0){

@@ -27,6 +27,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -44,7 +45,6 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.lang.Class;
@@ -247,7 +247,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                             };
                             // Show timeout error message
                             MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveConfirmappointment.this);
-                        }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                        }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             Log.e("responseBody",responseBody);
                             JSONObject errorObj = new JSONObject(responseBody);
@@ -526,7 +526,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         };
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
-                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);
@@ -620,7 +620,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         };
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
-                    }else if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);

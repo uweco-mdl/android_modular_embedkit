@@ -53,7 +53,6 @@ import com.mdlive.unifiedmiddleware.services.ConfirmAppointmentServices;
 import com.mdlive.unifiedmiddleware.services.myaccounts.GetCreditCardInfoService;
 import com.mdlive.unifiedmiddleware.services.pharmacy.PharmacyService;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -488,7 +487,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                     dismissDialog();
                     Log.e("error", error.toString());
                     NetworkResponse errorResponse = error.networkResponse;
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);

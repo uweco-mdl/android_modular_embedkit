@@ -37,6 +37,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.PendingVisits.MDLivePendingVisits;
@@ -62,7 +63,6 @@ import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.provider.SearchProviderDetailServices;
 import com.mdlive.unifiedmiddleware.services.userinfo.UserBasicInfoServices;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1192,7 +1192,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
                     NetworkResponse errorResponse = error.networkResponse;
-                    if(errorResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY){
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("message") || errorObj.has("error")) {
                             final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
                             (MDLiveGetStarted.this).runOnUiThread(new Runnable() {

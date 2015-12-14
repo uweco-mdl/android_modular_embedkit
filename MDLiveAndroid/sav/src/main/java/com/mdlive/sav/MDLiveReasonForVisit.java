@@ -65,7 +65,6 @@ import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryCompletionSe
 import com.mdlive.unifiedmiddleware.services.myhealth.MedicalHistoryLastUpdateServices;
 import com.mdlive.unifiedmiddleware.services.myhealth.UploadImageService;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -848,11 +847,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             NetworkResponse networkResponse = error.networkResponse;
             if (networkResponse != null) {
                 String message = "No Internet Connection";
-                if (networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                if (networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
                     message = "Internal Server Error";
-                } else if (networkResponse.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                } else if (networkResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY) {
                     message = "Unprocessable Entity Error";
-                } else if (networkResponse.statusCode == HttpStatus.SC_NOT_FOUND) {
+                } else if (networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND) {
                     message = "Page Not Found";
                 }
                 MdliveUtils.showDialog(MDLiveReasonForVisit.this, "Error",

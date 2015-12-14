@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.SSOActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
-import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -56,6 +55,11 @@ public class MDLiveConfig {
                                                                         EMBEDKITS.DOCTOR_CONSULT,
                                                                         EMBEDKITS.SYMPTOM_CHECKER);
     public static boolean IS_SSO = false;
+
+    public static final int HTTP_UNPROCESSABLE_ENTITY = 422;
+    public static final int HTTP_NOT_FOUND = 404;
+    public static final int HTTP_UNAUTHORIZED = 401;
+    public static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public static final String ZERO_PAY = "0.00";     // used to indicate a "zero payment" liability for consultations
 

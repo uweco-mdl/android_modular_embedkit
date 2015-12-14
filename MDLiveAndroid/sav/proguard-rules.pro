@@ -35,7 +35,16 @@
 -keep class com.mdlive.sav.payment.MDLivePayment{}
 -keep class com.mdlive.sav.appointment.AppointmentActivity{}
 
-
 # VSeeKit
 -keep public class com.vsee.kit.** {*;}
 -keep public class com.vsee.kit.evisit.** {*;}
+
+# allow resource IDs to be properly mapped
+-keep class *.R
+-keep class **.R$*
+-keepclassmembers class **.R$* {
+       public static <fields>;
+}
+-keepclasseswithmembers class **.R$* {
+    public static <fields>;
+}
