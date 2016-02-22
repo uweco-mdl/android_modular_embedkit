@@ -1088,7 +1088,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         }catch(Exception e){
             e.printStackTrace();
         }
-        dependentList.add(StringConstants.ADD_FAMILY_MEMBER);
+        //dependentList.add(StringConstants.ADD_FAMILY_MEMBER);
         setSpinnerValues(dependentList, patientSpinner);
 
     }

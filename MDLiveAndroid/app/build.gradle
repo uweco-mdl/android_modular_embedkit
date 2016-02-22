@@ -10,7 +10,7 @@ repositories {
     maven {
         credentials {
             username 'mdlive-vsee-user'
-            password 'vs33_p@sswd'
+            password '438631c3534ca56638d29c5173305eb8b4c7546b'
         }
         url 'http://dl.bintray.com/vsee/android'
     }

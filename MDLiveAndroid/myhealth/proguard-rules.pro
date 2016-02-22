@@ -29,3 +29,13 @@
 -keep public class * extends android.view.View
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.Fragment
+
+# allow resource IDs to be properly mapped
+-keep class *.R
+-keep class **.R$*
+-keepclassmembers class **.R$* {
+       public static <fields>;
+}
+-keepclasseswithmembers class **.R$* {
+    public static <fields>;
+}

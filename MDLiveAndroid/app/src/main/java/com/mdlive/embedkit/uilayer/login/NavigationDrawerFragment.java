@@ -459,6 +459,7 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
                     } else {
                         if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
                             view = inflater.inflate(R.layout.drawer_user_row_add_child, mSelectedUserLinearLayout, false);
+                            view.setVisibility(View.GONE);
                             view.setTag(users.get(i));
                         } else {
                             view = inflater.inflate(R.layout.drawer_user_row_middle, mSelectedUserLinearLayout, false);

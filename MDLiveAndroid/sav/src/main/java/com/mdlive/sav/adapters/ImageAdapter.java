@@ -123,7 +123,7 @@ public class ImageAdapter extends BaseAdapter {
      * RGB_565 - is used to reduce the quality of image to handle bitmap efficiently
      * Bitmap will be recycled for each time to avoid bitmap issue.
      *
-     * @param decodedString - byte data of image received  from werservice.
+     * @param decodedString - byte data of image received  from webservice.
      */
     static Bitmap decodeSampledBitmapFromResource(byte[] decodedString) {
         try {

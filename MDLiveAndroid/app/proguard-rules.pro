@@ -21,8 +21,6 @@
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
 
-
-
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -44,9 +42,6 @@
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.Fragment
 
-
-
-#-keep class othercode.** { *; }
 
 -keep class io.card.**
 -keepclassmembers class io.card.** {
@@ -127,3 +122,9 @@
 # VSeeKit
 -keep public class com.vsee.kit.** {*;}
 -keep public class com.vsee.kit.evisit.** {*;}
+
+# for API 23 (Apache HTTP client classes have now been removed)
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient
+-dontwarn com.google.android.gms.**
+-dontwarn com.android.volley.toolbox.**

@@ -53,7 +53,8 @@ public class MDLiveConfig {
     // Define what embedkit components subset will be actually accessible to affiliate app
     public static final Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST,
                                                                         EMBEDKITS.DOCTOR_CONSULT,
-                                                                        EMBEDKITS.SYMPTOM_CHECKER);
+                                                                        EMBEDKITS.SYMPTOM_CHECKER,
+                                                                        EMBEDKITS.MY_HEALTH);
     public static boolean IS_SSO = false;
 
     public static final int HTTP_UNPROCESSABLE_ENTITY = 422;
