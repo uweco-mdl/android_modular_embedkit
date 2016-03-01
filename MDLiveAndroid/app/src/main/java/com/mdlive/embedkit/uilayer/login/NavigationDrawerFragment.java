@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,6 +148,9 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
 
         String[] navStrings;
 
+// **** DEBUG ONLY.   o.uwechue
+Log.e("Nav Drawer Frag","+++++++++++++++++\nCreating nav drawer...");
+
         if (MDLiveConfig.IS_SSO) {
             navStrings = getActivity().getResources().getStringArray(R.array.left_navigation_items_sso);
             drawerItems = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.left_navigation_items_sso)));
@@ -176,22 +180,27 @@ public class NavigationDrawerFragment extends MDLiveBaseFragment {
         moduleMap.put(getString(R.string.mdl_symptom_checker), modules[4]);
         moduleMap.put(getString(R.string.mdl_my_accounts), modules[5]);
 
-        if(!MDLiveConfig.IS_SSO){
+//        if(!MDLiveConfig.IS_SSO){
+            String module=null;
             for (int i = navStrings.length - 1; i > 0; i--) {
                 try {
-                    String module = moduleMap.get(navStrings[i]);
+                    module = moduleMap.get(navStrings[i]);
                     if (module != null) {
+// **** DEBUG ONLY.   o.uwechue
+Log.e("Nav Drawers","+++++++++++++++++\nLooking for MODULE: "+module);
                         Class.forName(module);
+Log.e("Nav Drawers","Class found. MODULE name added to drawer \n+++++++++++++++++");
                     }
                 } catch (ClassNotFoundException e) {
-                    // Feature is remove. Set the flag to remove the associated icon later
+Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n+++++++++++++++++");
+                    // Feature is removed. Set the flag to remove the associated icon later
                     if(i<drawerItems.size()) {
                         drawerItems.remove(i);
                         stringMap.put(navStrings[i], HIDE_THE_ICON);
                     }
                 }
             }
-        }
+//        }
 
         // Add only the drawables that have the corresponding strings in the menu
         for(int i = 0; i<navStrings.length; i++) {
