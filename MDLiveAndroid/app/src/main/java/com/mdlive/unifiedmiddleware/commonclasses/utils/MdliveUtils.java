@@ -27,10 +27,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
@@ -1201,4 +1204,24 @@ public class MdliveUtils {
         }
     }
 
+    /**
+     * Method to verify google play services on the device
+     * */
+    public static boolean checkPlayServices(Activity context) {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(context);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, context,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(context,
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+            }
+            return false;
+        }
+        return true;
+    }
 }
