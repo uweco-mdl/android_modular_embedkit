@@ -768,6 +768,62 @@ public class MdliveUtils {
 
     /**
      *This method handles all the error scenarios and displays the corresponding alert.
+     * @param cxt -- params referring which class it is invoked from
+     * @param error -- Received error object in corresponding activities
+     * @param pDialog -- Progress Dialog obj to show tho dialog
+     */
+    public static void handleVolleyErrorResponse(Activity cxt, VolleyError error,ProgressDialog pDialog) {
+        try {
+            final WeakReference<Activity> reference = new WeakReference<Activity>(cxt);
+
+            if (error.networkResponse != null) {
+                NetworkResponse errorResponse = error.networkResponse;
+                Log.e("Status Code", "" + error.networkResponse.statusCode);
+
+                if(error.networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR){
+                    Log.e("Account Activation","\n*****\nERROR 500 from server...\n****\n");
+                    final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                    showExitDialog(reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
+                }
+                else if (error.getClass().equals(TimeoutError.class)) {
+                    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    };
+                    // Show timeout error message
+                    connectionTimeoutError(pDialog, reference.get());
+
+                }
+                else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_UNAUTHORIZED) {
+                    Log.e("Status Code", "" + error.networkResponse.statusCode);
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        alert(pDialog, reference.get(), errorObj.getString("message"));
+                    }  else if (errorObj.has("mobile_login_disabled") && errorObj.getBoolean("mobile_login_disabled")) {
+                        showVisitCloseAlert(reference, errorObj.getString("error"));
+                    } else if (errorObj.has("error")) {
+                        alert(pDialog, reference.get(), errorObj.getString("error"));
+                    } else if(errorObj.toString().equals("{}")){
+                        final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                        alert(pDialog, reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
+                    } else{
+                        connectionTimeoutError(pDialog, reference.get());
+
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *This method handles all the error scenarios and displays the corresponding alert.
      *
      * @param cxt       params referring which class it is ivoked from
      * @param error     Received error object in corresponding activities
@@ -1285,5 +1341,40 @@ public class MdliveUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Displays dialog and then exits the current activity
+     *
+     * @param ctx       the calling Activity
+     * @param message   message to be displayed
+     */
+    public static void showExitDialog(final Activity ctx, String message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
+
+
+        DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if(ctx!=null)
+                    ctx.finish();
+            }
+        };
+
+        alertDialogBuilder
+                .setTitle(ctx.getResources().getString(R.string.mdl_app_name))
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok", positiveOnclickListener);
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+            }
+        });
+
+        alertDialog.show();
     }
 }
