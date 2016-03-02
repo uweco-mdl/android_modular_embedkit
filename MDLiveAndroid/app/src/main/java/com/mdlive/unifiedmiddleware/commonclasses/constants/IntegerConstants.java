@@ -14,7 +14,7 @@ public class IntegerConstants {
     public static final int DATE_FLAG = 0;
     /*Pediatric*/
     public static final int PEDIATRIC_AGE_TWO = 2;
-    public static final int PEDIATRIC_AGE_ABOVETWO = 13;
+    public static final int PEDIATRIC_AGE_ABOVETWO = 12;
     public static final int PEDIATRIC_AGE_ZERO = 0;
 
     public static final int IMAGE_SAMPLE_SIZE = 8;
