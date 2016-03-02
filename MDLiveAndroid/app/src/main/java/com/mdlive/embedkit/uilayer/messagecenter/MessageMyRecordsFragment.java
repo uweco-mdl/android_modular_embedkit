@@ -159,16 +159,16 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
 
     String getDocumentType(String urlName) {
         String type = "";
-        if ((MdliveUtils.getExtention(urlName).equalsIgnoreCase("gif") || MdliveUtils.getExtention(urlName).equalsIgnoreCase("png")
-                || MdliveUtils.getExtention(urlName).equalsIgnoreCase("jpg") || MdliveUtils.getExtention(urlName).equalsIgnoreCase("jpeg"))) {
+        if ((MdliveUtils.getExtension(urlName).equalsIgnoreCase("gif") || MdliveUtils.getExtension(urlName).equalsIgnoreCase("png")
+                || MdliveUtils.getExtension(urlName).equalsIgnoreCase("jpg") || MdliveUtils.getExtension(urlName).equalsIgnoreCase("jpeg"))) {
             type = "image/*";
-        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("pdf")) {
+        } else if (MdliveUtils.getExtension(urlName).equalsIgnoreCase("pdf")) {
             type = "application/pdf";
-        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("doc") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("docx"))) {
+        } else if (MdliveUtils.getExtension(urlName).equalsIgnoreCase("doc") || (MdliveUtils.getExtension(urlName).equalsIgnoreCase("docx"))) {
             type = "application/msword";
-        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("xls") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("xlsx"))) {
+        } else if (MdliveUtils.getExtension(urlName).equalsIgnoreCase("xls") || (MdliveUtils.getExtension(urlName).equalsIgnoreCase("xlsx"))) {
             type = "application/vnd.ms-excel";
-        } else if (MdliveUtils.getExtention(urlName).equalsIgnoreCase("pptx") || (MdliveUtils.getExtention(urlName).equalsIgnoreCase("ppt"))) {
+        } else if (MdliveUtils.getExtension(urlName).equalsIgnoreCase("pptx") || (MdliveUtils.getExtension(urlName).equalsIgnoreCase("ppt"))) {
             type = "application/vnd.ms-powerpoint";
         } else {
             MdliveUtils.alert(getProgressDialog(), getActivity(), getString(R.string.mdl_no_compitable_app));
@@ -285,7 +285,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("file_name", currentTimeStamp + ".jpg");
             jsonObject.put("document_type_id", 2);
-            jsonObject.put("document", MdliveUtils.encodeFileToBase64Binary(file, MdliveUtils.getFileExtention(file)));
+            jsonObject.put("document", MdliveUtils.encodeFileToBase64Binary(file, MdliveUtils.getFileExtension(file)));
             parent.put("customer_document", jsonObject);
             uploadDocument(parent.toString());
         } catch (JSONException e) {
@@ -512,19 +512,19 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
 
-            if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("jpeg") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("jpg") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("png") || MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("gif")) {
+            if (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("jpeg") || MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("jpg") || MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("png") || MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("gif")) {
                 intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "image/*");
                 startActivity(intent);
-            } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("pdf")) {
+            } else if (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("pdf")) {
                 intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/pdf");
                 startActivity(intent);
-            } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("doc") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("docx"))) {
+            } else if (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("doc") || (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("docx"))) {
                 intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/msword");
                 startActivity(intent);
-            } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("xls") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("xlsx"))) {
+            } else if (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("xls") || (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("xlsx"))) {
                 intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/vnd.ms-excel");
                 startActivity(intent);
-            } else if (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("pptx") || (MdliveUtils.getExtention(file_url[0]).equalsIgnoreCase("ppt"))) {
+            } else if (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("pptx") || (MdliveUtils.getExtension(file_url[0]).equalsIgnoreCase("ppt"))) {
                 intent.setDataAndType(Uri.parse("file://" + "/sdcard/" + file_url[1]), "application/vnd.ms-powerpoint");
                 startActivity(intent);
             } else {

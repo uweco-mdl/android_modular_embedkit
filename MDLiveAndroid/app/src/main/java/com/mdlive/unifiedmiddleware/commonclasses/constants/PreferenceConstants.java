@@ -73,4 +73,5 @@ public class PreferenceConstants {
     public static final String BAYLOR_GUID = "baylor_guid";
     public static final String TIMEZONE_SET_AUTOMATIC = "set_automatic";
     public static final String SAVED_PUSH_NOTIFICATION_ID = "SAVED_PUSH_NOTIFICATION_ID";
+    public static final String GOOGLE_FIT_SYNC_BTN_CLICKED = "GOOGLE_FIT_SYNC_BTN_CLICKED";
 }

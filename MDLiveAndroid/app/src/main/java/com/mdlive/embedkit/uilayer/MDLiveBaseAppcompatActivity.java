@@ -570,7 +570,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
 
         if (userBasicInfo.getRemainingFamilyMembersLimit() < 1) {
-            MdliveUtils.showAddChildExcededDialog(this,userBasicInfo.getAssistPhoneNumber());
+            MdliveUtils.showAddChildExceededDialog(this,userBasicInfo.getAssistPhoneNumber());
         } else {
             Intent addFamilyMember = new Intent(getBaseContext(), AddFamilyMemberActivity.class);
             startActivity(addFamilyMember);
