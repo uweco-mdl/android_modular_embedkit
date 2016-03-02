@@ -55,7 +55,7 @@ public class SocialSharingHandler {
         ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(activity, R.layout.share_list_item, shareList);
         final Dialog dialog = new Dialog(activity, android.R.style.Theme_Holo_Light_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_share_dialog);
         ListView shareLv = (ListView)dialog.findViewById(R.id.shareLv);
         shareLv.setAdapter(listAdapter);

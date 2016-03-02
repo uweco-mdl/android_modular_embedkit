@@ -71,6 +71,7 @@ public abstract class BaseServicesPlugin {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
+                Log.d("** POST Req","*********\nHTTP POST Req [URL] data: ["+ url +"]"+params);
                 JsonObjectRequest req = new JsonObjectRequest(url, obj,responseListener
                         ,errorListener) {
                     @Override
@@ -113,6 +114,7 @@ public abstract class BaseServicesPlugin {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
+                Log.d("** PUT Req","================\nHTTP PUT Req [URL] data: ["+ url +"]\n" +params);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, obj, responseListener
                         ,errorListener) {
                     @Override
@@ -185,6 +187,7 @@ public abstract class BaseServicesPlugin {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
+                Log.d("** GET Req","================\nHTTP GET Req [URL] data: ["+ url +"]\n"+params);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, obj, responseListener
                         ,errorListener) {
                     @Override
@@ -236,6 +239,7 @@ public abstract class BaseServicesPlugin {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
+                Log.d("** DELETE Req","================\nHTTP DELETE Req [URL] data: ["+ url +"]\n"+params);
                 JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, url, obj, responseListener
                         ,errorListener) {
                     @Override
@@ -291,6 +295,7 @@ public abstract class BaseServicesPlugin {
         try {
             if (MdliveUtils.isNetworkAvailable(context)) {
                 JSONObject obj = params !=null ? new JSONObject(params) : null;
+                Log.d("** Array GET Req","================\nHTTP Array GET Req [URL] data: ["+ url +"]\n"+params);
                 JsonArrayRequest req = new JsonArrayRequest(url, responseListener, errorListener) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
