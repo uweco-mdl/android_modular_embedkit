@@ -319,4 +319,19 @@ public class TimeZoneUtils {
         return timezone;
     }
 
+    /**
+     * Gets the current date based on the timezone
+     *
+     * @return - Current date as "MM/dd/yyyy"
+     */
+    public static String getCurrentDate(String timezone) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone(timezone));
+        Date date = c.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        df.setTimeZone(TimeZone.getTimeZone(timezone));
+        String strDate = df.format(date);
+        return strDate;
+    }
+
 }
