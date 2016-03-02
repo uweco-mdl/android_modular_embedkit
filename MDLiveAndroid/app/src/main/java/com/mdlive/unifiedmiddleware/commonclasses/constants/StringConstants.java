@@ -30,6 +30,8 @@ public class StringConstants {
     public static final String NO_PROVIDERS = "There are no providers available at this time. Please call 1-800-400-MDLIVE FREE for assistance.";
     public static final String NO_PROVIDERS_FILTERS = "No Providers listed with given criteria";
     public static final String WITH_PATIENT = "With Patient";
+    public static final String PRIMARY_ACCOUNT_ACCESS = "Dependent is not allowed to access the primary's Account";
+
     /* Pediatric*/
     public static final String DIET_TYPE = "Select";
 }
