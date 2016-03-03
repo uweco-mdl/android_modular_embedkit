@@ -87,6 +87,7 @@ public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
                 super.onPageStarted(view, url, favicon);
             }
         });
+        mWebView.addJavascriptInterface(new WebAppInterface(this.getActivity()), "Android");
         mWebView.loadUrl(AppSpecificConfig.SYMPTOM_CHECKER_URL);
 
     }
