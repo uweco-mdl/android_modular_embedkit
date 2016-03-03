@@ -55,6 +55,11 @@ public class WebAppInterface
             catch(Exception ex){
                 // IllegalAccessException, NoSuchMethodException, InvocationTargetException
             }
+
+            // purge symptom activity off activity stack if it exists
+            Activity sc_activity = MDLiveSymptomCheckerFragment.parentActivity.get();
+            if(sc_activity!=null)
+                sc_activity.finish();
         }
         else{
             // cannot start SAV without a context obj, so just exit
