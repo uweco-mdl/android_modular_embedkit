@@ -183,7 +183,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
         Log.v("Provider Mode", providerMode);
 
-        if (providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")) {
+        if (providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_THERAPIST)) {
             isTherapistUser = true;
             findViewById(R.id.behaviourView).setVisibility(View.VISIBLE);
             findViewById(R.id.childHeader).setVisibility(View.GONE);

@@ -1,6 +1,7 @@
 package com.mdlive.sav;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,13 +66,15 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private long strDate,shared_timestamp;
     private ArrayList<HashMap<String, String>> providerListMap;
     private ChooseProviderAdapter baseadapter;
-    private boolean available_now_status = false;
+    private boolean available_now_status = false,
+                    isCignaCoachUser = false;
     private FrameLayout filterMainRl;
     private RelativeLayout docOnCalLinLay;
     private TextView loadingTxt;
     private boolean flag = false;
     public static boolean isDoctorOnCall = false, isDoctorOnVideo = false, fromGetSartedPage = true;
     public static boolean mDoctorOnCall = false, mDoctorOnVideo = false;
+    int docOnCalLinLayVisibility = View.VISIBLE;
 
     private Button seeFirstAvailDoctor;
 
@@ -93,7 +96,21 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chooseprovider);
         clearMinimizedTime();
-        this.setTitle(getString(R.string.mdl_choose_provider));
+
+        // Determine the Provider mode
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH))
+        {
+            isCignaCoachUser = true;
+            this.setTitle(getString(R.string.mdl_chat_with_coach));
+            docOnCalLinLayVisibility = View.GONE;
+            ((RelativeLayout)findViewById(R.id.docOnCalLinLay)).setVisibility(View.GONE);
+            findViewById(R.id.chatCoachHeaderTxt).setVisibility(View.VISIBLE);
+        }else{
+            this.setTitle(getString(R.string.mdl_choose_provider));
+        }
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -111,7 +128,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
        /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
 
-        Initailization();
+        Initialization();
         ChooseProviderResponseList();
 
 
@@ -161,7 +178,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * an alert.     *
      * **/
 
-    private void Initailization() {
+    private void Initialization() {
         elevateCircularImage((CircularNetworkImageView) findViewById(R.id.ProfileImg));
 
         providerListMap = new  ArrayList<HashMap<String, String>>();
@@ -225,7 +242,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
-                docOnCalLinLay.setVisibility(View.VISIBLE);
+                docOnCalLinLay.setVisibility(docOnCalLinLayVisibility);
                 filterMainRl.setVisibility(View.GONE);
                 findViewById(R.id.txtFilter).setVisibility(View.GONE);
                 findViewById(R.id.progressBar).setVisibility(View.GONE);
@@ -369,7 +386,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             //setListView();
                         }else{
                             if (StrDoctorOnCall) {
-                                docOnCalLinLay.setVisibility(View.VISIBLE);
+                                docOnCalLinLay.setVisibility(docOnCalLinLayVisibility);
                                 filterMainRl.setVisibility(View.GONE);
                                 findViewById(R.id.txtFilter).setVisibility(View.GONE);
                                 findViewById(R.id.progressBar).setVisibility(View.GONE);

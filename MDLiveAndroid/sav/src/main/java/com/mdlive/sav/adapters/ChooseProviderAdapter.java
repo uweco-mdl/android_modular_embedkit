@@ -2,6 +2,7 @@ package com.mdlive.sav.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.sav.MDLiveChooseProvider;
 import com.mdlive.sav.MDLiveDoctorOnCall;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.customUi.CircularNetworkImageView;
 
@@ -75,8 +78,16 @@ public class ChooseProviderAdapter extends BaseAdapter {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent, false);
 
-            Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
+            // remove adapter text title if user is using Cigna Health Coach
+            final SharedPreferences sharedpreferences = this.context.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
+            if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)){
+                row.findViewById(R.id.txtFilter).setVisibility(View.GONE);
+                row.findViewById(R.id.docOnCalLinLay2).setVisibility(View.GONE);
+            }
+
+            Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
 
             seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
                 @Override

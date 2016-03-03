@@ -184,6 +184,10 @@ public class MDLiveConfig {
     public static final String AUTHORIZATION_KEY = "api_key";
     //public static final String SESSION_TOKEN = "token";
 
+    public static final String PROVIDERTYPE_CIGNACOACH = "Health Coach";
+    public static final String PROVIDERTYPE_FAMPHYS = "Family Physician";
+    public static final String PROVIDERTYPE_THERAPIST = "Therapist";
+
     static {
         System.loadLibrary("app");
     }

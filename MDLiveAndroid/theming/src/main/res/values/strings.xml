@@ -160,6 +160,7 @@
     <string name="mdl_reason_txt">Hello Test, what seems to be the\n best problem today?</string>
     <string name="mdl_card_txt">Please fill your credit card information below :</string>
     <string name="mdl_choose_provider">CHOOSE YOUR DOCTOR</string>
+    <string name="mdl_chat_with_coach">CHAT WITH A COACH</string>
     <string name="mdl_available_txt"> Available 24/7 by phone</string>
     <string name="mdl_doctorOnCall_txt">Doctor on call</string>
     <string name="mdl_video_or_phone">video or phone</string>
@@ -189,6 +190,11 @@
     <string name="mdl_select_provider">Or choose a specific provider below</string>
     <string name="mdl_select_provider_olyfilter">Choose a specific provider below</string>
     <string name="mdl_see_doctor_now">See this doctor now</string>
+    <string name="mdl_coach_chat_intro">Need to lose weight, quit smoking, lower stress or manage a chronic condition like asthma or diabetes? Find a health coach and call to schedule a video chat.</string>
+    <string name="mdl_health_coach">Health Coach</string>
+    <string name="mdl_coach_details">COACH DETAILS</string>
+    <string name="mdl_cignacoach_phonenumber">Toll-Free: %1$s</string>
+    <string name="mdl_cignacoach_data_error">Unable to retrieve Health Coach information</string>
 
     <!--Get Started-->
     <string name="mdl_get_started">Patient Information</string>
