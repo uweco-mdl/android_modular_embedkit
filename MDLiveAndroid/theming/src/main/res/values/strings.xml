@@ -1238,8 +1238,6 @@
     <!-- For Google Analytics -->
     <!-- Affliate Google Tracking ID, if empty, then tracking is disable -->
     <string name="ga_customTrackingId"></string>
-    <!-- MDLive Google Analytics flag. Set to true to enable internal tracking for MDLive-->
-    <string name="enable_mdlive_ga_tracking">true</string>
 
     <string-array name="mdl_countries_array">
         <item>United States</item>

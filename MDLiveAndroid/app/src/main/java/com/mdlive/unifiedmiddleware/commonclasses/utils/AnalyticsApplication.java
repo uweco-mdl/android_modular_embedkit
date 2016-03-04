@@ -53,8 +53,11 @@ public class AnalyticsApplication{
                 GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
                 // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
                 String tid = (trackerId == TrackerName.AFFILIATE_TRACKER) ? context.getString(R.string.ga_customTrackingId) :
-                        context.getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true") ?
-                                context.getString(R.string.ga_mdlive_trackingId) : null;
+                        context.getString(R.string.ga_mdlive_trackingId);
+                // Removed the check for if the tracking Id is defined as a String by commenting out the use of the "enable_mdlive_ga_tracking"
+                // Boolean flag, as we do not want to expose this capability to the affiliate. We may bring this check back later.
+                //       context.getString(R.string.enable_mdlive_ga_tracking).equalsIgnoreCase("true") ?
+                //               context.getString(R.string.ga_mdlive_trackingId) : null;
                 if (tid != null) {
                     Tracker t = analytics.newTracker(R.xml.analytics);
                     t.set("&tid", tid);
