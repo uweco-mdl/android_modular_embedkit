@@ -37,7 +37,7 @@ public class RecordAdapter extends ArrayAdapter<Record> {
         }
         viewHolder.mTextViewTop.setText(getItem(position).docName);
         viewHolder.mTextViewBottom.setText(" by " + getItem(position).uploadedBy + " on " +getItem(position).uploadedAt);
-        viewHolder.mImageView.setImageResource(getImageResource(MdliveUtils.getExtention(getItem(position).docName)));
+        viewHolder.mImageView.setImageResource(getImageResource(MdliveUtils.getExtension(getItem(position).docName)));
         return convertView;
     }
 

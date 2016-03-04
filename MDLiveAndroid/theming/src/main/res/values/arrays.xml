@@ -15,6 +15,12 @@
 
     <string-array name="left_navigation_items_sso">
         <item>@string/mdl_home</item>
+        <item>@string/mdl_see_a_doctor_now</item>
+        <item>@string/mdl_my_health</item>
+        <item>@string/mdl_mdlive_assist</item>
+        <item>@string/mdl_message_center</item>
+        <item>@string/mdl_symptom_checker</item>
+        <item>@string/mdl_my_accounts</item>
     </string-array>
 
     <string-array name="left_navigation_items_image">

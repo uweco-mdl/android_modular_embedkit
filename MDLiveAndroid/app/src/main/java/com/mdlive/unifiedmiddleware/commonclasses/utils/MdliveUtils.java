@@ -27,10 +27,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.JsonObject;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
@@ -68,6 +71,7 @@ public class MdliveUtils {
     private MdliveUtils(){
         // this class cannot be directly instantiated externally
     }
+
     public static void connectionTimeoutError(ProgressDialog pDialog, final Context context) {
         if(!MdliveUtils.DIALOG_SHOWN) {
             MdliveUtils.DIALOG_SHOWN = true;
@@ -241,8 +245,8 @@ public class MdliveUtils {
 
     /**
      * This method validate validZip-Code
-     *@param zipCode -User enterd Zipcode has to be passed as parameter
      *
+     * @param zipCode -User enterd Zipcode has to be passed as parameter
      */
     public static boolean  validateZipCode(String zipCode){
         String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
@@ -270,9 +274,8 @@ public class MdliveUtils {
     }
 
     /**
-     *
-     *
      * This class checks weather the network is available or not. Returns true if available and false if not available.
+     *
      * @return boolean
      */
     public static boolean isNetworkAvailable(Context context) {
@@ -284,6 +287,7 @@ public class MdliveUtils {
     public static void showProgressDialog(ProgressDialog dialog){
         dialog.show();
     }
+
     public static void hideProgressDialog(ProgressDialog dialog){
         if(dialog.isShowing()){
             dialog.dismiss();
@@ -387,8 +391,8 @@ public class MdliveUtils {
                 months = 0;
             }
         }
-        //Create new Age object
 
+        //Create new Age object
         return months;
     }
 
@@ -409,19 +413,19 @@ public class MdliveUtils {
         //Get difference between months
         months = currMonth - birthMonth;
         //if month difference is in negative then reduce years by one and calculate the number of months.
-        if (months < 0)
+        if(months < 0)
         {
             months = 12 - birthMonth + currMonth;
             if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
                 months--;
-        } else if (months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
+        } else if(months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
         {
             months = 11;
         }
         //Calculate the days
         if (now.get(Calendar.DATE) > birthDay.get(Calendar.DATE))
             days = now.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
-        else if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
+        else if(now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
         {
             int today = now.get(Calendar.DAY_OF_MONTH);
             now.add(Calendar.MONTH, -1);
@@ -430,8 +434,8 @@ public class MdliveUtils {
         {
             days = 0;
         }
-        //Create new Age object
 
+        //Create new Age object
         return days;
     }
 
@@ -496,9 +500,10 @@ public class MdliveUtils {
         // convert from bitmap to byte array
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        if(extension.contains("jpg") || extension.contains("jpeg"))
+        /*if(extension.contains("jpg") || extension.contains("jpeg"))
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        else if(extension.contains("png"))
+        else */ // Superfluous. This predicate already handled in the alternative below
+        if(extension.contains("png"))
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         else
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
@@ -510,7 +515,7 @@ public class MdliveUtils {
         return imgString;
     }
 
-    public static String getFileExtention(File file){
+    public static String getFileExtension(File file){
         String extension = "";
         int i = file.getName().lastIndexOf('.');
         int p = Math.max(file.getName().lastIndexOf('/'), file.getName().lastIndexOf('\\'));
@@ -566,34 +571,36 @@ public class MdliveUtils {
         alert.show();
     }
 
-    //Hiding Keyboard
-    public static void hideKeyboard(Context cxt,EditText edText) {
+    /**
+     * Hide the soft keyboard
+     */
+    public static void hideKeyboard(Context cxt, EditText edText) {
         InputMethodManager imm = (InputMethodManager)cxt.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edText.getWindowToken(), 0);
     }
 
     /**
-     * Hides the soft keyboard
+     * Hide the soft keyboard
      */
-    public static void hideKeyboard(Activity context,View view)
+    public static void hideKeyboard(Activity context, View view)
     {
         try{
             InputMethodManager in = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         }catch (Exception e){
-
+            Log.e("MdliveUtils","Failed to hide soft keybd: "+e.getMessage());
         }
 
     }
 
 
     /**
-     *  This function is for check a json object has valid and not null json string.
+     *  Checks if JSON object has valid and not null json string.
      *
      *  This is for validation purpose.
      *
-     * @param jsonId : json id to be validate
-     * @param jsonObject : object that holds json id
+     * @param jsonId     json id to be validate
+     * @param jsonObject  object that holds json id
      */
 
     public static boolean checkJSONResponseHasString(Object jsonObject, String jsonId){
@@ -631,10 +638,10 @@ public class MdliveUtils {
     }
 
     /**
-     * This method will converts the user entered phone nummber into standar format.
+     * Converts the user-entered phone number into standard format.
      *
-     * @param phoneNumber- User typed phone number to received as params
-     * @return-Formatted mobile to the scrren
+     * @param phoneNumber    User typed phone number to received as params
+     * @return      Formatted mobile to the screen
      */
 
     public static String phoneNumberFormat(Long phoneNumber) {
@@ -678,10 +685,11 @@ public class MdliveUtils {
     }
 
     /**
-     *This method handles all the error scenarios and displays the corresponding alert.
-     * @param cxt---params referring which class it is ivoked from
-     * @param error--Received error object in corresponding activities
-     * @param pDialog--Progress Dialog obj to show tho dialog
+     * Handles all the error scenarios and displays the corresponding alert.
+     *
+     * @param cxt       params referring which class it is ivoked from
+     * @param error     Received error object in corresponding activities
+     * @param pDialog   Progress Dialog obj to show tho dialog
      */
 
     public static void handelVolleyErrorResponse(Activity cxt, VolleyError error,ProgressDialog pDialog) {
@@ -720,6 +728,9 @@ public class MdliveUtils {
                         connectionTimeoutError(pDialog, reference.get());
 
                     }
+                } else if (error.networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
+                    final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                    alert(pDialog, reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
                 }
             }
 
@@ -757,9 +768,66 @@ public class MdliveUtils {
 
     /**
      *This method handles all the error scenarios and displays the corresponding alert.
-     * @param cxt---params referring which class it is ivoked from
-     * @param error--Received error object in corresponding activities
-     * @param pDialog--Progress Dialog obj to show tho dialog
+     * @param cxt -- params referring which class it is invoked from
+     * @param error -- Received error object in corresponding activities
+     * @param pDialog -- Progress Dialog obj to show tho dialog
+     */
+    public static void handleVolleyErrorResponse(Activity cxt, VolleyError error,ProgressDialog pDialog) {
+        try {
+            final WeakReference<Activity> reference = new WeakReference<Activity>(cxt);
+
+            if (error.networkResponse != null) {
+                NetworkResponse errorResponse = error.networkResponse;
+                Log.e("Status Code", "" + error.networkResponse.statusCode);
+
+                if(error.networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR){
+                    Log.e("Account Activation","\n*****\nERROR 500 from server...\n****\n");
+                    final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                    showExitDialog(reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
+                }
+                else if (error.getClass().equals(TimeoutError.class)) {
+                    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    };
+                    // Show timeout error message
+                    connectionTimeoutError(pDialog, reference.get());
+
+                }
+                else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND
+                            || errorResponse.statusCode == MDLiveConfig.HTTP_UNAUTHORIZED) {
+                    Log.e("Status Code", "" + error.networkResponse.statusCode);
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    if (errorObj.has("message")) {
+                        alert(pDialog, reference.get(), errorObj.getString("message"));
+                    }  else if (errorObj.has("mobile_login_disabled") && errorObj.getBoolean("mobile_login_disabled")) {
+                        showVisitCloseAlert(reference, errorObj.getString("error"));
+                    } else if (errorObj.has("error")) {
+                        alert(pDialog, reference.get(), errorObj.getString("error"));
+                    } else if(errorObj.toString().equals("{}")){
+                        final String number = cxt.getString(R.string.mdl_help_number_if_assist_not_present);
+                        alert(pDialog, reference.get(), cxt.getString(R.string.mdl_loading_information_error_message, number));
+                    } else{
+                        connectionTimeoutError(pDialog, reference.get());
+
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *This method handles all the error scenarios and displays the corresponding alert.
+     *
+     * @param cxt       params referring which class it is ivoked from
+     * @param error     Received error object in corresponding activities
+     * @param pDialog   Progress Dialog obj to show tho dialog
      */
 
     public static void handelVolleyErrorResponseForDependentChild(Activity cxt, VolleyError error,ProgressDialog pDialog, final DialogInterface.OnClickListener onClickListener) {
@@ -824,8 +892,6 @@ public class MdliveUtils {
         alertDialog.show();
     }
 
-
-
     public static void showDialog(final Context context, String title, String message, final DialogInterface.OnClickListener positiveClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
@@ -835,6 +901,7 @@ public class MdliveUtils {
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("Ok", positiveClickListener);
+
        final AlertDialog alertDialog = alertDialogBuilder.create();
 
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -875,10 +942,61 @@ public class MdliveUtils {
     }
 
     /**
-     * closing activity with animation
+     * Closing activity with animation
      */
     public static void closingActivityAnimation(Activity context){
         //context.overridePendingTransition(R.anim.mdlive_trans_right_in, R.anim.mdlive_trans_right_out);
+    }
+
+    /**
+     * Shows MD Live Assist dialog
+     */
+    public static void showMDLiveAssistDialog(final Activity activity) {
+        try {
+            final WeakReference<Activity> reference = new WeakReference<Activity>(activity);
+
+            if (reference.get() == null) {
+                return;
+            }
+
+            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(reference.get());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(reference.get());
+            builder.setCancelable(false);
+            LayoutInflater layoutInflater = LayoutInflater.from(reference.get());
+            final View view = layoutInflater.inflate(R.layout.alertdialogmessage, null);
+            TextView alertText = (TextView) view.findViewById(R.id.alertdialogtextview);
+            alertText.setText(reference.get().getText(R.string.mdl_call_text));
+
+            builder.setView(view);
+            builder.setPositiveButton(reference.get().getText(R.string.mdl_call),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" + userBasicInfo.getAssistPhoneNumber().trim()));
+                                reference.get().startActivity(intent);
+                            } catch (Exception e) {
+                            }
+
+                        }
+                    });
+            builder.setNegativeButton(reference.get().getText(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+            builder.create().show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void showMDLiveHelpAndSupportDialog(final Activity activity) {
@@ -931,9 +1049,9 @@ public class MdliveUtils {
     }
 
     /**
-     * Shows Add child limit exceded dialog
+     * Shows "Add child limit exceeded" dialog
      */
-    public static  void showAddChildExcededDialog(final Activity activity,final String assistPhonenum) {
+    public static void showAddChildExceededDialog(final Activity activity, final String assistPhonenum) {
         try {
 
             final WeakReference<Activity> reference = new WeakReference<Activity>(activity);
@@ -952,6 +1070,7 @@ public class MdliveUtils {
                     }catch(SecurityException secex){
                         // handle runtime exception
                         // ...
+                        Log.e("","Runtime failure: "+secex.getMessage());
                     }
 
                 }
@@ -1059,6 +1178,7 @@ public class MdliveUtils {
             return "Password";
         }
     }
+
     public static void setPreferredLockType(final Context context, final String type) {
         final WeakReference<Context> reference = new WeakReference<>(context);
 
@@ -1073,6 +1193,7 @@ public class MdliveUtils {
         editor.commit();
 
     }
+
     public static void setLockType(final Context context, final String type) {
         final WeakReference<Context> reference = new WeakReference<>(context);
 
@@ -1121,7 +1242,7 @@ public class MdliveUtils {
     }
 
 
-    public static String getExtention(final String link) {
+    public static String getExtension(final String link) {
         try {
             String extension = link.substring(link.lastIndexOf(".") + 1, link.length());
             return extension;
@@ -1201,4 +1322,59 @@ public class MdliveUtils {
         }
     }
 
+    /**
+     * Method to verify google play services on the device
+     * */
+    public static boolean checkPlayServices(Activity context) {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(context);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, context,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(context,
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Displays dialog and then exits the current activity
+     *
+     * @param ctx       the calling Activity
+     * @param message   message to be displayed
+     */
+    public static void showExitDialog(final Activity ctx, String message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
+
+
+        DialogInterface.OnClickListener positiveOnclickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if(ctx!=null)
+                    ctx.finish();
+            }
+        };
+
+        alertDialogBuilder
+                .setTitle(ctx.getResources().getString(R.string.mdl_app_name))
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok", positiveOnclickListener);
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+            }
+        });
+
+        alertDialog.show();
+    }
 }

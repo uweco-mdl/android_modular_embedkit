@@ -92,6 +92,7 @@
     <string name="mdltag_locating_available_doctors">mdl_locating_available_doctors</string>
     <string name="mdltag_select_provider">mdl_select_provider</string>
     <string name="mdltag_filter_txt">mdl_filter_txt</string>
+    <string name="mdltag_coach_chat_intro">mdl_coach_chat_intro</string>
 
     <string name="mdltag_email_confirmation_text">mdl_email_confirmation_text</string>
     <string name="mdltag_email_confirmation_detail_text">mdl_email_confirmation_detail_text</string>

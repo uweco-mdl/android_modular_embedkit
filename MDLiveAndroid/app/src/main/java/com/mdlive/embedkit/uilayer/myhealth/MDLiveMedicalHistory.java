@@ -314,7 +314,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
-        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase("Therapist")){
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_THERAPIST)){
             isTherapiestUser = true;
             findViewById(R.id.BehaviouralHealthLl).setVisibility(View.VISIBLE);
         }else{

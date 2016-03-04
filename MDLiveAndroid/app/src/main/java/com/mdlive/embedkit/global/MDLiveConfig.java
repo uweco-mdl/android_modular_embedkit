@@ -184,6 +184,10 @@ public class MDLiveConfig {
     public static final String AUTHORIZATION_KEY = "api_key";
     //public static final String SESSION_TOKEN = "token";
 
+    public static final String PROVIDERTYPE_CIGNACOACH = "Health Coach";
+    public static final String PROVIDERTYPE_FAMPHYS = "Family Physician";
+    public static final String PROVIDERTYPE_THERAPIST = "Therapist";
+
     static {
         System.loadLibrary("app");
     }
@@ -239,7 +243,7 @@ public class MDLiveConfig {
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
-                AppSpecificConfig.SYMPTOM_CHECKER_URL = "http://symptomchecker.mdlive.com/sc/html/index.html";
+                AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html";
                 break;
             case QAPL:
                 // QA Pluto URL

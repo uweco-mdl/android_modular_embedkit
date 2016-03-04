@@ -30,7 +30,7 @@ public class UploadImageService  extends BaseServicesPlugin {
         try {
             HashMap<String, Object> customer_document = new HashMap<String, Object>();
             HashMap<String, Object> contents = new HashMap<String, Object>();
-            String extension = MdliveUtils.getFileExtention(file);
+            String extension = MdliveUtils.getFileExtension(file);
             contents.put("file_type", extension);
             contents.put("file_name", file.getName());
             contents.put("document_type_id", 2);

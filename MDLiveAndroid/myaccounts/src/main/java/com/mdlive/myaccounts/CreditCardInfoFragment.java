@@ -123,9 +123,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             myAccountHostedPCI.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
         if (MDLiveConfig.CURRENT_ENVIRONMENT == MDLiveConfig.ENVIRON.PROD) {
-            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index_prod.html");
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index_prod.html");
         } else {
-            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/myaccount_index.html");
+            myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         }
         myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
         mScanCardBtn.setOnClickListener(new View.OnClickListener() {

@@ -42,7 +42,7 @@ public class SocialSharingHandler {
         ArrayList<String> shareList = new ArrayList<String>();
         shareList.add("SMS");
         shareList.add("Twitter");
-        shareList.add("Facebook");
+        //shareList.add("Facebook");
         shareList.add("E-mail");
 
         final List<Intent> targetedShareIntents = new ArrayList<Intent>();
@@ -55,7 +55,7 @@ public class SocialSharingHandler {
         ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(activity, R.layout.share_list_item, shareList);
         final Dialog dialog = new Dialog(activity, android.R.style.Theme_Holo_Light_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_share_dialog);
         ListView shareLv = (ListView)dialog.findViewById(R.id.shareLv);
         shareLv.setAdapter(listAdapter);
@@ -86,12 +86,14 @@ public class SocialSharingHandler {
             case 1:
                 twitterShare(installedApps, targetedShareIntents, activity);
                 break;
+            /*
             case 2:
                 shareIntent = new Intent(activity, FacebookShareUtil.class);
                 shareIntent.putExtra("message", SHARE_MSG);
                 activity.startActivity(shareIntent);
                 break;
-            case 3:
+            */
+            case 2:
                 emailShare(installedApps, activity);
                 break;
             default:
@@ -109,9 +111,12 @@ public class SocialSharingHandler {
         if (!resInfo.isEmpty()) {
             for (ResolveInfo resolveInfo : resInfo) {
                 String packageName = resolveInfo.activityInfo.packageName;
+                /*
                 if (TextUtils.equals(packageName, "com.facebook.katana")) {
                     installedApps.add("Facebook");
-                } else if (TextUtils.equals(packageName, "com.google.android.gm")) {
+                } else
+                */
+                if (TextUtils.equals(packageName, "com.google.android.gm")) {
                     installedApps.add("GMail");
                 } else if (TextUtils.equals(packageName, "com.twitter.android")) {
                     installedApps.add("Twitter");

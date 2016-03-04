@@ -752,7 +752,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             JSONObject parent = new JSONObject();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("file_name", currentTimeStamp+".jpg");
-            jsonObject.put("photo",  MdliveUtils.encodeFileToBase64Binary(file, MdliveUtils.getFileExtention(file)));
+            jsonObject.put("photo",  MdliveUtils.encodeFileToBase64Binary(file, MdliveUtils.getFileExtension(file)));
             parent.put("personal_information", jsonObject);
             loadChangeProfilePicService(parent.toString());
         } catch (Exception e) {

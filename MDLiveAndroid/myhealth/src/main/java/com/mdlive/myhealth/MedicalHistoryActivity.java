@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -104,6 +105,8 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
             viewPager.invalidate();
         }
         if (savedInstanceState == null) {
+// **** DEBUG ONLY.   o.uwechue
+Log.e("Medical History","+++++++++++++++++\nAbout to create nav drawer");
             getSupportFragmentManager().
                     beginTransaction().
                     add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
