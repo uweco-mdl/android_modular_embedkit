@@ -1603,7 +1603,7 @@ Log.e("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             if(!specialities.equals("")||specialities.length()!=0)
             {
                 specialities_txt.setText(specialities);
-                ((TextView)findViewById(R.id.specalist)).setText(specialityArray.get(0).toString().replace("\"", ""));
+                ((TextView)findViewById(R.id.specialist)).setText(specialityArray.get(0).toString().replace("\"", ""));
             }else
             {
                 specialities_txt.setVisibility(View.GONE);

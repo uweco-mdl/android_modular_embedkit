@@ -61,7 +61,7 @@
         android:layout_alignEnd="@+id/layoutDoctorDetails" />
 
     <TextView
-        android:id="@+id/specalist"
+        android:id="@+id/specialist"
         style="@style/chooseProviderTextStyle"
         android:layout_marginLeft="17dp"
         android:layout_toRightOf="@id/ProfileImglist"
