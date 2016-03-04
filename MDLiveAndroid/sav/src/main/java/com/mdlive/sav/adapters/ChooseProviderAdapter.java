@@ -31,6 +31,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
     ArrayList<HashMap<String, String>> array = new ArrayList<HashMap<String, String>>();
     Context context;
     LayoutInflater inflate;
+    private boolean isCignaCoachUser = false;
 
     public ChooseProviderAdapter(Context applicationContext,
                                  ArrayList<HashMap<String, String>> arraylist) {
@@ -59,8 +60,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
      *     The getView Method displays the provider list items.
      *     The datas are fetched from the Arraylist based on the position the dates will be placed
      *     in the listview.If the header response is true the doctor on call will be displayed
-     *     and if the header response returns false then the doctor on call will be
-     *     false.
+     *     and if the header response returns false then the doctor on call will be false.
      *
      */
 
@@ -83,8 +83,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
             String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
             if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)){
+                isCignaCoachUser = true;
                 row.findViewById(R.id.txtFilter).setVisibility(View.GONE);
                 row.findViewById(R.id.docOnCalLinLay2).setVisibility(View.GONE);
+                row.findViewById(R.id.chatCoachHeaderTxt).setVisibility(View.VISIBLE);
             }
 
             Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
@@ -115,34 +117,34 @@ public class ChooseProviderAdapter extends BaseAdapter {
             if (array.get(pos).get("available_now_status").equals("true")) {
 
                 if(array.get(pos).get("availability_type").equalsIgnoreCase("with patient")) {
-                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
-                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
+                    ((TextView) row.findViewById(R.id.specialist)).setText(array.get(pos).get("availability_type"));
+                    ((TextView) row.findViewById(R.id.specialist)).setTextColor(context.getResources().getColor(R.color.choose_pro_orange_color));
                 }else if(array.get(pos).get("availability_type").equalsIgnoreCase("Available"))
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
-                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_green_color));
+                    ((TextView) row.findViewById(R.id.specialist)).setText(array.get(pos).get("availability_type"));
+                    ((TextView) row.findViewById(R.id.specialist)).setTextColor(context.getResources().getColor(R.color.choose_pro_green_color));
                 }else
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("availability_type"));
+                    ((TextView) row.findViewById(R.id.specialist)).setText(array.get(pos).get("availability_type"));
                 }
 
                 //image view
                 video_call_icon = (ImageButton)row.findViewById(R.id.video_call_icon);
                 if (array.get(pos).get("availability_type").equalsIgnoreCase(StringConstants.WITH_PATIENT)) {
                     video_call_icon.setBackgroundResource(R.drawable.clock_icon);
-                    ((TextView) row.findViewById(R.id.specalist)).setText("With Patient...");
+                    ((TextView) row.findViewById(R.id.specialist)).setText("With Patient...");
                 }
                 else if(array.get(pos).get("availability_type").equalsIgnoreCase("phone"))
                 {
                     video_call_icon.setBackgroundResource(R.drawable.phone_call_icon);
-                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by phone");
+                    ((TextView) row.findViewById(R.id.specialist)).setText("Available now by phone");
                 }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video"))
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by video");
+                    ((TextView) row.findViewById(R.id.specialist)).setText("Available now by video");
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }else if(array.get(pos).get("availability_type").equalsIgnoreCase("video or phone"))
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText("Available now by video or phone");
+                    ((TextView) row.findViewById(R.id.specialist)).setText("Available now by video or phone");
                     video_call_icon.setBackgroundResource(R.drawable.video_call_icon);
                 }
 
@@ -150,18 +152,25 @@ public class ChooseProviderAdapter extends BaseAdapter {
 
                 if(array.get(pos).get("next_availability") == null)
                 {
-                    ((TextView) row.findViewById(R.id.specalist)).setText("");
+                    ((TextView) row.findViewById(R.id.specialist)).setText("");
                 }else {
-                    ((TextView) row.findViewById(R.id.specalist)).setText(array.get(pos).get("next_availability"));
-                    ((TextView) row.findViewById(R.id.specalist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
+                    ((TextView) row.findViewById(R.id.specialist)).setText(array.get(pos).get("next_availability"));
+                    ((TextView) row.findViewById(R.id.specialist)).setTextColor(context.getResources().getColor(R.color.choose_pro_gray_color));
                 }
             }
 
-             /*This is to Check the availability of the Doctor. If the next availability of doctor
+            if(isCignaCoachUser && (SpecialistTxt.getText()==null || SpecialistTxt.getText().toString().trim().isEmpty()))
+            {
+                SpecialistTxt.setText(R.string.mdl_health_coach);
+            }
+
+             /*
+                This is to Check the availability of the Doctor. If the next availability of doctor
                 is available then the time stamp should be  visible else it should be hidden.
-               This is to Check the availability of the Doctor is through either by phone or video
-               if it is through phone calling icon should be visible or if it is either through
-               video then the video icon should be visible .*/
+                This is to Check the availability of the Doctor is through either by phone or video
+                if it is through phone calling icon should be visible or if it is either through
+                video then the video icon should be visible .
+              */
 
             }
 
