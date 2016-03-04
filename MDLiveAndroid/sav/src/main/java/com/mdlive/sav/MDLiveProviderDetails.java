@@ -12,9 +12,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -32,6 +35,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
@@ -78,7 +82,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private Button reqApmtBtm;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
-    boolean isDoctorAvailableNow = false;
+    boolean isDoctorAvailableNow = false,
+            isCignaCoachUser = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,9 +106,19 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         findViewById(R.id.txtApply).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
-        ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
+        // Determine the Provider mode
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH))
+        {
+            isCignaCoachUser = true;
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_coach_details).toUpperCase());
+        }else{
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
+        }
+        ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
         Initialization();
         getPreferenceDetails();
@@ -417,7 +432,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private void handleSuccessResponse(JSONObject response) {
         try {
             //Fetch Data From the Services
-            Log.v("Response details", response.toString());
+            Log.d("Response details", response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -473,7 +488,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 str_appointmenttype = timeSlotObj.get("appointment_type").getAsString();
                                 str_timeslot = timeSlotObj.get("timeslot").getAsString();
                                 selectedTimestamp = timeSlotObj.get("timeslot").getAsString();
-Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
+Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
                                 if(MdliveUtils.checkJSONResponseHasString(timeSlotObj, "phys_availability_id")){
                                     str_phys_avail_id = timeSlotObj.get("phys_availability_id").getAsString();
@@ -1005,11 +1020,17 @@ Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             @Override
             public void onClick(View v) {
                 if (reqfutureapptBtn.getText().toString().equalsIgnoreCase("Make an appointment request")) {
-                    reqfutureapptBtnLayout.setClickable(true);
-                    Intent intent = new Intent(MDLiveProviderDetails.this,MDLiveMakeAppmtrequest.class);
-                    startActivity(intent);
-                    MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
-                    finish();
+                    if(isCignaCoachUser){
+                        // display popup dialog
+                        popupCignaCoachContactInfo();
+                    }
+                    else {
+                        reqfutureapptBtnLayout.setClickable(true);
+                        Intent intent = new Intent(MDLiveProviderDetails.this, MDLiveMakeAppmtrequest.class);
+                        startActivity(intent);
+                        MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
+                        finish();
+                    }
 
                 } else {
                     clickForVideoOrPhoneTapReqFutureAction();
@@ -1507,7 +1528,7 @@ Log.e("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-Log.e("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n****\n");
+Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n****\n");
         editor.putString(PreferenceConstants.SELECTED_TIMESLOT, selectedTime);
         editor.putString(PreferenceConstants.SELECTED_TIMESTAMP, selectedTimestamp);
         editor.putString(PreferenceConstants.SELECTED_DATE, datteText);
@@ -1777,6 +1798,131 @@ Log.e("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             super.onPostExecute(aVoid);
             hideProgress();
         }
+    }
+
+    /**
+     *
+     */
+    public void popupCignaCoachContactInfo() {
+
+        setProgressBarVisibility();
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleCignaCoachSuccessResponse(response.toString());
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                hideProgress();
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    JSONObject errorObj = new JSONObject(responseBody);
+                    NetworkResponse errorResponse = error.networkResponse;
+                    if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
+                        if (errorObj.has("message") || errorObj.has("error")) {
+                            final String errorMsg = errorObj.has("message")?errorObj.getString("message") : errorObj.getString("error");
+                            (MDLiveProviderDetails.this).runOnUiThread(new Runnable() {
+                                public void run() {
+
+                                }
+                            });
+                        }
+                    } else {
+                        MdliveUtils.handelVolleyErrorResponse(MDLiveProviderDetails.this, error, getProgressDialog());
+
+                    }
+                }catch(Exception e){
+                    hideProgress();
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveProviderDetails.this);
+                    e.printStackTrace();
+                }
+            }};
+
+            ProviderDetailServices service = new ProviderDetailServices(MDLiveProviderDetails.this, null);
+// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
+/*
+            service.getProviderDetails(String appointmentDate, String appointmentType, String DoctorId, successCallBackListener, errorListener);
+*/
+    }
+
+
+    /**
+     * Response handler for cigna health coach call
+     *
+     * @param response
+     */
+    private void handleCignaCoachSuccessResponse(String response)
+    {
+
+        //Fetch Data From the Services
+        Log.i("Response details", response.toString());
+        JsonParser parser = new JsonParser();
+        JsonObject responObj = (JsonObject) parser.parse(response.toString());
+        JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
+        JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
+
+        JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
+        JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
+
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveProviderDetails.this);
+        // set title
+        LayoutInflater inflater = MDLiveProviderDetails.this.getLayoutInflater();
+
+// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
+/*
+        View dialogView = inflater.inflate(R.layout.mdlive_popup, null);
+        alertDialogBuilder.setView(dialogView);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
+
+        // set dialog message
+        alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
+                    applyPromoCode(editText.getText().toString());
+                    promoCode = editText.getText().toString();
+                    storeOfferCode(promoCode);
+                }
+            }
+        }).setNegativeButton(getString(R.string.mdl_cancel_upper), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+*/
+        // create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
+/*
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (editText.hasFocus()) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+*/
+
+        // show it
+        alertDialog.show();
+
+    }
+
+
+    /*
+     * make spinwait circle visible
+     */
+    public void setProgressBarVisibility()
+    {
+        showProgress();
     }
 
     @Override
