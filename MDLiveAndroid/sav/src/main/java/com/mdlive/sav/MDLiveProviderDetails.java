@@ -1,19 +1,26 @@
 package com.mdlive.sav;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -69,8 +77,8 @@ import java.util.HashMap;
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private CircularNetworkImageView ProfileImg;
-    public String DoctorId,str_ProfileImg="",str_Availability_Type = "",selectedTimestamp,str_phys_avail_id,str_appointmenttype = "";
-    private TextView tapSeetheDoctorTxt, byvideoBtn,byphoneBtn,reqfutureapptBtn;
+    public String doctorId, str_ProfileImg="", str_Availability_Type = "", selectedTimestamp, str_phys_avail_id, str_appointmenttype = "";
+    private TextView tapSeetheDoctorTxt, byvideoBtn, byphoneBtn, reqfutureapptBtn;
     private LinearLayout tapSeetheDoctorTxtLayout, byvideoBtnLayout, byphoneBtnLayout,videophoneparentLl;
     private RelativeLayout reqfutureapptBtnLayout;
     private boolean selectedTimeslot=false;
@@ -78,12 +86,15 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private String Shared_AppointmentDate,longLocation;
     private LinearLayout detailsLl, providerImageCollectionHolder;
     private HorizontalScrollView horizontalscrollview;
-    private  LinearLayout layout;
+    private LinearLayout layout;
     private Button reqApmtBtm;
     private static final int DATE_PICKER_ID = IdConstants.SEARCHPROVIDER_DATEPICKER;
     private ArrayList<HashMap<String, String>> timeSlotListMap = new ArrayList<HashMap<String, String>>();
     boolean isDoctorAvailableNow = false,
             isCignaCoachUser = false;
+    static final int PERMISSION_ACCESS_PHONE = 0;
+    View messagesView = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,7 +160,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
     private void getPreferenceDetails() {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        DoctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
+        doctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
         SharedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, null);
         Shared_AppointmentDate = settings.getString(PreferenceConstants.PROVIDER_APPOINTMENT_DATE_PREFERENCES, null);
         groupAffiliations = settings.getString(PreferenceConstants.PROVIDER_GROUP_AFFILIATIONS_PREFERENCES, null);
@@ -240,6 +251,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         startActivity(Reasonintent);
         MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
     }
+
     private void displayProviderDetailonUI(JSONObject response){
         try{
             tapSeetheDoctorTxtLayout.setClickable(true);
@@ -247,7 +259,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             videoList.clear();
             phoneList.clear();
 
-            if( findViewById(R.id.dateTxtLayout).getVisibility() == View.VISIBLE){
+            if(findViewById(R.id.dateTxtLayout).getVisibility() == View.VISIBLE){
                 selectedTimeslot=true;
                 handleDateResponse(response);
             }else{
@@ -257,6 +269,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             e.printStackTrace();
         }
     }
+
     /**
      * LProviderDetailServices
      * Class : ProviderDetailServices - Service class used to fetch the Provider's information
@@ -271,7 +284,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
 
             @Override
             public void onResponse(JSONObject response) {
-                new LoadProviderDetais(response).execute(response);
+                new LoadProviderDetails(response).execute(response);
             }
         };
         NetworkErrorListener errorListener = new NetworkErrorListener() {
@@ -297,10 +310,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             }};
         ProviderDetailServices services = new ProviderDetailServices(MDLiveProviderDetails.this, null);
 
-        services.getProviderDetails(SharedLocation,AppointmentDate,AppointmentType,DoctorId,successCallBackListener, errorListener);
+        services.getProviderDetails(SharedLocation, AppointmentDate, AppointmentType, doctorId, successCallBackListener, errorListener);
     }
-    //This respose is for while updating the daye response
 
+    //This response is for while updating the details
     public void handleDateResponse(JSONObject response){
         horizontalscrollview.setVisibility(View.GONE);
         //Fetch Data From the Services
@@ -552,20 +565,6 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     }
                 }
             }
-/*
-            hideProgress();
-
-            try {
-//               saveConsultationType(str_Availability_Type);
-                saveProviderDetailsForConFirmAppmt(myText.getText().toString(), ((TextView)findViewById(R.id.dateTxt)).getText().toString(), str_ProfileImg,selectedTimestamp,str_phys_avail_id);
-            } catch (Exception e) {
-                Log.e("***TIMESLOT 3 ERROR",e.getMessage());
-                //e.printStackTrace();
-            }
-
-            Log.v("layout.getChildCount()", layout.getChildCount() + "");
-
-*/
 
             //with patient
             if (isDoctorWithPatient) {
@@ -776,7 +775,6 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             }
         });
     }
-
 
     private void saveTimeSlotToNowMode() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -1300,10 +1298,13 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             }
         });
     }
-    //This method will show only the Phone icon and it will disable the Video Icon
-    //This is applicable for the PHS Users that is the consult method is phone and
-    //also for the texas.
 
+    /*
+     * This method will show only the Phone icon and it will disable the Video Icon
+     *
+     * This is applicable for the PHS Users that is the consult method is phone and
+     * also for the Texas.
+    */
     private void phsOnlyForPhone() {
         saveAppmtType("phone");
         byvideoBtnLayout.setBackgroundResource(R.drawable.disable_round_rect_grey_border);
@@ -1661,13 +1662,13 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
 
         }
     }
+
     /**
      *  Response Handler for getting the license.
      *  This method returns the successful response of the Provider for the corresponding
      *  Providers.
      *
      */
-
     private void getLicenseArrayResponse(JsonObject providerdetObj, String license_state) {
         JsonArray responArray = providerdetObj.get("provider_affiliations").getAsJsonArray();
         String hospitalAffilations = "";
@@ -1691,13 +1692,10 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
         }
     }
 
-
-    // new code MDLIVE Embed Lit Implementation for Date Picker
+    // new code MDLIVE EmbedKit Implementation for Date Picker
 
     /**
-     * This method is to fetch the apoointment date and the native date picker is called for selecting
-     * the required
-     * .
+     * Fetch the appointment date and invoke the native date picker
      */
     public void appointmentAction(View v)
     {
@@ -1762,24 +1760,22 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             updatedAppointmentDate = format1.format(cal.getTime());
             loadProviderDetails(updatedAppointmentDate);
 
-
         }
     };
 
     /**
      * Refer PMA-2128 for more details about the issue and the fix.
      *
-     * Since there are few providers who has more details and time slots
+     * Since there are few providers who have more details and time slots
      *
      * So having loop for long process the OS throws an alert as App not responding
      * to avoid this the long UI process made as Asyntask.
      *
      * The reason not to have the process on background method is the UI cannot be accessed in this case.
      */
-
-    private class LoadProviderDetais extends AsyncTask<JSONObject, Void, Void>{
+    private class LoadProviderDetails extends AsyncTask<JSONObject, Void, Void>{
         private JSONObject response;
-        public LoadProviderDetais(JSONObject details){
+        public LoadProviderDetails(JSONObject details){
             response = details;
         }
         @Override
@@ -1809,6 +1805,7 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                hideProgress();
                 handleCignaCoachSuccessResponse(response.toString());
             }
         };
@@ -1830,6 +1827,17 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
                             (MDLiveProviderDetails.this).runOnUiThread(new Runnable() {
                                 public void run() {
 
+                                    MdliveUtils.showDialog(MDLiveProviderDetails.this,
+                                                            getApplicationInfo().loadLabel(getPackageManager()).toString(),
+                                                            errorMsg,
+                                                            getString(R.string.mdl_ok_upper),
+                                                            null,
+                                                            new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }, null);
                                 }
                             });
                         }
@@ -1845,15 +1853,27 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             }};
 
             ProviderDetailServices service = new ProviderDetailServices(MDLiveProviderDetails.this, null);
-// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
-/*
-            service.getProviderDetails(String appointmentDate, String appointmentType, String DoctorId, successCallBackListener, errorListener);
-*/
+
+            String appointmentType = "1";
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            String appointmentDate = sdf.format(c.getTime());
+
+            service.getProviderDetails(appointmentDate, appointmentType, doctorId, successCallBackListener, errorListener);
     }
 
 
     /**
-     * Response handler for cigna health coach call
+     * Parses JSON response from Cigna Coach request and displays popup displaying the extracted info
+     *
+     * data structure:
+     * "appointment_instructions" : {
+     *      "title" : "Schedule an Appointment",
+     *      "description" : "To schedule a video coaching appointment, please call:",
+     *      "team_name" : "Marriott TakeCare Team",
+     *      "toll_free_number" : "1-800-700-1092",
+     *      "additional_info" : "Se habla Español"
+     *  }
      *
      * @param response
      */
@@ -1861,61 +1881,113 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
     {
 
         //Fetch Data From the Services
-        Log.i("Response details", response.toString());
+        Log.d("Response details", response.toString());
+        boolean DEBUGGING=true;
+        if(DEBUGGING){
+            response = "{\"request_appointment\":true," +
+                    "\"doctor_profile\":{" +
+                    "\"appointment_slot\":{}," +
+                    "\"provider_details\":{}," +
+                    "\"appointment_type\":null," +
+                    "\"appointment_instructions\":{" +
+                    "\"title\":\"Schedule an Appointment\"," +
+                    "\"description\":\"To schedule a video coaching appointment, please call:\"," +
+                    "\"team_name\":\"Marriott TakeCare Team\"," +
+                    "\"toll_free_number\":\"1-800-700-1092\"," +
+                    "\"additional_info\":\"Se habla Español\"" +
+                    "}" +
+                    "}" +
+                    "}";
+        }
+
         JsonParser parser = new JsonParser();
-        JsonObject responObj = (JsonObject) parser.parse(response.toString());
-        JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
-        JsonObject providerdetObj = profileobj.get("provider_details").getAsJsonObject();
+        JsonObject responseObj=null, profileObj=null, appointment_obj=null;
+        String dialog_title=null, dialog_desc=null, dialog_teamname=null, dialog_extrainfo=null, phonenumber=null;
+        try {
+            responseObj = (JsonObject) parser.parse(response.toString());
+            profileObj = responseObj.get("doctor_profile").getAsJsonObject();
+            appointment_obj = profileObj.get("appointment_instructions").getAsJsonObject();
 
-        JsonObject appointment_slot = profileobj.get("appointment_slot").getAsJsonObject();
-        JsonArray available_hour = appointment_slot.get("available_hour").getAsJsonArray();
+            dialog_title = appointment_obj.get("title").getAsString();
+            dialog_desc = appointment_obj.get("description").getAsString();
+            dialog_teamname = appointment_obj.get("team_name").getAsString();
+            phonenumber = appointment_obj.get("toll_free_number").getAsString();
+            dialog_extrainfo = appointment_obj.get("additional_info").getAsString();
 
+        }catch(NullPointerException nex){
+            Toast.makeText(this, R.string.mdl_cignacoach_data_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String dialog_phonenumber = phonenumber;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveProviderDetails.this);
-        // set title
         LayoutInflater inflater = MDLiveProviderDetails.this.getLayoutInflater();
-
-// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
-/*
-        View dialogView = inflater.inflate(R.layout.mdlive_popup, null);
+        View dialogView = inflater.inflate(R.layout.cignacoach_popup, null);
+        messagesView = dialogView;
         alertDialogBuilder.setView(dialogView);
-        final EditText editText = (EditText) dialogView.findViewById(R.id.offerCode);
 
-        // set dialog message
-        alertDialogBuilder.setCancelable(false).setPositiveButton(getString(R.string.mdl_apply), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (editText.getText().toString().length() != IntegerConstants.NUMBER_ZERO) {
-                    applyPromoCode(editText.getText().toString());
-                    promoCode = editText.getText().toString();
-                    storeOfferCode(promoCode);
-                }
-            }
-        }).setNegativeButton(getString(R.string.mdl_cancel_upper), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-*/
+        // populate the dialog's text fields
+        final TextView txt_title = (TextView) dialogView.findViewById(R.id.title);
+        txt_title.setText(dialog_title);
+        final TextView txt_desc = (TextView) dialogView.findViewById(R.id.desc);
+        txt_desc.setText(dialog_desc);
+        final TextView txt_team = (TextView) dialogView.findViewById(R.id.team);
+        txt_team.setText(dialog_teamname);
+        final TextView txt_phone = (TextView) dialogView.findViewById(R.id.phone);
+        txt_phone.setText(getString(R.string.mdl_cignacoach_phonenumber,dialog_phonenumber));
+        final TextView txt_extra = (TextView) dialogView.findViewById(R.id.extra);
+        txt_extra.setText(dialog_extrainfo);
+
+         alertDialogBuilder.setCancelable(true);
+
         // create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
-// ------------- NEED TO MODIFY/REWRITE THIS SECTION FOR CIGNA COACH POPUP -----------------
-/*
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (editText.hasFocus()) {
-                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MDLiveProviderDetails.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(MDLiveProviderDetails.this, new String[] {android.Manifest.permission.CALL_PHONE},
+                            MDLiveProviderDetails.PERMISSION_ACCESS_PHONE );
                 }
+                else{
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + dialog_phonenumber));
+                    startActivity(callIntent);
+                }
+                alertDialog.dismiss();
             }
         });
-*/
 
-        // show it
+        // display it
         alertDialog.show();
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MDLiveProviderDetails.PERMISSION_ACCESS_PHONE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MDLprovider", "Phone Call permission granted.");
+                    Snackbar.make(messagesView, R.string.mdl_permission_call_available, Snackbar.LENGTH_SHORT).show();
+
+                } else {
+
+                    Log.d("MDLprovider", "Phone Call permission Not granted.");
+                    Snackbar.make(messagesView, R.string.mdl_permission_call_not_available, Snackbar.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
     /*
      * make spinwait circle visible
