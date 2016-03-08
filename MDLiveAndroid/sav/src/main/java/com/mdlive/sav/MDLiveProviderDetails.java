@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -1881,32 +1882,15 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
     {
 
         //Fetch Data From the Services
-        Log.d("Response details", response.toString());
-        boolean DEBUGGING=true;
-        if(DEBUGGING){
-            response = "{\"request_appointment\":true," +
-                    "\"doctor_profile\":{" +
-                    "\"appointment_slot\":{}," +
-                    "\"provider_details\":{}," +
-                    "\"appointment_type\":null," +
-                    "\"appointment_instructions\":{" +
-                    "\"title\":\"Schedule an Appointment\"," +
-                    "\"description\":\"To schedule a video coaching appointment, please call:\"," +
-                    "\"team_name\":\"Marriott TakeCare Team\"," +
-                    "\"toll_free_number\":\"1-800-700-1092\"," +
-                    "\"additional_info\":\"Se habla Español\"" +
-                    "}" +
-                    "}" +
-                    "}";
-        }
-
+        //Log.e("Response details", "************\n**********"+response.toString());
         JsonParser parser = new JsonParser();
-        JsonObject responseObj=null, profileObj=null, appointment_obj=null;
+        JsonObject responseObj=null, profileObj=null, providerObj=null, appointment_obj=null;
         String dialog_title=null, dialog_desc=null, dialog_teamname=null, dialog_extrainfo=null, phonenumber=null;
         try {
             responseObj = (JsonObject) parser.parse(response.toString());
             profileObj = responseObj.get("doctor_profile").getAsJsonObject();
-            appointment_obj = profileObj.get("appointment_instructions").getAsJsonObject();
+            providerObj = profileObj.get("provider_details").getAsJsonObject();
+            appointment_obj = providerObj.get("appointment_instructions").getAsJsonObject();
 
             dialog_title = appointment_obj.get("title").getAsString();
             dialog_desc = appointment_obj.get("description").getAsString();
@@ -1915,6 +1899,7 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             dialog_extrainfo = appointment_obj.get("additional_info").getAsString();
 
         }catch(NullPointerException nex){
+            //Log.e("Error details", "************\n" + nex.getMessage());
             Toast.makeText(this, R.string.mdl_cignacoach_data_error, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1943,6 +1928,8 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
 
         // create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        // suppress default background to allow rounded corners to show through
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         txt_phone.setOnClickListener(new View.OnClickListener() {
             @Override
