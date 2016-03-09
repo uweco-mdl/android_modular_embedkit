@@ -61,7 +61,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View securityQuestions = inflater.inflate(R.layout.fragments_security_questions, null);
-        getActivity().setTitle(getString(R.string.mdl_change_security_questions));
+        getActivity().setTitle(getString(R.string.mdl_security_questions_txt));
 
         mSecurityQuestion1Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion1Layout);
         mSecurityQuestion2Layout = (RelativeLayout)securityQuestions.findViewById(R.id.changeQuestion2Layout);

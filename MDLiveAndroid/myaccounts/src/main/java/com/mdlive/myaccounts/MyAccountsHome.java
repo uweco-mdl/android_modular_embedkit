@@ -69,7 +69,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if (fragment.equals("SECURITY QUESTION")) {
-            title.setText(getResources().getString(R.string.mdl_change_security_questions).toUpperCase());
+            title.setText(getResources().getString(R.string.mdl_security_questions_txt).toUpperCase());
             response = getIntent().getStringExtra("Security_Response");
             getSupportFragmentManager().
                     beginTransaction().
