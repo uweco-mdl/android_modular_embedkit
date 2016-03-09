@@ -217,6 +217,11 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         };
     }
 
+    /**
+     * Handler for the "Submit Request Form" button
+     *
+     * @param v     View object in layout
+     */
     public void rightBtnOnClick(View v){
         String strappmtreason = appointmentReason.getText().toString().trim();
         String strappmtcomment = appointmentComment.getText().toString().trim();
