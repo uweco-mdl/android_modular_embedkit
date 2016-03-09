@@ -33,8 +33,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
     LayoutInflater inflate;
     private boolean isCignaCoachUser = false;
 
-    public ChooseProviderAdapter(Context applicationContext,
-                                 ArrayList<HashMap<String, String>> arraylist) {
+    public ChooseProviderAdapter(Context applicationContext, ArrayList<HashMap<String, String>> arraylist) {
 
         this.context = applicationContext;
         this.array = arraylist;
@@ -61,21 +60,18 @@ public class ChooseProviderAdapter extends BaseAdapter {
      *     The datas are fetched from the Arraylist based on the position the dates will be placed
      *     in the listview.If the header response is true the doctor on call will be displayed
      *     and if the header response returns false then the doctor on call will be false.
-     *
      */
-
     @Override
     public View getView(int pos, View convertview, ViewGroup parent) {
-        TextView PatientNameTxt, SpecialistTxt, group_affiliations;
+        TextView patientNameTxt, specialistTxt, group_affiliations;
         TextView withPatientTxt;
         ImageButton video_call_icon;
         final CircularNetworkImageView ProfileImg;
         View row = null;
         if (array.get(pos).get("isheader").equals(StringConstants.ISHEADER_TRUE)) {
             if (row == null)
+            {inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);}
 
-                inflate = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflate.inflate(R.layout.mdlive_chooseproviderheader, parent, false);
 
             // remove adapter text title if user is using Cigna Health Coach
@@ -101,16 +97,24 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 }
             });
         } else {
-            if (row == null)
-                inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflate.inflate(R.layout.chooseprovider_listitem, parent, false);
-            PatientNameTxt = (TextView) row.findViewById(R.id.PatientName);
+            int layout=0;
 
-            PatientNameTxt.setText(array.get(pos).get("name"));
+            if(isCignaCoachUser)
+                layout=R.layout.chooseprovider_listitem_hc;
+            else
+                layout=R.layout.chooseprovider_listitem;
+
+            if (row == null)
+                {inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);}
+
+            row = inflate.inflate(layout, parent, false);
+            patientNameTxt = (TextView) row.findViewById(R.id.PatientName);
+            patientNameTxt.setText(array.get(pos).get("name"));
+
             group_affiliations = (TextView) row.findViewById(R.id.group_affiliations);
             group_affiliations.setText(array.get(pos).get("group_name"));
-            SpecialistTxt = (TextView) row.findViewById(R.id.specalist);
-            SpecialistTxt.setText(array.get(pos).get("specialty"));
+            specialistTxt = (TextView) row.findViewById(R.id.specalist);
+            specialistTxt.setText(array.get(pos).get("specialty"));
             ProfileImg = (CircularNetworkImageView) row.findViewById(R.id.ProfileImglist);
             ProfileImg.setImageUrl(array.get(pos).get("provider_image_url"), ApplicationController.getInstance().getImageLoader(context));
 
@@ -159,9 +163,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 }
             }
 
-            if(isCignaCoachUser && (SpecialistTxt.getText()==null || SpecialistTxt.getText().toString().trim().isEmpty()))
+            if(isCignaCoachUser && (specialistTxt.getText()==null || specialistTxt.getText().toString().trim().isEmpty()))
             {
-                SpecialistTxt.setText(R.string.mdl_health_coach);
+                specialistTxt.setText(R.string.mdl_health_coach);
+                row.findViewById(R.id.group_affiliations).setVisibility(View.GONE);
             }
 
              /*
@@ -172,7 +177,7 @@ public class ChooseProviderAdapter extends BaseAdapter {
                 video then the video icon should be visible .
               */
 
-            }
+        }
 
         return row;
     }
