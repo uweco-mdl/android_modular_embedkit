@@ -129,7 +129,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         }
 
         if (fragment.equals("Add FAMILY MEMBER")) {
-            title.setText("ADD FAMILY MEMBER");
+            title.setText(getResources().getString(R.string.mdl_add_family_member).toUpperCase());
             getSupportFragmentManager().
                     beginTransaction().
                     add(R.id.container, AddFamilyMemberFragment.newInstance(), "Add FAMILY MEMBER").
