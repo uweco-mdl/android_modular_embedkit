@@ -978,6 +978,7 @@
     <string name="mdl_email_caps">EMAIL</string>
     <string name="mdl_email_address_caps">EMAIL ADDRESS</string>
     <string name="mdl_user_name_caps">USER NAME</string>
+    <string name="mdl_relationship_caps">RELATIONSHIP</string>
     <string name="mdl_phone_caps">PHONE</string>
     <string name="mdl_phone_caps_mandatory">PHONE*</string>
     <string name="mdl_street_address_caps">STREET ADDRESS</string>

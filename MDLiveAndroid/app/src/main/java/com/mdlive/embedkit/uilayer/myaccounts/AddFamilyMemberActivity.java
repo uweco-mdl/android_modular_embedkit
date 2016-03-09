@@ -62,6 +62,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private EditText mAddress1 = null;
     private EditText mCity = null;
     private TextView mState = null;
+    private TextView mRelationship = null;
     private EditText mPhone = null;
     private TextView mDOB = null;
     private TextView mGender = null;
@@ -73,7 +74,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private TextView mUsernameSpecialCharactersCheck = null;
 
     private List<String> stateIds = new ArrayList<String>();
-    private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
+    private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout, mRelationshipLayout;
     private boolean mayIAllowToEdit = true;
     private ProgressDialog pDialog;
 
@@ -233,6 +234,23 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             }
         });
 
+        mRelationshipLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final CharSequence[] items = {"Self", "Spouse" , "Child" , "Other"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddFamilyMemberActivity.this);
+                builder.setTitle("Make your selection");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        mRelationship.setText(items[item]);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         mPhone.addTextChangedListener(new TextWatcher() {
             @Override
@@ -394,11 +412,13 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         mCity = (EditText) findViewById(R.id.city);
         mState = (TextView) findViewById(R.id.state);
         mPhone = (EditText) findViewById(R.id.phone);
+        mRelationship = (TextView) findViewById(R.id.relationship);
         mDOB = (TextView) findViewById(R.id.DOB);
         mZip = (EditText) findViewById(R.id.zipcodeEditText);
         mGender = (TextView) findViewById(R.id.gender);
         mDOBLayout = (RelativeLayout) findViewById(R.id.DOBLayout);
         mStateLayout = (RelativeLayout) findViewById(R.id.stateLayout);
+        mRelationshipLayout = (RelativeLayout) findViewById(R.id.relationshipLayout);
         mGenderLayout = (RelativeLayout) findViewById(R.id.genderLayout);
         mValidEmailText = (TextView) findViewById(R.id.validEmailText);
         mValidationEmail = (TextView) findViewById(R.id.validationEmail);
@@ -419,11 +439,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         String state = mState.getText().toString().trim();
         String phone = mPhone.getText().toString().trim().replaceAll("[-() ]", "");
         String dob = mDOB.getText().toString().trim();
-        String zipCode =mZip.getText().toString();
+        String zipCode = mZip.getText().toString();
         String gender = mGender.getText().toString().trim();
+        String relationship = mRelationship.getText().toString().trim();
 
         if (isEmpty(userName) && isEmpty(eMail) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(address1) && isEmpty(city)
-                && isEmpty(state) && isEmpty(phone) && isEmpty(dob) && isEmpty(gender)) {
+                && isEmpty(state) && isEmpty(phone) && isEmpty(dob) && isEmpty(gender) && isEmpty(relationship)) {
             if (validEmail(eMail)) {
                 if(!MdliveUtils.validateZipCode(zipCode)){
                     Toast.makeText(getApplicationContext(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
@@ -443,6 +464,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         jsonObject1.put("address1", address1);
                         jsonObject1.put("city", city);
                         jsonObject1.put("state_id", state);
+                        jsonObject1.put("relationship", relationship);
                         jsonObject1.put("zip", zipCode.replace("-", ""));
                         jsonObject1.put("birthdate", dob);
                         jsonObject1.put("answer", "idontknow");

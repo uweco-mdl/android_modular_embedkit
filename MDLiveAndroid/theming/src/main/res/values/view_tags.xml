@@ -11,6 +11,7 @@
     <string name="mdltag_dob_caps">mdl_dob_caps</string>
     <string name="mdltag_gender_caps">mdl_gender_caps</string>
     <string name="mdltag_phone_caps">mdl_phone_caps</string>
+    <string name="mdltag_relationship_caps">mdl_relationship_caps</string>
     <string name="mdltag_reply_message_caps">mdl_reply_message_caps</string>
 
 

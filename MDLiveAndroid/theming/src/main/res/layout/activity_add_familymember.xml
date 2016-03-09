@@ -181,7 +181,7 @@
                 android:textSize="16sp"
                 android:visibility="gone" />
 
-            <TextView
+            <!--TextView
                 android:id="@+id/userNameAlphaNumericCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
                 android:tag="password_alphanumeric_check"
                 android:textColor="@color/change_password_alert_text_color_red"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:visibility="gone" /-->
 
             <TextView
                 android:id="@+id/userNameSpecialCharactersCheck"
@@ -234,6 +234,32 @@
                         android:singleLine="true"
                         android:imeOptions="actionNext"
                         android:cursorVisible="true" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                style="@style/myChangeProfileInfoLayoutStyle"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp">
+
+                <RelativeLayout style="@style/common_style_W_Match_H_Wrap"
+                    android:id="@+id/relationshipLayout">
+
+                    <TextView
+                        android:id="@+id/relationshipView"
+                        style="@style/myChangeProfileInfoTextStyle"
+                        android:text="@string/mdl_relationship_caps"
+                        android:tag="@string/mdltag_relationship_caps"/>
+
+                    <TextView
+                        android:id="@+id/relationship"
+                        style="@style/myChangeProfileInfoValueStyle"
+                        android:layout_below="@id/relationshipView"
+                        android:background="@color/white"
+                        android:cursorVisible="true"
+                        android:drawablePadding="5dp"
+                        android:drawableRight="@drawable/dropdown_icon" />
 
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
