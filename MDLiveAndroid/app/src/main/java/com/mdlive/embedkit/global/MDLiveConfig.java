@@ -192,7 +192,6 @@ public class MDLiveConfig {
         System.loadLibrary("app");
     }
 
-
     public static void setData(ENVIRON currentEnvironment){
         CURRENT_ENVIRONMENT = currentEnvironment;
 

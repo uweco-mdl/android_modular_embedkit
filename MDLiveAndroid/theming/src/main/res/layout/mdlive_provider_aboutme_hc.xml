@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/LinearLayoutStyle"
+    >
+    <LinearLayout
+       style="@style/DoctorLinearLayoutStyle"
+        android:background="@drawable/white_rounded_corner_hc"
+        android:orientation="vertical">
+        <TextView
+            style="@style/ProviderDetailHeaderStyleHC"
+            android:text="@string/mdl_about_me"
+            android:tag="@string/mdltag_about_me"
+            />
+        <TextView
+            style="@style/ProviderDetailContentStyle"
+            android:id="@+id/aboutMe_txt"
+            android:text=""
+            />
+
+       </LinearLayout>
+
+</LinearLayout>

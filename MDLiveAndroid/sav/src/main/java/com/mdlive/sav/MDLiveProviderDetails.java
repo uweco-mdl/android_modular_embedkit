@@ -21,7 +21,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,7 +75,7 @@ import java.util.HashMap;
  * the provider like Specalties, about the provider,languages has been defined.
  */
 public class MDLiveProviderDetails extends MDLiveBaseActivity{
-    private TextView aboutme_txt,education_txt,specialities_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
+    private TextView aboutme_txt,education_txt,specialties_txt, hospitalAffilations_txt,location_txt,lang_txt, doctorNameTv,detailsGroupAffiliations;
     private CircularNetworkImageView ProfileImg;
     public String doctorId, str_ProfileImg="", str_Availability_Type = "", selectedTimestamp, str_phys_avail_id, str_appointmenttype = "";
     private TextView tapSeetheDoctorTxt, byvideoBtn, byphoneBtn, reqfutureapptBtn;
@@ -95,12 +94,25 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
             isCignaCoachUser = false;
     static final int PERMISSION_ACCESS_PHONE = 0;
     View messagesView = null;
+    int viewsVisibility = View.VISIBLE;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mdlive_choose_provider_details);
+
+        // Determine the Provider mode and set local flag
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)) {
+            isCignaCoachUser = true;
+            viewsVisibility = View.GONE;
+            setContentView(R.layout.mdlive_choose_provider_details_hc);
+        }else{
+            setContentView(R.layout.mdlive_choose_provider_details);
+        }
+
         clearMinimizedTime();
         this.setTitle(getString(R.string.mdl_doctor_details));
 
@@ -119,17 +131,11 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
         findViewById(R.id.txtApply).setVisibility(View.GONE);
 
-        // Determine the Provider mode
-        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
-
-        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH))
-        {
-            isCignaCoachUser = true;
+        if(isCignaCoachUser)
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_coach_details).toUpperCase());
-        }else{
+        else
             ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_doctor_details).toUpperCase());
-        }
+
         ((TextView) findViewById(R.id.headerTxt)).setTextColor(Color.WHITE);
 
         Initialization();
@@ -158,7 +164,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      * be video by default.
      *
      */
-
     private void getPreferenceDetails() {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         doctorId = settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null);
@@ -192,14 +197,13 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      * and on clicking the Home button you will be navigated to the SSo Screen with
      * an alert.
      *
-     * **/
-
+     */
     public void Initialization()
     {
         reqApmtBtm = (Button)findViewById(R.id.reqApmtBtm);
         aboutme_txt = (TextView)findViewById(R.id.aboutMe_txt);
         education_txt = (TextView)findViewById(R.id.education_txt);
-        specialities_txt = (TextView)findViewById(R.id.specialities_txt);
+        specialties_txt = (TextView)findViewById(R.id.specialities_txt);
         hospitalAffilations_txt = (TextView)findViewById(R.id.license_txt);
         location_txt = (TextView)findViewById(R.id.provider_location_txt);
         lang_txt = (TextView)findViewById(R.id.provider_lang_txt);
@@ -410,9 +414,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                                 layout.addView(myText);
                             } else {
                                 setHorizontalScrollviewTimeslots(layout, str_timeslot, j,str_phys_avail_id);
-
                             }
-
                         }
                     }
                 }else
@@ -421,13 +423,12 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
                         selectedTimeslot=false;
                         findViewById(R.id.noappmtsTxtLayout).setVisibility(View.VISIBLE);
                         ((TextView)findViewById(R.id.noAppmtsTxt)).setText(getString(R.string.mdl_notimeslots_txt));
-                        reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+                        reqfutureapptBtnLayout.setVisibility(viewsVisibility);
                         ((TextView)findViewById(R.id.reqfutureapptBtn)).setText("Make an appointment request");
                         ((TextView)findViewById(R.id.reqfutureapptBtn)).setTextColor(Color.parseColor("#0079FD"));
                         videophoneparentLl.setVisibility(View.GONE);
                         tapReqFutureBtnAction();
                         findViewById(R.id.reqApmtBtm).setVisibility(View.GONE);
-
                     }
                 }
             }
@@ -442,11 +443,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      *  displayed.Along with this Provider's affilitations will also be displayed
      *
      */
-
     private void handleSuccessResponse(JSONObject response) {
         try {
             //Fetch Data From the Services
-            Log.d("Response details", response.toString());
+            Log.d("Response details", "******************\n*******************\n"+response.toString());
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject) parser.parse(response.toString());
             JsonObject profileobj = responObj.get("doctor_profile").getAsJsonObject();
@@ -558,7 +558,6 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                                 } else {
                                     setHorizontalScrollviewTimeslots(layout, str_timeslot, j,str_phys_avail_id);
                                 }
-
                             }
                         }
                     } else if (str_availabilityStatus.equalsIgnoreCase("With patient")) {
@@ -578,7 +577,6 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     onlyWithPatient();
 
                 }
-
             }
 
             /*This is for Status is available and the timeslot is Zero..Remaining all
@@ -599,15 +597,12 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     onlyWithPatient();
                 }
 
-
             }
 
             //Available now and later
             //Part1 ----> timeslot zero followed by many timeslots
             else if (isDoctorAvailableNow && layout.getChildCount() >= 1) {
                 enableOrdisableProviderDetails(str_Availability_Type);
-
-
 
             }
             //part 2 available ly later
@@ -627,9 +622,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 } else {
                     notAvailable();
                 }
-
             }
-
 
             //not available
             else if (layout.getChildCount() == 0) {
@@ -650,7 +643,6 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     //Make future appointment only
                     notAvailable();
                 }
-
             }
 
             setResponseQualificationDetails(providerdetObj, str_Availability_Type);
@@ -661,20 +653,25 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
     }
 
-    private void enableReqAppmtBtn() {
+    /**
+     * Enables/disables ability to request an appointment based on timeslot selection and affiliation
+     */
+    private void enableReqAppmtBtn()
+    {
+        if(isCignaCoachUser)
+            return;
+
         if(!selectedTimeslot)
         {
             reqApmtBtm.setVisibility(View.GONE);
-
         }else
         {
             reqApmtBtm.setVisibility(View.VISIBLE);
-
         }
     }
 
     private void notAvailable() {
-        tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
+        tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
         tapSeetheDoctorTxt.setText(getString(R.string.mdl_currently_unavail));
         tapSeetheDoctorTxtLayout.setClickable(false);
         tapSeetheDoctorTxtLayout.setBackgroundResource((R.color.darkgrey_background));
@@ -682,7 +679,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         videophoneparentLl.setVisibility(View.GONE);
         byvideoBtnLayout.setVisibility(View.GONE);
         byphoneBtnLayout.setVisibility(View.GONE);
-        reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+        reqfutureapptBtnLayout.setVisibility(viewsVisibility);
         reqfutureapptBtnLayout.setClickable(true);
         reqfutureapptBtn.setText(getString(R.string.mdl_make_appt));
         tapReqFutureBtnAction();
@@ -884,47 +881,45 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             tapSeetheDoctorTxtLayout.setClickable(false);
             tapSeetheDoctorTxtLayout.setVisibility(View.GONE);
             detailsLl.setVisibility(View.GONE);
+        }
 
-        }
-        if(str_AboutMe.length()!= IntegerConstants.NUMBER_ZERO)
-        {
+        if(str_AboutMe.length() != IntegerConstants.NUMBER_ZERO)
             aboutme_txt.setText(str_AboutMe);
-        }else
-        {
+        else
             findViewById(R.id.aboutmeLl).setVisibility(View.GONE);
-        }
-        if(!str_education.equals("") && !str_education.isEmpty()||str_education.length()!=0)
-        {
+
+        if(!str_education.equals("") && !str_education.isEmpty() || str_education.length()!=0)
             education_txt.setText(str_education);
-        }else
+        else
         {
             education_txt.setVisibility(View.GONE);
-            findViewById(R.id.educationLl).setVisibility(View.GONE);
+            if (!isCignaCoachUser)
+                findViewById(R.id.educationLl).setVisibility(View.GONE);
         }
 
-        if(!str_BoardCertifications.equals("")||str_BoardCertifications == null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
-        {
+        if(!str_BoardCertifications.equals("") || str_BoardCertifications == null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
             location_txt.setText(str_BoardCertifications);
-        }else
+        else
         {
             location_txt.setVisibility(View.GONE);
-            findViewById(R.id.boardCertificationsLl).setVisibility(View.GONE);
+            if (!isCignaCoachUser)
+                findViewById(R.id.boardCertificationsLl).setVisibility(View.GONE);
         }
-        String license_state = "";
-        //License Array
-        getLicenseArrayResponse(providerdetObj, license_state);
 
-        //Language Array
-        getLanguageArrayResponse(providerdetObj);
+        if(!isCignaCoachUser) {
+            String license_state = "";
 
-        //Specialities Array
-        getSpecialitiesArrayResponse(providerdetObj);
+            //License Array
+            getLicenseArrayResponse(providerdetObj, license_state);
+
+            //Language Array
+            getLanguageArrayResponse(providerdetObj);
+        }
+
+        //Specialties Array
+        getSpecialtiesArrayResponse(providerdetObj);
 
         //Provider Image Array
-        getProviderImageArrayResponse(providerdetObj);
-
-        //Provider affiliation Logo
-
         getProviderImageArrayResponse(providerdetObj);
     }
 
@@ -933,12 +928,12 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         {
             horizontalscrollview.setVisibility(View.GONE);
             findViewById(R.id.dateTxtLayout).setVisibility(View.GONE);
-            tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
+            tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
             tapSeetheDoctorTxt.setText("See this doctor now");
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_seethisdoctor_button));
             saveConsultationType("Video");
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.video_icon_white);
-            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            reqfutureapptBtnLayout.setVisibility(viewsVisibility);
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
@@ -951,19 +946,19 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             findViewById(R.id.dateTxtLayout).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxt.setVisibility(View.GONE);
-            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            reqfutureapptBtnLayout.setVisibility(viewsVisibility);
             ByPhoneOrByVideoForNowAndLater();
             tapReqFutureBtnAction();
         }
         else  if(str_Availability_Type.equalsIgnoreCase("phone")){
             findViewById(R.id.dateTxtLayout).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
-            tapSeetheDoctorTxtLayout.setVisibility(View.VISIBLE);
+            tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
             tapSeetheDoctorTxt.setText("Talk to this doctor now");
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_talktodoctor_button));
             saveConsultationType("Phone");
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.phone_icon_white);
-            reqfutureapptBtnLayout.setVisibility(View.VISIBLE);
+            reqfutureapptBtnLayout.setVisibility(viewsVisibility);
             videophoneparentLl.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.GONE);
             byphoneBtnLayout.setVisibility(View.GONE);
@@ -1019,27 +1014,16 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             @Override
             public void onClick(View v) {
                 if (reqfutureapptBtn.getText().toString().equalsIgnoreCase("Make an appointment request")) {
-                    if(isCignaCoachUser){
-                        // display popup dialog
-                        popupCignaCoachContactInfo();
-                    }
-                    else {
                         reqfutureapptBtnLayout.setClickable(true);
                         Intent intent = new Intent(MDLiveProviderDetails.this, MDLiveMakeAppmtrequest.class);
                         startActivity(intent);
                         MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
                         finish();
-                    }
-
                 } else {
                     clickForVideoOrPhoneTapReqFutureAction();
-
                 }
             }
-
-
         });
-
     }
 
     private void clickForVideoOrPhoneTapReqFutureAction() {
@@ -1602,46 +1586,49 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
                 }
             }
         }else{
-            findViewById(R.id.providerGroupAffiliation).setVisibility(View.GONE);
+            if(!isCignaCoachUser)
+                findViewById(R.id.providerGroupAffiliation).setVisibility(View.GONE);
         }
     }
+
     /**
-     *  Response Handler for getting the Speciality and this is completely depend upon the provider type.
-     *  Here the Provider type can either be family physician or Pediatrician.so based on this type
-     *  the Speciality data will be populated .
+     *  Response Handler for getting the Specialty and this is completely depend upon the provider type.
+     *  Here the Provider type can either be Family Physician or Pediatrician. So, based on this type
+     *  the Specialty data will be populated .
      *
      */
-
-    private void getSpecialitiesArrayResponse(JsonObject providerdetObj) {
-        String specialities = "";
-        JsonArray specialityArray = providerdetObj.get("speciality_qualifications").getAsJsonArray();
-        for(int i=0;i<specialityArray.size();i++)
+    private void getSpecialtiesArrayResponse(JsonObject providerdetObj) {
+        String specialties = "";
+        JsonArray specialtyArray = providerdetObj.get("speciality_qualifications").getAsJsonArray();
+        for(int i=0;i<specialtyArray.size();i++)
         {
-            if(i == specialityArray.size()-1){
-                specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1);
+            if(i == specialtyArray.size()-1){
+                specialties+= "\u2022"+" "+specialtyArray.get(i).toString().substring(1,specialtyArray.get(i).toString().length()-1);
             } else {
-                specialities+= "\u2022"+" "+specialityArray.get(i).toString().substring(1,specialityArray.get(i).toString().length()-1)+"\n";
+                specialties+= "\u2022"+" "+specialtyArray.get(i).toString().substring(1,specialtyArray.get(i).toString().length()-1)+"\n";
             }
 
-            if(!specialities.equals("")||specialities.length()!=0)
+            if(!specialties.equals("")||specialties.length()!=0)
             {
-                specialities_txt.setText(specialities);
-                ((TextView)findViewById(R.id.specialist)).setText(specialityArray.get(0).toString().replace("\"", ""));
+                specialties_txt.setText(specialties);
+                ((TextView)findViewById(R.id.specialist)).setText(specialtyArray.get(0).toString().replace("\"", ""));
             }else
             {
-                specialities_txt.setVisibility(View.GONE);
+                specialties_txt.setVisibility(View.GONE);
                 findViewById(R.id.specialitiesLl).setVisibility(View.GONE);
             }
 
         }
     }
+
     /**
      *  Response Handler for getting the languages , what the provider speaks.
      *  This method returns what the Provider speaks .The speaks will be populated in the arraylist
      *  and it will be loaded in the TextView.
      *
+     *  @param providerdetObj       Provider Details object
+     *
      */
-
     private void getLanguageArrayResponse(JsonObject providerdetObj) {
         String lang = "";
         JsonArray langArray = providerdetObj.get("Language").getAsJsonArray();
@@ -1658,7 +1645,8 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             }else
             {
                 lang_txt.setVisibility(View.GONE);
-                findViewById(R.id.languagesLl).setVisibility(View.GONE);
+                if(!isCignaCoachUser)
+                    findViewById(R.id.languagesLl).setVisibility(View.GONE);
             }
 
         }
@@ -1669,6 +1657,8 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
      *  This method returns the successful response of the Provider for the corresponding
      *  Providers.
      *
+     * @param providerdetObj    Provider details object
+     * @param license_state     state in which provider needs to be licensed
      */
     private void getLicenseArrayResponse(JsonObject providerdetObj, String license_state) {
         JsonArray responArray = providerdetObj.get("provider_affiliations").getAsJsonArray();
@@ -1689,7 +1679,6 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
                 hospitalAffilations_txt.setVisibility(View.GONE);
                 findViewById(R.id.hosaffiliationsLl).setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -1798,9 +1787,11 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
     }
 
     /**
+     * Displays a popup containing coach contact info.
+     * This method is invoked directly from XML layout.
      *
      */
-    public void popupCignaCoachContactInfo() {
+    public void popupCignaCoachContactInfo(View v) {
 
         setProgressBarVisibility();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -1876,11 +1867,10 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
      *      "additional_info" : "Se habla Español"
      *  }
      *
-     * @param response
+     * @param response      HTTP response object
      */
     private void handleCignaCoachSuccessResponse(String response)
     {
-
         //Fetch Data From the Services
         //Log.e("Response details", "************\n**********"+response.toString());
         JsonParser parser = new JsonParser();

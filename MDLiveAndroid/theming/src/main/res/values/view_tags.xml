@@ -320,6 +320,7 @@
     <string name="mdltag_hospital_affiliations">mdl_hospital_affiliations</string>
 
     <string name="mdltag_prof_statement">mdl_prof_statement</string>
+    <string name="mdltag_about_me">mdl_about_me</string>
 
     <string name="mdltag_apply_offer_code">mdl_apply_offer_code</string>
     <string name="mdltag_enter_code">mdl_enter_code</string>
