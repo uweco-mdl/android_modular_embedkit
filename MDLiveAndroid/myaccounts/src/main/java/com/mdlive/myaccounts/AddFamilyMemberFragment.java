@@ -51,6 +51,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private EditText mAddress1 = null;
     private EditText mCity = null;
     private TextView mState = null;
+    private TextView mRelationship = null;
     private EditText mPhone = null;
     private TextView mDOB = null;
     private TextView mGender = null;
@@ -62,7 +63,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private TextView mUsernameSpecialCharactersCheck = null;
 
     private List<String> stateIds = new ArrayList<String>();
-    private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout;
+    private RelativeLayout mStateLayout, mDOBLayout, mGenderLayout, mRelationshipLayout;
     private boolean mayIAllowToEdit = true;
 
     public static AddFamilyMemberFragment newInstance() {
@@ -177,6 +178,26 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             @Override
             public void onClick(View view) {
                 initializeStateDialog();
+            }
+        });
+
+        mRelationshipLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final CharSequence[] items = {
+                        "Self", "Spouse" , "Child" , "Other"
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Make your selection");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        mRelationship.setText(items[item]);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -320,6 +341,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mAddress1 = (EditText) addFamilyMember.findViewById(R.id.streetAddress);
         mCity = (EditText) addFamilyMember.findViewById(R.id.city);
         mState = (TextView) addFamilyMember.findViewById(R.id.state);
+        mRelationship = (TextView) addFamilyMember.findViewById(R.id.relationship);
         mPhone = (EditText) addFamilyMember.findViewById(R.id.phone);
         mDOB = (TextView) addFamilyMember.findViewById(R.id.DOB);
         mValidEmailText = (TextView) addFamilyMember.findViewById(R.id.validEmailText);
@@ -331,6 +353,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mDOBLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.DOBLayout);
         mZip = (EditText) addFamilyMember.findViewById(R.id.zipcodeEditText);
         mStateLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.stateLayout);
+        mRelationshipLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.relationshipLayout);
         mGenderLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.genderLayout);
     }
 
@@ -346,9 +369,10 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         String DOB = mDOB.getText().toString().trim();
         String Zipcode = mZip.getText().toString();
         String Gender = mGender.getText().toString().trim();
+        String relationship = mRelationship.getText().toString().trim();
 
         if (isEmpty(Username) && isEmpty(Email) && isEmpty(FirstName) && isEmpty(LastName) && isEmpty(Address1) && isEmpty(City)
-                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender) && isEmpty(Zipcode)) {
+                && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender) && isEmpty(Zipcode) && isEmpty(relationship)) {
             if (validEmail(Email)) {
                 if (!MdliveUtils.validateZipCode(Zipcode)) {
                     Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
@@ -367,6 +391,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         jsonObject1.put("address1", Address1);
                         jsonObject1.put("city", City);
                         jsonObject1.put("state_id", State);
+                        jsonObject1.put("relationship", relationship);
                         jsonObject1.put("zip", Zipcode.replace("-", ""));
                         jsonObject1.put("birthdate", DOB);
                         jsonObject1.put("answer", "idontknow");
