@@ -88,7 +88,7 @@ public class OldPinFragment extends MDLiveBaseFragment implements TextWatcher {
 
         mTitle = (TextView) changePin.findViewById(R.id.title);
 
-        mTitle.setText("Please enter your old PIN");
+        mTitle.setText(getString(R.string.mdl_please_enter_your_old_pin));
 
         mPassCode7.addTextChangedListener(this);
         mPassCode7.requestFocus();

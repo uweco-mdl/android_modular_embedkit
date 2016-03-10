@@ -58,6 +58,7 @@ public class MyAccountsHome extends MDLiveBaseAppcompatActivity {
         TextView title = (TextView) findViewById(R.id.headerTxt);
         ImageView apply = (ImageView) findViewById(R.id.txtApply);
 
+        back.setImageResource(R.drawable.back_arrow_hdpi);
 
         if (fragment.equals("CHANGE PASSWORD")) {
             title.setText(getResources().getString(R.string.mdl_change_password).toUpperCase());
