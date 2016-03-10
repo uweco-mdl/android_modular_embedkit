@@ -51,7 +51,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
     private TextView passwordspecialChars = null;
     private TextView passwordtwoRepeatChars = null;
     private TextView severityTv = null;
-//    private TextView confirmSeverityTv = null;
+    // private TextView confirmSeverityTv = null;
     private ImageButton selectedImageIcon = null;
     private ImageButton mCurrentPasswordShow = null;
     private ImageButton mNewPasswordShow = null;
@@ -70,6 +70,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
 
         View changePasswordView = inflater.inflate(R.layout.fragments_change_password, null);
         getActivity().setTitle(getString(R.string.mdl_change_password));
+        ((MyAccountsHome) getActivity()).hideTick();
 
         mCurrentPassword = (EditText) changePasswordView.findViewById(R.id.currentPassword);
         mNewPassword = (EditText) changePasswordView.findViewById(R.id.NewPassword);
@@ -84,7 +85,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         mNewPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.newPasswordShow);
         mConfirmPasswordShow = (ImageButton) changePasswordView.findViewById(R.id.confirmPasswordShow);
         severityTv = (TextView) changePasswordView.findViewById(R.id.severityTv);
-//        confirmSeverityTv = (TextView) changePasswordView.findViewById(R.id.confirmSeverityTv);
+        // confirmSeverityTv = (TextView) changePasswordView.findViewById(R.id.confirmSeverityTv);
 
 
         mCurrentPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -322,6 +323,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 checkThatUserEnteredPassword();
                 changeVisibilityOfImageButton(mCurrentPasswordShow, mCurrentPassword, null);
+                showViewsOnCondition();
 
                 /*if (mCurrentPassword.getText().length() >= 8 && mCurrentPassword.getText().length() <= 15) {
                     mPasswordLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
@@ -407,7 +409,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     mPasswordConfirmCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
                     passwordConfirmCheck = false;
                 }
-                if (hasAleastOnCharAndNumberCheck(mNewPassword.getText().toString())) {
+                if (hasAtleastOneCharAndNumberCheck(mNewPassword.getText().toString())) {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     passwordAlphaNumericCheck = true;
@@ -446,7 +448,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     confirmPasswordLength = false;
                 }
 
-                if (hasAleastOnCharAndNumberCheck(mConfirmPassword.getText().toString())) {
+                if (hasAtleastOneCharAndNumberCheck(mConfirmPassword.getText().toString())) {
                     mPasswordAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mPasswordAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     confirmPasswordAlphaNumericCheck = true;
@@ -490,11 +492,12 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         return changePasswordView;
     }
 
-    public boolean hasAleastOnCharAndNumberCheck(String yourString){
+    public boolean hasAtleastOneCharAndNumberCheck(String yourString){
         boolean hasAlpha = yourString.matches(".*[a-zA-Z]+.*");
         boolean hasNumber = yourString.matches(".*[0-9]+.*");
         return hasAlpha && hasNumber;
     }
+
     public void showViewsOnCondition() {
         try {
             if (mNewPassword.getText().toString().length() == 0
@@ -513,6 +516,17 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 passwordtwoRepeatChars.setVisibility(View.VISIBLE);
                 passwordspecialChars.setVisibility(View.VISIBLE);
             }
+
+
+            if(!TextUtils.isEmpty(mCurrentPassword.getText().toString().trim())
+                && !TextUtils.isEmpty(mNewPassword.getText().toString().trim())
+                && !TextUtils.isEmpty(mConfirmPassword.getText().toString().trim()))
+            {
+                ((MyAccountsHome) getActivity()).showTick();
+            }else{
+                ((MyAccountsHome) getActivity()).hideTick();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

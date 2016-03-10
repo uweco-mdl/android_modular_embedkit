@@ -52,6 +52,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
 
         View changePhoneNumberView = inflater.inflate(R.layout.fragment_change_phonenumber, null);
         getActivity().setTitle(getString(R.string.mdl_phone_number));
+        ((MyAccountsHome) getActivity()).hideTick();
 
         mPhoneNumber = (EditText) changePhoneNumberView.findViewById(R.id.phoneNumber);
         mEmergencyContactNumber = (EditText) changePhoneNumberView.findViewById(R.id.emergencyContactNumber);
@@ -81,7 +82,7 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
 
                 if (mPhoneNumber.getText().length() == PHONENUMBER_LENGTH && mEmergencyContactNumber.getText().length() == PHONENUMBER_LENGTH) {
                     if (getActivity() != null && getActivity() instanceof MyAccountsHome) {
-                        ((MyAccountsHome) getActivity()).showTick();
+                        //((MyAccountsHome) getActivity()).showTick();
                     }
                 } else {
                     if (getActivity() != null && getActivity() instanceof MyAccountsHome) {

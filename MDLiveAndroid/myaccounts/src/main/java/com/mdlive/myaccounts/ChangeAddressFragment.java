@@ -35,7 +35,7 @@ import java.util.List;
  * Created by venkataraman_r on 8/21/2015.
  */
 
-public class ChangeAddressFragment  extends MDLiveBaseFragment {
+public class ChangeAddressFragment extends MDLiveBaseFragment {
 
     public static ChangeAddressFragment newInstance(String response) {
 
@@ -54,6 +54,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
     private String response;
     private List<String> stateIds = new ArrayList<String>();
     private String mtimeZone;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,26 +67,14 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
         mState = (TextView) changeAddressView.findViewById(R.id.state);
         mZip = (EditText) changeAddressView.findViewById(R.id.zip);
         mCity = (EditText) changeAddressView.findViewById(R.id.city);
+        mAddressLine1.addTextChangedListener(addressLine1);
+        mAddressLine2.addTextChangedListener(addressLine2);
+        mState.addTextChangedListener(stateWatcher);
+        mCity.addTextChangedListener(cityWatcher);
+        mZip.addTextChangedListener(zipWatcher);
         RelativeLayout mStateLayout = (RelativeLayout)changeAddressView.findViewById(R.id.stateLayout);
 
-
         mZip.setTag(null);
-        mZip.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                MdliveUtils.validateZipcodeFormat(mZip);
-            }
-        });
-
         response = getArguments().getString("Response");
 
         mStateLayout.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +125,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                 e.printStackTrace();
             }
         }
+        ((MyAccountsHome) getActivity()).hideTick();
         return changeAddressView;
     }
 
@@ -146,7 +136,7 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
             try {
                 JSONObject responseDetail = new JSONObject(response);
                 String getEditTextValue = mZip.getText().toString();
-                if (isEmpty(mAddressLine1.getText().toString().trim())&& isEmpty(mState.getText().toString().trim())
+                if (isEmpty(mAddressLine1.getText().toString().trim()) && isEmpty(mState.getText().toString().trim())
                         && isEmpty(mCity.getText().toString().trim()) && isEmpty(mZip.getText().toString().trim())) {
 
                     JSONObject parent = new JSONObject();
@@ -161,48 +151,146 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
                     jsonObject.put("address1", mAddressLine1.getText().toString().trim());
                     jsonObject.put("address2", mAddressLine2.getText().toString().trim());
                     jsonObject.put("gender", responseDetail.getString("gender"));
-                    jsonObject.put("last_name",  responseDetail.getString("last_name"));
+                    jsonObject.put("last_name", responseDetail.getString("last_name"));
                     jsonObject.put("emergency_contact_number", responseDetail.getString("emergency_contact_number"));
                     jsonObject.put("language_preference", "en");
-                    if(mtimeZone!=null) {
+                    if(mtimeZone != null) {
                         jsonObject.put("timezone", mtimeZone);
                     }
 
-                        parent.put("member", jsonObject);
-                        Log.i("request:", jsonObject.toString());
-                        String errorMessage = ValidateForm();
-                        if(errorMessage == null){
-                            loadProfileInfo(parent.toString());
-                        }else{
-                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
+                    parent.put("member", jsonObject);
+                    Log.i("request:", jsonObject.toString());
+                    String errorMessage = ValidateForm();
+                    if(errorMessage == null){
+                        loadProfileInfo(parent.toString());
+                    }else{
+                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
 
-                    }else
+                }else
                 {
                     Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
                 }
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
     }
 
-    public String ValidateForm(){
-        if(mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0){
-            return "Please Enter All Fields";
-        }else if(mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0){
-            return "Please Enter All Fields";
-        }else if(mState.getText() == null && mState.getText().toString().trim().length() == 0){
-            return "Please Enter All Fields";
-        }else if(mZip.getText() == null && mZip.getText().toString().trim().length() == 0){
-            return "Please Enter All Fields";
-        }else if(mCity.getText() == null && mCity.getText().toString().trim().length() == 0){
-            return "Please Enter All Fields";
-        }else if(!MdliveUtils.validateZipCode(mZip.getText().toString())){
-            return "Please Enter Valid Zip Code.";
+
+    TextWatcher stateWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
         }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAddressFields();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+
+    TextWatcher cityWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAddressFields();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    TextWatcher addressLine2 = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAddressFields();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    TextWatcher addressLine1 = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAddressFields();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    TextWatcher zipWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAddressFields();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private void checkAddressFields() {
+        if (!TextUtils.isEmpty(mAddressLine1.getText().toString().trim()) && !TextUtils.isEmpty(mAddressLine2.getText().toString().trim())
+                && !TextUtils.isEmpty(mCity.getText().toString().trim()) && !TextUtils.isEmpty(mState.getText().toString().trim()) && !TextUtils.isEmpty(mZip.getText().toString().trim())) {
+            ((MyAccountsHome) getActivity()).showTick();
+        } else {
+            ((MyAccountsHome) getActivity()).hideTick();
+        }
+    }
+
+    /**
+     * Perform a sanity check on the input fields; make sure all mandatory fields are populated.
+     *
+     * @return  an error message if sanity check fails, else nothing.
+     */
+    public String ValidateForm()
+    {
+        if(mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0
+           || mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0
+           || mState.getText() == null && mState.getText().toString().trim().length() == 0
+           || mZip.getText() == null && mZip.getText().toString().trim().length() == 0
+           || mCity.getText() == null && mCity.getText().toString().trim().length() == 0) {
+            return (getString(R.string.mdl_please_enter));
+        }
+        else if(!MdliveUtils.validateZipCode(mZip.getText().toString()))
+            return(getString(R.string.mdl_enter_valid_zip));
+
         return null;
     }
 
@@ -248,11 +336,11 @@ public class ChangeAddressFragment  extends MDLiveBaseFragment {
 
     private void handleEditProfileInfoSuccessResponse(JSONObject response) {
         try {
-           hideProgressDialog();
+            hideProgressDialog();
 
             if(response != null)
             {
-                Toast.makeText(getActivity(),"Updated address successfully",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),getString(R.string.mdl_address_updated),Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 
