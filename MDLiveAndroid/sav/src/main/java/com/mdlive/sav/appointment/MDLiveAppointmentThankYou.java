@@ -15,11 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.sav.MDLiveChooseProvider;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
+import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +34,7 @@ import java.util.Date;
  */
 public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     private String providerName, consultationDate, Time;
-    LinearLayout thankYouLayout, onCallThankYouLayout;
+    //LinearLayout thankYouLayout, onCallThankYouLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,24 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        User user = null;
+        if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(User.USER_TAG) != null) {
+            user = getIntent().getExtras().getParcelable(User.USER_TAG);
+            }
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(user), LEFT_MENU).
+                    commit();
+
+            getSupportFragmentManager().
+                    beginTransaction().
+                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+                commit();
+        }
+
         TextView mdlCancelInstruction = (TextView) findViewById(R.id.mdl_cancellation_instructions);
         Spannable word = new SpannableString(getString(R.string.mdl_cancellation_instructions));
         word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.darkblack)), 39, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -159,7 +180,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     public void showHamburgerBell() {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_thankyou_string).toUpperCase());
         findViewById(R.id.toolbar_cross).setVisibility(View.GONE);
-        findViewById(R.id.toolbar_hamburger).setVisibility(View.GONE);
+        findViewById(R.id.toolbar_hamburger).setVisibility(View.VISIBLE);
         findViewById(R.id.toolbar_bell).setVisibility(View.GONE);
         findViewById(R.id.toolbar_tick).setVisibility(View.GONE);
     }
