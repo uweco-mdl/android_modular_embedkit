@@ -127,6 +127,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         TextView reasonTxt;
         LinearLayout reasonListItem;
     }
+
     @Override
     public View getView(final int pos, View convertview, ViewGroup parent) {
         ViewHolder viewHolder = null;
@@ -143,10 +144,9 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         } else {
             viewHolder = (ViewHolder) convertview.getTag();
         }
-
-
+        
         if(notFound){
-            viewHolder.reasonCheckbox.setVisibility(View.GONE);
+            viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
             viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
             viewHolder.reasonTxt.setOnClickListener(new View.OnClickListener() {
                 @Override
