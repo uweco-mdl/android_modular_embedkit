@@ -308,6 +308,8 @@
     <string name="mdl_speaks_caps">SPEAKS</string>
     <string name="mdl_gender_caps">GENDER</string>
     <string name="mdl_available_by_caps">AVAILABLE BY</string>
+    <string name="mdl_search_hint_hc">Search by name</string>
+    <string name="mdl_coach_type_hc">COACH TYPE</string>
 
     <!--Family member-->
     <string name="mdl_child_added">Child Added</string>

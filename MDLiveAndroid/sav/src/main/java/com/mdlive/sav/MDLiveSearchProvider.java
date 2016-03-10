@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -83,6 +84,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String, String> postParams = new HashMap<>();
     public String filter_SavedLocation, SavedLocation,postProviderId,serverDateFormat;
+    private boolean isCignaCoachUser = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,39 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         setContentView(R.layout.search_provider);
         clearMinimizedTime();
         this.setTitle(getString(R.string.mdl_refine_search));
+
+        // Determine the Provider mode
+        final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
+        // set CignaCoach-specific flag
+        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH))
+        {
+            isCignaCoachUser = true;
+            // overwrite text strings
+            ((TextView)findViewById(R.id.txtProviderType)).setText(getString(R.string.mdl_coach_type_hc));
+
+            // hide Views not used for Cigna Health Coach
+            findViewById(R.id.dividerLocatedIn).setVisibility(View.GONE);
+            findViewById(R.id.LocatioTxtViewR6).setVisibility(View.GONE);
+            findViewById(R.id.dividerAppointmentDate).setVisibility(View.GONE);
+            findViewById(R.id.AppointmentDateR2).setVisibility(View.GONE);
+            findViewById(R.id.dividerAvailableBy).setVisibility(View.GONE);
+            findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
+
+            // re-wire layouts relative dependencies after Views removals
+            View speaks = findViewById(R.id.SpeaksTxtViewR7);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)speaks.getLayoutParams();
+            View v = findViewById(R.id.dividerSpecialty);
+            params.addRule(RelativeLayout.BELOW, v.getId());
+            speaks.setLayoutParams(params);
+
+            View providerType = findViewById(R.id.ProviderTypeTxtViewR3);
+            params = (RelativeLayout.LayoutParams)providerType.getLayoutParams();
+            v = findViewById(R.id.edt_searchProvider);
+            //params.removeRule(RelativeLayout.BELOW);  //  available only from API level 17+
+            params.addRule(RelativeLayout.BELOW, v.getId());
+            providerType.setLayoutParams(params);
+        }
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -108,10 +143,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_refine_search));
 
-
         initialiseData();
 
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         ((TextView) findViewById(R.id.ProviderTypeTxtView)).setText(sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "Any"));
 
         //Load Services
@@ -142,6 +175,11 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         LocationTxtView = (TextView) findViewById(R.id.LocatioTxtView);
         genderTxtView = (TextView) findViewById(R.id.GenderTxtView);
         edtSearch = (EditText) findViewById(R.id.edt_searchProvider);
+
+        if(isCignaCoachUser){
+            edtSearch.setHint(R.string.mdl_search_hint_hc);
+        }
+
         setProgressBar(findViewById(R.id.progressDialog));
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getPersonalInfo().getConsultMethod().equalsIgnoreCase("video"))
@@ -154,13 +192,14 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
         }else
         {
-            findViewById(R.id.AvailableByR1).setVisibility(View.VISIBLE);
+            if(!isCignaCoachUser)
+                findViewById(R.id.AvailableByR1).setVisibility(View.VISIBLE);
         }
+
         /**
          * The back image will pull you back to the Previous activity
          * The home button will pull you back to the Dashboard activity
          */
-
 //        ((ImageView) findViewById(R.id.backImg)).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -170,7 +209,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 //            }
 //        });
     }
-
 
     public void availbleAction(View v) {
         showListViewDialog(AvailableByArrayList, (TextView) findViewById(R.id.AvailableTxtView), "available_by", SearchArrayListAvailableBy);
@@ -392,6 +430,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         SearchProviderDetailServices services = new SearchProviderDetailServices(MDLiveSearchProvider.this, null);
         services.getSearchDetails(successCallBackListener, errorListener);
     }
+
     /**
      *
      * Load loadProviderType Details.
@@ -422,6 +461,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         ProviderTypeList services = new ProviderTypeList(MDLiveSearchProvider.this, null);
         services.getProviderType(dependent_id, successCallBackListener, errorListener);
     }
+
     /**
      *
      *  Successful Response Handler for Provider Type Info.The Provider type info will provider the gender
@@ -430,7 +470,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      *  corresponding provider type will be changed to the selected dependents.
      *
      */
-
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
             JSONObject providertype = response.getJSONObject("provider_types");
@@ -457,7 +496,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     /**
      * Successful Response Handler for Search Provider's details.
      */
-
     private void handleSuccessResponse(JSONObject response) {
         try {
 
@@ -523,7 +561,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * This method will return the Sort types based on the  Availibility
      * of the Provider.
      */
-
     private void getSortData(JSONObject response) throws JSONException {
         JSONArray Sort_array = response.getJSONArray("sort_by");
         ArrayList<String> keysList = new ArrayList<String>();
@@ -546,7 +583,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * This method will return the Sort types based on the  Availibility
      * of the Provider.
      */
-
     private void getSpeaksData(JSONObject response) throws JSONException {
         JSONArray Speaks_array = response.getJSONArray("speaks");
         ArrayList<String> keysList = new ArrayList<String>();
@@ -570,7 +606,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * This method will return the Sort types based on the  Availibility
      * of the Provider.
      */
-
     private void getproviderType(JSONObject response) throws JSONException {
         Log.d("Response", response.toString());
         JSONArray provider_array = response.getJSONArray("provider_type");
@@ -590,10 +625,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             providerTypeArrayList.add(provider_array.getJSONObject(i).getString(provider_array.getJSONObject(i).keys().next()));
         }
     }
+
     /**
      * This method will return the Gender  of the Provider.
      */
-
     private void getGenderData(JSONObject response) throws JSONException {
         JSONArray Gender_array = response.getJSONArray("gender");
 
@@ -616,7 +651,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * This method will return the Availability Type whether the provider is
      * available through Video or phone.
      */
-
     private void getAvailableData(JSONObject response) throws JSONException {
         JSONArray Available_array = response.getJSONArray("available_by");
         for (int i = 0; i < Available_array.length(); i++) {
@@ -698,7 +732,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     /**
      * Successful Response Handler for getting Current Location
      */
-
     private void handleFilterSuccessResponse(JSONObject response) {
         try {
             hideProgress();
@@ -836,7 +869,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      * for the dependent users.     *
      * @param key : Dependent users Key
      */
-
     private void specialityBasedOnProvider(String selectedText, String key) {
         try {
             if ("provider_type".equalsIgnoreCase(key)) {
