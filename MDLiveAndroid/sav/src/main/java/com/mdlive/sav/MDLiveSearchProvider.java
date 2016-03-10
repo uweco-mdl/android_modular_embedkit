@@ -110,6 +110,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             findViewById(R.id.AppointmentDateR2).setVisibility(View.GONE);
             findViewById(R.id.dividerAvailableBy).setVisibility(View.GONE);
             findViewById(R.id.AvailableByR1).setVisibility(View.GONE);
+            findViewById(R.id.sorttByR4).setVisibility(View.GONE);
+            findViewById(R.id.dividerSorttBy).setVisibility(View.GONE);
 
             // re-wire layouts relative dependencies after Views removals
             View speaks = findViewById(R.id.SpeaksTxtViewR7);
@@ -124,6 +126,13 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             //params.removeRule(RelativeLayout.BELOW);  //  available only from API level 17+
             params.addRule(RelativeLayout.BELOW, v.getId());
             providerType.setLayoutParams(params);
+
+            View specialtyType = findViewById(R.id.SpecialityTxtViewR5);
+            params = (RelativeLayout.LayoutParams)specialtyType.getLayoutParams();
+            v = findViewById(R.id.dividerProviderType);
+            //params.removeRule(RelativeLayout.BELOW);  //  available only from API level 17+
+            params.addRule(RelativeLayout.BELOW, v.getId());
+            specialtyType.setLayoutParams(params);
         }
 
         try {
@@ -858,8 +867,27 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 }
                 specialityBasedOnProvider(SelectedText, key);
 
+                String oldChoice = selectedText.getText().toString();
                 selectedText.setText(SelectedText);
                 dialog.dismiss();
+
+                // if user selects a different Provider type, then reload this screen
+                if(!oldChoice.equals(SelectedText)){
+                    SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(PreferenceConstants.PROVIDER_MODE, SelectedText);
+
+                    int providerType = MDLiveConfig.PROVIDERTYPE_MAP.get(SelectedText)==null? MDLiveConfig.UNMAPPED : MDLiveConfig.PROVIDERTYPE_MAP.get(SelectedText);
+                    if(providerType==MDLiveConfig.UNMAPPED)
+                        editor.putString(PreferenceConstants.PROVIDERTYPE_ID, "");
+                    else
+                        editor.putString(PreferenceConstants.PROVIDERTYPE_ID, String.valueOf(providerType));
+
+                    editor.commit();
+
+                    // now reload the screen
+                    recreate();
+                }
             }
         });
     }

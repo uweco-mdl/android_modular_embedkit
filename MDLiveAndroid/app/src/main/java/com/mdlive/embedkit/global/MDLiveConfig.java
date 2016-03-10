@@ -11,6 +11,8 @@ import com.mdlive.embedkit.uilayer.login.SSOActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -188,8 +190,36 @@ public class MDLiveConfig {
     public static final String PROVIDERTYPE_FAMPHYS = "Family Physician";
     public static final String PROVIDERTYPE_THERAPIST = "Therapist";
 
+    public static final int UNMAPPED = -1;
+
+    /**
+     * "provider_type" definitions:
+     *
+     * VALUE        TYPE
+     *  1	    Mental Health
+     *  2	    General Health - Child
+     *  3	    General Health - Adult
+     *  4	    Social Worker
+     *  5	    Psychologist
+     *  6	    Psychiatrist
+     *  7	    Certified Addiction Professional
+     *  8	    Mental Health Intern
+     *  9	    Certified Peer Specialist
+     *  10	    Psychiatrist (Therapy and Medication Management)
+     *  11	    Mental Health Counselor
+     *  12	    Dermatologist
+     *  13	    Under 2
+     *  14	    Health Coach
+     *  15	    Smoking Cessation
+     */
+    public static final Map<String,Integer> PROVIDERTYPE_MAP = new HashMap();
+
     static {
         System.loadLibrary("app");
+
+        PROVIDERTYPE_MAP.put(PROVIDERTYPE_CIGNACOACH, 14);
+        PROVIDERTYPE_MAP.put(PROVIDERTYPE_FAMPHYS, 3);
+        PROVIDERTYPE_MAP.put(PROVIDERTYPE_THERAPIST, UNMAPPED);
     }
 
     public static void setData(ENVIRON currentEnvironment){
