@@ -190,6 +190,9 @@ public class MDLiveConfig {
     public static final String PROVIDERTYPE_FAMPHYS = "Family Physician";
     public static final String PROVIDERTYPE_THERAPIST = "Therapist";
 
+    // Disable/Enable Cigna Health Coach feature
+    public static boolean CIGNACOACH_ENABLED = false;
+
     public static final int UNMAPPED = -1;
 
     /**

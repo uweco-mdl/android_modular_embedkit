@@ -144,7 +144,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
         } else {
             viewHolder = (ViewHolder) convertview.getTag();
         }
-        
+
         if(notFound){
             viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
             viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");

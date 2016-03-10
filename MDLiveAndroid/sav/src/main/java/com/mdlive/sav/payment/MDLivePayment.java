@@ -701,13 +701,13 @@ public class MDLivePayment extends MDLiveBaseActivity {
             }
         });
 
-     /*   alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
-                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
-                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
+                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.accent_material_light));
+                alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.accent_material_light));
             }
-        });*/
+        });
         // show it
         alertDialog.show();
 

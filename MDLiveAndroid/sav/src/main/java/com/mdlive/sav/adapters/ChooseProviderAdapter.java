@@ -78,7 +78,10 @@ public class ChooseProviderAdapter extends BaseAdapter {
             final SharedPreferences sharedpreferences = this.context.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
             String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
-            if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)){
+            if(providerMode != null
+                    && providerMode.length() > 0
+                    && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)
+                    && MDLiveConfig.CIGNACOACH_ENABLED){
                 isCignaCoachUser = true;
                 row.findViewById(R.id.txtFilter).setVisibility(View.GONE);
                 row.findViewById(R.id.docOnCalLinLay2).setVisibility(View.GONE);

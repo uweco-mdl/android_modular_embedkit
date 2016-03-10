@@ -105,7 +105,10 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         // Determine the Provider mode and set local flag
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
-        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)) {
+        if(providerMode != null
+                && providerMode.length() > 0
+                && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)
+                && MDLiveConfig.CIGNACOACH_ENABLED) {
             isCignaCoachUser = true;
             viewsVisibility = View.GONE;
             setContentView(R.layout.mdlive_choose_provider_details_hc);
@@ -843,8 +846,12 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             str_DoctorName = providerdetObj.get("name").getAsString();
         }
         String str_BoardCertifications="";
+        String str_location = "";
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "board_certifications")) {
             str_BoardCertifications = providerdetObj.get("board_certifications").getAsString();
+        }
+        if (MdliveUtils.checkJSONResponseHasString(providerdetObj, "location")) {
+            str_location = providerdetObj.get("location").getAsString();
         }
         String str_AboutMe="";
         if(MdliveUtils.checkJSONResponseHasString(providerdetObj, "about_me"))
@@ -897,13 +904,16 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 findViewById(R.id.educationLl).setVisibility(View.GONE);
         }
 
-        if(!str_BoardCertifications.equals("") || str_BoardCertifications == null && !str_BoardCertifications.isEmpty()||str_BoardCertifications.length()!=0)
-            location_txt.setText(str_BoardCertifications);
+        if (!str_location.equals("") || str_location == null && !str_location.isEmpty() || str_location.length() != 0) {
+            location_txt.setText(str_location);
+        }
         else
         {
+            /*
             location_txt.setVisibility(View.GONE);
             if (!isCignaCoachUser)
                 findViewById(R.id.boardCertificationsLl).setVisibility(View.GONE);
+            */
         }
 
         if(!isCignaCoachUser) {

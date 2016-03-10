@@ -101,7 +101,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
 
-        if(providerMode != null && providerMode.length() > 0 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH))
+        if(providerMode != null && providerMode.length() > 0
+                && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)
+                && MDLiveConfig.CIGNACOACH_ENABLED)
         {
             isCignaCoachUser = true;
             this.setTitle(getString(R.string.mdl_chat_with_coach));

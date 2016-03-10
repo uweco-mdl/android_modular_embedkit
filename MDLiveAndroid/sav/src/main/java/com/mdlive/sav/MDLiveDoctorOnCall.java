@@ -71,6 +71,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
             public void onClick(View view) {
                 saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
                 saveConsultationType("Phone");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
+                /*
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                 byphoneBtn.setTextColor(Color.WHITE);
@@ -82,6 +83,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
 
                 MDLiveChooseProvider.isDoctorOnVideo = false;
                 MDLiveChooseProvider.isDoctorOnCall = true;
+                */
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
@@ -91,6 +93,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
             public void onClick(View view) {
                 saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
                 saveConsultationType("Video");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
+                /*
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
                 byvideoBtn.setTextColor(Color.WHITE);
@@ -103,6 +106,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
 
                 MDLiveChooseProvider.isDoctorOnVideo = true;
                 MDLiveChooseProvider.isDoctorOnCall = false;
+                */
                 Intent reasonForIntent = new Intent(MDLiveDoctorOnCall.this, MDLiveReasonForVisit.class);
                 startActivity(reasonForIntent);
             }
