@@ -8,11 +8,13 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -72,6 +73,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     protected static String previousSearch = "";
     private IntentFilter intentFilter;
     private boolean isFromPharmacyResult = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +98,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_search_pharm_txt));
 
-
-
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
         //initialize views of activity
@@ -115,7 +115,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
 
     }
-
 
     public void leftBtnOnClick(View v){
         MdliveUtils.hideSoftKeyboard(MDLivePharmacyChange.this);
@@ -254,6 +253,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      * @param view - view of button which is called.
      */
     public void getlocationButtonOnClick(View view) {
+        sendingIntent.putExtra("name", pharmacy_search_name.getText().toString().trim());
         mayIShowSuggestions = false;
         getLocationBtnOnClickAction();
     }
@@ -287,7 +287,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     }
 
     /**
-     * This fucntion is used to generate error message which will be used in MDLivePharmacyResult
+     * This function is used to generate error message which will be used in MDLivePharmacyResult
      * According to options which is selected by user, error message will be differs.
      * returning error message will be attached to intent and send over to MDLivePharmacyResult page.
      */
@@ -335,7 +335,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
         }
         return null;
     }
-
 
     public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
         @Override
@@ -411,9 +410,9 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     /**
      * This function is used to get suggestion results from webservice
-     *
-     * responseListener - handleSuggestionSuccessResponse handles the reponse results
-     *
+     * <p/>
+     * responseListener - handleSuggestionSuccessResponse handles the response results
+     * </p>
      * SuggestPharmayService class handling webservice integration for suggestions
      *
      * @param searchText - This text is enter by users
@@ -516,8 +515,10 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      */
     private void addExtrasInIntent() {
         HashMap<String, Object> keyParams = new HashMap<String, Object>();
-        if (!TextUtils.isEmpty(pharmacy_search_name.getText().toString()))
+        if (!TextUtils.isEmpty(pharmacy_search_name.getText().toString())) {
+            Log.d("Name Of Phar", pharmacy_search_name.getText().toString());
             sendingIntent.putExtra("name", pharmacy_search_name.getText().toString());
+        }
         try {
             if (!TextUtils.isEmpty(zipcodeText.getText().toString())) {
                 sendingIntent.putExtra("zipcode", zipcodeText.getText().toString());
@@ -565,7 +566,6 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     /**
      * This method will close the activity with transition effect.
      */
-
     @Override
     public void onBackPressed() {
         if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
@@ -578,7 +578,12 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             } catch(ClassNotFoundException e){
-                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                /*Toast.makeText(getBaseContext(),
+                                getString(R.string.mdl_mdlive_module_not_found),
+                                Toast.LENGTH_LONG).show();*/
+                Snackbar.make(findViewById(android.R.id.content),
+                                getString(R.string.mdl_mdlive_module_not_found),
+                                Snackbar.LENGTH_LONG).show();
             }
             MdliveUtils.closingActivityAnimation(this);
         } else {
