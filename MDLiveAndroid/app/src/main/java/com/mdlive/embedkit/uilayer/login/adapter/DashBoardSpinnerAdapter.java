@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mdlive.embedkit.R;
@@ -18,6 +19,9 @@ import java.util.List;
  * Created by dhiman_da on 8/13/2015.
  */
 public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
+
+    public static ImageView spinner_icon = null;
+
     /**
      * Constructor
      *
@@ -41,10 +45,12 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
             viewHolder = new ViewHolder();
             viewHolder.mTextView = (TextView) convertView.findViewById(R.id.adapter_dashboard_spinner_text_view);
             viewHolder.mImageView = (CircularNetworkImageView) convertView.findViewById(R.id.adapter_dashboard_spinner_circular_image_view);
+            spinner_icon = (ImageView) convertView.findViewById(R.id.spinner_arrow);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+            spinner_icon.setRotation(180);
         }
 
         viewHolder.mTextView.setText(getItem(position).mName);
@@ -76,12 +82,13 @@ public class DashBoardSpinnerAdapter extends ArrayAdapter<User> {
         } else {
             viewHolder.mImageView.setImageUrl(getItem(position).mImageUrl, ApplicationController.getInstance().getImageLoader(convertView.getContext()));
         }
-
+        spinner_icon.setRotation(180);
         return convertView;
     }
 
     static class ViewHolder {
         CircularNetworkImageView mImageView;
+        ImageView spinnerIcon;
         TextView mTextView;
     }
 

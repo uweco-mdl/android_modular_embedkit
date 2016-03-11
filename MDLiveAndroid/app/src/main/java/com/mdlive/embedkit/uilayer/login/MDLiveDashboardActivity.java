@@ -17,7 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
-import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationCliked;
+import com.mdlive.embedkit.uilayer.login.MDLiveDashBoardFragment.OnNotificationClicked;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment.NotifyDashboard;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.AnalyticsApplication;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -31,7 +31,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 /**
  * Created by dhiman_da on 8/6/2015.
  */
-public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements NotifyDashboard, OnNotificationCliked {
+public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity implements NotifyDashboard, OnNotificationClicked {
     public static Intent getDashboardIntentWithUser(final Context context, final User user) {
         final Intent intent = new Intent(context, MDLiveDashboardActivity.class);
         intent.putExtra(User.USER_TAG, user);

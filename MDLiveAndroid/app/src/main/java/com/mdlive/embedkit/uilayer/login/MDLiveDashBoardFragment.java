@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     public static OnUserSelectionChanged mOnUserSelectionChanged;
-    public static OnNotificationCliked mOnNotificationCliked;
+    public static OnNotificationClicked mOnNotificationClicked;
 
     private String mCustomerDefaultNumber;
     private String mCustomerProvidedPhoneNumber;
@@ -78,7 +78,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 // Setting selection to 0, as do not want Add child to Show
                 mSpinner.setOnItemSelectedListener(null);
                 mSpinner.setSelection(0);
-                // Preventing  onItemSeleection to get callied
+                // Preventing  onItemSelection to get called
                 mSpinner.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -136,9 +136,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         try {
             mOnUserSelectionChanged = (OnUserSelectionChanged) activity;
-            mOnNotificationCliked = (OnNotificationCliked) activity;
+            mOnNotificationClicked = (OnNotificationClicked) activity;
         } catch (ClassCastException cce) {
-            logE("MDLiveDashBoardFRagment", activity.getClass().getSimpleName() + ", should implement OnUserSelectionChanged");
+            logE("MDLiveDashBoardFragment", activity.getClass().getSimpleName() + ", should implement OnUserSelectionChanged");
         }
     }
 
@@ -201,7 +201,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         super.onDetach();
 
         mOnUserSelectionChanged = null;
-        mOnNotificationCliked = null;
+        mOnNotificationClicked = null;
     }
 
     public void setPrimaryUserSelected() {
@@ -264,7 +264,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 }
                 mSpinner.setOnItemSelectedListener(null);
                 mSpinner.setAdapter(mAdapter);
-                // Preventing  onItemSeleection to get callied
+                // Preventing  onItemSelection to get callied
                 mSpinner.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -426,8 +426,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     try {
                         if (v.getTag() != null) {
                             final Appointment appo = (Appointment) v.getTag();
-                            if (appo != null && mOnNotificationCliked != null) {
-                                mOnNotificationCliked.onNotificationClicked(appo);
+                            if (appo != null && mOnNotificationClicked != null) {
+                                mOnNotificationClicked.onNotificationClicked(appo);
                             }
                         }
                     } catch (Exception e) {
@@ -451,7 +451,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         void onAddChildSelectedFromDashboard(final User user, final int dependentUserSize);
     }
 
-    public interface OnNotificationCliked {
+    public interface OnNotificationClicked {
         void onNotificationClicked(final Appointment appointment);
     }
 
