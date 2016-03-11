@@ -1,7 +1,6 @@
 package com.mdlive.myaccounts;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
+import com.mdlive.embedkit.uilayer.myaccounts.CustomDatePickerDialog;
 import com.mdlive.myaccounts.R;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
@@ -138,8 +137,8 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 int d = c.get(Calendar.DAY_OF_MONTH);
                 final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-                DatePickerDialog dp = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
+                CustomDatePickerDialog dp = new CustomDatePickerDialog(getActivity(),
+                        new CustomDatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,

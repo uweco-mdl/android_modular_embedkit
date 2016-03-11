@@ -1,6 +1,5 @@
 package com.mdlive.sav;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +34,7 @@ import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.embedkit.uilayer.myaccounts.CustomDatePickerDialog;
 import com.mdlive.sav.adapters.ReasonForVisitAdapter;
 import com.mdlive.sav.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.sav.R;
@@ -422,14 +422,14 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-                DatePickerDialog dialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                CustomDatePickerDialog dialog = new CustomDatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMinDate(calendar.getTimeInMillis() + TimeZoneUtils.getOffsetTimezone(this).getRawOffset() + TimeZoneUtils.getOffsetTimezone(this).getDSTSavings() -10000);
                 return dialog;
         }
         return null;
     }
 
-    private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
+    private CustomDatePickerDialog.OnDateSetListener pickerListener = new CustomDatePickerDialog.OnDateSetListener() {
 
         // when dialog box is closed, below method will be called.
         @Override

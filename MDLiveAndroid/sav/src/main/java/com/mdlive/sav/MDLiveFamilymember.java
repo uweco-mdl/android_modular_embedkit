@@ -2,7 +2,6 @@ package com.mdlive.sav;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.myaccounts.CustomDatePickerDialog;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -57,7 +57,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     private TextView genderTxt,dateTxt;
     private int month,day,year;
     private String strGender,strDate;
-    private DatePickerDialog datePickerDialog;
+    private CustomDatePickerDialog datePickerDialog;
     private  boolean isAllFieldsfilled = true;
     private ArrayList<String> GenderList = new ArrayList<String>();
     private  HashMap<String,HashMap<String,String>>  array = new HashMap<>();
@@ -143,8 +143,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     /*
-    * Event for Add Child button click
-    * */
+     * Event for Add Child button click
+     */
     public void onAddChildButtonClicked(View view) {
         String firstNameEditTextValue = firstNameEditText.getText().toString().trim();
         String lastNameEditTextValue = lastNameEditText.getText().toString().trim();
@@ -197,16 +197,16 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     /*
-    * Event for on screen back button click
-    * */
+     * Event for on screen back button click
+     */
     public void onBackClicked(View view) {
         MdliveUtils.hideSoftKeyboard(MDLiveFamilymember.this);
         onBackPressed();
     }
 
     /*
-    * Event for gender click
-    * */
+     * Event for gender click
+     */
     public void onGenderClicked(View view) {
         if(GenderList.size() == IntegerConstants.NUMBER_ZERO){
             GenderList.add("Male");
@@ -216,8 +216,8 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
     /*
-    * Event for Date of Birth click
-    * */
+     * Event for Date of Birth click
+     */
     public void onDateOfBirthClicked(View view) {
         datePickerDialog.show();
     }
@@ -242,7 +242,6 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     /**
      * Applying validation on form and enable/disable continue button for further steps over.
      */
-
     public void ValidateModuleFields() {
 
         isAllFieldsfilled = !TextUtils.isEmpty(firstNameEditText.getText().toString());
@@ -315,7 +314,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
      */
     private void getDateOfBirth() {
         Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
-        datePickerDialog = new DatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog = new CustomDatePickerDialog(this, pickerListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setCalendarViewShown(false);
         datePickerDialog.getDatePicker().setMinDate(TimeZoneUtils.getDateBeforeNumberOfYears(IntegerConstants.ADD_CHILD_AGELIMIT, this));
         datePickerDialog.getDatePicker().setMaxDate(TimeZoneUtils.getCalendarWithOffset(this).getTime().getTime());
@@ -336,7 +335,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
     }
 
 
-    private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
+    private CustomDatePickerDialog.OnDateSetListener pickerListener = new CustomDatePickerDialog.OnDateSetListener() {
 
         // when dialog box is closed, below method will be called.
         @Override
@@ -418,4 +417,3 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
         //ApplicationController.getInstance().cancelPendingRequests(ApplicationController.TAG);
     }
 }
-

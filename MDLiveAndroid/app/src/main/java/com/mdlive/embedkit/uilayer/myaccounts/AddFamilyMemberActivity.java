@@ -1,7 +1,6 @@
 package com.mdlive.embedkit.uilayer.myaccounts;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -172,8 +171,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 int d = c.get(Calendar.DAY_OF_MONTH);
                 final String[] MONTH = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-                DatePickerDialog dp = new DatePickerDialog(AddFamilyMemberActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
+                CustomDatePickerDialog dp = new CustomDatePickerDialog(AddFamilyMemberActivity.this,
+                        new CustomDatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -187,6 +186,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                             }
 
                         }, y, m, d);
+
                 dp.setTitle("Calender");
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
                 dp.show();
