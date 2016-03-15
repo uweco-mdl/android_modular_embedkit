@@ -178,13 +178,13 @@
 				}
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
-        }else if(!/^[0-9]+$/.test(ccNumValueCheck) || ccNumValueCheck.length>16 || ccNumValueCheck.length<16){
+        }else if(!/^[0-9]+$/.test(ccNumValueCheck){
         	this.billingData = {
                 "status" : "Invalid Credit Card Information"
             }
         	window.billing.sendToAndroid(JSON.stringify(this.billingData));
             return false;
-        }else if(!/^[0-9]+$/.test(cccvvValueCheck) || cccvvValueCheck.length>4 || cccvvValueCheck.length<3){
+        }else if(!/^[0-9]+$/.test(cccvvValueCheck){
         	this.billingData = {
                 "status" : "Invalid Security Code"
             }
