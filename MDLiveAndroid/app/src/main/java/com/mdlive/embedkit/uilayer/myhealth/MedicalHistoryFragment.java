@@ -149,7 +149,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
                         if (!userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, true)) {
                             Log.d("HealthKit Response", "Health Kit Called---");
-                            GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
+                            GoogleFitUtils.getInstance().buildFitnessClient(true, null, getActivity());
                             mHealthSyncContainer.setVisibility(View.GONE);
                         } else if(dependentId != null){
                             mHealthSyncContainer.setVisibility(View.GONE);
@@ -226,6 +226,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("Success response of Health", response.toString());
                 hideProgressDialog();
                 try {
                     if (response.get("health_last_update") instanceof Number) {
@@ -285,7 +286,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     /**
      * Handling the response of medical Aggregation webservice response.
      */
-
     private void medicalAggregationHandleSuccessResponse(View view, JSONObject response) {
         try {
             medicalAggregationJsonObject = response;
@@ -298,7 +298,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     /**
      * Applying validation on form and enable/disable continue button for further steps over.
      */
-
     public void ValidateModuleFields(View view) {
         boolean isAllFieldsfilled = true;
         if (hasFemaleAttribute) {
@@ -400,15 +399,19 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         try {
             for (int i = 0; i < historyPercentageArray.length(); i++) {
                 if (historyPercentageArray.getJSONObject(i).has("life_style")) {
-                    if (historyPercentageArray.getJSONObject(i).optInt("life_style", 0) == 40) {
+                    if (historyPercentageArray.getJSONObject(i).optInt("life_style", 0)>10) {
                         ((TextView) view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+                    }else{
+                        ((TextView) view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_notcompleted_txt));
                     }
                 }
             }
 
             if (medicalAggregationJsonObject.has("family_history")) {
-                if (medicalAggregationJsonObject.getJSONArray("family_history").length() > 0) {
+                if (medicalAggregationJsonObject.getJSONArray("family_history").length() > 20) {
                     ((TextView) view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
+                }else{
+                    ((TextView) view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_notcompleted_txt));
                 }
             }
         } catch (Exception e) {
@@ -427,7 +430,6 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     *
      */
     public interface OnGoogleFitGetData {
         void getGoogleFitData(String data);
@@ -689,7 +691,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             mHealthSyncCv.setVisibility(View.GONE);
             editor.putBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, true);
             editor.commit();
-            GoogleFitUtils.getInstance().buildFitnessClient(true,null,getActivity());
+            GoogleFitUtils.getInstance().buildFitnessClient(true, null, getActivity());
             updateHealthSyncStatus();
         }
     }
@@ -712,7 +714,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
 
         try {
             final JSONObject personalInfoJSONObject = new JSONObject();
-            if(heightFt != 0) {
+            if(heightFt != 0){
                 personalInfoJSONObject.put("height_feet", heightFt + "");
             }
             if(heightIn != 0){
@@ -773,7 +775,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
                         }
                         heightIn = (int) heightValue[1];
                     }
-                    updateLifeStyleWithHealthKitData(weight,heightFt,heightIn);
+                    updateLifeStyleWithHealthKitData(weight, heightFt, heightIn);
                 } catch (JSONException e) {
                     hideProgressDialog();
                     e.printStackTrace();

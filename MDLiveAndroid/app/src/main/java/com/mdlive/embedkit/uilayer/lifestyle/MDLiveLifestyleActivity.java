@@ -64,6 +64,14 @@ public class MDLiveLifestyleActivity extends MDLiveBaseAppcompatActivity impleme
                 commit();
     }
 
+    public void showTick(){
+        findViewById(R.id.txt_apply).setVisibility(View.VISIBLE);
+    }
+
+    public void hideTick(){
+        findViewById(R.id.txt_apply).setVisibility(View.GONE);
+    }
+
     /* Start of Dashboard icons click listener */
     public void onBackClicked(View view) {
         finish();

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,11 +100,16 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         mWeightLbsEditText = (EditText) view.findViewById(R.id.life_style_weight_editTextone);
         mHeightInEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "11")});
         mBmiText = (TextView) view.findViewById(R.id.life_style_bmi_value_text);
-        mHeightFtEditText.addTextChangedListener(bmiTextWatcher);
-        mHeightInEditText.addTextChangedListener(bmiTextWatcher);
-        mWeightLbsEditText.addTextChangedListener(bmiTextWatcher);
+        mHeightFtEditText.addTextChangedListener(heightFtTxtWatcher);
+        mHeightInEditText.addTextChangedListener(heightInTxtWatcher);
+        mWeightLbsEditText.addTextChangedListener(weightTxtWatcher);
         mListView = (ListView) view.findViewById(R.id.lifestyle_listview);
 
+        if ((!TextUtils.isEmpty(mHeightFtEditText.getText().toString()) || !TextUtils.isEmpty(mHeightInEditText.getText().toString())) && !TextUtils.isEmpty(mWeightLbsEditText.getText().toString())) {
+            ((MDLiveLifestyleActivity) getActivity()).showTick();
+        } else {
+            ((MDLiveLifestyleActivity) getActivity()).hideTick();
+        }
     }
 
     /**
@@ -111,7 +117,6 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     *
      */
     public interface OnGoogleFitGetData {
         void getGoogleFitData(String data);
@@ -181,7 +186,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             for (int i = 0; i < lifestyleConditionArray.length(); i++) {
                 jsonObject = lifestyleConditionArray.getJSONObject(i);
                 lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"),
-                        ((jsonObject.isNull("active") || jsonObject.optString("active").trim().length() == 0) ? "":jsonObject.getString("active"))));
+                        ((jsonObject.isNull("active") || jsonObject.optString("active").trim().length() == 0) ? "" : jsonObject.getString("active"))));
             }
             adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels);
             mListView.setAdapter(adapter);
@@ -219,15 +224,15 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
             String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
-            if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
-                if((!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0")) && mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "","0"},getActivity());
+            if (dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false)) {
+                if ((!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0")) && mWeightLbsEditText.getText().toString().equals("0")) {
+                    GoogleFitUtils.getInstance().buildFitnessClient(false, new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "", "0"}, getActivity());
                     hideProgressDialog();
-                } else if((mHeightFtEditText.getText().toString().equals("0") || mHeightFtEditText.getText().toString().equals("0")) && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                } else if ((mHeightFtEditText.getText().toString().equals("0") || mHeightFtEditText.getText().toString().equals("0")) && !mWeightLbsEditText.getText().toString().equals("0")) {
+                    GoogleFitUtils.getInstance().buildFitnessClient(false, new String[]{"0", Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""}, getActivity());
                     hideProgressDialog();
-                } else if(!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0") && !mWeightLbsEditText.getText().toString().equals("0")){
-                    GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "",Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""},getActivity());
+                } else if (!mHeightFtEditText.getText().toString().equals("0") && !mHeightFtEditText.getText().toString().equals("0") && !mWeightLbsEditText.getText().toString().equals("0")) {
+                    GoogleFitUtils.getInstance().buildFitnessClient(false, new String[]{Integer.parseInt(mHeightFtEditText.getText().toString()) * 12 + Integer.parseInt(mHeightInEditText.getText().toString()) + "", Integer.parseInt(mWeightLbsEditText.getText().toString()) + ""}, getActivity());
                     hideProgressDialog();
                 }
             }
@@ -240,7 +245,6 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     }
 
     /**
-     *
      * This function will save the updated lifestyle data to service.
      *
      * @param requestJSON
@@ -283,7 +287,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
      * weight and height edittexts.
      *
      */
-    TextWatcher bmiTextWatcher = new TextWatcher() {
+    TextWatcher heightFtTxtWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -291,6 +295,59 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             setBMIText();
+            tickVisibilityConditions();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private void tickVisibilityConditions() {
+        if ((!TextUtils.isEmpty(mHeightFtEditText.getText().toString()) || !TextUtils.isEmpty(mHeightInEditText.getText().toString()))) {
+            if (TextUtils.isEmpty(mWeightLbsEditText.getText().toString())) {
+                ((MDLiveLifestyleActivity) getActivity()).hideTick();
+            } else {
+                ((MDLiveLifestyleActivity) getActivity()).showTick();
+            }
+        } else {
+            ((MDLiveLifestyleActivity) getActivity()).hideTick();
+        }
+    }
+
+    /**
+     * This textwatcher will call the setBMIText() function whenever the text is changed for
+     * weight and height edittexts.
+     */
+    TextWatcher heightInTxtWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            setBMIText();
+            tickVisibilityConditions();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    /**
+     * This textwatcher will call the setBMIText() function whenever the text is changed for
+     * weight and height edittexts.
+     */
+    TextWatcher weightTxtWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            setBMIText();
+            tickVisibilityConditions();
         }
 
         @Override
@@ -352,12 +409,14 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                 int input = Integer.parseInt(dest.toString() + source.toString());
                 if (isInRange(min, max, input))
                     return null;
-            } catch (NumberFormatException nfe) { }
+            } catch (NumberFormatException nfe) {
+                // @ToDo - handle the issue here
+            }
             return "";
         }
 
         private boolean isInRange(int a, int b, int c) {
-            return b > a ? c >= a && c <= b : c >= b && c <= a;
+            return (b > a ? c >= a && c <= b : c >= b && c <= a);
         }
     }
 
