@@ -888,7 +888,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                     editor.commit();
 
                     // now reload the screen
-                    recreate();
+                    //recreate();
                 }
             }
         });

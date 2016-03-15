@@ -1861,7 +1861,7 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             String appointmentDate = sdf.format(c.getTime());
 
-            service.getProviderDetails(appointmentDate, appointmentType, doctorId, successCallBackListener, errorListener);
+            service.getProviderDetails(SharedLocation, appointmentDate, appointmentType, doctorId, successCallBackListener, errorListener);
     }
 
 
