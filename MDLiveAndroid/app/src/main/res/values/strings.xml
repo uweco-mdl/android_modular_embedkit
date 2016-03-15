@@ -2,9 +2,9 @@
 <resources>
     <!-- MDLIVE Google Analytics tracking ID -->
     <!--Replace placeholder ID with your tracking ID old UA-50076077-1 -->
-    <!--   Stage - UA-59678541-1 , Dev - UA-59666445-1 , QA - UA-59663838-1 , Prod - UA-52183043-1 -->
-    <!--   SSO Embedkit - UA-68912220-1 -->
-    <string name="ga_mdlive_trackingId">UA-68912220-1</string>
+    <!--   Stage - UA-74888683-1 , Dev - UA-59666445-1 , QA - UA-59663838-1 , Prod - UA-68912220-1 -->
+    <!--   SSO Embedkit - UA-74888683-1  (Staging) - Production GS Tracking Id comes from JNI call.-->
+    <string name="ga_mdlive_trackingId">UA-74888683-1</string>
 
     <!-- For Google Analytics -->
     <string name="mdl_mdlive_adult">Adult</string>
