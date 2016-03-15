@@ -54,7 +54,7 @@ public class MDLiveConfig {
 
     // Define what embedkit components subset will be actually accessible to affiliate app
     public static final Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST,
-                                                                        //EMBEDKITS.DOCTOR_CONSULT,
+                                                                        EMBEDKITS.DOCTOR_CONSULT,
                                                                         EMBEDKITS.SYMPTOM_CHECKER,
                                                                         EMBEDKITS.MY_HEALTH);
     public static boolean IS_SSO = false;
@@ -257,8 +257,8 @@ public class MDLiveConfig {
                 // stage environment
                 AppSpecificConfig.WEB_URL = "http://www.mdlive.com";
                 AppSpecificConfig.BASE_URL = "https://stage-rtl.mdlive.com/services";
-                AppSpecificConfig.API_KEY = "c9e63d9a77f17039c470";
-                AppSpecificConfig.SECRET_KEY = "b302e84f866a8730eb2";
+                AppSpecificConfig.API_KEY = "34f881b5dff46ee62cac";
+                AppSpecificConfig.SECRET_KEY = "ee93d2e7acb5cb667f4";
                 AppSpecificConfig.URL_ENVIRONMENT = "s";
                 AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";

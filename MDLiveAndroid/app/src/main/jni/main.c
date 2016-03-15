@@ -8,7 +8,7 @@
   JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdApiKeyFromNative
      (JNIEnv * env, jobject obj)
      {
-           return (*env)->NewStringUTF(env, "9e511cd537c72a11338b");
+           return (*env)->NewStringUTF(env, "b74d0fb9a114904c009b");
      }
 
    /*
@@ -19,5 +19,5 @@
   JNIEXPORT jstring JNICALL Java_com_mdlive_embedkit_global_MDLiveConfig_getProdSecretKeyFromNative
      (JNIEnv * env, jobject obj)
      {
-         return (*env)->NewStringUTF(env, "e7302efc779e724040d");
+         return (*env)->NewStringUTF(env, "89c8d3ea88501e8e62a");
      }
