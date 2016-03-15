@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -643,7 +644,10 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
         try {
             mFromResult = false;
             hideProgressDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    response.getString("message"),
+                    Snackbar.LENGTH_SHORT).show();
             getProfileInfoService();
 
         } catch (Exception e) {

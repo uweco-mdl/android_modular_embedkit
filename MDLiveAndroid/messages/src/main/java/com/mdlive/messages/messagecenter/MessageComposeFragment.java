@@ -184,12 +184,12 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
             MdliveUtils.hideKeyboard(getActivity(), (View)mSubjectEditText);
 
             if (mSubjectEditText != null && mSubjectEditText.getText().toString().trim().length() < 1) {
-                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandatory_fields));
                 return;
             }
 
             if (mBodyEditText != null && mBodyEditText.getText().toString().trim().length() < 0) {
-                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandetory_fileds));
+                MdliveUtils.showDialog(getActivity(), getString(R.string.mdl_app_name), getString(R.string.mdl_please_enter_mandatory_fields));
                 return;
             }
 

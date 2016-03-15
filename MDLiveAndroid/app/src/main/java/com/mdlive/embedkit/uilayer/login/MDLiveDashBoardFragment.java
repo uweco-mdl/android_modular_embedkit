@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -338,7 +339,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                                 Intent intent = new Intent(getActivity(), clazz);
                                 startActivity(intent);
                             } catch (ClassNotFoundException e){
-                                Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                        getString(R.string.mdl_mdlive_module_not_found),
+                                        Snackbar.LENGTH_LONG).show();
                             }
                             MdliveUtils.startActivityAnimation(getActivity());
                         }

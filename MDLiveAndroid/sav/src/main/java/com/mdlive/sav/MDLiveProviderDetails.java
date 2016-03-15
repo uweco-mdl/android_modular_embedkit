@@ -1900,7 +1900,10 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
 
         }catch(NullPointerException nex){
             //Log.e("Error details", "************\n" + nex.getMessage());
-            Toast.makeText(this, R.string.mdl_cignacoach_data_error, Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(this, R.string.mdl_cignacoach_data_error, Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_cignacoach_data_error),
+                    Snackbar.LENGTH_SHORT).show();
             return;
         }
 

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -619,7 +620,10 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(MDLiveReasonForVisit.this, "" + position, Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(MDLiveReasonForVisit.this, "" + position, Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(findViewById(android.R.id.content),
+                        "" + position,
+                        Snackbar.LENGTH_SHORT).show();
             }
         });
         takePhoto = (ImageView) findViewById(R.id.takePicture);
@@ -1004,8 +1008,11 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                                 downloadMedicalRecordService();
                             }
                         }else{
-                            Toast.makeText(getApplicationContext(), "Something Went Wrong in Uploading Document!",
-                                    Toast.LENGTH_SHORT).show();
+                            /*Toast.makeText(getApplicationContext(), "Something Went Wrong in Uploading Document!",
+                                    Toast.LENGTH_SHORT).show();*/
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.mdl_problem_uploading),
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }catch (Exception e){

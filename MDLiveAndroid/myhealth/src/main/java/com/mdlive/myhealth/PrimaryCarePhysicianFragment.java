@@ -3,6 +3,7 @@ package com.mdlive.myhealth;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -265,7 +266,10 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getActivity(), getString(R.string.mdl_please_enter_mandetory_fileds), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), getString(R.string.mdl_please_enter_mandetory_fileds), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_please_enter_mandatory_fields),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -306,7 +310,10 @@ public class PrimaryCarePhysicianFragment extends MDLiveBaseFragment {
             hideProgressDialog();
 
             if(response != null) {
-                Toast.makeText(getActivity(), getString(R.string.mdl_pcp_added_succesfully), Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getActivity(), getString(R.string.mdl_pcp_added_succesfully), Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        getString(R.string.mdl_pcp_added_succesfully),
+                        Snackbar.LENGTH_SHORT).show();
                 getActivity().finish();
             }
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.InflateException;
@@ -290,7 +291,10 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 }
             }
         } catch (ClassNotFoundException e){
-            Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

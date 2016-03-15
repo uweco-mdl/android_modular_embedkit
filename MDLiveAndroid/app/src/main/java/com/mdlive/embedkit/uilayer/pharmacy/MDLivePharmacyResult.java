@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -637,7 +638,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 } catch (ClassNotFoundException e){
-                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.mdl_mdlive_module_not_found),
+                            Snackbar.LENGTH_LONG).show();
                 }
                 MdliveUtils.closingActivityAnimation(this);
             }else if (response.getString("message").equals("Pharmacy details updated")) {
@@ -687,7 +691,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                     i.putExtra("redirect_mypharmacy", true);
                                     startActivity(i);
                                 } catch (ClassNotFoundException e){
-                                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                                    Snackbar.make(findViewById(android.R.id.content),
+                                            getString(R.string.mdl_mdlive_module_not_found),
+                                            Snackbar.LENGTH_LONG).show();
                                 }
                                 finish();
                                 MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
@@ -735,7 +742,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 storePayableAmount("0.00");
                 startActivity(i);
             } catch (ClassNotFoundException e) {
-                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                Snackbar.make(findViewById(android.R.id.content),
+                        getString(R.string.mdl_mdlive_module_not_found),
+                        Snackbar.LENGTH_LONG).show();
             }
             MdliveUtils.startActivityAnimation(MDLivePharmacyResult.this);
         }
@@ -786,7 +796,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 }catch(ClassNotFoundException e){
-                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.mdl_mdlive_module_not_found),
+                            Snackbar.LENGTH_LONG).show();
                 }
             MdliveUtils.closingActivityAnimation(this);
         } else {

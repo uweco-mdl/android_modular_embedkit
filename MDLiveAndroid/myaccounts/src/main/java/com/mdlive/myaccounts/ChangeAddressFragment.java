@@ -3,6 +3,7 @@ package com.mdlive.myaccounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -164,12 +165,18 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
                     if(errorMessage == null){
                         loadProfileInfo(parent.toString());
                     }else{
-                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                        /*Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();*/
+                        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                errorMessage,
+                                Snackbar.LENGTH_SHORT).show();
                     }
 
                 }else
                 {
-                    Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();*/
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                            getString(R.string.mdl_all_fields_required),
+                            Snackbar.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -340,7 +347,10 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
 
             if(response != null)
             {
-                Toast.makeText(getActivity(),getString(R.string.mdl_address_updated),Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getActivity(),getString(R.string.mdl_address_updated),Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        getString(R.string.mdl_address_updated),
+                        Snackbar.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 

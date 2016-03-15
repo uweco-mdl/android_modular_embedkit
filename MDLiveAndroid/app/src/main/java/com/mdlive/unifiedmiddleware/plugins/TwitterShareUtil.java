@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Picture;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
@@ -58,9 +59,12 @@ public class TwitterShareUtil extends Dialog {
 
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(TwitterShareUtil.this.getContext(),
+                /*Toast.makeText(TwitterShareUtil.this.getContext(),
                         TwitterShareUtil.this.getContext().getResources().getString(R.string.mdl_share_cancelled),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(TwitterShareUtil.this.findViewById(android.R.id.content),
+                        TwitterShareUtil.this.getContext().getResources().getString(R.string.mdl_share_cancelled),
+                        Snackbar.LENGTH_SHORT).show();
                 TwitterShareUtil.this.cancel();
             }
         });
@@ -75,9 +79,12 @@ public class TwitterShareUtil extends Dialog {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if(url.contains("/complete")){
-                Toast.makeText(TwitterShareUtil.this.getContext(),
+                /*Toast.makeText(TwitterShareUtil.this.getContext(),
                         TwitterShareUtil.this.getContext().getResources().getString(R.string.mdl_share_success),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(TwitterShareUtil.this.findViewById(android.R.id.content),
+                        TwitterShareUtil.this.getContext().getResources().getString(R.string.mdl_share_success),
+                        Snackbar.LENGTH_SHORT).show();
                 TwitterShareUtil.this.dismiss();
             }
             view.loadUrl(url);

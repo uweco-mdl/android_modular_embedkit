@@ -686,7 +686,7 @@
     <string name="mdl_date_of_birth">Date of Birth</string>
     <string name="mdl_date_of_birth_hint">mm/dd/yyyy</string>
     <string name="mdl_summary_txt">I,Michelle Marino confirm that I\'m the legal parent / guardian of the minor above.</string>
-    <string name="mdl_please_enter_mandetory_fileds">Please enter all mandatory fields.</string>
+    <string name="mdl_please_enter_mandatory_fields">Please enter all mandatory fields.</string>
     <string name="mdl_please_enter_login_fileds"> Please enter a valid Username or Email, and a password to continue.</string>
     <string name="mdl_please_enter_valid_fileds">Please enter valid credentials.</string>
     <string name="mdl_fileds">Please enter a valid Username or Email, and a password to continue should be displayed.</string>
@@ -1587,7 +1587,7 @@
     <string name="mdl_weak">WEAK</string>
     <string name="mdl_password_mismatch">New &amp; Confirm password mismatch</string>
     <string name="mdl_phone_number_updated">Update phone number successfully</string>
-    <string name="mdl_answer_updated">Answers are mandatory</string>
+    <string name="mdl_answer_mandatory">Answers are mandatory</string>
     <string name="mdl_by">by</string>
     <string name="mdl_year_of_procedure">Year of procedure :</string>
     <string name="mdl_twice">Twice</string>

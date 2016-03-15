@@ -289,7 +289,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             LoadappmtRequest();
             saveDateAndTime();
         } else {
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandetory_fileds));
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandatory_fields));
         }
     }
     public void saveDateAndTime()

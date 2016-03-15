@@ -1,8 +1,8 @@
 package com.mdlive.embedkit.global;
 
-
 import android.app.Activity;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -54,7 +54,7 @@ public class MDLiveConfig {
 
     // Define what embedkit components subset will be actually accessible to affiliate app
     public static final Set<EMBEDKITS> EMBEDKIT_COMPONENTS = EnumSet.of(EMBEDKITS.CALL_ASSIST,
-                                                                        EMBEDKITS.DOCTOR_CONSULT,
+                                                                        //EMBEDKITS.DOCTOR_CONSULT,
                                                                         EMBEDKITS.SYMPTOM_CHECKER,
                                                                         EMBEDKITS.MY_HEALTH);
     public static boolean IS_SSO = false;
@@ -413,7 +413,10 @@ public class MDLiveConfig {
         if(!EMBEDKIT_COMPONENTS.contains(component))
         {
             if (ctx != null)
-                Toast.makeText(ctx, ctx.getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                /*Toast.makeText(ctx, ctx.getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                Snackbar.make(ctx.findViewById(android.R.id.content),
+                            ctx.getString(R.string.mdl_mdlive_module_not_found),
+                            Snackbar.LENGTH_LONG).show();
 
             return(false);
         }

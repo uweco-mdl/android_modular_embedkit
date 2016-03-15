@@ -192,7 +192,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             }
 
         } else {
-            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandetory_fileds));
+            MdliveUtils.showDialog(MDLiveFamilymember.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandatory_fields));
         }
     }
 

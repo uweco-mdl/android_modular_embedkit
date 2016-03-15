@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.provider.Telephony;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -176,14 +177,20 @@ public class SocialSharingHandler {
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
                 activity.startActivity(shareIntent);
             } else {
-                Toast.makeText(activity,
+                /*Toast.makeText(activity,
                         activity.getResources().getString(R.string.mdl_share_failed),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(activity.findViewById(android.R.id.content),
+                        activity.getString(R.string.mdl_share_failed),
+                        Snackbar.LENGTH_SHORT).show();
             }
         } catch(Exception e){
-            Toast.makeText(activity,
+            /*Toast.makeText(activity,
                     activity.getResources().getString(R.string.mdl_share_failed),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(activity.findViewById(android.R.id.content),
+                    activity.getString(R.string.mdl_share_failed),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -120,7 +121,10 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
                     messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(messageIntent);
                 }catch (ClassNotFoundException e){
-                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.mdl_mdlive_module_not_found),
+                            Snackbar.LENGTH_LONG).show();
                 }
             }
         }catch (Exception e){

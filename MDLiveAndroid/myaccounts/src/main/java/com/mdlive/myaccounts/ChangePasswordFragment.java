@@ -3,6 +3,7 @@ package com.mdlive.myaccounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -638,7 +639,10 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         try {
             hideProgressDialog();
             //Fetch Data From the Services
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    response.getString("message"),
+                    Snackbar.LENGTH_SHORT).show();
             getActivity().finish();
 
         } catch (Exception e) {
@@ -662,10 +666,16 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(getActivity(), "New & Confirm password mismatch", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getActivity(), "New & Confirm password mismatch", Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        "New & Confirm password mismatch",
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_all_fields_required),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 }

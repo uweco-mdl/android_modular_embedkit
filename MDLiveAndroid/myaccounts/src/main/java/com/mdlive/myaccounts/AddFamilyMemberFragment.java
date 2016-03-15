@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -374,7 +375,10 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 && isEmpty(State) && isEmpty(Phone) && isEmpty(DOB) && isEmpty(Gender) && isEmpty(Zipcode) && isEmpty(relationship)) {
             if (validEmail(Email)) {
                 if (!MdliveUtils.validateZipCode(Zipcode)) {
-                    Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(getActivity(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();*/
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                            getString(R.string.mdl_valid_zip),
+                            Snackbar.LENGTH_SHORT).show();
                 } else {
                     try {
                         JSONObject parent = new JSONObject();
@@ -404,10 +408,16 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                     }
                 }
             } else {
-                Toast.makeText(getActivity(), "Email id is invalid", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getActivity(), "Email id is invalid", Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        getString(R.string.mdl_email_id_invalid),
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_all_fields_required),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -447,7 +457,10 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private void handleAddFamilyInfoSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    response.getString("message"),
+                    Snackbar.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {
             e.printStackTrace();

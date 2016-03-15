@@ -3,6 +3,7 @@ package com.mdlive.myaccounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -205,7 +206,10 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_all_fields_required),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -251,7 +255,10 @@ public class ChangePhoneNumber extends MDLiveBaseFragment {
             hideProgressDialog();
 
             if (response != null) {
-                Toast.makeText(getActivity(), "Update phone number successfully", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getActivity(), "Update phone number successfully", Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        getString(R.string.mdl_phone_number_updated),
+                        Snackbar.LENGTH_SHORT).show();
                 getActivity().finish();
             }
 

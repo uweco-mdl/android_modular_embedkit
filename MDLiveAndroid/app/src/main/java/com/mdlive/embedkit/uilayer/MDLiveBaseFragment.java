@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -61,13 +62,19 @@ public class MDLiveBaseFragment extends Fragment {
 
     public void showToast(final String message) {
         if (getActivity() != null) {
-            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    message,
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
     public void showToast(final int stringResourceId) {
         if (getActivity() != null) {
-            Toast.makeText(getActivity(), getActivity().getString(stringResourceId), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), getActivity().getString(stringResourceId), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(stringResourceId),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 

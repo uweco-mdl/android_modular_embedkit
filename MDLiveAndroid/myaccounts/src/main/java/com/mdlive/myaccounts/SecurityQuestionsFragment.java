@@ -3,6 +3,7 @@ package com.mdlive.myaccounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -362,7 +363,10 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
             }
         }
         else
-            Toast.makeText(getActivity(), "Answers are mandatory", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), "Answers are mandatory", Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    getString(R.string.mdl_answer_mandatory),
+                    Snackbar.LENGTH_SHORT).show();
     }
     private void updateSecurityQuestionsService(String params) {
         showProgressDialog();
@@ -404,7 +408,10 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
     private void handleUpdateSecurityQuestionsSuccessResponse(JSONObject response) {
         try {
             hideProgressDialog();
-            Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    response.getString("message"),
+                    Snackbar.LENGTH_SHORT).show();
             getActivity().finish();
         } catch (Exception e) {
             e.printStackTrace();

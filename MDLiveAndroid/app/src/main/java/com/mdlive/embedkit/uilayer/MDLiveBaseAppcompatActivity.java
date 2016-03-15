@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -381,7 +382,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onDependentSelected(User user) {
         if (user.mMode == User.MODE_ADD_CHILD) {
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_add_child_start),
+                    Snackbar.LENGTH_LONG).show();
             return;
         }
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
@@ -397,7 +401,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     @Override
     public void onPrimarySelected(User user) {
         if (user.mMode == User.MODE_ADD_CHILD) {
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_add_child_start),
+                    Snackbar.LENGTH_LONG).show();
             return;
         }
         IS_DEPENDENT_SELECTED = false;
@@ -425,7 +432,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
             method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getBaseContext()).getAssistPhoneNumber());
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -447,7 +457,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 showEmailConfirmationDialog();
             }
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -482,7 +495,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
                 startActivity((Intent) method.invoke(null, getBaseContext(), user));
             }
         }catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -493,7 +509,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -502,7 +521,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_symptomchecker_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -511,7 +533,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Class clazz = Class.forName(getString(R.string.mdl_mdlive_myaccount_module));
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -523,7 +548,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         } catch(ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -538,7 +566,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }catch(ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -554,7 +585,10 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             Method method = clazz.getMethod("getAppointmentIntent", Context.class, Appointment.class);
             startActivity((Intent)method.invoke(null, getBaseContext(), appointment));
         }catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }catch (Exception e){
             e.printStackTrace();
         }

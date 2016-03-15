@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -58,7 +59,10 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
                     startActivity(waitingRoomIntent);
                     MdliveUtils.startActivityAnimation(MDLivePendingVisits.this);
                 } catch (ClassNotFoundException e){
-                    Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.mdl_mdlive_module_not_found),
+                            Snackbar.LENGTH_LONG).show();
                 }
             }
         });

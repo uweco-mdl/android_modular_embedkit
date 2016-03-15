@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,10 @@ public class MDLiveSymptomCheckerFragment extends MDLiveBaseFragment {
                         final Intent intent = new Intent(getActivity(), clazz);
                         startActivity(intent);
                     }catch (ClassNotFoundException e){
-                        Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                        /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                getString(R.string.mdl_mdlive_module_not_found),
+                                Snackbar.LENGTH_LONG).show();
                     }
                 } else if(url.startsWith("tel:")) {
                     Intent intent = new Intent(Intent.ACTION_DIAL,

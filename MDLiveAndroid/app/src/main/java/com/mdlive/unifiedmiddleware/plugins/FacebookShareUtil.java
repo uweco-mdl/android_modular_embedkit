@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
@@ -95,9 +96,12 @@ public class FacebookShareUtil extends Activity {
                                 checkedPermission = true;
                                 return;
                             } else {
-                                Toast.makeText(FacebookShareUtil.this,
+                                /*Toast.makeText(FacebookShareUtil.this,
                                         getResources().getString(R.string.mdl_share_failed),
-                                        Toast.LENGTH_SHORT).show();
+                                        Toast.LENGTH_SHORT).show();*/
+                                Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                                        getString(R.string.mdl_share_failed),
+                                        Snackbar.LENGTH_SHORT).show();
                                 finish();
                             }
                         }
@@ -138,25 +142,37 @@ public class FacebookShareUtil extends Activity {
             // and the post Id.
             final String postId = values.getString("post_id");
             if (postId != null) {
-                Toast.makeText(FacebookShareUtil.this,
+                /*Toast.makeText(FacebookShareUtil.this,
                         getResources().getString(R.string.mdl_share_success),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                        getString(R.string.mdl_share_success),
+                        Snackbar.LENGTH_SHORT).show();
             } else {
                 // User clicked the Cancel button
-                Toast.makeText(FacebookShareUtil.this,
+                /*Toast.makeText(FacebookShareUtil.this,
                         getResources().getString(R.string.mdl_share_cancelled),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                        getString(R.string.mdl_share_cancelled),
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else if (error instanceof FacebookOperationCanceledException) {
             // User clicked the "x" button
-            Toast.makeText(FacebookShareUtil.this,
+            /*Toast.makeText(FacebookShareUtil.this,
                     getResources().getString(R.string.mdl_share_cancelled),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                    getString(R.string.mdl_share_cancelled),
+                    Snackbar.LENGTH_SHORT).show();
         } else {
             // Generic, ex: network error
-            Toast.makeText(FacebookShareUtil.this,
+            /*Toast.makeText(FacebookShareUtil.this,
                     getResources().getString(R.string.mdl_share_failed),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                    getString(R.string.mdl_share_failed),
+                    Snackbar.LENGTH_SHORT).show();
         }
         FacebookShareUtil.this.finish();
     }
@@ -194,7 +210,10 @@ public class FacebookShareUtil extends Activity {
         });
 
         if (resultCode == 0) {
-            Toast.makeText(FacebookShareUtil.this, getResources().getString(R.string.mdl_share_failed), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(FacebookShareUtil.this, getResources().getString(R.string.mdl_share_failed), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(FacebookShareUtil.this.findViewById(android.R.id.content),
+                    getString(R.string.mdl_share_failed),
+                    Snackbar.LENGTH_LONG).show();
             pDialog.dismiss();
             finish();
         }

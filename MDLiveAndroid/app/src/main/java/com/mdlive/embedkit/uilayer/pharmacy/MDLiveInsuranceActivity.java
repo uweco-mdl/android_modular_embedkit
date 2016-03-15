@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -73,7 +74,10 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
                 }, 3000);
             }
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
        // checkInsuranceEligibility();
     }
@@ -106,7 +110,10 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
                                 startActivity(i);
                                 MdliveUtils.startActivityAnimation(MDLiveInsuranceActivity.this);
                             }catch (ClassNotFoundException e){
-                                Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                                /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        getString(R.string.mdl_mdlive_module_not_found),
+                                        Snackbar.LENGTH_LONG).show();
                             }
                         } else {
                             moveToNextPage();
@@ -150,7 +157,10 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
             startActivity(i);
             MdliveUtils.startActivityAnimation(MDLiveInsuranceActivity.this);
         }catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 

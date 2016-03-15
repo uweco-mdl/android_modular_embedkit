@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -325,7 +326,10 @@ public class NotificationFragment extends MDLiveBaseFragment {
                             startActivity(intent);
                             MdliveUtils.startActivityAnimation(getActivity());
                         } catch (ClassNotFoundException e){
-                            Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                            /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                    getString(R.string.mdl_mdlive_module_not_found),
+                                    Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });

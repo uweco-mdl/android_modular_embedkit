@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -92,7 +93,10 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
             Class clazz = Class.forName("com.mdlive.sav.WaitingRoom.MDLiveWaitingRoom");
             startActivityWithClassName(clazz);
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
 
     }

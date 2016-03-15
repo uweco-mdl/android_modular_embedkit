@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -106,7 +107,10 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
                         Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
                         method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getActivity()).getAssistPhoneNumber());
                     } catch (ClassNotFoundException e){
-                        Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                        /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                getString(R.string.mdl_mdlive_module_not_found),
+                                Snackbar.LENGTH_LONG).show();
                     } catch (Exception e){
                         e.printStackTrace();
                     }

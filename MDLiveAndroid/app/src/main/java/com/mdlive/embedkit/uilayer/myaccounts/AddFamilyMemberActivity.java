@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -395,7 +396,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             startActivity(upIntent);
             finish();
         } catch (ClassNotFoundException e){
-            Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+            /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -447,7 +451,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 && isEmpty(state) && isEmpty(phone) && isEmpty(dob) && isEmpty(gender) && isEmpty(relationship)) {
             if (validEmail(eMail)) {
                 if(!MdliveUtils.validateZipCode(zipCode)){
-                    Toast.makeText(getApplicationContext(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(getApplicationContext(), getString(R.string.mdl_valid_zip), Toast.LENGTH_SHORT).show();*/
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.mdl_valid_zip),
+                            Snackbar.LENGTH_SHORT).show();
                 }else {
                     try {
                         JSONObject parent = new JSONObject();
@@ -501,10 +508,16 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(getBaseContext(), "eMail id is invalid", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getBaseContext(), "eMail id is invalid", Toast.LENGTH_SHORT).show();*/
+                Snackbar.make(findViewById(android.R.id.content),
+                        getString(R.string.mdl_email_id_invalid),
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(AddFamilyMemberActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(AddFamilyMemberActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_all_fields_required),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -546,7 +559,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
             pDialog.dismiss();
 
-            Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(AddFamilyMemberActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    response.getString("message"),
+                    Snackbar.LENGTH_SHORT).show();
 
             final User user = User.getSelectedUser(getBaseContext());
             if (user == null) {
@@ -564,7 +580,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         Method method = clazz.getMethod("getGetStartedIntentWithUser", Context.class, User.class);
                         startActivity((Intent) method.invoke(null, getBaseContext(), user));
                     } catch (ClassNotFoundException e){
-                        Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();
+                        /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                        Snackbar.make(findViewById(android.R.id.content),
+                                getString(R.string.mdl_mdlive_module_not_found),
+                                Snackbar.LENGTH_LONG).show();
                     }
             }else {
                     startActivity(MDLiveDashboardActivity.getDashboardIntentWithUser(getBaseContext(), user));

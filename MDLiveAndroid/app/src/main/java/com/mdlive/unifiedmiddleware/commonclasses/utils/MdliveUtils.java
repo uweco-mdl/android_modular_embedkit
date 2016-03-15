@@ -16,6 +16,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -1334,9 +1335,12 @@ public class MdliveUtils {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, context,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(context,
+                /*Toast.makeText(context,
                         "This device is not supported.", Toast.LENGTH_LONG)
-                        .show();
+                        .show();*/
+                Snackbar.make(context.findViewById(android.R.id.content),
+                        context.getString(R.string.mdl_device_not_supported),
+                        Snackbar.LENGTH_LONG).show();
             }
             return false;
         }
