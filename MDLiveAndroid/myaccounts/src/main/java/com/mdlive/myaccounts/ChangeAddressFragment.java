@@ -273,7 +273,7 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
     };
 
     private void checkAddressFields() {
-        if (!TextUtils.isEmpty(mAddressLine1.getText().toString().trim()) && !TextUtils.isEmpty(mAddressLine2.getText().toString().trim())
+        if (!TextUtils.isEmpty(mAddressLine1.getText().toString().trim())
                 && !TextUtils.isEmpty(mCity.getText().toString().trim()) && !TextUtils.isEmpty(mState.getText().toString().trim()) && !TextUtils.isEmpty(mZip.getText().toString().trim())) {
             ((MyAccountsHome) getActivity()).showTick();
         } else {
@@ -289,7 +289,7 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
     public String ValidateForm()
     {
         if(mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0
-           || mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0
+    //     || mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0
            || mState.getText() == null && mState.getText().toString().trim().length() == 0
            || mZip.getText() == null && mZip.getText().toString().trim().length() == 0
            || mCity.getText() == null && mCity.getText().toString().trim().length() == 0) {
