@@ -315,7 +315,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("customer_call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
 
             params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
             Gson gson = new GsonBuilder().serializeNulls().create();
@@ -326,11 +326,9 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         }
     }
 
-
     public void leftBtnOnClick(View v) {
         MdliveUtils.hideSoftKeyboard(MDLiveConfirmappointment.this);
         onBackPressed();
-
     }
 
     @Override
@@ -484,14 +482,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     }
 
 
-
     /***
      * This method will be called when doctor on call by Video is available
      * On successful response it will return an appointment ID which will saved in shared Preference for future use.
      * On Error respose the corresponding message will be notified to the user.
      */
-
-
     private void doOnVideoConsultaion() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -570,7 +565,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
 
         onCallParams.put("user", params);
 
@@ -585,8 +580,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
      * This method will be called when doctor on call by Phone is available
      * On Success response it will be taken to the thank you screen.
      */
-
-
     private void doOnCallConsultaion() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -597,7 +590,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                     Log.v("Response",response.toString());
                     if(response.has("message")){
                         Intent thankYouIntent=new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
-                        thankYouIntent.putExtra("activitycaller","OnCall");
+                        thankYouIntent.putExtra("activitycaller", "OnCall");
                         startActivity(thankYouIntent);
                         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
                     }
@@ -664,7 +657,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
 
         onCallParams.put("user",params);
 
@@ -672,8 +665,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
         services.doOnCallAppointment(gson.toJson(onCallParams), responseListener, errorListener);
     }
-
-
 
 
     private void dismissDialog() {
@@ -744,7 +735,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
 
 
-
             // create alert dialog
             final AlertDialog alertDialog = alertDialogBuilder.create();
 
@@ -764,6 +754,5 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             e.printStackTrace();
         }
     }
-
 
 }

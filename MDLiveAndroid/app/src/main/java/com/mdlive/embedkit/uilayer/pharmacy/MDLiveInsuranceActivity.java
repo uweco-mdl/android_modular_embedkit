@@ -173,7 +173,7 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
     public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExixtingCard);
         editor.commit();
     }
 
@@ -188,8 +188,8 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method", "1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot", "Now");
-        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID,""));
-        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        insuranceMap.put("provider_type_id", settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         return new Gson().toJson(insuranceMap);
     }
 

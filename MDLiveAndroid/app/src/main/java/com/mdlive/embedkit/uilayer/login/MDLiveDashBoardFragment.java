@@ -34,6 +34,7 @@ import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
 import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.login.EmailConfirmationService;
+import com.mdlive.unifiedmiddleware.services.myaccounts.GetProfileInfoService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,6 +196,71 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getProfileInfoService();
+    }
+
+    /**
+     * This method fetches the user basic info
+     * @author  Jitendra Singh
+     */
+    private void getProfileInfoService() {
+
+        NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                handleGetProfileInfoSuccessResponse(response);
+            }
+        };
+
+        NetworkErrorListener errorListener = new NetworkErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideProgressDialog();
+                //We set FL in case of an error
+                setDefaultState(getActivity().getString(R.string.mdl_fl));
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }
+        };
+
+        GetProfileInfoService service = new GetProfileInfoService(getActivity(), null);
+        service.getProfileInfo(successCallBackListener, errorListener, null);
+    }
+
+    public void handleGetProfileInfoSuccessResponse(JSONObject response) {
+        try
+        {
+            JSONObject myProfile = response.getJSONObject("personal_info");
+            String state;
+            if (MdliveUtils.checkIsEmpty(myProfile.getString("state"))) {
+                //We set FL in case of blank
+                state = getActivity().getString(R.string.mdl_fl);
+            } else {
+                state = myProfile.getString("state");
+            }
+            setDefaultState(state);
+
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setDefaultState(String state)
+    {
+        if (getActivity() != null) {
+            SharedPreferences sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getActivity().getString(R.string.mdl_user_profile_state), state);
+            editor.commit();
+        }
     }
 
     @Override

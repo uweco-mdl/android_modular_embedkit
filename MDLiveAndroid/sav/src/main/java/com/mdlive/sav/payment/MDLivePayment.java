@@ -904,7 +904,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
         insuranceMap.put("timeslot", "Now");
         insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
         insuranceMap.put("promocode", promoCode);
-        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         Log.e("insurance Map",insuranceMap.toString());
         return new Gson().toJson(insuranceMap);
     }
@@ -998,6 +998,5 @@ public class MDLivePayment extends MDLiveBaseActivity {
         super.onActivityResult(requestCode, resultCode, intent);
 
     }
-
 
 }

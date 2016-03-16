@@ -1305,6 +1305,7 @@ public class MdliveUtils {
         }
         return formatText;
     }
+
     public static boolean checkIsEmpty(String text){
 
         return (text.equalsIgnoreCase("null")) || (text == null) || (TextUtils.isEmpty(text)) || (text.trim().length()) == 0;
@@ -1381,4 +1382,14 @@ public class MdliveUtils {
 
         alertDialog.show();
     }
+
+    /**
+     * This method will fetch the default state of the user which is set in his/her profile
+     */
+    public static String getProfileStateOfUser(Context ctx)
+    {
+        SharedPreferences sharedPref = ctx.getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+        return sharedPref.getString(ctx.getString(R.string.mdl_user_profile_state),ctx.getString(R.string.mdl_fl));
+    }
+
 }

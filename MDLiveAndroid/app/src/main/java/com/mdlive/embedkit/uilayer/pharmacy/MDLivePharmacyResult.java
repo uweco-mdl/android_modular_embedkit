@@ -663,7 +663,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      * PharmacyService-Class will send the request to the server and get the responses
      *doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
      */
-
     public void checkInsuranceEligibility(){
         showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
@@ -722,9 +721,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     }
 
 
-    // This is For navigating to the next Screen
-    //if the amount has been deducted then it should go to the Confirm Appointment Screen
-
+    /**
+     * This is For navigating to the next Screen
+     * if the amount has been deducted then it should go to the Confirm Appointment Screen
+     */
     private void moveToNextPage() {
         CheckdoconfirmAppointment(true);
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
@@ -758,10 +758,10 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         editor.commit();
     }
 
-    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
+    public void CheckdoconfirmAppointment(boolean checkExistingCard) {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExixtingCard);
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExistingCard);
         editor.commit();
     }
 
@@ -775,15 +775,14 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         insuranceMap.put("appointment_method","1");
         insuranceMap.put("provider_id", settings.getString(PreferenceConstants.PROVIDER_DOCTORID_PREFERENCES, null));
         insuranceMap.put("timeslot","Now");
-        insuranceMap.put("provider_type_id",settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
-        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, "FL"));
+        insuranceMap.put("provider_type_id", settings.getString(PreferenceConstants.PROVIDERTYPE_ID, ""));
+        insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         return new Gson().toJson(insuranceMap);
     }
 
     /**
      * This method will close the activity with transition effect.
      */
-
     @Override
     public void onBackPressed() {
         if(getIntent().hasExtra("FROM_MY_HEALTH") && getIntent().hasExtra("PHARMACY_SELECTED") &&
