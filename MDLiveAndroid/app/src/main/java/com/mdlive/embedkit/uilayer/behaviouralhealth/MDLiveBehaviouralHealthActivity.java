@@ -12,7 +12,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.CustomDatePickerDialog;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.TimeZoneUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
@@ -27,7 +27,7 @@ public class MDLiveBehaviouralHealthActivity extends MedicalHistoryPluginActivit
         setContentView(R.layout.mdlive_behavioural_history_layout);
         clearMinimizedTime();
 
-        locationService = new LocationCooridnates(getApplicationContext());
+        locationService = new LocationCoordinates(getApplicationContext());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
         if(getIntent() != null && getIntent().hasExtra("from_sav")){

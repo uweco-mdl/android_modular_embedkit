@@ -45,7 +45,7 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myaccounts.AddFamilyMemberActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IdConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -110,7 +110,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     //Location Services
 
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
     private IntentFilter intentFilter;
     private String shortNameText;
 
@@ -121,7 +121,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         clearMinimizedTime();
         clearCacheInVolley();
         this.setTitle(getString(R.string.mdl_getstarted));
-        locationService = new LocationCooridnates(MDLiveGetStarted.this);
+        locationService = new LocationCoordinates(MDLiveGetStarted.this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
@@ -181,6 +181,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 showSettingsAlert();
             }
         });
+
+        // First we need to check availability of play services
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+        }
     }
 
 
@@ -194,7 +200,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * be navigated to the MDLiveChooseProvider Screen.
      *
      */
-
     public void onTickClicked(View v){
         saveDateOfBirth();
         try{
@@ -979,9 +984,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 //        phonrNmberEditTxt.setSelection(phonrNmberEditTxt.getText().length());
 //        mayIallowtoParse = true;
 
-
-
-
         try {
             String formattedString = MdliveUtils.phoneNumberFormat(Long.parseLong(formatText));
             phonrNmberEditTxt = (EditText) findViewById(R.id.telephoneTxt);
@@ -1030,7 +1032,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *  corresponding provider type will be changed to the selected dependents.
      *
      */
-
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
             providerTypeArrayList.clear();
@@ -1101,7 +1102,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *  The state id is needed because it is passes to the other activity.
      *
      */
-
     private void handleDependentSuccessResponse(JSONObject response) {
         try {
             remainingFamilyMemberCount = 0;
@@ -1303,6 +1303,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         //
 
     }
+
     /**
      * The date Of Birth text will be saved in the preferences
      * The location will also be saved to the preferences.
@@ -1369,27 +1370,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             ((NotificationFragment) fragment).setNotification(userBasicInfo);
         }
     }
-
-
-    //Location Fetched class
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            hideProgress();
-            unregisterReceiver(locationReceiver);
-            locationService.setBroadCastData(StringConstants.DEFAULT);
-            if (locationService != null && locationService.isTrackingLocation()) {
-                locationService.stopListners();
-            }
-            HideKeyboard();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void getCurrentLocation() {
         showProgress();
@@ -1460,27 +1440,44 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         currentlocationservices.getCurrentLocation(latitude, longitude, responseListener, errorListener);
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        try{
+            hideProgress();
+            unregisterReceiver(locationReceiver);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            if(locationService != null && locationService.isTrackingLocation()) {
+                locationService.stopListners();
+            }
+            HideKeyboard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         try {
-            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-                findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
-            } else {
-                findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);
-            }
+            MdliveUtils.checkPlayServices(this);
+            registerReceiver(locationReceiver, intentFilter);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     /**
      * Successful Response Handler for getting Current Location
      */
-
-
     private void CurrentLocationResponse(JSONObject response) {
         try {
             hideProgress();

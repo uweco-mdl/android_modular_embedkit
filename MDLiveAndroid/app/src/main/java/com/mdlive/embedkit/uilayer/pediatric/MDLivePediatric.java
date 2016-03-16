@@ -35,7 +35,7 @@ import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.embedkit.uilayer.myhealth.MDLiveMedicalHistory;
 import com.mdlive.unifiedmiddleware.commonclasses.application.AppSpecificConfig;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -141,7 +141,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             e.printStackTrace();
         }
 
-        locationService = new LocationCooridnates(getApplicationContext());
+        locationService = new LocationCoordinates(getApplicationContext());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 

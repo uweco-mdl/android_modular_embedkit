@@ -15,7 +15,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -42,7 +42,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
      */
 
 
-    public LocationCooridnates locationService;
+    public LocationCoordinates locationService;
     public LatLng currentLocation;
     public IntentFilter intentFilter;
 

@@ -4,11 +4,14 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mdlive.embedkit.R;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -26,10 +29,17 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
 
     public View progressBarLayout;
     private ProgressDialog mProgressDialog=null;
+    public GoogleApiClient mGoogleApiClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_color));
+        }
 
         mProgressDialog = MdliveUtils.getFullScreenProgressDialog(this);
     }

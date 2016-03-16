@@ -32,7 +32,7 @@ import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -62,7 +62,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     private GoogleMap map;
     private Bundle bundletoSend = new Bundle();
     private IntentFilter intentFilter;
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +86,14 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_right_arrow_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_my_pharm_txt).toUpperCase());
 
-
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
-        locationService = new LocationCooridnates(getApplicationContext());
+        locationService = new LocationCoordinates(this);
+        // First we need to check availability of play services
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+        }
 
         //This function is for initialize views in layout
         initializeViews();
@@ -636,6 +640,14 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
         }
     }
 

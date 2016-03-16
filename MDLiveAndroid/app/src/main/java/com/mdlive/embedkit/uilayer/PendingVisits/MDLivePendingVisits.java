@@ -2,6 +2,7 @@ package com.mdlive.embedkit.uilayer.PendingVisits;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -23,7 +25,8 @@ import org.json.JSONObject;
 
 public class MDLivePendingVisits extends MDLiveBaseActivity {
     private TextView txtPatientName, txtAddress;
-
+    private LocationCoordinates locationService;
+    private IntentFilter intentFilter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
 
 
     /**
-     * This function will deals with all necessary UI Initialization.
+     * This function performs all necessary UI Initializations.
      */
     public void initializeUI() {
         Button resumeBtn = (Button) findViewById(R.id.resumeConsultationBtn);
@@ -45,6 +48,8 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
         TextView txtDoctorName = (TextView) findViewById(R.id.txtPendingDoctorName);
         TextView txtReason = (TextView) findViewById(R.id.txtPendingReason);
         txtAddress = (TextView) findViewById(R.id.txtPharmacyAddress);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(getClass().getSimpleName());
         setProgressBar(findViewById(R.id.progressDialog));
         resumeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +71,13 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
                 }
             }
         });
+
+        locationService = new LocationCoordinates(this);
+        // First we need to check availability of play services
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+         }
 
         Bundle extras = getIntent().getExtras();
         txtDoctorName.setText(extras.getString("DocName", ""));
@@ -129,7 +141,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
 
 
     /**
-     * This methos will be called when user clicks on the cancel text in the UI
+     * This method will be called when user clicks on the Cancel text in the UI
      *
      * @param v-User clicked view from the screen
      */
@@ -139,7 +151,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
 
 
     /**
-     * This method will close the activity with transition effect.
+     * This method will close the activity with a transition effect.
      */
 
     @Override
@@ -148,5 +160,106 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(this);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /**
+     * This override function will be called on every time with this page loading.
+     * <p/>
+     * if any progressBar loading on screen anonymously on this callPharmacyServicewill stop it.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            MdliveUtils.checkPlayServices(this);
+            //registerReceiver(locationReceiver, intentFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            //unregisterReceiver(locationReceiver);
+            //locationService.setBroadCastData(StringConstants.DEFAULT);
+            if(locationService != null && locationService.isTrackingLocation()){
+                locationService.stopListners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgress();
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    handleMilesResponse(response);
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgress();
+                    MdliveUtils.handelVolleyErrorResponse(MDLivePendingVisits.this, error, null);
+                }
+            };
+            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                showProgress();
+                PharmacyService services = new PharmacyService(MDLivePendingVisits.this, null);
+                services.doMyPharmacyRequest(lat+"", lon+"",responseListener, errorListener);
+            }
+        }
+    };
+    public void handleMilesResponse(JSONObject response){
+        hideProgress();
+        try{
+            JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
+            ((TextView) findViewById(R.id.text_view_a)).setText(pharmacyDatas.getString("store_name"));
+            ((TextView) findViewById(R.id.text_view_b)).setText(((pharmacyDatas.getString("distance") != null && !pharmacyDatas.getString("distance").isEmpty()) ?
+                    pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
+            ((TextView) findViewById(R.id.txtAddressLine2)).setText(pharmacyDatas.getString("address1"));
+            ((TextView) findViewById(R.id.txtAddressLine3)).setText(pharmacyDatas.getString("city") + "," + pharmacyDatas.getString("state") + " " +
+                    MdliveUtils.zipCodeFormat(pharmacyDatas.getString("zipcode")) + " ");
+            setMaxWidthForLeftText(findViewById(R.id.relative_layout),
+                    (TextView) findViewById(R.id.text_view_a),
+                    (TextView) findViewById(R.id.text_view_b)
+            );
+        }catch (Exception e){
+        }
+    }
+    */
+
+    /**
+     *  This method is used to call pharmacy service
+     *  In pharmacy service, it requires GPS location details to get distance details.
+     *
+     *  @param errorListener - Pharmacy error response listener
+     *  @param responseListener - Pharmacy detail Success response listener
+     */
+    public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
+                                    final NetworkErrorListener errorListener){
+        if(locationService.checkLocationServiceSettingsEnabled(this)){
+            showProgress();
+            locationService.setBroadCastData(getClass().getSimpleName());
+            locationService.startTrackingLocation(getApplicationContext());
+        }else{
+            hideProgress();
+        }
+    }
 
 }

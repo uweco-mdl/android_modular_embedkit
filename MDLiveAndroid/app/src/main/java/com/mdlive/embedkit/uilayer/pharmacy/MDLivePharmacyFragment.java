@@ -28,7 +28,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+//import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -52,7 +53,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private IntentFilter intentFilter;
     private static View view;
     private Activity parentActivity;
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
     private boolean isVisibleToUser = false;
     private boolean isLoading = false;
     public static MDLivePharmacyFragment newInstance() {
@@ -104,7 +105,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        locationService = new LocationCooridnates(getActivity());
+        locationService = new LocationCoordinates(getActivity());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
         initializeMapView();

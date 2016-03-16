@@ -33,7 +33,7 @@ import com.mdlive.embedkit.uilayer.pediatric.MDLivePediatric;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyResult;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -75,7 +75,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private boolean  isNewUser = false;
     private RadioGroup PediatricAgeCheckGroup_1, PediatricAgeCheckGroup_2, PreExisitingGroup,
             MedicationsGroup, AllergiesGroup, ProceduresGroup, primaryCareGroup;
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
     private LatLng currentLocation;
     private IntentFilter intentFilter;
 
@@ -116,7 +116,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         AllergiesGroup = ((RadioGroup) findViewById(R.id.allergiesGroup));
         //error
         ProceduresGroup = ((RadioGroup) findViewById(R.id.proceduresGroup));
-        locationService = new LocationCooridnates(getApplicationContext());
+        locationService = new LocationCoordinates(this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
@@ -130,6 +130,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     beginTransaction().
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
+        }
+        // First we need to check availability of play services
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
         }
 
         initializeYesNoButtonActions();
@@ -389,34 +394,44 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
     }
 
+    /**
+     * This override function will be called on every time with this page loading.
+     * <p/>
+     * if any progressBar loading on screen anonymously on this will stop it.
+     */
     @Override
     public void onResume() {
+        super.onResume();
         try {
-            ValidateModuleFields();
-            locationService.setBroadCastData(StringConstants.DEFAULT);
+            MdliveUtils.checkPlayServices(this);
             registerReceiver(locationReceiver, intentFilter);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.onResume();
     }
 
 
-
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         try {
-            locationService.setBroadCastData(StringConstants.DEFAULT);
+            unregisterReceiver(locationReceiver);
+            //locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
                 locationService.stopListners();
             }
-            unregisterReceiver(locationReceiver);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
 
     /**
      * Checks user medical history aggregation details.
@@ -424,7 +439,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered.
      */
-
     private void checkMedicalDateHistory() {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -482,7 +496,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered.
      */
-
     private void checkMedicalAggregation() {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -519,7 +532,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     /**
      * Applying validation on form and enable/disable continue button for further steps over.
      */
-
     public void ValidateModuleFields() {
         boolean isAllFieldsfilled = true;
         if (hasFemaleAttribute) {
@@ -1104,10 +1116,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
 
 
 
-    /* This function handles webservice response and parsing the contents.
-    *  Once parsing operation done, then it will update UI
-    *  bundletoSend is stand for to send bundle of datas received from webservice to next page.
-    */
+    /**
+     *  This function handles webservice response and parsing the contents.
+     *  Once parsing operation done, then it will update UI
+     *  bundletoSend is stand for to send bundle of datas received from webservice to next page.
+     */
     Bundle bundletoSend = new Bundle();
     String jsonResponse;
 
@@ -1151,7 +1164,6 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      * OnClickAction for Location Button Action. This will get the current location. If the current
      * location is received, starts teh MDLivePharmacyResult activity.
      *
-     *
      */
     private void getLocationBtnOnClickAction() {
         if(currentLocation != null && currentLocation.latitude != 0 && currentLocation.longitude != 0){
@@ -1173,14 +1185,10 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     /**
      * This method will close the activity with transition effect.
      */
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(MDLiveMedicalHistory.this);
     }
-    /**
-     * This method will stop the service call if activity is closed during service call.
-     */
 
 }

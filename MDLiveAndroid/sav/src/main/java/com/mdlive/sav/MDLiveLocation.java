@@ -34,7 +34,7 @@ import com.google.gson.JsonParser;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.sav.R;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
@@ -66,7 +66,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     private List<String> ShortNameList = new ArrayList<String>();
     private String selectedCity,longNameText,shortNameText;
     boolean isCityFound=false;
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
     private IntentFilter intentFilter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }
         });
 
-        locationService = new LocationCooridnates(getApplicationContext());
+        locationService = new LocationCoordinates(getApplicationContext());
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
@@ -179,6 +179,13 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                     add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
                     commit();
         }
+
+        locationService = new LocationCoordinates(this);
+        // First we need to check availability of play services
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+        }
     }
 
     public void leftBtnOnClick(View v){
@@ -210,6 +217,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     public void onResume() {
         super.onResume();
         try {
+            MdliveUtils.checkPlayServices(this);
             registerReceiver(locationReceiver, intentFilter);
             locationService.setBroadCastData(StringConstants.DEFAULT);
         } catch (Exception e) {
@@ -475,7 +483,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         View convertView = inflater.inflate(R.layout.mdlive_screen_popup, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.popupListview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lv.setCacheColorHint(Color.TRANSPARENT);
@@ -488,7 +496,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 shortNameText = ShortNameList.get(position);
                 longNameText = LongNameList.get(position);
                 SelectedText.setText(longNameText);
-                SelectedText.setContentDescription(getString(R.string.mdl_ada_dropdown)+longNameText);
+                SelectedText.setContentDescription(getString(R.string.mdl_ada_dropdown) + longNameText);
                 selectedCity = shortNameText;
                 dialog.dismiss();
             }
@@ -498,7 +506,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
     /**
      * This method will close the activity with transition effect.
      */
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

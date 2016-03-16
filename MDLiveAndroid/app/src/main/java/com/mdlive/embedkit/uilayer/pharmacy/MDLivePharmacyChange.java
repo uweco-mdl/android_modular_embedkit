@@ -33,7 +33,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.ApplicationController;
-import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCooridnates;
+import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -54,7 +54,6 @@ import java.util.List;
  * The layout will have the details about option for searching pharmacy details.
  * Once user chooses options from search, it will navigate to MDLBTPharmacy_ResultTab page.
  */
-
 public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
     private AutoCompleteTextView pharmacy_search_name;
@@ -64,7 +63,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     private AlertDialog stateDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> suggestionList = new ArrayList<String>();
-    private LocationCooridnates locationService;
+    private LocationCoordinates locationService;
     private List<String> stateIds = new ArrayList<String>();
     private List<String> stateList = new ArrayList<String>();
     private Intent sendingIntent;
@@ -100,6 +99,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
+
         //initialize views of activity
         initializeViews();
         if (savedInstanceState == null) {
@@ -207,13 +207,19 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
                 }
             }
         });
-        locationService = new LocationCooridnates(getApplicationContext());
+
+        locationService = new LocationCoordinates(this);
+        if (MdliveUtils.checkPlayServices(this)) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         try {
+            MdliveUtils.checkPlayServices(this);
             locationService.setBroadCastData(StringConstants.DEFAULT);
             registerReceiver(locationReceiver, intentFilter);
         } catch (Exception e) {
@@ -599,4 +605,13 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
     public void onStop() {
         super.onStop();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
 }
