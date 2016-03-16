@@ -3,7 +3,9 @@ package com.mdlive.symptomchecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 //import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 
@@ -65,6 +67,30 @@ public class WebAppInterface
             // cannot start SAV without a context obj, so just exit
             //
         }
+    }
+
+    /**
+     * Opens a new browser instance to the specified URL.
+     * This method is designed to be invoked from a webview.
+     */
+    @JavascriptInterface
+    public static void openBrowser(String url)
+    {
+        Activity ctx = parentContext.get();
+        if(ctx == null)
+            return; // abort
+
+        Uri uriUrl;
+        try {
+            uriUrl = Uri.parse(url);
+        }catch(Exception ex)
+        {
+            Toast.makeText(ctx, ctx.getString(R.string.mdl_bad_url),Toast.LENGTH_SHORT).show();
+            return; // abort
+        }
+
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        ctx.startActivity(launchBrowser);
     }
 
     /*
