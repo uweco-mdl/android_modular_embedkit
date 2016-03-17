@@ -1630,4 +1630,6 @@
 
     <string name="mdl_permission_call_available">Phone Call permission granted.</string>
     <string name="mdl_permission_call_not_available">Phone Call permission Not granted.</string>
+
+    <string name="mdl_select_sec">Select security question</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.mdlive.myaccounts;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -13,7 +14,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -308,38 +312,88 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Select security question");
+//        builder.setTitle("Select security question");
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.security_questions_dialog_layout,null);
+        builder.setView(view);
+        TextView textView1 = (TextView) view.findViewById(R.id.header_txt);
+        textView1.setText(getString(R.string.mdl_select_sec));
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.questions_layout);
+        if(linearLayout!=null)
+            linearLayout.removeAllViews();
 //        final String[] stringArray = mQuestions.toArray(new String[mQuestions.size()]);
-       final ArrayList<String> stringArray =new ArrayList<String>();
+        final ArrayList<String> stringArray =new ArrayList<>();
 //        final String[] stringArray =new String[mQuestions.size()];
         int j=0;
+        final AlertDialog alertDialog = builder.create();
         for(int i=0;i<mQuestions.size();i++)
         {
-            if(textView == mSecurityQuestion1) {
-                if (!mSecurityQuestion2.getText().toString().equals(mQuestions.get(i))) {
-                    stringArray.add(mQuestions.get(i));
-                    j++;
-                }
+            View view1 =  LayoutInflater.from(getActivity()).inflate(R.layout.radio_btn_layout,null);
+            final RadioButton radioButton = (RadioButton) view1.findViewById(R.id.radioButton);
+            radioButton.setText(mQuestions.get(i));
+
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+
+                            new int[]{-android.R.attr.state_checked},   //disabled
+                            new int[]{android.R.attr.state_checked}     //enabled
+                    },
+                    new int[] {
+
+                            getActivity().getResources().getColor(R.color.black)                //disabled
+                            ,getActivity().getResources().getColor(R.color.green_background)    //enabled
+
+                    }
+            );
+
+            radioButton.setButtonTintList(colorStateList);
+            radioButton.invalidate();
+
+            if (textView.getText().equals(mQuestions.get(i)))
+            {
+                radioButton.setChecked(true);
+
             }
 
-            if(textView == mSecurityQuestion2) {
-                if (!mSecurityQuestion1.getText().toString().equals(mQuestions.get(i))) {
-                    stringArray.add(mQuestions.get(i));
-                    j++;
+            linearLayout.addView(view1);
+//            if(textView == mSecurityQuestion1) {
+//                if (!mSecurityQuestion2.getText().toString().equals(mQuestions.get(i))) {
+//                    stringArray.add(mQuestions.get(i));
+//                    j++;
+//                }
+//            }
+//
+//            if(textView == mSecurityQuestion2) {
+//                if (!mSecurityQuestion1.getText().toString().equals(mQuestions.get(i))) {
+//                    stringArray.add(mQuestions.get(i));
+//                    j++;
+//                }
+//            }
+
+            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        textView.setText(radioButton.getText().toString());
+                        answerLayout.setVisibility(View.VISIBLE);
+                        if (alertDialog != null)
+                            alertDialog.cancel();
+                    }
                 }
-            }
+            });
         }
 
-        builder.setItems(stringArray.toArray(new String[stringArray.size()]), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+//builder.
 
-                textView.setText(stringArray.get(i));
-                answerLayout.setVisibility(View.VISIBLE);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
+//        builder.setItems(stringArray.toArray(new String[stringArray.size()]), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                textView.setText(stringArray.get(i));
+//                answerLayout.setVisibility(View.VISIBLE);
+//                dialogInterface.dismiss();
+//            }
+//        });
+
+        alertDialog.show();
     }
 
     public void uploadSecurityQuestions()

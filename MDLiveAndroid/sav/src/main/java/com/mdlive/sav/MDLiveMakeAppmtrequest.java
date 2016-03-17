@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -319,7 +320,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         reasonList  = new ArrayList<>();
         ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 
-
+        appointmentReason.setImeOptions(EditorInfo.IME_ACTION_NEXT);    // make sure the Soft Keyboard 'Next' button works for this field
     }
     public void onclickVideo(View v)
     {
