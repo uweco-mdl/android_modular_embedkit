@@ -1389,7 +1389,7 @@ public class MdliveUtils {
     public static String getProfileStateOfUser(Context ctx)
     {
         SharedPreferences sharedPref = ctx.getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
-        return sharedPref.getString(ctx.getString(R.string.mdl_user_profile_state),ctx.getString(R.string.mdl_fl));
+        return sharedPref.getString(ctx.getString(R.string.mdl_user_address_state),ctx.getString(R.string.mdl_fl));
     }
 
 }

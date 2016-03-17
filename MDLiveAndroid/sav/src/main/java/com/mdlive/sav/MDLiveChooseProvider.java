@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
@@ -43,6 +44,7 @@ import com.mdlive.unifiedmiddleware.plugins.NetworkSuccessListener;
 import com.mdlive.unifiedmiddleware.services.provider.ChooseProviderServices;
 import com.mdlive.unifiedmiddleware.services.provider.FilterSearchServices;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -128,7 +130,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
        /* ((ImageView) findViewById(R.id.txtApply)).setVisibility(View.GONE);*/
-        ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
+        if(isCignaCoachUser)
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_chat_with_coach));
+        else
+            ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_choose_provider));
 
         Initialization();
         ChooseProviderResponseList();
@@ -177,9 +182,8 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * the click event for the back button and the home button was done here.
      * On clicking the back button image will be finishing the current Activity
      * and on clicking the Home button you will be navigated to the SSo Screen with
-     * an alert.     *
-     * **/
-
+     * an alert.
+     */
     private void Initialization() {
         elevateCircularImage((CircularNetworkImageView) findViewById(R.id.ProfileImg));
 
@@ -195,14 +199,14 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isDoctorOnCall=mDoctorOnCall;
-                isDoctorOnVideo=mDoctorOnVideo;
-                Intent seeFirstAvailableDocIntent=new Intent(MDLiveChooseProvider.this,MDLiveDoctorOnCall.class);
+                isDoctorOnCall = mDoctorOnCall;
+                isDoctorOnVideo = mDoctorOnVideo;
+                Intent seeFirstAvailableDocIntent = new Intent(MDLiveChooseProvider.this, MDLiveDoctorOnCall.class);
                 startActivity(seeFirstAvailableDocIntent);
             }
         });
-
     }
+
     /**
      * This function is invoked when the doctor on call returns true from the service.
      * if the list returns the providers in that case the filter will be added.if there
@@ -219,6 +223,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }
         });
     }
+
     /**
      *
      * Choose Provider List Details.
@@ -630,6 +635,18 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         if(resultCode==1){
             String response=data.getStringExtra("Response");
             postParams = data.getStringExtra("postParams");
+            String state = null;
+            try
+            {
+                JSONObject jsonObject = new JSONObject(postParams);
+                state =  jsonObject.getString("located_in");
+            }
+            catch(JSONException exception)
+            {
+                Log.d("jits","Problem parsing the JSON"+exception);
+                state = null;
+            }
+            setChangedState(state);
             try{
                 // Clear the ListView
                 fromGetSartedPage = false;
@@ -644,15 +661,24 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         }
     }
 
+    public void setChangedState(String state)
+    {
+        SharedPreferences sharedPref = getSharedPreferences("ADDRESS_CHANGE", this.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.mdl_user_profile_state), state);
+        editor.commit();
+    }
+
     /*
-    * set visible for the progress bar
-    */
+     * Set visibility for the progress bar
+     */
     public void setProgressBarVisibility()
     {
         //progressBar.setVisibility(View.VISIBLE);
         showProgress();
         loadingTxt.setVisibility(View.GONE);
     }
+
     /*
     * set visible for the details view layout
     */
@@ -662,6 +688,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         hideProgress();
         loadingTxt.setVisibility(View.GONE);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

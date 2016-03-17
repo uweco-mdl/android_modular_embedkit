@@ -315,7 +315,19 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("customer_call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
 
             params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+
+            String changedState = getSelectedStateOfUser();
+            if(changedState!=null)
+            {
+                Log.d("jits","stae passed in if WS is-->>"+changedState);
+                params.put("state_id", changedState);
+            }
+            else
+            {
+                Log.d("jits","state passed in else WS is-->>"+settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+                params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+            }
+
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
             Gson gson = new GsonBuilder().serializeNulls().create();
@@ -324,6 +336,15 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This method will fetch the default state of the user which was changed from the Refine Search screen
+     */
+    private String getSelectedStateOfUser()
+    {
+        SharedPreferences sharedPref = this.getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
+        return sharedPref.getString(getString(R.string.mdl_user_profile_state),null);
     }
 
     public void leftBtnOnClick(View v) {

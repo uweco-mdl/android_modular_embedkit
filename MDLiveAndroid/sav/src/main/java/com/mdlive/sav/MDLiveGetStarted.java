@@ -112,7 +112,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private LocationCoordinates locationService;
     private IntentFilter intentFilter;
-    private String shortNameText;
+    private String shortNameText, selectedCity, locationServiceText;
+    private boolean isLocationFetched;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         locationService = new LocationCoordinates(MDLiveGetStarted.this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
+        isLocationFetched=false;
 
         try {
             setDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
@@ -153,7 +155,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 editor.commit();
                 loadDependentUserInformationDetails(user.mId);
                 loadDependentProviderTypeDetails(user.mId);
-                Log.v("Mid", user.mId);
+                Log.d("Mid", user.mId);
             } else {
                 loadProviderType();
             }
@@ -252,10 +254,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                                 editor.putString(PreferenceConstants.DEPENDENT_USER_ID, null);
                             }
                             editor.commit();
-                            Log.v("phne num lenght-->",phonrNmberEditTxt.getText().toString()+"Length-->"+phonrNmberEditTxt.getText().toString().length());
+                            Log.d("phne num length-->",phonrNmberEditTxt.getText().toString()+"Length-->"+phonrNmberEditTxt.getText().toString().length());
                             if (phonrNmberEditTxt.getText() != null && phonrNmberEditTxt.getText().toString().length() == IntegerConstants.PHONENUMBER_LENGTH) {
                                 String phoneNumberText = phonrNmberEditTxt.getText().toString();
-                                Log.v("phne num lenght-->",phoneNumberText+"Length-->"+phoneNumberText.length());
+                                Log.d("phne num length-->",phoneNumberText+"Length-->"+phoneNumberText.length());
                                 //phoneNumberText = MdliveUtils.getSpecialCaseRemovedNumber(phoneNumberText);
                                 editor.putString(PreferenceConstants.PHONE_NUMBER, phoneNumberText);
                                 editor.putString(PreferenceConstants.PROVIDERTYPE_ID, strProviderId);
@@ -280,6 +282,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             e.printStackTrace();
         }
     }
+
     /**
      *
      * The initialization of the views was done here.All the labels was defined here and
@@ -288,8 +291,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * and on clicking the Home button you will be navigated to the SSo Screen with
      * an alert.
      *
-     * **/
-
+     */
     private void HideKeyboard(){
         // Check if no view has focus:
         View view = this.getCurrentFocus();
@@ -298,6 +300,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
     private void initialiseData() {
         locationTxt= (TextView) findViewById(R.id.locationTxt);
         patientSpinner=(Spinner)findViewById(R.id.patientSpinner);
@@ -305,6 +308,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         providerTypeIdList = new ArrayList<String>();
         setProgressBar(findViewById(R.id.progressDialog));
     }
+
     /**
      *
      * The Click event for the Current location was done here and on clicking the location
@@ -315,8 +319,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * will be displayed in the Patient Information screen.
      *
      */
-
-
     public void goToLocation(View v) {
         if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
             findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
@@ -330,15 +332,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         String longLocation = settings.getString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, getString(R.string.mdl_florida));
 
-        Log.v("Long Location Nmae-->", longLocation);
+        Log.d("Long Location Name-->", longLocation);
         SavedLocation = settings.getString(PreferenceConstants.ZIPCODE_PREFERENCES, getString(R.string.mdl_fl));
 
         if (longLocation != null && longLocation.length() != IntegerConstants.NUMBER_ZERO){
             locationTxt.setText(longLocation);
         }
-
-
-
 
     }
 
@@ -392,7 +391,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * setSpinnerValues method.Similarly the gender arraylist will also be defined.
      *
      */
-
     private void setSpinnerValues(final ArrayList<String> list, final Spinner spinner) {
         Log.v("List of Spinner value ", list.toString());
         dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,list);
@@ -580,9 +578,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onResponse(Object response) {
                 hideProgress();
                 handlePendingResponse(response.toString());
+                if(!isLocationFetched){
+                    getCurrentLocation();
+                }
             }
         };
-        NetworkErrorListener errorListner=new NetworkErrorListener() {
+        NetworkErrorListener errorListener=new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
@@ -601,7 +602,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         };
 
         MDLivePendingVisitService getApponitmentsService=new MDLivePendingVisitService(MDLiveGetStarted.this,getProgressDialog());
-        getApponitmentsService.getUserPendingHistory(successListener,errorListner);
+        getApponitmentsService.getUserPendingHistory(successListener, errorListener);
     }
 
 
@@ -656,6 +657,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onResponse(JSONObject response) {
                 hideProgress();
                 handleSuccessResponse(response);
+                if(!isLocationFetched){
+                    Log.e("Location ", "started");
+                    getCurrentLocation();
+                }
                 if(NavigationDrawerFragment.getInstance() != null){
                     NavigationDrawerFragment.getInstance().handleServiceResponseForParent(response);
                 }
@@ -718,13 +723,13 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
         ptypeservices.getSearchDetails(successCallBackListener, errorListener);
     }
+
     /**
      * Load Family Member Type Details.
      * Class : FamilyMembersList - Service class used to fetch the Family Member List information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
      */
-
     private void loadDependentUserInformationDetails(final String depenedentId) {
         showProgress();
         MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = true;
@@ -741,7 +746,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                     NavigationDrawerFragment.getInstance().handleServiceResponseForDependent(response);
                 }
                 createAndSaveUser(response, depenedentId);
-                getCurrentLocation();
+                if(!isLocationFetched){
+                    Log.e("Location ", "started");
+                    getCurrentLocation();
+                }
             }
         };
 
@@ -790,7 +798,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onResponse(JSONObject response) {
                 try {
 
-                    Log.v("ptype Response", response.toString());
+                    Log.d("ptype Response", response.toString());
                     hideProgress();
                     if (response.has("located_in")) {
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES,Context.MODE_PRIVATE);
@@ -1129,18 +1137,22 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                 }
             }
 
-            for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
-                if(personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
-                    SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
-                    editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
-                    editor.commit();
-                    locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
+            if(state!=null){
+                locationTxt.setText(state);
+            }else {
+                for (int i = 0; i < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); i++) {
+                    if (personalInfo.getString("state").equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))) {
+                        SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(PreferenceConstants.ZIPCODE_PREFERENCES, personalInfo.getString("state"));
+                        editor.putString(PreferenceConstants.LONGNAME_LOCATION_PREFERENCES, Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
+                        editor.commit();
+                        //locationTxt.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
+                    }
                 }
             }
 
-            locationTxt.setText(state);
+            // locationTxt.setText(state);
             JsonParser parser = new JsonParser();
             JsonObject responObj = (JsonObject)parser.parse(response.toString());
             SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -1373,10 +1385,12 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     public void getCurrentLocation() {
         showProgress();
+        isLocationFetched=true;
         try {
             registerReceiver(locationReceiver, intentFilter);
-            if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
-                locationService.setBroadCastData(getClass().getSimpleName());
+            if (locationService.checkLocationServiceSettingsEnabled(this)) {
+                //locationService.setBroadCastData(getClass().getSimpleName());
+                hideProgress();
                 locationService.startTrackingLocation(MDLiveGetStarted.this);
                 findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
             } else {
@@ -1446,7 +1460,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         try{
             hideProgress();
             unregisterReceiver(locationReceiver);
-            locationService.setBroadCastData(StringConstants.DEFAULT);
+            //locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()) {
                 locationService.stopListners();
             }
@@ -1482,7 +1496,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         try {
             hideProgress();
             //Fetch Data From the Services
-            String locationServiceText = "";
             if (response.has("state")) {
                 String selectedCity = response.getString("state");
                 for (int l = 0; l < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); l++) {

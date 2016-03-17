@@ -259,7 +259,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         if (getActivity() != null) {
             SharedPreferences sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(getActivity().getString(R.string.mdl_user_profile_state), state);
+            editor.putString(getActivity().getString(R.string.mdl_user_address_state), state);
             editor.commit();
         }
     }
