@@ -11,7 +11,7 @@ public class CustomDatePickerDialog extends DatePickerDialog
     private Context context;
 
     public CustomDatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
-        super(context, callBack, year, monthOfYear, dayOfMonth);
+        super(context, android.R.style.Theme_Holo_Light_Panel, callBack, year, monthOfYear, dayOfMonth);
         this.context = context;
     }
 

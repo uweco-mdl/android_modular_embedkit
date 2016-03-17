@@ -49,7 +49,19 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).to);
         viewHolder.mTextViewBottom.setText(getItem(position).subject);
-        viewHolder.mTextViewTime.setText(TimeZoneUtils.getReceivedSentTime(getItem(position).inMilliseconds, getItem(position).timeZone, getContext()));
+        //viewHolder.mTextViewTime.setText(TimeZoneUtils.getReceivedSentTime(getItem(position).inMilliseconds, getItem(position).timeZone, getContext()));
+
+        // solve the lagging issue in scrolling starts :
+        String time = getItem(position).date;
+        if (time.contains(" ")) {
+            String newTime = time.substring(0, time.indexOf(" "));
+            if (newTime.equalsIgnoreCase(TimeZoneUtils.getCurrentDate
+                    (time.substring(time.length()-4,time.length()-1)))) {
+                newTime = getItem(position).time.substring(0,getItem(position).time.indexOf(" "));
+            }
+            time = newTime;
+        }
+        viewHolder.mTextViewTime.setText(time);
 
         return convertView;
     }
