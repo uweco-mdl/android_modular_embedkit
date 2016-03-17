@@ -241,6 +241,13 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                     ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
                     ((TextView) findViewById(R.id.date)).setText("Date: " + consultationDate);
                 }
+
+                if(MDLiveChooseProvider.isDoctorOnCall) {
+                    SimpleDateFormat sdfTime = new SimpleDateFormat("h:mm a z");
+                    ((TextView) findViewById(R.id.time)).setText("Time: " + sdfTime.format(dateNow));
+                    ((TextView) findViewById(R.id.date)).setText("Date: " + sdfNow.format(dateNow));
+                }
+
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }

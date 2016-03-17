@@ -28,6 +28,7 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
     private ToggleButton mPassCode4 = null;
     private ToggleButton mPassCode5 = null;
     private ToggleButton mPassCode6 = null;
+    private TextView mHeaderText = null;
 
     private EditText mPassCode7 = null;
 
@@ -67,6 +68,9 @@ public class MyAccountNewPinFragment extends MDLiveBaseFragment implements TextW
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View changePin = inflater.inflate(R.layout.fragments_pin_change, null);
+        mHeaderText =(TextView)getActivity().findViewById(R.id.headerTxt);
+        mHeaderText.setAllCaps(true);
+        mHeaderText.setText(getString(R.string.mdl_create_a_pin));
 
         init(changePin);
 

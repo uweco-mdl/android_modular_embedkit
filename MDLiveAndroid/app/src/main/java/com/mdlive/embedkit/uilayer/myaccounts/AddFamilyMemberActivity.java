@@ -296,7 +296,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                     }
 
-                    if (mUsername.getText().length() > 6 && mUsername.getText().length() < 16) {
+                    if (mUsername.getText().toString().length() > 5 && mUsername.getText().toString().length() < 16) {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                     } else {
@@ -337,7 +337,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                 }
 
-                if (mUsername.getText().length() > 6 && mUsername.getText().length() < 16) {
+                if (mUsername.getText().toString().length() > 5 && mUsername.getText().length() < 16) {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                 } else {

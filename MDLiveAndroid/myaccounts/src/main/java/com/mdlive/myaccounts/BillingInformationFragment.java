@@ -170,23 +170,21 @@ public class  BillingInformationFragment extends MDLiveBaseFragment  {
                     mviewCreditCard.setVisibility(View.GONE);
                 } else {
                     if(mobile.equalsIgnoreCase("1")) {
-
-                      mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                        mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
                         creditCardLogo.setImageResource(R.drawable.visa);
-                    }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
-
+                    }else if(mobile.equalsIgnoreCase("2")) {
+                        mCreditCardDate.setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.master);
+                    }else if(mobile.equalsIgnoreCase("3")) {
                         mCreditCardDate.setText(getString(R.string.mdl_discover_card_details) + " " + myProfile.getString("cc_number"));
                         creditCardLogo.setImageResource(R.drawable.discover);
-                    }else if(myProfile.getString("cc_type_id").equalsIgnoreCase("3")) {
-
+                    }else if(mobile.equalsIgnoreCase("4")) {
                         mCreditCardDate.setText(getString(R.string.mdl_amex_card_details) + " " + myProfile.getString("cc_number"));
                         creditCardLogo.setImageResource(R.drawable.amex);
                     }
-
-                    else
-                    {
-                        mCreditCardDate.setText(getString(R.string.mdl_card_details) + " " + myProfile.getString("cc_number"));
-                        creditCardLogo.setImageResource(R.drawable.master);
+                    else {
+                        mCreditCardDate.setText(getString(R.string.mdl_visa_card_details) + " " + myProfile.getString("cc_number"));
+                        creditCardLogo.setImageResource(R.drawable.visa);
                     }
 
                     mCreditCardAddress.setText("Billing Address:" + "\n" + address1 + " " + address2 + "\n" +

@@ -120,7 +120,7 @@
 			// 1    Visa
 			// 2    MasterCard
 			// 3    Discover
-			// 5    AMEX
+			// 4    AMEX
 			// Using basic regex validation
 			var re = new RegExp("^4");
 			if (mappedCCValue.match(re) != null)
@@ -136,7 +136,7 @@
 
 			re = new RegExp("^(34|37)");
 			if (mappedCCValue.match(re) != null)
-				return 5; //Amex
+				return 4; //Amex
 			return 0;
 		};
 

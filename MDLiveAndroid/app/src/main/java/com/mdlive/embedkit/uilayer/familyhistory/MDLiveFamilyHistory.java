@@ -338,7 +338,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             // Set Spinner values & selection listener
             final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                    (getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
+                    (getBaseContext(), R.layout.family_row_layout, relationShpList);
             dataAdapter.setDropDownViewResource
                     (android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(dataAdapter);

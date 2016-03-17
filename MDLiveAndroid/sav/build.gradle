@@ -32,6 +32,11 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        // force 32-bit emulation for 64-bit devices, as VSee lib does not support 64-bit arch.
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
     buildTypes {
         release {

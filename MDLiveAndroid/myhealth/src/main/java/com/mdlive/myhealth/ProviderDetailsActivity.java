@@ -42,7 +42,7 @@ public class ProviderDetailsActivity extends MDLiveBaseAppcompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_provider));
+            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_provider).toUpperCase());
             ((ImageView) findViewById(R.id.left_icon)).setImageResource(R.drawable.back_arrow_hdpi);
             elevateToolbar(toolbar);
         }

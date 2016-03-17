@@ -272,9 +272,9 @@ public class MDLivePayment extends MDLiveBaseActivity {
         try {
             if (response != null) {
                 myProfile = response.getJSONObject("billing_information");
-                if (myProfile.optBoolean("allow_cc_scan",false)){
-                    mScanCardBtn.setVisibility(View.VISIBLE);
-                }
+//                if (myProfile.optBoolean("allow_cc_scan",false)){
+//                    mScanCardBtn.setVisibility(View.VISIBLE);
+//                }
                 if (myProfile.getString("cc_number").equals(null)||myProfile.getString("cc_number").equals("null")||myProfile.getString("cc_number").equals("")||myProfile.getString("cc_number").isEmpty()
                         ) {
                     findViewById(R.id.masterCardRl).setVisibility(View.GONE);
