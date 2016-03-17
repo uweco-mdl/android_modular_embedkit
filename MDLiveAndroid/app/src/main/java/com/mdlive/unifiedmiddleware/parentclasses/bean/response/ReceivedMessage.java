@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by dhiman_da on 6/24/2015.
  */
-public class ReceivedMessage implements Parcelable {
+public class ReceivedMessage extends AbstractSendReceiveMessage implements Parcelable {
     @Override
     public String toString() {
         return "ReceivedMessage{" +
@@ -28,8 +28,6 @@ public class ReceivedMessage implements Parcelable {
                 '}';
     }
 
-    @Expose
-    public String time;
     @SerializedName("read_status")
     @Expose
     public boolean readStatus;
@@ -56,8 +54,6 @@ public class ReceivedMessage implements Parcelable {
     @SerializedName("provider_id")
     @Expose
     public int providerId;
-    @Expose
-    public String date;
 
     @Override
     public int describeContents() {

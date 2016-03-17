@@ -224,8 +224,8 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 final CharSequence[] items = view.getContext().getResources().getStringArray(R.array.mdl_timezone);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Make your selection");
-                builder.setCancelable(false);
+                builder.setTitle(getString(R.string.mdl_make_selection));
+                //builder.setCancelable(false);
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mTimeZone.setText(items[item]);
