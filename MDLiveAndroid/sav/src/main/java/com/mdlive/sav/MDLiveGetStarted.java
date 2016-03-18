@@ -1381,8 +1381,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         try {
             registerReceiver(locationReceiver, intentFilter);
             if (locationService.checkLocationServiceSettingsEnabled(this)) {
-                //locationService.setBroadCastData(getClass().getSimpleName());
-                hideProgress();
+                locationService.setBroadCastData(getClass().getSimpleName());
                 locationService.startTrackingLocation(MDLiveGetStarted.this);
                 findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
             } else {
@@ -1452,7 +1451,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         try{
             hideProgress();
             unregisterReceiver(locationReceiver);
-            //locationService.setBroadCastData(StringConstants.DEFAULT);
+            locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()) {
                 locationService.stopListners();
             }

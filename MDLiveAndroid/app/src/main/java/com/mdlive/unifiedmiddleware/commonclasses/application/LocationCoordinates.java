@@ -76,15 +76,7 @@ public class LocationCoordinates {
 
     //Starting location listener and initializing result receiver.
     public boolean startTrackingLocation(Context context) {
-        isTrackingLocation = true;
-        if (gps_enabled && lm != null)
-            // @ToDo : use a generic permissions check handling method
-            //if(permissionsEnabled(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION))
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
-
-        trackingTimer = new Timer();
-        // timer will run until 20000 milli second for location updates.
-        trackingTimer.schedule(new GetLastLocation(), 20000);
+        getLocation();
         return true;
     }
 
@@ -121,45 +113,6 @@ public class LocationCoordinates {
         }
     }
 
-    class GetLastLocation extends TimerTask {
-        @Override
-        public void run() {
-            if(lm != null) {
-                lm.removeUpdates(locationListenerGps);
-            }
-            Location gps_loc = null;
-            if (gps_enabled) {
-                gps_loc = getLastKnownLocation();
-            }
-
-            if (gps_loc != null) {
-                //locationResult.gotLocation(gps_loc);
-                sendLocationInfo(gps_loc);
-                return;
-            }
-            sendLocationInfo(null);
-            //locationResult.gotLocation(null);
-        }
-    }
-
-    private Location getLastKnownLocation() {
-        if(lm != null){
-            List<String> providers = lm.getProviders(true);
-            Location bestLocation = null;
-            for (String provider : providers) {
-                Location l = lm.getLastKnownLocation(provider);
-                if (l == null) {
-                    continue;
-                }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                    // Found best last known location: %s", l);
-                    bestLocation = l;
-                }
-            }
-            return bestLocation;
-        }
-        return null;
-    }
 
     public void sendLocationInfo(Location location){
         isTrackingLocation = false;
@@ -183,7 +136,7 @@ public class LocationCoordinates {
     /**
      * Method to get the location from Google Location API
      * */
-    public void getLocation() {
+    private void getLocation() {
         try {
             Location mLastLocation = LocationServices.FusedLocationApi
                     .getLastLocation(((MDLiveBaseActivity)context).mGoogleApiClient);
