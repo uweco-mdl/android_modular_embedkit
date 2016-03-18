@@ -97,10 +97,10 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
 
     private int remainingFamilyMemberCount;
 
-    private ArrayList<HashMap<String, String>> PatientList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> PatientList = new ArrayList<>();
     public static ArrayList<String> providerTypeArrayList;
     public static ArrayList<String> providerTypeIdList;
-    private  ArrayList<String> dependentList = new ArrayList<String>();
+    private  ArrayList<String> dependentList = new ArrayList<>();
     private Spinner patientSpinner;
     private EditText phonrNmberEditTxt;
     private String dependentName=null;
@@ -114,6 +114,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     private IntentFilter intentFilter;
     private String shortNameText, selectedCity, locationServiceText;
     private boolean isLocationFetched;
+    public static String SAV_STATE_LOCATION = null; // 2-letter state selected by user in Refined Search
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         locationService = new LocationCoordinates(MDLiveGetStarted.this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
+        SAV_STATE_LOCATION = null;  // reset the temporary SAV location preference
         isLocationFetched=false;
 
         try {
@@ -460,8 +462,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     /***
      * SpinnerAdapter- Class is used to inflate custom text and inflate the custom view in spinner
      */
-
-
     public class SpinnerAdapter extends ArrayAdapter<String>{
         ArrayList<String> objects;
         public SpinnerAdapter(Context ctx, int txtViewResourceId, ArrayList<String> objects){
@@ -476,7 +476,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             TextView main_text = (TextView) mySpinner.findViewById(R.id.txtPatientName);
             main_text.setText(objects.get(position));
             return mySpinner;
-
 
         }
         @Override
@@ -493,10 +492,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             return  mySpinner;
         }
     }
-
-
-
-
 
 
     /**
@@ -517,7 +512,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * @param dependentName-User selected dependent name from spinner
      * @param position-User selected dependent item position,used to map user dependent id
      */
-
     private void loadDependentInformationDetails(String dependentName,int position) {
         try{
             if(position!=IntegerConstants.NUMBER_ZERO){
@@ -570,7 +564,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * is MDLiveChooseProvider. Incase if the response has some datas it will be
      * navigated to the PendingVisit Screen.
      */
-
     public void getPendingAppointments(){
         showProgress();
         NetworkSuccessListener successListener=new NetworkSuccessListener() {
@@ -680,6 +673,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
+
     /**
      *
      * Load loadProviderType Details.
@@ -789,7 +783,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
     }
 
 
-
     private void loadDependentProviderTypeDetails(String depenedentId) {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -835,7 +828,6 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *  exceed more than 10 digits.
      *
      */
-
     private void handleSuccessResponse(JSONObject response) {
         try {
             //Log.e("userinfo Res-->",response.toString());

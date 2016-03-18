@@ -32,6 +32,7 @@ import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
+import com.mdlive.sav.MDLiveGetStarted;
 import com.mdlive.sav.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.sav.MDLiveChooseProvider;
 import com.mdlive.sav.R;
@@ -316,17 +317,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
             params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
 
-            String changedState = getSelectedStateOfUser();
-            if(changedState!=null)
-            {
-                Log.d("jits","stae passed in if WS is-->>"+changedState);
-                params.put("state_id", changedState);
-            }
-            else
-            {
-                Log.d("jits","state passed in else WS is-->>"+settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+            if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
                 params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
-            }
+            else
+                params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
 
             SharedPreferences promocodePreferences = this.getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
@@ -336,15 +330,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * This method will fetch the default state of the user which was changed from the Refine Search screen
-     */
-    private String getSelectedStateOfUser()
-    {
-        SharedPreferences sharedPref = this.getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
-        return sharedPref.getString(getString(R.string.mdl_user_profile_state),null);
     }
 
     public void leftBtnOnClick(View v) {
@@ -361,9 +346,9 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     public void rightBtnOnClick(View v) {
         if (CheckdoconfirmAppmt) {
             if(MDLiveChooseProvider.isDoctorOnCall){
-                doOnCallConsultaion();
+                doOnCallConsultation();
             }else if(MDLiveChooseProvider.isDoctorOnVideo){
-                doOnVideoConsultaion();
+                doOnVideoConsultation();
             }else{
                 doConfirmAppointment();
             }
@@ -508,7 +493,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
      * On successful response it will return an appointment ID which will saved in shared Preference for future use.
      * On Error respose the corresponding message will be notified to the user.
      */
-    private void doOnVideoConsultaion() {
+    private void doOnVideoConsultation() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -586,7 +571,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+
+        if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
+            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+        else
+            params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
 
         onCallParams.put("user", params);
 
@@ -601,14 +590,14 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
      * This method will be called when doctor on call by Phone is available
      * On Success response it will be taken to the thank you screen.
      */
-    private void doOnCallConsultaion() {
+    private void doOnCallConsultation() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 dismissDialog();
                 try {
-                    Log.v("Response",response.toString());
+                    Log.d("Response",response.toString());
                     if(response.has("message")){
                         Intent thankYouIntent=new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
                         thankYouIntent.putExtra("activitycaller", "OnCall");
@@ -672,13 +661,17 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         SharedPreferences settings =   getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, HashMap<String, Object>> onCallParams=new HashMap<>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("consultation_method", "Phone");
         params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
-        params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+
+        if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
+            params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
+        else
+            params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
 
         onCallParams.put("user",params);
 
@@ -734,7 +727,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         .setPositiveButton(StringConstants.ALERT_CALLNOW, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.v("Phone Inside",errorPhoneNumber);
+                                Log.v("Phone Inside", errorPhoneNumber);
                                 if (errorPhoneNumber != null) {
                                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + errorPhoneNumber.replaceAll("-", "")));
                                     startActivity(intent);

@@ -318,42 +318,39 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
             //Doctor call Validation
             if(resObject.has("doctor_on_call_video") || resObject.has("doctor_on_call")){
-                if(resObject.isNull("doctor_on_call_video")&&resObject.isNull("doctor_on_call")) {
-                    isDoctorOnCall=false;
-                    isDoctorOnVideo=false;
-                    StrDoctorOnCall=false;
-                    mDoctorOnCall=false;
-                    mDoctorOnVideo=false;
+                if(resObject.isNull("doctor_on_call_video") && resObject.isNull("doctor_on_call")) {
+                    isDoctorOnCall = false;
+                    isDoctorOnVideo = false;
+                    StrDoctorOnCall = false;
+                    mDoctorOnCall = false;
+                    mDoctorOnVideo = false;
                 }else if(resObject.getBoolean("doctor_on_call_video")) {
-                    isDoctorOnVideo=true;
-                    isDoctorOnCall=false;
-                    StrDoctorOnCall=true;
-                    mDoctorOnCall=false;
-                    mDoctorOnVideo=true;
+                    isDoctorOnVideo = true;
+                    isDoctorOnCall = false;
+                    StrDoctorOnCall = true;
+                    mDoctorOnCall = false;
+                    mDoctorOnVideo = true;
                 } else if(resObject.getBoolean("doctor_on_call")) {
-                    isDoctorOnVideo=false;
-                    isDoctorOnCall=true;
-                    StrDoctorOnCall=true;
-                    mDoctorOnCall=true;
-                    mDoctorOnVideo=false;
-
+                    isDoctorOnVideo = false;
+                    isDoctorOnCall = true;
+                    StrDoctorOnCall = true;
+                    mDoctorOnCall = true;
+                    mDoctorOnVideo = false;
                 }
-                if(resObject.getBoolean("doctor_on_call")&&resObject.getBoolean("doctor_on_call_video")){
-                    isDoctorOnVideo=true;
-                    isDoctorOnCall=true;
-                    StrDoctorOnCall=true;
-                    mDoctorOnCall=true;
-                    mDoctorOnVideo=true;
-
-                }else if(!resObject.getBoolean("doctor_on_call")&&!resObject.getBoolean("doctor_on_call_video"))
+                if(resObject.getBoolean("doctor_on_call") && resObject.getBoolean("doctor_on_call_video")){
+                    isDoctorOnVideo = true;
+                    isDoctorOnCall = true;
+                    StrDoctorOnCall = true;
+                    mDoctorOnCall = true;
+                    mDoctorOnVideo = true;
+                }else if(!resObject.getBoolean("doctor_on_call") && !resObject.getBoolean("doctor_on_call_video"))
                 {
-                    isDoctorOnVideo=false;
-                    isDoctorOnCall=false;
-                    StrDoctorOnCall=false;
-                    mDoctorOnCall=false;
-                    mDoctorOnVideo=false;
+                    isDoctorOnVideo = false;
+                    isDoctorOnCall = false;
+                    StrDoctorOnCall = false;
+                    mDoctorOnCall = false;
+                    mDoctorOnVideo = false;
                 }
-
             }
 
 
@@ -381,7 +378,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                     }
                 }
 
-            }else  if(!responObj.get("physicians").isJsonNull()){
+            }else if(!responObj.get("physicians").isJsonNull()){
                 if (responObj.has("physicians")){
                     JsonArray  responArray = responObj.get("physicians").getAsJsonArray();
                     if(responArray.size()!=0){
@@ -409,7 +406,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                                     }
                                 });
                             }
-                    }
+                        }
 
                     }
                 }
@@ -420,6 +417,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         baseadapter.notifyDataSetChanged();
         setInfoVisibilty();
     }
+
     /**
      *
      *  Set the ListView values.Here the Listview is populated with two list values
@@ -437,7 +435,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     }
 
     /*
-    * shows or hide list footer/ bottom footer. This is for the static and the dynamic footer
+    * Display or hide list footer/bottom footer. This is for the static and the dynamic footer
     * implementation. If there is no list that is the response is null then the static footer
     * has been implemented.In case if the list has items then the footer in the listview
     * has been implemented.
@@ -445,7 +443,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     * availability for timestamp that cannot be saved in preferences it might result like
     * todat and tommorrow which may cause datye parse exception , so i have used seperate
     * key for saving the timestamp that is shared_timestamp.
-    * */
+    */
     public void showOrHideFooter() {
 //        //
     }
@@ -506,6 +504,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             providerListMap.add(map);
         }
     }
+
     /**
      *
      *  Set the Header content of the Listview.In this the Doctor Name and the
@@ -514,7 +513,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *  the Particular doctor will be displayed.
      *
      */
-
     private void setHeaderContent(boolean strDoctorOnCall) {
         if(StringConstants.TRUE == strDoctorOnCall)
         {
@@ -572,7 +570,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MM yyyy HH:mm a", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("EDT"));
 
-
                 Calendar today = Calendar.getInstance();
                 today.set(Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
@@ -583,7 +580,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 Calendar tomorrow = Calendar.getInstance();
                 tomorrow.add(Calendar.DATE, 1);  // number of days to add
                 tomorrow.set(tomorrow.get(Calendar.YEAR), tomorrow.get(Calendar.MONTH), tomorrow.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-
 
                 String sendData="";
                 if(timestamp <= today.getTimeInMillis()){
@@ -622,6 +618,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.PROVIDER_AVAILABILITY_STATUS_PREFERENCES, availability_status);
         editor.commit();
     }
+
     /**
      *      @param requestCode,resultCode : Pass the request code and the result code
      *      The Corresponding doctor's list will be displayed based on the corresponding
@@ -633,20 +630,9 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode==1){
-            String response=data.getStringExtra("Response");
+            String response = data.getStringExtra("Response");
             postParams = data.getStringExtra("postParams");
-            String state = null;
-            try
-            {
-                JSONObject jsonObject = new JSONObject(postParams);
-                state =  jsonObject.getString("located_in");
-            }
-            catch(JSONException exception)
-            {
-                Log.d("jits","Problem parsing the JSON"+exception);
-                state = null;
-            }
-            setChangedState(state);
+
             try{
                 // Clear the ListView
                 fromGetSartedPage = false;
@@ -659,14 +645,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             }
 
         }
-    }
-
-    public void setChangedState(String state)
-    {
-        SharedPreferences sharedPref = getSharedPreferences("ADDRESS_CHANGE", this.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.mdl_user_profile_state), state);
-        editor.commit();
     }
 
     /*

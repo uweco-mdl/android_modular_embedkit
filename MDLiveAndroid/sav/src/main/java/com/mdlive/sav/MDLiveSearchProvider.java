@@ -321,6 +321,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         if(filter_SavedLocation != null && !filter_SavedLocation.equalsIgnoreCase("Any")){
             postParams.put("located_in", filter_SavedLocation);
+            MDLiveGetStarted.SAV_STATE_LOCATION = filter_SavedLocation;
         }
 
         if(((TextView)findViewById(R.id.SpeaksTxtView)).getText() != null && ((TextView)findViewById(R.id.SpeaksTxtView)).getText().toString().length() != 0 &&
