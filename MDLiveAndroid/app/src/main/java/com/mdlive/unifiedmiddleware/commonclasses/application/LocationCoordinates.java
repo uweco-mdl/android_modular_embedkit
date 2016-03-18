@@ -58,7 +58,7 @@ public class LocationCoordinates {
         //exceptions will be thrown if provider is not permitted.
         try {
             if(lm != null)
-                gps_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
         }
 
@@ -80,7 +80,7 @@ public class LocationCoordinates {
         if (gps_enabled && lm != null)
             // @ToDo : use a generic permissions check handling method
             //if(permissionsEnabled(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION))
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerGps);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
 
         trackingTimer = new Timer();
         // timer will run until 20000 milli second for location updates.
