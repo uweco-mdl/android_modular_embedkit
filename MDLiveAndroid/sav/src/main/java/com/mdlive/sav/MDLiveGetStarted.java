@@ -322,7 +322,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      *
      */
     public void goToLocation(View v) {
-        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+        if (locationService.checkLocationServiceSettingsEnabled(this)) {
             findViewById(R.id.txt_alert_img).setVisibility(View.GONE);
         } else {
             findViewById(R.id.txt_alert_img).setVisibility(View.VISIBLE);

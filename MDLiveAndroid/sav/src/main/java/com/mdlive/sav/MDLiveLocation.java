@@ -103,7 +103,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }
         });
 
-        locationService = new LocationCoordinates(getApplicationContext());
+        locationService = new LocationCoordinates(this);
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
@@ -396,15 +396,14 @@ public class MDLiveLocation extends MDLiveBaseActivity {
      * getLocationCoordinates method is to get the Current latitude and longitude of the location
      */
     public void getLocationCoordinates() {
-        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+        if (locationService.checkLocationServiceSettingsEnabled(this)) {
             locationService.setBroadCastData(getClass().getSimpleName());
-            locationService.startTrackingLocation(getApplicationContext());
+            locationService.startTrackingLocation(this);
         } else {
             hideProgress();
             MdliveUtils.showGPSSettingsAlert(MDLiveLocation.this,(RelativeLayout)findViewById(R.id.progressDialog));
         }
     }
-
 
 
     public BroadcastReceiver locationReceiver = new BroadcastReceiver() {

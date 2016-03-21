@@ -1057,11 +1057,11 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
                                     final NetworkErrorListener errorListener){
-        if(locationService.checkLocationServiceSettingsEnabled(getApplicationContext())){
+        if(locationService.checkLocationServiceSettingsEnabled(this)){
             showProgress();
             registerReceiver(locationReceiver, intentFilter);
             locationService.setBroadCastData(getClass().getSimpleName());
-            locationService.startTrackingLocation(getApplicationContext());
+            locationService.startTrackingLocation(this);
         }else{
             PharmacyService services = new PharmacyService(MDLiveMedicalHistory.this, null);
             services.doMyPharmacyRequest("","",responseListener, errorListener);
