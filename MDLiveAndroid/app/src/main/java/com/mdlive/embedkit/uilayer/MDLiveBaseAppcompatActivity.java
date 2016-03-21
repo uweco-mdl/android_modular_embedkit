@@ -417,7 +417,8 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         }
         fragment = getSupportFragmentManager().findFragmentByTag(LEFT_MENU);
         if (fragment != null && fragment instanceof  NavigationDrawerFragment) {
-            ((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
+            //((NavigationDrawerFragment) fragment).loadUserInformationDetails(true);
+            ((NavigationDrawerFragment) fragment).loadUserInformationDetailsOnSelection(true);
         }
     }
 

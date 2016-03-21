@@ -226,7 +226,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Success response of Health", response.toString());
+                Log.d("Success response:Health", response.toString());
                 hideProgressDialog();
                 try {
                     if (response.get("health_last_update") instanceof Number) {

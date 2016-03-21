@@ -2,10 +2,13 @@ package com.mdlive.unifiedmiddleware.commonclasses.application;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -106,6 +109,12 @@ public class LocationCoordinates {
         if (lm != null) {
             if(locationListenerGps != null){
                 if(lm != null){
+                    if ( Build.VERSION.SDK_INT >= 23 &&
+                            ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                            ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return  ;
+                    }
+
                     lm.removeUpdates(locationListenerGps);
                     lm = null;
                 }
@@ -138,6 +147,13 @@ public class LocationCoordinates {
      * */
     private void getLocation() {
         try {
+
+            if ( Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return  ;
+            }
+
             Location mLastLocation = LocationServices.FusedLocationApi
                     .getLastLocation(((MDLiveBaseActivity)context).mGoogleApiClient);
             sendLocationInfo(mLastLocation);

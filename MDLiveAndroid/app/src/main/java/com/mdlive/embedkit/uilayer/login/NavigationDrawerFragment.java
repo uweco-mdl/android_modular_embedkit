@@ -320,6 +320,74 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
 
+    //Temporary method starts
+    /**
+     * Makes the customer/user_information call to get the User information.
+     *
+     * Class : UserBasicInfoServices - Service class used to fetch the user basic information
+     * Listeners : SuccessCallBackListener and ErrorListener are two listeners passed to the service class to handle the service response calls.
+     * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will be shown to user).
+     *
+     * After getting the response based on whether the user is primary or not we show the popup
+     */
+    public void loadUserInformationDetailsOnSelection(final boolean showProgress) {
+        /* Clears the Selected User Preference*, for safety */
+        //User.clearSelectedUser(getActivity());
+
+        if (showProgress) {
+            showProgressDialog();
+        }
+        MDLiveBaseAppcompatActivity.IS_DEPENDENT_SELECTED = false;
+        if(NotificationFragment.getInstance() != null && NotificationFragment.getInstance().mUpcomingAppoinmantListView != null){
+
+            NotificationFragment.getInstance().mUpcomingAppoinmantListView.setAdapter(null);
+//            NotificationFragment.getInstance().onCallNotificationLayout.setVisibility(View.GONE);
+        }
+        final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                User.clearUser(getActivity());
+                handleServiceResponseForParent(response);
+                try
+                {
+                    if(!response.getBoolean("primary_user"))
+                    {
+                        MdliveUtils.showDialog(getActivity(),"",StringConstants.PRIMARY_ACCOUNT_ACCESS);
+                    }
+                }
+                catch (JSONException exc)
+                {
+
+                }
+                if (showProgress) {
+                    hideProgressDialog();
+                }
+            }
+
+
+        };
+
+        final NetworkErrorListener errorListener = new NetworkErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if (showProgress) {
+                    hideProgressDialog();
+                }
+                try {
+                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                }
+                catch (Exception e) {
+                    MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
+                }
+            }};
+        final UserBasicInfoServices services = new UserBasicInfoServices(getActivity(), null);
+        services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
+    }
+    //Temporary method ends
+
     public void handleServiceResponseForParent(JSONObject response) {
     /* Security JSON we need to read again, because of the web service issue..
     * We are excluding the security tag to be parsed by GSON,
