@@ -38,7 +38,6 @@ import static com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment.newInst
  *  1. MDLiveAddAllergies
  *  2. MDLIveAddConditions
  *  3. MDLiveAddMedications
- *
  */
 
 public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBaseActivity {
@@ -46,7 +45,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     protected JSONArray conditionsListJSONArray;
     protected ArrayList<HashMap<String,String>> conditionsList;
     protected static String previousSearch = "";
-    public enum TYPE_CONSTANT {CONDITION,ALLERGY,MEDICATION,PROCEDURE}
+    public enum TYPE_CONSTANT {CONDITION, ALLERGY, MEDICATION, PROCEDURE}
 
     protected TYPE_CONSTANT type;
     public Intent resultData = new Intent();
@@ -67,7 +66,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         conditionsList = new ArrayList<>();
         adapter = new ConditionsAdapter();
         conditionsCollection = new ArrayList<>();
-        conditionsListView = (ListView) findViewById(R.id.conditionsListView);
+        conditionsListView = (ListView)findViewById(R.id.conditionsListView);
         noConditionsLayout = (LinearLayout)findViewById(R.id.noConditionsLayout);
         conditionsListView.setAdapter(adapter);
         setProgressBar(findViewById(R.id.progressBar));
@@ -127,7 +126,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     }
 
     /**
-     *\
      * This function will fetch the necessary conditions or allergies information from the JSON data received from
      * the MedicalConditionListServices. A dynamic layout is inflated and the pre existing conditions
      * are loaded into the dynamic views.
@@ -256,6 +254,12 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            if (getItem(position).isAllowToEdit()) {
+                holder.deleteIcon.setVisibility(View.VISIBLE);
+            } else {
+                holder.deleteIcon.setVisibility(View.GONE);
+            }
+
             holder.deleteIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -300,7 +304,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                 }
             });
 
-            if(isEditCalled){
+            if(isEditCalled && getItem(position).isAllowToEdit()) {
                 holder.deleteIcon.setVisibility(View.VISIBLE);
             }else{
                 holder.deleteIcon.setVisibility(View.GONE);
@@ -328,14 +332,18 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         }
     }
 
-    class ViewHolder{
+    class ViewHolder {
         ImageView deleteIcon;
-        TextView conditionName,conditionSubName;
+        TextView conditionName, conditionSubName;
     }
 
     class Model {
         public String conditionName;
         public String conditionId;
+        public String frequency;
+        public String dosage;
+        public String conditionSubName;
+        public boolean allowToEdit = true;
 
         public String getFrequency() {
             return frequency;
@@ -353,9 +361,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             this.dosage = dosage;
         }
 
-        public String frequency;
-        public String dosage;
-
         public boolean isAllowToEdit() {
             return allowToEdit;
         }
@@ -364,7 +369,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             this.allowToEdit = allowToEdit;
         }
 
-        public boolean allowToEdit = true;
         public String getConditionSubName() {
             return conditionSubName;
         }
@@ -372,8 +376,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         public void setConditionSubName(String conditionSubName) {
             this.conditionSubName = conditionSubName;
         }
-
-        public String conditionSubName;
 
         public String getConditionName() {
             return conditionName;
@@ -399,7 +401,6 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered.
      */
-
     public void checkMedicalAggregation() {
         showProgress();
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
@@ -424,7 +425,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
             hideProgress();
             JSONObject healthHistory = response.getJSONObject("health_history");
             String conditonsNames = "";
-            Log.v("HISTORY REPONSE", response.toString());
+            Log.v("HISTORY RESPONSE", response.toString());
             if(type == TYPE_CONSTANT.CONDITION){
                 JSONArray conditonsArray = healthHistory.getJSONArray("conditions");
                 for (int i = 0; i < conditonsArray.length(); i++) {
@@ -493,9 +494,7 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
     }
 
     /**
-     *
      *  Error Response Handler for Medical Conditions and allergies
-     *
      */
     protected void medicalCommonErrorResponseHandler(VolleyError error) {
         previousSearch = StringConstants.EMPTY_STRING;
