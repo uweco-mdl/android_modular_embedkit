@@ -392,6 +392,7 @@
     <string name="mdl_my_health_add_photo">Add a photo\n(Helpful for rashes, cuts,etc)</string>
     <string name="mdl_add_photo">Add a photo</string>
     <string name="mdl_my_health_helpful">Helpful for rashes, cuts,etc</string>
+    <string name="mdl_medical_history_txt">MEDICAL HISTORY</string>
 
     <string name="mdl_add_medical_condition">PRE-EXISTING CONDITIONS</string>
     <string name="mdl_add_condition_with_eg_hint">Add Condition, e.g. Diabetes</string>

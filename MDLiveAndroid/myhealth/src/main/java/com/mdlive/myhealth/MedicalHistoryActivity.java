@@ -85,7 +85,7 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(R.string.mdl_my_health).toUpperCase());
+            setHeaderTitle(R.string.mdl_medical_history_txt);
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -131,12 +131,33 @@ Log.e("Medical History","+++++++++++++++++\nAbout to create nav drawer");
      * @param viewPager - The viewpager instance.
      */
     private void setupViewPager(ViewPager viewPager) {
+        final List<Integer> headerNames = new ArrayList<>();
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new MedicalHistoryFragment(), getString(R.string.mdl_medical_history));
         adapter.addFragment(MDLivePharmacyFragment.newInstance(), getString(R.string.mdl_pharmacy));
         adapter.addFragment(MDLiveMyHealthProvidersFragment.newInstance(), getString(R.string.mdl_providers));
         adapter.addFragment(MDLiveMyHealthVisitsFragment.newInstance(), getString(R.string.mdl_visits));
+        headerNames.add(R.string.mdl_medical_history);
+        headerNames.add(R.string.mdl_pharmacy);
+        headerNames.add(R.string.mdl_providers);
+        headerNames.add(R.string.mdl_visits);
         viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setHeaderTitle(headerNames.get(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     @Override
@@ -176,13 +197,13 @@ Log.e("Medical History","+++++++++++++++++\nAbout to create nav drawer");
         }
     }
 
-
-
     // Medical History MDLIVE
-
+    public void setHeaderTitle(int titleId) {
+        ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(titleId).toUpperCase());
+    }
 
     /**
-     * This function is used to initialize clickListners of Buttons used in MedicalHistory page
+     * This function is used to initialize clickListeners of Buttons used in MedicalHistory page
      */
     public void pediatricOnClick(View view) {
         Intent i = new Intent(getBaseContext(), MDLivePediatric.class);
