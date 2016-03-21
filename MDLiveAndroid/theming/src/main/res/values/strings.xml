@@ -990,6 +990,8 @@
     <string name="mdl_valid_emailtext">Please use a valid email</string>
     <string name="mdl_please_call_customer">Please call customer service to add additional family members.</string>
     <string name="mdl_validation_email">You\'ll need to confirm your email to: \n\u2022 Receive appointment confirmations \n\u2022 Request a password reset \n\u2022 Send secure messages to providers</string>
+    <string name="mdl_billing_info_txt">BILLING INFORMATION</string>
+    <string name="mdl_family_info_txt">FAMILY MEMBERS</string>
 
     <!-- For Get started Page -->
     <string name="mdl_my_location">My Location</string>

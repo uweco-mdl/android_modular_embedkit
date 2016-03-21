@@ -16,6 +16,9 @@ import com.mdlive.myaccounts.adapter.MyAccountViewPagerAdapter;
 import com.mdlive.myaccounts.GetFamilyMemberFragment.OnChildAdded;
 import com.mdlive.myaccounts.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sanjibkumar_p on 7/27/2015.
  */
@@ -70,11 +73,33 @@ public class MyAccountActivity extends MDLiveBaseAppcompatActivity implements On
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        final List<Integer> headerNames = new ArrayList<>();
         final MyAccountViewPagerAdapter adapter = new MyAccountViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(MyProfileFragment.newInstance(), getString(R.string.mdl_account));
         adapter.addFragment(BillingInformationFragment.newInstance(), getString(R.string.mdl_billing));
         adapter.addFragment(GetFamilyMemberFragment.newInstance(), getString(R.string.mdl_family_history));
+        headerNames.add(R.string.mdl_account_details);
+        headerNames.add(R.string.mdl_billing_info_txt);
+        headerNames.add(R.string.mdl_family_info_txt);
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setHeaderTitle(headerNames.get(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+         });
+        }
+
+    public void setHeaderTitle(int titleId) {
+        ((TextView) findViewById(R.id.toolbar_text_view)).setText(getString(titleId).toUpperCase());
     }
 
     @Override
