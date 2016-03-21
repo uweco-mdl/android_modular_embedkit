@@ -195,6 +195,10 @@ public class MDLiveConfig {
 
     public static final int UNMAPPED = -1;
 
+    // distinguish between MDLIVE and BCBS app variants
+    private static final String BCBS_PACKAGE_NAME = "com.mdlive.BCBST_mobile";
+    public static boolean IS_BCBS = false;
+
     /**
      * "provider_type" definitions:
      *
@@ -260,7 +264,12 @@ public class MDLiveConfig {
                 AppSpecificConfig.API_KEY = "34f881b5dff46ee62cac";
                 AppSpecificConfig.SECRET_KEY = "ee93d2e7acb5cb667f4";
                 AppSpecificConfig.URL_ENVIRONMENT = "s";
-                AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
+
+                if(IS_BCBS)
+                    AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile_benefit_registration?group=bcbst";
+                else
+                    AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
+
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://stage-symptomchecker.mdlive.com/sc/html/index.html";
@@ -273,6 +282,16 @@ public class MDLiveConfig {
                 AppSpecificConfig.API_KEY = getProdApiKeyFromNative();
                 AppSpecificConfig.SECRET_KEY = getProdSecretKeyFromNative();
                 AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
+
+                if(IS_BCBS) {
+                    AppSpecificConfig.URL_SIGN_UP = "https://members.mdlive.com/signup/mobile_benefit_registration?group=bcbst";
+                    AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html?vendorid=bcbst";
+                }
+                else {
+                    AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
+                    AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html?vendorid=mdlive";
+                }
+
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://members.mdlive.com/forgot_password";
                 AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html?vendorid=mdlive";
