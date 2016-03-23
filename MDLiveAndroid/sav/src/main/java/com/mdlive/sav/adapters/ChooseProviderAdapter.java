@@ -89,6 +89,14 @@ public class ChooseProviderAdapter extends BaseAdapter {
             }
 
             Button seeFirstAvailDoctor= (Button)row.findViewById(R.id.btn_see_first_available_doctor);
+            TextView filterTxt = (TextView) row.findViewById(R.id.filterTxt);
+
+            filterTxt.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                      ((MDLiveChooseProvider) context).doctorOnCallButtonClick();
+                 }
+            });
 
             seeFirstAvailDoctor.setOnClickListener(new View.OnClickListener() {
                 @Override

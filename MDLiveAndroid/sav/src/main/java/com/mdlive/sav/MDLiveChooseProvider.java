@@ -213,15 +213,10 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      * is no providers then the filter icon will be hidden.
      *
      */
-    private void doctorOnCallButtonClick() {
-        findViewById(R.id.filterTxt).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
-                startActivityForResult(intent, 1);
-                MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
-            }
-        });
+    public void doctorOnCallButtonClick() {
+        Intent intent = new Intent(MDLiveChooseProvider.this, MDLiveSearchProvider.class);
+        startActivityForResult(intent, 1);
+        MdliveUtils.startActivityAnimation(MDLiveChooseProvider.this);
     }
 
     /**
@@ -253,7 +248,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 filterMainRl.setVisibility(View.GONE);
                 findViewById(R.id.txtFilter).setVisibility(View.GONE);
                 findViewById(R.id.progressBar).setVisibility(View.GONE);
-                doctorOnCallButtonClick();
+                //doctorOnCallButtonClick();
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
@@ -457,7 +452,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
      *
      */
     private void setBodyContent(JsonArray responArray) {
-        doctorOnCallButtonClick();
+        //doctorOnCallButtonClick();
         for(int i=0;i<responArray.size();i++) {
             try {
                  providerName = responArray.get(i).getAsJsonObject().get("name").getAsString();
