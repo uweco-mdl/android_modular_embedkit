@@ -95,6 +95,15 @@ public class MedicalHistoryActivity extends MDLiveBaseAppcompatActivity implemen
 
         }
 
+        // Initializing the "GOOGLE_FIT_SYNC_BTN_CLICKED" shared preference to 'false'. This preference protects
+        // the user from being exposed to continuance selection prompts when there is more than one Gmail acct on the device.
+        SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        if (!userPrefs.contains(PreferenceConstants.GOOGLE_FIT_SYNC_BTN_CLICKED)) {
+            SharedPreferences.Editor editor = userPrefs.edit();
+            editor.putBoolean(PreferenceConstants.GOOGLE_FIT_SYNC_BTN_CLICKED, false);
+        }
+
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL | TabLayout.GRAVITY_CENTER);
@@ -265,6 +274,7 @@ Log.e("Medical History","+++++++++++++++++\nAbout to create nav drawer");
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userPrefs.edit();
         editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+        editor.putBoolean(PreferenceConstants.GOOGLE_FIT_SYNC_BTN_CLICKED, true);
         editor.commit();
         GoogleFitUtils.getInstance().buildFitnessClient(false,null,this);
     }
@@ -279,6 +289,7 @@ Log.e("Medical History","+++++++++++++++++\nAbout to create nav drawer");
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userPrefs.edit();
         editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+        editor.putBoolean(PreferenceConstants.GOOGLE_FIT_SYNC_BTN_CLICKED, false);
         editor.commit();
     }
 

@@ -66,6 +66,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
     private String mParam1;
     private String mParam2;
     private boolean isFirstTime = true;
+    private static boolean DisplayGoogleFitInvitePage = true;
 
     private OnGoogleFitSyncResponse mListener;
 
@@ -113,11 +114,27 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(getString(R.string.mdl_medical_history));
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = getActivity().getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPrefs.edit();
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         mHealthSyncContainer = view.findViewById(R.id.HealthSyncContainer);
         mHealthSyncCv = view.findViewById(R.id.HealthSyncCv);
         if(dependentId == null && checkFitInstalled()){
-            getHealthKitSyncStatus();
+            if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_SYNC_BTN_CLICKED, false)) {
+                if (userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false)) {
+                    editor.putBoolean(PreferenceConstants.GOOGLE_FIT_FIRST_TIME, false);
+                }
+                getHealthKitSyncStatus();
+            }
+            else {
+                if (DisplayGoogleFitInvitePage) {
+                    mHealthSyncContainer.setVisibility(View.VISIBLE);
+                    DisplayGoogleFitInvitePage = false;
+                }
+                else {
+                    mHealthSyncContainer.setVisibility(View.GONE);
+                }
+            }
         } else {
             mHealthSyncCv.setVisibility(View.GONE);
             mHealthSyncContainer.setVisibility(View.GONE);
