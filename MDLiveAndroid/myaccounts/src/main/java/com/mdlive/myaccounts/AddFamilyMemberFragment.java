@@ -324,7 +324,11 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                String result = editable.toString().replaceAll(" ", "");
+                if (!editable.toString().equals(result)) {
+                    mUsername.setText(result);
+                    mUsername.setSelection(result.length());
+                }
             }
         });
 
