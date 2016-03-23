@@ -160,7 +160,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             }
         }
 
-        // This annotation is required in Jelly Bean and later:
+        // This annotation is required in JellyBean and later:
         @JavascriptInterface
         public void scanCreditCard() {
         }
@@ -186,6 +186,14 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
         mScanCardBtn = (Button)billingInformation.findViewById(R.id.ScanCardBtn);
+        mNameOnCard.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    MdliveUtils.showSoftKeyboard(getActivity(), mNameOnCard);
+                }
+            }
+        });
 
         mAddress1.setText("");
         mAddress2.setText("");
