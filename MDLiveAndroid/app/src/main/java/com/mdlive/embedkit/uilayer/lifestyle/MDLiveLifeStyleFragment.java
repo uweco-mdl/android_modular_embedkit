@@ -304,14 +304,17 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     };
 
     private void tickVisibilityConditions() {
-        if ((!TextUtils.isEmpty(mHeightFtEditText.getText().toString()) || !TextUtils.isEmpty(mHeightInEditText.getText().toString()))) {
-            if (TextUtils.isEmpty(mWeightLbsEditText.getText().toString())) {
-                ((MDLiveLifestyleActivity) getActivity()).hideTick();
-            } else {
-                ((MDLiveLifestyleActivity) getActivity()).showTick();
-            }
-        } else {
+        String heightFeet = mHeightFtEditText.getText().toString();
+        //String heightInches = mHeightInEditText.getText().toString();
+        String weight = mWeightLbsEditText.getText().toString();
+        String ZERO ="0";
+        if(TextUtils.isEmpty(heightFeet)||TextUtils.isEmpty(weight)||heightFeet.equals(ZERO)||weight.equals(ZERO))
+        {
             ((MDLiveLifestyleActivity) getActivity()).hideTick();
+        }
+        else
+        {
+            ((MDLiveLifestyleActivity) getActivity()).showTick();
         }
     }
 
@@ -445,7 +448,6 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                     hideProgressDialog();
                     e.printStackTrace();
                 }
-
             }
         });
 

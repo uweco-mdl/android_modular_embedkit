@@ -3,12 +3,14 @@ package com.mdlive.symptomchecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 //import com.mdlive.embedkit.uilayer.sav.MDLiveGetStarted;
 
+import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.User;
 
 import java.lang.ref.WeakReference;
@@ -91,6 +93,28 @@ public class WebAppInterface
 
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         ctx.startActivity(launchBrowser);
+    }
+
+    /**
+     * Fetch current patient's gender as "M" or "F", or blank string if gender undefined.
+     * This method is designed to be invoked from a webview.
+     */
+    @JavascriptInterface
+    public static String getUserGender()
+    {
+        String g="";
+
+        Activity ctx = parentContext.get();
+        if(ctx != null) {
+            SharedPreferences sharedpreferences = ctx.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+            String gender = sharedpreferences.getString(PreferenceConstants.GENDER, "");
+            if (gender.equalsIgnoreCase("Female"))
+                g = "F";
+            else if(gender.equalsIgnoreCase("Male"))
+                g = "M";
+        }
+
+        return(g);
     }
 
     /*
