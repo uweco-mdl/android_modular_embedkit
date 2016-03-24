@@ -404,10 +404,10 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
      */
     private void getLocationBtnOnClickAction() {
         mayIShowSuggestions = false;
-        if (locationService.checkLocationServiceSettingsEnabled(getApplicationContext())) {
+        if (locationService.checkLocationServiceSettingsEnabled(this)) {
             showProgress();
             locationService.setBroadCastData(getClass().getSimpleName());
-            locationService.startTrackingLocation(getApplicationContext());
+            locationService.startTrackingLocation(this);
         } else {
             MdliveUtils.showGPSSettingsAlert(MDLivePharmacyChange.this, (RelativeLayout) findViewById(R.id.progressDialog));
             hideProgress();
