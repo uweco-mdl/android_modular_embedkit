@@ -62,6 +62,8 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
     private EditText mSecurityAnswer2 = null;
     private ArrayList<String> mQuestions = null;
     private String response;
+    private String mFirstQuestion=null;
+    private String mSecondQuestion=null;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -91,6 +93,8 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
                     mSecurityQuestion2.setText(securityQuestion.getString("question2"));
                     mSecurityAnswer1.setText(securityQuestion.getString("answer1"));
                     mSecurityAnswer2.setText(securityQuestion.getString("answer2"));
+                    mFirstQuestion = securityQuestion.getString("question1");
+                    mSecondQuestion = securityQuestion.getString("question2");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -373,6 +377,19 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
+                        if(textView.getId()==R.id.changeQuestion1)
+                        {
+                            if(mFirstQuestion!=null&&!(mFirstQuestion.equals(radioButton.getText().toString())))
+                            {
+                                mSecurityAnswer1.setText("");
+                            }
+                        }
+                        else {
+                            if(mSecondQuestion!=null&&!(mSecondQuestion.equals(radioButton.getText().toString())))
+                            {
+                                mSecurityAnswer2.setText("");
+                            }
+                        }
                         textView.setText(radioButton.getText().toString());
                         answerLayout.setVisibility(View.VISIBLE);
                         if (alertDialog != null)
