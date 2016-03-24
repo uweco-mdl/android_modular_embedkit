@@ -352,6 +352,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                     editor.putString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No");
                 }
                 editor.commit();
+                ValidateModuleFields();
             }
         });
 
@@ -540,22 +541,13 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
                 isAllFieldsfilled = false;
             }
         }
-        if (findViewById(R.id.MyHealthConditionChoiceLl).getVisibility() == View.VISIBLE &&
-                PreExisitingGroup.getCheckedRadioButtonId() < 0) {
-            isAllFieldsfilled = false;
-        }
-        if (findViewById(R.id.MyHealthMedicationsLl).getVisibility() == View.VISIBLE &&
-                MedicationsGroup.getCheckedRadioButtonId() < 0) {
-            isAllFieldsfilled = false;
-        }
-        if (findViewById(R.id.MyHealthAllergiesLl).getVisibility() == View.VISIBLE &&
-                AllergiesGroup.getCheckedRadioButtonId() < 0) {
-            isAllFieldsfilled = false;
-        }
-
-        if (findViewById(R.id.MyHealthProceduresLl).getVisibility() == View.VISIBLE &&
-                ProceduresGroup.getCheckedRadioButtonId() < 0) {
-            isAllFieldsfilled = false;
+        if (findViewById(R.id.MyHealthConditionChoiceLl).getVisibility() == View.VISIBLE && PreExisitingGroup.getCheckedRadioButtonId() < 0
+                || findViewById(R.id.MyHealthMedicationsLl).getVisibility() == View.VISIBLE && MedicationsGroup.getCheckedRadioButtonId() < 0
+                || findViewById(R.id.MyHealthAllergiesLl).getVisibility() == View.VISIBLE && AllergiesGroup.getCheckedRadioButtonId() < 0
+                || findViewById(R.id.MyHealthProceduresLl).getVisibility() == View.VISIBLE && ProceduresGroup.getCheckedRadioButtonId() < 0
+                || findViewById(R.id.MyPrimaryCareLl).getVisibility() == View.VISIBLE && primaryCareGroup.getCheckedRadioButtonId() < 0)
+        {
+           isAllFieldsfilled = false;
         }
 
         if (isAllFieldsfilled) {
