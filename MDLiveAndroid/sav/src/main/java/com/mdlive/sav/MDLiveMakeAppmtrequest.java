@@ -273,8 +273,8 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this,"Appointment Type", "Would you like this appointment by phone or video?", "Phone", "Video",
                     negativeOnClickListener, positiveOnClickListener);
         }
-       else if (!TextUtils.isEmpty(strappmtcomment) && !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
-               /* && !TextUtils.isEmpty(strnxtavailable) && !TextUtils.isEmpty(stridealdate)*/ && !TextUtils.isEmpty(selectionType))
+        else if (/*!TextUtils.isEmpty(strappmtcomment) && */ !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
+                && !TextUtils.isEmpty(selectionType))
         {
             HashMap params1 = new HashMap();
             params1.put("appointment_method", selectedvideo);
@@ -293,6 +293,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getResources().getString(R.string.mdl_please_enter_mandatory_fields));
         }
     }
+
     public void saveDateAndTime()
     {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -322,6 +323,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
         appointmentReason.setImeOptions(EditorInfo.IME_ACTION_NEXT);    // make sure the Soft Keyboard 'Next' button works for this field
     }
+
     public void onclickVideo(View v)
     {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
@@ -343,6 +345,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         }
 
     }
+
     public void onclickPhone(View v)
     {
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
@@ -392,6 +395,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         showListViewDialog(nextAvailableList,(TextView)findViewById(R.id.appointmentNextAvailable));
 
     }
+
     //date click listener
     // this is for Ideal date. The user can select the date from the picker to select
     //the corresponding date from the picker and set it to the corresponding label
@@ -512,6 +516,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         services.makeappmt(params, successCallBackListener, errorListener);
         Log.v("params",params.toString());
     }
+
     private void handlepostSuccessResponse(JSONObject response) {
         try {
             hideProgress();
@@ -554,11 +559,6 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
     };
 
 
-
-    /*
-* Event for Add Child button click
-* */
-
     /**
      * Instantiating array adapter to populate the listView
      * The layout android.R.layout.simple_list_item_single_choice creates radio button for each listview item
@@ -588,7 +588,5 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             }
         });
     }
-
-
 
 }
