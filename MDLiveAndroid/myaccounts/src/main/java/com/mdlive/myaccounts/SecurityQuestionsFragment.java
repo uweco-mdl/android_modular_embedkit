@@ -178,7 +178,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 //                dialog.show();
 
                 showSecurityQuestionsDialog(mSecurityQuestion1,mSecurityAnswer1Layout);
-                mSecurityAnswer1.setText("");
+                //mSecurityAnswer1.setText("");
 
 //                lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 //                    public void onItemClick(AdapterView<?> listView, View itemView, int position, long itemId) {
@@ -231,7 +231,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
 
                 MdliveUtils.hideKeyboard(getActivity(),view);
                 showSecurityQuestionsDialog(mSecurityQuestion2,mSecurityAnswer2Layout);
-                mSecurityAnswer2.setText("");
+                //mSecurityAnswer2.setText("");
             }
         });
 
@@ -298,8 +298,8 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
         }
 
         if((mSecurityAnswer1.getText().length()) == 0 && (mSecurityAnswer2.getText().length() == 0)) {
-            mSecurityQuestion1.setText("Select Question");
-            mSecurityQuestion2.setText("Select Question");
+            mSecurityQuestion1.setText(getActivity().getString(R.string.mdl_select_question));
+            mSecurityQuestion2.setText(getActivity().getString(R.string.mdl_select_question));
             mSecurityAnswer1Layout.setVisibility(View.GONE);
             mSecurityAnswer2Layout.setVisibility(View.GONE);
         }
