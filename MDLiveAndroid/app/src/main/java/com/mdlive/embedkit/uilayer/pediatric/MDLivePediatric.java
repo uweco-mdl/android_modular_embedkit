@@ -145,7 +145,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
 
-        dietLayout= (CardView) findViewById(R.id.diet_layout);
+        dietLayout = (CardView) findViewById(R.id.diet_layout);
 
         ((ImageView) findViewById(R.id.backImg)).setImageResource(R.drawable.back_arrow_hdpi);
         findViewById(R.id.backImg).setContentDescription(getString(R.string.mdl_ada_back_button));
@@ -193,8 +193,8 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         edtLastShot = (EditText) findViewById(R.id.edt_lastshot);
         lasShotLabel = (TextView) findViewById(R.id.txt_lastShot_label);
         birthComplicationLayout = (RelativeLayout) findViewById(R.id.layout_birthComplications);
-        View birthCompView=findViewById(R.id.birth_complication_view);
-        if (checkPerdiatricAge()) {
+        View birthCompView = findViewById(R.id.birth_complication_view);
+        if (checkPediatricAge()) {
             txtAge.setText(getString(R.string.mdl_AgeUnder13));
             birthComplicationLayout.setVisibility(View.GONE);//Hiding this layout for adult users
             birthCompView.setVisibility(View.GONE);
@@ -210,7 +210,8 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             txtDietType.setVisibility(View.VISIBLE);
             txtDietTypeHeader.setVisibility(View.VISIBLE);
         }
-        explanationListners();
+
+        explanationListeners();
         dietList = new ArrayList<>();
         dietList = Arrays.asList(getResources().getStringArray(R.array.mdl_dietlist));
         buttonClick();
@@ -218,13 +219,11 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         getPediatricProfileBelowTwo();
     }
 
-
     /***
      * This method is used to check the user age based on which label will be displayed
      * @return true when the necessary conditions met else returns false
      */
-
-    public boolean checkPerdiatricAge() {
+    public boolean checkPediatricAge() {
         if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) > IntegerConstants.PEDIATRIC_AGE_TWO && TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) < IntegerConstants.PEDIATRIC_AGE_ABOVETWO) {
             return true;
         } else if (TimeZoneUtils.calculteAgeFromPrefs(MDLivePediatric.this) == IntegerConstants.PEDIATRIC_AGE_TWO) {
@@ -243,7 +242,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
     /**
      * This function will invokes when user enter some descriptions in Birth complications field
      */
-    public void explanationListners() {
+    public void explanationListeners() {
         edtBirthComplications.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -490,7 +489,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
-               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
+                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
             }
         };
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
@@ -510,6 +509,13 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                     questionItem.put("name", questionObj.getString("name"));
                     questionItem.put("value", questionObj.getString("value"));
                     questionList.add(questionItem);
+
+                    if ("Last shot".equalsIgnoreCase(questionObj.getString("name"))) {
+                        edtLastShot.setText(questionObj.getString("value"));
+                    }
+                    if ("Birth complications explanation".equalsIgnoreCase(questionObj.getString("name"))) {
+                        edtLastShot.setText(questionObj.getString("value"));
+                    }
                 }
                 questionsMap.put("questions", questionList);
                 postParams.put("pediatric", questionsMap);
@@ -518,11 +524,10 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 weightMap.put("birth_weight", "10");
                 weightMap.put("weight", personalInfoObj.getString("weight"));
 
-
                 postParams.put("personal_info", weightMap);
                 String weight = personalInfoObj.getString("weight");
-                boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY",false);
-                if(weight!=null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight) && fromMedicalHistory) {
+                boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY", false);
+                if(weight != null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight) && fromMedicalHistory) {
                     ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
                 }
 
@@ -538,13 +543,12 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
     /**
      * This method will be responsible for filling all the profile information based on the response
      *
-     * @param name  --Corresponding field name
-     * @param value---Correspomding vlaue to the field.
+     * @param name      Corresponding field name
+     * @param value     Corresponding value to the field.
      */
-
     public void enableRadioButtons(String name, String value) {
 
-        boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY",false);
+        boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY", false);
 
         if(fromMedicalHistory){
             if ("Immunization up to date?".equals(name)) {
@@ -617,23 +621,25 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 if(getIntent() != null && getIntent().hasExtra("firstTimeUser")){
                     if(getIntent().hasExtra("theraphyFlow")){
                         checkMedicalAggregation();
-                    }else{
+                    } else {
                         Intent medicalIntent = new Intent(MDLivePediatric.this, MDLiveMedicalHistory.class);
                         startActivity(medicalIntent);
                         MdliveUtils.startActivityAnimation(MDLivePediatric.this);
                     }
-                }else{
+                } else {
                     setResult(RESULT_OK);
                     finish();
                 }
             }
         };
+
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-               MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this,error,getProgressDialog());
+                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
             }
         };
+
         SharedPreferences sharedPref = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
@@ -650,12 +656,10 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
     /**
      * This method will display diet type as drop down.
-     * @param list------------- contains list values which has to be displayed in dropdown,
-     * @param selectedText----- View will be updated based on user selection from the dropdown list.
-     * @param typeName--------- Diet type name
+     * @param list          contains list values which has to be displayed in dropdown,
+     * @param selectedText  View will be updated based on user selection from the dropdown list.
+     * @param typeName      Diet type name
      */
-
-
     private void showListViewDialog(final List<String> list, final TextView selectedText, final String typeName) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MDLivePediatric.this);
         alertDialog.setItems(getResources().getStringArray(R.array.mdl_dietlist), new DialogInterface.OnClickListener() {
@@ -669,6 +673,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 dialog.dismiss();
             }
         });
+
         final AlertDialog dialog = alertDialog.create();
         dialog.show();
     }
@@ -693,7 +698,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             }
         }
     }
-
 
     public boolean isFieldsNotEmpty() {
         if (edtCurrentWeight.getText().toString().length() == IntegerConstants.NUMBER_ZERO || edtCurrentWeight.getText().toString().startsWith(" ")) {
@@ -735,33 +739,31 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         return true;
     }
 
-    /*
-       * set visible for the progress bar
-       */
+    /**
+     * Display the progress bar
+     */
     public void setProgressBarVisibility() {
         showProgress();
         findViewById(R.id.txtApply).setVisibility(View.GONE);
     }
 
-    /*
-    * set visible for the details view layout
-    */
+    /**
+     * Hide the progress bar
+     */
     public void setInfoVisibilty() {
         hideProgress();
     }
 
-
     /**
-     * This method will close the activity with transition effect.
+     * This method will close the activity with a transition effect.
      */
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(this);
     }
 
-    private boolean isInteger(String value){
+    private boolean isInteger(String value) {
         try {
             Integer.parseInt(value);
         } catch (NumberFormatException e) {
