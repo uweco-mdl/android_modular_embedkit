@@ -68,7 +68,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.facebook.android:facebook-android-sdk:3.19.0'
     compile 'io.card:android-sdk:5.1.0'
-    //compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services-base:8.4.0'
 
     compile 'com.android.support:design:23.2.1'
