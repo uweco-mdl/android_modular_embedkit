@@ -83,7 +83,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     private ArrayList<String> SpeaksArrayList = new ArrayList<String>();
     private ArrayList<String> GenderArrayList = new ArrayList<String>();
     private HashMap<String, String> postParams = new HashMap<>();
-    public String filter_SavedLocation, SavedLocation,postProviderId,serverDateFormat;
+    public String filter_SavedLocation, SavedLocation, postProviderId, serverDateFormat;
     private boolean isCignaCoachUser = false;
 
     @Override
@@ -97,7 +97,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         final SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         String providerMode = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
         // set CignaCoach-specific flag
-        if(providerMode != null && providerMode.length() > 0
+        if(providerMode != null
+                && providerMode.length() > 0
                 && providerMode.equalsIgnoreCase(MDLiveConfig.PROVIDERTYPE_CIGNACOACH)
                 && MDLiveConfig.CIGNACOACH_ENABLED)
         {
@@ -242,11 +243,11 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
      */
     public void providerTypeAction(View v) {
         ProviderTypeArrayList = MDLiveGetStarted.providerTypeArrayList;
-        ArrayList<HashMap<String,String>> providerIdArray = new ArrayList<HashMap<String,String>>();
+        ArrayList<HashMap<String,String>> providerIdArray = new ArrayList<>();
 
-        for(int i = 0; i<ProviderTypeArrayList.size();i++){
-            HashMap<String,String> providerID = new HashMap<String,String>();
-            providerID.put(MDLiveGetStarted.providerTypeIdList.get(i),ProviderTypeArrayList.get(i));
+        for(int i = 0; i < ProviderTypeArrayList.size(); i++){
+            HashMap<String,String> providerID = new HashMap<>();
+            providerID.put(MDLiveGetStarted.providerTypeIdList.get(i), ProviderTypeArrayList.get(i));
             providerIdArray.add(providerID);
         }
         showListViewDialog(ProviderTypeArrayList, (TextView) findViewById(R.id.ProviderTypeTxtView), "provider_type", providerIdArray);
@@ -316,9 +317,9 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 //            postParams.put("provider_type", StringConstants.APPOINTMENT_TYPE);
 //        }
 
-        //MDLive Embed Kit Implementtaions
+        //MDLive Embed Kit Implementations
 
-
+        MdliveUtils.hideKeyboard(getApplicationContext(), edtSearch);
         if(filter_SavedLocation != null && !filter_SavedLocation.equalsIgnoreCase("Any")){
             postParams.put("located_in", filter_SavedLocation);
             MDLiveGetStarted.SAV_STATE_LOCATION = filter_SavedLocation;
@@ -345,23 +346,22 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
         if(((TextView)findViewById(R.id.SpecialityTxtView)).getText() != null && ((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().length() != 0 &&
                 !((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString().equalsIgnoreCase("Any")){
-            postParams.put("speciality",((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
+            postParams.put("speciality", ((TextView)findViewById(R.id.SpecialityTxtView)).getText().toString());
         }
 
         if(edtSearch.getText() != null && edtSearch.getText().toString().length() != 0 &&
                 !edtSearch.getText().toString().equalsIgnoreCase("Any")){
-            postParams.put("provider_name",edtSearch.getText().toString());
+            postParams.put("provider_name", edtSearch.getText().toString());
         }
 
         if (postParams.get("provider_type") != null) {
             postParams.put("provider_type", postParams.get("provider_type"));
 
-
         }else
         {
             String providerTypeString = ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString();
             int pos = MDLiveGetStarted.providerTypeArrayList.indexOf(providerTypeString);
-            String providerTypeId = MDLiveGetStarted.providerTypeIdList.get(pos>=0?pos : 1);
+            String providerTypeId = MDLiveGetStarted.providerTypeIdList.get(pos >=0 ? pos : 1);
             postParams.put("provider_type", providerTypeId);
         }
 
@@ -388,7 +388,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             editor.putString(PreferenceConstants.PROVIDER_MODE, ((TextView) findViewById(R.id.ProviderTypeTxtView)).getText().toString());
         }
         editor.commit();
-       LoadFilterSearchServices();
+        LoadFilterSearchServices();
     }
 
 
@@ -444,12 +444,10 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     }
 
     /**
-     *
      * Load loadProviderType Details.
      * Class : ProviderTypeList - Service class used to fetch the Provider Detail information
      * Listeners : SuccessCallBackListener and errorListener are two listeners passed to the service class to handle the service response calls.
      * Based on the server response the corresponding action will be triggered(Either error message to user or Get started screen will shown to user).
-     *
      */
     private void loadProviderType() {
         showProgress();
@@ -467,20 +465,19 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 Log.d("Response", error.toString());
                 hideProgress();
                 MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
-            }};
+            }
+        };
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
-        String dependent_id=  settings.getString("dependent_id","");
+        String dependent_id = settings.getString("dependent_id", "");
         ProviderTypeList services = new ProviderTypeList(MDLiveSearchProvider.this, null);
         services.getProviderType(dependent_id, successCallBackListener, errorListener);
     }
 
     /**
-     *
      *  Successful Response Handler for Provider Type Info.The Provider type info will provider the gender
      *  of the user and the date of birth of the corresponding user.The dependent id will be
      *  passed for the the each provider while switching over the dependent so that the
      *  corresponding provider type will be changed to the selected dependents.
-     *
      */
     private void handleproviderTypeSuccessResponse(JSONObject response) {
         try {
@@ -499,9 +496,8 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 }
                 ((TextView)findViewById(R.id.ProviderTypeTxtView)).setText(providerTypeArrayList.get(0));
             }
-
         } catch (Exception e) {
-
+            Log.e("MDLSearchProvider","Problem with providertype success response: "+e.getMessage());
         }
     }
 
@@ -528,8 +524,6 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
             //provider type response
             getproviderType(response);
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -698,7 +692,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Sucess Response", response.toString());
+                Log.d("Success Response", response.toString());
                 handleFilterSuccessResponse(response);
             }
         };
@@ -710,7 +704,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     JSONObject errorObj = new JSONObject(responseBody);
-                    Log.e("Response Body", errorObj.toString());
+                    Log.d("Response Body", errorObj.toString());
                     NetworkResponse errorResponse = error.networkResponse;
                     if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         if (errorObj.has("error") || errorObj.has("message")) {
@@ -737,7 +731,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             }
         };
         FilterSearchServices services = new FilterSearchServices(MDLiveSearchProvider.this, null);
-        Log.e("Filter",postParams.toString());
+        Log.e("Filter", postParams.toString());
         services.getFilterSearch(postParams, successCallBackListener, errorListener);
     }
 
@@ -754,7 +748,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 JsonArray responArray = responObj.get("physicians").getAsJsonArray();
                 if (responArray.size() != 0) {
                     if (responArray.get(0).isJsonObject()) {
-                        Log.e("Filter Response",responObj.toString());
+                        Log.e("Filter Response", responObj.toString());
                         Intent intent = new Intent();
                         intent.putExtra("Response", response.toString());
                         intent.putExtra("postParams", new Gson().toJson(postParams));
@@ -762,7 +756,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                         finish();
                         MdliveUtils.closingActivityAnimation(MDLiveSearchProvider.this);
                     }else{
-                        Log.e("Filter Response",responObj.toString());
+                        Log.e("Filter Response", responObj.toString());
                         MdliveUtils.showDialog(MDLiveSearchProvider.this, responArray.getAsString(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -788,7 +782,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
         // Show current date
         String format = new SimpleDateFormat("MMM d, yyyy").format(c.getTime());
         selectedText.setText(format);
-        serverDateFormat=new SimpleDateFormat("yyyy/MM/dd").format(c.getTime());
+        serverDateFormat = new SimpleDateFormat("yyyy/MM/dd").format(c.getTime());
 //        selectedText.setText(new StringBuilder()
 //                // Month is 0 based, just add 1
 //                .append(month + 1).append("/").append(day).append("/")
@@ -831,7 +825,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             String format = sdf.format(cal.getTime());
             sdf = new SimpleDateFormat("yyyy/MM/dd");
             sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(MDLiveSearchProvider.this));
-            serverDateFormat= sdf.format(cal.getTime());
+            serverDateFormat = sdf.format(cal.getTime());
             // Show selected date
             AppointmentTxtView.setText(format);
 
@@ -841,6 +835,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
     /**
      * Instantiating array adapter to populate the listView
      * The layout android.R.layout.simple_list_item_single_choice creates radio button for each listview item
+     *
      * @param list : Dependent users array list
      */
     private void showListViewDialog(final ArrayList<String> list, final TextView selectedText, final String key, final ArrayList<HashMap<String, String>> typeList) {
@@ -875,13 +870,13 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                 dialog.dismiss();
 
                 // if user selects a different Provider type, then reload this screen
-                if(!oldChoice.equals(SelectedText)){
+                if (!oldChoice.equals(SelectedText)){
                     SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(PreferenceConstants.PROVIDER_MODE, SelectedText);
 
                     int providerType = MDLiveConfig.PROVIDERTYPE_MAP.get(SelectedText)==null? MDLiveConfig.UNMAPPED : MDLiveConfig.PROVIDERTYPE_MAP.get(SelectedText);
-                    if(providerType==MDLiveConfig.UNMAPPED)
+                    if (providerType == MDLiveConfig.UNMAPPED)
                         editor.putString(PreferenceConstants.PROVIDERTYPE_ID, "");
                     else
                         editor.putString(PreferenceConstants.PROVIDERTYPE_ID, String.valueOf(providerType));
