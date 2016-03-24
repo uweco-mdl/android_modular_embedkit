@@ -213,7 +213,7 @@ public class MDLiveDashboardActivity extends MDLiveBaseAppcompatActivity impleme
     }
 
     @Override
-    public void onShowNotifyOnCallDashBorad(OncallAppointment appointment) {
+    public void onShowNotifyOnCallDashBoard(OncallAppointment appointment) {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MDLiveDashBoardFragment) {
             ((MDLiveDashBoardFragment) fragment).showOnCallNotification(appointment);
