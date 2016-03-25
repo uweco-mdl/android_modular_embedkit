@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -96,7 +95,6 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     View messagesView = null;
     int viewsVisibility = View.VISIBLE;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +157,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
         }
         //Enable or disable Request Appointment Button
     }
+
     /**
      * Retrieve the shared data from preferences for Provider Id and Location.The Provider id and
      * the Location can be fetched from the GetStarted screen and the provider's Id and the
@@ -235,10 +234,9 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     }
 
 
-
-
     public void rightBtnOnClick(View view){
         reqApmtBtm.setVisibility(View.VISIBLE);
+        MDLiveChooseProvider.isDoctorOnCall = false;
         Intent Reasonintent = new Intent(MDLiveProviderDetails.this, MDLiveReasonForVisit.class);
         startActivity(Reasonintent);
         MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -1399,7 +1397,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
         //saveConsultationType(appointmentType);
         saveProviderDetailsForConFirmAppmt(timeslotTxt.getText().toString(),
-                                            ((TextView) findViewById(R.id.dateTxt)).getText().toString(),
+                                            ((TextView) findViewById(R.id.dateTxt)).getText().toString().trim(),
                                             str_ProfileImg,
                                             selectedTimestamp,
                                             str_phys_avail_id);
