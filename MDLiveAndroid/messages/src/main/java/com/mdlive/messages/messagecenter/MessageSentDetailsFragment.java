@@ -76,7 +76,7 @@ public class MessageSentDetailsFragment extends MDLiveBaseFragment {
 
         final TextView doctorNameTextView = (TextView) view.findViewById(R.id.fragment_message_received_doctor_name_text_view);
         if (doctorNameTextView != null) {
-            doctorNameTextView.setText(sentMessage.from);
+            doctorNameTextView.setText(sentMessage.to);
         }
 
         final TextView timeTextView = (TextView) view.findViewById(R.id.fragment_message_received_date_text_view);
