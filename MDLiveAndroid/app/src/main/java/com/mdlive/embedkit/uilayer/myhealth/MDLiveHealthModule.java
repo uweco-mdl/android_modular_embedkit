@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -412,7 +411,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             String dateofBirth =userBasicInfo.getPersonalInfo().getBirthdate();
 //            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
             procedureYearList.clear();
-            Log.v("dateofBirth", dateofBirth);
+            Log.d("dateofBirth", dateofBirth);
             if(dateofBirth != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
@@ -420,7 +419,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 years = TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR) - years;
                 for(int i = years; i <= TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
-                    Log.v("Years--->", i+"");
+                    Log.d("Years--->", i+"");
                 }
                 if(procedureYearList.size() == 0){
                     procedureYearList.add(TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR)+"");
@@ -494,8 +493,6 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     }
 
 
-
-
     /**
      * This function handles onClick event of done text in layout
      * saveBtnAction - is used to add new condition/allergy/medication
@@ -533,8 +530,6 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         MdliveUtils.closingActivityAnimation(MDLiveHealthModule.this);
     }
 
-
-
     /**
      * This function handles the saving of data when the user presses the save button. Only the newly
      * added conditions are saved.
@@ -553,15 +548,13 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 }
                 map.put("surgery_year", surgeryYear.getText().toString());
                 allergies.put("surgery", map);
-                Log.v("Post Body ", new Gson().toJson(allergies));
+                Log.d("Post Body ", new Gson().toJson(allergies));
                 saveNewConditionsOrAllergies(new Gson().toJson(allergies));
             }
         }else if(type == TYPE_CONSTANT.MEDICATION){
-            LinkedHashSet<String> listToSet = new LinkedHashSet<String>();
+
             ArrayList<String> duplicationCollection = MDLiveCommonConditionsMedicationsActivity.conditionsCollection;
-            listToSet.addAll(duplicationCollection);
-            listToSet.add(conditionText.getText().toString().toLowerCase());
-            if (((duplicationCollection.size() + 1) == listToSet.size())) {
+            if (!duplicationCollection.contains(conditionText.getText().toString())) {
                 HashMap<String, HashMap<String, String>> medications = new HashMap<>();
                 HashMap<String, String> map = new HashMap<>();
                 map.put("name", conditionText.getText().toString());
@@ -574,7 +567,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                 map.put("frequency", ((TextView)findViewById(R.id.timesTxt)).getText().toString() +" "+
                         ((TextView)findViewById(R.id.modeTxt)).getText().toString());
                 medications.put("medication", map);
-                Log.v("Post Body ", new Gson().toJson(medications));
+                Log.d("Post Body ", new Gson().toJson(medications));
                 saveNewConditionsOrAllergies(new Gson().toJson(medications));
             }else{
                 MdliveUtils.alert(null, MDLiveHealthModule.this, getResources().getString(R.string.mdl_medication_already_exist));
@@ -762,7 +755,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.v("Response String", response.toString());
+                Log.d("Response String", response.toString());
                 hideProgress();
                 setResult(RESULT_OK);
                 finish();
