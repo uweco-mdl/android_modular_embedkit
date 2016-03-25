@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -225,7 +224,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.mdl_make_selection));
-                //builder.setCancelable(false);
+                builder.setCancelable(true);
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mTimeZone.setText(items[item]);
