@@ -21,7 +21,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.TimeoutError;
@@ -63,7 +62,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
     private String appointmentMethodType;
     private String phys_ID;
     private boolean CheckdoconfirmAppmt = false;
-    private static String errorPhoneNumber=null;
+    private static String errorPhoneNumber = null;
     private boolean CheckTermsConsent = false;
     private boolean CheckPrivacyPolicy = false;
 
@@ -254,20 +253,20 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                             MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveConfirmappointment.this);
                         }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                             String responseBody = new String(error.networkResponse.data, "utf-8");
-                            Log.e("responseBody",responseBody);
+                            Log.d("responseBody",responseBody);
                             JSONObject errorObj = new JSONObject(responseBody);
                             if (errorObj.has("message")) {
                                 if(errorObj.has("phone")){
-                                    errorPhoneNumber=errorObj.getString("phone");
+                                    errorPhoneNumber = errorObj.getString("phone");
                                 }else{
-                                    errorPhoneNumber=null;
+                                    errorPhoneNumber = null;
                                 }
                                 showAlertPopup(errorObj.getString("message"));
                             } else if (errorObj.has("error")) {
                                 if(errorObj.has("phone")){
-                                    errorPhoneNumber=errorObj.getString("phone");
+                                    errorPhoneNumber = errorObj.getString("phone");
                                 }else{
-                                    errorPhoneNumber=null;
+                                    errorPhoneNumber = null;
                                 }
                                 showAlertPopup(errorObj.getString("error"));
                             }
@@ -292,7 +291,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("appointment_method", appointmentMethodType);
             params.put("alternate_visit_option", "No Answer");
 
-            if(phys_ID==null)
+            if(phys_ID == null)
             {
                 params.put("phys_availability_id", "");
             }else
@@ -317,7 +316,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
             params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
 
-            if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
+            if(MDLiveGetStarted.SAV_STATE_LOCATION == null)
                 params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
             else
                 params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
@@ -326,6 +325,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             params.put("promocode", promocodePreferences.getString(PreferenceConstants.OFFER_CODE, ""));
             Gson gson = new GsonBuilder().serializeNulls().create();
             ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
+            Log.d("Params Is", gson.toJson(params));
             services.doConfirmAppointment(gson.toJson(params), responseListener, errorListener);
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -347,14 +347,12 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         if (CheckdoconfirmAppmt) {
             if(MDLiveChooseProvider.isDoctorOnCall){
                 doOnCallConsultation();
-            }else if(MDLiveChooseProvider.isDoctorOnVideo){
+            } else if (MDLiveChooseProvider.isDoctorOnVideo){
                 doOnVideoConsultation();
-            }else{
+            } else {
                 doConfirmAppointment();
             }
-
         }
-
     }
 
     private void movetostartVisit() {
@@ -420,11 +418,11 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 final Date date = calendar.getTime();
                 ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(date));
                 String timeZoneValue = "";
-                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
+                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo() != null){
                     timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
                 }
                 if(Time != null && !Time.equalsIgnoreCase("Now")){
-                    ((TextView) findViewById(R.id.txtTime)).setText(Time +" "+ timeZoneValue);
+                    ((TextView) findViewById(R.id.txtTime)).setText(Time + " " + timeZoneValue);
                     calendar = TimeZoneUtils.getCalendarWithOffset(this);
                     SimpleDateFormat sdfNow = new SimpleDateFormat("EEEE, MMMM d");
                     sdfNow.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
@@ -435,10 +433,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         final Date dateTime = calendar.getTime();
                         ((TextView) findViewById(R.id.txtDate)).setText(sdf.format(dateTime));
                     }
-                }else if(Time!=null){
+                }else if(Time != null){
                     ((TextView) findViewById(R.id.txtTime)).setText(Time);
                 }
-                Log.v("Step 2 B", "11111");
+                Log.d("Step 2 B", "11111");
             } else {
                 Calendar calendar = TimeZoneUtils.getCalendarWithOffset(this);
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d");
@@ -448,7 +446,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 SimpleDateFormat df = new SimpleDateFormat("HH:mm  a");
                 String currentTime = df.format(calendar.getTime());
                 String timeZoneValue = "";
-                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo()!=null){
+                if(UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo() != null){
                     timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveConfirmappointment.this).getPersonalInfo().getTimezone();
                 }
                 ((TextView) findViewById(R.id.txtTime)).setText(currentTime+" "+timeZoneValue);
@@ -500,7 +498,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 dismissDialog();
                 try {
-                    Log.v("Response",response.toString());
+                    Log.d("Response",response.toString());
                     if(response.has("id")){
                         String callConsultationId=response.getString("id");
                         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
@@ -531,27 +529,27 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         };
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
-                    }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
+                    } else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
                         Log.e("responseBody",responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);
                         if (errorObj.has("message")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
+                            if (errorObj.has("phone")){
+                                errorPhoneNumber = errorObj.getString("phone");
+                            } else {
+                                errorPhoneNumber = null;
                             }
                             showAlertPopup(errorObj.getString("message"));
                         } else if (errorObj.has("error")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
+                            if (errorObj.has("phone")){
+                                errorPhoneNumber = errorObj.getString("phone");
+                            } else {
+                                errorPhoneNumber = null;
                             }
                             showAlertPopup(errorObj.getString("error"));
                         }
 
-                    }else{
+                    } else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
                     }
 
@@ -562,17 +560,17 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         };
 
-        SharedPreferences settings =   getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
-        HashMap<String, HashMap<String, Object>> onCallParams=new HashMap<>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, HashMap<String, Object>> onCallParams = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("consultation_method", "Video");
-        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
+        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID, "3"));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
 
-        if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
+        if(MDLiveGetStarted.SAV_STATE_LOCATION == null)
             params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         else
             params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
@@ -583,7 +581,6 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
         services.doOnCallAppointment(gson.toJson(onCallParams), responseListener, errorListener);
     }
-
 
 
     /***
@@ -597,10 +594,16 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             public void onResponse(JSONObject response) {
                 dismissDialog();
                 try {
-                    Log.d("Response",response.toString());
-                    if(response.has("message")){
-                        Intent thankYouIntent=new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+                    Log.d("Response", response.toString());
+                    if (response.has("message")) {
+                        Intent thankYouIntent = null;
+                        if (consultationType.equalsIgnoreCase("Phone")) {
+                            thankYouIntent = new Intent(MDLiveConfirmappointment.this, MDLiveAppointmentThankYou.class);
+                        } else {
+                            thankYouIntent = new Intent(MDLiveConfirmappointment.this, MDLiveStartVisit.class);
+                        }
                         thankYouIntent.putExtra("activitycaller", "OnCall");
+                        thankYouIntent.putExtra("consultationType", consultationType);
                         startActivity(thankYouIntent);
                         MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
                     }
@@ -627,27 +630,27 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         };
                         // Show timeout error message
                         MdliveUtils.connectionTimeoutError(null, MDLiveConfirmappointment.this);
-                    }else if(errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
+                    } else if (errorResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY){
                         String responseBody = new String(error.networkResponse.data, "utf-8");
-                        Log.e("responseBody",responseBody);
+                        Log.e("responseBody", responseBody);
                         JSONObject errorObj = new JSONObject(responseBody);
                         if (errorObj.has("message")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
+                            if (errorObj.has("phone")){
+                                errorPhoneNumber = errorObj.getString("phone");
+                            } else {
+                                errorPhoneNumber = null;
                             }
                             showAlertPopup(errorObj.getString("message"));
                         } else if (errorObj.has("error")) {
-                            if(errorObj.has("phone")){
-                                errorPhoneNumber=errorObj.getString("phone");
-                            }else{
-                                errorPhoneNumber=null;
+                            if (errorObj.has("phone")){
+                                errorPhoneNumber = errorObj.getString("phone");
+                            } else {
+                                errorPhoneNumber = null;
                             }
                             showAlertPopup(errorObj.getString("error"));
                         }
 
-                    }else {
+                    } else {
                         MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
                     }
                 } catch (Exception e) {
@@ -657,23 +660,22 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
         };
 
-
-        SharedPreferences settings =   getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
+        SharedPreferences settings = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
         HashMap<String, HashMap<String, Object>> onCallParams=new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("consultation_method", "Phone");
-        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID,"3"));
+        params.put("consultation_method", consultationType);
+        params.put("physician_type", settings.getString(PreferenceConstants.PROVIDERTYPE_ID, "3"));
         params.put("chief_complaint", reasonPref.getString(PreferenceConstants.REASON, "Not Sure"));
         params.put("call_in_number", MdliveUtils.getSpecialCaseRemovedNumber(settings.getString(PreferenceConstants.PHONE_NUMBER, "")));
         params.put("do_you_have_primary_care_physician", settings.getString(PreferenceConstants.PRIMARY_PHYSICIAN_STATUS, "No"));
 
-        if(MDLiveGetStarted.SAV_STATE_LOCATION==null)
+        if(MDLiveGetStarted.SAV_STATE_LOCATION == null)
             params.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         else
             params.put("state_id", MDLiveGetStarted.SAV_STATE_LOCATION);
 
-        onCallParams.put("user",params);
+        onCallParams.put("user", params);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
@@ -706,9 +708,9 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     public void showAlertPopup(String errorMessage){
         try {
-            Log.v("Alert","Cominr Alert");
+            Log.d("Alert","Coming Alert");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MDLiveConfirmappointment.this);
-            if(errorPhoneNumber==null){
+            if(errorPhoneNumber == null){
                 alertDialogBuilder
                         .setTitle("")
                         .setMessage(errorMessage)
@@ -719,7 +721,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                                 dialog.dismiss();
                             }
                         });
-            }else{
+            } else {
                 alertDialogBuilder
                         .setTitle("")
                         .setMessage(errorMessage)
@@ -727,12 +729,19 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         .setPositiveButton(StringConstants.ALERT_CALLNOW, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.v("Phone Inside", errorPhoneNumber);
+                                Log.d("Phone Inside", errorPhoneNumber);
                                 if (errorPhoneNumber != null) {
                                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(StringConstants.TEL + errorPhoneNumber.replaceAll("-", "")));
-                                    startActivity(intent);
-                                    MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
-                                }else{
+                                    try {
+                                        startActivity(intent);
+                                        MdliveUtils.startActivityAnimation(MDLiveConfirmappointment.this);
+                                    }catch(SecurityException secex){
+                                        Snackbar.make(findViewById(android.R.id.content),
+                                                getString(R.string.mdl_permission_call_not_available),
+                                                Snackbar.LENGTH_LONG).show();
+                                        dialog.dismiss();
+                                    }
+                                } else {
                                     dialog.dismiss();
                                 }
 
@@ -741,8 +750,8 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         }).setNegativeButton(StringConstants.ALERT_DISMISS, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MDLiveChooseProvider.isDoctorOnCall=false;
-                        MDLiveChooseProvider.isDoctorOnVideo=false;
+                        MDLiveChooseProvider.isDoctorOnCall = false;
+                        MDLiveChooseProvider.isDoctorOnVideo = false;
                         dialog.dismiss();
                     }
                 });
@@ -756,7 +765,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                 @Override
                 public void onShow(DialogInterface arg0) {
                     alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
-                    if(errorPhoneNumber!=null){
+                    if(errorPhoneNumber != null){
                         alertDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.mdlivePrimaryBlueColor));
                     }
                 }
