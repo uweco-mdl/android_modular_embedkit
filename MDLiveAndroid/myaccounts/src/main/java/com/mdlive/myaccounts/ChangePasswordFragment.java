@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -383,7 +382,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                     }
                 }
                 UserBasicInfo info = UserBasicInfo.readFromSharedPreference(getActivity());
-                if(!info.getPersonalInfo().getUsername().equals(mNewPassword)){
+                if (!info.getPersonalInfo().getUsername().equalsIgnoreCase(mNewPassword.getText().toString().trim())) {
                     passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
                     passwordDiffName = true;
