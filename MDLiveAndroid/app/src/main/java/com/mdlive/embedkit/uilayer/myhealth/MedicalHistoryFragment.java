@@ -416,7 +416,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         try {
             for (int i = 0; i < historyPercentageArray.length(); i++) {
                 if (historyPercentageArray.getJSONObject(i).has("life_style")) {
-                    if (historyPercentageArray.getJSONObject(i).optInt("life_style", 0)>10) {
+                    if (historyPercentageArray.getJSONObject(i).optInt("life_style", 0) > 10) {
                         ((TextView) view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                     }else{
                         ((TextView) view.findViewById(R.id.LifestyleTv)).setText(getResources().getString(R.string.mdl_pediatric_notcompleted_txt));
@@ -425,7 +425,7 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
             }
 
             if (medicalAggregationJsonObject.has("family_history")) {
-                if (medicalAggregationJsonObject.getJSONArray("family_history").length() > 20) {
+                if (medicalAggregationJsonObject.getJSONArray("family_history").length() > 0) {
                     ((TextView) view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_completed_txt));
                 }else{
                     ((TextView) view.findViewById(R.id.FamilyHistoryTv)).setText(getResources().getString(R.string.mdl_pediatric_notcompleted_txt));
