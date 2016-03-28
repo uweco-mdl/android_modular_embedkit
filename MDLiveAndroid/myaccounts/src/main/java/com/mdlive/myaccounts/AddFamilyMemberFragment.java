@@ -108,7 +108,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mCity = (EditText) addFamilyMember.findViewById(R.id.city);
         mState = (TextView) addFamilyMember.findViewById(R.id.state);
 
-        if(mUserBasicInfo  != null){
+        if(mUserBasicInfo != null){
             if(mUserBasicInfo.getPersonalInfo().getZipcode() != null){
                 mZip.setText(mUserBasicInfo.getPersonalInfo().getZipcode());
             }
@@ -119,7 +119,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 mCity.setText(mUserBasicInfo.getPersonalInfo().getCity());
             }
             if(mUserBasicInfo.getPersonalInfo().getState() != null){
-                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
+                for(int i = 0; i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); i++){
                     if(mUserBasicInfo.getPersonalInfo().getState().equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
                         mState.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                     }
@@ -186,7 +186,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             public void onClick(View v) {
 
                 final CharSequence[] items = {
-                        "Self", "Spouse" , "Child" , "Other"
+                        "Self", "Spouse", "Child", "Other"
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -264,7 +264,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                     }
 
-                    if (mUsername.getText().toString().length() > 5 && mUsername.getText().toString().length() < 16) {
+                    if (mUsername.getText().toString().length() > 5) {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                     } else {
@@ -305,7 +305,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                     mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                 }
 
-                if (mUsername.getText().toString().length() > 5 && mUsername.getText().toString().length() < 16) {
+                if (mUsername.getText().toString().length() > 5) {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                 } else {

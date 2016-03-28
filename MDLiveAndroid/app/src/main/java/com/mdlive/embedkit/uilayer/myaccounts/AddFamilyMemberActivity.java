@@ -122,7 +122,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 mCity.setText(mUserBasicInfo.getPersonalInfo().getCity());
             }
             if(mUserBasicInfo.getPersonalInfo().getState() != null){
-                for(int i=0;i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size();i++){
+                for(int i = 0; i < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); i++){
                     if(mUserBasicInfo.getPersonalInfo().getState().equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
                         mState.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                     }
@@ -239,7 +239,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final CharSequence[] items = {"Self", "Spouse" , "Child" , "Other"};
+                final CharSequence[] items = {"Self", "Spouse", "Child", "Other"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddFamilyMemberActivity.this);
                 builder.setTitle("Make your selection");
@@ -296,7 +296,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                     }
 
-                    if (mUsername.getText().toString().length() > 5 && mUsername.getText().toString().length() < 16) {
+                    if (mUsername.getText().toString().length() > 5) {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                     } else {
@@ -338,7 +338,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                 }
 
-                if (mUsername.getText().toString().length() > 5 && mUsername.getText().length() < 16) {
+                if (mUsername.getText().toString().length() > 5) {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
                 } else {
@@ -578,8 +578,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                String activityCaller  = getIntent().getStringExtra("activitycaller");
-                Log.v("Caller bname", activityCaller);
+                String activityCaller = getIntent().getStringExtra("activitycaller");
+                Log.d("Caller name", activityCaller);
                 if(activityCaller.equals("getstarted")){
                     try {
                         Class clazz = Class.forName(getString(R.string.mdl_mdlive_sav_module));
