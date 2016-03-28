@@ -411,22 +411,29 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
             String dateofBirth =userBasicInfo.getPersonalInfo().getBirthdate();
 //            String dateofBirth = sharedpreferences.getString(PreferenceConstants.DATE_OF_BIRTH, null);
             procedureYearList.clear();
-            Log.d("dateofBirth", dateofBirth);
+
             if(dateofBirth != null){
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                String birthYear = dateofBirth.substring(dateofBirth.lastIndexOf("/") + 1, dateofBirth.length());
+                int startYear = Integer.parseInt(birthYear);
+                for(int i = startYear; i<= year ;i++) {
+                   procedureYearList.add(String.valueOf(i));
+                }
+                /*SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 sdf.setTimeZone(TimeZoneUtils.getOffsetTimezone(this));
                 int years = MdliveUtils.calculateAge(sdf.parse(dateofBirth),this);
                 years = TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR) - years;
                 for(int i = years; i <= TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR); i++){
                     procedureYearList.add(i+"");
                     Log.d("Years--->", i+"");
-                }
+                }*/
                 if(procedureYearList.size() == 0){
                     procedureYearList.add(TimeZoneUtils.getCalendarWithOffset(this).get(Calendar.YEAR)+"");
                 }
             }
             yearAdapter.notifyDataSetChanged();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         getSurgeryNameList(nameAdapter);
