@@ -73,7 +73,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
     private String zip = null;
     RelativeLayout mAddressVisibility,mStateLayout;
     private WebView myAccountHostedPCI;
-    private Button mScanCardBtn;
+    //private Button mScanCardBtn;
 
     private int year, month;
     Calendar expiryDate = Calendar.getInstance();
@@ -128,12 +128,12 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             myAccountHostedPCI.loadUrl("file:///android_asset/htdocs/index.html");
         }
         myAccountHostedPCI.addJavascriptInterface(new IJavascriptHandler(), "billing");
-        mScanCardBtn.setOnClickListener(new View.OnClickListener() {
+/*        mScanCardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CardIOPlugin.scanCard(getActivity());
             }
-        });
+        });*/
         return billingInformation;
 
     }
@@ -185,7 +185,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         mAddressVisibility = (RelativeLayout) billingInformation.findViewById(R.id.addressVisibility);
         myAccountHostedPCI = (WebView) billingInformation.findViewById(R.id.myAccountHostedPCI);
         mStateLayout = (RelativeLayout)billingInformation.findViewById(R.id.stateLayout);
-        mScanCardBtn = (Button)billingInformation.findViewById(R.id.ScanCardBtn);
+        //mScanCardBtn = (Button)billingInformation.findViewById(R.id.ScanCardBtn);
         mNameOnCard.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -283,9 +283,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
                     city = myProfile.getString("billing_city");
                     address1 = myProfile.getString("billing_address1");
                     cardExpirationMonth = myProfile.getString("cc_expmonth");
-                    if (myProfile.optBoolean("allow_cc_scan", false)){
+/*                    if (myProfile.optBoolean("allow_cc_scan", false)){
                         mScanCardBtn.setVisibility(View.VISIBLE);
-                    }
+                    }*/
 
 
 
@@ -340,9 +340,9 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
         }else if(response!=null){
             try {
                 JSONObject myProfile = new JSONObject(response);
-                if (myProfile.optBoolean("allow_cc_scan", false)) {
+                /*if (myProfile.optBoolean("allow_cc_scan", false)) {
                     mScanCardBtn.setVisibility(View.VISIBLE);
-                }
+                }*/
             } catch(Exception e){
                 e.printStackTrace();
             }
