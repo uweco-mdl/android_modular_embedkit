@@ -517,7 +517,6 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 passwordspecialChars.setVisibility(View.VISIBLE);
             }
 
-
             if(!TextUtils.isEmpty(mCurrentPassword.getText().toString().trim())
                 && !TextUtils.isEmpty(mNewPassword.getText().toString().trim())
                 && !TextUtils.isEmpty(mConfirmPassword.getText().toString().trim()))
@@ -526,7 +525,6 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             }else{
                 ((MyAccountsHome) getActivity()).hideTick();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -570,7 +568,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             }
         } else {
             selectedImageIcon.setVisibility(View.VISIBLE);
-            if(severityTv!=null) {
+            if(severityTv != null) {
                 severityTv.setVisibility(View.VISIBLE);
             }
         }
@@ -586,13 +584,13 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
         if ((mCurrentPassword.getText() != null && mCurrentPassword.getText().toString().length() != 0) ||
                 (mConfirmPassword.getText() != null && mConfirmPassword.getText().toString().length() != 0) ||
                 (mNewPassword.getText() != null && mNewPassword.getText().toString().length() != 0)) {
-            passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
-            passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
+//            passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
+//            passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
             passwordspecialChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
             passwordspecialChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle), null, null, null);
         } else {
-            passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
-            passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
+//            passworddiffName.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
+//            passworddiffName.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
             passwordspecialChars.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
             passwordspecialChars.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle), null, null, null);
         }
@@ -667,7 +665,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
             } else {
                 /*Toast.makeText(getActivity(), "New & Confirm password mismatch", Toast.LENGTH_SHORT).show();*/
                 Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        "New & Confirm password mismatch",
+                        getString(R.string.mdl_newconfirm_mismatch),
                         Snackbar.LENGTH_SHORT).show();
             }
         } else {
