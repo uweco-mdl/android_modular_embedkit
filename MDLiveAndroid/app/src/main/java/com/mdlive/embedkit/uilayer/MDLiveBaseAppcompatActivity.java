@@ -724,6 +724,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         final Intent intent = new Intent();
         intent.setAction(BroadcastConstant.LOGIN_ACTION);
         intent.putExtra(BroadcastConstant.UNLOCK_FLAG, BroadcastConstant.SHOW_LOGIN_AFTER_LOGOUT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         return intent;
     }
