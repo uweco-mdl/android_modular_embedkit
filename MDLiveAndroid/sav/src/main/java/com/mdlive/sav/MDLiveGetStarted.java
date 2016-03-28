@@ -608,6 +608,8 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
      * @param response
      */
     public void handlePendingResponse(String response){
+        // DEBUGGING.  o.uwechue
+        Log.d("** MDLGetStarted","*********\nHTTP Response: "+ response);
         try{
             JSONObject resObj=new JSONObject(response);
             JSONArray appointArray=resObj.getJSONArray("appointments");

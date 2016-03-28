@@ -18,6 +18,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.sav.MDLiveChooseProvider;
+import com.mdlive.sav.MDLiveProviderDetails;
 import com.mdlive.sav.R;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
@@ -107,7 +108,7 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
                 }
             }else{
                 if (getTimeSlotToNowMode() != null && getTimeSlotToNowMode().length() != 0 && getTimeSlotToNowMode().equalsIgnoreCase("Now")
-                        && getConsultationType() != null && getConsultationType().equalsIgnoreCase("phone")) {
+                        && MDLiveProviderDetails.getConsultationType(this) != null && MDLiveProviderDetails.getConsultationType(this).equalsIgnoreCase("phone")) {
                     findViewById(R.id.onCallThankyouLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.thankyouLayout).setVisibility(View.GONE);
                     findViewById(R.id.cencel_info).setVisibility(View.GONE);
@@ -172,10 +173,12 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
         return sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, null);
     }
 
+    /*
     private String getConsultationType() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         return sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, null);
     }
+    */
 
     public void showHamburgerBell() {
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_thankyou_string).toUpperCase());

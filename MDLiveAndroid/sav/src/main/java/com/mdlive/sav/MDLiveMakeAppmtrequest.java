@@ -277,6 +277,10 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 && !TextUtils.isEmpty(selectionType))
         {
             HashMap params1 = new HashMap();
+
+            // DEBUG MODE.   o.uwechue
+            Log.d("MDLMakeAppointReq","************\nAPPOINTMENT TYPE (1=Vid, 2=Phon): "+ selectedvideo+"\n************");
+
             params1.put("appointment_method", selectedvideo);
             params1.put("contact_number",strappointmentContactNumber);
             params1.put("chief_complaint", "Tendinitis");
@@ -473,7 +477,8 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Sucess Response", response.toString());
+                // DEBUGGING.  o.uwechue
+                Log.d("Success:MakeAppointmt","*********\nHTTP Response: "+ response);
                 handlepostSuccessResponse(response);
 
             }

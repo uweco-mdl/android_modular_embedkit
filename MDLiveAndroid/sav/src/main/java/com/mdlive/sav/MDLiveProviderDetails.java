@@ -80,7 +80,7 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
     private TextView tapSeetheDoctorTxt, byvideoBtn, byphoneBtn, reqfutureapptBtn;
     private LinearLayout tapSeetheDoctorTxtLayout, byvideoBtnLayout, byphoneBtnLayout,videophoneparentLl;
     private RelativeLayout reqfutureapptBtnLayout;
-    private boolean selectedTimeslot=false;
+    public static boolean selectedTimeslot = false;
     private String SharedLocation,AppointmentDate,AppointmentType,groupAffiliations,updatedAppointmentDate;
     private String Shared_AppointmentDate,longLocation;
     private LinearLayout detailsLl, providerImageCollectionHolder;
@@ -445,6 +445,8 @@ public class MDLiveProviderDetails extends MDLiveBaseActivity{
      *
      */
     private void handleSuccessResponse(JSONObject response) {
+        // DEBUGGING.  o.uwechue
+        Log.d("MDLProviderDetails","*********\nHTTP Response: "+ response);
         try {
             //Fetch Data From the Services
             Log.d("Response details", "******************\n*******************\n"+response.toString());
@@ -703,7 +705,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
     private void onlyPhone() {
         tapSeetheDoctorTxt.setText(getString(R.string.mdl_talk_to_doctor));
-        saveConsultationType("Phone");
+        saveConsultationType("Phone", this);
         findViewById(R.id.see_icon).setBackgroundResource(R.drawable.phone_icon_white);
         reqfutureapptBtnLayout.setVisibility(View.GONE);
         videophoneparentLl.setVisibility(View.GONE);
@@ -718,7 +720,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
 
     private void onlyVideo() {
         tapSeetheDoctorTxt.setText(getString(R.string.mdl_see_doc_now));
-        saveConsultationType("Video");
+        saveConsultationType("Video", this);
         findViewById(R.id.see_icon).setBackgroundResource(R.drawable.video_icon_white);
         reqfutureapptBtnLayout.setVisibility(View.GONE);
         videophoneparentLl.setVisibility(View.GONE);
@@ -751,7 +753,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
                 accessModeCall("video");
-                saveConsultationType("Video");
+                saveConsultationType("Video", MDLiveProviderDetails.this);
                 saveTimeSlotToNowMode();
             }
 
@@ -770,7 +772,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
                 accessModeCall("phone");
-                saveConsultationType("Phone");
+                saveConsultationType("Phone", MDLiveProviderDetails.this);
             }
         });
     }
@@ -787,6 +789,10 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.ACCESS_MODE, accessType);
         editor.putString(PreferenceConstants.CONSULTATION_TYPE, accessType);
+
+        // DEBUG MODE.   o.uwechue
+        Log.d("MDLproviderDetails", "*******\nVIDEO/PHONE Type Saved :" + accessType + "\n*******");
+
         editor.commit();
     }
     //This is to show the by video and by Phone icon for both the available now (video or phone)
@@ -810,7 +816,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 byvideoBtn.setTextColor(Color.WHITE);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                 byphoneBtn.setTextColor(Color.WHITE);
-                saveConsultationType("Video");
+                saveConsultationType("Video", MDLiveProviderDetails.this);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
                 startActivity(Reasonintent);
                 MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
@@ -826,7 +832,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView)findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
                 ((ImageView)findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
-                saveConsultationType("Phone");
+                saveConsultationType("Phone", MDLiveProviderDetails.this);
                 byphoneBtn.setTextColor(Color.WHITE);
                 byvideoBtn.setTextColor(Color.WHITE);
                 Intent Reasonintent = new Intent(MDLiveProviderDetails.this,MDLiveReasonForVisit.class);
@@ -939,7 +945,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
             tapSeetheDoctorTxt.setText("See this doctor now");
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_seethisdoctor_button));
-            saveConsultationType("Video");
+            saveConsultationType("Video", this);
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.video_icon_white);
             reqfutureapptBtnLayout.setVisibility(viewsVisibility);
             videophoneparentLl.setVisibility(View.GONE);
@@ -964,7 +970,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
             tapSeetheDoctorTxt.setText("Talk to this doctor now");
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_talktodoctor_button));
-            saveConsultationType("Phone");
+            saveConsultationType("Phone", this);
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.phone_icon_white);
             reqfutureapptBtnLayout.setVisibility(viewsVisibility);
             videophoneparentLl.setVisibility(View.GONE);
@@ -1082,7 +1088,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                         for (TextView tv : videoList) {
                             layout.addView(tv);
                         }
-                        saveConsultationType("Video");
+                        saveConsultationType("Video", MDLiveProviderDetails.this);
                         //Enable Request Appointment Button
                         enableReqAppmtBtn();
                         ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -1166,7 +1172,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                                 for (TextView tv : videoList) {
                                     layout.addView(tv);
                                 }
-                                saveConsultationType("Video");
+                                saveConsultationType("Video", MDLiveProviderDetails.this);
                                 //Enable Request Appointment Button
 
                                 horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
@@ -1213,7 +1219,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                                 for (TextView tv : phoneList) {
                                     layout.addView(tv);
                                 }
-                                saveConsultationType("Phone");
+                                saveConsultationType("Phone", MDLiveProviderDetails.this);
                                 //Enable Request Appointment Button
 
                                 horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
@@ -1276,7 +1282,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     for (TextView tv : videoList) {
                         layout.addView(tv);
                     }
-                    saveConsultationType("Video");
+                    saveConsultationType("Video", MDLiveProviderDetails.this);
                     //Enable Request Appointment Button
 
                     horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
@@ -1328,7 +1334,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
                     for (TextView tv : phoneList) {
                         layout.addView(tv);
                     }
-                    saveConsultationType("Phone");
+                    saveConsultationType("Phone", MDLiveProviderDetails.this);
                     //Enable Request Appointment Button
                     enableReqAppmtBtn();
                     horizontalscrollview.smoothScrollTo(layout.getChildAt(0).getLeft(),0);
@@ -1450,7 +1456,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
     private void visibilityBasedOnHorizontalTextView(String position) {
         if(position.equalsIgnoreCase("video"))
         {
-            saveConsultationType("Video");
+            saveConsultationType("Video", this);
             reqfutureapptBtnLayout.setVisibility(View.GONE);
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_blue_rounded_corner);
@@ -1498,7 +1504,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             });
         }
         else  if(position.equalsIgnoreCase("phone")){
-            saveConsultationType("Phone");
+            saveConsultationType("Phone", this);
             byvideoBtnLayout.setVisibility(View.VISIBLE);
             byvideoBtnLayout.setClickable(false);
             byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_white_rounded_corner);
@@ -1538,13 +1544,24 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
         MdliveUtils.startActivityAnimation(MDLiveProviderDetails.this);
     }
 
-    public void saveConsultationType(String consultationType){
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+    public static void saveConsultationType(String consultationType, Context ctx){
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         if(consultationType != null){
             editor.putString(PreferenceConstants.CONSULTATION_TYPE,consultationType);
+            // DEBUG MODE.   o.uwechue
+            Log.d("MDLproviderDetails","*******\nVIDEO/PHONE Type Saved :"+ consultationType+"\n*******");
         }
         editor.commit();
+    }
+
+    public static String getConsultationType(Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        // DEBUG MODE.   o.uwechue
+        Log.e("MDLAppointThnx", "*******\nVIDEO/PHONE Type FETCHED :"
+             + sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, null)
+             + "\n*******");
+        return sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, null);
     }
 
     /**
@@ -1991,5 +2008,9 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
         MdliveUtils.closingActivityAnimation(MDLiveProviderDetails.this);
     }
 
+    public static boolean getSelectedTimeslot()
+    {
+        return(selectedTimeslot);
+    }
 
 }

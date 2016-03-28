@@ -114,6 +114,10 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                 public void run() {
                     Log.v("Run","Run Inside");
                     getOnCallProviderStatus();
+                    if(MDLiveChooseProvider.doDocOnCall)
+                        getOnCallProviderStatus();
+                    else
+                        getProviderStatus();
                 }
             };
             runnable.run();

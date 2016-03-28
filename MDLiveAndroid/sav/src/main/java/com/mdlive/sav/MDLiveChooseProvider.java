@@ -76,6 +76,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     private boolean flag = false;
     public static boolean isDoctorOnCall = false, isDoctorOnVideo = false, fromGetSartedPage = true;
     public static boolean mDoctorOnCall = false, mDoctorOnVideo = false;
+    public static boolean doDocOnCall = false;
     int docOnCalLinLayVisibility = View.VISIBLE;
 
     private Button seeFirstAvailDoctor;
@@ -160,6 +161,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        doDocOnCall = false;
         mHandler.post(mRunnable);
         baseadapter.notifyDataSetChanged();
     }
@@ -201,6 +203,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             public void onClick(View view) {
                 isDoctorOnCall = mDoctorOnCall;
                 isDoctorOnVideo = mDoctorOnVideo;
+                MDLiveChooseProvider.doDocOnCall= true;
                 Intent seeFirstAvailableDocIntent = new Intent(MDLiveChooseProvider.this, MDLiveDoctorOnCall.class);
                 startActivity(seeFirstAvailableDocIntent);
             }
@@ -295,13 +298,13 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
     }
     /**
-     *
      *  Successful Response Handler for Load Basic Info.
-     *   Here if the doctor on call String returns true then the Doctor On Call should
-     *   be available else the doctor on call should be hidden.
-     *
+     *  Here if the doctor on call String returns true then the Doctor On Call should
+     *  be available else the doctor on call should be hidden.
      */
     private void handleSuccessResponse(String response) {
+        // DEBUGGING.  o.uwechue
+        Log.d("** MDLChooseProvider","*********\nMDLChooseProvider HTTP Response: "+ response);
         try {
             docOnCalLinLay.setVisibility(View.GONE);
             filterMainRl.setVisibility(View.VISIBLE);
@@ -348,10 +351,12 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                 }
             }
 
+            // DEBUG MODE.   o.uwechue
+            Log.e("MDLchooseProvider","***********\n isDoctorOnVideo :"+isDoctorOnVideo);
+            Log.e("MDLchooseProvider","***********\n isDoctorOnCall :"+isDoctorOnCall);
 
             if(responObj.get("doctor_on_call").isJsonNull())
             {
-
                 if (responObj.has("physicians")) {
                     JsonArray responseArray = responObj.get("physicians").getAsJsonArray();
                     if (responseArray.size() != 0) {
@@ -372,7 +377,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
 
                     }
                 }
-
             }else if(!responObj.get("physicians").isJsonNull()){
                 if (responObj.has("physicians")){
                     JsonArray  responArray = responObj.get("physicians").getAsJsonArray();

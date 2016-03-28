@@ -62,15 +62,14 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         byvideoBtn = (TextView)findViewById(R.id.byvideoBtn);
         byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
 
-        Log.d("Doc On call", "" + MDLiveChooseProvider.isDoctorOnCall);
-        Log.d("Doc On Video", "" + MDLiveChooseProvider.isDoctorOnVideo);
-
+        // DEBUGGING.  o.uwechue
+        Log.d("MDLDocOnCall", "***************/n(Initial) is PHONE or VIDEO Consult ? :" + MDLiveProviderDetails.getConsultationType(this));
 
         byphoneBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
-                saveConsultationType("Phone");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
+                MDLiveProviderDetails.saveConsultationType("Phone", MDLiveDoctorOnCall.this);   // need to save the consultation type which will be getting reflected in confirm appointment screen.
                 /*
                 byphoneBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView) findViewById(R.id.phoneicon)).setImageResource(R.drawable.phone_icon_white);
@@ -92,7 +91,8 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
             @Override
             public void onClick(View view) {
                 saveDoctorName("Doctor On Call");//Doctor name Needs to be saved as Doctor on Call in case of user doing consultation on this flow.
-                saveConsultationType("Video");//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
+                MDLiveProviderDetails.saveConsultationType("Video", MDLiveDoctorOnCall.this);//Method need to save the consultation type which will be getting reflected in confirm appointment screen.
+
                 /*
                 byvideoBtnLayout.setBackgroundResource(R.drawable.searchpvr_green_rounded_corner);
                 ((ImageView) findViewById(R.id.videoicon)).setImageResource(R.drawable.video_icon_white);
@@ -160,6 +160,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
 
     }
 
+    /*
     public void saveConsultationType(String consultationType){
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -168,6 +169,7 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
         }
         editor.commit();
     }
+    */
 
     public void saveDoctorName(String docName){
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);

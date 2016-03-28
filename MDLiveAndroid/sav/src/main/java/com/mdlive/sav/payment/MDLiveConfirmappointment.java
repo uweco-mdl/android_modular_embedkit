@@ -32,6 +32,7 @@ import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
 import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.sav.MDLiveGetStarted;
+import com.mdlive.sav.MDLiveProviderDetails;
 import com.mdlive.sav.appointment.MDLiveAppointmentThankYou;
 import com.mdlive.sav.MDLiveChooseProvider;
 import com.mdlive.sav.R;
@@ -186,7 +187,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
                 @Override
                 public void onResponse(JSONObject response) {
-                //Log.v("confirm appmt res---->", response.toString());
+                //Log.d("***Confirm Appointment", response.toString());
                     hideProgress();
                     try {
                         String apptId = response.getString("appointment_id");
@@ -285,6 +286,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
             SharedPreferences reasonPref = getSharedPreferences(PreferenceConstants.REASON_PREFERENCES, Context.MODE_PRIVATE);
             HashMap<String, Object> params = new HashMap<String, Object>();
+
+            // DEBUG MODE.   o.uwechue
+            Log.d("MDLConfirmAppoint","************\nAPPOINTMENT TYPE (1=Vid, 2=Phon): "+ appointmentMethodType+"\n************");
+
             final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
             Log.v("PostValue confirmTS", TimeStamp);
             Log.v("PostValue phys", phys_ID);
@@ -345,6 +350,24 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
 
     public void rightBtnOnClick(View v) {
         if (CheckdoconfirmAppmt) {
+            if (MDLiveChooseProvider.isDoctorOnCall
+                    && "Phone".equals(MDLiveProviderDetails.getConsultationType(this))
+                    && MDLiveChooseProvider.doDocOnCall) {
+                // DEBUG MODE.   o.uwechue
+                Log.e("MDLConfirmAppt","*******\n !! DOC ON CALL (PHONE) !!\n*******");
+                doOnCallPhoneConsultation();
+            } else if (MDLiveChooseProvider.isDoctorOnVideo
+                    && "Video".equals(MDLiveProviderDetails.getConsultationType(this))
+                    && MDLiveChooseProvider.doDocOnCall) {
+                // DEBUG MODE.   o.uwechue
+                Log.e("MDLConfirmAppt","*******\n !! DOC ON CALL (VIDEO) !!\n*******");
+                doOnCallVideoConsultation();
+            } else {
+                // DEBUG MODE.   o.uwechue
+                Log.e("MDLConfirmAppt","*******\n !! Confirm Appointment !!\n*******");
+                doConfirmAppointment();
+            }
+            /*
             if(MDLiveChooseProvider.isDoctorOnCall){
                 doOnCallConsultation();
             } else if (MDLiveChooseProvider.isDoctorOnVideo){
@@ -352,6 +375,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             } else {
                 doConfirmAppointment();
             }
+            */
         }
     }
 
@@ -379,6 +403,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             String providerType = sharedpreferences.getString(PreferenceConstants.PROVIDER_MODE, "");
             ((TextView) findViewById(R.id.txtproviderType)).setText(providerType);
             consultationType = sharedpreferences.getString(PreferenceConstants.CONSULTATION_TYPE, "");
+
+            // DEBUG MODE.   o.uwechue
+            Log.d("MDL_ConfirmAppoint", "*******\nVIDEO/PHONE Type FETCHED :" + consultationType + "\n*******");
+
             String consultationTypeStr = getString(R.string.mdl_title_video_home);
             if (consultationType.equalsIgnoreCase("phone")){
                 consultationTypeStr = getString(R.string.mdl_phone_consultation);
@@ -386,6 +414,17 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
             }
             ((TextView) findViewById(R.id.txtConsultationtype)).setText(consultationTypeStr);
             Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+
+            // ADDED.   o.uwechue
+            if(!MDLiveChooseProvider.doDocOnCall && !MDLiveProviderDetails.getSelectedTimeslot()) {
+                Time = "Now";
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(PreferenceConstants.SELECTED_TIMESLOT, "Now").commit();
+            }
+            else {
+                Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+            }
+
             TimeStamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
             phys_ID = sharedpreferences.getString(PreferenceConstants.SELECTED_PHYSID, "");
             if (consultationType.equalsIgnoreCase("Video")) {
@@ -491,7 +530,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
      * On successful response it will return an appointment ID which will saved in shared Preference for future use.
      * On Error respose the corresponding message will be notified to the user.
      */
-    private void doOnVideoConsultation() {
+    private void doOnCallVideoConsultation() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
@@ -578,6 +617,10 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
         onCallParams.put("user", params);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
+
+        // DEBUG MODE.   o.uwechue
+        Log.d("MDLConfirmAppt_svc", "*******\n --- DOC ON VIDEO CALL \n*******");
+
         ConfirmAppointmentServices services = new ConfirmAppointmentServices(MDLiveConfirmappointment.this, null);
         services.doOnCallAppointment(gson.toJson(onCallParams), responseListener, errorListener);
     }
@@ -587,14 +630,14 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
      * This method will be called when doctor on call by Phone is available
      * On Success response it will be taken to the thank you screen.
      */
-    private void doOnCallConsultation() {
+    private void doOnCallPhoneConsultation() {
         showProgressDialog();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 dismissDialog();
                 try {
-                    Log.d("Response", response.toString());
+                    Log.d("ConfirmAppointResponse", response.toString());
                     if (response.has("message")) {
                         Intent thankYouIntent = null;
                         if (consultationType.equalsIgnoreCase("Phone")) {
