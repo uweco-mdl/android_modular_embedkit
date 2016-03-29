@@ -692,7 +692,7 @@ public class MdliveUtils {
      * @param error     Received error object in corresponding activities
      * @param pDialog   Progress Dialog obj to show tho dialog
      */
-
+    /*
     public static void handelVolleyErrorResponse(Activity cxt, VolleyError error,ProgressDialog pDialog) {
         try {
             final WeakReference<Activity> reference = new WeakReference<Activity>(cxt);
@@ -739,6 +739,7 @@ public class MdliveUtils {
             e.printStackTrace();
         }
     }
+    */
 
     public static void showVisitCloseAlert(final WeakReference<Activity> reference, final String message) {
         if (reference != null && reference.get() != null) {

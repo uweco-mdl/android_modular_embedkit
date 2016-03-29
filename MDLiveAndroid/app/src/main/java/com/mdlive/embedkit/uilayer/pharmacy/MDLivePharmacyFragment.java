@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,8 +27,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
-//import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocationCoordinates;
+import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 import com.mdlive.unifiedmiddleware.parentclasses.bean.response.UserBasicInfo;
 import com.mdlive.unifiedmiddleware.plugins.NetworkErrorListener;
@@ -46,7 +45,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private TextView addressline1, addressline2, addressline3;
     private SupportMapFragment mapView;
-//    private RelativeLayout progressBar;
+    // private RelativeLayout progressBar;
     private GoogleMap map;
     private View mSmallMapView;
     private Bundle bundletoSend = new Bundle();
@@ -56,13 +55,63 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private LocationCoordinates locationService;
     private boolean isVisibleToUser = false;
     private boolean isLoading = false;
-    public static MDLivePharmacyFragment newInstance() {
-        final MDLivePharmacyFragment pharmacyFragment = new MDLivePharmacyFragment();
-        return pharmacyFragment;
-    }
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgressDialog();
+            if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                if (lat != 0 && lon != 0) {
+                    Intent i = new Intent(parentActivity, MDLivePharmacyResult.class);
+                    i.putExtra("longitude", lat);
+                    i.putExtra("latitude", lon);
+                    i.putExtra("FROM_MY_HEALTH", true);
+                    i.putExtra("PHARMACY_SELECTED", false);
+                    i.putExtra("errorMesssage", getString(R.string.mdl_no_pharmacies_listed));
+                    startActivity(i);
+                    MdliveUtils.startActivityAnimation(parentActivity);
+                } else {
+                    MdliveUtils.showGPSFailureDialog(parentActivity,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
+                                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                    pharmacyintent.putExtra("PHARMACY_SELECTED", false);
+                                    startActivity(pharmacyintent);
+                                }
+                            });
+                }
+            } else {
+                /*MdliveUtils.showGPSFailureDialog(parentActivity,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
+                                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                                pharmacyintent.putExtra("PHARMACY_SELECTED", false);
+                                startActivity(pharmacyintent);
+                            }
+                        });*/
+                Intent pharmacyintent = new Intent(parentActivity, MDLivePharmacyChange.class);
+                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
+                pharmacyintent.putExtra("PHARMACY_SELECTED", false);
+                startActivity(pharmacyintent);
+            }
+        }
+    };
 
     public MDLivePharmacyFragment() {
         super();
+    }
+
+    public static MDLivePharmacyFragment newInstance() {
+        final MDLivePharmacyFragment pharmacyFragment = new MDLivePharmacyFragment();
+        return pharmacyFragment;
     }
 
     @Override
@@ -81,7 +130,7 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         }
         try {
             view = inflater.inflate(R.layout.mdlive_pharmacy_fragment, container, false);
-            getActivity().setTitle(getString(R.string.mdl_pharmacy));
+            parentActivity.setTitle(getString(R.string.mdl_pharmacy));
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
@@ -106,18 +155,39 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         locationService = new LocationCoordinates(getActivity());
+        if (MdliveUtils.checkPlayServices(getActivity())) {
+            // Building the GoogleApi client
+            locationService.buildGoogleApiClient();
+        }
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
         initializeMapView();
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            parentActivity.unregisterReceiver(locationReceiver);
+            if (locationService != null && locationService.isTrackingLocation()) {
+                locationService.stopListeners();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onResume() {
+        try {
+            if (MdliveUtils.checkPlayServices(getActivity())) {
+                locationService.setBroadCastData(StringConstants.DEFAULT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onResume();
-     /*   if(!isLoading){
-            isLoading = true;
-            getUserPharmacyDetails();
-        }*/
         getUserPharmacyDetails();
     }
 
@@ -138,9 +208,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
 
 
     /*
-            * This function is mainly focused on initializing view in layout.
-            * LocalisationHelper will be initialized over here to update tag details of view declared in xml
-            */
+     * This function is mainly focused on initializing view in layout.
+     * LocalisationHelper will be initialized over here to update tag details of view declared in xml
+     */
     public void initializeViews(View view) {
         addressline1 = ((TextView) view.findViewById(R.id.addressline1));
         addressline2 = ((TextView) view.findViewById(R.id.addressline2));
@@ -150,7 +220,6 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         mSmallMapView = view.findViewById(R.id.small_map_layout);
     }
 
-
     /*
    * This function will get latest default pharmacy details of users from webservice.
    * PharmacyService class handles webservice integration.
@@ -159,7 +228,6 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
    * once message received by  @responseListener then it will redirect to handleSuccessResponse function
    * to parse message content.
    */
-
     public void getUserPharmacyDetails() {
 //        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -172,19 +240,18 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                progressBar.setVisibility(View.GONE);
-                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
             }
         };
         callPharmacyService(responseListener, errorListener);
     }
 
-
     /**
      *  This method is used to call pharmacy service
      *  In pharmacy service, it requires GPS location details to get distance details.
      *
-     *  @param errorListener - Pharmacy error response listener
-     *  @param responseListener - Pharmacy detail Success response listener
+     *  @param errorListener        Pharmacy error response listener
+     *  @param responseListener     Pharmacy detail Success response listener
      */
     public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
                                     final NetworkErrorListener errorListener){
@@ -192,8 +259,11 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             services.doMyPharmacyRequest("", "", responseListener, errorListener);
     }
 
-
-    /* This function is used to initialize map view for MDLivePharmacy activity */
+    /**
+     * This function handles webservice response and parsing the contents.
+     * Once parsing operation done, then it will update UI
+     * bundletoSend is stand for to send bundle of datas received from webservice to next page.
+     */
     public void initializeMapView() {
         HttpsURLConnection.setDefaultSSLSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
         mapView = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView));
@@ -215,7 +285,6 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     *  Once parsing operation done, then it will update UI
     *  bundletoSend is stand for to send bundle of datas received from webservice to next page.
     */
-
     private void handleSuccessResponse(JSONObject response) {
         try {
 //            progressBar.setVisibility(View.GONE);
@@ -270,11 +339,11 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 Class clazz = Class.forName(getString(R.string.mdl_mdlive_myhealth_module));
                 Method method = clazz.getMethod("getViewPager");
                 if(isVisibleToUser && parentActivity.getClass().isAssignableFrom(clazz) && (((ViewPager)method.invoke(clazz.cast(parentActivity))).getCurrentItem() == 1)){
-                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getActivity());
+                    final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(parentActivity);
                     if(userBasicInfo.getNotifications().getPharmacyDetails() == null){
                         if(locationService!=null && locationService.checkLocationServiceSettingsEnabled(getActivity())){
                             showProgressDialog();
-                            getActivity().registerReceiver(locationReceiver, intentFilter);
+                            parentActivity.registerReceiver(locationReceiver, intentFilter);
                             locationService.setBroadCastData(getClass().getSimpleName());
                             locationService.startTrackingLocation(getActivity());
                         } else {
@@ -344,49 +413,4 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
-
-    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            hideProgressDialog();
-            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")){
-                double lat=intent.getDoubleExtra("Latitude",0d);
-                double lon=intent.getDoubleExtra("Longitude",0d);
-                if(lat!=0 && lon!=0){
-                    Intent i = new Intent(getActivity(), MDLivePharmacyResult.class);
-                    i.putExtra("longitude", lat + "");
-                    i.putExtra("latitude", lon + "");
-                    i.putExtra("FROM_MY_HEALTH", true);
-                    i.putExtra("PHARMACY_SELECTED",false);
-                    i.putExtra("errorMesssage", "No Pharmacies listed in your location");
-                    startActivity(i);
-                    MdliveUtils.startActivityAnimation(getActivity());
-                } else{
-                    MdliveUtils.showGPSFailureDialog(getActivity(),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                                    pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                                    pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                                    startActivity(pharmacyintent);
-                                }
-                            });
-                }
-            } else {
-                MdliveUtils.showGPSFailureDialog(getActivity(),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent pharmacyintent = new Intent(parentActivity,MDLivePharmacyChange.class);
-                                pharmacyintent.putExtra("FROM_MY_HEALTH", true);
-                                pharmacyintent.putExtra("PHARMACY_SELECTED",false);
-                                startActivity(pharmacyintent);
-                            }
-                        });
-            }
-        }
-    };
 }

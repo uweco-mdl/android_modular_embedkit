@@ -109,7 +109,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
             }
         };
         SummaryService summaryService = new SummaryService(this, getProgressDialog());
@@ -142,7 +142,7 @@ public class MDLiveSummary extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveSummary.this, error, getProgressDialog());
             }
         };
         SummaryService summaryService = new SummaryService(this, getProgressDialog());

@@ -310,7 +310,7 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
                     hideProgressDialog();
                 }
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -377,7 +377,7 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
                     hideProgressDialog();
                 }
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

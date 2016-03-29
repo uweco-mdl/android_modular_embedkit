@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,7 +52,6 @@ import javax.net.ssl.HttpsURLConnection;
  * The wrapper class for Current Pharmacy Activity. This layout have the details about users default pharmacy details
  * Google map will indicate location of pharmacy. Click on change pharmacy will redirect to MDLivePharmacyChange page
  */
-
 public class MDLivePharmacy extends MDLiveBaseActivity {
 
     private TextView addressline1, addressline2, addressline3;
@@ -63,6 +61,42 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     private Bundle bundletoSend = new Bundle();
     private IntentFilter intentFilter;
     private LocationCoordinates locationService;
+    private Double currentLongitude, currentLatitude;
+
+    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    handleSuccessResponse(response);
+                }
+            };
+            NetworkErrorListener errorListener = new NetworkErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideProgress();
+                    MdliveUtils.handleVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
+                }
+            };
+            if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+                services.doMyPharmacyRequest(lat + "", lon + "", responseListener, errorListener);
+            } else {
+                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
+                services.doMyPharmacyRequest("", "", responseListener, errorListener);
+            }
+        }
+    };
+
+    public static void CheckDoConfirmAppointment(boolean checkExistingCard, Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExistingCard);
+        editor.commit();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +122,7 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(getClass().getSimpleName());
-        locationService = new LocationCoordinates(this);
+        locationService = new LocationCoordinates(MDLivePharmacy.this);
         // First we need to check availability of play services
         if (MdliveUtils.checkPlayServices(this)) {
             // Building the GoogleApi client
@@ -102,42 +136,33 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         //This function is for get user pharmacy details
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
-                    commit();
-
-            getSupportFragmentManager().
-                    beginTransaction().
-                    add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
-                    commit();
+            setUpNavigationDrawers();
         }
 
-
-        if (getIntent() != null && getIntent().hasExtra("Response"))
+        //This is used for getting user pharmacy details
+        if (getIntent() != null && getIntent().hasExtra("Response")) {
             loadDatas(getIntent().getStringExtra("Response"));
+            if (getIntent().hasExtra("currentLongitude") && getIntent().hasExtra("currentLatitude")) {
+                currentLatitude = getIntent().getDoubleExtra("currentLatitude", 0L);
+                currentLongitude = getIntent().getDoubleExtra("currentLongitude", 0L);
+            }
+        }
         else
             getUserPharmacyDetails();
     }
 
     public void rightBtnOnClick(View view){
-        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
-        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
-        MdliveUtils.closingActivityAnimation(this);*/
        checkInsuranceEligibility();
     }
+
     /**
      * This function handles click listener of SavContinueBtn
      *
      * @param view - view of button which is called.
      */
     public void SavContinueBtnOnClick(View view) {
-        /*Intent i = new Intent(getBaseContext(),MDLiveInsuranceActivity.class);
-        startActivityForResult(i, IntegerConstants.INSURANCE_ERROR_CODE);
-        MdliveUtils.closingActivityAnimation(this);*/
         checkInsuranceEligibility();
     }
-
 
     /**
      * This function handles click listener of changePharmacyButton
@@ -145,9 +170,17 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      * @param view - view of button which is called.
      */
     public void changePharmacyButtonOnClick(View view) {
-        Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
-        startActivity(i);
-        MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        if(locationService.checkLocationServiceSettingsEnabled(this)){
+            Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
+            i.putExtra("longitude", currentLongitude);
+            i.putExtra("latitude", currentLatitude);
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        }else{
+            Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+            startActivity(i);
+            MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
+        }
     }
 
     /**
@@ -172,7 +205,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         MdliveUtils.hideSoftKeyboard(MDLivePharmacy.this);
         onBackPressed();
     }
-
 
     /**
      * This override function will be called on every time with this page loading.
@@ -203,17 +235,17 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             unregisterReceiver(locationReceiver);
             //locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*
-            * This function is mainly focused on initializing view in layout.
-            * LocalisationHelper will be initialized over here to update tag details of view declared in xml
-            */
+    /**
+     * This function is mainly focused on initializing view in layout.
+     * LocalisationHelper will be initialized over here to update tag details of view declared in xml
+     */
     public void initializeViews() {
         addressline1 = ((TextView) findViewById(R.id.addressline1));
         addressline2 = ((TextView) findViewById(R.id.addressline2));
@@ -222,6 +254,9 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         //progressBar = (RelativeLayout) findViewById(R.id.progressDialog);
     }
 
+    // This is For navigating to the next Screen
+    // if the amount has been deducted then it should go to the Confirm Appointment Screen
+
     /**
      * This method handles checks user insurance eligibility and return the final amount for the user.
      * successListener-Listner to handle success response.
@@ -229,41 +264,32 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
      * PharmacyService-Class will send the request to the server and get the responses
      * doPostCheckInsulranceEligibility-Method will carries required parameters for sending request to the server.
      */
-
     public void checkInsuranceEligibility() {
         showProgress();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
             @Override
-            public void onResponse(Object response) {
+            public void onResponse(Object response)
+            {
                 hideProgress();
                 Log.v("Zero Dollar Insurance", response.toString());
                 try {
                     JSONObject jobj = new JSONObject(response.toString());
-                    if (jobj.has("final_amount")) {
-
-                        if (!jobj.getString("final_amount").equals("0") && !jobj.getString("final_amount").equals("0.00")) {
-                            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-                            if(userBasicInfo.getVerifyEligibility()) {
-                                Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
+                    if (jobj.has("final_amount"))
+                    {
+                        if (!jobj.getString("final_amount").equals("0") && !jobj.getString("final_amount").equals("0.00"))
+                        {
+                            try {
+                                Class clazz = Class.forName("com.mdlive.sav.payment.MDLivePayment");
+                                Intent i = new Intent(getApplicationContext(), clazz);
                                 i.putExtra("final_amount", jobj.getString("final_amount"));
                                 startActivity(i);
                                 MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
-                            } else
-                            {
-                                try {
-                                    Class clazz = Class.forName("com.mdlive.sav.payment.MDLivePayment");
-                                    Intent i = new Intent(getApplicationContext(), clazz);
-                                    i.putExtra("final_amount", jobj.getString("final_amount"));
-                                    startActivity(i);
-                                    MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
-                                } catch (ClassNotFoundException e){
-                                    /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
-                                    Snackbar.make(findViewById(android.R.id.content),
-                                            getString(R.string.mdl_mdlive_module_not_found),
-                                            Snackbar.LENGTH_LONG).show();
-                                }
+                            } catch (ClassNotFoundException e){
+                                /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        getString(R.string.mdl_mdlive_module_not_found),
+                                        Snackbar.LENGTH_LONG).show();
                             }
-
                         } else {
                             moveToNextPage();
                         }
@@ -278,48 +304,27 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 //progressBar.setVisibility(View.GONE);
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
         PharmacyService insuranceService = new PharmacyService(MDLivePharmacy.this, null);
         insuranceService.doPostCheckInsulranceEligibility(formPostInsuranceParams(), successListener, errorListener);
     }
 
-    // This is For navigating to the next Screen
-    //if the amount has been deducted then it should go to the Confirm Appointment Screen
-
     private void moveToNextPage() {
-        CheckdoconfirmAppointment(true);
-        final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
-        if(userBasicInfo.getVerifyEligibility())
-        {
-            Intent i = new Intent(getApplicationContext(), MDLiveInsuranceActivity.class);
-            i.putExtra("final_amount", "0.00");
+        MDLivePharmacy.CheckDoConfirmAppointment(true, this);
+        try {
+            Class clazz = Class.forName("com.mdlive.sav.payment.MDLiveConfirmappointment");
+            Intent i = new Intent(MDLivePharmacy.this, clazz);
+            storePayableAmount("0.00");
             startActivity(i);
             MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
-        } else
-        {
-            try {
-                Class clazz = Class.forName("com.mdlive.sav.payment.MDLiveConfirmappointment");
-                Intent i = new Intent(MDLivePharmacy.this, clazz);
-                storePayableAmount("0.00");
-                startActivity(i);
-                MdliveUtils.startActivityAnimation(MDLivePharmacy.this);
-            }catch (ClassNotFoundException e){
-               /* Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
-                Snackbar.make(findViewById(android.R.id.content),
-                        getString(R.string.mdl_mdlive_module_not_found),
-                        Snackbar.LENGTH_LONG).show();
-            }
+        }catch (ClassNotFoundException e){
+           /* Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.mdl_mdlive_module_not_found),
+                    Snackbar.LENGTH_LONG).show();
         }
-
-
-    }
-    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK,checkExixtingCard);
-        editor.commit();
     }
 
     public void storePayableAmount(String amount) {
@@ -329,12 +334,10 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         editor.commit();
     }
 
-
     /**
      * This function is used to get post body content for Check Insurance Eligibility
      * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
      */
-
     public String formPostInsuranceParams() {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String, String> insuranceMap = new HashMap<>();
@@ -347,15 +350,14 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         return new Gson().toJson(insuranceMap);
     }
 
-    /*
-   * This function will get latest default pharmacy details of users from webservice.
-   * PharmacyService class handles webservice integration.
-   * @responseListener - Receives webservice informatoin
-   * @errorListener - Received error information (if any problem in webservice)
-   * once message received by  @responseListener then it will redirect to handleSuccessResponse function
-   * to parse message content.
-   */
-
+    /**
+     * Fetch latest default pharmacy details of users from webservice.
+     * PharmacyService class handles webservice integration.
+     * @responseListener - Receives webservice informatoin
+     * @errorListener - Received error information (if any problem in webservice)
+     * once message received by  @responseListener then it will redirect to handleSuccessResponse function
+     * to parse message content.
+     */
     public void getUserPharmacyDetails() {
         showProgress();
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -368,15 +370,15 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
             }
         };
         callPharmacyService(responseListener, errorListener);
     }
 
     /**
-     *  This method is used to call pharmacy service
-     *  In pharmacy service, it requires GPS location details to get distance details.
+     *  Calls the pharmacy service.
+     *  Requires GPS location details to get distance details.
      *
      *  @param errorListener - Pharmacy error response listener
      *  @param responseListener - Pharmacy detail Success response listener
@@ -393,40 +395,40 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
         }
     }
 
-    public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    handleSuccessResponse(response);
-                }
-            };
-            NetworkErrorListener errorListener = new NetworkErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    hideProgress();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacy.this, error, getProgressDialog());
-                }
-            };
-            if(intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
-                double lat = intent.getDoubleExtra("Latitude", 0d);
-                double lon = intent.getDoubleExtra("Longitude", 0d);
-                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
-                services.doMyPharmacyRequest(lat+"", lon+"",responseListener, errorListener);
-            }else{
-                PharmacyService services = new PharmacyService(MDLivePharmacy.this, null);
-                services.doMyPharmacyRequest("","",responseListener, errorListener);
-            }
-        }
-    };
 
-    /* This function is used to initialize map view for MDLivePharmacy activity */
+    /**
+     *  Initialize map view for MDLivePharmacy activity
+     */
     public void initializeMapView() {
         HttpsURLConnection.setDefaultSSLSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
         mapView = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView));
         map = mapView.getMap();
         if (map != null) {
+            /**
+             *  This mConditionsadapter is used to display info window when users click on the marker on google map
+             *
+             *  It has a layout to show user when click on marker.
+             */
+            map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                // Use default InfoWindow frame
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    View v = getLayoutInflater().inflate(R.layout.mdlive_pharm_custom_mapinfowindow_view, null);
+                    TextView addressline1 = (TextView) v.findViewById(R.id.addressText1);
+                    TextView addressline2 = (TextView) v.findViewById(R.id.addressText2);
+                    TextView addressline3 = (TextView) v.findViewById(R.id.addressText3);
+                    addressline1.setText(bundletoSend.get("store_name") + "");
+                    addressline2.setText(bundletoSend.get("address1") + "");
+                    addressline3.setText(bundletoSend.get("city") + "  " + (TextUtils.isEmpty(bundletoSend.getString("zipcode")) ? "" : MdliveUtils.zipCodeFormat(bundletoSend.get("zipcode").toString())));
+                    return v;
+                }
+
+                @Override
+                public View getInfoContents(Marker arg0) {
+                    return null;
+                }
+            });
+
             map.setInfoWindowAdapter(null);
             map.getUiSettings().setScrollGesturesEnabled(false);
             map.getUiSettings().setAllGesturesEnabled(false);
@@ -436,8 +438,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
                     return true;
                 }
             });
-
-            map.getUiSettings().setAllGesturesEnabled(false);
         }
     }
 
@@ -445,13 +445,12 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     *  Once parsing operation done, then it will update UI
     *  bundletoSend is stand for to send bundle of datas received from webservice to next page.
     */
-
     private void handleSuccessResponse(JSONObject response) {
         try {
             hideProgress();
             final JSONObject pharmacyDatas = response.getJSONObject("pharmacy");
-            addressline1.setText(pharmacyDatas.getString("store_name") + " "+
-                    ((pharmacyDatas.getString("distance")!=null && !pharmacyDatas.getString("distance").isEmpty())?
+            addressline1.setText(pharmacyDatas.getString("store_name") + " " +
+                    ((pharmacyDatas.getString("distance") != null && !pharmacyDatas.getString("distance").isEmpty())?
                             pharmacyDatas.getString("distance").replace(" miles", "mi") : ""));
             addressline2.setText(pharmacyDatas.getString("address1"));
             addressline3.setText(pharmacyDatas.getString("city") + ", "
@@ -628,46 +627,6 @@ public class MDLivePharmacy extends MDLiveBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == IntegerConstants.INSURANCE_ERROR_CODE) {
-            try {
-                showDialog(getApplicationContext(),
-                        "Connection Timed Out Error Occurred.", null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    public void showDialog(final Context context, String message,
-                                  DialogInterface.OnClickListener positiveOnclickListener) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
-        alertDialogBuilder
-                .setTitle("MDLIVE")
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("Ok",positiveOnclickListener);
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.mdlivePrimaryBlueColor));
-            }
-        });
-        alertDialog.show();
     }
 
 }

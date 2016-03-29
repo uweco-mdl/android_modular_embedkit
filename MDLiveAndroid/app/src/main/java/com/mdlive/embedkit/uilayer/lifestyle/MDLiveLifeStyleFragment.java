@@ -150,7 +150,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -270,7 +270,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

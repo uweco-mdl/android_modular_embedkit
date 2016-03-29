@@ -149,7 +149,7 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
     // This is For navigating to the next Screen
     //if the amount has been deducted then it should go to the Confirm Appointment Screen
     private void moveToNextPage() {
-        CheckdoconfirmAppointment(true);
+        MDLivePharmacy.CheckDoConfirmAppointment(true, this);
         try {
             Class clazz = Class.forName("com.mdlive.sav.payment.MDLiveConfirmappointment");
             Intent i = new Intent(MDLiveInsuranceActivity.this, clazz);
@@ -170,18 +170,11 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
         editor.putString(PreferenceConstants.AMOUNT, amount);
         editor.commit();
     }
-    public void CheckdoconfirmAppointment(boolean checkExixtingCard) {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExixtingCard);
-        editor.commit();
-    }
 
     /**
      * This function is used to get post body content for Check Insurance Eligibility
      * Values hard coded are default criteria from get response of Insurance Eligibility of all users.
      */
-
     public String formPostInsuranceParams() {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         HashMap<String, String> insuranceMap = new HashMap<>();
@@ -192,7 +185,6 @@ public class MDLiveInsuranceActivity  extends MDLiveBaseActivity {
         insuranceMap.put("state_id", settings.getString(PreferenceConstants.LOCATION, MdliveUtils.getProfileStateOfUser(this)));
         return new Gson().toJson(insuranceMap);
     }
-
 
     /**
      * This method will close the activity with transition effect.

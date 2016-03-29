@@ -234,7 +234,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             locationService.setBroadCastData(StringConstants.DEFAULT);
             unregisterReceiver(locationReceiver);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -435,7 +435,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 isPerformingAutoSuggestion = false;
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyChange.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePharmacyChange.this, error, getProgressDialog());
             }
         };
         if (!isPerformingAutoSuggestion && !previousSearch.equalsIgnoreCase(searchText)) {

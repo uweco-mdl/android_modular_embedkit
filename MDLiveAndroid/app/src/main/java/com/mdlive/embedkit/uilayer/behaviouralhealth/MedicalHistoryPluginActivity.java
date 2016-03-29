@@ -11,6 +11,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+
+import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacy;
 import com.mdlive.embedkit.uilayer.pharmacy.MDLivePharmacyChange;
@@ -210,7 +212,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
         try {
             locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
             unregisterReceiver(locationReceiver);
         } catch (Exception e) {
@@ -360,7 +362,7 @@ public class MedicalHistoryPluginActivity extends MDLiveBaseActivity {
             Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
             i.putExtra("longitude", currentLocation.latitude+"");
             i.putExtra("latitude", currentLocation.longitude+"");
-            i.putExtra("errorMesssage", "No Pharmacies listed in your location");
+            i.putExtra("errorMesssage", getString(R.string.mdl_no_pharmacies_listed));
             startActivity(i);
             MdliveUtils.startActivityAnimation(MedicalHistoryPluginActivity.this);
         }else{

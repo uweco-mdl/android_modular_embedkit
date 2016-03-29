@@ -54,8 +54,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class is for MDLiveMedicalHistory page.
@@ -78,6 +80,8 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
     private LocationCoordinates locationService;
     private LatLng currentLocation;
     private IntentFilter intentFilter;
+    private Double currentLatitude = 0d, currentLongitude = 0d;
+    private static List<BroadcastReceiver> registeredReceivers = new ArrayList<BroadcastReceiver>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -405,10 +409,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         super.onResume();
         try {
             MdliveUtils.checkPlayServices(this);
+            ValidateModuleFields();
+            locationService.setBroadCastData(StringConstants.DEFAULT);
             registerReceiver(locationReceiver, intentFilter);
+            registeredReceivers.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onResume();
     }
 
 
@@ -419,7 +427,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             unregisterReceiver(locationReceiver);
             //locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -432,6 +440,25 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            locationService.setBroadCastData(StringConstants.DEFAULT);
+            if (locationService != null && locationService.isTrackingLocation()) {
+                locationService.stopListeners();
+            }
+
+            if (registeredReceivers != null) {
+                for (BroadcastReceiver receiver : registeredReceivers) {
+                    unregisterReceiver(receiver);
+                }
+            }
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
     }
 
     /**
@@ -1049,14 +1076,14 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
      */
     public void callPharmacyService(final NetworkSuccessListener<JSONObject> responseListener,
                                     final NetworkErrorListener errorListener){
-        if(locationService.checkLocationServiceSettingsEnabled(this)){
+        if(locationService.checkLocationServiceSettingsEnabled(MDLiveMedicalHistory.this)){
             showProgress();
             registerReceiver(locationReceiver, intentFilter);
             locationService.setBroadCastData(getClass().getSimpleName());
-            locationService.startTrackingLocation(this);
+            locationService.startTrackingLocation(MDLiveMedicalHistory.this);
         }else{
             PharmacyService services = new PharmacyService(MDLiveMedicalHistory.this, null);
-            services.doMyPharmacyRequest("","",responseListener, errorListener);
+            services.doMyPharmacyRequest("", "", responseListener, errorListener);
         }
     }
 
@@ -1064,6 +1091,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             unregisterReceiver(locationReceiver);
+            registeredReceivers.remove(locationReceiver);
             NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -1173,6 +1201,31 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         }
     }
 
+    public BroadcastReceiver newUserReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hideProgress();
+            unregisterReceiver(newUserReceiver);
+            registeredReceivers.remove(newUserReceiver);
+            if (intent.hasExtra("Latitude") && intent.hasExtra("Longitude")) {
+                double lat = intent.getDoubleExtra("Latitude", 0d);
+                double lon = intent.getDoubleExtra("Longitude", 0d);
+                currentLatitude = lat;
+                currentLongitude = lon;
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
+                i.putExtra("longitude", lon);
+                i.putExtra("latitude", lat);
+                i.putExtra("errorMesssage", getString(R.string.mdl_no_pharmacies_listed));
+                startActivity(i);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+            } else {
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                i.putExtra("Response", jsonResponse);
+                startActivity(i);
+                MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
+            }
+        }
+    };
 
     /**
      * This method will close the activity with transition effect.

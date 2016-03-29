@@ -489,7 +489,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
             }
         };
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);
@@ -636,7 +636,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         NetworkErrorListener errorListener = new NetworkErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                MdliveUtils.handelVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePediatric.this, error, getProgressDialog());
             }
         };
 

@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mdlive.embedkit.R;
 import com.mdlive.embedkit.global.MDLiveConfig;
 import com.mdlive.embedkit.uilayer.helpandsupport.MDLiveHelpAndSupportActivity;
@@ -79,6 +80,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
     private DrawerLayout mDrawerLayout;
 
     private Handler mHandler;
+    public static GoogleApiClient mGoogleApiClient;
 
     // Collection that contains all Activities that need to be terminated upon embedkit exit in SSO mode
     public static List<WeakReference<? extends MDLiveBaseAppcompatActivity>> VisitedScreens_SSO = new LinkedList<>();
@@ -116,6 +118,9 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
             }
         }else if(DeepLinkUtils.DEEPLINK_DATA != null && DeepLinkUtils.DEEPLINK_DATA.getAffiliate().equalsIgnoreCase(DeepLinkUtils.DeeplinkAffiliate.BAYLOR.name())){
             MakeBaylorSSOLogin();
+        }
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
         }
     }
     /**

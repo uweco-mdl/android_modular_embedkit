@@ -14,15 +14,10 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.mdlive.embedkit.uilayer.MDLiveBaseActivity;
+import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.StringConstants;
 
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
  * This class is used to get current location of user.
@@ -86,12 +81,14 @@ public class LocationCoordinates {
 
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
+            if (location == null) return;
+
             trackingTimer.cancel();
             if(isTrackingLocation){
                 //locationResult.gotLocation(location);
                 sendLocationInfo(location);
                 isTrackingLocation = false;
-                stopListners();
+                stopListeners();
             }
         }
 
@@ -105,7 +102,7 @@ public class LocationCoordinates {
         }
     };
 
-    public void stopListners() {
+    public void stopListeners() {
         if (lm != null) {
             if(locationListenerGps != null){
                 if(lm != null){
@@ -135,14 +132,6 @@ public class LocationCoordinates {
     }
 
     /**
-     * Result receiver class which will have body of gotLocation function at the place
-     * of implementation of Activity.
-     */
-    /*public static abstract class LocationResult {
-        public abstract void gotLocation(Location location);
-    }*/
-
-    /**
      * Method to get the location from Google Location API
      * */
     private void getLocation() {
@@ -155,10 +144,10 @@ public class LocationCoordinates {
             }
 
             Location mLastLocation = LocationServices.FusedLocationApi
-                    .getLastLocation(((MDLiveBaseActivity)context).mGoogleApiClient);
+                    .getLastLocation(MDLiveBaseAppcompatActivity.mGoogleApiClient);
             sendLocationInfo(mLastLocation);
 
-            if (mLastLocation == null) {
+            if (mLastLocation != null) {
                 double latitude = mLastLocation.getLatitude();
                 double longitude = mLastLocation.getLongitude();
             } else {
@@ -173,7 +162,7 @@ public class LocationCoordinates {
      * Creating google api client object
      * */
     public synchronized void buildGoogleApiClient() {
-        ((MDLiveBaseActivity)context).mGoogleApiClient = new GoogleApiClient.Builder(context)
+        MDLiveBaseAppcompatActivity.mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
 
                     @Override
@@ -184,7 +173,7 @@ public class LocationCoordinates {
 
                     @Override
                     public void onConnectionSuspended(int arg0) {
-                        ((MDLiveBaseActivity)context).mGoogleApiClient.connect();
+                        MDLiveBaseAppcompatActivity.mGoogleApiClient.connect();
                     }
                 })
                 .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {

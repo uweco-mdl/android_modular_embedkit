@@ -549,7 +549,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
                 pDialog.dismiss();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(AddFamilyMemberActivity.this, error, pDialog);
+                    MdliveUtils.handleVolleyErrorResponse(AddFamilyMemberActivity.this, error, pDialog);
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, AddFamilyMemberActivity.this);
                 }

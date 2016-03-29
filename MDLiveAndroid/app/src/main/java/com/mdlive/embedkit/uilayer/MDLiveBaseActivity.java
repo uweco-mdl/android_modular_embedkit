@@ -13,6 +13,8 @@ import android.view.WindowManager;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mdlive.embedkit.R;
+import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
+import com.mdlive.embedkit.uilayer.login.NotificationFragment;
 import com.mdlive.unifiedmiddleware.commonclasses.application.LocalizationSingleton;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
@@ -148,6 +150,18 @@ public class MDLiveBaseActivity extends MDLiveBaseAppcompatActivity {
         if (progressBarLayout != null) {
             progressBarLayout.setVisibility(View.GONE);
         }
+    }
+
+    public void setUpNavigationDrawers(){
+        getSupportFragmentManager().
+            beginTransaction().
+            add(R.id.dash_board__left_container, NavigationDrawerFragment.newInstance(), LEFT_MENU).
+            commit();
+
+        getSupportFragmentManager().
+            beginTransaction().
+            add(R.id.dash_board__right_container, NotificationFragment.newInstance(), RIGHT_MENU).
+            commit();
     }
 
     public ProgressDialog getProgressDialog() {

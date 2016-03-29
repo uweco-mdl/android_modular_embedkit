@@ -268,7 +268,8 @@ public class MDLiveConfig {
                 if(IS_BCBS)
                     AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile_benefit_registration?group=bcbst";
                 else
-                    AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
+                    AppSpecificConfig.URL_SIGN_UP = "https://saturn-members.mdtestsite.net/signup/mobile_benefit_registration";
+                    //AppSpecificConfig.URL_SIGN_UP = "https://stage-members.mdlive.com/signup/mobile";
 
                 AppSpecificConfig.URL_FORGOT_USERNAME = "https://stage-members.mdlive.com/forgot_username";
                 AppSpecificConfig.URL_FORGOT_PASSWORD = "https://stage-members.mdlive.com/forgot_password";
@@ -288,7 +289,8 @@ public class MDLiveConfig {
                     AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html?vendorid=bcbst";
                 }
                 else {
-                    AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
+                    AppSpecificConfig.URL_SIGN_UP = "https://members.mdlive.com/signup/mobile_benefit_registration";
+                    //AppSpecificConfig.URL_SIGN_UP = "http://www.mdlive.com/mobile/joinnow";
                     AppSpecificConfig.SYMPTOM_CHECKER_URL = "https://symptomchecker.mdlive.com/scmdlive/html/index.html?vendorid=mdlive";
                 }
 

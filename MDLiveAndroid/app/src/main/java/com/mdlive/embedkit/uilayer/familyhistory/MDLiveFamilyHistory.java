@@ -101,7 +101,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
+                    MdliveUtils.handleVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);
@@ -208,7 +208,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
             public void onErrorResponse(VolleyError error) {
                 setInfoVisibilty();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
+                    MdliveUtils.handleVolleyErrorResponse(MDLiveFamilyHistory.this, error, pDialog);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, MDLiveFamilyHistory.this);

@@ -108,7 +108,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePendingVisits.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePendingVisits.this, error, getProgressDialog());
 
             }
         };
@@ -191,7 +191,7 @@ public class MDLivePendingVisits extends MDLiveBaseActivity {
             //unregisterReceiver(locationReceiver);
             //locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -182,7 +182,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
         public void onErrorResponse(VolleyError error) {
             hideProgressDialog();
             try {
-                MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                MdliveUtils.handleVolleyErrorResponse(getActivity(), error, null);
                 final String errorResponse = new String(error.networkResponse.data);
                 Log.e("MDLIVE ERROR", "Error : " + errorResponse);
             } catch (Exception e) {
@@ -356,7 +356,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
@@ -384,7 +384,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

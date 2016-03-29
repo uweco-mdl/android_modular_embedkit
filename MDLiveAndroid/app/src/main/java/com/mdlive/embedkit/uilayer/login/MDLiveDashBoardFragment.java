@@ -222,7 +222,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 //We set FL in case of an error
                 setDefaultState(getActivity().getString(R.string.mdl_fl));
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -367,7 +367,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

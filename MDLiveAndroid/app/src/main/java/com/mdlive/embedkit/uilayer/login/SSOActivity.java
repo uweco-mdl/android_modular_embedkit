@@ -233,7 +233,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                    MdliveUtils.handleVolleyErrorResponse(SSOActivity.this, error, null);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);
@@ -401,7 +401,7 @@ public class SSOActivity extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(SSOActivity.this, error, null);
+                    MdliveUtils.handleVolleyErrorResponse(SSOActivity.this, error, null);
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(pDialog, SSOActivity.this);

@@ -891,7 +891,7 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
                     });
                 }
             } else {
-                MdliveUtils.handelVolleyErrorResponse(MDLiveHealthModule.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveHealthModule.this, error, getProgressDialog());
             }
         }catch(Exception e){
             MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveHealthModule.this);

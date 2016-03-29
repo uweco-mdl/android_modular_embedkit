@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -92,7 +91,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // This code this added here because we are not extending from MDLiveBaseActivity, due to support map
-
 
         setContentView(R.layout.mdlive_pharmacy_result);
         clearMinimizedTime();
@@ -251,9 +249,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 expandgoogleMap.setInfoWindowAdapter(markerInfoAdapter);
             }
         }
-
-
-
     }
 
     GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
@@ -314,7 +309,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                     }
                     hideProgress();
                     resetLoadingViews();
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
                 }
             };
             if (bottomLoder.getVisibility() == View.VISIBLE) {
@@ -332,9 +327,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     }
 
 
-    /*
-    * This function is for reset views in scroll up update of list.
-    * */
+    /**
+    * Reset views in scroll up update of list.
+    */
     private void resetLoadingViews() {
         isLoading = false;
         pharmList.setEnabled(true);
@@ -346,7 +341,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      *
      * It has a layout to show user when click on marker.
      */
-
     GoogleMap.InfoWindowAdapter markerInfoAdapter = new GoogleMap.InfoWindowAdapter() {
         @Override
         public View getInfoWindow(Marker arg0) {
@@ -371,9 +365,9 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      */
     private String getPostBody(Intent receivedIntent) {
         if (receivedIntent.hasExtra("latitude"))
-            keyParams.put("latitude", receivedIntent.getDoubleExtra("latitude", 0));
+            keyParams.put("latitude", receivedIntent.getDoubleExtra("latitude", 0d));
         if (receivedIntent.hasExtra("longitude"))
-            keyParams.put("longitude", receivedIntent.getDoubleExtra("longitude", 0));
+            keyParams.put("longitude", receivedIntent.getDoubleExtra("longitude", 0d));
         if (receivedIntent.hasExtra("name"))
             keyParams.put("name", receivedIntent.getStringExtra("name"));
         if(receivedIntent.hasExtra("errorMesssage"))
@@ -401,7 +395,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      *
      * @param response - response is catched response from getPharmacySearchResults network response
      */
-
     private void handleListSuccessResponse(JSONObject response) {
         JsonObject responObj = null;
         try {
@@ -456,16 +449,16 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                 }
                 try {
                     if (responArray.get(i).getAsJsonObject().get("coordinates").isJsonNull()) {
-                        longitude = 0;
-                        latitude = 0;
+                        longitude = 0d;
+                        latitude = 0d;
                     } else {
                         longitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject().get("longitude").getAsDouble();
                         latitude = responArray.get(i).getAsJsonObject().get("coordinates").getAsJsonObject().get("latitude").getAsDouble();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    longitude = 0;
-                    latitude = 0;
+                    longitude = 0d;
+                    latitude = 0d;
                 }
                 markerPoint = new LatLng(latitude, longitude);
                 addResultsDatasInMap(pharmacy_id, longitude, latitude, twenty_four_hours, active, is_preferred, store_name, phone, address1, address2, zipcode, fax, city, distance, state, markerPoint, i);
@@ -492,7 +485,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
     private void handleJsonDatas(JsonObject responObj) {
         try{
             if(responObj.get("total_pages").isJsonNull()){
-                MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
+               /* MdliveUtils.showDialog(MDLivePharmacyResult.this, errorMesssage,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -509,7 +502,18 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 finish();
                                 MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
                             }
-                        });
+                        });*/
+                Intent i = new Intent(getApplicationContext(), MDLivePharmacyChange.class);
+                if (getIntent().hasExtra("FROM_MY_HEALTH")) {
+                    i.putExtra("FROM_MY_HEALTH", getIntent().getBooleanExtra("FROM_MY_HEALTH", false));
+                }
+                if (getIntent().hasExtra("PHARMACY_SELECTED")) {
+                    i.putExtra("PHARMACY_SELECTED", getIntent().getBooleanExtra("PHARMACY_SELECTED", false));
+                }
+                //i.putExtra("FROM_MY_RESULT", "");
+                startActivity(i);
+                finish();
+                MdliveUtils.hideSoftKeyboard(MDLivePharmacyResult.this);
             }
             if(!responObj.get("total_pages").isJsonNull() && !responObj.get("total_pages").getAsString().equals("0")){
                 mapscrollView= (ScrollView) findViewById(R.id.mapscrollView);
@@ -535,7 +539,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
                                 keyParams.put("per_page", 10);
                                 Gson gson = new Gson();
                                 String postBody = gson.toJson(keyParams);
-                                Log.v("Post Body", postBody);
+                                Log.d("Post Body", postBody);
                                 getPharmacySearchResults(postBody);
                             }
                         }
@@ -611,7 +615,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         HashMap<String, Integer> gsonMap = new HashMap<String, Integer>();
@@ -713,7 +717,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePharmacyResult.this, error, getProgressDialog());
             }
         };
         PharmacyService insuranceService=new PharmacyService(MDLivePharmacyResult.this,null);
@@ -726,7 +730,7 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
      * if the amount has been deducted then it should go to the Confirm Appointment Screen
      */
     private void moveToNextPage() {
-        CheckdoconfirmAppointment(true);
+        MDLivePharmacy.CheckDoConfirmAppointment(true, this);
         final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(getBaseContext());
         if(userBasicInfo.getVerifyEligibility())
         {
@@ -755,13 +759,6 @@ public class MDLivePharmacyResult extends MDLiveBaseActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.PAY_AMOUNT_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PreferenceConstants.AMOUNT, amount);
-        editor.commit();
-    }
-
-    public void CheckdoconfirmAppointment(boolean checkExistingCard) {
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(PreferenceConstants.EXISTING_CARD_CHECK, checkExistingCard);
         editor.commit();
     }
 
