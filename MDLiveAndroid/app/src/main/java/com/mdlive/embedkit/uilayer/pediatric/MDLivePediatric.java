@@ -315,14 +315,14 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 MdliveUtils.hideSoftKeyboard(MDLivePediatric.this);
                 if (checkedId == R.id.birthComplications_yesButton) {
-                    updateParams("Birth complications", "Yes");
+                    updateBirthComplication("Birth complications", "Yes");
                     edtBirthComplications.setVisibility(View.VISIBLE);
-                    updateExplanationParams("Birth complications explanation", edtBirthComplications.getText().toString());//To update birth Params
+                    updateBirthComplication("Birth complications explanation", edtBirthComplications.getText().toString());//To update birth Params
                     enableSaveButton();
                 } else {
-                    updateParams("Birth complications", "No");
+                    updateBirthComplication("Birth complications", "No");
                     edtBirthComplications.setVisibility(View.GONE);
-                    updateExplanationParams("Birth complications explanation", "");
+                    updateBirthComplication("Birth complications explanation", "");
                     enableSaveButton();
 
                 }
@@ -394,7 +394,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
      * @param name---It is a key value to match the key present inside the questionItem map
      * @param value--it is normally the yes or no value.
      */
-
     public void updateParams(String name, String value) {
         if ("Yes".equals(value)) {
             for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
@@ -413,36 +412,66 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 }
             }
         }
-
-
         Gson gs = new Gson();
-
-
     }
 
+    public void updateBirthComplication(String name,String value)
+    {
+        boolean isPresent = false;
+        for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
+            questionItem = questionList.get(i);
+            if (questionItem.get("name").equals(name)) {
+                isPresent = true;
+                break;
+            }
+        }
+        if(isPresent)
+        {
+            updateParams(name,value);
+        }
+        else
+        {
+            HashMap<String,String> birthField =  new HashMap<String,String>();
+            birthField.put("name",name);
+            birthField.put("value",value);
+            questionList.add(birthField);
+        }
+
+    }
 
     /**
      * Method hanldes uodating values in dropdown to post params --Diet type
      *
-     * @param name---It   is a key value to match the key present inside the questionItem map
-     * @param value--user selected value from the dropdown.
+     * @param name      a key value to match the key present inside the questionItem map
+     * @param value     user selected value from the dropdown.
      */
-
     public void updateDropDownParams(String name, String value) {
+        boolean isPresent = false;
         for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
             questionItem = questionList.get(i);
             if (questionItem.get("name").equals(name)) {
                 questionItem.put("value", value);
+                isPresent = true;
                 break;
             }
+        }
+        if(isPresent)
+        {
+            updateParams(name,value);
+        }
+        else {
+            HashMap<String,String> dietField =  new HashMap<String,String>();
+            dietField.put("name","Current Diet");
+            dietField.put("value",value);
+            questionList.add(dietField);
         }
     }
 
 
     /**
      *
-     * @param name-- Key values to get the value from Map which is stored in Question list
-     * @param value---User entered valued to be updated in post params.
+     * @param name      Key values to get the value from Map which is stored in Question list
+     * @param value     User entered valued to be updated in post params.
      */
 
     public void updateExplanationParams(String name, String value) {
@@ -481,7 +510,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             @Override
             public void onResponse(Object response) {
                 handleSuccessResponse(response.toString());
-                Log.v("Pediatric Profile", response.toString());
+                Log.d("Pediatric Profile", response.toString());
                 setInfoVisibilty();
             }
         };
@@ -514,7 +543,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                         edtLastShot.setText(questionObj.getString("value"));
                     }
                     if ("Birth complications explanation".equalsIgnoreCase(questionObj.getString("name"))) {
-                        edtLastShot.setText(questionObj.getString("value"));
+                        edtBirthComplications.setText(questionObj.getString("value"));
                     }
                 }
                 questionsMap.put("questions", questionList);
@@ -644,9 +673,9 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         SharedPreferences userPrefs = getSharedPreferences(sharedPref.getString(PreferenceConstants.USER_UNIQUE_ID, AppSpecificConfig.DEFAULT_USER_ID), Context.MODE_PRIVATE);
         String dependentId = sharedPref.getString(PreferenceConstants.DEPENDENT_USER_ID, null);
         EditText weightEt = (EditText) findViewById(R.id.edt_currentweight);
-        if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES,false)){
+        if(dependentId == null && userPrefs.getBoolean(PreferenceConstants.GOOGLE_FIT_PREFERENCES, false)){
             if((weightEt.getText().toString().equals("0"))){
-                GoogleFitUtils.getInstance().buildFitnessClient(false,new String[]{"0",Integer.parseInt(weightEt.getText().toString()) + ""},this);
+                GoogleFitUtils.getInstance().buildFitnessClient(false, new String[]{"0", Integer.parseInt(weightEt.getText().toString()) + ""}, this);
             }
         }
         PediatricService getProfileData = new PediatricService(MDLivePediatric.this, null);

@@ -206,7 +206,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         innerJsonArray = new JSONArray();
 
         try {
-            innerJsonObject.put("family_histories",innerJsonArray);
+            innerJsonObject.put("family_histories", innerJsonArray);
             rootJsonObjectString = innerJsonObject.toString();
             familyHistory_conditionValue.put("", rootJsonObjectString);
         }
@@ -290,7 +290,7 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
                 spinnerCv.setVisibility(View.GONE);
             }
 
-            checkBox.setText(familyHistoryList.get(position).condition);
+            checkBox.setText(capsFirst(familyHistoryList.get(position).condition));
 
             // Set Spinner values & selection listener
             final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
@@ -406,4 +406,18 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
         final LinearLayout scrollLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_family_scroll_view);
         scrollLinearLayout.addView(rootLinearLayout);
     }
+
+    private String capsFirst(String str) {
+        String[] words = str.split(" ");
+        StringBuilder ret = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            ret.append(Character.toUpperCase(words[i].charAt(0)));
+            ret.append(words[i].substring(1));
+            if (i < words.length - 1) {
+                ret.append(' ');
+            }
+        }
+        return ret.toString();
+    }
+
 }
