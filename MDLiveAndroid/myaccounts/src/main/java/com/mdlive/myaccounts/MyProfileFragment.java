@@ -347,7 +347,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             public void onErrorResponse(VolleyError error) {
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
@@ -375,7 +375,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());

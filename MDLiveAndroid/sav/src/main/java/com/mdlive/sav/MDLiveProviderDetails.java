@@ -1859,7 +1859,7 @@ Log.d("***timestamp**","/n*****/nselectedTimestamp = ["+selectedTimestamp+"]\n**
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveProviderDetails.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveProviderDetails.this, error, getProgressDialog());
 
                     }
                 }catch(Exception e){

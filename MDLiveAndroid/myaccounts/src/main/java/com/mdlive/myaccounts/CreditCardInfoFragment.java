@@ -570,7 +570,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             public void onErrorResponse(VolleyError error) {
                 dismissDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

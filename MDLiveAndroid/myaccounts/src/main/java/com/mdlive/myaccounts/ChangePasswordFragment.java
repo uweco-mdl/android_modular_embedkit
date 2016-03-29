@@ -623,7 +623,7 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                         MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                     }
                 } else {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 }
             }
         };

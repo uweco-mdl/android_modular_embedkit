@@ -273,7 +273,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                             }
 
                         }else{
-                            MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
+                            MdliveUtils.handleVolleyErrorResponse(MDLiveConfirmappointment.this, error, getProgressDialog());
                         }
 
                     } catch (Exception e) {
@@ -589,7 +589,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         }
 
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
                     }
 
                 } catch (Exception e) {
@@ -694,7 +694,7 @@ public class MDLiveConfirmappointment extends MDLiveBaseActivity {
                         }
 
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveConfirmappointment.this, error, null);
                     }
                 } catch (Exception e) {
                     dismissDialog();

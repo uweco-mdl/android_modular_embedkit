@@ -277,7 +277,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveChooseProvider.this, error, getProgressDialog());
                         filterMainRl.setVisibility(View.GONE);
                         findViewById(R.id.txtFilter).setVisibility(View.GONE);
                     }

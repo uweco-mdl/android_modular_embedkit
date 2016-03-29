@@ -128,7 +128,7 @@ public class  BillingInformationFragment extends MDLiveBaseFragment  {
 
                 hideProgressDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, null);
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }

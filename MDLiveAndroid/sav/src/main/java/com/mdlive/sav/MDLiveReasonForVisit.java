@@ -217,7 +217,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveReasonForVisit.this);
@@ -375,7 +375,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
                 }
                 catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveReasonForVisit.this);
@@ -675,7 +675,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveReasonForVisit.this, error, getProgressDialog());
             }
         };
         ReasonForVisitServices services = new ReasonForVisitServices(MDLiveReasonForVisit.this, null);

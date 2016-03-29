@@ -119,7 +119,7 @@ public class MDLiveImageGalleryView extends MDLiveBaseActivity {
      */
     private void medicalCommonErrorResponseHandler(VolleyError error) {
         progressBar.setVisibility(View.GONE);
-        MdliveUtils.handelVolleyErrorResponse(MDLiveImageGalleryView.this, error, getProgressDialog());
+        MdliveUtils.handleVolleyErrorResponse(MDLiveImageGalleryView.this, error, getProgressDialog());
     }
 
 

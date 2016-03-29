@@ -220,7 +220,7 @@ public class MessageReceivedDetailsFragment extends MDLiveBaseFragment {
                             }
                         });
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                     }
                 }
                 catch (Exception e) {

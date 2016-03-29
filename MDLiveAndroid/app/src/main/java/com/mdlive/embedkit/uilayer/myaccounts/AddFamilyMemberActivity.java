@@ -70,7 +70,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private TextView mValidEmailText = null;
     private TextView mValidationEmail = null;
     private TextView mUsernameLength = null;
-    private TextView mUsernameAlphaNumericCheck = null;
+    //private TextView mUsernameAlphaNumericCheck = null;
     private TextView mUsernameSpecialCharactersCheck = null;
 
     private List<String> stateIds = new ArrayList<String>();
@@ -111,7 +111,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         mCity = (EditText) findViewById(R.id.city);
         mState = (TextView) findViewById(R.id.state);
 
-        if(mUserBasicInfo  != null){
+        if(mUserBasicInfo != null){
             if(mUserBasicInfo.getPersonalInfo().getZipcode() != null){
                 mZip.setText(mUserBasicInfo.getPersonalInfo().getZipcode());
             }
@@ -288,11 +288,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 if (hasFocus) {
                     if (mUsername.getText().length() == 0) {
                         mUsernameLength.setVisibility(View.GONE);
-                        mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                        //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                         mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                     } else {
                         mUsernameLength.setVisibility(View.VISIBLE);
-                        mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                        //mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
                         mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                     }
 
@@ -303,7 +303,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
                     }
-                    if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
+/*                    if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 
@@ -311,10 +311,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     else {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
-                    }
+                    }*/
                 } else {
                     mUsernameLength.setVisibility(View.GONE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                 }
             }
@@ -330,11 +330,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (mUsername.getText().length() == 0) {
                     mUsernameLength.setVisibility(View.GONE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                 } else {
                     mUsernameLength.setVisibility(View.VISIBLE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                 }
 
@@ -345,7 +345,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
                 }
-                if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
+/*                if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                     mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 
@@ -353,7 +353,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 else {
                     mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
-                }
+                }*/
             }
 
             @Override
@@ -387,6 +387,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(upIntent);
             } catch (ClassNotFoundException e){
+                Snackbar.make(findViewById(android.R.id.content),
+                        getString(R.string.mdl_mdlive_module_not_found),
+                        Snackbar.LENGTH_LONG).show();
                 super.onBackPressed();
             }
         }
@@ -433,7 +436,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         mValidEmailText = (TextView) findViewById(R.id.validEmailText);
         mValidationEmail = (TextView) findViewById(R.id.validationEmail);
         mUsernameLength = (TextView) findViewById(R.id.userNameLength);
-        mUsernameAlphaNumericCheck = (TextView) findViewById(R.id.userNameAlphaNumericCheck);
+        //mUsernameAlphaNumericCheck = (TextView) findViewById(R.id.userNameAlphaNumericCheck);
         mUsernameSpecialCharactersCheck = (TextView) findViewById(R.id.userNameSpecialCharactersCheck);
 
         pDialog = MdliveUtils.getFullScreenProgressDialog(this);
@@ -589,6 +592,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         /*Toast.makeText(getBaseContext(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
                         Snackbar.make(findViewById(android.R.id.content),
                                 getString(R.string.mdl_mdlive_module_not_found),
+                                Snackbar.LENGTH_LONG).show();
+                    } catch(NullPointerException nex){
+                        Snackbar.make(findViewById(android.R.id.content),
+                                getString(R.string.mdl_mdlive_entity_not_found),
                                 Snackbar.LENGTH_LONG).show();
                     }
             }else {

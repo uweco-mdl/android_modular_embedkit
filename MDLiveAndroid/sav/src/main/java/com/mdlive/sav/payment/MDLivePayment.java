@@ -255,7 +255,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 dismissDialog();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, null);
+                    MdliveUtils.handleVolleyErrorResponse(MDLivePayment.this, error, null);
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLivePayment.this);
                 }
@@ -508,7 +508,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
                         }
                     }
 
-                    MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -728,7 +728,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dismissDialog();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLivePayment.this, error, getProgressDialog());
 
 
             }
@@ -874,7 +874,7 @@ public class MDLivePayment extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLivePayment.this, error, null);
+                MdliveUtils.handleVolleyErrorResponse(MDLivePayment.this, error, null);
             }
         };
         PharmacyService insuranceService = new PharmacyService(MDLivePayment.this, null);

@@ -24,4 +24,5 @@
     <string name="mdl_mdlive_myaccount_module">com.mdlive.myaccounts.MyAccountActivity</string>
 
     <string name="mdl_mdlive_module_not_found">Sorry, this feature is not available in this version!</string>
+    <string name="mdl_mdlive_entity_not_found">Missing class or method</string>
 </resources>

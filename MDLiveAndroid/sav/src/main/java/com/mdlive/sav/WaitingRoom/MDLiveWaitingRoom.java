@@ -231,7 +231,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveWaitingRoom.this, error, getProgressDialog());
                     }
 
                     if (isReturning && !isStartedSummary) {
@@ -525,7 +525,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Provider Status Inside","error Response"+"--"+error.toString());
-                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
+                MdliveUtils.handleVolleyErrorResponse(MDLiveWaitingRoom.this, error, null);
             }
         };
 
@@ -657,7 +657,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 //To do: Need to handle the Error response
-                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
+                MdliveUtils.handleVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
             }
         };
         waitingService=new WaitingRoomService(MDLiveWaitingRoom.this,null);
@@ -708,7 +708,7 @@ public class MDLiveWaitingRoom extends MDLiveBaseActivity{
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 //To do: Need to handle the Error response
-                MdliveUtils.handelVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
+                MdliveUtils.handleVolleyErrorResponse(MDLiveWaitingRoom.this,volleyError,null);
             }
         };
         waitingService=new WaitingRoomService(MDLiveWaitingRoom.this,null);

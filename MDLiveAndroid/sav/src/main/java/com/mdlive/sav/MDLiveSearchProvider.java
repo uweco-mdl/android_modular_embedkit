@@ -464,7 +464,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
             }
         };
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -723,7 +723,7 @@ public class MDLiveSearchProvider extends MDLiveBaseActivity {
                             }
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveSearchProvider.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     e.printStackTrace();

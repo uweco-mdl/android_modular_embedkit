@@ -168,7 +168,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
             }
         };
         ReasonForVisitServices services = new ReasonForVisitServices(MDLiveMakeAppmtrequest.this, null);
@@ -510,7 +510,7 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                             }
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveMakeAppmtrequest.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     e.printStackTrace();

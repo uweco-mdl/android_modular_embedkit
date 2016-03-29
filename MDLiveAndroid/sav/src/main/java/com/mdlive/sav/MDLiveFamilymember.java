@@ -297,7 +297,7 @@ public class MDLiveFamilymember extends MDLiveBaseActivity {
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(MDLiveFamilymember.this,error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(MDLiveFamilymember.this,error, getProgressDialog());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

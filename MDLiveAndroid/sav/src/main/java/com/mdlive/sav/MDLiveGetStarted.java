@@ -670,7 +670,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 //Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
@@ -714,7 +714,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
             }};
         SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
         ptypeservices.getSearchDetails(successCallBackListener, errorListener);
@@ -754,7 +754,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 //Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
         UserBasicInfoServices services = new UserBasicInfoServices(MDLiveGetStarted.this, null);
         services.getUserBasicInfoRequest(depenedentId, successCallBackListener, errorListener);
@@ -813,7 +813,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             public void onErrorResponse(VolleyError error) {
                 //Log.d("Response", error.toString());
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this,error,getProgressDialog());
             }};
         SearchProviderDetailServices ptypeservices = new SearchProviderDetailServices(MDLiveGetStarted.this, getProgressDialog());
         ptypeservices.getSearchDetails(successCallBackListener, errorListener);
@@ -1213,7 +1213,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
                             });
                         }
                     } else {
-                        MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+                        MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
                     }
                 }catch(Exception e){
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), MDLiveGetStarted.this);
@@ -1438,7 +1438,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();
-                MdliveUtils.handelVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
+                MdliveUtils.handleVolleyErrorResponse(MDLiveGetStarted.this, error, getProgressDialog());
 
             }
         };
@@ -1455,7 +1455,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
             unregisterReceiver(locationReceiver);
             locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()) {
-                locationService.stopListners();
+                locationService.stopListeners();
             }
             HideKeyboard();
         } catch (Exception e) {

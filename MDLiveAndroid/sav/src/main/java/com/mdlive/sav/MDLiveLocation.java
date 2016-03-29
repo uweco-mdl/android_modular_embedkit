@@ -232,7 +232,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             unregisterReceiver(locationReceiver);
             locationService.setBroadCastData(StringConstants.DEFAULT);
             if(locationService != null && locationService.isTrackingLocation()){
-                locationService.stopListners();
+                locationService.stopListeners();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
@@ -59,7 +58,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
     private TextView mValidEmailText = null;
     private TextView mValidationEmail = null;
     private TextView mUsernameLength = null;
-    private TextView mUsernameAlphaNumericCheck = null;
+    //private TextView mUsernameAlphaNumericCheck = null;
     private TextView mUsernameSpecialCharactersCheck = null;
 
     private List<String> stateIds = new ArrayList<String>();
@@ -119,7 +118,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 mCity.setText(mUserBasicInfo.getPersonalInfo().getCity());
             }
             if(mUserBasicInfo.getPersonalInfo().getState() != null){
-                for(int i = 0; i< Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); i++){
+                for(int i = 0; i < Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).size(); i++){
                     if(mUserBasicInfo.getPersonalInfo().getState().equals(Arrays.asList(getResources().getStringArray(R.array.mdl_stateCode)).get(i))){
                         mState.setText(Arrays.asList(getResources().getStringArray(R.array.mdl_stateName)).get(i));
                     }
@@ -190,7 +189,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Make your selection");
+                builder.setTitle(getActivity().getString(R.string.mdl_make_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mRelationship.setText(items[item]);
@@ -206,11 +205,12 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             public void onClick(View v) {
 
                 final CharSequence[] items = {
-                        "Male", "Female"
+                        getActivity().getString(R.string.mdl_male),
+                        getActivity().getString(R.string.mdl_female)
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Make your selection");
+                builder.setTitle(getActivity().getString(R.string.mdl_make_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mGender.setText(items[item]);
@@ -256,11 +256,11 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 if (hasFocus) {
                     if (mUsername.getText().length() == 0) {
                         mUsernameLength.setVisibility(View.GONE);
-                        mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                        //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                         mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                     } else {
                         mUsernameLength.setVisibility(View.VISIBLE);
-                        mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                        //mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
                         mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                     }
 
@@ -271,17 +271,17 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                         mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getActivity(), R.drawable.red_circle_small), null, null, null);
                     }
-                    if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
+/*                    if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                         mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 
                     } else {
                         mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                         mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
-                    }
+                    }*/
                 } else {
                     mUsernameLength.setVisibility(View.GONE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                 }
             }
@@ -297,11 +297,11 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (mUsername.getText().length() == 0) {
                     mUsernameLength.setVisibility(View.GONE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.GONE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.GONE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.GONE);
                 } else {
                     mUsernameLength.setVisibility(View.VISIBLE);
-                    mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
+                    //mUsernameAlphaNumericCheck.setVisibility(View.VISIBLE);
                     mUsernameSpecialCharactersCheck.setVisibility(View.VISIBLE);
                 }
 
@@ -312,14 +312,14 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                     mUsernameLength.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mUsernameLength.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
                 }
-                if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
+/*                if (mUsername.getText().toString().matches(".*[a-zA-Z]+.*")) {
                     mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                     mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.green_circle_small), null, null, null);
 
                 } else {
                     mUsernameAlphaNumericCheck.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                     mUsernameAlphaNumericCheck.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.red_circle_small), null, null, null);
-                }
+                }*/
             }
 
             @Override
@@ -351,7 +351,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
         mValidEmailText = (TextView) addFamilyMember.findViewById(R.id.validEmailText);
         mValidationEmail = (TextView) addFamilyMember.findViewById(R.id.validationEmail);
         mUsernameLength = (TextView) addFamilyMember.findViewById(R.id.userNameLength);
-        mUsernameAlphaNumericCheck = (TextView) addFamilyMember.findViewById(R.id.userNameAlphaNumericCheck);
+        //mUsernameAlphaNumericCheck = (TextView) addFamilyMember.findViewById(R.id.userNameAlphaNumericCheck);
         mUsernameSpecialCharactersCheck = (TextView) addFamilyMember.findViewById(R.id.userNameSpecialCharactersCheck);
         mGender = (TextView) addFamilyMember.findViewById(R.id.gender);
         mDOBLayout = (RelativeLayout) addFamilyMember.findViewById(R.id.DOBLayout);
@@ -447,7 +447,7 @@ public class AddFamilyMemberFragment extends MDLiveBaseFragment {
                 hideProgressDialog();
 
                 try {
-                    MdliveUtils.handelVolleyErrorResponse(getActivity(), error, getProgressDialog());
+                    MdliveUtils.handleVolleyErrorResponse(getActivity(), error, getProgressDialog());
                 } catch (Exception e) {
                     MdliveUtils.connectionTimeoutError(getProgressDialog(), getActivity());
                 }
