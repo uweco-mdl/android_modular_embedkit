@@ -832,7 +832,7 @@ public class MdliveUtils {
      * @param pDialog   Progress Dialog obj to show tho dialog
      */
 
-    public static void handelVolleyErrorResponseForDependentChild(Activity cxt, VolleyError error,ProgressDialog pDialog, final DialogInterface.OnClickListener onClickListener) {
+    public static void handleVolleyErrorResponseForDependentChild(Activity cxt, VolleyError error,ProgressDialog pDialog, final DialogInterface.OnClickListener onClickListener) {
         final WeakReference<Activity> reference = new WeakReference<Activity>(cxt);
 
         try {

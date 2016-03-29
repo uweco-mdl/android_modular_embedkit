@@ -455,7 +455,7 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
                 try {
                     //MdliveUtils.handelVolleyErrorResponse(getActivity(), error, null);
 
-                    MdliveUtils.handelVolleyErrorResponseForDependentChild(getActivity(), error, getProgressDialog(), new DialogInterface.OnClickListener() {
+                    MdliveUtils.handleVolleyErrorResponseForDependentChild(getActivity(), error, getProgressDialog(), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //loadUserInformationDetails(true);
