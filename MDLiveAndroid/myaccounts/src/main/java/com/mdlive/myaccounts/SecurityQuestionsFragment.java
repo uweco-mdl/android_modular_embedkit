@@ -335,7 +335,7 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
             final RadioButton radioButton = (RadioButton) view1.findViewById(R.id.radioButton);
             radioButton.setText(mQuestions.get(i));
 
-            ColorStateList colorStateList = new ColorStateList(
+/*            ColorStateList colorStateList = new ColorStateList(
                     new int[][]{
 
                             new int[]{-android.R.attr.state_checked},   //disabled
@@ -347,9 +347,9 @@ public class SecurityQuestionsFragment extends MDLiveBaseFragment {
                             ,getActivity().getResources().getColor(R.color.green_background)    //enabled
 
                     }
-            );
+            );*/
 
-            radioButton.setButtonTintList(colorStateList);
+            //radioButton.setButtonTintList(colorStateList);
             radioButton.invalidate();
 
             if (textView.getText().equals(mQuestions.get(i)))
