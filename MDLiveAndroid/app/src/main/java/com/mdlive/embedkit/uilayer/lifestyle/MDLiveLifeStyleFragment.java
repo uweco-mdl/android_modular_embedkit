@@ -43,7 +43,7 @@ import java.util.List;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
+public class MDLiveLifeStyleFragment extends MDLiveBaseFragment implements ListItemCheckedListener {
 
     private View view;
     private EditText mHeightFtEditText;
@@ -188,7 +188,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
                 lifeStyleModels.add(new Model(jsonObject.getInt("id"), jsonObject.getString("condition"),
                         ((jsonObject.isNull("active") || jsonObject.optString("active").trim().length() == 0) ? "" : jsonObject.getString("active"))));
             }
-            adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels);
+            adapter = new LifeStyleBaseAdapter(getActivity(), lifeStyleModels, this);
             mListView.setAdapter(adapter);
             mListView.invalidateViews();
 
@@ -282,10 +282,8 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     }
 
     /**
-     *
      * This textwatcher will call the setBMIText() function whenever the text is changed for
      * weight and height edittexts.
-     *
      */
     TextWatcher heightFtTxtWatcher = new TextWatcher() {
         @Override
@@ -312,9 +310,32 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         {
             ((MDLiveLifestyleActivity) getActivity()).hideTick();
         }
-        else
+        else if (checkQuestionStatus())
         {
             ((MDLiveLifestyleActivity) getActivity()).showTick();
+        }
+        else
+        {
+            ((MDLiveLifestyleActivity) getActivity()).hideTick();
+        }
+    }
+
+    private void tickVisibilityConditions(boolean listItemStatus) {
+        String heightFeet = mHeightFtEditText.getText().toString();
+        ///String heightInches = mHeightInEditText.getText().toString();
+        String weight = mWeightLbsEditText.getText().toString();
+        String ZERO ="0";
+        if(TextUtils.isEmpty(heightFeet)||TextUtils.isEmpty(weight)||heightFeet.equals(ZERO)||weight.equals(ZERO))
+        {
+            ((MDLiveLifestyleActivity) getActivity()).hideTick();
+        }
+        else if (listItemStatus)
+        {
+            ((MDLiveLifestyleActivity) getActivity()).showTick();
+        }
+        else
+        {
+            ((MDLiveLifestyleActivity) getActivity()).hideTick();
         }
     }
 
@@ -386,11 +407,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
     }
 
     /**
-     *
-     *
      * This filter class will set the minimum and maximum values to an Edit text.
-     *
-     *
      */
     private class InputFilterMinMax implements InputFilter {
 
@@ -438,7 +455,7 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
 
                     if(obj.has("height") && !obj.getString("height").equals("0")){
                         double[] heightValue = GoogleFitUtils.convertMetersToFeet(Double.parseDouble(obj.getString("height")));
-                        if((int) heightValue[0]>0) {
+                        if((int) heightValue[0] > 0) {
                             mHeightFtEditText.setText((int) heightValue[0] + "");
                         }
                         mHeightInEditText.setText((int) heightValue[1] + "");
@@ -452,4 +469,30 @@ public class MDLiveLifeStyleFragment extends MDLiveBaseFragment {
         });
 
     }
+
+    @Override
+    public void onItemClick()
+    {
+        tickVisibilityConditions(checkQuestionStatus());
+    }
+
+    public boolean checkQuestionStatus()
+    {
+        boolean isEveryFieldChecked = true;
+        models = adapter.getItems();
+        for (Model model:models) {
+            if(TextUtils.isEmpty(model.active))
+            {
+                isEveryFieldChecked = false;
+                break;
+            }
+        }
+        return isEveryFieldChecked;
+    }
+
+}
+
+interface ListItemCheckedListener
+{
+    public void onItemClick();
 }

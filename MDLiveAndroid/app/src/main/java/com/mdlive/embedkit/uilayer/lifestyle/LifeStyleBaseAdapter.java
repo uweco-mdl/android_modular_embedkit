@@ -18,9 +18,11 @@ import java.util.List;
  */
 public class LifeStyleBaseAdapter extends BaseAdapter {
     private List<Model> mModels;
+    private MDLiveLifeStyleFragment fragment;
 
-    public LifeStyleBaseAdapter(Context context, List<Model> objects) {
+    public LifeStyleBaseAdapter(Context context, List<Model> objects, MDLiveLifeStyleFragment fragment) {
         mModels = objects;
+        this.fragment = fragment;
     }
 
     /**
@@ -92,6 +94,7 @@ public class LifeStyleBaseAdapter extends BaseAdapter {
         viewHolder.mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 if(viewHolder.mRadioGroup.getTag() != null){
                     if (checkedId == R.id.yesradioButton) {
                         mModels.get(position).active = Model.YES;
@@ -105,6 +108,7 @@ public class LifeStyleBaseAdapter extends BaseAdapter {
                         mModels.get(position).active = Model.NO;
                     }
                 }
+                fragment.onItemClick();
             }
         });
         return convertView;
