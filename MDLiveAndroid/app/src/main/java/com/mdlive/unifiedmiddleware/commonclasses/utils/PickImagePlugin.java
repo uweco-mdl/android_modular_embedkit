@@ -118,7 +118,7 @@ public class PickImagePlugin {
                     ContentResolver cr = parentActivity.getContentResolver();
                     cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
                 }
-            }else if(lastFileNameId != null && lastFileNameId != cursor.getString(0)){
+            }else if(lastFileNameId != null && lastFileNameId.equalsIgnoreCase(cursor.getString(0))){
                 ContentResolver cr = parentActivity.getContentResolver();
                 cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
             }

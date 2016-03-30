@@ -613,7 +613,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
 
 
     public void initializeViews() {
-        myPhotosList = new ArrayList<HashMap<String, Object>>();
+        myPhotosList = new ArrayList<>();
         imageAdapter = new ImageAdapter(MDLiveReasonForVisit.this, myPhotosList);
         gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(imageAdapter);
@@ -632,7 +632,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             @Override
             public void onClick(View v) {
                 if (!isDeviceSupportCamera()){
-                    MdliveUtils.alert(null, getApplicationContext(), "Your Device doesn't support have Camera Feature!");
+                    MdliveUtils.alert(null, getApplicationContext(), getString(R.string.mdl_camera_nt_supported_msg));
                 }else if(myPhotosList.size() < 8){
                     captureImage();
                 }
@@ -805,7 +805,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
             acceptSize = false;
         }
         if(!acceptSize)
-            return "Please add a photo with a maximum size of 10 MB";
+            return getString(R.string.mdl_photo_size_message);
         else
             return null;
     }
@@ -1067,7 +1067,7 @@ public class MDLiveReasonForVisit extends MDLiveBaseActivity {
                     ContentResolver cr = getContentResolver();
                     cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
                 }
-            }else if(lastFileNameId != null && lastFileNameId != cursor.getString(0)){
+            }else if(lastFileNameId != null && lastFileNameId.equalsIgnoreCase(cursor.getString(0))){
                 ContentResolver cr = getContentResolver();
                 cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, BaseColumns._ID + "=" + cursor.getString(0), null);
             }

@@ -51,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -955,13 +956,21 @@ public class MdliveUtils {
      */
     public static void showMDLiveAssistDialog(final Activity activity) {
         try {
-            final WeakReference<Activity> reference = new WeakReference<Activity>(activity);
+            final WeakReference<Activity> reference = new WeakReference<>(activity);
 
             if (reference.get() == null) {
                 return;
             }
 
-            final UserBasicInfo userBasicInfo = UserBasicInfo.readFromSharedPreference(reference.get());
+            Class clazz = Class.forName(reference.get().getString(R.string.mdl_mdlive_assist_module));
+            Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
+            if(method==null)
+                return;
+            final String phoneNum = (String)method.invoke(null,
+                                                          reference.get(),
+                                                          UserBasicInfo.readFromSharedPreference(reference.get()).getAssistPhoneNumber());
+            if(phoneNum==null || phoneNum.isEmpty())
+                return;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(reference.get());
             builder.setCancelable(false);
@@ -978,7 +987,7 @@ public class MdliveUtils {
                         public void onClick(DialogInterface dialog, int which) {
                             try {
                                 Intent intent = new Intent(Intent.ACTION_CALL);
-                                intent.setData(Uri.parse("tel:" + userBasicInfo.getAssistPhoneNumber().trim()));
+                                intent.setData(Uri.parse("tel:" + phoneNum.trim()));
                                 reference.get().startActivity(intent);
                             } catch (Exception e) {
                             }

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
@@ -47,7 +46,8 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     private HashMap<String, ArrayList<String>> values;
     private ArrayList<String> nameList;
     private ArrayList<String> urlList;
-    View header,footer;
+    View header, footer;
+
     public static GetFamilyMemberFragment newInstance() {
         final GetFamilyMemberFragment fragment = new GetFamilyMemberFragment();
         return fragment;
@@ -87,7 +87,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
         CardView addFamilyMember1 = (CardView) footer.findViewById(R.id.addFamilyMember);
         TextView callCustomer = (TextView) footer.findViewById(R.id.call_customer);
 
-        TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
+        //TextView addFamilyMember = (TextView) view.findViewById(R.id.txt_add_FamilyMember);
 
         lv.addFooterView(footer);
         lv.addHeaderView(header);
@@ -102,18 +102,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View textView) {
-                    try {
-                        Class clazz = Class.forName(getString(R.string.mdl_mdlive_assist_module));
-                        Method method = clazz.getMethod("showMDLiveAssistDialog", Activity.class, String.class);
-                        method.invoke(null, this, UserBasicInfo.readFromSharedPreference(getActivity()).getAssistPhoneNumber());
-                    } catch (ClassNotFoundException e){
-                        /*Toast.makeText(getActivity(), getString(R.string.mdl_mdlive_module_not_found), Toast.LENGTH_LONG).show();*/
-                        Snackbar.make(getActivity().findViewById(android.R.id.content),
-                                getString(R.string.mdl_mdlive_module_not_found),
-                                Snackbar.LENGTH_LONG).show();
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    MdliveUtils.showMDLiveAssistDialog(getActivity());
                 }
 
                 public void updateDrawState(TextPaint ds) {// override updateDrawState
@@ -146,7 +135,6 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
         getFamilyMemberInfoService();
     }
 
@@ -160,8 +148,8 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     public void getFamilyMemberInfoService() {
         showProgressDialog();
 
-        nameList = new ArrayList<String>();
-        urlList = new ArrayList<String>();
+        nameList = new ArrayList<>();
+        urlList = new ArrayList<>();
 
         NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {
 
@@ -189,21 +177,19 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     }
 
     public void handleFamilyMemberAddedSucessResponse(JSONObject response) {
-        Log.e("Response user ",response.toString());
+        Log.e("Response user ", response.toString());
         hideProgressDialog();
         try {
             String primaryUserName = userBasicInfo.getPersonalInfo().getFirstName() + " " + userBasicInfo.getPersonalInfo().getLastName();
 
             nameList.add(primaryUserName);
             urlList.add(userBasicInfo.getPersonalInfo().getImageUrl());
-            boolean isPrimaryUser=response.getBoolean("primary_user");
+            boolean isPrimaryUser = response.getBoolean("primary_user");
 
-
-
-            if((response.get("primary_user").toString())== "false")
-            {
-                lv.removeFooterView(footer);
-            }
+//            if((response.get("primary_user").toString()) == "false")
+//            {
+//                lv.removeFooterView(footer);
+//            }
 
             JSONArray jsonarray = (JSONArray) response.get("dependant_users");
 
@@ -218,9 +204,10 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
             if(!isPrimaryUser){
                 nameList.remove(nameList.size() - 1);
                 urlList.remove(urlList.size() - 1);
+                lv.removeFooterView(footer);
             }
 
-            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList,urlList,isPrimaryUser));
+            lv.setAdapter(new GetFamilyMemberAdapter(getActivity(), nameList, urlList, isPrimaryUser));
 
             if (mOnChildAdded != null) {
                 mOnChildAdded.reloadNavigartion();
@@ -232,12 +219,8 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     }
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-
         switch (requestCode) {
-
             case 3:
-
                 getFamilyMemberInfoService();
                 break;
         }
