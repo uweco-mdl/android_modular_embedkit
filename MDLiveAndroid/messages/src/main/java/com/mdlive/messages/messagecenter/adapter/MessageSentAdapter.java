@@ -42,9 +42,9 @@ public class MessageSentAdapter extends ArrayAdapter<SentMessage> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
-        viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
-        viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.read_text_color));
+        viewHolder.mTextViewTop.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
+        viewHolder.mTextViewBottom.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
+        viewHolder.mTextViewTime.setTextColor(convertView.getResources().getColor(R.color.unread_text_color));
 
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).providerImageUrl, ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).to);
