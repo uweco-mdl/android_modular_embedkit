@@ -120,11 +120,11 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.behavioural_health_hospitalized_yes_radio_button) {
-                        mBehavioralHistory.hospitalized = "Yes";
+                        mBehavioralHistory.hospitalized = getActivity().getString(R.string.mdl_yes);
                         mWhenLl.setVisibility(View.VISIBLE);
                         mhowLongLl.setVisibility(View.VISIBLE);
                     } else if (checkedId == R.id.behavioural_health_hospitalized_no_radio_button) {
-                        mBehavioralHistory.hospitalized = "No";
+                        mBehavioralHistory.hospitalized = getActivity().getString(R.string.mdl_no);
                         mBehavioralHistory.hospitalizedDate = "";
                         mBehavioralHistory.hospitalizedDuration = "";
                         mWhenLl.setVisibility(View.GONE);
@@ -139,9 +139,9 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.behavioural_health_question_family_yes_radio_button) {
-                        mBehavioralHistory.familyHospitalized = "Yes";
+                        mBehavioralHistory.familyHospitalized = getActivity().getString(R.string.mdl_yes);
                     } else if (checkedId == R.id.behavioural_health_question_family_no_radio_button) {
-                        mBehavioralHistory.familyHospitalized = "No";
+                        mBehavioralHistory.familyHospitalized = getActivity().getString(R.string.mdl_no);
                     }
                 }
             });
@@ -202,7 +202,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 final View child = getActivity().getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
                 final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
                 checkBox.setText(mBehavioralHistory.behavioralMconditions.get(position).condition);
-                if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralMconditions.get(position).active)) {
+                if (getActivity().getString(R.string.mdl_yes).equalsIgnoreCase(mBehavioralHistory.behavioralMconditions.get(position).active)) {
                     checkBox.setChecked(true);
                 } else {
                     checkBox.setChecked(false);
@@ -229,7 +229,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
                 final View child = getActivity().getLayoutInflater().inflate(R.layout.mdlive_behavioural_checkbox_layout, null);
                 final CheckBox checkBox = (CheckBox)child.findViewById(R.id.behavioral_history_checkBox);
                 checkBox.setText(mBehavioralHistory.behavioralFamilyHistory.get(position).condition);
-                if ("Yes".equalsIgnoreCase(mBehavioralHistory.behavioralFamilyHistory.get(position).active)) {
+                if (getActivity().getString(R.string.mdl_yes).equalsIgnoreCase(mBehavioralHistory.behavioralFamilyHistory.get(position).active)) {
                     checkBox.setChecked(true);
                 } else {
                     checkBox.setChecked(false);
@@ -249,7 +249,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
             }
         }
 
-        if("Yes".equalsIgnoreCase(mBehavioralHistory.hospitalized)) {
+        if(getActivity().getString(R.string.mdl_yes).equalsIgnoreCase(mBehavioralHistory.hospitalized)) {
             mHospitalizedYesRadioButton.setChecked(true);
             mHospitalizedNoRadioButton.setChecked(false);
             mWhenLl.setVisibility(View.VISIBLE);
@@ -261,7 +261,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
             mhowLongLl.setVisibility(View.GONE);
         }
 
-        if("Yes".equalsIgnoreCase(mBehavioralHistory.familyHospitalized)) {
+        if(getActivity().getString(R.string.mdl_yes).equalsIgnoreCase(mBehavioralHistory.familyHospitalized)) {
             mFamilyYesRadioButton.setChecked(true);
             mFamilyNoRadioButton.setChecked(false);
         } else {

@@ -623,16 +623,16 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
         hideProgress();
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null) {
-            String message = "No Internet Connection";
+            String message = getString(R.string.mdl_no_internet_connection);
             if (networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
-                message = "Internal Server Error";
+                message = getString(R.string.mdl_internal_server_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY) {
-                message = "Unprocessable Entity Error";
+                message = getString(R.string.mdl_unprocessable_entity_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND) {
-                message = "Page Not Found";
+                message = getString(R.string.mdl_page_not_found);
             }
-            MdliveUtils.showDialog(MDLiveMedicalHistory.this, "Error",
-                    "Server Response : " + message);
+            MdliveUtils.showDialog(MDLiveMedicalHistory.this, getString(R.string.mdl_error),
+                    getString(R.string.mdl_server_response) + message);
         }
     }
     /**
@@ -1190,7 +1190,7 @@ public class MDLiveMedicalHistory extends MDLiveBaseActivity {
             Intent i = new Intent(getApplicationContext(), MDLivePharmacyResult.class);
             i.putExtra("longitude", currentLocation.latitude+"");
             i.putExtra("latitude", currentLocation.longitude+"");
-            i.putExtra("errorMesssage", "No Pharmacies listed in your location");
+            i.putExtra("errorMesssage", getString(R.string.mdl_no_pharmacies_listed));
             startActivity(i);
             MdliveUtils.startActivityAnimation(MDLiveMedicalHistory.this);
         }else{

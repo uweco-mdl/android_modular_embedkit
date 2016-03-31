@@ -52,8 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -80,10 +78,11 @@ public class MDLiveHealthModule extends MDLiveBaseActivity {
     public TextView surgeryName, surgeryYear, errorText;
     public EditText dosageTxt, otherProcedureTxt;
     String[] timesList = new String[]{
-            "Once","Twice","Three times","Four times", "Five times", "Six times"
+            getString(R.string.mdl_once), getString(R.string.mdl_twice), getString(R.string.mdl_thrice),
+            getString(R.string.mdl_fourth), getString(R.string.mdl_fifth), getString(R.string.mdl_sixth)
     };
     String[] modesList =  new String[]{
-            "Daily", "Hourly", "Weekly","Monthly"
+            getString(R.string.mdl_daily),getString(R.string.mdl_hourly),getString(R.string.mdl_weekly),getString(R.string.mdl_monthly)
     };
 
     @Override

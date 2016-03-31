@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -389,7 +388,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (user.mMode == User.MODE_ADD_CHILD) {
             /*Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();*/
             Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.mdl_add_child_start),
+                    getString(R.string.mdl_add_child_started),
                     Snackbar.LENGTH_LONG).show();
             return;
         }
@@ -408,7 +407,7 @@ public abstract class MDLiveBaseAppcompatActivity extends AppCompatActivity impl
         if (user.mMode == User.MODE_ADD_CHILD) {
             /*Toast.makeText(getBaseContext(), getString(R.string.mdl_add_child_start), Toast.LENGTH_SHORT).show();*/
             Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.mdl_add_child_start),
+                    getString(R.string.mdl_add_child_started),
                     Snackbar.LENGTH_LONG).show();
             return;
         }

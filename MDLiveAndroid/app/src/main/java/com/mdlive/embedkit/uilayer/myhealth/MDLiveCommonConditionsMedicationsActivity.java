@@ -316,7 +316,8 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
                     getItem(position).getConditionSubName().length() != 0){
                 holder.conditionSubName.setVisibility(View.VISIBLE);
                 if(type == TYPE_CONSTANT.PROCEDURE){
-                    holder.conditionSubName.setText("Year of procedure : "+getItem(position).getConditionSubName());
+                    holder.conditionSubName.setText(getString(R.string.mdl_year_of_procedure)
+                                                    +getItem(position).getConditionSubName());
                 }else{
                     holder.conditionSubName.setText(getItem(position).getConditionSubName());
                 }
@@ -501,17 +502,18 @@ public abstract class MDLiveCommonConditionsMedicationsActivity extends MDLiveBa
         hideProgress();
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null) {
-            String message = "No Internet Connection";
+            String message = getString(R.string.mdl_no_internet_connection);
             if (networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
-                message = "Internal Server Error";
+                message = getString(R.string.mdl_internal_server_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY) {
-                message = "Unprocessable Entity Error";
+                message = getString(R.string.mdl_unprocessable_entity_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND) {
-                message = "Page Not Found";
+                message = getString(R.string.mdl_page_not_found);
             }
-            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this, "Error",
-                    "Status Code : " + error.networkResponse.statusCode + "\n" +
-                            "Server Response : " + message);
+            MdliveUtils.showDialog(MDLiveCommonConditionsMedicationsActivity.this,
+                                    getString(R.string.mdl_error),
+                                    getString(R.string.mdl_status_code)+ error.networkResponse.statusCode + "\n" +
+                                    getString(R.string.mdl_server_response) + message);
         }
 
     }

@@ -262,7 +262,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 //Log.e("Response",error.toString());
                 hideProgress();
 //                MdliveUtils.handelVolleyErrorResponse(MDLiveLocation.this,error,getProgressDialog());
-                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                MdliveUtils.showDialog(MDLiveLocation.this, getString(R.string.mdl_unable_to_find_location), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                       dialog.dismiss();
@@ -362,17 +362,17 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 }
             }else{
 
-          MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, "Unable to find location by Zipcode.");
+          MdliveUtils.alert(getProgressDialog(), MDLiveLocation.this, getString(R.string.mdl_find_location_zipcode));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * Successful Response Handler for getting Current Location
      */
-
     private void CurrentLocationResponse(JSONObject response) {
         try {
             hideProgress();
@@ -392,6 +392,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             e.printStackTrace();
         }
     }
+
     /**
      * getLocationCoordinates method is to get the Current latitude and longitude of the location
      */
@@ -405,7 +406,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         }
     }
 
-
     public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -415,7 +415,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
                 double lon = intent.getDoubleExtra("Longitude", 0d);
                 loadCurrentLocation(lat + "", lon + "");
             }else{
-                MdliveUtils.showDialog(MDLiveLocation.this, "Unable to find location", new DialogInterface.OnClickListener() {
+                MdliveUtils.showDialog(MDLiveLocation.this, getString(R.string.mdl_unable_to_find_location), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -424,7 +424,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
             }
         }
     };
-
 
     public void SavecurrentLocation(String ZipCodeCity) {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
@@ -442,8 +441,6 @@ public class MDLiveLocation extends MDLiveBaseActivity {
      *                    The Corresponding Zip Code and the Short name of the city should be saved in the Preferences and will be
      *                    triggerred in the Requird places.
      */
-
-
     public void SaveZipCodeCity(String ZipCodeCity) {
         SharedPreferences settings = this.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -510,6 +507,7 @@ public class MDLiveLocation extends MDLiveBaseActivity {
         super.onBackPressed();
         MdliveUtils.closingActivityAnimation(MDLiveLocation.this);
     }
+
     /**
      * This method will stop the service call if activity is closed during service call.
      */

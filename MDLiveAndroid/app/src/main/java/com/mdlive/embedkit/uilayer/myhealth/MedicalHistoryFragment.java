@@ -370,15 +370,15 @@ public class MedicalHistoryFragment extends MDLiveBaseFragment {
         hideProgressDialog();
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null) {
-            String message = "No Internet Connection";
+            String message = getActivity().getString(R.string.mdl_no_internet_connection);
             if (networkResponse.statusCode == MDLiveConfig.HTTP_INTERNAL_SERVER_ERROR) {
-                message = "Internal Server Error";
+                message = getActivity().getString(R.string.mdl_internal_server_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_UNPROCESSABLE_ENTITY) {
-                message = "Unprocessable Entity Error";
+                message = getActivity().getString(R.string.mdl_unprocessable_entity_error);
             } else if (networkResponse.statusCode == MDLiveConfig.HTTP_NOT_FOUND) {
-                message = "Page Not Found";
+                message = getActivity().getString(R.string.mdl_page_not_found);
             }
-            MdliveUtils.showDialog(getActivity(), "Error",
+            MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_error),
                     "Server Response : " + message);
         }
     }

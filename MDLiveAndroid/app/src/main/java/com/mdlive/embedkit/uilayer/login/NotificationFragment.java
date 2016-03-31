@@ -18,11 +18,9 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
-import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.MDLiveBaseFragment;
 import com.mdlive.embedkit.uilayer.login.adapter.UpcominAppointmentAdapter;
 import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
@@ -303,7 +301,7 @@ public class NotificationFragment extends MDLiveBaseFragment {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(PreferenceConstants.APPT_ID, apptId);
             editor.commit();
-            String builder = "Doctor On Call" + "\n";
+            String builder = getActivity().getString(R.string.mdl_doctor_on_call) + "\n";
             builder = builder + TimeZoneUtils.convertMiliSeconedsToStringWithTimeZone(System.currentTimeMillis()/1000, "", getActivity()) + "\n";   //Sending Current time for Doctor on call
 
             builder = builder + mPendingAppointment.getOncallAppointments().get(0).getApptType() + " " + getResources().getString(R.string.mdl_consultation) + "\n";

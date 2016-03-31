@@ -188,7 +188,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
                         }, y, m, d);
 
-                dp.setTitle("Calender");
+                dp.setTitle(getString(R.string.mdl_calendar));
                 dp.getDatePicker().setMaxDate(System.currentTimeMillis());
                 dp.show();
             }
@@ -220,11 +220,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final CharSequence[] items = {
-                        "Male", "Female"
+                        getString(R.string.mdl_male), getString(R.string.mdl_female)
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddFamilyMemberActivity.this);
-                builder.setTitle("Make your selection");
+                builder.setTitle(getString(R.string.mdl_make_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mGender.setText(items[item]);
@@ -239,10 +239,14 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final CharSequence[] items = {"Self", "Spouse", "Child", "Other"};
+                final CharSequence[] items = {
+                        getString(R.string.mdl_self),
+                        getString(R.string.mdl_spouse),getString(R.string.mdl_child),
+                        getString(R.string.mdl_procedure_other_txt)
+                };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddFamilyMemberActivity.this);
-                builder.setTitle("Make your selection");
+                builder.setTitle(getString(R.string.mdl_make_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         mRelationship.setText(items[item]);
@@ -268,7 +272,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (mayIAllowToEdit) {
                     try {
-
                         String formattedString = MdliveUtils.formatDualString(mPhone.getText().toString());
                         mayIAllowToEdit = false;
                         mPhone.setText(formattedString);

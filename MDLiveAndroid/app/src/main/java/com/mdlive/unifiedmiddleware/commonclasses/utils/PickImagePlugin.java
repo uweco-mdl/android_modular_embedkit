@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
+import com.mdlive.embedkit.R;
+
 import com.mdlive.unifiedmiddleware.commonclasses.constants.IntegerConstants;
 
 import java.io.File;
@@ -37,7 +39,7 @@ public class PickImagePlugin {
       */
     public void captureImage() {
         if (!isDeviceSupportCamera()){
-            MdliveUtils.alert(null, parentActivity, "Your Device doesn't support have Camera Feature!");
+            MdliveUtils.alert(null, parentActivity, parentActivity.getString(R.string.mdl_device_camera_unsupported));
         }else{
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             fileUri = getOutputMediaFileUri();
@@ -172,7 +174,7 @@ public class PickImagePlugin {
             acceptSize = false;
         }
         if(!acceptSize)
-            return "Please add a photo with a maximum size of 10 MB";
+            return parentActivity.getString(R.string.mdl_photo_max_size);
         else
             return null;
     }

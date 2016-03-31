@@ -233,9 +233,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         Log.v("post value","appmt reason->"+strappmtreason+"   strappmtcomment->"+strappmtcomment+"   strappointmentContactNumber->"+strappointmentContactNumber+"   strnxtavailable"+strnxtavailable+"   stridealdate"+postidealTime+"   SelectVideo"+selectedvideo+"  DoctorId"+DoctorId);
         if(TextUtils.isEmpty(strappointmentContactNumber)||appointmentContactNumber.getText().toString().length()<14){
 
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter a valid US phone number.");
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getString(R.string.mdl_valid_US_number));
         } else if(TextUtils.isEmpty(strappmtreason)){
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), "Please enter reason for your appointment.");
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this, getResources().getString(R.string.mdl_app_name), getString(R.string.mdl_enter_reason_for_appointment));
         } else if(TextUtils.isEmpty(selectionType)){
             DialogInterface.OnClickListener positiveOnClickListener = new DialogInterface.OnClickListener() {
                 @Override
@@ -270,7 +270,8 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
                 }
             };
 
-            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this,"Appointment Type", "Would you like this appointment by phone or video?", "Phone", "Video",
+            MdliveUtils.showDialog(MDLiveMakeAppmtrequest.this,getString(R.string.mdl_appointment_type),
+                    getString(R.string.mdl_appointment_by_phone_or_video),getString(R.string.mdl_phone_txt), getString(R.string.mdl_video_txt),
                     negativeOnClickListener, positiveOnClickListener);
         }
         else if (/*!TextUtils.isEmpty(strappmtcomment) && */ !TextUtils.isEmpty(strappmtreason)&& !TextUtils.isEmpty(strappointmentContactNumber)
@@ -319,9 +320,9 @@ public class MDLiveMakeAppmtrequest extends MDLiveBaseActivity {
         appointmentContactNumber.addTextChangedListener(watcher);
         GetCurrentDate((TextView) findViewById(R.id.appointmentNextAvailable));
         nextAvailableList.clear();
-        nextAvailableList.add("Morning");
-        nextAvailableList.add("Afternoon");
-        nextAvailableList.add("Evening");
+        nextAvailableList.add(getString(R.string.mdl_morning_txt));
+        nextAvailableList.add(getString(R.string.mdl_afternoon_txt));
+        nextAvailableList.add(getString(R.string.mdl_evening_txt));
         reasonList  = new ArrayList<>();
         ((TextView) findViewById(R.id.appointmentNextAvailable)).setText(nextAvailableList.get(0));
 

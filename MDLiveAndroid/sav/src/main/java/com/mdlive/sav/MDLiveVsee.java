@@ -193,7 +193,7 @@ public class MDLiveVsee extends MDLiveBaseActivity
 
         FrameLayout frame = (FrameLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.mdlive_vseewaitingmessage, null);
         TextView waitConnectMesg = (TextView)frame.findViewById(R.id.txtWaitCallConnect);
-        waitConnectMesg.setText("Waiting for call to connect...");
+        waitConnectMesg.setText(getString(R.string.mdl_call_connect_waiting)+"...");
         return(frame);
     }
 

@@ -943,7 +943,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             horizontalscrollview.setVisibility(View.GONE);
             findViewById(R.id.dateTxtLayout).setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
-            tapSeetheDoctorTxt.setText("See this doctor now");
+            tapSeetheDoctorTxt.setText(getString(R.string.mdl_see_doctor));
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_seethisdoctor_button));
             saveConsultationType("Video", this);
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.video_icon_white);
@@ -968,7 +968,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             findViewById(R.id.dateTxtLayout).setVisibility(View.GONE);
             horizontalscrollview.setVisibility(View.GONE);
             tapSeetheDoctorTxtLayout.setVisibility(viewsVisibility);
-            tapSeetheDoctorTxt.setText("Talk to this doctor now");
+            tapSeetheDoctorTxt.setText(getString(R.string.mdl_talk_to_doctor));
             tapSeetheDoctorTxt.setContentDescription(getString(R.string.mdl_ada_talktodoctor_button));
             saveConsultationType("Phone", this);
             findViewById(R.id.see_icon).setBackgroundResource(R.drawable.phone_icon_white);
@@ -982,7 +982,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         } else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
             isDoctorAvailableNow=false;
             findViewById(R.id.withpatineLayout).setVisibility(View.VISIBLE);
-            ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
+            ((TextView)findViewById(R.id.withpatientTxt)).setText(getString(R.string.mdl_currently_with_patient));
             clickForVideoOrPhoneTapReqFutureAction();
             findViewById(R.id.withpatineLayout).setClickable(false);
             findViewById(R.id.withpatineLayout).setBackgroundResource(R.color.choose_pro_orange_color);
@@ -1008,7 +1008,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
             clickForVideoOrPhoneTapReqFutureAction();
         } else if(str_Availability_Type.equalsIgnoreCase("With Patient")){
             (findViewById(R.id.withpatineLayout)).setVisibility(View.VISIBLE);
-            ((TextView)findViewById(R.id.withpatientTxt)).setText("Currently with patient");
+            ((TextView)findViewById(R.id.withpatientTxt)).setText(getString(R.string.mdl_currently_with_patient));
             clickForVideoOrPhoneTapReqFutureAction();
             (findViewById(R.id.withpatineLayout)).setClickable(false);
             (findViewById(R.id.withpatineLayout)).setBackgroundResource(R.color.choose_pro_orange_color);
@@ -1027,7 +1027,7 @@ Log.d("***TIMESLOT***","****\n****\nTimeslot: ["+selectedTimestamp+"]");
         reqfutureapptBtnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (reqfutureapptBtn.getText().toString().equalsIgnoreCase("Make an appointment request")) {
+                if (reqfutureapptBtn.getText().toString().equalsIgnoreCase(getString(R.string.mdl_make_appt))) {
                         reqfutureapptBtnLayout.setClickable(true);
                         Intent intent = new Intent(MDLiveProviderDetails.this, MDLiveMakeAppmtrequest.class);
                         startActivity(intent);

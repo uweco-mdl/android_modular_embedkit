@@ -65,7 +65,6 @@ public class PediatricProfileAdapter extends BaseAdapter {
      *     The datas are fetched from the Arraylist based on the position the dats will be placed
      *     in the listview.
      */
-
     @Override
     public View getView(final int pos, View convertview, ViewGroup parent) {
         if(pos == 0){
@@ -238,12 +237,9 @@ public class PediatricProfileAdapter extends BaseAdapter {
 
 
     /**
-
-     *                    The Corresponding Zip Code and the Short name of the city should be saved in the Preferences and will be
-     *                    triggerred in the Requird places.
+     * The Corresponding Zip Code and the Short name of the city should be saved in the Preferences and will be
+     * triggerred in the Requird places.
      */
-
-
     public void SavePediatricEditValues(String prefText, String answerText) {
         SharedPreferences settings = context.getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -256,17 +252,15 @@ public class PediatricProfileAdapter extends BaseAdapter {
         return settings.getString(prefKeyValue, "");
     }
 
-
-
     public void showAlertView(final TextView modifyText){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("Select");
-        arrayAdapter.add("Vaginal Delivery");
-        arrayAdapter.add("C-section");
-        arrayAdapter.add("Bottle fed");
-        arrayAdapter.add("Breast fed");
-        arrayAdapter.add("Full diet");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add(context.getString(R.string.mdl_pediatric_select_hint));
+        arrayAdapter.add(context.getString(R.string.mdl_vaginal_delivery));
+        arrayAdapter.add(context.getString(R.string.mdl_C_section));
+        arrayAdapter.add(context.getString(R.string.mdl_bottle_feed));
+        arrayAdapter.add(context.getString(R.string.mdl_breast_feed));
+        arrayAdapter.add(context.getString(R.string.mdl_full_diet));
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -284,14 +278,10 @@ public class PediatricProfileAdapter extends BaseAdapter {
         });
     }
 
-
     /**
      *    This is to Check the availability of the Doctor.if the next availabilty of doctor
      *    is available then the time stamp should be  visible else it should be hidden.
-     *
-     *
      */
-
     private void changeButtonColor(Button selectedBtn,Button unselectedBtn){
         selectedBtn.setBackgroundResource(R.drawable.btn_selected);
         unselectedBtn.setBackgroundResource(R.drawable.btn_unselected);
@@ -302,6 +292,5 @@ public class PediatricProfileAdapter extends BaseAdapter {
     public ArrayList<HashMap<String, String>> getResult(){
        return array;
     }
-
 
 }

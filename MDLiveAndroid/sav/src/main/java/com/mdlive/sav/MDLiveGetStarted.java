@@ -1516,9 +1516,9 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         // Setting Dialog Title
         alertDialog.setTitle("");
         // Setting Dialog Message
-        alertDialog.setMessage("We need access to your GPS to determine your location.");
+        alertDialog.setMessage(getString(R.string.mdl_gps_access));
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.mdl_settings), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1527,7 +1527,7 @@ public class  MDLiveGetStarted extends MDLiveBaseActivity implements OnUserChang
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.mdl_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

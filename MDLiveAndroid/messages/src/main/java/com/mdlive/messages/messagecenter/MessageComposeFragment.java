@@ -93,7 +93,7 @@ public class MessageComposeFragment extends MDLiveBaseFragment implements TextWa
             if(parentActivity != null){
                 parentActivity.isFromNewMessageCompose(false);
             }
-            mSubjectEditText.setText("Re: "+ ((mSubjectEditText.getText() == null ||
+            mSubjectEditText.setText(getActivity().getString(R.string.mdl_re) + ((mSubjectEditText.getText() == null ||
                     mSubjectEditText.getText().toString().length() == 0) ? "" : mSubjectEditText.getText().toString()));
         } else if (parcelable instanceof SentMessage) {
             url = ((SentMessage) parcelable).providerImageUrl;

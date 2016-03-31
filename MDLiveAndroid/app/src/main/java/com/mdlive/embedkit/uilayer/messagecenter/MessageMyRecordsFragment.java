@@ -205,7 +205,7 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         cameraPlugIn = new PickImagePlugin(getActivity(), this);
-        pDialog = MdliveUtils.getProgressDialog("Please wait...", getActivity());
+        pDialog = MdliveUtils.getProgressDialog(getActivity().getString(R.string.mdl_please_wait)+"...", getActivity());
 
         fetchMyRecords();
         //uploadDocument();
@@ -405,32 +405,33 @@ public class MessageMyRecordsFragment extends MDLiveBaseFragment implements Pick
         messageCenter.uploadDocument(successListener, errorListener, params);
     }
 
-    public void showChosserDialog() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
-                "Cancel"};
+    public void showChooserDialog() {
+        final CharSequence[] items = {getActivity().getString(R.string.mdl_take_photo),
+                                        getActivity().getString(R.string.mdl_choose_from_library),
+                                        getActivity().getString(R.string.mdl_cancel)};
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose Photo");
+        builder.setTitle(getActivity().getString(R.string.mdl_choose_photo));
         builder.setCancelable(false);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
+                if (items[item].equals(getActivity().getString(R.string.mdl_take_pic))) {
                     //cameraPlugIn.captureImage();
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     PickImagePlugin.fileUri = cameraPlugIn.getOutputMediaFileUri();
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, PickImagePlugin.fileUri);
                     startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-                } else if (items[item].equals("Choose from Library")) {
+                } else if (items[item].equals(getActivity().getString(R.string.mdl_choose_from_library))) {
                     //cameraPlugIn.pickImage();
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
+                            Intent.createChooser(intent, getActivity().getString(R.string.mdl_select_file)),
                             IntegerConstants.PICK_IMAGE_REQUEST_CODE);
-                } else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals(getActivity().getString(R.string.mdl_cancel))) {
                     dialog.dismiss();
                 }
             }

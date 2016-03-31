@@ -255,7 +255,7 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Make your selection");
+                builder.setTitle(getActivity().getString(R.string.mdl_make_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         changeLangTv.setText(items[item]);
@@ -509,34 +509,36 @@ public class MyProfileFragment extends MDLiveBaseFragment  implements PickImageP
     }
 
     public void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+        final CharSequence[] items = {getActivity().getString(R.string.mdl_take_pic),
+                                        getActivity().getString(R.string.mdl_choose_from_library),
+                                        getActivity().getString(R.string.mdl_cancel)};
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
+        builder.setTitle(getActivity().getString(R.string.mdl_myrecords_add_photo)+"!");
         builder.setCancelable(false);
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
+                if (items[item].equals(getActivity().getString(R.string.mdl_take_pic))) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     PickImagePlugin.fileUri = cameraPlugIn.getOutputMediaFileUri();
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, PickImagePlugin.fileUri);
                     startActivityForResult(intent, IntegerConstants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
                     /*Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(takePicture, 2);*/
-                } else if (items[item].equals("Choose from Library")) {
+                } else if (items[item].equals(getActivity().getString(R.string.mdl_choose_from_library))) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
+                            Intent.createChooser(intent, getActivity().getString(R.string.mdl_select_file)),
                             IntegerConstants.PICK_IMAGE_REQUEST_CODE);
                     /*Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(pickPhoto, 1);*/
-                } else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals(getActivity().getString(R.string.mdl_cancel))) {
                     dialog.dismiss();
                 }
             }

@@ -133,7 +133,7 @@ public class MDLivePharmacyChange extends MDLiveBaseActivity {
             }
             finish();
         } else {
-            MdliveUtils.showDialog(MDLivePharmacyChange.this, "MDLIVE", hasErrorMessage);
+            MdliveUtils.showDialog(MDLivePharmacyChange.this, getString(R.string.mdl_app_name), hasErrorMessage);
         }
     }
 

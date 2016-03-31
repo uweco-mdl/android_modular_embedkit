@@ -73,7 +73,10 @@ public class ConsultationHistoryAdapter extends ArrayAdapter<ConsultationHistory
         }
         viewHolder.mCircularNetworkImageView.setImageUrl(getItem(position).getProviderImageUrl(), ApplicationController.getInstance().getImageLoader(parent.getContext()));
         viewHolder.mTextViewTop.setText(getItem(position).getProviderName());
-        viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " + getItem(position).getConsultationDate() + " by " + getItem(position).getConsultationMethod());
+        viewHolder.mTextViewBottom.setText(context.getResources().getString(R.string.mdl_last_visit) + " " +
+                                            getItem(position).getConsultationDate() +
+                                            context.getString(R.string.mdl_by) +
+                                            getItem(position).getConsultationMethod());
         viewHolder.reasonForVisitTv.setText(" " + getItem(position).getChiefComplaint());
         if (getItem(position).getPrimaryDiagnosis().isEmpty()) {
             viewHolder.primaryDiagnosisTv.setText(" " + context.getResources().getString(R.string.mdl_no_diagnosis));

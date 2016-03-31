@@ -540,7 +540,7 @@ public class CreditCardInfoFragment extends MDLiveBaseFragment {
             }
         } else {
 //            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
-            MdliveUtils.showDialog(getActivity(), "All fields are required", new DialogInterface.OnClickListener() {
+            MdliveUtils.showDialog(getActivity(), getActivity().getString(R.string.mdl_all_fields_required), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

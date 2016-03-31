@@ -362,14 +362,14 @@ public class ChangePasswordFragment extends MDLiveBaseFragment {
                 checkThatUserEnteredPassword();
                 changeVisibilityOfImageButton(mNewPasswordShow, mNewPassword, severityTv);
                 if (mNewPassword.getText().length() > 8 && mNewPassword.getText().toString().matches("^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
-                    severityTv.setText("STRONG");
+                    severityTv.setText(getActivity().getString(R.string.mdl_strong));
                     severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_green));
                 } else if(mNewPassword.getText().length() >= 6 && (mNewPassword.getText().toString().matches("^(\\w*(\\d+[a-zA-Z]|[a-zA-Z]+\\d)\\w*)+$") ||
                         mNewPassword.getText().toString().matches("^((.*?[0-9].*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*)|(.*?[@#$%&*+\\-_(),+':;?.,!\\[\\]\\s\\\\].*?[0-9].*))$"))) {
-                    severityTv.setText("MEDIUM");
+                    severityTv.setText(getActivity().getString(R.string.mdl_medium));
                     severityTv.setTextColor(getResources().getColor(R.color.change_password_medium_text_color_yellow));
                 } else{
-                    severityTv.setText("WEAK");
+                    severityTv.setText(getActivity().getString(R.string.mdl_weak));
                     severityTv.setTextColor(getResources().getColor(R.color.change_password_alert_text_color_red));
                 }
                 if (charSequence != null && charSequence.length() != 0) {

@@ -68,7 +68,7 @@ public class MDLiveMyRecords extends MDLiveBaseAppcompatActivity {
     public void addPhotoOnClick(View view) {
         android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT);
         if (fragment != null && fragment instanceof MessageMyRecordsFragment) {
-            ((MessageMyRecordsFragment) fragment).showChosserDialog();
+            ((MessageMyRecordsFragment) fragment).showChooserDialog();
         }
     }
 

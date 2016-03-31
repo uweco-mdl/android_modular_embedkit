@@ -680,7 +680,7 @@
     <!-- Strings for Add Family Screen -->
     <string name="mdl_age_error_message">Child must be younger than 18 years old.</string>
     <string name="mdl_add_child">Add Child</string>
-    <string name="mdl_add_child_start">Add Child To Be Started</string>
+    <string name="mdl_add_child_started">Add Child To Be Started</string>
     <string name="mdl_child_must_be_younger_than">Child must be younger than 18 years old.</string>
     <string name="mdl_first_name">First Name</string>
     <string name="mdl_last_name">Last Name</string>
@@ -1626,7 +1626,6 @@
     <string name="mdl_evening_txt">Evening</string>
     <string name="mdl_see_doctor">See this doctor now</string>
     <string name="mdl_problem_uploading">Something Went Wrong in Uploading Document!</string>
-    <string name="mdl_add_child_started">Add Child To Be Started</string>
     <string name="mdl_call_connect_waiting">Waiting for call to connect</string>
     <string name="mdl_device_not_supported">This device is not supported.</string>
     <string name="mdl_empty_text">Please add some text</string>

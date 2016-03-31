@@ -23,8 +23,8 @@ import java.util.ArrayList;
  * the search function for the new symptom has been done here.
  */
 public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
-    private ArrayList<String> originalArray = new ArrayList<String>();
-    private ArrayList<String> array = new ArrayList<String>();
+    private ArrayList<String> originalArray = new ArrayList<>();
+    private ArrayList<String> array = new ArrayList<>();
     private Activity context;
     private Filter filter;
     private LayoutInflater inflate;
@@ -147,7 +147,9 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
 
         if(notFound){
             viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
-            viewHolder.reasonTxt.setText("No results found for '"+array.get(pos)+"'.\n"+"Submit '"+array.get(pos)+"' as your symptom");
+            viewHolder.reasonTxt.setText(context.getString(R.string.mdl_no_result_found) + array.get(pos) + "'.\n" +
+                                        context.getString(R.string.mdl_submit_) +
+                                        array.get(pos)+context.getString(R.string.mdl_as_your_symptom));
             viewHolder.reasonTxt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
