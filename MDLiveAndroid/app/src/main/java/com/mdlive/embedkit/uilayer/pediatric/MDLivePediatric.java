@@ -1,6 +1,5 @@
 package com.mdlive.embedkit.uilayer.pediatric;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,7 +56,7 @@ import java.util.List;
 
 public class MDLivePediatric extends MedicalHistoryPluginActivity {
     private RadioGroup birthComplicationGroup, lastShotGroup, smokingGroup, childOutGroup, siblingsGroup;
-    public EditText edtBirthComplications, edtLastShot, edtCurrentWeight;
+    private EditText edtBirthComplications, edtLastShot, edtCurrentWeight;
     private List<String> dietList;
     private TextView txtDietType, txtDietTypeHeader;
     public ArrayList<HashMap<String, String>> questionList;
@@ -154,7 +153,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         findViewById(R.id.txtApply).setContentDescription(getString(R.string.mdl_ada_tick_button));
         ((TextView) findViewById(R.id.headerTxt)).setText(getString(R.string.mdl_pediatric_header_text));
 
-        SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
+        // SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
 //        ((TextView) findViewById(R.id.reason_patientTxt)).setText(sharedpreferences.getString(PreferenceConstants.PATIENT_NAME, ""));
         questionList = new ArrayList<>();
         questionsMap = new HashMap<>();
@@ -307,7 +306,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
      * This function will invoke when user clicks on radio Button
      * Base on user Choice Update params function will be invoked and post params will be updated correspondingly
      */
-
     public void radioClick() {
 
         birthComplicationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -389,12 +387,13 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
 
     /**
-     * This function will be resposible for update post params values based on user inputs
+     * Update post params values based on user inputs
      *
      * @param name---It is a key value to match the key present inside the questionItem map
      * @param value--it is normally the yes or no value.
      */
-    public void updateParams(String name, String value) {
+    public void updateParams(String name, String value)
+    {
         if ("Yes".equals(value)) {
             for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
                 questionItem = questionList.get(i);
@@ -412,10 +411,10 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 }
             }
         }
-        Gson gs = new Gson();
+        //Gson gs = new Gson();
     }
 
-    public void updateBirthComplication(String name,String value)
+    public void updateBirthComplication(String name, String value)
     {
         boolean isPresent = false;
         for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
@@ -431,9 +430,9 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         }
         else
         {
-            HashMap<String,String> birthField =  new HashMap<String,String>();
-            birthField.put("name",name);
-            birthField.put("value",value);
+            HashMap<String, String> birthField =  new HashMap<>();
+            birthField.put("name", name);
+            birthField.put("value", value);
             questionList.add(birthField);
         }
 
@@ -457,12 +456,12 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         }
         if(isPresent)
         {
-            updateParams(name,value);
+            updateParams(name, value);
         }
         else {
-            HashMap<String,String> dietField =  new HashMap<String,String>();
-            dietField.put("name","Current Diet");
-            dietField.put("value",value);
+            HashMap<String, String> dietField =  new HashMap<>();
+            dietField.put("name", "Current Diet");
+            dietField.put("value", value);
             questionList.add(dietField);
         }
     }
@@ -473,7 +472,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
      * @param name      Key values to get the value from Map which is stored in Question list
      * @param value     User entered valued to be updated in post params.
      */
-
     public void updateExplanationParams(String name, String value) {
         for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
             questionItem = questionList.get(i);
@@ -483,7 +481,6 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
             }
         }
     }
-
 
 
     public void buttonClick() {
@@ -528,22 +525,24 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
     private void handleSuccessResponse(String response) {
         try {
             JSONObject resObj = new JSONObject(response);
-            JSONObject pediatricObj = resObj.getJSONObject("pediatric");
-            if (!pediatricObj.getJSONArray("questions").equals("null")) {
+            if (resObj != null) {
+                JSONObject pediatricObj = resObj.getJSONObject("pediatric");
                 JSONArray questionArray = pediatricObj.getJSONArray("questions");
-                for (int i = IntegerConstants.NUMBER_ZERO; i < questionArray.length(); i++) {
-                    JSONObject questionObj = questionArray.getJSONObject(i);
-                    enableRadioButtons(questionObj.getString("name"), questionObj.getString("value"));//This method will enable radio buttons based on values
-                    questionItem = new HashMap<>();
-                    questionItem.put("name", questionObj.getString("name"));
-                    questionItem.put("value", questionObj.getString("value"));
-                    questionList.add(questionItem);
+                if (questionArray != null && questionArray.length() != 0) {
+                    for (int i = IntegerConstants.NUMBER_ZERO; i < questionArray.length(); i++) {
+                        JSONObject questionObj = questionArray.getJSONObject(i);
+                        enableRadioButtons(questionObj.getString("name"), questionObj.getString("value"));//This method will enable radio buttons based on values
+                        questionItem = new HashMap<>();
+                        questionItem.put("name", questionObj.getString("name"));
+                        questionItem.put("value", questionObj.getString("value"));
+                        questionList.add(questionItem);
 
-                    if ("Last shot".equalsIgnoreCase(questionObj.getString("name"))) {
-                        edtLastShot.setText(questionObj.getString("value"));
-                    }
-                    if ("Birth complications explanation".equalsIgnoreCase(questionObj.getString("name"))) {
-                        edtBirthComplications.setText(questionObj.getString("value"));
+                        if ("Last shot".equalsIgnoreCase(questionObj.getString("name"))) {
+                            edtLastShot.setText(questionObj.getString("value"));
+                        }
+                        if ("Birth complications explanation".equalsIgnoreCase(questionObj.getString("name"))) {
+                            edtBirthComplications.setText(questionObj.getString("value"));
+                        }
                     }
                 }
                 questionsMap.put("questions", questionList);
@@ -556,13 +555,14 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 postParams.put("personal_info", weightMap);
                 String weight = personalInfoObj.getString("weight");
                 boolean fromMedicalHistory = getIntent().getBooleanExtra("FROM_MEDICAL_HISTORY", false);
-                if(weight != null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight) && fromMedicalHistory) {
+                if (weight != null && !weight.trim().isEmpty() && !weight.trim().equals("0") && isInteger(weight) && fromMedicalHistory) {
                     ((EditText) findViewById(R.id.edt_currentweight)).setText(weight);
                 }
 
                 enableSaveButton();
-                Gson gs = new Gson();
             }
+           // Gson gs = new Gson();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -615,7 +615,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
         } else if ("Birth complications explanation".equals(name)) {
             edtBirthComplications.setText(value);
         } else if ("Current Diet".equalsIgnoreCase(name)) {
-            if(value != null && !value.isEmpty()) {
+            if (value != null && !value.isEmpty()) {
                 txtDietType.setText(value);
             } else {
                 txtDietType.setText(StringConstants.DIET_TYPE);
@@ -624,23 +624,18 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
     }
 
     /**
-     * This function will be invoked when user clicks on save button
+     * This function will be invoked when user clicks on save button in the UI
      *
-     * @param v--Button variable
+     * @param v     Button variable
      */
-
-
     public void continueBtn(View v) {
         callUpdateService();
-
     }
-
 
     /**
      * This method will be responsible for updating  all the profile information based on the user inputs
      * PediatricService - This service class will make the service calls to update the pediatric profile
      */
-
     public void callUpdateService() {
         showProgress();
         NetworkSuccessListener successListener = new NetworkSuccessListener() {
