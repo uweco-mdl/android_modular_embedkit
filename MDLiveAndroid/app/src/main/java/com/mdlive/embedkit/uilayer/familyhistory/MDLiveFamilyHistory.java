@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -247,7 +248,7 @@ public class MDLiveFamilyHistory extends MDLiveBaseAppcompatActivity {
     }
 
     public void addAction (View view) {
-        if(mFamilyHistoryOtherEditText.getText().length() != 0) {
+        if(!TextUtils.isEmpty(mFamilyHistoryOtherEditText.getText())) {
             mFamilyHistoryOtherEditTextValue = mFamilyHistoryOtherEditText.getText().toString();
             mFamilyHistoryOtherEditText.setText("");
             MdliveUtils.hideKeyboard(getBaseContext(), mFamilyHistoryOtherEditText);

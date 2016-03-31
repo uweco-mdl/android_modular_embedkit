@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -235,11 +237,11 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(mFamilyHistoryOtherEditText.getText().toString().isEmpty()){
-                    view.findViewById(R.id.my_family_history_other_btn).setClickable(false);
-                } else {
-                    view.findViewById(R.id.my_family_history_other_btn).setClickable(true);
-                }
+//                if(mFamilyHistoryOtherEditText.getText().toString().isEmpty()){
+//                    view.findViewById(R.id.my_family_history_other_btn).setClickable(false);
+//                } else {
+//                    view.findViewById(R.id.my_family_history_other_btn).setClickable(true);
+//                }
             }
         });
 
@@ -331,80 +333,88 @@ public class MDLiveFamilyFragment extends MDLiveBaseFragment {
     void addNewHistoryData(){
         EditText otherConditionEt = (EditText)view.findViewById(R.id.my_family_history_other_editText);
         MdliveUtils.hideKeyboard(otherConditionEt.getContext(), otherConditionEt);
-        final FamilyHistoryModel model = new FamilyHistoryModel(null, otherConditionEt.getText().toString(), FamilyHistoryModel.NO);
-        Log.d("FamilyHistoryResVal = ", model.toString());
-        familyHistoryList.add(model);
+        if(!TextUtils.isEmpty(otherConditionEt.getText()))
+        {
+            final FamilyHistoryModel model = new FamilyHistoryModel(null, otherConditionEt.getText().toString(), FamilyHistoryModel.NO);
+            Log.d("FamilyHistoryResVal = ", model.toString());
+            familyHistoryList.add(model);
 
-        otherConditionEt.setText("");
-        // Inflate Row
-        final LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
-        final View rootLinearLayout = inflater.inflate(R.layout.mdlive_familyhistory_addrows, null, false);
+            otherConditionEt.setText("");
+            // Inflate Row
+            final LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
+            final View rootLinearLayout = inflater.inflate(R.layout.mdlive_familyhistory_addrows, null, false);
 
-        // Inflate & get reference of Views to be used
-        final CheckBox checkBox = (CheckBox) rootLinearLayout.findViewById(R.id.my_family_history_checkBox);
-        final Spinner spinner = (Spinner) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinner);
-        final CardView spinnerCv = (CardView) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinnerCv);
+            // Inflate & get reference of Views to be used
+            final CheckBox checkBox = (CheckBox) rootLinearLayout.findViewById(R.id.my_family_history_checkBox);
+            final Spinner spinner = (Spinner) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinner);
+            final CardView spinnerCv = (CardView) rootLinearLayout.findViewById(R.id.my_family_history_checkBox_spinnerCv);
 
-        // Set Checkbox values & check changed listener
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    model.active = FamilyHistoryModel.YES;
-                    spinnerCv.setVisibility(View.VISIBLE);
-                } else {
-                    model.active = FamilyHistoryModel.NO;
-                    spinnerCv.setVisibility(View.GONE);
+            // Set Checkbox values & check changed listener
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        model.active = FamilyHistoryModel.YES;
+                        spinnerCv.setVisibility(View.VISIBLE);
+                    } else {
+                        model.active = FamilyHistoryModel.NO;
+                        spinnerCv.setVisibility(View.GONE);
+                    }
                 }
-            }
-        });
+            });
 
-        if (FamilyHistoryModel.YES.equalsIgnoreCase(model.active)) {
-            checkBox.setChecked(true);
-            spinnerCv.setVisibility(View.VISIBLE);
+            if (FamilyHistoryModel.YES.equalsIgnoreCase(model.active)) {
+                checkBox.setChecked(true);
+                spinnerCv.setVisibility(View.VISIBLE);
+
+                if ("null".equalsIgnoreCase(model.relationship) || model.relationship == null) {
+                }
+            } else {
+                checkBox.setChecked(false);
+                spinnerCv.setVisibility(View.GONE);
+            }
+
+            checkBox.setText(model.condition);
+
+            // Set Spinner values & selection listener
+            final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
+            final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                    (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
+            dataAdapter.setDropDownViewResource
+                    (android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(dataAdapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int selectedIndex, long id) {
+                    model.relationship = relationShpList.get(selectedIndex);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
 
             if ("null".equalsIgnoreCase(model.relationship) || model.relationship == null) {
-            }
-        } else {
-            checkBox.setChecked(false);
-            spinnerCv.setVisibility(View.GONE);
-        }
-
-        checkBox.setText(model.condition);
-
-        // Set Spinner values & selection listener
-        final List<String> relationShpList = Arrays.asList(getResources().getStringArray(R.array.mdl_Relationship));
-        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                (getActivity().getBaseContext(), android.R.layout.simple_spinner_item, relationShpList);
-        dataAdapter.setDropDownViewResource
-                (android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int selectedIndex, long id) {
-                model.relationship = relationShpList.get(selectedIndex);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        if ("null".equalsIgnoreCase(model.relationship) || model.relationship == null) {
-        } else {
-            int selectedPosition = 0;
-            for (int j = 0; j < relationShpList.size(); j++) {
-                if (model.relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).trim())) {
-                    selectedPosition = j;
-                    break;
+            } else {
+                int selectedPosition = 0;
+                for (int j = 0; j < relationShpList.size(); j++) {
+                    if (model.relationship.toLowerCase().trim().equalsIgnoreCase(relationShpList.get(j).trim())) {
+                        selectedPosition = j;
+                        break;
+                    }
                 }
+                spinner.setSelection(selectedPosition);
             }
-            spinner.setSelection(selectedPosition);
+            final LinearLayout scrollLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_family_scroll_view);
+            scrollLinearLayout.addView(rootLinearLayout);
         }
-        final LinearLayout scrollLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_family_scroll_view);
-        scrollLinearLayout.addView(rootLinearLayout);
+        else
+        {
+            // @ToDo : replace Toast with Snackbar
+            Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.mdl_empty_text), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String capsFirst(String str) {
