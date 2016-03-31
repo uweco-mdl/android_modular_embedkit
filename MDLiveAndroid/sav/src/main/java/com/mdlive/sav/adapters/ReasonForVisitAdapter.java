@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * new symptom.The selected symptonm is retrieved through the arraylist and
  * the search function for the new symptom has been done here.
  */
-public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
+public class ReasonForVisitAdapter extends BaseAdapter implements Filterable {
     private ArrayList<String> originalArray = new ArrayList<>();
     private ArrayList<String> array = new ArrayList<>();
     private Activity context;
@@ -32,13 +32,15 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     private int checkedItemPosition = -1;
     private String checkedItemReaston = "";
     private ImageView btnContinue;
+
     public ReasonForVisitAdapter(Activity activityContext,
-                                 ArrayList<String> arraylist, ImageView btnContinue) {
+                                 ArrayList<String> arraylist,
+                                 ImageView btnContinue) {
         this.context = activityContext;
         this.originalArray = arraylist;
         this.array = arraylist;
         this.btnContinue = btnContinue;
-        filter= new Filter() {
+        filter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 // Create a FilterResults object
@@ -52,12 +54,12 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
                     results.count = originalArray.size();
                 } else {
                   /*  Some search constraint has been passed so let's filter accordingly.*/
-                    ArrayList<String> filteredContacts = new ArrayList<String>();
+                    ArrayList<String> filteredContacts = new ArrayList<>();
 
                   /* We'll go through all the contacts and see
                      if they contain the supplied string.*/
                     for (String c : originalArray) {
-                        if (c.toUpperCase().contains( constraint.toString().toUpperCase() )) {
+                        if (c.toUpperCase().contains(constraint.toString().toUpperCase())) {
                             // if `contains` == true then add it
                             // to our filtered list
                             filteredContacts.add(c);
@@ -75,11 +77,11 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 array = (ArrayList<String>) results.values;
-                if(array.size()==0)
+                if(array.size() == 0)
                 {
                     notFound = true;
                     array.add(0, constraint.toString());
-                }else
+                } else
                 {
                     notFound = false;
                 }
@@ -96,6 +98,7 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     public boolean isNotFoundinList(){
         return notFound;
     }
+
     @Override
     public int getCount() {
         return array.size();
@@ -118,9 +121,9 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
     }
 
     /**
-     *     The getView Method displays the symptom list items.
-     *     The datas are fetched from the Arraylist based on the position the data will be placed
-     *     in the listview.
+     *  The getView Method displays the symptom list items.
+     *  The datas are fetched from the Arraylist based on the position the data will be placed
+     *  in the listview.
      */
     private static class ViewHolder {
         ImageView reasonCheckbox;
@@ -145,21 +148,19 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             viewHolder = (ViewHolder) convertview.getTag();
         }
 
-        if(notFound){
+        if (notFound) {
             viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
-            viewHolder.reasonTxt.setText(context.getString(R.string.mdl_no_result_found) + array.get(pos) + "'.\n" +
-                                        context.getString(R.string.mdl_submit_) +
-                                        array.get(pos)+context.getString(R.string.mdl_as_your_symptom));
+            viewHolder.reasonTxt.setText(context.getString(R.string.mdl_no_result_found) + array.get(pos) + "'.\n" + context.getString(R.string.mdl_submit_)
+                    + array.get(pos) + context.getString(R.string.mdl_as_your_symptom));
             viewHolder.reasonTxt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((MDLiveReasonForVisit) context).rightBtnOnClick(null);
                 }
             });
-        }else {
+        } else {
             viewHolder.reasonCheckbox.setVisibility(View.VISIBLE);
             viewHolder.reasonTxt.setText(array.get(pos));
-
         }
         viewHolder.reasonListItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,10 +171,10 @@ public class ReasonForVisitAdapter extends BaseAdapter implements Filterable{
             }
         });
 
-        if(checkedItemPosition >= 0 && (checkedItemPosition == pos || checkedItemReaston.equals(array.get(pos)))){
+        if (checkedItemPosition >= 0 && checkedItemReaston.equalsIgnoreCase(array.get(pos))) {
             viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_tick);
             btnContinue.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.reasonCheckbox.setImageResource(R.drawable.check_box_untick);
         }
 
