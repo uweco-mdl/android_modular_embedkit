@@ -111,7 +111,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             isCignaCoachUser = true;
             this.setTitle(getString(R.string.mdl_chat_with_coach));
             docOnCalLinLayVisibility = View.GONE;
-            ((RelativeLayout)findViewById(R.id.docOnCalLinLay)).setVisibility(View.GONE);
+            findViewById(R.id.docOnCalLinLay).setVisibility(View.GONE);
             findViewById(R.id.chatCoachHeaderTxt).setVisibility(View.VISIBLE);
         }else{
             this.setTitle(getString(R.string.mdl_choose_provider));

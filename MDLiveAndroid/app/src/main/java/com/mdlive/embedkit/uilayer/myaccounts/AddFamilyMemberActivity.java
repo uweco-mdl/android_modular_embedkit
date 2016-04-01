@@ -132,21 +132,27 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         }
 
         Toolbar toolbar = null;
+        ImageView back = null;
+        TextView title = null;
+        ImageView apply = null;
         try {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
+                if(getSupportActionBar()!=null)
+                {
+                    getSupportActionBar().setDisplayShowTitleEnabled(false);
+                }
+                back = (ImageView) toolbar.findViewById(R.id.backImg);
+                back.setContentDescription(getString(R.string.mdl_ada_back_button));
+                title = (TextView) toolbar.findViewById(R.id.headerTxt);
+                title.setText(getString(R.string.mdl_add_family_member).toUpperCase());
+                apply = (ImageView) toolbar.findViewById(R.id.txtApply);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         this.setTitle(getString(R.string.mdl_add_family_member));
-        ImageView back = (ImageView) toolbar.findViewById(R.id.backImg);
-        back.setContentDescription(getString(R.string.mdl_ada_back_button));
-        TextView title = (TextView) toolbar.findViewById(R.id.headerTxt);
-        title.setText(getString(R.string.mdl_add_family_member).toUpperCase());
-        ImageView apply = (ImageView) toolbar.findViewById(R.id.txtApply);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
