@@ -315,12 +315,12 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 if (checkedId == R.id.birthComplications_yesButton) {
                     updateBirthComplication("Birth complications", "Yes");
                     edtBirthComplications.setVisibility(View.VISIBLE);
-                    updateBirthComplication("Birth complications explanation", edtBirthComplications.getText().toString());//To update birth Params
+                    //updateBirthComplication("Birth complications explanation", edtBirthComplications.getText().toString());//To update birth Params
                     enableSaveButton();
                 } else {
                     updateBirthComplication("Birth complications", "No");
                     edtBirthComplications.setVisibility(View.GONE);
-                    updateBirthComplication("Birth complications explanation", "");
+                    //updateBirthComplication("Birth complications explanation", "");
                     enableSaveButton();
 
                 }
@@ -444,7 +444,8 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
      * @param name      a key value to match the key present inside the questionItem map
      * @param value     user selected value from the dropdown.
      */
-    public void updateDropDownParams(String name, String value) {
+    public void updateDropDownParams(String name, String value)
+    {
         boolean isPresent = false;
         for (int i = IntegerConstants.NUMBER_ZERO; i < questionList.size(); i++) {
             questionItem = questionList.get(i);
@@ -454,11 +455,7 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
                 break;
             }
         }
-        if(isPresent)
-        {
-            updateParams(name, value);
-        }
-        else {
+        if (!isPresent) {
             HashMap<String, String> dietField =  new HashMap<>();
             dietField.put("name", "Current Diet");
             dietField.put("value", value);
