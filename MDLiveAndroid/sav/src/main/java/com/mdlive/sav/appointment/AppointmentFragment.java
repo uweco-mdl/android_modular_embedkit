@@ -138,19 +138,23 @@ public class AppointmentFragment extends MDLiveBaseFragment {
             e.printStackTrace();
         }
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         final Appointment appointment = getArguments().getParcelable(APPOINTMENT_TAG);
 
-        if(appointment.getApptType() != null && !appointment.getApptType().equalsIgnoreCase("null")) {
-            renderUI(view, appointment);
-        }else{
-            getAppointmentDetails(view, appointment.getStringID() == null ? (appointment.getId() + "") : appointment.getStringID());
+        if(appointment != null)
+        {
+            if(appointment.getApptType() != null && !appointment.getApptType().equalsIgnoreCase("null")) {
+                renderUI(view, appointment);
+            }else{
+                getAppointmentDetails(view, appointment.getStringID() == null ? (appointment.getId() + "") : appointment.getStringID());
+            }
         }
-
     }
+
     public void getAppointmentDetails(final View view, String id) {
         showProgressDialog();
         final NetworkSuccessListener<JSONObject> successCallBackListener = new NetworkSuccessListener<JSONObject>() {

@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mdlive.embedkit.uilayer.MDLiveBaseAppcompatActivity;
 import com.mdlive.embedkit.uilayer.login.NavigationDrawerFragment;
@@ -63,7 +62,7 @@ public class AppointmentActivity extends MDLiveBaseAppcompatActivity {
                         beginTransaction().
                         add(R.id.main_container, AppointmentFragment.newInstance(appointment), MAIN_CONTENT).
                         commit();
-            }else if (getIntent().getExtras() != null && getIntent().getExtras().getParcelable(APPOINTMENT_TAG) != null) {
+            }else if (getIntent()!=null && getIntent().getExtras() != null && getIntent().getExtras().getParcelable(APPOINTMENT_TAG) != null) {
                 final Appointment appointment = getIntent().getExtras().getParcelable(APPOINTMENT_TAG);
 
                 getSupportFragmentManager().
