@@ -262,7 +262,7 @@ public class TimeZoneUtils {
         * Will return 1 if less than 24 hours
         * Will return 2 in other cases.
         * */
-    public static int getRemainigTimeToAppointment(final long milis, final String timeZone, Context context) {
+    public static int getRemainingTimeToAppointment(final long milis, final String timeZone, Context context) {
         final long now = System.currentTimeMillis();
 
         final Calendar myTime = getCalendarWithOffset(context);

@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mdlive.embedkit.R;
@@ -57,11 +56,11 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     private Spinner mSpinner;
     private DashBoardSpinnerAdapter mAdapter;
 
-    private View mEmailConfirmationView,mDashBoardEmailLl;
+    private View mEmailConfirmationView, mDashBoardEmailLl;
 
     private View mNotificationView, mEmailConfirmationIv;
 
-    private TextView mMessageCountTextView,mEmailConfirmationTv;
+    private TextView mMessageCountTextView, mEmailConfirmationTv;
     public WebView mWebView;
     public boolean isWebView;
 
@@ -81,7 +80,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 // Setting selection to 0, as do not want Add child to Show
                 mSpinner.setOnItemSelectedListener(null);
                 mSpinner.setSelection(0);
-                // Preventing  onItemSelection to get called
+                // Preventing onItemSelection from getting called:
                 mSpinner.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -102,10 +101,10 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
                 if (mOnUserSelectionChanged != null) {
                     mOnUserSelectionChanged.onDependentSelected(selectedUser);
-                    if(NotificationFragment.getInstance() != null) {
+                    if (NotificationFragment.getInstance() != null) {
                         NotificationFragment.getInstance().reloadPendingAppointment();
+                    }
                 }
-            }
             }
             // The Parent User Selected
             else {
@@ -113,7 +112,8 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mOnUserSelectionChanged.onPrimarySelected(selectedUser);
                     if(NotificationFragment.getInstance() != null){
 
-                        NotificationFragment.getInstance().reloadPendingAppointment();}
+                        NotificationFragment.getInstance().reloadPendingAppointment();
+                    }
                 }
             }
         }
@@ -125,8 +125,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
     };
 
     public static MDLiveDashBoardFragment newInstance() {
-        final MDLiveDashBoardFragment fragment = new MDLiveDashBoardFragment();
-        return fragment;
+        return new MDLiveDashBoardFragment();
     }
 
     public MDLiveDashBoardFragment() {
@@ -202,7 +201,6 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
     /**
      * This method fetches the user basic info
-     * @author  Jitendra Singh
      */
     private void getProfileInfoService() {
 
@@ -260,7 +258,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             SharedPreferences sharedPref = getActivity().getSharedPreferences("ADDRESS_CHANGE", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(getActivity().getString(R.string.mdl_user_address_state), state);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -280,7 +278,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
         try {
             if (mSpinner != null) {
                 mUserBasicInfo = userBasicInfo;
-                List<User> users = null;
+                List<User> users;
 
                 if (mUserBasicInfo.getPrimaryUser()) {
                     users = UserBasicInfo.getUsersAsPrimaryUser(getActivity());
@@ -311,9 +309,9 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 SharedPreferences sharedPref = getActivity().getSharedPreferences(PreferenceConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor1 = sharedPref.edit();
                 editor1.putString(PreferenceConstants.PREFFERED_LANGUAGE, userBasicInfo.getPersonalInfo().getLanguagePreference());
-                editor1.commit();
+                editor1.apply();
                 final JSONObject obj = new JSONObject(sharedPref.getString(PreferenceConstants.HEALTH_SYSTEM_PREFERENCES, "{}"));
-                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false) && mUserBasicInfo.getPersonalInfo().getEmailConfirmed()){
+                if (obj.length() > 0 && obj.optBoolean("additional_screen_applicable", false) && mUserBasicInfo.getPersonalInfo().getEmailConfirmed()) {
                     mDashBoardEmailLl.setBackgroundColor(getResources().getColor(R.color.parentView_color));
                     mEmailConfirmationView.setVisibility(View.VISIBLE);
                     mEmailConfirmationIv.setVisibility(View.VISIBLE);
@@ -324,7 +322,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     mDashBoardEmailLl.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent i = new Intent(getActivity(),HealthSystemsActivity.class);
+                            Intent i = new Intent(getActivity(), HealthSystemsActivity.class);
                             i.putExtra("URL", obj.optString("iframe_url"));
                             startActivity(i);
                         }
@@ -332,7 +330,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                 }
                 mSpinner.setOnItemSelectedListener(null);
                 mSpinner.setAdapter(mAdapter);
-                // Preventing  onItemSelection to get callied
+                // Preventing onItemSelection from being called:
                 mSpinner.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -383,7 +381,6 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
      * This method will be invoked to show the notification in dashboard only for oncall Pending visits.
      * @param appointment--Object carries appointment details.
      */
-
     public void showOnCallNotification(final OncallAppointment appointment){
         final TextView firstTextView = (TextView) mNotificationView.findViewById(R.id.notification_first_text_view);
         final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
@@ -391,7 +388,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
 
         mNotificationView.setTag(appointment);
         mNotificationView.setVisibility(View.VISIBLE);
-        Log.e("Appointment Dash",appointment.getApptType());
+        Log.e("Appointment Dash", appointment.getApptType());
 
         if(appointment.getApptType().equalsIgnoreCase("video")){
             firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
@@ -418,33 +415,26 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     }
                 }
             });
-        }else{
+        } else {
 
 
-            if(mUserBasicInfo!=null){
+            if(mUserBasicInfo != null){
                 mCustomerDefaultNumber = MdliveUtils.formatDualString(mUserBasicInfo.getPersonalInfo().getPhone());
-            }else{
-                mCustomerDefaultNumber="";
+            } else {
+                mCustomerDefaultNumber = "";
             }
             if (PendingAppointment.readFromSharedPreference(getActivity()) != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments() != null && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().size() > 0
                     && PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber() != null) {
                 mCustomerProvidedPhoneNumber = MdliveUtils.formatDualString(PendingAppointment.readFromSharedPreference(getActivity()).getOncallAppointments().get(0).getCustomerCallInNumber());
 
-            }else{
-                mCustomerProvidedPhoneNumber=mCustomerDefaultNumber;
+            } else {
+                mCustomerProvidedPhoneNumber = mCustomerDefaultNumber;
             }
 
-                firstTextView.setText(getActivity().getString(R.string.mdl_oncall_dashboard_phone_text, mCustomerProvidedPhoneNumber));
+            firstTextView.setText(getActivity().getString(R.string.mdl_oncall_dashboard_phone_text, mCustomerProvidedPhoneNumber));
             secondTextView.setVisibility(View.GONE);
         }
-
-
     }
-
-
-
-
-
 
     public void showNotification(final Appointment appointment) {
         if (mNotificationView != null) {
@@ -454,38 +444,38 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
             final TextView secondTextView = (TextView) mNotificationView.findViewById(R.id.notification_second_text_view);
 
             try {
-                    final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
+                final int type = TimeZoneUtils.getRemainingTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
 
-                 /*
+                /*
                 * Will return 0 if less than 10 minutes
                 * Will return 1 if less than 24 hours
                 * Will return 2 in other cases.
-                * */
-                    switch (type) {
-                        // Ten minutes case
-                        case 0:
-                            final long now = System.currentTimeMillis();
-                            final Calendar myTime = TimeZoneUtils.getCalendarWithOffset(getActivity());
-                            myTime.setTimeInMillis(now);
-                            Log.v("now 2", myTime.getTimeInMillis() + "");
-                            final long difference = (appointment.getInMilliseconds() * 1000) - Calendar.getInstance().getTimeInMillis();
-                            if(difference > 0){
-                                String remainingMinute = Long.toString(TimeUnit.MILLISECONDS.toMinutes(difference));
-                                firstTextView.setText(getString(R.string.mdl_appt_notification, remainingMinute));
-                            }else{
-                                firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
-                                secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
-                            }
+                */
+                switch (type) {
+                    // Ten minutes case
+                    case 0:
+                        final long now = System.currentTimeMillis();
+                        final Calendar myTime = TimeZoneUtils.getCalendarWithOffset(getActivity());
+                        myTime.setTimeInMillis(now);
+                        Log.d("now 2", myTime.getTimeInMillis() + "");
+                        final long difference = (appointment.getInMilliseconds() * 1000) - Calendar.getInstance().getTimeInMillis();
+                        if (difference > 0) {
+                            String remainingMinute = Long.toString(TimeUnit.MILLISECONDS.toMinutes(difference));
+                            firstTextView.setText(getString(R.string.mdl_appt_notification, remainingMinute));
+                        } else {
+                            firstTextView.setText(getActivity().getString(R.string.mdl_your_appointmant_has_started));
+                            secondTextView.setText(getActivity().getString(R.string.mdl_tap_here_to_enter));
+                        }
 
-                            secondTextView.setText(getString(R.string.mdl_click_to_start));
-                            break;
+                        secondTextView.setText(getString(R.string.mdl_click_to_start));
+                        break;
 
-                        default:
-                            firstTextView.setText(getString(R.string.mdl_next_appt) + " " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
-                            secondTextView.setText(getString(R.string.mdl_click_to_detail));
-                            break;
-                    }
-            }catch (Exception e){
+                    default:
+                        firstTextView.setText(getString(R.string.mdl_next_appt) + " " + TimeZoneUtils.convertMiliSeconedsToDayYearTimeString(appointment.getInMilliseconds(), getActivity()));
+                        secondTextView.setText(getString(R.string.mdl_click_to_detail));
+                        break;
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -497,7 +487,7 @@ public class MDLiveDashBoardFragment extends MDLiveBaseFragment {
                     try {
                         if (v.getTag() != null) {
                             final Appointment appo = (Appointment) v.getTag();
-                            if (appo != null && mOnNotificationClicked != null) {
+                            if (mOnNotificationClicked != null) {
                                 mOnNotificationClicked.onNotificationClicked(appo);
                             }
                         }

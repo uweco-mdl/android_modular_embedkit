@@ -74,7 +74,7 @@ public class AppointmentFragment extends MDLiveBaseFragment {
 
             ((TextView) view.findViewById(R.id.consulatation_daye_text_view)).setText(TimeZoneUtils.convertMiliSeconedsToStringMonthWithTimeZone(appointment.getInMilliseconds(), getActivity()));
 
-            final int type = TimeZoneUtils.getRemainigTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
+            final int type = TimeZoneUtils.getRemainingTimeToAppointment(appointment.getInMilliseconds(), "", getActivity());
             Log.v("Appmtfragtimestamp",appointment.getInMilliseconds()+"");
             switch (type) {
 
