@@ -48,7 +48,7 @@ public class AskQuestionFragment extends MDLiveBaseFragment {
     }
 
     public void onTickClicked() {
-        if (questionEditText.getText().toString() != null && questionEditText.getText().toString().trim().length() > 0) {
+        if (questionEditText.getText().toString().trim().length() > 0) {
             MdliveUtils.hideKeyboard(getActivity(), (View) questionEditText);
             try {
                 final JSONObject outerJsonObject = new JSONObject();

@@ -156,7 +156,7 @@ public class  BillingInformationFragment extends MDLiveBaseFragment  {
                 String mobile = myProfile.getString("cc_type_id");
                 String address2 = myProfile.getString("billing_address2");
 
-                if (address2.equalsIgnoreCase("null") || (address2 == null)  || (TextUtils.isEmpty(address2))) {
+                if (address2.equalsIgnoreCase("null") || (TextUtils.isEmpty(address2))) {
                     address2="";
                 }
 
