@@ -320,7 +320,6 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
         services.getUserBasicInfoRequest("", successCallBackListener, errorListener);
     }
 
-    //Temporary method starts
     /**
      * Makes the customer/user_information call to get the User information.
      *
@@ -506,6 +505,9 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
         if (mSelectedUserLinearLayout != null) {
             List<User> users = null;
 
+            if(mUserBasicInfo==null)
+                return;
+
             if (mUserBasicInfo.getPrimaryUser()) {
                 users = UserBasicInfo.getUsersAsPrimaryUser(getActivity());
             } else {
@@ -513,85 +515,89 @@ Log.e("Nav Drawers","Class NOT found. MODULE name removed from drawer \n++++++++
             }
 
             if (users.size() > 0) {
-                final LayoutInflater inflater = LayoutInflater.from(mSelectedUserLinearLayout.getContext());
-                mSelectedUserLinearLayout.removeAllViews();
-                mAllUserLinearLayout.removeAllViews();
+                try {
+                    final LayoutInflater inflater = LayoutInflater.from(mSelectedUserLinearLayout.getContext());
+                    mSelectedUserLinearLayout.removeAllViews();
+                    mAllUserLinearLayout.removeAllViews();
 
-                for (int i = 0; i < users.size(); i++) {
-                    final int position = i;
-                    final User user = users.get(position);
-                    View view = null;
+                    for (int i = 0; i < users.size(); i++) {
+                        final int position = i;
+                        final User user = users.get(position);
+                        View view = null;
 
-                    if (i == 0) {
-                        view = inflater.inflate(R.layout.drawer_user_row, mSelectedUserLinearLayout, false);
-                        view.setTag(users.get(i));
-
-                        mSelectedUserLinearLayout.addView(view);
-                        mSelectedUserLinearLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                animateWithLoad(user, false);
-                            }
-                        });
-                    } else {
-                        if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
-                            view = inflater.inflate(R.layout.drawer_user_row_add_child, mSelectedUserLinearLayout, false);
-                            view.setVisibility(View.GONE);
+                        if (i == 0) {
+                            view = inflater.inflate(R.layout.drawer_user_row, mSelectedUserLinearLayout, false);
                             view.setTag(users.get(i));
+
+                            mSelectedUserLinearLayout.addView(view);
+                            mSelectedUserLinearLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    animateWithLoad(user, false);
+                                }
+                            });
                         } else {
-                            view = inflater.inflate(R.layout.drawer_user_row_middle, mSelectedUserLinearLayout, false);
-                            view.setTag(users.get(i));
+                            if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
+                                view = inflater.inflate(R.layout.drawer_user_row_add_child, mSelectedUserLinearLayout, false);
+                                view.setVisibility(View.GONE);
+                                view.setTag(users.get(i));
+                            } else {
+                                view = inflater.inflate(R.layout.drawer_user_row_middle, mSelectedUserLinearLayout, false);
+                                view.setTag(users.get(i));
+                            }
+
+                            logD("Dependent Users", "" + user.mMode + ", " + user.mName);
+                            view.findViewById(R.id.drawer_user_row_down_image_view).setVisibility(View.GONE);
+                            mAllUserLinearLayout.addView(view);
+                            view.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // If Add child clicked
+                                    if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
+                                        if (mOnUserInformationLoaded != null) {
+                                            mOnUserInformationLoaded.onAddChildSelectedFromDrawer(user,
+                                                    mUserBasicInfo.getDependantUsers() == null ? 0 : mUserBasicInfo.getDependantUsers().size());
+                                            return;
+                                        }
+                                    }
+
+                                    animateWithLoad(user, true);
+                                }
+                            });
                         }
 
-                        logD("Dependent Users", "" + user.mMode + ", " + user.mName);
-                        view.findViewById(R.id.drawer_user_row_down_image_view).setVisibility(View.GONE);
-                        mAllUserLinearLayout.addView(view);
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // If Add child clicked
-                                if (User.MODE_ADD_CHILD == user.mMode || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
-                                    if (mOnUserInformationLoaded != null) {
-                                        mOnUserInformationLoaded.onAddChildSelectedFromDrawer(user,
-                                                mUserBasicInfo.getDependantUsers() == null ? 0 : mUserBasicInfo.getDependantUsers().size());
-                                        return;
-                                    }
-                                }
+                        ((TextView) view.findViewById(R.id.drawer_user_row_text_view)).setText(users.get(i).mName);
+                        if (user.mMode == User.MODE_ADD_CHILD || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
+                            ((CircularNetworkImageView) view.findViewById(R.id.drawer_user_row_circular_image_view)).setImageResource(R.drawable.add_child);
+                        } else {
+                            ((CircularNetworkImageView) view.findViewById(R.id.drawer_user_row_circular_image_view)).setImageUrl(users.get(i).mImageUrl, ApplicationController.getInstance().getImageLoader(view.getContext()));
+                        }
 
-                                animateWithLoad(user, true);
-                            }
-                        });
+                        setMaxWidthForLeftText(mSelectedUserLinearLayout,
+                                ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_circular_image_view)),
+                                ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)),
+                                mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view));
                     }
 
-                    ((TextView) view.findViewById(R.id.drawer_user_row_text_view)).setText(users.get(i).mName);
-                    if (user.mMode == User.MODE_ADD_CHILD || StringConstants.ADD_CHILD.equalsIgnoreCase(user.mName)) {
-                        ((CircularNetworkImageView) view.findViewById(R.id.drawer_user_row_circular_image_view)).setImageResource(R.drawable.add_child);
-                    } else {
-                        ((CircularNetworkImageView) view.findViewById(R.id.drawer_user_row_circular_image_view)).setImageUrl(users.get(i).mImageUrl, ApplicationController.getInstance().getImageLoader(view.getContext()));
-                    }
+                    mAllUserLinearLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            mAllUserLinearLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                            logD("Height", "" + mScrollHeight);
+                            mScrollHeight = mAllUserLinearLayout.getHeight();
+                            return false;
+                        }
+                    });
 
-                    setMaxWidthForLeftText(mSelectedUserLinearLayout,
-                            ((ImageView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_circular_image_view)),
-                            ((TextView) mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_text_view)),
-                            mSelectedUserLinearLayout.findViewById(R.id.drawer_user_row_down_image_view));
+                    mAllUserLinearLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ObjectAnimator.ofFloat(mAllUserLinearLayout, "translationY", -mAllUserLinearLayout.getHeight()).setDuration(0).start();
+                        }
+                    }, 100);
+                }catch(NullPointerException nex){
+                    // some undefined var. discovered.  Silently exit
                 }
-
-                mAllUserLinearLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        mAllUserLinearLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-                        logD("Height", "" + mScrollHeight);
-                        mScrollHeight = mAllUserLinearLayout.getHeight();
-                        return false;
-                    }
-                });
-
-                mAllUserLinearLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ObjectAnimator.ofFloat(mAllUserLinearLayout, "translationY", -mAllUserLinearLayout.getHeight()).setDuration(0).start();
-                    }
-                }, 100);
             }
         }
     }
