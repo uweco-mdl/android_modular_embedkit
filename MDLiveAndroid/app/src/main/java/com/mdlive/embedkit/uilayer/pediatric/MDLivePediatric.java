@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -175,7 +176,10 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s.length() != IntegerConstants.NUMBER_ZERO) {
+                    weightMap.put("weight", s.toString());
+                    enableSaveButton();//Function to check whether all fileds are filled or not?
+                }
             }
 
             @Override
@@ -721,7 +725,8 @@ public class MDLivePediatric extends MedicalHistoryPluginActivity {
     }
 
     public boolean isFieldsNotEmpty() {
-        if (edtCurrentWeight.getText().toString().length() == IntegerConstants.NUMBER_ZERO || edtCurrentWeight.getText().toString().startsWith(" ")) {
+        String check = edtCurrentWeight.getText().toString().trim();
+        if (TextUtils.isEmpty(check) || Float.parseFloat(check) <= 0f) {
             return false;
         }
         if (txtDietType.getVisibility() == View.VISIBLE) {
