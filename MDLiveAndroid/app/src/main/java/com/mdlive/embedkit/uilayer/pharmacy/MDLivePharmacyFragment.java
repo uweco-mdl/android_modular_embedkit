@@ -16,6 +16,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -39,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -55,6 +57,9 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
     private LocationCoordinates locationService;
     private boolean isVisibleToUser = false;
     private boolean isLoading = false;
+    private Button mGetDirection;
+    private String latitude;
+    private String longitude;
 
     public BroadcastReceiver locationReceiver = new BroadcastReceiver() {
         @Override
@@ -215,19 +220,33 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
         addressline1 = ((TextView) view.findViewById(R.id.addressline1));
         addressline2 = ((TextView) view.findViewById(R.id.addressline2));
         addressline3 = ((TextView) view.findViewById(R.id.addressline3));
+        mGetDirection = (Button)view.findViewById(R.id.getDirection);
 //        progressBar = (RelativeLayout) view.findViewById(R.id.progressDialog);
 
-        mSmallMapView = view.findViewById(R.id.small_map_layout);
+        mSmallMapView = view.findViewById(R.id.small_map_layout);mGetDirection.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                openNativeMapApp();
+            }
+        });
+    }
+
+    public void openNativeMapApp()
+    {
+        String uri = String.format(Locale.ENGLISH, "geo:%f,%f", Double.parseDouble(latitude),Double.parseDouble(longitude));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
     }
 
     /*
-   * This function will get latest default pharmacy details of users from webservice.
-   * PharmacyService class handles webservice integration.
-   * @responseListener - Receives webservice information
-   * @errorListener - Received error information (if any problem in webservice)
-   * once message received by  @responseListener then it will redirect to handleSuccessResponse function
-   * to parse message content.
-   */
+     * This function will get latest default pharmacy details of users from webservice.
+     * PharmacyService class handles webservice integration.
+     * @responseListener - Receives webservice information
+     * @errorListener - Received error information (if any problem in webservice)
+     * once message received by  @responseListener then it will redirect to handleSuccessResponse function
+     * to parse message content.
+     */
     public void getUserPharmacyDetails() {
 //        progressBar.setVisibility(View.VISIBLE);
         NetworkSuccessListener<JSONObject> responseListener = new NetworkSuccessListener<JSONObject>() {
@@ -329,8 +348,11 @@ public class MDLivePharmacyFragment extends MDLiveBaseFragment {
                 bundletoSend.putString("distance", pharmacyDatas.getString("distance"));
                 bundletoSend.putString("state", pharmacyDatas.getString("state"));
                 if (map != null) {
-                    LatLng markerPoint = new LatLng(Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("latitude")),
-                            Double.parseDouble(pharmacyDatas.getJSONObject("coordinates").getString("longitude")));
+                    latitude = pharmacyDatas.getJSONObject("coordinates").getString("latitude");
+                    longitude = pharmacyDatas.getJSONObject("coordinates").getString("longitude");
+                    LatLng markerPoint = new LatLng(Double.parseDouble(latitude),
+                                                    Double.parseDouble(longitude));
+
                     map.addMarker(new MarkerOptions().position(markerPoint)
                             .title("Marker"));
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPoint, 10));

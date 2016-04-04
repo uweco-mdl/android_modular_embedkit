@@ -2,76 +2,76 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
+    android:background="@color/mdliveBackgroundColor"
     android:clipToPadding="false"
-    android:background="@color/mdliveBackgroundColor">
-    <LinearLayout
-        style="@style/ContainerStyle"
-        >
+    android:scrollbars="none">
+
+    <LinearLayout style="@style/ContainerStyle">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/getstarted_background_color"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/getstarted_background_color"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:background="@drawable/round_rect_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="9.67dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="9.67dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginRight="9.67dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/round_rect_white"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="13.33dp"
-                    android:paddingLeft="9.67dp">
+                    android:orientation="vertical"
+                    android:paddingLeft="9.67dp"
+                    android:paddingTop="13.33dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16.80sp"
-                        android:textColor="@color/medical_history_sub_text"
-                        android:id="@+id/addressline1" />
-
-                    <TextView
+                        android:id="@+id/addressline1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/medical_history_sub_text"
-                        android:textSize="14.40sp"
-                        android:id="@+id/addressline2" />
+                        android:textSize="16.80sp" />
 
                     <TextView
+                        android:id="@+id/addressline2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/medical_history_sub_text"
-                        android:textSize="14.40sp"
-                        android:id="@+id/addressline3" />
+                        android:textSize="14.40sp" />
 
                     <TextView
+                        android:id="@+id/addressline3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:tag="@string/mdltag_my_pharmacy_addressline_four"
-                        android:textSize="14.40sp"
-                        android:textColor="@color/radio_button_color_highlighted"
+                        android:textColor="@color/medical_history_sub_text"
+                        android:textSize="14.40sp" />
+
+                    <TextView
                         android:id="@+id/txt_my_pharmacy_addressline_four"
-                        android:clickable="true"
-                        android:onClick="onPhoneNumberClicked"/>
-
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:onClick="onPhoneNumberClicked"
+                        android:tag="@string/mdltag_my_pharmacy_addressline_four"
+                        android:textColor="@color/radio_button_color_highlighted"
+                        android:textSize="14.40sp" />
+
+                    <TextView
                         android:id="@+id/SavContinueBtn"
-                        android:text="@string/mdl_my_pharmacy_opening_time"
-                        android:tag="@string/mdltag_my_pharmacy_opening_time"
-                        android:textColor="@color/medical_history_sub_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:paddingTop="12.67dp"
-                        android:visibility="gone"
-                        android:textSize="13.44sp" />
+                        android:tag="@string/mdltag_my_pharmacy_opening_time"
+                        android:text="@string/mdl_my_pharmacy_opening_time"
+                        android:textColor="@color/medical_history_sub_text"
+                        android:textSize="13.44sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -93,30 +93,45 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/changePharmacyButton"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="@string/mdl_change_pharmacy"
-                    android:tag="@string/mdltag_change_pharmacy"
-                    android:gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textSize="16sp"
-                    android:background="@null"
-                    android:onClick="changePharmacyButtonOnClick"
-                    android:textAllCaps="false"
-                    android:textColor="@color/summary_contact"
-                    android:id="@+id/changePharmacyButton"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
-                    android:textStyle="normal"
+                    android:background="@null"
                     android:fontFamily="sans-serif"
-                    />
+                    android:gravity="center"
+                    android:onClick="changePharmacyButtonOnClick"
+                    android:tag="@string/mdltag_change_pharmacy"
+                    android:text="@string/mdl_change_pharmacy"
+                    android:textAllCaps="false"
+                    android:textColor="@color/summary_contact"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
 
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/getDirection"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:tag="@string/mdltag_change_pharmacy"
+            android:text="Get Directions"
+            android:textAllCaps="false"
+            android:textColor="@color/summary_contact"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 </ScrollView>
