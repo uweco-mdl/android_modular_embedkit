@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -288,15 +287,15 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
      */
     public String ValidateForm()
     {
-        if(mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0
+        if(mAddressLine1 != null && mAddressLine1.getText() == null && mAddressLine1.getText().toString().trim().length() == 0
     //     || mAddressLine2.getText() == null && mAddressLine2.getText().toString().trim().length() == 0
-           || mState.getText() == null && mState.getText().toString().trim().length() == 0
-           || mZip.getText() == null && mZip.getText().toString().trim().length() == 0
-           || mCity.getText() == null && mCity.getText().toString().trim().length() == 0) {
+           || mState != null && mState.getText() == null && mState.getText().toString().trim().length() == 0
+           || mZip != null && mZip.getText() == null && mZip.getText().toString().trim().length() == 0
+           || mCity != null && mCity.getText() == null && mCity.getText().toString().trim().length() == 0) {
             return (getString(R.string.mdl_please_enter));
         }
-        else if(!MdliveUtils.validateZipCode(mZip.getText().toString()))
-            return(getString(R.string.mdl_enter_valid_zip));
+        else if (!MdliveUtils.validateZipCode(mZip.getText().toString()))
+            return (getString(R.string.mdl_enter_valid_zip));
 
         return null;
     }
@@ -374,12 +373,12 @@ public class ChangeAddressFragment extends MDLiveBaseFragment {
 
                 String SelectedText = stateIds.get(i);
                 mState.setText(SelectedText);
-                mState.setContentDescription(getString(R.string.mdl_ada_dropdown)+SelectedText);
-                if(MyProfileFragment.timeZoneByStateValue!=null){
-                    try{
+                mState.setContentDescription(getString(R.string.mdl_ada_dropdown) + SelectedText);
+                if(MyProfileFragment.timeZoneByStateValue != null){
+                    try {
                         JSONObject stateTimezoneObj = new JSONObject(MyProfileFragment.timeZoneByStateValue);
                         mtimeZone = stateTimezoneObj.getString(stateIds.get(i));
-                    }catch(Exception e){
+                    } catch (Exception e){
                         e.printStackTrace();
                     }
                 }
