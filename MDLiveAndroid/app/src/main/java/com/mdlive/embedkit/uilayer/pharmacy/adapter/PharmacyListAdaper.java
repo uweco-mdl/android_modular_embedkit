@@ -24,7 +24,7 @@ import java.util.HashMap;
  */
 public class PharmacyListAdaper extends BaseAdapter{
 
-    private ArrayList<HashMap<String, Object>>  list = new ArrayList<HashMap<String, Object>>();
+    private ArrayList<HashMap<String, Object>>  list = new ArrayList<>();
     private Activity context;
 
     /**
@@ -40,9 +40,9 @@ public class PharmacyListAdaper extends BaseAdapter{
     /**
      * This override method is used to return initialized and updated view to listview.
      *
-     * @param convertView - view is going to be return
-     * @param position - position of view in listview
-     * @param parent - inflated layout group
+     * @param convertView   view is going to be return
+     * @param position      position of view in listview
+     * @param parent        inflated layout group
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -67,10 +67,11 @@ public class PharmacyListAdaper extends BaseAdapter{
         ((TextView) convertView.findViewById(R.id.pharmacyAddresline1)).setText((String)getItem(position).get("address1"));
 
         ((TextView) convertView.findViewById(R.id.pharmacyAddressline2)).setText(
-                ((getItem(position).get("city")!= null) ? getItem(position).get("city") +", ":"")+
-                        getItem(position).get("state") +" "+ getItem(position).get("zipcode"));
+                ((getItem(position).get("city") != null) ? getItem(position).get("city") +", ":"") +
+                        getItem(position).get("state") + " " + getItem(position).get("zipcode"));
 
-        ((TextView) convertView.findViewById(R.id.text_view_a)).setText((String)getItem(position).get("store_name"));
+        String resultString = ((String) getItem(position).get("store_name")).replaceAll("\\P{L}", "");
+        ((TextView) convertView.findViewById(R.id.text_view_a)).setText(resultString.trim());
 
         ((TextView) convertView.findViewById(R.id.milesText)).setText((((getItem(position).get("distance") != null) &&
                 ((String) getItem(position).get("distance")).length() != 0) ? ((String) getItem(position).get("distance")).trim().replace(" miles", "mi") : ""));
@@ -86,7 +87,7 @@ public class PharmacyListAdaper extends BaseAdapter{
 
 
     /**
-     * returns size of items in list
+     * Returns length of list
      */
     @Override
     public int getCount() {
@@ -94,7 +95,7 @@ public class PharmacyListAdaper extends BaseAdapter{
     }
 
     /**
-     * returns object according to position which is occpy.
+     * Returns object according to position it occupies.
      * @param position - position of item in list
      */
     @Override
