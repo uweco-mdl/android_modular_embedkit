@@ -41,7 +41,6 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
     private ToggleButton mPassCode4 = null;
     private ToggleButton mPassCode5 = null;
     private ToggleButton mPassCode6 = null;
-    private TextView mHeaderText = null;
 
     private EditText mPassCode7 = null;
 
@@ -77,7 +76,7 @@ public class ChangePinFragment extends MDLiveBaseFragment implements TextWatcher
 
         View changePin = inflater.inflate(R.layout.fragments_pin_change, null);
         getActivity().setTitle(getString(R.string.mdl_change_pin));
-        mHeaderText =(TextView)getActivity().findViewById(R.id.headerTxt);
+        TextView mHeaderText = (TextView) getActivity().findViewById(R.id.headerTxt);
         mHeaderText.setAllCaps(true);
         mHeaderText.setText(getString(R.string.mdl_confirm_your_pin));
         MdliveUtils.DIALOG_SHOWN = false;

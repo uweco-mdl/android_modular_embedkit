@@ -1,6 +1,5 @@
 package com.mdlive.sav;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,8 +18,6 @@ import com.mdlive.unifiedmiddleware.commonclasses.constants.PreferenceConstants;
 import com.mdlive.unifiedmiddleware.commonclasses.utils.MdliveUtils;
 
 public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
-    private LinearLayout  byvideoBtnLayout, byphoneBtnLayout;
-    private TextView  byvideoBtn,byphoneBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,10 +54,10 @@ public class MDLiveDoctorOnCall extends MDLiveBaseActivity {
     }
 
     public void initializeView(){
-        byvideoBtnLayout  = (LinearLayout)findViewById(R.id.byvideoBtnLayout);
-        byphoneBtnLayout = (LinearLayout)findViewById(R.id.byphoneBtnLayout);
-        byvideoBtn = (TextView)findViewById(R.id.byvideoBtn);
-        byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
+        LinearLayout byvideoBtnLayout  = (LinearLayout)findViewById(R.id.byvideoBtnLayout);
+        LinearLayout byphoneBtnLayout = (LinearLayout)findViewById(R.id.byphoneBtnLayout);
+        TextView byvideoBtn = (TextView)findViewById(R.id.byvideoBtn);
+        TextView byphoneBtn = (TextView)findViewById(R.id.byphoneBtn);
 
         // DEBUGGING.  o.uwechue
         Log.d("MDLDocOnCall", "***************/n(Initial) is PHONE or VIDEO Consult ? :" + MDLiveProviderDetails.getConsultationType(this));

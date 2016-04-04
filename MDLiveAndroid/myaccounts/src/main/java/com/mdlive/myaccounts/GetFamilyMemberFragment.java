@@ -77,7 +77,7 @@ public class GetFamilyMemberFragment extends MDLiveBaseFragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        values = new HashMap<String, ArrayList<String>>();
+        HashMap<String, ArrayList<String>> values = new HashMap<String, ArrayList<String>>();
 
         lv = (ListView) view.findViewById(R.id.listView);
 

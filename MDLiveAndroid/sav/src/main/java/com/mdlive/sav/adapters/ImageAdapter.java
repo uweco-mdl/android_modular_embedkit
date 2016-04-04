@@ -29,14 +29,13 @@ import java.util.HashMap;
 public class ImageAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<HashMap<String, Object>> myPhotosList;
-    private BitmapFactory.Options options;
     private int size = 0;
     private LayoutInflater inflater;
 
     public ImageAdapter(Activity activity, ArrayList<HashMap<String, Object>> myPhotosList) {
         this.myPhotosList = myPhotosList;
         this.activity = activity;
-        options = new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = IntegerConstants.IMAGE_SAMPLE_SIZE;
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);

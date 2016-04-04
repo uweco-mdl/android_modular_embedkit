@@ -20,13 +20,12 @@ public class HelpAndSupportAdapter extends ArrayAdapter<HashMap<String,String>> 
 
     ViewHolder viewHolder;
     public List<HashMap<String, String>> itemList;
-    private Activity mContext;
     LayoutInflater inflater;
 
     public HelpAndSupportAdapter(Activity context, List<HashMap<String, String>> itemList) {
         super(context, R.layout.mdlive_help_and_support_addrows, itemList);
         this.itemList = itemList;
-        this.mContext = context;
+        Activity mContext = context;
         inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

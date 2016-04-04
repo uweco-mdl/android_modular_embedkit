@@ -23,9 +23,6 @@ import org.json.JSONObject;
  * Created by venkataraman_r on 7/25/2015.
  */
 public class EmailConfirmFragment extends MDLiveBaseFragment {
-    private Button resendEmail = null;
-    private Button dismiss = null;
-
 
     public EmailConfirmFragment() {
         super();
@@ -46,8 +43,8 @@ public class EmailConfirmFragment extends MDLiveBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        resendEmail = (Button) view.findViewById(R.id.resend_email);
-        dismiss = (Button) view.findViewById(R.id.dismiss);
+        Button resendEmail = (Button) view.findViewById(R.id.resend_email);
+        Button dismiss = (Button) view.findViewById(R.id.dismiss);
 
         resendEmail.setOnClickListener(new View.OnClickListener() {
             @Override

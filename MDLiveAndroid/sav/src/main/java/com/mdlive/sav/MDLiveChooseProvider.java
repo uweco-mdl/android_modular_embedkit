@@ -79,8 +79,6 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
     public static boolean doDocOnCall = false;
     int docOnCalLinLayVisibility = View.VISIBLE;
 
-    private Button seeFirstAvailDoctor;
-
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -194,7 +192,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
         filterMainRl = (FrameLayout)findViewById(R.id.filterMainRl);
         loadingTxt= (TextView)findViewById(R.id.loadingTxt);
         //setProgressBar(findViewById(R.id.progressDialog));
-        seeFirstAvailDoctor= (Button) findViewById(R.id.btn_see_first_available_doctor);
+        Button seeFirstAvailDoctor = (Button) findViewById(R.id.btn_see_first_available_doctor);
         elevateButton(seeFirstAvailDoctor);
         listView = (ListView) findViewById(R.id.chooseProviderList);
 
@@ -203,7 +201,7 @@ public class MDLiveChooseProvider extends MDLiveBaseActivity {
             public void onClick(View view) {
                 isDoctorOnCall = mDoctorOnCall;
                 isDoctorOnVideo = mDoctorOnVideo;
-                MDLiveChooseProvider.doDocOnCall= true;
+                MDLiveChooseProvider.doDocOnCall = true;
                 Intent seeFirstAvailableDocIntent = new Intent(MDLiveChooseProvider.this, MDLiveDoctorOnCall.class);
                 startActivity(seeFirstAvailableDocIntent);
             }

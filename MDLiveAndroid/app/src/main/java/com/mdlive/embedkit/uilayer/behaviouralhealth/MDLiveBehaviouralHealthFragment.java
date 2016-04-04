@@ -48,7 +48,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     private LinearLayout mConditionLinearLayout;
 
-    private RadioGroup mHospitalizedRadioGroup;
     private RadioButton mHospitalizedYesRadioButton;
     private RadioButton mHospitalizedNoRadioButton;
     private TextView mWhenTextView;
@@ -56,7 +55,6 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
     private LinearLayout mFamilyHistoryLinearLayout, mWhenLl, mhowLongLl;
 
-    private RadioGroup mFamilyRadioGroup;
     private RadioButton mFamilyYesRadioButton;
     private RadioButton mFamilyNoRadioButton;
     private Spinner mCounsellingSpinner;
@@ -100,8 +98,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mConditionLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_histroy_conditions);
-        mHospitalizedRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_hospitalized_radio_group);
-
+        RadioGroup mHospitalizedRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_hospitalized_radio_group);
 
         mHospitalizedYesRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_yes_radio_button);
         mHospitalizedNoRadioButton = (RadioButton)view.findViewById(R.id.behavioural_health_hospitalized_no_radio_button);
@@ -113,7 +110,7 @@ public class MDLiveBehaviouralHealthFragment extends MDLiveBaseFragment {
 
         mFamilyHistoryLinearLayout = (LinearLayout) view.findViewById(R.id.mdlive_behavioural_family_histroy);
 
-        mFamilyRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_question_family_radio_group);
+        RadioGroup mFamilyRadioGroup = (RadioGroup) view.findViewById(R.id.behavioural_health_question_family_radio_group);
 
         if (mHospitalizedRadioGroup != null) {
             mHospitalizedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

@@ -34,7 +34,6 @@ import java.util.Date;
  * Created by sudha_s on 8/23/2015.
  */
 public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
-    private String providerName, consultationDate, Time;
     //LinearLayout thankYouLayout, onCallThankYouLayout;
 
     @Override
@@ -199,29 +198,31 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
 
     public void getPreferenceValue() {
         SharedPreferences sharedpreferences = getSharedPreferences(PreferenceConstants.MDLIVE_USER_PREFERENCES, Context.MODE_PRIVATE);
-        providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
+        String providerName = sharedpreferences.getString(PreferenceConstants.PROVIDER_DOCTORNANME_PREFERENCES, "");
         ((TextView) findViewById(R.id.provider)).setText("Provider: " + providerName);
         String activityCaller = null;
         if (getIntent().hasExtra("activitycaller")) {
             activityCaller = getIntent().getStringExtra("activitycaller");
         }
 
+        String consultationDate;
+        String time;
         if (activityCaller != null && activityCaller.equalsIgnoreCase(getString(R.string.mdl_makeAppmtRequest))) {
             consultationDate = sharedpreferences.getString(PreferenceConstants.IDEAL_DATE, "");
             ((TextView) findViewById(R.id.date)).setText("Date: " + consultationDate);
-            Time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
+            time = sharedpreferences.getString(PreferenceConstants.NEXT_AVAIL_DATE, "");
             String timeZoneValue = "";
             if (UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo() != null) {
                 timeZoneValue = UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo().getTimezone();
             }
-            ((TextView) findViewById(R.id.time)).setText("Time: " + Time);
+            ((TextView) findViewById(R.id.time)).setText("Time: " + time);
 
         } else {
 
             try {
                 consultationDate = sharedpreferences.getString(PreferenceConstants.SELECTED_DATE, "");
 
-                Time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
+                time = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESLOT, "");
                 String timeZoneValue = "";
                 String Timestamp = sharedpreferences.getString(PreferenceConstants.SELECTED_TIMESTAMP, "");
                 if (UserBasicInfo.readFromSharedPreference(MDLiveAppointmentThankYou.this).getPersonalInfo() != null) {
@@ -239,9 +240,9 @@ public class MDLiveAppointmentThankYou extends MDLiveBaseActivity {
     //                ((TextView) findViewById(R.id.txtDate)).setText(format);
     //                ((TextView) findViewById(R.id.time)).setText("Time: " +sdfNow.format(dateTime)+ " " + timeZoneValue);
                     ((TextView) findViewById(R.id.date)).setText("Date: " + sdfNow.format(dateTime));
-                    ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
+                    ((TextView) findViewById(R.id.time)).setText("Time: " + time + " " + timeZoneValue);
                 }else {
-                    ((TextView) findViewById(R.id.time)).setText("Time: " + Time + " " + timeZoneValue);
+                    ((TextView) findViewById(R.id.time)).setText("Time: " + time + " " + timeZoneValue);
                     ((TextView) findViewById(R.id.date)).setText("Date: " + consultationDate);
                 }
 
